@@ -7,5 +7,5 @@
 
 from .client import GAS
 
-__version__ = "0.3.10"
+__version__ = "0.0.0"
 __all__ = ["GAS"]
