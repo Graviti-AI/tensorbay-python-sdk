@@ -1,4 +1,4 @@
 #!/usr/bin/env python3
 #
-# Copyright 2021 Graviti. All Rights Reserved.
+# Copyright 2021 Graviti. Licensed under MIT License.
 #

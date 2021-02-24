@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copytright 2020 Graviti. All Rights Reserved
+# Copytright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
 
