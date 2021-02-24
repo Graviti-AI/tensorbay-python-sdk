@@ -30,8 +30,9 @@ import threading
 import time
 import uuid
 from copy import deepcopy
+from itertools import islice
 from pathlib import PurePosixPath
-from typing import Any, Dict, Iterator, Optional, Tuple
+from typing import Any, Dict, Iterable, Iterator, Optional, Tuple, Union
 
 import filetype
 from requests_toolbelt import MultipartEncoder
@@ -220,6 +221,25 @@ class SegmentClientBase:
         if sensor_name:
             post_data["sensorName"] = sensor_name
         self._client.open_api_do("PUT", "labels", self.dataset_id, json=post_data)
+
+    def delete_data(self, remote_paths: Union[str, Iterable[str]]) -> None:
+        """DELETE data in a TensorBay segment with the given remote paths.
+
+        Arguments:
+            remote_paths: The remote paths of data in a TensorBay segment.
+
+        """
+        all_paths = iter((remote_paths,)) if isinstance(remote_paths, str) else iter(remote_paths)
+
+        while True:
+            request_remote_paths = list(islice(all_paths, 128))
+            if not request_remote_paths:
+                return
+            delete_data: Dict[str, Any] = {
+                "segmentName": self.name,
+                "remotePaths": request_remote_paths,
+            }
+            self._client.open_api_do("DELETE", "data", self.dataset_id, json=delete_data)
 
 
 class SegmentClient(SegmentClientBase):
