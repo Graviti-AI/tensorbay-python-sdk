@@ -1,0 +1,14 @@
+{
+    "CLASSIFICATION": {
+        "categories": [
+            { "name": "amusement" },
+            { "name": "anger" },
+            { "name": "awe" },
+            { "name": "contentment" },
+            { "name": "disgust" },
+            { "name": "excitement" },
+            { "name": "fear" },
+            { "name": "sad" }
+        ]
+    }
+}

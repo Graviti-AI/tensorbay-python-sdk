@@ -1,0 +1,39 @@
+{
+    "KEYPOINTS2D": {
+        "keypoints": [
+            {
+                "number": 14,
+                "names": [
+                    "Right ankle",
+                    "Right knee",
+                    "Right hip",
+                    "Left hip",
+                    "Left knee",
+                    "Left ankle",
+                    "Right wrist",
+                    "Right elbow",
+                    "Right shoulder",
+                    "Left shoulder",
+                    "Left elbow",
+                    "Left wrist",
+                    "Neck",
+                    "Head top"
+                ],
+                "skeleton": [
+                    [0, 1],
+                    [1, 2],
+                    [3, 4],
+                    [4, 5],
+                    [6, 7],
+                    [7, 8],
+                    [9, 10],
+                    [10, 11],
+                    [12, 13],
+                    [12, 2],
+                    [12, 3]
+                ],
+                "visible": "BINARY"
+            }
+        ]
+    }
+}

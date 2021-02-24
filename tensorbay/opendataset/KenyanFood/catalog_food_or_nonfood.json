@@ -1,0 +1,5 @@
+{
+    "CLASSIFICATION": {
+        "categories": [{ "name": "food" }, { "name": "nonfood" }]
+    }
+}

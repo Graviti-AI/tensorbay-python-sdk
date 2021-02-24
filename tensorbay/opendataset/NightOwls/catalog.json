@@ -1,0 +1,30 @@
+{
+    "BOX2D": {
+        "isTracking": true,
+        "categories": [
+            { "name": "Pedestrians" },
+            { "name": "Bicycledriver" },
+            { "name": "MotorbikeDriver" },
+            { "name": "Ignore areas" }
+        ],
+
+        "attributes": [
+            {
+                "name": "pose",
+                "enum": ["front", "left", "back", "right", null]
+            },
+            {
+                "name": "difficulty",
+                "enum": [true, false, null]
+            },
+            {
+                "name": "occluded",
+                "enum": [true, false, null]
+            },
+            {
+                "name": "truncation",
+                "type": "boolean"
+            }
+        ]
+    }
+}

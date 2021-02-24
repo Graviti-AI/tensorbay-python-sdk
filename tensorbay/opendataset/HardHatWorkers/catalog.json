@@ -1,0 +1,5 @@
+{
+    "BOX2D": {
+        "categories": [{ "name": "head" }, { "name": "helmet" }, { "name": "person" }]
+    }
+}

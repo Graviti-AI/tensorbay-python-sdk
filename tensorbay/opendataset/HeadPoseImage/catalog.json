@@ -1,0 +1,41 @@
+{
+    "BOX2D": {
+        "categories": [
+            { "name": "01" },
+            { "name": "02" },
+            { "name": "03" },
+            { "name": "04" },
+            { "name": "05" },
+            { "name": "06" },
+            { "name": "07" },
+            { "name": "08" },
+            { "name": "09" },
+            { "name": "10" },
+            { "name": "11" },
+            { "name": "12" },
+            { "name": "13" },
+            { "name": "14" },
+            { "name": "15" }
+        ],
+        "attributes": [
+            {
+                "name": "Vertical angle",
+                "enum": [-90, -60, -30, -15, 0, 15, 30, 60, 90]
+            },
+            {
+                "name": "Horizontal angle",
+                "enum": [-90, -75, -60, -45, -30, -15, 0, 15, 30, 45, 60, 75, 90]
+            },
+            {
+                "name": "Serie",
+                "enum": [1, 2]
+            },
+            {
+                "name": "Number",
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 92
+            }
+        ]
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "CLASSIFICATION": {
+        "categories": [{ "name": "day" }, { "name": "night" }]
+    },
+    "BOX2D": {
+        "categories": [
+            { "name": "BOX.go" },
+            { "name": "BOX.goForward" },
+            { "name": "BOX.goLeft" },
+            { "name": "BOX.stop" },
+            { "name": "BOX.stopLeft" },
+            { "name": "BOX.warning" },
+            { "name": "BOX.warningLeft" },
+            { "name": "BULB.go" },
+            { "name": "BULB.goForward" },
+            { "name": "BULB.goLeft" },
+            { "name": "BULB.stop" },
+            { "name": "BULB.stopLeft" },
+            { "name": "BULB.warning" },
+            { "name": "BULB.warningLeft" }
+        ]
+    }
+}

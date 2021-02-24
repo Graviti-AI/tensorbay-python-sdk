@@ -1,0 +1,25 @@
+{
+    "BOX2D": {
+        "categories": [
+            { "name": "Red" },
+            { "name": "RedLeft" },
+            { "name": "RedRight" },
+            { "name": "RedStraight" },
+            { "name": "RedStraightLeft" },
+            { "name": "Green" },
+            { "name": "GreenLeft" },
+            { "name": "GreenRight" },
+            { "name": "GreenStraight" },
+            { "name": "GreenStraightLeft" },
+            { "name": "GreenStraigntRight" },
+            { "name": "Yellow" },
+            { "name": "off" }
+        ],
+        "attributes": [
+            {
+                "name": "occluded",
+                "type": "boolean"
+            }
+        ]
+    }
+}

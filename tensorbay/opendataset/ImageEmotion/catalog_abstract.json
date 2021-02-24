@@ -1,0 +1,54 @@
+{
+    "CLASSIFICATION": {
+        "attributes": [
+            {
+                "name": "Amusement",
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 13
+            },
+            {
+                "name": "Anger",
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 13
+            },
+            {
+                "name": "Awe",
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 13
+            },
+            {
+                "name": "Content",
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 13
+            },
+            {
+                "name": "Disgust",
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 13
+            },
+            {
+                "name": "Excitement",
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 13
+            },
+            {
+                "name": "Fear",
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 13
+            },
+            {
+                "name": "Sad",
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 13
+            }
+        ]
+    }
+}

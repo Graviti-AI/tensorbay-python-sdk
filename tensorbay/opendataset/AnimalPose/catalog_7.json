@@ -1,0 +1,13 @@
+{
+    "BOX2D": {
+        "categories": [
+            { "name": "antelope" },
+            { "name": "bear" },
+            { "name": "bobcat" },
+            { "name": "chimpanzee" },
+            { "name": "hippopotamus" },
+            { "name": "otter" },
+            { "name": "rhino" }
+        ]
+    }
+}

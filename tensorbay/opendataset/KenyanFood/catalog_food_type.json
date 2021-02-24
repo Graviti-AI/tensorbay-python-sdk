@@ -1,0 +1,19 @@
+{
+    "CLASSIFICATION": {
+        "categories": [
+            { "name": "bhaji" },
+            { "name": "chapati" },
+            { "name": "githeri" },
+            { "name": "kachumbari" },
+            { "name": "kukuchoma" },
+            { "name": "mandazi" },
+            { "name": "masalachips" },
+            { "name": "matoke" },
+            { "name": "mukimo" },
+            { "name": "nyamachoma" },
+            { "name": "pilau" },
+            { "name": "sukumawiki" },
+            { "name": "ugali" }
+        ]
+    }
+}

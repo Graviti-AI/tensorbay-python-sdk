@@ -1,0 +1,24 @@
+{
+    "BOX3D": {
+        "categories": [
+            { "name": "BIG_TRUCK" },
+            { "name": "BUS" },
+            { "name": "BUS_HARD" },
+            { "name": "CAR" },
+            { "name": "CAR_HARD" },
+            { "name": "CONE" },
+            { "name": "CYCLIST" },
+            { "name": "CYCLIST_HARD" },
+            { "name": "MOTORIST" },
+            { "name": "MOTORIST_HARD" },
+            { "name": "PEDESTRIAN" },
+            { "name": "PEDESTRIAN_HARD" },
+            { "name": "TRICYCLE" },
+            { "name": "TRICYCLE_HARD" },
+            { "name": "TRUCK" },
+            { "name": "TRUCK_HARD" },
+            { "name": "VAN" },
+            { "name": "VAN_HARD" }
+        ]
+    }
+}

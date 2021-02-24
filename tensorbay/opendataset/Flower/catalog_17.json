@@ -1,0 +1,23 @@
+{
+    "CLASSIFICATION": {
+        "categories": [
+            { "name": "Daffodil" },
+            { "name": "Snowdrop" },
+            { "name": "Lily Valley" },
+            { "name": "Bluebell" },
+            { "name": "Crocus" },
+            { "name": "Iris" },
+            { "name": "Tigerlily" },
+            { "name": "Tulip" },
+            { "name": "Fritillary" },
+            { "name": "Sunflower" },
+            { "name": "Daisy" },
+            { "name": "Colts Foot" },
+            { "name": "Dandelalion" },
+            { "name": "Cowslip" },
+            { "name": "Buttercup" },
+            { "name": "Windflower" },
+            { "name": "Pansy" }
+        ]
+    }
+}

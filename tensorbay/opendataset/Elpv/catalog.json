@@ -1,0 +1,20 @@
+{
+    "CLASSIFICATION": {
+        "categories": [
+            {
+                "name": "mono"
+            },
+            {
+                "name": "poly"
+            }
+        ],
+        "attributes": [
+            {
+                "name": "defect probability",
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+            }
+        ]
+    }
+}

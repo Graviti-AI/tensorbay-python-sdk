@@ -1,0 +1,107 @@
+{
+    "BOX2D": {
+        "attributes": [
+            {
+                "name": "occlusion-level",
+                "enum": ["visible", "partial-occlusion", "full-occlusion"]
+            },
+            {
+                "name": "blur-level",
+                "type": "boolean"
+            }
+        ]
+    },
+    "CLASSIFICATION": {
+        "attributes": [
+            {
+                "name": "total-count",
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 25791
+            },
+            {
+                "name": "scene-type",
+                "enum": [
+                    "Canada",
+                    "China",
+                    "Kite-festival",
+                    "Music-event",
+                    "Public-speech",
+                    "Rain",
+                    "Traffic",
+                    "airport",
+                    "army",
+                    "assembly",
+                    "battle-ground",
+                    "beach",
+                    "bus station",
+                    "bus",
+                    "celebratiobn",
+                    "celebration",
+                    "christmas",
+                    "classroom",
+                    "cocnert",
+                    "concert",
+                    "conference",
+                    "construction",
+                    "convocation",
+                    "crowd-gathering",
+                    "disco",
+                    "distractor",
+                    "exhibition",
+                    "fair",
+                    "festival",
+                    "flags",
+                    "foodcourt",
+                    "gathering",
+                    "group",
+                    "hike",
+                    "hiking",
+                    "inaugaration",
+                    "indoor",
+                    "kite-festival",
+                    "mall",
+                    "marathon",
+                    "market",
+                    "monument",
+                    "mountain",
+                    "music-event",
+                    "music-festival",
+                    "new fog",
+                    "no-crowd",
+                    "parade",
+                    "park",
+                    "parking",
+                    "play",
+                    "police",
+                    "procession",
+                    "prortest",
+                    "protest",
+                    "public-speech",
+                    "queue",
+                    "railway station",
+                    "rally",
+                    "restaurant",
+                    "running",
+                    "sport",
+                    "stadium",
+                    "stores",
+                    "street",
+                    "traffic",
+                    "war",
+                    "water park",
+                    "waterpark",
+                    "wild"
+                ]
+            },
+            {
+                "name": "weather-condition",
+                "enum": ["no weather degradationi", "fog/haze", "rain", "snow"]
+            },
+            {
+                "name": "distractor",
+                "type": "boolean"
+            }
+        ]
+    }
+}

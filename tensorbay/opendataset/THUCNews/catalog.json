@@ -1,0 +1,20 @@
+{
+    "CLASSIFICATION": {
+        "categories": [
+            { "name": "体育" },
+            { "name": "娱乐" },
+            { "name": "家居" },
+            { "name": "彩票" },
+            { "name": "房产" },
+            { "name": "教育" },
+            { "name": "时尚" },
+            { "name": "时政" },
+            { "name": "星座" },
+            { "name": "游戏" },
+            { "name": "社会" },
+            { "name": "科技" },
+            { "name": "股票" },
+            { "name": "财经" }
+        ]
+    }
+}

@@ -1,0 +1,137 @@
+{
+    "CLASSIFICATION": {
+        "categories": [
+            {
+                "name": "blanket1",
+                "description": "Woven blanket"
+            },
+            {
+                "name": "blanket2",
+                "description": "Woven blanket"
+            },
+            {
+                "name": "canvas1",
+                "description": "Woven linen canvas"
+            },
+            {
+                "name": "ceiling1",
+                "description": "Painted concrete ceiling"
+            },
+            {
+                "name": "ceiling2",
+                "description": "Metal plate ceiling with small holes"
+            },
+            {
+                "name": "cushion1",
+                "description": "Woven fabric on a cushion"
+            },
+            {
+                "name": "floor1",
+                "description": "Plastic plate floor on top of concrete"
+            },
+            {
+                "name": "floor2",
+                "description": "Linoleum floor with stone imitation"
+            },
+            {
+                "name": "grass1",
+                "description": "Grass from a lawn"
+            },
+            {
+                "name": "lentils1",
+                "description": "Red lentils on a flat surface"
+            },
+            {
+                "name": "linseds1",
+                "description": "Linseeds on a flat surface"
+            },
+            {
+                "name": "oatmeal1",
+                "description": "Oatmeal on a flat surface"
+            },
+            {
+                "name": "pearlsugar1",
+                "description": "Pearl sugar on a flat surface"
+            },
+            {
+                "name": "rice1",
+                "description": "White rice on a flat surface"
+            },
+            {
+                "name": "rice2",
+                "description": "Arborio rice on a flat surface"
+            },
+            {
+                "name": "rug1",
+                "description": "Rya rug (long pile rug)"
+            },
+            {
+                "name": "sand1",
+                "description": "Sand surface"
+            },
+            {
+                "name": "scarf1",
+                "description": "Woven scarf"
+            },
+            {
+                "name": "scarf2",
+                "description": "Woven scarf"
+            },
+            {
+                "name": "screen1",
+                "description": "Woven fabric on a screen"
+            },
+            {
+                "name": "seat1",
+                "description": "Woven fabric on chair"
+            },
+            {
+                "name": "seat2",
+                "description": "Woven fabric on chair"
+            },
+            {
+                "name": "sesameseeds1",
+                "description": "Sesame seeds on a flat surface"
+            },
+            {
+                "name": "stone1",
+                "description": "Flat part of a granite base of a sculpture"
+            },
+            {
+                "name": "stone2",
+                "description": "Flat part of stone base of a building"
+            },
+            {
+                "name": "stone3",
+                "description": "Flat part of stone wall"
+            },
+            {
+                "name": "stoneslab1",
+                "description": "Stone slab from a building’s entrance"
+            },
+            {
+                "name": "wall1",
+                "description": "Painted lime plaster of an outdoor wall"
+            }
+        ],
+        "attributes": [
+            {
+                "name": "original image sample number",
+                "enum": ["a", "b", "c", "d"],
+                "description": "each class was divided into 4 sections"
+            },
+            {
+                "name": "patch number",
+                "type": ["integer", "null"],
+                "minimum": 1,
+                "maximum": 40,
+                "description": "each section was divided into 40 square patches of size 576×576 pixels, null for originalPNG"
+            },
+            {
+                "name": "rotated degrees",
+                "enum": [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
+                "description": "alternative dataset with 12 rotations per each original patch"
+            }
+        ]
+    }
+}

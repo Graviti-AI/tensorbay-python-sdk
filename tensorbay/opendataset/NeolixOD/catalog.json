@@ -1,0 +1,38 @@
+{
+    "BOX3D": {
+        "categories": [
+            { "name": "Adult" },
+            { "name": "Animal" },
+            { "name": "Barrier" },
+            { "name": "Bicycle" },
+            { "name": "Bicycles" },
+            { "name": "Bus" },
+            { "name": "Car" },
+            { "name": "Child" },
+            { "name": "Cyclist" },
+            { "name": "Motorcycle" },
+            { "name": "Motorcyclist" },
+            { "name": "Trailer" },
+            { "name": "Tricycle" },
+            { "name": "Truck" },
+            { "name": "Unknown" }
+        ],
+        "attributes": [
+            {
+                "name": "Alpha",
+                "type": "number",
+                "description": "Angle of view"
+            },
+            {
+                "name": "Occlusion",
+                "enum": [0, 1, 2],
+                "description": "It indicates the degree of occlusion of objects by other obstacles"
+            },
+            {
+                "name": "Truncation",
+                "type": "boolean",
+                "description": "It indicates whether the object is truncated by the edge of the image"
+            }
+        ]
+    }
+}

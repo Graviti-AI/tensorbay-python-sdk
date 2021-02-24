@@ -1,0 +1,10 @@
+{
+    "BOX2D": {
+        "categories": [
+            { "name": "go" },
+            { "name": "stop" },
+            { "name": "warning" },
+            { "name": "ambiguous" }
+        ]
+    }
+}

@@ -1,0 +1,398 @@
+{
+    "CLASSIFICATION": {
+        "categories": [
+            { "name": "antelope" },
+            { "name": "bat" },
+            { "name": "beaver" },
+            { "name": "blue+whale" },
+            { "name": "bobcat" },
+            { "name": "buffalo" },
+            { "name": "chihuahua" },
+            { "name": "chimpanzee" },
+            { "name": "collie" },
+            { "name": "cow" },
+            { "name": "dalmatian" },
+            { "name": "deer" },
+            { "name": "dolphin" },
+            { "name": "elephant" },
+            { "name": "fox" },
+            { "name": "german+shepherd" },
+            { "name": "giant+panda" },
+            { "name": "giraffe" },
+            { "name": "gorilla" },
+            { "name": "grizzly+bear" },
+            { "name": "hamster" },
+            { "name": "hippopotamus" },
+            { "name": "horse" },
+            { "name": "humpback+whale" },
+            { "name": "killer+whale" },
+            { "name": "leopard" },
+            { "name": "lion" },
+            { "name": "mole" },
+            { "name": "moose" },
+            { "name": "mouse" },
+            { "name": "otter" },
+            { "name": "ox" },
+            { "name": "persian+cat" },
+            { "name": "pig" },
+            { "name": "polar+bear" },
+            { "name": "rabbit" },
+            { "name": "raccoon" },
+            { "name": "rat" },
+            { "name": "rhinoceros" },
+            { "name": "seal" },
+            { "name": "sheep" },
+            { "name": "siamese+cat" },
+            { "name": "skunk" },
+            { "name": "spider+monkey" },
+            { "name": "squirrel" },
+            { "name": "tiger" },
+            { "name": "walrus" },
+            { "name": "weasel" },
+            { "name": "wolf" },
+            { "name": "zebra" }
+        ],
+        "attributes": [
+            {
+                "name": "active",
+                "type": "boolean"
+            },
+            {
+                "name": "agility",
+                "type": "boolean"
+            },
+            {
+                "name": "arctic",
+                "type": "boolean"
+            },
+            {
+                "name": "big",
+                "type": "boolean"
+            },
+            {
+                "name": "bipedal",
+                "type": "boolean"
+            },
+            {
+                "name": "black",
+                "type": "boolean"
+            },
+            {
+                "name": "blue",
+                "type": "boolean"
+            },
+            {
+                "name": "brown",
+                "type": "boolean"
+            },
+            {
+                "name": "buckteeth",
+                "type": "boolean"
+            },
+            {
+                "name": "bulbous",
+                "type": "boolean"
+            },
+            {
+                "name": "bush",
+                "type": "boolean"
+            },
+            {
+                "name": "cave",
+                "type": "boolean"
+            },
+            {
+                "name": "chewteeth",
+                "type": "boolean"
+            },
+            {
+                "name": "claws",
+                "type": "boolean"
+            },
+            {
+                "name": "coastal",
+                "type": "boolean"
+            },
+            {
+                "name": "desert",
+                "type": "boolean"
+            },
+            {
+                "name": "domesti",
+                "type": "boolean"
+            },
+            {
+                "name": "fast",
+                "type": "boolean"
+            },
+            {
+                "name": "fields",
+                "type": "boolean"
+            },
+            {
+                "name": "fierce",
+                "type": "boolean"
+            },
+            {
+                "name": "fish",
+                "type": "boolean"
+            },
+            {
+                "name": "flippers",
+                "type": "boolean"
+            },
+            {
+                "name": "flys",
+                "type": "boolean"
+            },
+            {
+                "name": "forager",
+                "type": "boolean"
+            },
+            {
+                "name": "forest",
+                "type": "boolean"
+            },
+            {
+                "name": "furry",
+                "type": "boolean"
+            },
+            {
+                "name": "gray",
+                "type": "boolean"
+            },
+            {
+                "name": "grazer",
+                "type": "boolean"
+            },
+            {
+                "name": "ground",
+                "type": "boolean"
+            },
+            {
+                "name": "group",
+                "type": "boolean"
+            },
+            {
+                "name": "hairless",
+                "type": "boolean"
+            },
+            {
+                "name": "hands",
+                "type": "boolean"
+            },
+            {
+                "name": "hibernate",
+                "type": "boolean"
+            },
+            {
+                "name": "hooves",
+                "type": "boolean"
+            },
+            {
+                "name": "hops",
+                "type": "boolean"
+            },
+            {
+                "name": "horns",
+                "type": "boolean"
+            },
+            {
+                "name": "hunter",
+                "type": "boolean"
+            },
+            {
+                "name": "inactive",
+                "type": "boolean"
+            },
+            {
+                "name": "insects",
+                "type": "boolean"
+            },
+            {
+                "name": "jungle",
+                "type": "boolean"
+            },
+            {
+                "name": "lean",
+                "type": "boolean"
+            },
+            {
+                "name": "longleg",
+                "type": "boolean"
+            },
+            {
+                "name": "longneck",
+                "type": "boolean"
+            },
+            {
+                "name": "meat",
+                "type": "boolean"
+            },
+            {
+                "name": "meatteeth",
+                "type": "boolean"
+            },
+            {
+                "name": "mountains",
+                "type": "boolean"
+            },
+            {
+                "name": "muscle",
+                "type": "boolean"
+            },
+            {
+                "name": "nestspot",
+                "type": "boolean"
+            },
+            {
+                "name": "newworld",
+                "type": "boolean"
+            },
+            {
+                "name": "nocturnal",
+                "type": "boolean"
+            },
+            {
+                "name": "ocean",
+                "type": "boolean"
+            },
+            {
+                "name": "oldworld",
+                "type": "boolean"
+            },
+            {
+                "name": "orange",
+                "type": "boolean"
+            },
+            {
+                "name": "pads",
+                "type": "boolean"
+            },
+            {
+                "name": "patches",
+                "type": "boolean"
+            },
+            {
+                "name": "paws",
+                "type": "boolean"
+            },
+            {
+                "name": "plains",
+                "type": "boolean"
+            },
+            {
+                "name": "plankton",
+                "type": "boolean"
+            },
+            {
+                "name": "quadrapedal",
+                "type": "boolean"
+            },
+            {
+                "name": "red",
+                "type": "boolean"
+            },
+            {
+                "name": "scavenger",
+                "type": "boolean"
+            },
+            {
+                "name": "skimmer",
+                "type": "boolean"
+            },
+            {
+                "name": "slow",
+                "type": "boolean"
+            },
+            {
+                "name": "small",
+                "type": "boolean"
+            },
+            {
+                "name": "smart",
+                "type": "boolean"
+            },
+            {
+                "name": "smelly",
+                "type": "boolean"
+            },
+            {
+                "name": "solitary",
+                "type": "boolean"
+            },
+            {
+                "name": "spots",
+                "type": "boolean"
+            },
+            {
+                "name": "stalker",
+                "type": "boolean"
+            },
+            {
+                "name": "strainteeth",
+                "type": "boolean"
+            },
+            {
+                "name": "stripes",
+                "type": "boolean"
+            },
+            {
+                "name": "strong",
+                "type": "boolean"
+            },
+            {
+                "name": "swims",
+                "type": "boolean"
+            },
+            {
+                "name": "tail",
+                "type": "boolean"
+            },
+            {
+                "name": "timid",
+                "type": "boolean"
+            },
+            {
+                "name": "toughskin",
+                "type": "boolean"
+            },
+            {
+                "name": "tree",
+                "type": "boolean"
+            },
+            {
+                "name": "tunnels",
+                "type": "boolean"
+            },
+            {
+                "name": "tusks",
+                "type": "boolean"
+            },
+            {
+                "name": "vegetation",
+                "type": "boolean"
+            },
+            {
+                "name": "walks",
+                "type": "boolean"
+            },
+            {
+                "name": "water",
+                "type": "boolean"
+            },
+            {
+                "name": "weak",
+                "type": "boolean"
+            },
+            {
+                "name": "white",
+                "type": "boolean"
+            },
+            {
+                "name": "yellow",
+                "type": "boolean"
+            }
+        ]
+    }
+}

@@ -1,0 +1,95 @@
+{
+    "CLASSIFICATION": {
+        "categories": [
+            { "name": "Aerobics" },
+            { "name": "Angler" },
+            { "name": "Award_Ceremony" },
+            { "name": "Balloonist" },
+            { "name": "Baseball" },
+            { "name": "Basketball" },
+            { "name": "Car_Accident" },
+            { "name": "Car_Racing" },
+            { "name": "Celebration_Or_Party" },
+            { "name": "Ceremony" },
+            { "name": "Cheering" },
+            { "name": "Concerts" },
+            { "name": "Couple" },
+            { "name": "Dancing" },
+            { "name": "Demonstration" },
+            { "name": "Dresses" },
+            { "name": "Election_Campain" },
+            { "name": "Family_Group" },
+            { "name": "Festival" },
+            { "name": "Football" },
+            { "name": "Funeral" },
+            { "name": "Greeting" },
+            { "name": "Group" },
+            { "name": "Gymnastics" },
+            { "name": "Handshaking" },
+            { "name": "Hockey" },
+            { "name": "Ice_Skating" },
+            { "name": "Interview" },
+            { "name": "Jockey" },
+            { "name": "Matador_Bullfighter" },
+            { "name": "Meeting" },
+            { "name": "Parachutist_Paratrooper" },
+            { "name": "Parade" },
+            { "name": "People_Marching" },
+            { "name": "Photographers" },
+            { "name": "Picnic" },
+            { "name": "Press_Conference" },
+            { "name": "Raid" },
+            { "name": "Rescue" },
+            { "name": "Riot" },
+            { "name": "Row_Boat" },
+            { "name": "Running" },
+            { "name": "Shoppers" },
+            { "name": "Soccer" },
+            { "name": "Soldier_Drilling" },
+            { "name": "Soldier_Firing" },
+            { "name": "Soldier_Patrol" },
+            { "name": "Spa" },
+            { "name": "Sports_Coach_Trainer" },
+            { "name": "Sports_Fan" },
+            { "name": "Stock_Market" },
+            { "name": "Street_Battle" },
+            { "name": "Students_Schoolkids" },
+            { "name": "Surgeons" },
+            { "name": "Swimming" },
+            { "name": "Tennis" },
+            { "name": "Traffic" },
+            { "name": "Voter" },
+            { "name": "Waiter_Waitress" },
+            { "name": "Worker_Laborer" },
+            { "name": "people_driving_car" }
+        ]
+    },
+    "BOX2D": {
+        "attributes": [
+            {
+                "name": "blur",
+                "enum": ["clear", "normal blur", "heavy blur"]
+            },
+            {
+                "name": "expression",
+                "enum": ["typical expression", "exaggerate typical"]
+            },
+            {
+                "name": "illumination",
+                "enum": ["normal illumination", "extreme, illumination"]
+            },
+            {
+                "name": "invalid",
+                "type": "boolean"
+            },
+            {
+                "name": "occlusion",
+                "enum": ["no occlusion", "partial occlusion", "heavy occlusion"]
+            },
+            {
+                "name": "pose",
+                "enum": ["typical pose", "atypical pose"]
+            }
+        ]
+    }
+}

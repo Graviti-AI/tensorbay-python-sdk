@@ -1,0 +1,85 @@
+{
+    "KEYPOINTS2D": {
+        "keypoints": [
+            {
+                "number": 11,
+                "names": [
+                    "L_shoulder",
+                    "L_Elbow",
+                    "L_wrist",
+                    "R_Shoulder",
+                    "R_Elbow",
+                    "R_Wrist",
+                    "L_Hip",
+                    "R_Hip",
+                    "L_Eye",
+                    "R_Eye",
+                    "Nose"
+                ],
+                "skeleton": [
+                    [0, 1],
+                    [1, 2],
+                    [3, 4],
+                    [4, 5],
+                    [6, 7],
+                    [8, 9],
+                    [9, 10],
+                    [10, 8]
+                ]
+            }
+        ],
+        "attributes": [
+            {
+                "name": "poselet_hit_idx",
+                "type": "array",
+                "items": {
+                    "type": "integer"
+                }
+            }
+        ]
+    },
+    "BOX2D": {
+        "description": "bounding box of torso"
+    },
+    "CLASSIFICATION": {
+        "categories": [
+            { "name": "12-oclock-high-special-edition" },
+            { "name": "2-fast-2-furious" },
+            { "name": "along-came-polly" },
+            { "name": "american-wedding-unrated6x9" },
+            { "name": "basic-instinct" },
+            { "name": "batman-returns" },
+            { "name": "battle-cry" },
+            { "name": "bend-of-the-river" },
+            { "name": "bourne-supremacy" },
+            { "name": "casino-royale" },
+            { "name": "collateral-disc1" },
+            { "name": "daredevil-disc1" },
+            { "name": "diehard2-dts" },
+            { "name": "flt0nnw1" },
+            { "name": "funny-girl-dvd-video" },
+            { "name": "giant-side-a" },
+            { "name": "goldeneye" },
+            { "name": "hitch" },
+            { "name": "irma-la-douce" },
+            { "name": "italian-job" },
+            { "name": "mi2" },
+            { "name": "million-dollar-baby-disc" },
+            { "name": "monster-in-law-d1" },
+            { "name": "mr-mrs-smith-ws" },
+            { "name": "national-treasure" },
+            { "name": "oceans-eleven-2001" },
+            { "name": "princess-diaries-2" },
+            { "name": "schindlers-list" },
+            { "name": "ten-commandments-disc1" },
+            { "name": "the-departed" }
+        ],
+        "attributes": [
+            {
+                "name": "currframe",
+                "type": "integer",
+                "minimum": 0
+            }
+        ]
+    }
+}

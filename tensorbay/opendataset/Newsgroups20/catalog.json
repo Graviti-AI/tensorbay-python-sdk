@@ -1,0 +1,26 @@
+{
+    "CLASSIFICATION": {
+        "categories": [
+            { "name": "alt.atheism" },
+            { "name": "comp.graphics" },
+            { "name": "comp.os.ms-windows.misc" },
+            { "name": "comp.sys.ibm.pc.hardware" },
+            { "name": "comp.sys.mac.hardware" },
+            { "name": "comp.windows.x" },
+            { "name": "misc.forsale" },
+            { "name": "rec.autos" },
+            { "name": "rec.motorcycles" },
+            { "name": "rec.sport.baseball" },
+            { "name": "rec.sport.hockey" },
+            { "name": "sci.crypt" },
+            { "name": "sci.electronics" },
+            { "name": "sci.med" },
+            { "name": "sci.space" },
+            { "name": "soc.religion.christian" },
+            { "name": "talk.politics.guns" },
+            { "name": "talk.politics.mideast" },
+            { "name": "talk.politics.misc" },
+            { "name": "talk.religion.misc" }
+        ]
+    }
+}
