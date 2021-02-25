@@ -58,6 +58,7 @@ repos:
         types: [rst]
         additional_dependencies: ["sphinx"]
         args: [
+          "--ignore-directives=automodule",
           "--ignore-messages",
           "Hyperlink target \".+?\" is not referenced."
         ]
