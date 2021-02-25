@@ -3,7 +3,13 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""This file defines class Polyline2D"""
+"""Polyline2D.
+
+:class:`Polyline2D` contains the coordinates of the vertexes of the polyline
+and provides a series of methods to operate on polyline, such as
+:meth:`Polyline2D.uniform_frechet_distance` and :meth:`Polyline2D.similarity`.
+
+"""
 
 import math
 from typing import Any, Dict, Iterator, List, Sequence, Tuple, Type, TypeVar
@@ -16,25 +22,36 @@ from .vector import Vector2D
 
 
 class Polyline2D(PointList2D[Vector2D]):
-    """this class defines the concept of Polyline2D based on class PointList2D"""
+    """This class defines the concept of Polyline2D.
+
+    :class:`Polyline2D` contains the coordinates of the vertexes of the polyline
+    and provides a series of methods to operate on polyline, such as
+    :meth:`Polyline2D.uniform_frechet_distance` and :meth:`Polyline2D.similarity`.
+
+    """
 
     _ElementType = Vector2D
     _P = TypeVar("_P", bound="Polyline2D")
 
     @classmethod
     def loads(cls: Type[_P], contents: List[Dict[str, float]]) -> _P:
-        """Load a Polyline2D from a list of dict containing coordinates of 2D vectors
-            within the 2D polyline.
+        """Load a :class:`Polyline2D` from a list of dictionaries.
 
-        :param contents: A list of dict containing coordinates of 2D vectors within the 2D polyline
-        [
-            {
-                "x": ...
-                "y": ...
-            },
-            ...
-        ]
-        :return: The loaded Polyline2D
+        Arguments:
+            contents: A list of dictionaries containing
+                the coordinates of the vertexes of the polyline::
+
+                    [
+                        {
+                            "x": ...
+                            "y": ...
+                        },
+                        ...
+                    ]
+
+        Returns:
+            The loaded :class:`Polyline2D` object.
+
         """
         return common_loads(cls, contents)
 
@@ -67,9 +84,13 @@ class Polyline2D(PointList2D[Vector2D]):
     def _insert_point(info1: Dict[str, Any], info2: Dict[str, Any]) -> Dict[str, Any]:
         """Insert one point in info1 into the info2.
 
-        :param info1: segment info of the insert point
-        :param info2: the inserted segment info
-        :return: a dictionary containing info of the inserted point
+        Arguments:
+            info1: Segment information of the insert point.
+            info2: The inserted segment information.
+
+        Returns:
+            A dictionary containing information of the inserted point.
+
         """
         ratio = (info1["time"] - info2["last_time"]) / (info2["time"] - info2["last_time"])
         insert_point = info2["point"] + info2["vector"] * ratio
@@ -82,11 +103,14 @@ class Polyline2D(PointList2D[Vector2D]):
     ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
         """Calculate insert points in polyline1 and polyline2.
 
-        :param polyline_info1: segment info in polyline1
-        :param polyline_info2: segment info in polyline2
-        :returns:
-            insert points in polyline1
-            insert points in polyline2
+        Arguments:
+            polyline_info1: Segment information in polyline1.
+            polyline_info2: Segment information in polyline2.
+
+        Returns:
+            Insert points in polyline1.
+            insert points in polyline2.
+
         """
         insert_points1: List[Dict[str, Any]] = []
         insert_points2: List[Dict[str, Any]] = []
@@ -120,10 +144,14 @@ class Polyline2D(PointList2D[Vector2D]):
     def _max_distance_in_point_pairs(polyline1: np.ndarray, polyline2: np.ndarray) -> float:
         """Calculate the maximum distance between point pairs in two polylines.
 
-        :param polyline1: the first inserted polyline
-        :param polyline2: the second inserted polyline, containing the same number of
-            points as the first one
-        :return: the maximum distance between point pairs in two polylines
+        Arguments:
+            polyline1: The first inserted polyline.
+            polyline2: The second inserted polyline, which contains the same number of
+                points as the first one.
+
+        Returns:
+            The maximum distance between point pairs in two polylines.
+
         """
         assert len(polyline1) == len(polyline2)
 
@@ -141,9 +169,13 @@ class Polyline2D(PointList2D[Vector2D]):
     ) -> float:
         """Compute the maximum distance between two curves if walk on a constant speed on a curve.
 
-        :param polyline1: the first polyline consisting of multiple points
-        :param polyline2: the second polyline consisting of multiple points
-        :return: the computed distance between the two polylines
+        Arguments:
+            polyline1: The first polyline consists of multiple points.
+            polyline2: The second polyline consists of multiple points.
+
+        Returns:
+            The computed distance between the two polylines.
+
         """
         polyline_info1 = Polyline2D._get_polyline_info(polyline1)
         polyline_info2 = Polyline2D._get_polyline_info(polyline2)
@@ -181,9 +213,14 @@ class Polyline2D(PointList2D[Vector2D]):
     ) -> float:
         """Calculate the similarity between two polylines, range from 0 to 1.
 
-        :param polyline1: the first polyline consisting of multiple points
-        :param polyline2: the second polyline consisting of multiple points
-        :return: the similarity between the two polylines. The bigger, the more similar.
+        Arguments:
+            polyline1: The first polyline consists of multiple points.
+            polyline2: The second polyline consisting of multiple points.
+
+        Returns:
+            The similarity between the two polylines.
+            The larger the value, the higher the similarity.
+
         """
         min_distance = Polyline2D.uniform_frechet_distance(polyline1, polyline2)
         max_distance = -1.0

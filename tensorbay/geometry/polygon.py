@@ -3,7 +3,14 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""This file defines class PointList2D, Polygon2D"""
+"""PointList2D, Polygon2D.
+
+:class:`PointList2D` contains a list of 2D points.
+
+:class:`Polygon` contains the coordinates of the vertexes of the polygon
+and provides :meth:`Polygon2D.area` to calculate the area of the polygon.
+
+"""
 
 from typing import Dict, Iterable, List, Optional, Type, TypeVar
 
@@ -15,9 +22,13 @@ _T = TypeVar("_T", bound=Vector2D)
 
 
 class PointList2D(UserMutableSequence[_T]):
-    """this class defines the concept of point list
+    """This class defines the concept of PointList2D.
 
-    :param points: a list of 2D point list
+    :class:`PointList2D` contains a list of 2D points.
+
+    Arguments:
+        points: A list of 2D points.
+
     """
 
     _ElementType: Type[_T]
@@ -36,18 +47,23 @@ class PointList2D(UserMutableSequence[_T]):
 
     @classmethod
     def loads(cls: Type[_P], contents: List[Dict[str, float]]) -> _P:
-        """Load a PointList2D from a list of dict containing coordinates of 2D vectors
-            within the pointlist.
+        """Load a :class:`PointList2D` from a list of dictionaries.
 
-        :param contents: A list of dict containing coordinates of 2D vectors within the pointlist
-        [
-            {
-                "x": ...
-                "y": ...
-            },
-            ...
-        ]
-        :return: The loaded PointList2D
+        Arguments:
+            contents: A list of dictionaries containing the coordinates of the vertexes
+                of the polygon::
+
+                    [
+                        {
+                            "x": ...
+                            "y": ...
+                        },
+                        ...
+                    ]
+
+        Returns:
+            The loaded :class:`PointList2D` object.
+
         """
         return common_loads(cls, contents)
 
@@ -62,13 +78,22 @@ class PointList2D(UserMutableSequence[_T]):
         return False
 
     def dumps(self) -> List[Dict[str, float]]:
-        """dump a PointList2D into a point list."""
+        """Dumps a :class:`PointList2D` into a point list.
 
+        Returns:
+            A list of dictionaries containing the coordinates of the vertexes
+            of the polygon within the point list.
+
+        """
         return [point.dumps() for point in self._data]
 
     def bounds(self) -> Box2D:
-        """calculate the bounds of point list."""
+        """Calculate the bounds of point list.
 
+        Returns:
+            The bounds of point list.
+
+        """
         x_min = x_max = self._data[0].x
         y_min = y_max = self._data[0].y
 
@@ -87,17 +112,25 @@ class PointList2D(UserMutableSequence[_T]):
 
 
 class Polygon2D(PointList2D[Vector2D]):
-    """this class defines the concept of Polygon2D based on class PointList2D"""
+    """This class defines the concept of Polygon2D.
+
+    :class:`Polygon` contains the coordinates of the vertexes of the polygon and provides
+    :meth:`Polygon2D.area` to calculate the area of the polygon.
+
+    """
 
     _ElementType = Vector2D
     _P = TypeVar("_P", bound="Polygon2D")
 
     def area(self) -> float:
-        """Get the area of the polygon.
-        If the orientation of the points is counterclockwise, the area is positive.
-        If it is clockwise, the area is negative.
+        """Return the area of the polygon.
 
-        :return: The area of the polygon
+        The area is positive if the rotating direction of the points is counterclockwise,
+        and negative if clockwise.
+
+        Returns:
+            The area of the polygon.
+
         """
         area = 0.0
         for i in range(len(self._data)):
@@ -109,17 +142,22 @@ class Polygon2D(PointList2D[Vector2D]):
 
     @classmethod
     def loads(cls: Type[_P], contents: List[Dict[str, float]]) -> _P:
-        """Load a Polygon2D from a list of dict containing coordinates of 2D vectors
-            within the 2D polygon.
+        """Load a :class:`Polygon2D` from a list of dictionaries.
 
-        :param contents: A list of dict containing coordinates of 2D vectors within the polygon
-        [
-            {
-                "x": ...
-                "y": ...
-            },
-            ...
-        ]
-        :return: The loaded Polygon2D
+        Arguments:
+            contents: A list of dictionaries containing the coordinates
+                of the vertexes of the polygon::
+
+                    [
+                        {
+                            "x": ...
+                            "y": ...
+                        },
+                        ...
+                    ]
+
+        Returns:
+            The loaded :class:`Polygon2D` object.
+
         """
         return common_loads(cls, contents)

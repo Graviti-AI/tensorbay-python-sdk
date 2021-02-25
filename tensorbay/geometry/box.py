@@ -3,7 +3,17 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""This file defines class Box2D, Box3D"""
+"""Box2D, Box3D.
+
+:class:`Box2D` contains the information of a 2D bounding box, such as the coordinates,
+width and height.
+It provides :meth:`Box2D.iou` to calculate the intersection over union of two 2D boxes.
+
+:class:`Box3D` contains the information of a 3D bounding box such as the transform,
+translation, rotation and size.
+It provides :meth:`Box3D.iou` to calculate the intersection over union of two 3D boxes.
+
+"""
 
 from typing import Dict, Iterable, Optional, Tuple, Type, TypeVar, Union
 
@@ -16,17 +26,29 @@ _T = TypeVar("_T", bound="Box3D")
 
 
 class Box2D(UserSequence[float]):
-    """Contain the definition of 2D bounding box and some related operations.
+    """This class defines the concept of Box2D.
 
-    :param args: Union[None, float, Sequence[float]],
-        box = Box2D()
-        box = Box2D(10, 20, 30, 40)
-        box = Box2D([10, 20, 30, 40])
-    :param x: X coordinate of the top left vertex of the box
-    :param y: Y coordinate of the top left vertex of the box
-    :param width: Length along the x axis
-    :param height: Length along the y axis
-    :raise TypeError: When input params do not meet the requirement
+    :class:`Box2D` contains the information of a 2D bounding box, such as the coordinates,
+    width and height.
+    It provides :meth:`Box2D.iou` to calculate the intersection over union of two 2D boxes.
+
+    Arguments:
+        args: Coordinates of a 2D bounding box:
+
+            .. code:: python
+
+                box = Box2D()
+                box = Box2D(10, 20, 30, 40)
+                box = Box2D([10, 20, 30, 40])
+
+        x: X coordinate of the top left vertex of the box.
+        y: Y coordinate of the top left vertex of the box.
+        width: Length along the x axis.
+        height: Length along the y axis.
+
+    Raises:
+        TypeError: If input parameters do not meet the requirement.
+
     """
 
     _repr_type = ReprType.INSTANCE
@@ -73,16 +95,21 @@ class Box2D(UserSequence[float]):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
-        """Load a Box2D from a dict containing coordinates of the 2D box.
+        """Load a :class:`Box2D` from a dictionary containing coordinates of the 2D box.
 
-        :param contents: A dict containing coordinates of a 2D box
-        {
-            "xmin": ...
-            "ymin": ...
-            "xmax": ...
-            "ymax": ...
-        }
-        :return: The loaded Box2D
+        Arguments:
+            contents: A dictionary containing coordinates of a 2D box::
+
+                {
+                    "xmin": ...
+                    "ymin": ...
+                    "xmax": ...
+                    "ymax": ...
+                }
+
+        Returns:
+            The loaded :class:`Box2D` object.
+
         """
         return common_loads(cls, contents)
 
@@ -90,16 +117,20 @@ class Box2D(UserSequence[float]):
         self._data = (contents["xmin"], contents["ymin"], contents["xmax"], contents["ymax"])
 
     def _repr_head(self) -> str:
-        """return basic info of the Box2D.
+        """Return basic information of the Box2D.
 
-        :return: basic info of the Box2D
+        Returns:
+            Basic information of the Box2D.
+
         """
         return f"{self.__class__.__name__}{self._data}"
 
     def dumps(self) -> Dict[str, float]:
-        """Dump a 2D box as a dict.
+        """Dumps a 2D box into a dictionary.
 
-        :return: a dict containing vertex coordinates of the box
+        Returns:
+            A dictionary containing vertex coordinates of the box.
+
         """
         return {
             "xmin": self._data[0],
@@ -111,8 +142,12 @@ class Box2D(UserSequence[float]):
     def __and__(self, other: "Box2D") -> "Box2D":
         """Calculate the intersect box of two boxes.
 
-        :param other: the other box
-        :return: the intersect box of the two boxes
+        Arguments:
+            other: The other box.
+
+        Returns:
+            The intersect box of the two boxes.
+
         """
         xmin = max(self._data[0], other._data[0])
         ymin = max(self._data[1], other._data[1])
@@ -130,73 +165,104 @@ class Box2D(UserSequence[float]):
 
     @property
     def xmin(self) -> float:
-        """Get the minimum x coordinate.
+        """Return the minimum x coordinate.
 
-        :return: minimum x coordinate
+        Returns:
+            Minimum x coordinate.
+
         """
         return self._data[0]
 
     @property
     def ymin(self) -> float:
-        """Get the minimum y coordinate.
+        """Return the minimum y coordinate.
 
-        :return: minimum y coordinate
+        Returns:
+            Minimum y coordinate.
+
         """
         return self._data[1]
 
     @property
     def xmax(self) -> float:
-        """Get the maximum x coordinate.
+        """Return the maximum x coordinate.
 
-        :return: maximum x coordinate
+        Returns:
+            Maximum x coordinate.
+
         """
         return self._data[2]
 
     @property
     def ymax(self) -> float:
-        """Get the maximum y coordinate.
+        """Return the maximum y coordinate.
 
-        :return: maximum y coordinate
+        Returns:
+            Maximum y coordinate.
+
         """
         return self._data[3]
 
     @property
     def tl(self) -> Vector2D:  # pylint: disable=invalid-name
-        """Get the top left point.
+        """Return the top left point.
 
-        :return: the top left point
+        Returns:
+            The top left point.
+
         """
         return Vector2D(self._data[:2])
 
     @property
     def br(self) -> Vector2D:  # pylint: disable=invalid-name
-        """Get the bottom right point.
+        """Return the bottom right point.
 
-        :return: the bottom right point
+        Returns:
+            The bottom right point.
+
         """
         return Vector2D(self._data[2:])
 
     @property
     def width(self) -> float:
-        """Get the width of the 2d box"""
+        """Return the width of the 2D box.
+
+        Returns:
+            The width of the 2D box.
+
+        """
         return self._data[2] - self._data[0]
 
     @property
     def height(self) -> float:
-        """Get the height of the 2d box"""
+        """Return the height of the 2D box.
+
+        Returns:
+            The height of the 2D box.
+
+        """
         return self._data[3] - self._data[1]
 
     def area(self) -> float:
-        """Get the area of the 2d box"""
+        """Return the area of the 2D box.
+
+        Returns:
+            The area of the 2D box.
+
+        """
         return self.width * self.height
 
     @staticmethod
     def iou(box1: "Box2D", box2: "Box2D") -> float:
-        """Calculate the intersection over union of two 2d boxes.
+        """Calculate the intersection over union of two 2D boxes.
 
-        :param box1: a 2d box
-        :param box2: a 2d box
-        :return: intersection over union between the two input boxes
+        Arguments:
+            box1: A 2D box.
+            box2: A 2D box.
+
+        Returns:
+            The intersection over union between the two input boxes.
+
         """
         area1 = box1.area()
         area2 = box2.area()
@@ -207,13 +273,22 @@ class Box2D(UserSequence[float]):
 
 
 class Box3D(ReprMixin):
-    """Contain the definition of 3D bounding box and some related operations.
+    """This class defines the concept of Box3D.
 
-    :param transform: A Transform3D object or a 4x4 or 3x4 transfrom matrix
-    :param translation: Translation in a sequence of [x, y, z]
-    :param rotation: Rotation in a sequence of [w, x, y, z] or 3x3 rotation matrix or `Quaternion`
-    :param size: Size in a sequence of [x, y, z]
-    :param kwargs: Other parameters to initialize rotation of the transform
+    :class:`Box3D` contains the information of a 3D bounding box such as the transform,
+    translation, rotation and size.
+    It provides :meth:`Box3D.iou` to calculate the intersection over union of two 3D boxes.
+
+    Arguments:
+        transform: A :class:`~graviti.geometry.transform.Transform3D` object
+            or a 4x4 or 3x4 transform matrix.
+        translation: Translation in a sequence of [x, y, z].
+        rotation: Rotation in a sequence of [w, x, y, z] or a 3x3 rotation matrix
+            or a :class:`~graviti.geometry.quaternion.Quaternion` object.
+        size: Size in a sequence of [x, y, z].
+        **kwargs: Other parameters to initialize rotation of the transform.
+            See :class:`~graviti.geometry.quaternion.Quaternion` documents for details.
+
     """
 
     _repr_type = ReprType.INSTANCE
@@ -235,28 +310,33 @@ class Box3D(ReprMixin):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Dict[str, float]]) -> _T:
-        """Load a Box3D from a dict containing coordinates of the 3D box.
+        """Load a :class:`Box3D` from a dictionary containing the coordinates of the 3D box.
 
-        :param contents: A dict containing coordinates of a 3D box
-        {
-            "size": {
-                "x": ...
-                "y": ...
-                "z": ...
-            },
-            "translation": {
-                "x": ...
-                "y": ...
-                "z": ...
-            },
-            "rotation": {
-                "w": ...
-                "x": ...
-                "y": ...
-                "z": ...
-            }
-        }
-        :return: The loaded Box3D
+        Arguments:
+            contents: A dictionary containing the coordinates of a 3D box::
+
+                {
+                    "size": {
+                        "x": ...
+                        "y": ...
+                        "z": ...
+                    },
+                    "translation": {
+                        "x": ...
+                        "y": ...
+                        "z": ...
+                    },
+                    "rotation": {
+                        "w": ...
+                        "x": ...
+                        "y": ...
+                        "z": ...
+                    }
+                }
+
+        Returns:
+            The loaded :class:`Box3D` object.
+
         """
         return common_loads(cls, contents)
 
@@ -265,9 +345,11 @@ class Box3D(ReprMixin):
         self._transform = Transform3D.loads(contents)
 
     def dumps(self) -> Dict[str, Dict[str, float]]:
-        """Dump the 3d box as a dictionary.
+        """Dumps the 3D box into a dictionary.
 
-        :return: a dictionary containing translation, rotation and size info
+        Returns:
+            A dictionary containing translation, rotation and size information.
+
         """
         contents = self._transform.dumps()
         contents["size"] = self.size.dumps()
@@ -289,37 +371,66 @@ class Box3D(ReprMixin):
 
     @property
     def translation(self) -> Vector3D:
-        """Get the translation of the 3d box by property."""
+        """Return the translation of the 3D box.
+
+        Returns:
+            The translation of the 3D box.
+
+        """
         return self._transform.translation
 
     @property
     def rotation(self) -> Quaternion:
-        """Get the rotation of the 3d box by property."""
+        """Return the rotation of the 3D box.
+
+        Returns:
+            The rotation of the 3D box.
+
+        """
         return self._transform.rotation
 
     @property
     def transform(self) -> Transform3D:
-        """Get the transform of the 3d box by property."""
+        """Return the transform of the 3D box.
+
+        Returns:
+            The transform of the 3D box.
+
+        """
         return self._transform
 
     @property
     def size(self) -> Vector3D:
-        """Get the size of the 3d box by property."""
+        """Return the size of the 3D box.
+
+        Returns:
+            The size of the 3D box.
+
+        """
         return self._size
 
     def volume(self) -> float:
-        """Get the volume of the 3d box."""
+        """Return the volume of the 3D box.
+
+        Returns:
+            The volume of the 3D box.
+
+        """
         return self.size.x * self.size.y * self.size.z
 
     @classmethod
     def iou(cls, box1: "Box3D", box2: "Box3D", angle_threshold: float = 5) -> float:
-        """Calculate the iou between two 3d boxes.
+        """Calculate the intersection over union between two 3D boxes.
 
-        :param box1: a 3d box
-        :param box2: a 3d box
-        :param angle_threshold: the threshold of the relative angles between two input 3d boxes,
-        in degree
-        :return: the iou of the two 3d boxes
+        Arguments:
+            box1: A 3D box.
+            box2: A 3D box.
+            angle_threshold: The threshold of the relative angles
+                between two input 3d boxes in degree.
+
+        Returns:
+            The intersection over union of the two 3D boxes.
+
         """
         box2 = box1.transform.inverse() * box2
         if abs(box2.rotation.degrees) > angle_threshold:
@@ -336,10 +447,14 @@ class Box3D(ReprMixin):
     def _line_intersect(length1: float, length2: float, midpoint_distance: float) -> float:
         """Calculate the intersect length between two parallel lines.
 
-        :param length1: the length of line1
-        :param length2: the length of line2
-        :param midpoint_distance: the distance between midpoints of the two lines
-        :return: the intersect length between line1 and line2
+        Arguments:
+            length1: The length of line1.
+            length2: the length of line2.
+            midpoint_distance: The distance between midpoints of the two lines.
+
+        Returns:
+            The intersect length between line1 and line2.
+
         """
         line1_min = -length1 / 2
         line1_max = length1 / 2

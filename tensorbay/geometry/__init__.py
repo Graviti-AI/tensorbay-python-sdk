@@ -3,7 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-""" geometry classes """
+"""Geometry related classes."""
 
 from .box import Box2D, Box3D
 from .keypoint import Keypoint2D, Keypoints2D
@@ -26,3 +26,4 @@ __all__ = [
     "Vector2D",
     "Vector3D",
 ]
+
