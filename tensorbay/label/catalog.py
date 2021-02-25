@@ -3,7 +3,13 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""This file defines class Subcatalogbase and Subcatalog classes for every LabelType."""
+"""Catalog.
+
+:class:`Catalog` is used to describe the types of labels
+contained in a :class:`~graviti.dataset.dataset.DatasetBase`
+and all the optional values of the label contents.
+
+"""
 
 from typing import Any, Dict, Type, TypeVar
 
@@ -21,10 +27,16 @@ from .subcatalog import (
 
 
 class Catalog(ReprMixin):
-    """Catalog is a mapping which contains `Subcatalog`,
-    the corresponding key is the 'name' of `LabelType`.
+    """This class defines the concept of catalog.
 
-    :param loads: A dict contains a series of Subcatalog dicts
+    :class:`Catalog` is used to describe the types of labels
+    contained in a :class:`~graviti.dataset.dataset.DatasetBase`
+    and all the optional values of the label contents.
+
+    A :class:`Catalog` contains one or several :class:`~graviti.label.subcatalog.SubcatalogBase`,
+    corresponding to different types of labels.
+    Each of the :class:`~graviti.label.subcatalog.SubcatalogBase`
+    contains the features, fields and the specific definitions of the labels.
 
     """
 
@@ -43,10 +55,14 @@ class Catalog(ReprMixin):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Load a Catalog from a dict containing the information of the Catalog.
+        """Load a Catalog from a dictionary containing the catalog information.
 
-        :param contents: A dict contains all information of the Catalog
-        :return: The loaded Catalog
+        Arguments:
+            contents: A dictionary containing all the information of the catalog.
+
+        Returns:
+            The loaded :class:`Catalog` object.
+
         """
         return common_loads(cls, contents)
 
@@ -56,9 +72,11 @@ class Catalog(ReprMixin):
             setattr(self, label_type.value, label_type.subcatalog_type.loads(subcatalog))
 
     def dumps(self) -> Dict[str, Any]:
-        """Dump the catalog into a series of subcatalog dict
+        """Dumps the catalog into a dictionary containing the information of all the subcatalog.
 
-        :return: a dict contains a series of subcatalog dict with their label types as dict keys
+        Returns:
+            A dictionary containing all the subcatalog information with their label types as keys.
+
         """
         contents: Dict[str, Any] = {}
         for label_type in LabelType:

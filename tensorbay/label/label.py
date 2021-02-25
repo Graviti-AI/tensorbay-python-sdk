@@ -3,8 +3,31 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""This file defines class Label, LabelType, Classification, LabeledBox2D, LabeledBox3D,
-LabeledPolygon2D and LabeledPolyline2D
+"""Label, LabelType and different types of labels.
+
+:class:`LabelType` is an enumeration type
+which includes all the supported label types within :class:`~graviti.dataset.data.Labels`.
+
+:class:`Label` is the most basic label level in the TensorBay dataset structure,
+and is the base class for the following various types of label classes.
+
+Each :class:`Label` object contains one annotaion of a :class:`~graviti.dataset.data.Data` object.
+
+.. table:: label classes
+   :widths: auto
+
+   ============================  ===================================
+   label classes                 explaination
+   ============================  ===================================
+   :class:`Classification`       classification type of label
+   :class:`LabeledBox2D`         2D bounding box type of label
+   :class:`LabeledBox3D`         3D bounding box type of label
+   :class:`LabeledPolygon2D`     2D polygon type of label
+   :class:`LabeledPolyline2D`    2D polyline type of label
+   :class:`LabeledKeypoints2D`   2D keypoints type of label
+   :class:`LabeledSentence`      transcripted sentence type of label
+   ============================  ===================================
+
 """
 
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Union
@@ -14,10 +37,7 @@ from ..utility import ReprMixin, ReprType, TypeEnum, TypeMixin, TypeRegister, co
 
 
 class LabelType(TypeEnum):
-    """this class defines the type of the labels.
-
-    :param label_key: The key string of the json format label annotation
-    """
+    """This class defines all the supported types within :class:`~graviti.dataset.data.Labels`."""
 
     __subcatalog_registry__: Dict[TypeEnum, Type[Any]] = {}
 
@@ -31,16 +51,36 @@ class LabelType(TypeEnum):
 
     @property
     def subcatalog_type(self) -> Type[Any]:
-        """Get the corresponding subcatalog class.
+        """Return the corresponding subcatalog class.
+
+        Each label type has a corresponding Subcatalog class.
 
         Returns:
-            The correspoinding subcatalog type.
+            The corresponding subcatalog type.
         """
         return self.__subcatalog_registry__[self]
 
 
 class Label(TypeMixin[LabelType], ReprMixin):
-    """This class defines the concept of label and some operations on it."""
+    """This class defines the basic concept of label.
+
+    :class:`Label` is the most basic label level in the TensorBay dataset structure,
+    and is the base class for the following various types of label classes.
+
+    Each :class:`Label` object
+    contains one annotaion of a :class:`~graviti.dataset.data.Data` object.
+
+    Arguments:
+        category: The category of the label.
+        attributes: The attributes of the label.
+        instance: The instance id of the label.
+
+    Attributes:
+        category: The category of the label.
+        attributes: The attributes of the label.
+        instance: The instance id of the label.
+
+    """
 
     _T = TypeVar("_T", bound="Label")
     _label_attrs: Tuple[str, ...] = ("category", "attributes", "instance")
@@ -69,8 +109,13 @@ class Label(TypeMixin[LabelType], ReprMixin):
                 setattr(self, attribute_name, contents[attribute_name])
 
     def dumps(self) -> Dict[str, Any]:
-        """dump a label into a dict."""
+        """Dumps the label into a dictionary.
 
+        Returns:
+            A dictionary containing all the information of the label.
+            See dictionary format details in ``dumps()`` of different label classes .
+
+        """
         contents: Dict[str, Any] = {}
         for attribute_name in self._label_attrs:
             attribute_value = getattr(self, attribute_name, None)
@@ -83,8 +128,17 @@ class Label(TypeMixin[LabelType], ReprMixin):
 class Classification(Label):
     """This class defines the concept of classification label.
 
-    :param category: Category of the label
-    :param attributes: Attributs of the label
+    :class:`Classification` is the classification type of label,
+    which applies to different types of data, such as images and texts.
+
+    Arguments:
+        category: The category of the label.
+        attributes: The attributes of the label.
+
+    Attributes:
+        category: The category of the label.
+        attributes: The attributes of the label.
+
     """
 
     _T = TypeVar("_T", bound="Classification")
@@ -100,34 +154,59 @@ class Classification(Label):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Load a Classification label from a dict containing the information of the label.
+        """Loads a Classification label from a dictionary containing the label information.
 
-        :param contents: A dict containing the information of a Classification label
-        {
-            "category": <str>
-            "attributes": <Dict>
-            "instance": <str>
-        }
-        :return: The loaded Classification label
+        Arguments:
+            contents: A dictionary containing the information of the classification label,
+                whose format should be like::
+
+                    {
+                        "category": <str>
+                        "attributes": {
+                            <key>: <value>
+                            ...
+                            ...
+                        },
+                        "instance": <str>
+                    }
+
+        Returns:
+            The loaded :class:`Classification` object.
+
         """
         return common_loads(cls, contents)
 
 
 @TypeRegister(LabelType.BOX2D)
 class LabeledBox2D(Box2D, Label):  # pylint: disable=too-many-ancestors
-    """Contain the definition of LabeledBox2D bounding box and some related operations.
+    """This class defines the concept of 2D bounding box label.
 
-    :param args: Union[None, float, Sequence[float]],
-        box = LabeledBox2D()
-        box = LabeledBox2D(10, 20, 30, 40)
-        box = LabeledBox2D([10, 20, 30, 40])
-    :param category: Category of the label
-    :param attributes: Attributs of the label
-    :param instance: Labeled instance
-    :param x: X coordinate of the top left vertex of the box
-    :param y: Y coordinate of the top left vertex of the box
-    :param width: Length along the x axis
-    :param height: Length along the y axis
+    :class:`LabeledBox2D` is the 2D bounding box type of label,
+    which is often used for CV tasks such as object detection.
+
+    Arguments:
+        *args: The coordinates of the top-left and bottom-right vertex of the 2D box,
+            which can be initialized like:
+
+            .. code:: python
+
+                box = LabeledBox2D()
+                box = LabeledBox2D(10, 20, 30, 40)
+                box = LabeledBox2D([10, 20, 30, 40])
+
+        category: The category of the label.
+        attributes: The attributs of the label.
+        instance: The instance id of the label.
+        x: X coordinate of the top-left vertex of the box.
+        y: Y coordinate of the top-left vertex of the box.
+        width: Length of the 2D bounding box along the x axis.
+        height: Length of the 2D bounding box along the y axis.
+
+    Attributes:
+        category: The category of the label.
+        attributes: The attributes of the label.
+        instance: The instance id of the label.
+
     """
 
     _T = TypeVar("_T", bound="LabeledBox2D")
@@ -150,16 +229,31 @@ class LabeledBox2D(Box2D, Label):  # pylint: disable=too-many-ancestors
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Load a LabeledBox2D from a dict containing the information of the label.
+        """Loads a LabeledBox2D from a dictionary containing the information of the label.
 
-        :param contents: A dict containing the information of a LabeledBox2D
-        {
-            "box2d": <Dict>
-            "category": <str>
-            "attributes": <Dict>
-            "instance": <str>
-        }
-        :return: The loaded LabeledBox2D
+        Arguments:
+            contents: A dictionary containing the information of the 2D bounding box label,
+                whose format should be like::
+
+                    {
+                        "box2d": {
+                            "xmin": <float>
+                            "ymin": <float>
+                            "xmax": <float>
+                            "ymax": <float>
+                        },
+                        "category": <str>
+                        "attributes": {
+                            <key>: <value>
+                            ...
+                            ...
+                        },
+                        "instance": <str>
+                    }
+
+        Returns:
+            The loaded :class:`LabeledBox2D` object.
+
         """
         return common_loads(cls, contents)
 
@@ -168,6 +262,29 @@ class LabeledBox2D(Box2D, Label):  # pylint: disable=too-many-ancestors
         Label._loads(self, contents)
 
     def dumps(self) -> Dict[str, Any]:
+        """Dumps the current 2D bounding box label into a dictionary.
+
+        Returns:
+            A dictionary containing all the information of the 2D box label,
+            whose format is like::
+
+                {
+                    "box2d": {
+                        "xmin": <float>
+                        "ymin": <float>
+                        "xmax": <float>
+                        "ymax": <float>
+                    },
+                    "category": <str>
+                    "attributes": {
+                        <key>: <value>
+                        ...
+                        ...
+                    },
+                    "instance": <str>
+                }
+
+        """
         contents = Label.dumps(self)
         contents["box2d"] = Box2D.dumps(self)
         return contents
@@ -175,16 +292,33 @@ class LabeledBox2D(Box2D, Label):  # pylint: disable=too-many-ancestors
 
 @TypeRegister(LabelType.BOX3D)
 class LabeledBox3D(Box3D, Label):
-    """Contain the definition of LabeledBox3D bounding box and some related operations.
+    """This class defines the concept of 3D bounding box label.
 
-    :param transform: A Transform3D object or a 4x4 or 3x4 transfrom matrix
-    :param translation: Translation in a sequence of [x, y, z]
-    :param rotation: Rotation in a sequence of [w, x, y, z] or 3x3 rotation matrix or `Quaternion`
-    :param size: Size in a sequence of [x, y, z]
-    :param category: Category of the label
-    :param attributes: Attributs of the label
-    :param instance: Labeled instance
-    :param kwargs: Other parameters to initialize rotation of the transform
+    :class:`LabeledBox3D` is the 3D bounding box type of label,
+    which is often used for object detection in 3D point cloud.
+
+    Arguments:
+        transform: The transform of the 3D bounding box label in
+            a :class:`~graviti.geometry.transform.Transform3D` object
+            or a 4x4 or 3x4 transformation matrix.
+        translation: Translation of the 3D bounding box label in a sequence of [x, y, z].
+        rotation: Rotation of the 3D bounding box label in a sequence of [w, x, y, z]
+            or a 3x3 rotation matrix
+            or a :class:`~graviti.geometry.quaternion.Quaternion` object.
+        size: Size of the 3D bounding box label in a sequence of [x, y, z].
+        category: Category of the 3D bounding box label.
+        attributes: Attributs of the 3D bounding box label.
+        instance: The instance id of the 3D bounding box label.
+        **kwargs: Other parameters to initialize the rotation of the 3D bounding box label.
+            See :class:`~graviti.geometry.quaternion.Quaternion` documents for details.
+
+    Attributes:
+        category: The category of the label.
+        attributes: The attributes of the label.
+        instance: The instance id of the label.
+        size: The size of the 3D bounding box.
+        transform: The transform of the 3D bounding box.
+
     """
 
     _T = TypeVar("_T", bound="LabeledBox3D")
@@ -214,18 +348,43 @@ class LabeledBox3D(Box3D, Label):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Load a LabeledBox3D from a dict containing the information of the label.
+        """Loads a LabeledBox3D from a dictionary containing the information of the label.
 
-        :param contents: A dict containing the information of a LabeledBox3D
-        {
-            "translation": translation in a sequence of [x, y, z]
-            "rotation": rotation in a sequence of [w, x, y, z]
-            "size": size in a sequence of [x, y, z]
-            "category": <str>
-            "attributes": <Dict>
-            "instance": <str>
-        }
-        :return: The loaded LabeledBox3D
+        Arguments:
+            contents: A dictionary containing the information of the 3D bounding box label,
+                whose format should be like::
+
+                    {
+                        "box3d": {
+                            "translation": {
+                                "x": <float>
+                                "y": <float>
+                                "z": <float>
+                            },
+                            "rotation": {
+                                "w": <float>
+                                "x": <float>
+                                "y": <float>
+                                "z": <float>
+                            },
+                            "size": {
+                                "x": <float>
+                                "y": <float>
+                                "z": <float>
+                            }
+                        },
+                        "category": <str>
+                        "attributes": {
+                            <key>: <value>
+                            ...
+                            ...
+                        },
+                        "instance": <str>
+                    }
+
+        Returns:
+            The loaded :class:`LabeledBox3D` object.
+
         """
         return common_loads(cls, contents)
 
@@ -247,6 +406,41 @@ class LabeledBox3D(Box3D, Label):
         return NotImplemented  # type: ignore[unreachable]
 
     def dumps(self) -> Dict[str, Any]:
+        """Dumps the current 3D bounding box label into a dictionary.
+
+        Returns:
+            A dictionary containing all the information of the 3D bounding box label,
+            whose format is like::
+
+                {
+                    "box3d": {
+                        "translation": {
+                            "x": <float>
+                            "y": <float>
+                            "z": <float>
+                        },
+                        "rotation": {
+                            "w": <float>
+                            "x": <float>
+                            "y": <float>
+                            "z": <float>
+                        },
+                        "size": {
+                            "x": <float>
+                            "y": <float>
+                            "z": <float>
+                        }
+                    },
+                    "category": <str>
+                    "attributes": {
+                        <key>: <value>
+                        ...
+                        ...
+                    },
+                    "instance": <str>
+                },
+
+        """
         contents = Label.dumps(self)
         contents["box3d"] = Box3D.dumps(self)
         return contents
@@ -254,12 +448,22 @@ class LabeledBox3D(Box3D, Label):
 
 @TypeRegister(LabelType.POLYGON2D)
 class LabeledPolygon2D(Polygon2D, Label):  # pylint: disable=too-many-ancestors
-    """this class defines the polygon2D with labels
+    """This class defines the concept of polygon2D label.
 
-    :param points: a list of 2D point list
-    :param category: Category of the label
-    :param attributes: Attributs of the label
-    :param instance: Labeled instance
+    :class:`LabeledPolygon2D` is the 2D polygon type of label,
+    which is often used for CV tasks such as semantic segmentation.
+
+    Arguments:
+        points: A list of 2D points representing the vertexes of the 2D polygon.
+        category: The category of the label.
+        attributes: The attributs of the label.
+        instance: The instance id of the label.
+
+    Attributes:
+        category: The category of the label.
+        attributes: The attributes of the label.
+        instance: The instance id of the label.
+
     """
 
     _T = TypeVar("_T", bound="LabeledPolygon2D")
@@ -279,26 +483,32 @@ class LabeledPolygon2D(Polygon2D, Label):  # pylint: disable=too-many-ancestors
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:  # type: ignore[override]
-        """Load a LabeledPolygon2D from a dict containing the information of the label.
+        """Loads a LabeledPolygon2D from a dictionary containing the information of the label.
 
-        :param contents: A dict containing the information of a LabeledPolygon2D
-        {
-            "polygon": [
-                { "x": <int>
-                  "y": <int>
-                },
-                ...
-                ...
-            ],
-            "category": <str>
-            "attributes": {
-                "<key>": "<value>" <str>
-                ...
-                ...
-            }
-            "instance": <str>
-        }
-        :return: The loaded LabeledPolygon2D
+        Arguments:
+            contents: A dictionary containing the information of the 2D polygon label,
+                whose format should be like::
+
+                    {
+                        "polygon": [
+                            { "x": <int>
+                              "y": <int>
+                            },
+                            ...
+                            ...
+                        ],
+                        "category": <str>
+                        "attributes": {
+                            <key>: <value>
+                            ...
+                            ...
+                        },
+                        "instance": <str>
+                    }
+
+        Returns:
+            The loaded :class:`LabeledPolygon2D` object.
+
         """
         return common_loads(cls, contents)
 
@@ -307,8 +517,30 @@ class LabeledPolygon2D(Polygon2D, Label):  # pylint: disable=too-many-ancestors
         Label._loads(self, contents)
 
     def dumps(self) -> Dict[str, Any]:  # type: ignore[override]
-        """dump a LabeledPolygon2D into a dict"""
+        """Dumps the current 2D polygon label into a dictionary.
 
+        Returns:
+            A dictionary containing all the information of the 2D polygon label,
+            whose format is like::
+
+                {
+                    "polygon": [
+                        { "x": <int>
+                          "y": <int>
+                        },
+                        ...
+                        ...
+                    ],
+                    "category": <str>
+                    "attributes": {
+                        <key>: <value>
+                        ...
+                        ...
+                    },
+                    "instance": <str>
+                }
+
+        """
         contents = Label.dumps(self)
         contents["polygon2d"] = super().dumps()
 
@@ -317,12 +549,22 @@ class LabeledPolygon2D(Polygon2D, Label):  # pylint: disable=too-many-ancestors
 
 @TypeRegister(LabelType.POLYLINE2D)
 class LabeledPolyline2D(Polyline2D, Label):  # pylint: disable=too-many-ancestors
-    """this class defines the polyline2D with labels
+    """This class defines the concept of polyline2D label.
 
-    :param points: a list of 2D point list
-    :param category: Category of the label
-    :param attributes: Attributs of the label
-    :param instance: Labeled instance
+    :class:`LabeledPolyline2D` is the 2D polyline type of label,
+    which is often used for CV tasks such as lane detection.
+
+    Arguments:
+        points: A list of 2D points representing the vertexes of the 2D polyline.
+        category: The category of the label.
+        attributes: The attributes of the label.
+        instance: The instance id of the label.
+
+    Attributes:
+        category: The category of the label.
+        attributes: The attributes of the label.
+        instance: The instance id of the label.
+
     """
 
     _T = TypeVar("_T", bound="LabeledPolyline2D")
@@ -342,26 +584,32 @@ class LabeledPolyline2D(Polyline2D, Label):  # pylint: disable=too-many-ancestor
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:  # type: ignore[override]
-        """Load a LabeledPolyline2D from a dict containing the information of the label.
+        """Loads a LabeledPolyline2D from a dictionary containing the information of the label.
 
-        :param contents: A dict containing the information of a LabeledPolyline2D
-        {
-            "polyline": [
-                { "x": <int>
-                  "y": <int>
-                },
-                ...
-                ...
-            ],
-            "category": <str>
-            "attributes": {
-                "<key>": "<value>" <str>
-                ...
-                ...
-            }
-            "instance": <str>
-        }
-        :return: The loaded LabeledPolyline2D
+        Arguments:
+            contents: A dictionary containing the information of the 2D polyline label,
+                whose format should be like::
+
+                    {
+                        "polyline": [
+                            { "x": <int>
+                              "y": <int>
+                            },
+                            ...
+                            ...
+                        ],
+                        "category": <str>
+                        "attributes": {
+                            <key>: <value>
+                            ...
+                            ...
+                        },
+                        "instance": <str>
+                    }
+
+        Returns:
+            The loaded :class:`LabeledPolyline2D` object.
+
         """
         return common_loads(cls, contents)
 
@@ -370,8 +618,30 @@ class LabeledPolyline2D(Polyline2D, Label):  # pylint: disable=too-many-ancestor
         Label._loads(self, contents)
 
     def dumps(self) -> Dict[str, Any]:  # type: ignore[override]
-        """dump a LabeledPolyline2D into a dict"""
+        """Dumps the current 2D polyline label into a dictionary.
 
+        Returns:
+            A dictionary containing all the information of the 2D polyline label,
+            whose format is like::
+
+                {
+                    "polyline": [
+                        { "x": <int>
+                          "y": <int>
+                        },
+                        ...
+                        ...
+                    ],
+                    "category": <str>
+                    "attributes": {
+                        <key>: <value>
+                        ...
+                        ...
+                    },
+                    "instance": <str>
+                }
+
+        """
         contents = Label.dumps(self)
         contents["polyline2d"] = super().dumps()
 
@@ -379,11 +649,21 @@ class LabeledPolyline2D(Polyline2D, Label):  # pylint: disable=too-many-ancestor
 
 
 class Word(ReprMixin):
-    """Contain the content and time of the word
+    """This class defines the concept of word.
 
-    :param text: content of the word
-    :param begin: the begin time of the word in audio
-    :param end: the end time of the word in audio
+    :class:`Word` is a word within a phonetic transcription sentence,
+    containing the content of the word, the start and end time in the audio.
+
+    Arguments:
+        text: The content of the word.
+        begin: The begin time of the word in the audio.
+        end: The end time of the word in the audio.
+
+    Attributes:
+        text: The content of the word.
+        begin: The begin time of the word in the audio.
+        end: The end time of the word in the audio.
+
     """
 
     _T = TypeVar("_T", bound="Word")
@@ -403,15 +683,21 @@ class Word(ReprMixin):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Union[str, float]]) -> _T:
-        """Load a Word from a dict containing the information of the word.
+        """Loads a Word from a dictionary containing the information of the word.
 
-        :param contents: A dict containing the information of a Word
-        {
-            "text": str ,
-            "begin": float,
-            "end": float,
-        }
-        :return: The loaded Word
+        Arguments:
+            contents: A dictionary containing the information of the word,
+                whose format should be like::
+
+                    {
+                        "text": str ,
+                        "begin": float,
+                        "end": float,
+                    }
+
+        Returns:
+            The loaded :class:`Word` object.
+
         """
         return common_loads(cls, contents)
 
@@ -425,7 +711,19 @@ class Word(ReprMixin):
             self.end = contents["end"]
 
     def dumps(self) -> Dict[str, Union[str, float]]:
-        """Dumps a word into a dict"""
+        """Dumps the current word into a dictionary.
+
+        Returns:
+            A dictionary containing all the information of the word,
+            whose format is like::
+
+                {
+                    "text": str ,
+                    "begin": float,
+                    "end": float,
+                }
+
+        """
         contents: Dict[str, Union[str, float]] = {"text": self.text}
         if hasattr(self, "begin"):
             contents["begin"] = self.begin
@@ -436,12 +734,23 @@ class Word(ReprMixin):
 
 @TypeRegister(LabelType.SENTENCE)  # pylint: disable=too-few-public-methods
 class LabeledSentence(Label):
-    """this class defines the speech to sentence with lables
+    """This class defines the concept of phonetic transcription lable.
 
-    :param sentence: a list of sentence
-    :param speech: a list of spell, only exists in chinese language
-    :param phone: a list of phone
-    :param attributes: attributes of the label
+    :class:`LabeledSentence` is the transcripted sentence type of label.
+    which is often used for tasks such as automatic speech recognition.
+
+    Arguments:
+        sentence: A list of sentence.
+        spell: A list of spell, only exists in Chinese language.
+        phone: A list of phone.
+        attributes: The attributes of the label.
+
+    Attributes:
+        sentence: The transcripted sentence.
+        spell: The spell within the sentence, only exists in Chinese language.
+        phone: The phone of the sentence label.
+        attributes: The attributes of the label.
+
     """
 
     _T = TypeVar("_T", bound="LabeledSentence")
@@ -467,44 +776,50 @@ class LabeledSentence(Label):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Load a LabeledSentence from a dict containing the information of the label.
+        """Loads a LabeledSentence from a dictionary containing the information of the label.
 
-        :param contents: A dict containing the information of a LabeledSentence
-        {
-            "sentence": [
-                {
-                    "text":          <string>
-                    "begin":         <number>
-                    "end":           <number>
-                }
-                ...
-                ...
-            ],
-            "spell": [
-                {
-                    "text":          <string>
-                    "begin":         <number>
-                    "end":           <number>
-                }
-                ...
-                ...
-            ],
-            "phone": [
-                {
-                    "text":          <string>
-                    "begin":         <number>
-                    "end":           <number>
-                }
-                ...
-                ...
-            ],
-            "attributes": {
-                <key>: <value>,    <str>
-                ...
-                ...
-            }
-        }
-        :return: The loaded LabeledSentence
+        Arguments:
+            contents: A dictionary containing the information of the sentence label,
+                whose format should be like::
+
+                    {
+                        "sentence": [
+                            {
+                                "text":  <str>
+                                "begin": <float>
+                                "end":   <float>
+                            }
+                            ...
+                            ...
+                        ],
+                        "spell": [
+                            {
+                                "text":  <str>
+                                "begin": <float>
+                                "end":   <float>
+                            }
+                            ...
+                            ...
+                        ],
+                        "phone": [
+                            {
+                                "text":  <str>
+                                "begin": <float>
+                                "end":   <float>
+                            }
+                            ...
+                            ...
+                        ],
+                        "attributes": {
+                            <key>: <value>,
+                            ...
+                            ...
+                        }
+                    }
+
+        Returns:
+            The loaded :class:`LabeledSentence` object.
+
         """
         return common_loads(cls, contents)
 
@@ -525,8 +840,48 @@ class LabeledSentence(Label):
         return [Word.loads(word) for word in contents]
 
     def dumps(self) -> Dict[str, Any]:
-        """dump a LabeledSentence into a dict"""
+        """Dumps the current label into a dictionary.
 
+        Returns:
+            A dictionary containing all the information of the sentence label,
+            whose format is like::
+
+                {
+                    "sentence": [
+                        {
+                            "text":  <str>
+                            "begin": <float>
+                            "end":   <float>
+                        }
+                        ...
+                        ...
+                    ],
+                    "spell": [
+                        {
+                            "text":  <str>
+                            "begin": <float>
+                            "end":   <float>
+                        }
+                        ...
+                        ...
+                    ],
+                    "phone": [
+                        {
+                            "text":  <str>
+                            "begin": <float>
+                            "end":   <float>
+                        }
+                        ...
+                        ...
+                    ],
+                    "attributes": {
+                        <key>: <value>,
+                        ...
+                        ...
+                    }
+                }
+
+        """
         contents = Label.dumps(self)
         if hasattr(self, "sentence"):
             contents["sentence"] = [word.dumps() for word in self.sentence]
@@ -539,12 +894,22 @@ class LabeledSentence(Label):
 
 @TypeRegister(LabelType.KEYPOINTS2D)
 class LabeledKeypoints2D(Keypoints2D, Label):  # pylint: disable=too-many-ancestors
-    """This class defines Keypoints2D with labels.
+    """This class defines the concept of 2D keypoints label.
 
-    :param keypoints: a list of 2D keypoint list
-    :param category: Category of the label
-    :param attributes: Attributs of the label
-    :param instance: Labeled instance
+    :class:`LabeledKeypoints2D` is the 2D keypoints type of label,
+    which is often used for CV tasks such as human body pose estimation.
+
+    Arguments:
+        keypoints: A list of 2D keypoint.
+        category: The category of the label.
+        attributes: The attributes of the label.
+        instance: The instance id of the label.
+
+    Attributes:
+        category: The category of the label.
+        attributes: The attributes of the label.
+        instance: The instance id of the label.
+
     """
 
     _T = TypeVar("_T", bound="LabeledKeypoints2D")
@@ -564,27 +929,33 @@ class LabeledKeypoints2D(Keypoints2D, Label):  # pylint: disable=too-many-ancest
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:  # type: ignore[override]
-        """Load a LabeledKeypoints2D from a dict containing the information of the label.
+        """Loads a LabeledKeypoints2D from a dictionary containing the information of the label.
 
-        :param contents: A dict containing the information of a LabeledKeypoints2D
-        {
-            "keypoints2d": [
-                { "x": <float>
-                  "y": <float>
-                  "v": <int>
-                },
-                ...
-                ...
-            ],
-            "category": <str>
-            "attributes": {
-                "<key>": "<value>" <str>
-                ...
-                ...
-            }
-            "instance": <str>
-        }
-        :return: The loaded LabeledKeypoints2D
+        Arguments:
+            contents: A dictionary containing the information of the 2D keypoints label,
+                whose format should be like::
+
+                    {
+                        "keypoints2d": [
+                            { "x": <float>
+                              "y": <float>
+                              "v": <int>
+                            },
+                            ...
+                            ...
+                        ],
+                        "category": <str>
+                        "attributes": {
+                            <key>: <value>
+                            ...
+                            ...
+                        },
+                        "instance": <str>
+                    }
+
+        Returns:
+            The loaded :class:`LabeledKeypoints2D` object.
+
         """
         return common_loads(cls, contents)
 
@@ -593,9 +964,30 @@ class LabeledKeypoints2D(Keypoints2D, Label):  # pylint: disable=too-many-ancest
         Label._loads(self, contents)
 
     def dumps(self) -> Dict[str, Any]:  # type: ignore[override]
-        """Dumps a LabeledKeypoints2D into a dict
+        """Dumps the current 2D keypoints label into a dictionary.
 
-        :return: a dictionary containing the labeled 2D keypoints
+        Returns:
+            A dictionary containing all the information of the 2D keypoints label,
+            whose format is like::
+
+                {
+                    "keypoints2d": [
+                        { "x": <float>
+                          "y": <float>
+                          "v": <int>
+                        },
+                        ...
+                        ...
+                    ],
+                    "category": <str>
+                    "attributes": {
+                        <key>: <value>
+                        ...
+                        ...
+                    },
+                    "instance": <str>
+                }
+
         """
         contents = Label.dumps(self)
         contents["keypoints2d"] = super().dumps()
