@@ -37,6 +37,9 @@ Keypoints2D
 Sentence
 ========
 
+Word
+----
+
 ******************
  TensorBay Client
 ******************
