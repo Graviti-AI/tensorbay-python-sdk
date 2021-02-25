@@ -64,12 +64,12 @@ repos:
           "--ignore-messages",
           "Hyperlink target \".+?\" is not referenced."
         ]
-  - repo: https://github.com/markdownlint/markdownlint
-    rev: v0.11.0
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.26.0
     hooks:
       - id: markdownlint
         types: [markdown]
-        args: ["--config=./markdownlint.json"]
+        args: ["--config=.markdownlint.json"]
   - repo: local
     hooks:
       - id: pylint
