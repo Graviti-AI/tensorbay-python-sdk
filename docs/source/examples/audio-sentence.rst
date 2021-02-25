@@ -249,7 +249,7 @@ The function of :ref:`contribution:Dataloader` is to read the dataset into a
 :ref:`basic_concepts:Dataset` object.
 The :ref:`code block <THCHS30-dataloader>` below displays the ``THCHS-30`` dataloader.
 
-.. literalinclude:: ../../../opendataset/THCHS30/loader.py
+.. literalinclude:: ../../../tensorbay/opendataset/THCHS30/loader.py
    :language: python
    :name: THCHS30-dataloader
    :linenos:
@@ -258,7 +258,7 @@ The :ref:`code block <THCHS30-dataloader>` below displays the ``THCHS-30`` datal
 There are mainly two steps to write a :ref:`contribution:Dataloader`:
 
 -  Create a :ref:`basic_concepts:Dataset` and its relevant :ref:`Segments <basic_concepts:Segment>`.
--  Add the :ref:`basic_concepts:Data` and corresponding :ref:`basic_concepts:Labels`
+-  Add the :ref:`basic_concepts:Data` and corresponding labels
    to the created :ref:`Segments <basic_concepts:Segment>`.
 
 Create Dataset and Segments
