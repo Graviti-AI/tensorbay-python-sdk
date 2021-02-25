@@ -67,7 +67,7 @@ repos:
     hooks:
       - id: markdownlint
         types: [markdown]
-        args: ["--config=./config/markdownlint.json"]
+        args: ["--config=./markdownlint.json"]
   - repo: local
     hooks:
       - id: pylint
