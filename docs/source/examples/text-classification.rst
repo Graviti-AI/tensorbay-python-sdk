@@ -4,9 +4,9 @@
 
 
 As demonstrated in :ref:`quick_start:Quick Start`,
-:ref:`features:Classification` supports classsification on images.
+:ref:`supported_label_types:Classification` supports classsification on images.
 Besides images,
-:ref:`features:Classification` supports classification on :ref:`features:Text` as well.
+:ref:`supported_label_types:Classification` supports classification on text as well.
 
 We take `20 Newsgroups`_ dataset as an example to illustrate the operations
 for text dataset with classification labels.
@@ -17,7 +17,7 @@ for text dataset with classification labels.
  Preparation
 *************
 
-First of all, create a :ref:`features:GAS Client`.
+First of all, create a :ref:`features/tensorbay_client:GAS Client`.
 
 .. code:: python
 
@@ -32,7 +32,7 @@ First of all, create a :ref:`features:GAS Client`.
 
 As mentioned in :ref:`quick_start:Quick Start`, obtain_ and fork_ should be done before reading a
 dataset from TensorBay. Then, pass the correct dataset name to the GAS client, and you will get a
-:ref:`features:Dataset Client`.
+:ref:`features/tensorbay_client:Dataset Client`.
 
 Here, we take `20 Newsgroups`_ as an example.
 
@@ -62,7 +62,8 @@ You can use the list method to get all the open datasets you forked.
 In :ref:`basic_concepts:Dataset` ``20 Newsgroups``,
 there are four :ref:`Segments<basic_concepts:Segment>`.
 
-You can use the list method to get all the segment names under the :ref:`features:Dataset Client`.
+You can use the list method to get all the segment names under the
+:ref:`features/tensorbay_client:Dataset Client`.
 
 .. code:: python
 
@@ -91,7 +92,8 @@ can get one by index.
      )
    )
 
-In each :ref:`basic_concepts:Data`, there is one :ref:`features:Classification` annotation.
+In each :ref:`basic_concepts:Data`,
+there is one :ref:`supported_label_types:Classification` annotation.
 You can get the annotation by the attrs of labels.
 
 .. code:: python
@@ -106,7 +108,7 @@ You can get the annotation by the attrs of labels.
 
 There is only one label type in ``20 Newsgroups`` dataset, which is ``classification``.
 The annotation "alt.atheism" is
-stored in :ref:`features:Category` of :ref:`features:Classification`.
+stored in :ref:`supported_label_types:Category` of :ref:`supported_label_types:Classification`.
 
 *************************
  Read Dataset from Local
@@ -170,8 +172,8 @@ The directory structure for ``20 Newsgroups`` should be like:
 
 .. note::
 
-   Note that :ref:`basic_concepts:Dataset` and :ref:`features:Dataset Client` are different
-   concepts.
+   Note that :ref:`basic_concepts:Dataset` and :ref:`features/tensorbay_client:Dataset Client`
+   are different concepts.
 
 .. warning::
 
@@ -210,8 +212,8 @@ Before writing the dataloader, we first need to write the :ref:`contribution:Cat
 
 Catalog is a json file contains all label information of one dataset.
 See :ref:`this page <basic_concepts:Catalog & SubCatalog>` for more details.
-The only annotation type for ``20 Newsgroups`` is :ref:`features:Classification`, and there are 20
-:ref:`features:Category` types.
+The only annotation type for ``20 Newsgroups`` is :ref:`supported_label_types:Classification`,
+and there are 20 :ref:`supported_label_types:Category` types.
 
 .. literalinclude:: ../../../tensorbay/opendataset/Newsgroups20/catalog.json
    :language: json
@@ -220,8 +222,9 @@ The only annotation type for ``20 Newsgroups`` is :ref:`features:Classification`
 
 .. note::
 
-   The :ref:`categories<features:Category>` in :ref:`basic_concepts:Dataset` ``20 Newsgroups``
-   have parent-child relationship, and it use "." to sparate different levels.
+   The :ref:`categories<supported_label_types:Category>` in
+   :ref:`basic_concepts:Dataset` ``20 Newsgroups`` have parent-child relationship,
+   and it use "." to sparate different levels.
 
    Thus, ``categoryDelimeter`` is needed
    in the classification :ref:`Subcatalog <basic_concepts:Catalog & SubCatalog>`
@@ -245,7 +248,7 @@ There are mainly two steps to write a :ref:`contribution:Dataloader`:
 
 -  Create a :ref:`basic_concepts:Dataset` and its relevant :ref:`Segments <basic_concepts:Segment>`.
 -  Add the :ref:`basic_concepts:Data` and
-   corresponding :ref:`types of labels<features:Supported Label Types>`
+   corresponding :ref:`types of labels<supported_label_types:Supported Label Types>`
    to the created :ref:`Segments <basic_concepts:Segment>`.
 
 Create Dataset and Segments
@@ -268,11 +271,11 @@ Add Data and Labels
 It takes four key substeps to add the data and the labels:
 
 -  Creating :ref:`basic_concepts:Data` and adding content.
--  Creating :ref:`features:Classification` and adding annotations.
+-  Creating :ref:`supported_label_types:Classification` and adding annotations.
 -  Appending the Classification labels to the created Data.
 -  Appending the Data to the created Segment.
 
-See :ref:`this page <features:Classification>`
+See :ref:`this page <supported_label_types:Classification>`
 for more details for about Classification annoation details.
 
 .. note::
@@ -306,10 +309,10 @@ Once you write your own :ref:`contribution:Dataloader` and read the local datase
 Note that you need to create a dataset with the correct name on TensorBay first
 if the :ref:`basic_concepts:Dataset` does not exist on TensorBay yet.
 
-And remember to execute the :ref:`features:Commit` step after uploading.
+And remember to execute the :ref:`features/version_control:Commit` step after uploading.
 If needed, you can re-upload and commit again.
 
-Please see :ref:`features:Version Control` for more details.
+Please see :ref:`features/version_control:Version Control` for more details.
 
 .. note::
 

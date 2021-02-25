@@ -30,7 +30,7 @@ Please visit `Graviti AI Service(GAS)`_ to sign up.
  GAS Client
 ************
 
-First step to use TensorBay is to create a :ref:`features:GAS Client`.
+First step to use TensorBay is to create a :ref:`features/tensorbay_client:GAS Client`.
 
 .. code:: python
 
@@ -57,7 +57,7 @@ In the first method, you can read a dataset uploaded by the community, your work
 
 Before reading a dataset from TensorBay, two preparation steps should be done: obtain_ and fork_.
 After that, you only need to pass the correct dataset name to the GAS client, and you will get a
-:ref:`features:Dataset Client`.
+:ref:`features/tensorbay_client:Dataset Client`.
 
 Here, we take `Dogs vs. Cats`_ as an example.
 
@@ -120,8 +120,9 @@ get a Data object by index.
    :meth:`~graviti.dataset.data.Data.open()` returns a file pointer.
 
 There is only one label type in ``Dogs vs. Cats`` dataset, which is classification. The annotation
-"cat" is stored in :ref:`features:Category` attribute of :ref:`features:Classification`. See
-:ref:`features:Supported Label Types` for more label information.
+"cat" is stored in :ref:`supported_label_types:Category` attribute of
+:ref:`supported_label_types:Classification`. See
+:ref:`supported_label_types:Supported Label Types` for more label information.
 
 Read Dataset from Local
 =======================
@@ -163,8 +164,8 @@ for ``Dogs vs. Cats`` should be like:
 
 .. note::
 
-   Note that :ref:`basic_concepts:Dataset` and :ref:`features:Dataset Client` are different
-   concepts.
+   Note that :ref:`basic_concepts:Dataset` and :ref:`features/tensorbay_client:Dataset Client`
+   are different concepts.
 
 .. warning::
 
@@ -193,9 +194,9 @@ If there is no dataloader avaliable to your target dataset, you can write one an
 Please see :ref:`contribution:Contribute Dataloader` for more details.
 
 What's more, after you read a local dataset into a :ref:`basic_concepts:Dataset` object using your
-own dataloader, you can upload it to TensorBay for reuse and sharing. It depends on you to share it
-within your team or with the whole community. Please see :ref:`contribution:Contribute Dataset` for
-more details.
+own dataloader, you can upload it to TensorBay for reuse and sharing.
+Of course, it depends on you whether to share it or not.
+Please see :ref:`contribution:Contribute Dataset` for more details.
 
 .. image:: images/upload_pipeline.png
 
@@ -204,5 +205,12 @@ more details.
    >>> dataset_client = gas.upload_dataset_object(dataset)
    >>> dataset_client.commit("a demo dataset")
 
-Remember to execute the :ref:`features:Commit` step after uploading. If needed, you can re-upload
-and commit again. Please see :ref:`features:Version Control` for more details.
+Remember to do the :ref:`features/version_control:Commit` step after uploading.
+If needed, you can do some operations based on this dataset and commit again.
+
+.. code:: python
+
+   >>> dataset_client.upload_segment_object(segment)
+   >>> dataset_client.commit("add a new segment")
+
+Please see :ref:`features/version_control:Version Control` for more details.

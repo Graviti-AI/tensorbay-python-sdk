@@ -159,10 +159,10 @@ Currently, We support four types of :class:`Sensors<graviti.sensor.sensor.Sensor
    =============================================  ===================================
    supported sensors                              corresponding data type
    =============================================  ===================================
-   :class:`~graviti.sensor.sensor.Camera`         :ref:`features:Image`
-   :class:`~graviti.sensor.sensor.FisheyeCamera`  :ref:`features:Image`
-   :class:`~graviti.sensor.sensor.Lidar`          :ref:`features:Point Cloud`
-   :class:`~graviti.sensor.sensor.Radar`          :ref:`features:Point Cloud`
+   :class:`~graviti.sensor.sensor.Camera`         image
+   :class:`~graviti.sensor.sensor.FisheyeCamera`  image
+   :class:`~graviti.sensor.sensor.Lidar`          point cloud
+   :class:`~graviti.sensor.sensor.Radar`          point cloud
    =============================================  ===================================
 
 A :class:`~graviti.sensor.sensor.Sensor` object stores the information of a sensor,
