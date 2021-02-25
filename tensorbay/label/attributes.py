@@ -28,6 +28,7 @@ _EnumElementType = Union[str, float, bool, None]
 class _AttributeType(Enum):
     """All the possible type of the attributes."""
 
+    # pylint: disable=invalid-name
     array = list
     boolean = bool
     integer = int
@@ -50,14 +51,14 @@ class _AttributeType(Enum):
             ValueError: When the input type_ is not supported.
 
         """
-        if type_ in cls.__members__:
+        if type_ in cls.__members__:  # pylint: disable=unsupported-membership-test
             return type_  # type: ignore[return-value]
 
         try:
             return cls(type_).name
         except ValueError as error:
             raise ValueError(
-                "Invalid type_ values for attribute. "
+                "Invalid type_ values for attribute. "  # pylint: disable=no-member
                 f"Only support {tuple(cls.__members__.keys())} attribute types"
             ) from error
 
