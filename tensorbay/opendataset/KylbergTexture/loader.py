@@ -16,22 +16,26 @@ DATASET_NAME = "KylbergTexture"
 
 
 def KylbergTexture(path: str) -> Dataset:
-    """
-    Load the Kylberg Texture Dataset to TensorBay
-    :param path: the root directory of the dataset
-    The file structure should be like:
-    <path>
-        originalPNG/
-            <imagename>.png
-            ...
-        withoutRotateAll/
-            <imagename>.png
-            ...
-        RotateAll/
-            <imagename>.png
-            ...
+    """Load the Kylberg Texture Dataset to TensorBay
 
-    :return: a loaded dataset
+    Arguments:
+        path: the root directory of the dataset
+            The file structure should be like::
+
+                <path>
+                    originalPNG/
+                        <imagename>.png
+                        ...
+                    withoutRotateAll/
+                        <imagename>.png
+                        ...
+                    RotateAll/
+                        <imagename>.png
+                        ...
+
+    Returns:
+        Loaded `Dataset` object
+        
     """
     root_path = os.path.abspath(os.path.expanduser(path))
 

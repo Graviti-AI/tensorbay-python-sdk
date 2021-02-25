@@ -21,28 +21,34 @@ _LABEL_FILENAME_DICT = {
 
 
 def BSTLD(path: str) -> Dataset:
-    """
-    Load the BSTLD dataset to TensorBay
-    :param path: the root directory of the dataset
-    The file structure should be like:
-    <path>
-        rgb/
-            additional/
-                2015-10-05-10-52-01_bag/
-                    <image_name>.jpg
-                    ...
-                ...
-            test/
-                <image_name>.jpg
-                ...
-            train/
-                2015-05-29-15-29-39_arastradero_traffic_light_loop_bag/
-                    <image_name>.jpg
-                    ...
-                ...
-        test.yaml
-        train.yaml
-        additional_train.yaml
+    """Load the BSTLD dataset to TensorBay
+
+    Arguments:
+        path: the root directory of the dataset
+            The file structure should be like::
+
+                <path>
+                    rgb/
+                        additional/
+                            2015-10-05-10-52-01_bag/
+                                <image_name>.jpg
+                                ...
+                            ...
+                        test/
+                            <image_name>.jpg
+                            ...
+                        train/
+                            2015-05-29-15-29-39_arastradero_traffic_light_loop_bag/
+                                <image_name>.jpg
+                                ...
+                            ...
+                    test.yaml
+                    train.yaml
+                    additional_train.yaml
+
+    Returns:
+        Loaded `Dataset` object
+
     """
     import yaml  # pylint: disable=import-outside-toplevel
 

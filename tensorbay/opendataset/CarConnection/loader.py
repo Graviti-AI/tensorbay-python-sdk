@@ -18,16 +18,21 @@ DATASET_NAME = "CarConnection"
 
 
 def CarConnection(path: str) -> Dataset:
-    """
-    Load the Car Connection Picture Dataset to TensorBay
-    :param path: the root directory of the dataset
-    The file structure should be like:
-    <path>
-        <imagename>.jpg
-        ...
+    """Load the Car Connection Picture Dataset to TensorBay
 
-    :return: a loaded dataset
+    Arguments:
+        path: the root directory of the dataset
+            The file structure should be like::
+
+                <path>
+                    <imagename>.jpg
+                    ...
+
+    Returns:
+        Loaded `Dataset` object
+        
     """
+    
     root_path = os.path.abspath(os.path.expanduser(path))
 
     dataset = Dataset(DATASET_NAME)

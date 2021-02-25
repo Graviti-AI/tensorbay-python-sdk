@@ -15,17 +15,21 @@ DATASET_NAME = "Elpv"
 
 
 def Elpv(path: str) -> Dataset:
-    """
-    Elpv open dataset dataloader
-    :param path:Path to Elpv dataset
-    the file structure should be like:
-    <path>
-        labels.csv
-        images/
-            cell0001.png
-            ...
+    """Elpv open dataset dataloader
+    
+    Arguments:
+        path:Path to Elpv dataset
+            The file structure should be like::
 
-    :return:load `Dataset` object
+                <path>
+                    labels.csv
+                    images/
+                        cell0001.png
+                        ...
+
+    Returns:
+        Loaded `Dataset` object
+        
     """
     root_path = os.path.abspath(os.path.expanduser(path))
 

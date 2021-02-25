@@ -180,19 +180,23 @@ _DATA_GETTERS = {"part1": _get_data_part1, "part2": _get_data_part2}
 def AnimalPose7(path: str) -> Dataset:
     """7 Categories AnimalPose open dataset dataloader
 
-    :param path: Path to 7 Categories AnimalPose dataset
-    The file structure should be like:
-    <path>
-        bndbox_image/
-            antelope/
-                Img-77.jpg
-                ...
-            ...
-        bndbox_anno/
-            antelope.json
-            ...
+    Arguments:
+        path: Path to 7 Categories AnimalPose dataset
+            The file structure should be like::
 
-    :return: load `Dataset` object
+                <path>
+                    bndbox_image/
+                        antelope/
+                            Img-77.jpg
+                            ...
+                        ...
+                    bndbox_anno/
+                        antelope.json
+                        ...
+
+    Returns: 
+        loaded `Dataset` object
+
     """
     root_path = os.path.abspath(os.path.expanduser(path))
 

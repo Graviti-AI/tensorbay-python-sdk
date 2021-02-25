@@ -20,14 +20,18 @@ DATASET_NAME_ARTPHOTO = "ImageEmotionArtphoto"
 def ImageEmotionAbstract(path: str) -> Dataset:
     """ImageEmotionAbstract open dataset dataloader
 
-    :param path: Path to ImageEmotionAbstract dataset
-    The file structure should be like:
-    <path>
-        ABSTRACT_groundTruth.csv
-        abstract_xxxx.jpg
-        ...
+    Arguments:
+        path: Path to ImageEmotionAbstract dataset
+            The file structure should be like::
 
-    :return: load `Dataset` object
+                <path>
+                    ABSTRACT_groundTruth.csv
+                    abstract_xxxx.jpg
+                    ...
+
+    Returns:
+        Loaded `Dataset` object
+
     """
     root_path = os.path.abspath(os.path.expanduser(path))
 
@@ -57,13 +61,17 @@ def ImageEmotionAbstract(path: str) -> Dataset:
 def ImageEmotionArtphoto(path: str) -> Dataset:
     """ImageEmotionArtphoto open dataset dataloader
 
-    :param path: Path to ImageEmotionArtphoto dataset
-    The file structure should be like:
-    <path>
-        <filename>.jpg
-        ...
+    Arguments:
+        path: Path to ImageEmotionArtphoto dataset
+            The file structure should be like::
+            
+                <path>
+                    <filename>.jpg
+                    ...
 
-    :return: load `Dataset` object
+    Returns:
+        Loaded `Dataset` object
+        
     """
     root_path = os.path.abspath(os.path.expanduser(path))
 

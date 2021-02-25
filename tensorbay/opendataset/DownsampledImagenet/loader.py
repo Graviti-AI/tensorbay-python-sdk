@@ -16,26 +16,29 @@ SEGMENT_NAMES = ["train_32x32", "train_64x64", "valid_32x32", "valid_64x64"]
 
 
 def DownsampledImagenet(path: str) -> Dataset:
-    """
-    DownsampledImagenet open dataset dataloader
+    """DownsampledImagenet open dataset dataloader
 
-    :param path: Path to DownsampledImagenet dataset
-    the file structure should be like:
-    <path>
-        valid_32x32/
-            <imagename>.png
-            ...
-        valid_64x64/
-            <imagename>.png
-            ...
-        train_32x32/
-            <imagename>.png
-            ...
-        train_64x64/
-            <imagename>.png
-            ...
+    Arguments:
+        path: Path to DownsampledImagenet dataset
+            The file structure should be like::
+            
+                <path>
+                    valid_32x32/
+                        <imagename>.png
+                        ...
+                    valid_64x64/
+                        <imagename>.png
+                        ...
+                    train_32x32/
+                        <imagename>.png
+                        ...
+                    train_64x64/
+                        <imagename>.png
+                        ...
 
-    :return: load `Dataset` object
+    Returns:
+        Loaded `Dataset` object
+        
     """
     root_path = os.path.abspath(os.path.expanduser(path))
     dataset = Dataset(DATASET_NAME)

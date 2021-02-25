@@ -16,21 +16,25 @@ DATASET_NAME = "AnimalsWithAttributes2"
 
 
 def AnimalsWithAttributes2(path: str) -> Dataset:
-    """
-    Load the Animals with attributes 2 to TensorBay
-    :param path: the root directory of the dataset
-    The file structure should be like:
-    <path>
-        classes.txt
-        predicates.txt
-        predicate-matrix-binary.txt
-        JPEGImages/
-            <classname>/
-                <imagename>.jpg
-                ...
-            ...
+    """Load the Animals with attributes 2 to TensorBay
 
-    :return: a loaded dataset
+    Arguments:
+        path: the root directory of the dataset
+            The file structure should be like::
+            
+                <path>
+                    classes.txt
+                    predicates.txt
+                    predicate-matrix-binary.txt
+                    JPEGImages/
+                        <classname>/
+                            <imagename>.jpg
+                        ...
+                    ...
+
+    Returns: 
+        Loaded `Dataset` object
+
     """
     root_path = os.path.abspath(os.path.expanduser(path))
 

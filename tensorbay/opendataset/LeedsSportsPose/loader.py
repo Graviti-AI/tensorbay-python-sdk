@@ -19,15 +19,20 @@ DATASET_NAME = "LeedsSportsPose"
 def LeedsSportsPose(path: str) -> Dataset:
     """LeedsSportsPose open dataset dataloader.
 
-    :param path: Path to LeedsSportsPose
-    The folder structure should be like:
-    <path>
-        joints.mat
-        images/
-            im0001.jpg
-            im0002.jpg
-            ...
-    :return: loaded LeedsSportsPose Dataset
+    Arguments:
+        path: Path to LeedsSportsPose
+            The folder structure should be like::
+
+                <path>
+                    joints.mat
+                    images/
+                        im0001.jpg
+                        im0002.jpg
+                        ...
+
+    Returns:
+        Loaded `Dataset` object
+        
     """
     from scipy.io import loadmat  # pylint: disable=import-outside-toplevel
 

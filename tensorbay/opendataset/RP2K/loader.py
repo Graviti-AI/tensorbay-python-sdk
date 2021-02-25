@@ -16,22 +16,27 @@ DATASET_NAME = "RP2K"
 
 
 def RP2K(path: str) -> Dataset:
-    """
-    Load the RP2K to TensorBay
-    :param path: the root path of dataset
-    The file structure of RP2K looks like:
-    <path>
-        all/
-            test/
-                <catagory>/
-                    <image_name>.jpg
-                    ...
-                ...
-            train/
-                <catagory>/
-                    <image_name>.jpg
-                    ...
-                ...
+    """Load the RP2K to TensorBay
+
+    Arguments:
+        path: the root path of dataset
+            The file structure of RP2K looks like::
+
+                <path>
+                    all/
+                        test/
+                            <catagory>/
+                                <image_name>.jpg
+                                ...
+                            ...
+                        train/
+                            <catagory>/
+                                <image_name>.jpg
+                                ...
+                            ...
+    Returns:
+        Loaded `Dataset` object
+        
     """
     root_path = os.path.join(os.path.abspath(os.path.expanduser(path)), "all")
     dataset = Dataset(DATASET_NAME)
