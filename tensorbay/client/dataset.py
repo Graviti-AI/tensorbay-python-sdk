@@ -58,6 +58,16 @@ class DatasetClientBase:
         self._commit_id = commit_id
 
     @property
+    def name(self) -> str:
+        """Get the dataset name.
+
+        Returns:
+            The dataset name.
+
+        """
+        return self._name
+
+    @property
     def commit_id(self) -> Optional[str]:
         """Get the dataset commit ID.
 
@@ -98,7 +108,13 @@ class DatasetClientBase:
         commit_id = self._commit(message, tag)
         self._commit_id = commit_id
 
-    def _create_segment(self, name: str) -> None:
+    def _create_segment(self, name: str = "") -> None:
+        """Create a segment in Tensorbay dataset.
+
+        Arguments:
+            name: Segment name.
+
+        """
         post_data = {"name": name}
         self._client.open_api_do("POST", "segments", self.dataset_id, json=post_data)
 
@@ -196,20 +212,6 @@ class DatasetClient(DatasetClientBase):
 
     """
 
-    def get_or_create_segment(self, name: str = "") -> SegmentClient:
-        """Create a segment set according to given name.
-
-        Arguments:
-            name: Segment name, can not be "_default".
-
-        Returns:
-            Created segment with given name, or created default segment.
-
-        """
-        if name not in self._list_segments():
-            self._create_segment(name)
-        return SegmentClient(name, self._dataset_id, self._name, self._client, self.commit_id)
-
     def get_segment(self, name: str = "") -> SegmentClient:
         """Get a segment according to given name.
 
@@ -227,6 +229,19 @@ class DatasetClient(DatasetClientBase):
             raise GASSegmentError(name)
 
         return SegmentClient(name, self._dataset_id, self._name, self._client, self.commit_id)
+
+    def get_or_create_segment(self, name: str = "") -> SegmentClient:
+        """Create a segment set according to given name.
+
+        Arguments:
+            name: Segment name, can not be "_default".
+
+        Returns:
+            Created segment with given name, or created default segment.
+
+        """
+        self._create_segment(name)
+        return SegmentClient(name, self._dataset_id, self._name, self._client)
 
     def get_segment_object(self, name: str = "") -> Segment:
         """Get a :class:`Segment` according to given name.
@@ -269,6 +284,7 @@ class DatasetClient(DatasetClientBase):
 
         """
         segment_client = self.get_or_create_segment(segment.name)
+
         segment_filter: Iterable[Data]
         if skip_uploaded_files:
             done_set = set(segment_client.list_data())
@@ -291,20 +307,6 @@ class FusionDatasetClient(DatasetClientBase):
 
     """
 
-    def get_or_create_segment(self, name: str = "") -> FusionSegmentClient:
-        """Create a fusion segment set according to the given name.
-
-        Arguments:
-            name: Segment name, can not be "_default".
-
-        Returns:
-            Created fusion segment with given name, or created default segment.
-
-        """
-        if name not in self._list_segments():
-            self._create_segment(name)
-        return FusionSegmentClient(name, self._dataset_id, self._name, self._client, self.commit_id)
-
     def get_segment(self, name: str = "") -> FusionSegmentClient:
         """Get a fusion segment according to given name.
 
@@ -321,6 +323,19 @@ class FusionDatasetClient(DatasetClientBase):
         if name not in self._list_segments():
             raise GASSegmentError(name)
         return FusionSegmentClient(name, self._dataset_id, self._name, self._client, self.commit_id)
+
+    def get_or_create_segment(self, name: str = "") -> FusionSegmentClient:
+        """Create a fusion segment set according to the given name.
+
+        Arguments:
+            name: Segment name, can not be "_default".
+
+        Returns:
+            Created fusion segment with given name, or created default segment.
+
+        """
+        self._create_segment(name)
+        return FusionSegmentClient(name, self._dataset_id, self._name, self._client)
 
     def get_segment_object(self, name: str = "") -> FusionSegment:
         """Get a :class:`Segment` according to given name.
@@ -365,6 +380,7 @@ class FusionDatasetClient(DatasetClientBase):
 
         """
         segment_client = self.get_or_create_segment(segment.name)
+
         for sensor in segment.sensors.values():
             segment_client.upload_sensor_object(sensor)
 
