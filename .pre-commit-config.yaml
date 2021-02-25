@@ -1,0 +1,84 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.4.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-yaml
+      - id: check-case-conflict
+      - id: detect-private-key
+  - repo: https://github.com/pre-commit/mirrors-isort
+    rev: v5.7.0
+    hooks:
+      - id: isort
+        types: [python]
+        args: ["--profile black", "-w 100"]
+  - repo: https://github.com/ambv/black
+    rev: 20.8b1
+    hooks:
+      - id: black
+        types: [python]
+        args: ["-l 100"]
+  - repo: https://gitlab.com/pycqa/flake8
+    rev: 3.8.4
+    hooks:
+      - id: flake8
+        types: [python]
+        exclude: "(test_\\w*\\.py$)"
+        additional_dependencies: ["flake8-docstrings", "darglint"]
+        args: [
+          "--max-line-length=100",
+          "--docstring-style=google",
+          "--docstring-convention=google",
+          "--ignore-decorators=overload",
+          "--ignore=E203,W503,D105,D107,DAR203"
+        ]
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v0.812
+    hooks:
+      - id: mypy
+        types: [python]
+        exclude: "(test_\\w*\\.py$)"
+        args: [
+          "--cache-dir=/tmp/mypy_cache/",
+          "--ignore-missing-imports",
+          "--warn-unreachable",
+          "--strict-equality",
+          "--strict"
+        ]
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v2.2.1
+    hooks:
+      - id: prettier
+        types_or: [markdown, json]
+        args: ["--print-width=100", "--tab-width=4"]
+  - repo: https://github.com/myint/rstcheck
+    rev: 3f92957478422df87bd730abde66f089cc1ee19b 
+    hooks:
+      - id: rstcheck
+        types: [rst]
+        additional_dependencies: ["sphinx"]
+        args: [
+          "--ignore-messages",
+          "Hyperlink target \".+?\" is not referenced."
+        ]
+  - repo: https://github.com/markdownlint/markdownlint
+    rev: v0.11.0 
+    hooks:
+      - id: markdownlint
+        types: [markdown]
+        args: ["--config=./config/markdownlint.json"]
+  - repo: local
+    hooks:
+      - id: pylint
+        name: pylint
+        entry: pylint
+        language: system
+        types: [python]
+        exclude: "(test_\\w*\\.py$)"
+        args: [
+          "--good-names=i,j,k,x,y,z,w,fp",
+          "--disable=bad-continuation",
+          "--generated-members=torch.*,cv2.*",
+          "--min-similarity-lines=10",
+          "--notes=FIXME,XXX"
+        ]
