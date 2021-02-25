@@ -1,0 +1,9 @@
+[general]
+ignore=body-is-missing
+contrib=CT1
+
+[title-max-length]
+line-length=72
+
+[contrib-title-conventional-commits]
+types = build, ci, docs, feat, fix, perf, refactor, style, test, release
