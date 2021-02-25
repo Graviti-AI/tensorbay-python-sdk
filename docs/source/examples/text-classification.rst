@@ -213,7 +213,7 @@ See :ref:`this page <basic_concepts:Catalog & SubCatalog>` for more details.
 The only annotation type for ``20 Newsgroups`` is :ref:`features:Classification`, and there are 20
 :ref:`features:Category` types.
 
-.. literalinclude:: ../../../opendataset/Newsgroups20/catalog.json
+.. literalinclude:: ../../../tensorbay/opendataset/Newsgroups20/catalog.json
    :language: json
    :name: Newsgroups20-catalog
    :linenos:
@@ -235,7 +235,7 @@ The function of :ref:`contribution:Dataloader` is to read the dataset into a
 
 The :ref:`code block <Newsgroups20-dataloader>` below displays the ``20 Newsgroups`` dataloader.
 
-.. literalinclude:: ../../../opendataset/Newsgroups20/loader.py
+.. literalinclude:: ../../../tensorbay/opendataset/Newsgroups20/loader.py
    :language: python
    :name: Newsgroups20-dataloader
    :linenos:
