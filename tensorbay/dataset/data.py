@@ -114,7 +114,7 @@ class Labels(ReprMixin):
 
     def _loads(self, contents: Dict[str, Any]) -> None:
         for key, labels in contents.items():
-            if key not in LabelType.__members__:
+            if key not in LabelType.__members__:  # pylint: disable=unsupported-membership-test
                 continue
 
             label_type = LabelType[key]
