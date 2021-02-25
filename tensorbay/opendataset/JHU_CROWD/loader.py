@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file define JHU_CROWD Dataloader"""
+"""Dataloader of the JHU-CROWD++ dataset."""
 
 import os
 from typing import Dict, List
@@ -20,10 +20,10 @@ _WEATHER_CONDITION_MAP = {0: "no weather degradationi", 1: "fog/haze", 2: "rain"
 
 
 def JHU_CROWD(path: str) -> Dataset:
-    """Load the JHU-CROWD++ Dataset to TensorBay
+    """Dataloader of the JHU-CROWD++ dataset.
 
     Arguments:
-        path: the root directory of the dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>
@@ -39,10 +39,9 @@ def JHU_CROWD(path: str) -> Dataset:
                     val/
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
-
     dataset = Dataset(DATASET_NAME)
     dataset.load_catalog(os.path.join(os.path.dirname(__file__), "catalog.json"))
     for segment_name in SEGMENT_LIST:

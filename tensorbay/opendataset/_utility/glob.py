@@ -12,23 +12,24 @@ from .exceptions import OpenDatasetNoFileError
 
 
 def glob(pathname: str, *, recursive: bool = False) -> List[str]:
+    """Return a sorted list of paths matching a pathname pattern.
+
+    The pattern may contain simple shell-style wildcards a la fnmatch.
+    However, unlike fnmatch, filenames starting with a dot are special cases
+    that are not matched by '*' and '?' patterns.
+
+    Arguments:
+        pathname: The pathname pattern.
+        recursive: If recursive is true, the pattern '**' will match any files and
+            zero or more directories and subdirectories.
+
+    Returns:
+        A sorted list of paths matching a pathname pattern.
+
+    Raises:
+        OpenDatasetNoFileError: When there is no file matching the given pathname pattern.
+
     """
-    Return a sorted list of paths matching a pathname pattern.
-    If the result list is empty, raise `OpenDatasetNoFileError`
-
-    The pattern may contain simple shell-style wildcards a la
-    fnmatch. However, unlike fnmatch, filenames starting with a
-    dot are special cases that are not matched by '*' and '?'
-    patterns.
-
-    :param pathname: the pathname pattern
-    :param recursive: if recursive is true, the pattern '**' will match any files and
-    zero or more directories and subdirectories.
-
-    :return: a sorted list of paths matching a pathname pattern
-    :raises OpenDatasetNoFileError: when there is no file matching the given pathname pattern
-    """
-
     paths = buildin_glob(pathname, recursive=recursive)
     if not paths:
         raise OpenDatasetNoFileError(pathname)

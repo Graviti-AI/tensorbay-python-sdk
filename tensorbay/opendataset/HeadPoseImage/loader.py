@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file define HeadPoseImage Dataloader"""
+"""Dataloader of the Head Pose Image dataset."""
 
 import os
 import re
@@ -19,10 +19,10 @@ DATASET_NAME = "Head Pose Image"
 
 
 def HeadPoseImage(path: str) -> Dataset:
-    """Load the Head Pose Image Dataset to TensorBay
+    """Dataloader of the Head Pose Image dataset.
 
     Arguments:
-        path: the root directory of the dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>
@@ -38,10 +38,9 @@ def HeadPoseImage(path: str) -> Dataset:
                     Person15/
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
-
     dataset = Dataset(DATASET_NAME)
     dataset.load_catalog(os.path.join(os.path.dirname(__file__), "catalog.json"))
     segment = dataset.create_segment()

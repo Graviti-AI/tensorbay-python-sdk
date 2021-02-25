@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file define the CompCars Dataloader"""
+"""Dataloader of the CompCars dataset."""
 
 import os
 from typing import Any, Dict, List, Tuple
@@ -22,10 +22,10 @@ _SEGMENT_SPLIT_FILES = (
 
 
 def CompCars(path: str) -> Dataset:
-    """Load the CompCars dataset to TensorBay
+    """Dataloader of the CompCars dataset.
 
     Arguments:
-        path: the root path of dataset
+        path: The root path of dataset.
             The file structure should be like::
 
                 <path>
@@ -58,7 +58,7 @@ def CompCars(path: str) -> Dataset:
                                 test.txt
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
     root_path = os.path.join(os.path.abspath(os.path.expanduser(path)), "data")

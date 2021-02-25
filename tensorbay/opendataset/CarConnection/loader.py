@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file define the Car Connection Picture Dataloader"""
+"""Dataloader of the The Car Connection Picture dataset."""
 
 import os
 from typing import Union
@@ -18,10 +18,10 @@ DATASET_NAME = "CarConnection"
 
 
 def CarConnection(path: str) -> Dataset:
-    """Load the Car Connection Picture Dataset to TensorBay
+    """Dataloader of the The Car Connection Picture dataset.
 
     Arguments:
-        path: the root directory of the dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>
@@ -29,10 +29,9 @@ def CarConnection(path: str) -> Dataset:
                     ...
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
-
     root_path = os.path.abspath(os.path.expanduser(path))
 
     dataset = Dataset(DATASET_NAME)

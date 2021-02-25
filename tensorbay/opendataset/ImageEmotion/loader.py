@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file handles with the ImageEmotion dataset"""
+"""Dataloader of the ImageEmotionAbstract dataset and the ImageEmotionArtphoto dataset."""
 
 import csv
 import os
@@ -18,10 +18,10 @@ DATASET_NAME_ARTPHOTO = "ImageEmotionArtphoto"
 
 
 def ImageEmotionAbstract(path: str) -> Dataset:
-    """ImageEmotionAbstract open dataset dataloader
+    """Dataloader of the ImageEmotionAbstract dataset.
 
     Arguments:
-        path: Path to ImageEmotionAbstract dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>
@@ -30,7 +30,7 @@ def ImageEmotionAbstract(path: str) -> Dataset:
                     ...
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))
@@ -59,10 +59,10 @@ def ImageEmotionAbstract(path: str) -> Dataset:
 
 
 def ImageEmotionArtphoto(path: str) -> Dataset:
-    """ImageEmotionArtphoto open dataset dataloader
+    """Dataloader of the ImageEmotionArtphoto dataset.
 
     Arguments:
-        path: Path to ImageEmotionArtphoto dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>

@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file define the Elpv Dataloader"""
+"""Dataloader of the Elpv dataset."""
 
 import os
 
@@ -15,10 +15,10 @@ DATASET_NAME = "Elpv"
 
 
 def Elpv(path: str) -> Dataset:
-    """Elpv open dataset dataloader
+    """Dataloader of the Elpv dataset.
 
     Arguments:
-        path:Path to Elpv dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>
@@ -28,7 +28,7 @@ def Elpv(path: str) -> Dataset:
                         ...
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

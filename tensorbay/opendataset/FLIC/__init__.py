@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of FLIC."""
+"""Dataloader of the FLIC dataset."""
 
 from .loader import FLIC
 

@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of the CompCars"""
+"""Dataloader of the CompCars dataset."""
 
 from .loader import CompCars
 

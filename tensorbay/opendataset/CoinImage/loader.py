@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file handles with the CoinImage dataset"""
+"""Dataloader of the Coin Image dataset."""
 
 import csv
 import os
@@ -18,10 +18,10 @@ DATASET_NAME = "CoinImage"
 
 
 def CoinImage(path: str) -> Dataset:
-    """Coin Image open dataset dataloader
+    """Dataloader of the Coin Image dataset.
 
     Arguments:
-        path: Path to Coin Image dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>
@@ -30,7 +30,7 @@ def CoinImage(path: str) -> Dataset:
                     ...
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

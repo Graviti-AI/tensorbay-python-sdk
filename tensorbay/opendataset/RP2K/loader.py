@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file defines the RP2K Dataloader"""
+"""Dataloader of the RP2K dataset."""
 
 import os
 
@@ -16,10 +16,10 @@ DATASET_NAME = "RP2K"
 
 
 def RP2K(path: str) -> Dataset:
-    """Load the RP2K to TensorBay
+    """Dataloader of the RP2K dataset.
 
     Arguments:
-        path: the root path of dataset
+        path: The root directory of the dataset.
             The file structure of RP2K looks like::
 
                 <path>
@@ -34,8 +34,9 @@ def RP2K(path: str) -> Dataset:
                                 <image_name>.jpg
                                 ...
                             ...
+
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
     root_path = os.path.join(os.path.abspath(os.path.expanduser(path)), "all")

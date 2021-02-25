@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file define the Hard Hat Workers Dataloader"""
+"""Dataloader of the Hard Hat Workers dataset."""
 
 import os
 from typing import List
@@ -18,10 +18,10 @@ DATASET_NAME = "Hard Hat Workers"
 
 
 def HardHatWorkers(path: str) -> Dataset:
-    """Load the Hard Hat Workers Dataset to TensorBay
+    """Dataloader of the Hard Hat Workers dataset.
 
     Arguments:
-        path: the root directory of the dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>
@@ -33,7 +33,7 @@ def HardHatWorkers(path: str) -> Dataset:
                         ...
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
     dataset = Dataset(DATASET_NAME)

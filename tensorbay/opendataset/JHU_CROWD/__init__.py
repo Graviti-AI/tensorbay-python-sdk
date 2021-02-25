@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of the JHU-CROWD++ Dataset"""
+"""Dataloader of the JHU-CROWD++ dataset."""
 
 from .loader import JHU_CROWD
 

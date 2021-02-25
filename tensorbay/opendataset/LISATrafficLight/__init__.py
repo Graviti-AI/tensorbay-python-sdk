@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of LISA Traffic Light."""
+"""Dataloader of the LISA traffic light dataset."""
 
 from .loader import LISATrafficLight
 

@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of Traffic Lights Recognition Dataset"""
+"""Dataloader of the TLR dataset."""
 
 from .loader import TLR
 

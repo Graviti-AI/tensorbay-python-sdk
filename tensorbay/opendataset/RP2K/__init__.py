@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of the RP2K"""
+"""Dataloader of the RP2K dataset."""
 
 from .loader import RP2K
 

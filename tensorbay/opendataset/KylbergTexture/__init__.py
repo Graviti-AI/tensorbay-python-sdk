@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of the Kylberg Texture Dataset"""
+"""Dataloader of the Kylberg Texture dataset."""
 
 from .loader import KylbergTexture
 

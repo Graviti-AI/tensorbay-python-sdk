@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of the WIDER FACE Dataset"""
+"""Dataloader of the WIDER FACE dataset."""
 
 from .loader import WIDER_FACE
 

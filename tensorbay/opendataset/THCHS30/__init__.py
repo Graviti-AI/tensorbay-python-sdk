@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of the THCHS-30 Dataset"""
+"""Dataloader of the THCHS-30 dataset."""
 
 from .loader import THCHS30
 

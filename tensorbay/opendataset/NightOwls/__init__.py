@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of the NightOwls Dataset"""
+"""Dataloader of the NightOwls dataset."""
 
 from .loader import NightOwls
 

@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file handles with the NeolixOD dataset"""
+"""Dataloader of the NeolixOD dataset."""
 
 import os
 
@@ -16,10 +16,10 @@ DATASET_NAME = "NeolixOD"
 
 
 def NeolixOD(path: str) -> Dataset:
-    """NeolixOD  dataset dataloader
+    """Dataloader of the NeolixOD dataset.
 
     Arguments:
-        path: Path to NeolixOD dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>
@@ -30,7 +30,7 @@ def NeolixOD(path: str) -> Dataset:
                     ...
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

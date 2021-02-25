@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file defines the FLIC Dataloader"""
+"""Dataloader of the FLIC dataset."""
 
 import os
 from typing import Any, Dict, Iterator, Tuple
@@ -17,10 +17,10 @@ _VALID_KEYPOINT_INDICES = [0, 1, 2, 3, 4, 5, 6, 9, 12, 13, 16]
 
 
 def FLIC(path: str) -> Dataset:
-    """FLIC open dataset dataloader.
+    """Dataloader of the FLIC dataset.
 
     Arguments:
-        path: Path to FLIC
+        path: The root directory of the dataset.
             The folder structure should be like::
 
                 <path>
@@ -30,7 +30,7 @@ def FLIC(path: str) -> Dataset:
                         ...
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
     from scipy.io import loadmat  # pylint: disable=import-outside-toplevel

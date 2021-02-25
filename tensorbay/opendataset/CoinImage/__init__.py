@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of Coin Image."""
+"""Dataloader of the Coin Image dataset."""
 
 from .loader import CoinImage
 

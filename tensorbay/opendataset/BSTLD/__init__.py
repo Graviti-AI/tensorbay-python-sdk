@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of the BSTLD dataset"""
+"""Dataloader of the BSTLD dataset."""
 
 from .loader import BSTLD
 

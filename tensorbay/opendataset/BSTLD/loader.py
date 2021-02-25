@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file handles with the BSTLD dataset"""
+"""Dataloader of the BSTLD dataset."""
 
 import os
 
@@ -21,10 +21,10 @@ _LABEL_FILENAME_DICT = {
 
 
 def BSTLD(path: str) -> Dataset:
-    """Load the BSTLD dataset to TensorBay
+    """Dataloader of the BSTLD dataset.
 
     Arguments:
-        path: the root directory of the dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>
@@ -47,7 +47,7 @@ def BSTLD(path: str) -> Dataset:
                     additional_train.yaml
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
     import yaml  # pylint: disable=import-outside-toplevel

@@ -3,7 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""This file defines some exceptions about open dataset loader."""
+"""Exceptions about open data loader."""
 
 
 class OpenDatasetException(Exception):
@@ -11,9 +11,11 @@ class OpenDatasetException(Exception):
 
 
 class OpenDatasetNoFileError(OpenDatasetException):
-    """Exception for no file found in the opendataset directory
+    """Exception for no file found in the opendataset directory.
 
-    :param pattern: glob pattern
+    Arguments:
+        pattern: Glob pattern.
+
     """
 
     def __init__(self, pattern: str) -> None:

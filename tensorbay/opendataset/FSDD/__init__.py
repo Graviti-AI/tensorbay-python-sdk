@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of the Free Spoken Digit Dataset"""
+"""Dataloader of the Free Spoken Digit dataset."""
 
 from .loader import FSDD
 
