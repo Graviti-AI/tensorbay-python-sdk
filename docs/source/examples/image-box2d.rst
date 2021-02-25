@@ -201,7 +201,7 @@ See :ref:`this page <basic_concepts:Catalog & SubCatalog>` for more details.
 The only annotation type for ``BSTLD`` is :ref:`features:Box2D`, and there are 13
 :ref:`features:Category` types and one :ref:`features:Attributes` type.
 
-.. literalinclude:: ../../../opendataset/BSTLD/catalog.json
+.. literalinclude:: ../../../tensorbay/opendataset/BSTLD/catalog.json
    :language: json
    :name: BSTLD-catalog
    :linenos:
@@ -214,7 +214,7 @@ The function of :ref:`contribution:Dataloader` is to read the dataset into a
 :ref:`basic_concepts:Dataset` object.
 The :ref:`code block <BSTLD-dataloader>` below displays the ``BSTLD`` dataloader.
 
-.. literalinclude:: ../../../opendataset/BSTLD/loader.py
+.. literalinclude:: ../../../tensorbay/opendataset/BSTLD/loader.py
    :language: python
    :name: BSTLD-dataloader
    :linenos:

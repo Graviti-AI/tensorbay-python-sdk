@@ -181,7 +181,7 @@ Catalog is a json file contains all label information of one dataset.
 See :ref:`this page <basic_concepts:Catalog & SubCatalog>` for more details.
 The only annotation type for ``LeedsSportsPose`` is :ref:`features:Keypoints2D`.
 
-.. literalinclude:: ../../../opendataset/LeedsSportsPose/catalog.json
+.. literalinclude:: ../../../tensorbay/opendataset/LeedsSportsPose/catalog.json
    :language: json
    :name: LeedsSportsPose-catalog
    :linenos:
@@ -195,7 +195,7 @@ The function of :ref:`contribution:Dataloader` is to read the dataset into a
 The :ref:`code block <LeedsSportsPose-dataloader>` below displays
 the ``LeedsSportsPose`` dataloader.
 
-.. literalinclude:: ../../../opendataset/LeedsSportsPose/loader.py
+.. literalinclude:: ../../../tensorbay/opendataset/LeedsSportsPose/loader.py
    :language: python
    :name: LeedsSportsPose-dataloader
    :linenos:
