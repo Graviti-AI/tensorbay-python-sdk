@@ -5,7 +5,7 @@
 
 """Data, Labels.
 
-:class:`Data` is the most basic data unit of a :class:`~graviti.dataset.dataset.Dataset`.
+:class:`Data` is the most basic data unit of a :class:`~tensorbay.dataset.dataset.Dataset`.
 It contains path information of a data sample and its corresponding labels.
 
 A :class:`Data` instance contains one or several types of labels,
@@ -106,7 +106,8 @@ class Labels(ReprMixin):
                     }
 
         Returns:
-            A :class:`Label` instance containing labels information from the given dictionary.
+            A :class:`~tensorbay.label.label.Label` instance containing labels information
+            from the given dictionary.
 
         """
         return common_loads(cls, contents)
@@ -128,7 +129,7 @@ class Labels(ReprMixin):
 
 
 class Data(ReprMixin):
-    """Data is the most basic data unit of a :class:`~graviti.dataset.dataset.Dataset`.
+    """Data is the most basic data unit of a :class:`~tensorbay.dataset.dataset.Dataset`.
 
     It contains the local and/or remote path of a data sample,
     sample's labels information, as well as some other information, such as timestamp.
