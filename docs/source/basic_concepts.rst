@@ -41,8 +41,8 @@ The structure of a :class:`~graviti.dataset.dataset.Dataset` looks like:
 Dataset
 =======
 
-:class:`~graviti.dataset.dataset.Dataset` is the topmost data level in the TensorBay dataset
-structure.
+:class:`~graviti.dataset.dataset.Dataset` is one of the two topmost data levels
+in the TensorBay dataset structure.
 It contains all the data, label and any other information of a dataset.
 
 There are a certain number of :class:`Segments <graviti.dataset.segment.Segment>`
@@ -84,17 +84,105 @@ and any other information such as timestamp.
  FusionDataset Related Concepts
 ********************************
 
+:class:`~graviti.dataset.dataset.FusionDataset`
+represents datasets with data collected from multiple sensors,
+and is often used for autonomous driving datasets, such as `nuScenes`_ and `KITTI-tracking`_.
+
+See :ref:`basic_concepts:Dataset` for the comparison between
+:class:`~graviti.dataset.dataset.Dataset` and :class:`~graviti.dataset.dataset.FusionDataset`.
+
+The structure of a :class:`~graviti.dataset.dataset.Dataset` looks like:
+
+.. code:: console
+   :name: fusion-dataset-structure
+
+   FusionDataset
+   ├── Catalog
+   │   ├── SubCatalog
+   │   ├── SubCatalog
+   │   └── ...
+   ├── FusionSegment
+   │   ├── sensors
+   │   │   ├── Sensor
+   │   │   ├── Sensor
+   │   │   └── ...
+   │   ├── Frame
+   │   │   ├── Data
+   │   │   └── ...
+   │   ├── Frame
+   │   │   ├── Data
+   │   │   └── ...
+   │   └── ...
+   ├── FusionSegment
+   └── ...
+
+.. _nuScenes: https://www.graviti.cn/open-datasets/nuScenes
+.. _KITTI-tracking: https://www.graviti.cn/open-datasets/KITTItracking
+
+
 FusionDataset
 =============
+
+:class:`~graviti.dataset.dataset.FusionDataset` is one of the two topmost data levels
+in the TensorBay dataset structure.
+
+It is made up of data collected from multiple sensors
+and contains all the frames, labels, sensors and any other information of a fusion dataset.
+
+There are a certain number of :class:`FusionSegments <graviti.dataset.segment.FusionSegment>`
+in one :class:`~graviti.dataset.dataset.FusionDataset`.
 
 FusionSegment
 =============
 
-Frame
-=====
+:class:`~graviti.dataset.segment.FusionSegment` is the data level second to
+:class:`~graviti.dataset.dataset.FusionDataset` in the TensorBay dataset structure.
+
+Each :class:`~graviti.dataset.segment.FusionSegment` consists of
+a certain number of :class:`Frames<graviti.dataset.frame.Frame>` to store the data.
+
+Besides, a fusion segment contains multiple :class:`Sensors<graviti.sensor.sensor.Sensor>`
+from which the :class:`~graviti.dataset.data.Data`
+under each :class:`~graviti.dataset.frame.Frame` are collected.
 
 Sensor
 ======
 
+:class:`~graviti.sensor.sensor.Sensor` represents the device that collects the data
+in the :class:`~graviti.dataset.segment.FusionSegment`.
+
+Currently, We support four types of :class:`Sensors<graviti.sensor.sensor.Sensor>`.
+
+.. table:: supported sensors
+   :widths: auto
+
+   =============================================  ===================================
+   supported sensors                              corresponding data type
+   =============================================  ===================================
+   :class:`~graviti.sensor.sensor.Camera`         :ref:`features:Image`
+   :class:`~graviti.sensor.sensor.FisheyeCamera`  :ref:`features:Image`
+   :class:`~graviti.sensor.sensor.Lidar`          :ref:`features:Point Cloud`
+   :class:`~graviti.sensor.sensor.Radar`          :ref:`features:Point Cloud`
+   =============================================  ===================================
+
+A :class:`~graviti.sensor.sensor.Sensor` object stores the information of a sensor,
+including the sensor name,
+extrinsic parameters and intrinsic parameters(only for camera type sensors).
+
+Frame
+=====
+
+:class:`~graviti.dataset.frame.Frame` is the component
+that composes :class:`~graviti.dataset.segment.FusionSegment`.
+
+A :class:`~graviti.dataset.frame.Frame` object consists of
+multiple :class:`~graviti.dataset.data.Data` collected at the same time from different sensors.
+
 Data in FusionDataset
 =====================
+
+Each :class:`data<graviti.dataset.data.Data>` inside a :class:`frame<graviti.dataset.frame.Frame>`
+corresponds to a :class:`sensor<graviti.sensor.sensor.Sensor>`.
+
+And the :class:`~graviti.dataset.data.Data` in :class:`~graviti.dataset.dataset.FusionDataset`
+is the same as the :ref:`basic_concepts:Data` in :class:`~graviti.dataset.dataset.Dataset`.
