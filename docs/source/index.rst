@@ -39,8 +39,9 @@ data and work with TensorBay through TensorBaySDK. CLI is also available.
 
    quick_start
    basic_concepts
+   supported_label_types
    features
-   examples/index
+   examples
    advanced_features
    contribution
    tensorbay_sdk_api

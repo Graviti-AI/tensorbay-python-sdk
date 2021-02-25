@@ -2,8 +2,8 @@
  Point Cloud with Box3D Label
 ##############################
 
-:ref:`features:Box3D` is a kind of label type. It represents the 3D Box labels on
-:ref:`features:Point Cloud`. (:numref:`Fig. %s <example-Box3D>`)
+:ref:`supported_label_types:Box3D` is a kind of label type. It represents the 3D Box labels on
+point cloud. (:numref:`Fig. %s <example-Box3D>`)
 
 .. _example-Box3D:
 
@@ -17,7 +17,7 @@
  Preparation
 *************
 
-First of all, create a :ref:`features:GAS Client`.
+First of all, create a :ref:`features/tensorbay_client:GAS Client`.
 
 .. code:: python
 
@@ -32,7 +32,7 @@ First of all, create a :ref:`features:GAS Client`.
 
 As mentioned in :ref:`quick_start:Quick Start`, obtain_ and fork_ should be done before reading a
 dataset from TensorBay. Then, pass the correct dataset name to the GAS client, and you will get a
-:ref:`features:Dataset Client`.
+:ref:`features/tensorbay_client:Dataset Client`.
 
 Here, we take `Neolix OD`_ as an example.
 
@@ -101,8 +101,9 @@ can get one by index.
    If the :ref:`basic_concepts:Segment` or :ref:`basic_concepts:FusionSegment` is created without
    given name, then its name will be "".
 
-In each :ref:`basic_concepts:Data`, there is a sequence of :ref:`features:Box3D` annotations. You
-can get one by index.
+In each :ref:`basic_concepts:Data`,
+there is a sequence of :ref:`supported_label_types:Box3D` annotations.
+You can get one by index.
 
 .. code:: python
 
@@ -122,9 +123,9 @@ can get one by index.
    {'Alpha': 0, 'Occlusion': 0, 'Truncation': False}
 
 There is only one label type in ``Neolix OD`` dataset, which is ``box3d``. The annotation "Adult" is
-stored in :ref:`features:Category` of :ref:`features:Box3D`. The annotation "{'Alpha': 0,
-'Occlusion': 0, 'Truncation': False}" is stored in :ref:`features:Attributes` of
-:ref:`features:Box3D`.
+stored in :ref:`supported_label_types:Category` of :ref:`supported_label_types:Box3D`.
+The annotation "{'Alpha': 0, 'Occlusion': 0, 'Truncation': False}" is stored in
+:ref:`supported_label_types:Attributes` of :ref:`supported_label_types:Box3D`.
 
 *************************
  Read Dataset from Local
@@ -163,8 +164,8 @@ structure for ``Neolix OD`` should be like:
 
 .. note::
 
-   Note that :ref:`basic_concepts:Dataset` and :ref:`features:Dataset Client` are different
-   concepts.
+   Note that :ref:`basic_concepts:Dataset` and :ref:`features/tensorbay_client:Dataset Client`
+   are different concepts.
 
 .. warning::
 
@@ -201,8 +202,8 @@ Write the Catalog
 Before writing the dataloader, we first need to write the :ref:`contribution:Catalog`.
 Catalog is a json file contains all label information of one dataset.
 See :ref:`this page <basic_concepts:Catalog & SubCatalog>` for more details.
-The only annotation type for ``Neolix OD`` is :ref:`features:Box3D`, and there are 15
-:ref:`features:Category` types and 3 :ref:`features:Attributes` types.
+The only annotation type for ``Neolix OD`` is :ref:`supported_label_types:Box3D`, and there are 15
+:ref:`supported_label_types:Category` types and 3 :ref:`supported_label_types:Attributes` types.
 
 .. literalinclude:: ../../../tensorbay/opendataset/NeolixOD/catalog.json
    :language: json
@@ -245,11 +246,12 @@ Add Data and Labels
 It takes four key substeps to read the data and the labels:
 
 -  Creating :ref:`basic_concepts:Data` and adding content.
--  Creating :ref:`features:Box3D` and adding annotations.
+-  Creating :ref:`supported_label_types:Box3D` and adding annotations.
 -  Appending the Box3D labels to the created Data.
 -  Appending the Data to the created Segment.
 
-See :ref:`this page <features:Box3D>` for more details for about Box3D annoation details.
+See :ref:`this page <supported_label_types:Box3D>` for more details for about
+Box3D annoation details.
 
 .. note::
    The :ref:`Neolix OD dataloader <NeolixOD-dataloader>` above uses relative import(L11-13).
@@ -273,8 +275,9 @@ Once you write your own :ref:`contribution:Dataloader` and read the local datase
    >>> dataset_client = gas.upload_dataset_object(dataset, jobs=8, skip_uploaded_files=False)
    >>> dataset_client.commit("Neolix OD")
 
-Remember to execute the :ref:`features:Commit` step after uploading. If needed, you can re-upload
-and commit again. Please see :ref:`features:Version Control` for more details.
+Remember to execute the :ref:`features/version_control:Commit` step after uploading.
+If needed, you can re-upload and commit again.
+Please see :ref:`features/version_control:Version Control` for more details.
 
 .. note::
 

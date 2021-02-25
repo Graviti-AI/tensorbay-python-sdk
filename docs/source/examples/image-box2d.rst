@@ -2,7 +2,7 @@
  Image with Box2D Label
 ########################
 
-:ref:`features:Box2D` is a kind of label type. It represents the 2D Box labels on
+:ref:`supported_label_types:Box2D` is a kind of label type. It represents the 2D Box labels on
 images. (:numref:`Fig. %s <example-Box2D>`)
 
 .. _example-Box2D:
@@ -17,7 +17,7 @@ images. (:numref:`Fig. %s <example-Box2D>`)
  Preparation
 *************
 
-First of all, create a :ref:`features:GAS Client`.
+First of all, create a :ref:`features/tensorbay_client:GAS Client`.
 
 .. code:: python
 
@@ -32,7 +32,7 @@ First of all, create a :ref:`features:GAS Client`.
 
 As mentioned in :ref:`quick_start:Quick Start`, obtain_ and fork_ should be done before reading a
 dataset from TensorBay. Then, pass the correct dataset name to the GAS client, and you will get a
-:ref:`features:Dataset Client`.
+:ref:`features/tensorbay_client:Dataset Client`.
 
 Here, we take `BSTLD`_ as an example.
 
@@ -96,8 +96,9 @@ can get one by index.
    If the :ref:`basic_concepts:Segment` or :ref:`basic_concepts:FusionSegment` is created without
    given name, then its name will be "".
 
-In each :ref:`basic_concepts:Data`, there is a sequence of :ref:`features:Box2D` annotations. You
-can get one by index.
+In each :ref:`basic_concepts:Data`,
+there is a sequence of :ref:`supported_label_types:Box2D` annotations.
+You can get one by index.
 
 .. code:: python
 
@@ -114,8 +115,8 @@ can get one by index.
     {'occluded': True}
 
 There is only one label type in ``BSTLD`` dataset, which is ``box2d``. The annotation "RedLeft" is
-stored in :ref:`features:Category` of :ref:`features:Box2D`. The annotation "{'occluded': True}"
-is stored in :ref:`features:Attributes` of :ref:`features:Box2D`.
+stored in :ref:`supported_label_types:Category` of :ref:`supported_label_types:Box2D`. The annotation "{'occluded': True}"
+is stored in :ref:`supported_label_types:Attributes` of :ref:`supported_label_types:Box2D`.
 
 *************************
  Read Dataset from Local
@@ -160,8 +161,8 @@ structure for ``BSTLD`` should be like:
 
 .. note::
 
-   Note that :ref:`basic_concepts:Dataset` and :ref:`features:Dataset Client` are different
-   concepts.
+   Note that :ref:`basic_concepts:Dataset` and :ref:`features/tensorbay_client:Dataset Client`
+   are different concepts.
 
 .. warning::
 
@@ -198,8 +199,8 @@ Write the Catalog
 Before writing the dataloader, we first need to write the :ref:`contribution:Catalog`.
 Catalog is a json file contains all label information of one dataset.
 See :ref:`this page <basic_concepts:Catalog & SubCatalog>` for more details.
-The only annotation type for ``BSTLD`` is :ref:`features:Box2D`, and there are 13
-:ref:`features:Category` types and one :ref:`features:Attributes` type.
+The only annotation type for ``BSTLD`` is :ref:`supported_label_types:Box2D`, and there are 13
+:ref:`supported_label_types:Category` types and one :ref:`supported_label_types:Attributes` type.
 
 .. literalinclude:: ../../../tensorbay/opendataset/BSTLD/catalog.json
    :language: json
@@ -243,11 +244,11 @@ Add Data and Labels
 It takes four key substeps to add the data and the labels:
 
 -  Creating :ref:`basic_concepts:Data` and adding content.
--  Creating :ref:`features:Box2D` and adding annotations.
+-  Creating :ref:`supported_label_types:Box2D` and adding annotations.
 -  Appending the Box2D labels to the created Data.
 -  Appending the Data to the created Segment.
 
-See :ref:`this page <features:Box2D>` for more details for about Box2D annotation details.
+See :ref:`this page <supported_label_types:Box2D>` for more details for about Box2D annotation details.
 
 .. note::
    The :ref:`BSTLD dataloader <BSTLD-dataloader>` above uses relative import(L11-12).
@@ -272,8 +273,9 @@ Once you write your own :ref:`contribution:Dataloader` and read the local datase
     >>> dataset_client = gas.upload_dataset_object(dataset, jobs=8, skip_uploaded_files=False)
     >>> dataset_client.commit("BSTLD")
 
-Remember to execute the :ref:`features:Commit` step after uploading. If needed, you can re-upload
-and commit again. Please see :ref:`features:Version Control` for more details.
+Remember to execute the :ref:`features/version_control:Commit` step after uploading.
+If needed, you can re-upload and commit again.
+Please see :ref:`features/version_control:Version Control` for more details.
 
 .. note::
 

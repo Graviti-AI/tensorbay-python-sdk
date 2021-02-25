@@ -2,14 +2,14 @@
  Audio with sentence Label
 ###########################
 
-:ref:`features:Sentence` is one of label types. It represents Sentence label
-of Audio data.
+:ref:`supported_label_types:Sentence` is one of the supported label types.
+It represents Sentence label of audio data.
 
 *************
  Preparation
 *************
 
-First of all, create a :ref:`features:GAS Client`.
+First of all, create a :ref:`features/tensorbay_client:GAS Client`.
 
 .. code:: python
 
@@ -24,7 +24,7 @@ First of all, create a :ref:`features:GAS Client`.
 
 As mentioned in :ref:`quick_start:Quick Start`, obtain_ and fork_ should be done before reading a
 dataset from TensorBay. Then, pass the correct dataset name to the GAS client, and you will get a
-:ref:`features:Dataset Client`.
+:ref:`features/tensorbay_client:Dataset Client`.
 
 Here, we take `THCHS-30`_ as an example.
 
@@ -79,8 +79,9 @@ You can get one by index.
    If the :ref:`basic_concepts:Segment` or :ref:`basic_concepts:FusionSegment` is created without
    given name, then its name will be "".
 
-In each :ref:`basic_concepts:Data`, there is a sequence of :ref:`features:Sentence` annotations. You
-can get one by index.
+In each :ref:`basic_concepts:Data`,
+there is a sequence of :ref:`supported_label_types:Sentence` annotations.
+You can get one by index.
 
 .. code:: python
 
@@ -126,7 +127,8 @@ can get one by index.
         )
     ]
 
-In ``sentence`` attribute of :ref:`features:Sentence`, there is a list of :ref:`features:Word`.
+In ``sentence`` attribute of :ref:`supported_label_types:Sentence`,
+there is a list of :ref:`supported_label_types:Word`.
 In a Word instance, ``text`` means one phrase of a sentence, ``begin`` means the start time of text,
 ``end`` means the end time of text.
 
@@ -140,10 +142,12 @@ In a Word instance, ``text`` means one phrase of a sentence, ``begin`` means the
         )
     ]
 
-In ``spell`` attribute of :ref:`features:Sentence`, there is a list of :ref:`features:Word`.
-In a Word instance, ``text`` means the Chinese Phonetic Alphabet with tone or English spelling of a word.
-'qi1' is the Chinese Phonetic Alphabet with first tone of '七'. ``begin`` means the start time of text,
-``end`` means the end time of text.
+In ``spell`` attribute of :ref:`supported_label_types:Sentence`,
+there is a list of :ref:`supported_label_types:Word`.
+In a Word instance, ``text`` means the Chinese Phonetic Alphabet with tone or English spelling
+of a word.
+'qi1' is the Chinese Phonetic Alphabet with first tone of '七'.
+``begin`` means the start time of text, ``end`` means the end time of text.
 
     >>> label_audio.phone
     [Word(
@@ -155,7 +159,8 @@ In a Word instance, ``text`` means the Chinese Phonetic Alphabet with tone or En
         )
     ]
 
-In ``phone`` attribute of :ref:`features:Sentence`, there is a list of :ref:`features:Word`.
+In ``phone`` attribute of :ref:`supported_label_types:Sentence`,
+there is a list of :ref:`supported_label_types:Word`.
 In a Word instance, ``text`` means the Chinese initials and finals or English phonemes of a word.
 'q' is the Chinese initial of '七', ``begin`` means the start time of text,
 ``end`` means the end time of text.
@@ -201,8 +206,8 @@ structure for ``THCHS-30`` should be like:
 
 .. note::
 
-   Note that :ref:`basic_concepts:Dataset` and :ref:`features:Dataset Client` are different
-   concepts.
+   Note that :ref:`basic_concepts:Dataset` and :ref:`features/tensorbay_client:Dataset Client`
+   are different concepts.
 
 .. warning::
 
@@ -231,7 +236,7 @@ The :ref:`basic_concepts:Segment` you get now is the same as the one you read fr
 If there is no :ref:`contribution:Dataloader` avaliable to your target dataset,
 welcome to write and contribute one.
 Now we take ``THCHS-30`` as an example to explain how to write a dataloader for datasets with
-:ref:`features:Sentence` label.
+:ref:`supported_label_types:Sentence` label.
 
 Write the Catalog
 =================
@@ -278,11 +283,12 @@ Add Data and Labels
 It takes four key substeps to add the data and the labels:
 
 -  Creating :ref:`basic_concepts:Data` and adding content.
--  Creating :ref:`features:Sentence` and adding annotations.
+-  Creating :ref:`supported_label_types:Sentence` and adding annotations.
 -  Appending the Sentence labels to the created Data.
 -  Appending the Data to the created Segment.
 
-See :ref:`this page <features:Sentence>` for more details for about Sentence annoation details.
+See :ref:`this page <supported_label_types:Sentence>` for more details for about Sentence annoation
+details.
 
 .. note::
    The :ref:`THCHS-30 dataloader <THCHS30-dataloader>` above uses relative import(L13-15).
@@ -307,8 +313,9 @@ Once you write your own :ref:`contribution:Dataloader` and read the local datase
    >>> dataset_client = gas.upload_dataset_object(dataset, jobs=8, skip_uploaded_files=False)
    >>> dataset_client.commit("THCHS-30")
 
-Remember to execute the :ref:`features:Commit` step after uploading. If needed, you can re-upload
-and commit again. Please see :ref:`features:Version Control` for more details.
+Remember to execute the :ref:`features/version_control:Commit` step after uploading.
+If needed, you can re-upload and commit again.
+Please see :ref:`features/version_control:Version Control` for more details.
 
 .. note::
 
