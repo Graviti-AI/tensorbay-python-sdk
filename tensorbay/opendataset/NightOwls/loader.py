@@ -18,24 +18,28 @@ DATASET_NAME = "NightOwls"
 
 
 def NightOwls(path: str) -> Dataset:
-    """
-    Load the NightOwls Dataset to TensorBay
-    :param path: the root directory of the dataset
-    The file structure should be like:
-    <path>
-        nightowls_test/
-            <image_name>.png
-            ...
-        nightowls_training/
-            <image_name>.png
-            ...
-        nightowls_validation/
-            <image_name>.png
-            ...
-        nightowls_training.json
-        nightowls_validation.json
+    """Load the NightOwls Dataset to TensorBay
 
-    :return: a loaded dataset
+    Arguments:
+        path: the root directory of the dataset
+            The file structure should be like::
+
+                <path>
+                    nightowls_test/
+                        <image_name>.png
+                        ...
+                    nightowls_training/
+                        <image_name>.png
+                        ...
+                    nightowls_validation/
+                        <image_name>.png
+                        ...
+                    nightowls_training.json
+                    nightowls_validation.json
+
+    Returns:
+        Loaded `Dataset` object
+        
     """
     root_path = os.path.abspath(os.path.expanduser(path))
 

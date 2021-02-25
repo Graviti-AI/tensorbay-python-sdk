@@ -19,19 +19,24 @@ DATASET_NAME = "TLR"
 
 
 def TLR(path: str) -> Dataset:
-    """
-    Load Traffic Lights Recognition to TensorBay
+    """Load Traffic Lights Recognition to TensorBay
 
-    :param path: the root directory of the dataset
+    Arguments:
+        path: the root directory of the dataset
+            The file structure should like::
 
-    The file structure should like this:
-    root_path/
-        Lara3D_URbanSeq1_JPG/
-            frame_011149.jpg
-            frame_011150.jpg
-            frame_<frame_index>.jpg
-            ...
-        Lara_UrbanSeq1_GroundTruth_cvml.xml
+                <path>
+                    root_path/
+                        Lara3D_URbanSeq1_JPG/
+                            frame_011149.jpg
+                            frame_011150.jpg
+                            frame_<frame_index>.jpg
+                            ...
+                        Lara_UrbanSeq1_GroundTruth_cvml.xml
+        
+    Returns:
+        Loaded `Dataset` object
+        
     """
     root_path = os.path.abspath(os.path.expanduser(path))
 

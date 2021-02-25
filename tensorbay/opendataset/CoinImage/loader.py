@@ -20,14 +20,18 @@ DATASET_NAME = "CoinImage"
 def CoinImage(path: str) -> Dataset:
     """Coin Image open dataset dataloader
 
-    :param path: Path to Coin Image dataset
-    The file structure should be like:
-    <path>
-        classes.csv
-        <imagename>.png
-        ...
+    Arguments:
+        path: Path to Coin Image dataset
+            The file structure should be like::
 
-    :return: load `Dataset` object
+                <path>
+                    classes.csv
+                    <imagename>.png
+                    ...
+
+    Returns: 
+        Loaded `Dataset` object
+        
     """
     root_path = os.path.abspath(os.path.expanduser(path))
 

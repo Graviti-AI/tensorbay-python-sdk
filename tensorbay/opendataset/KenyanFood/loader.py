@@ -19,24 +19,28 @@ SEGMENTS_FOOD_OR_NONFOOD = {"test": "test.txt", "train": "train.txt"}
 
 
 def KenyanFoodOrNonfood(path: str) -> Dataset:
-    """
-    Kenyan Food or Nonfood open dataset dataloader
-    :param path: Path to KenyanFoodOrNonfood dataset
-    the file structure should be like:
-    <path>
-            images/
-                food/
-                    236171947206673742.jpg
-                    ...
-                nonfood/
-                    168223407.jpg
-                    ...
-            data.csv
-            split.py
-            test.txt
-            train.txt
+    """Kenyan Food or Nonfood open dataset dataloader
 
-    :return:load `Dataset` object
+    Arguments:
+        path: Path to KenyanFoodOrNonfood dataset
+            The file structure should be like::
+            
+                <path>
+                        images/
+                            food/
+                                236171947206673742.jpg
+                                ...
+                            nonfood/
+                                168223407.jpg
+                                ...
+                        data.csv
+                        split.py
+                        test.txt
+                        train.txt
+
+    Returns:
+        Loaded `Dataset` object
+
     """
     root_path = os.path.abspath(os.path.expanduser(path))
     dataset = Dataset(DATASET_NAME_FOOD_OR_NONFOOD)
@@ -55,36 +59,40 @@ def KenyanFoodOrNonfood(path: str) -> Dataset:
 
 
 def KenyanFoodType(path: str) -> Dataset:
-    """
-    Kenyan Food Type open dataset dataloader
-    :param path:Path to KenyanFoodType dataset
-    the file structure should be like:
-    <path>
-        test.csv
-        test/
-            bhaji/
-                1611654056376059197.jpg
-                ...
-            chapati/
-                1451497832469337023.jpg
-                ...
-            ...
-        train/
-            bhaji/
-                190393222473009410.jpg
-                ...
-            chapati/
-                1310641031297661755.jpg
-                ...
-        val/
-            bhaji/
-                1615408264598518873.jpg
-                ...
-            chapati/
-                1553618479852020228.jpg
-                ...
+    """Kenyan Food Type open dataset dataloader
 
-    :return:load `Dataset` object
+    Arguments:
+        path:Path to KenyanFoodType dataset
+            The file structure should be like::
+
+                <path>
+                    test.csv
+                    test/
+                        bhaji/
+                            1611654056376059197.jpg
+                            ...
+                        chapati/
+                            1451497832469337023.jpg
+                            ...
+                        ...
+                    train/
+                        bhaji/
+                            190393222473009410.jpg
+                            ...
+                        chapati/
+                            1310641031297661755.jpg
+                            ...
+                    val/
+                        bhaji/
+                            1615408264598518873.jpg
+                            ...
+                        chapati/
+                            1553618479852020228.jpg
+                            ...
+
+    Returns:
+        Loaded `Dataset` object
+        
     """
 
     root_path = os.path.abspath(os.path.expanduser(path))

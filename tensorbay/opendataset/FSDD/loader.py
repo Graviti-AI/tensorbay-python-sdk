@@ -27,15 +27,20 @@ _METADATA = {
 def FSDD(path: str) -> Dataset:
     """Load the Free Spoken Digit Dataset to TensorBay
 
-    :param path: the root directory of the dataset
-    The file structure should be like:
-    <path>
-        recordings/
-            0_george_0.wav
-            0_george_1.wav
-            ...
+    Arguments:
 
-    :return: a loaded dataset
+        path: the root directory of the dataset
+            The file structure should be like::
+
+                <path>
+                    recordings/
+                        0_george_0.wav
+                        0_george_1.wav
+                        ...
+
+    Returns:
+        Loaded `Dataset` object
+        
     """
     label_map = {}
     for key, value in _METADATA.items():

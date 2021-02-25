@@ -20,17 +20,21 @@ DATASET_NAME = "Hard Hat Workers"
 def HardHatWorkers(path: str) -> Dataset:
     """Load the Hard Hat Workers Dataset to TensorBay
 
-    :param path: the root directory of the dataset
-    The file structure should be like:
-    <path>
-        annotations/
-            hard_hat_workers0.xml
-            ...
-        images/
-            hard_hat_workers0.png
-            ...
+    Arguments:
+        path: the root directory of the dataset
+            The file structure should be like::
 
-    :return: a loaded dataset
+                <path>
+                    annotations/
+                        hard_hat_workers0.xml
+                        ...
+                    images/
+                        hard_hat_workers0.png
+                        ...
+
+    Returns:
+        Loaded `Dataset` object
+        
     """
     dataset = Dataset(DATASET_NAME)
     dataset.load_catalog(os.path.join(os.path.dirname(__file__), "catalog.json"))

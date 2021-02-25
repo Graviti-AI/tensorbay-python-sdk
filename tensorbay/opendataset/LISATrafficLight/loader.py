@@ -25,40 +25,44 @@ SUPERCATEGORY_INDEX = {
 def LISATrafficLight(path: str) -> Dataset:
     """LISA traffic light open dataset dataloader
 
-    :param path: Path to LISA traffic light dataset
-    The file structure should be like:
-    <path>
-        Annotations/Annotations/
-            daySequence1/
-            daySequence2/
-            dayTrain/
-                dayClip1/
-                dayClip10/
-                ...
-                dayClip9/
-            nightSequence1/
-            nightSequence2/
-            nightTrain/
-                nightClip1/
-                nightClip2/
-                ...
-                nightClip5/
-        daySequence1/daySequence1/
-        daySequence2/daySequence2/
-        dayTrain/dayTrain/
-            dayClip1/
-            dayClip10/
-            ...
-            dayClip9/
-        nightSequence1/nightSequence1/
-        nightSequence2/nightSequence2/
-        nightTrain/nightTrain/
-            nightClip1/
-            nightClip2/
-            ...
-            nightClip5/
+    Arguments:
+        path: Path to LISA traffic light dataset
+            The file structure should be like::
 
-    :return: load `Dataset` object
+                <path>
+                    Annotations/Annotations/
+                        daySequence1/
+                        daySequence2/
+                        dayTrain/
+                            dayClip1/
+                            dayClip10/
+                            ...
+                            dayClip9/
+                        nightSequence1/
+                        nightSequence2/
+                        nightTrain/
+                            nightClip1/
+                            nightClip2/
+                            ...
+                            nightClip5/
+                    daySequence1/daySequence1/
+                    daySequence2/daySequence2/
+                    dayTrain/dayTrain/
+                        dayClip1/
+                        dayClip10/
+                        ...
+                        dayClip9/
+                    nightSequence1/nightSequence1/
+                    nightSequence2/nightSequence2/
+                    nightTrain/nightTrain/
+                        nightClip1/
+                        nightClip2/
+                        ...
+                        nightClip5/
+
+   Returns:
+        Loaded `Dataset` object
+        
     """
     root_path = os.path.abspath(os.path.expanduser(path))
     annotation_path = os.path.join(root_path, "Annotations", "Annotations")

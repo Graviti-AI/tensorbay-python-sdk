@@ -19,14 +19,19 @@ _VALID_KEYPOINT_INDICES = [0, 1, 2, 3, 4, 5, 6, 9, 12, 13, 16]
 def FLIC(path: str) -> Dataset:
     """FLIC open dataset dataloader.
 
-    :param path: Path to FLIC
-    The folder structure should be like:
-    <path>
-        exampls.mat
-        images/
-            2-fast-2-furious-00003571.jpg
-            ...
-    :return: loaded FLIC Dataset
+    Arguments:
+        path: Path to FLIC
+            The folder structure should be like::
+
+                <path>
+                    exampls.mat
+                    images/
+                        2-fast-2-furious-00003571.jpg
+                        ...
+
+    Returns:
+        Loaded `Dataset` object
+        
     """
     from scipy.io import loadmat  # pylint: disable=import-outside-toplevel
 

@@ -26,27 +26,33 @@ _ATTRIBUTE_MAP_TYPE = Dict[str, List[Union[bool, str]]]
 def WIDER_FACE(path: str) -> Dataset:
     """Load the WIDER FACE Dataset to TensorBay
 
-    :param path: the root directory of the dataset
-    The file structure should be like: <path> WIDER_train/
-            images/
-                0--Parade/
-                    0_Parade_marchingband_1_100.jpg
-                    0_Parade_marchingband_1_1015.jpg
-                    0_Parade_marchingband_1_1030.jpg
-                    ...
-                1--Handshaking/
-                ...
-                59--people--driving--car/
-                61--Street_Battle/
-        WIDER_val/
-            ...
-        WIDER_test/
-            ...
-        wider_face_split/
-            wider_face_train_bbx_gt.txt
-            wider_face_val_bbx_gt.txt
+    Arguments:
+        path: the root directory of the dataset
+            The file structure should be like::
+    
+                <path> 
+                    WIDER_train/
+                        images/
+                            0--Parade/
+                                0_Parade_marchingband_1_100.jpg
+                                0_Parade_marchingband_1_1015.jpg
+                                0_Parade_marchingband_1_1030.jpg
+                                ...
+                            1--Handshaking/
+                            ...
+                            59--people--driving--car/
+                            61--Street_Battle/
+                    WIDER_val/
+                        ...
+                    WIDER_test/
+                        ...
+                    wider_face_split/
+                        wider_face_train_bbx_gt.txt
+                        wider_face_val_bbx_gt.txt
 
-    :return: a loaded dataset
+    Returns:
+        Loaded `Dataset` object
+        
     """
 
     dataset = Dataset(DATASET_NAME)

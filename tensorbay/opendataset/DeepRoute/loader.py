@@ -19,21 +19,25 @@ DATASET_NAME = "DeepRoute"
 def DeepRoute(path: str) -> Dataset:
     """DeepRoute dataset dataloader
 
-    :param path: Path to DeepRoute dataset
-    The file structure should be like:
-    <path>
-        pointcloud/
-            00001.bin
-            00002.bin
-            ...
-            10000.bin
-        groundtruth/
-            00001.txt
-            00002.txt
-            ...
-            10000.txt
+    Arguments:
+        path: Path to DeepRoute dataset
+            The file structure should be like::
 
-    :return: load `Dataset` object
+                <path>
+                    pointcloud/
+                        00001.bin
+                        00002.bin
+                        ...
+                        10000.bin
+                    groundtruth/
+                        00001.txt
+                        00002.txt
+                        ...
+                        10000.txt
+
+    Returns:
+        Loaded `Dataset` object
+        
     """
     root_path = os.path.abspath(os.path.expanduser(path))
 

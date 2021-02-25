@@ -19,24 +19,23 @@ _SEGMENTS = {"train": True, "test": False}
 def DogsVsCats(path: str) -> Dataset:
     """Open dataset DogsVsCats dataloader.
 
-    The file structure should be like::
-
-        <path>
-            train/
-                cat.0.jpg
-                ...
-                dog.0.jpg
-                ...
-            test/
-                1000.jpg
-                1001.jpg
-                ...
-
     Arguments:
-        path: Path to DogsVsCats dataset.
+        path: Path to DogsVsCats dataset
+            The file structure should be like::
+
+                <path>
+                    train/
+                        cat.0.jpg
+                        ...
+                        dog.0.jpg
+                        ...
+                    test/
+                        1000.jpg
+                        1001.jpg
+                        ...
 
     Returns:
-        Dataset: Loaded ``Dataset`` object.
+        Loaded ``Dataset`` object.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

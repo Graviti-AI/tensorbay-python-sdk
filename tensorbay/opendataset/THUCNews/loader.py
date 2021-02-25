@@ -16,19 +16,25 @@ DATASET_NAME = "THUCNews"
 
 
 def THUCNews(path: str) -> Dataset:
-    """
-    :param path: Path to THUCNews
-    The folder structure should be like
-    <path>
-        <category>/
-            0.txt
-            1.txt
-            2.txt
-            3.txt
-            ...
-        <category>/
-        ...
-    :return: The loaded THUCNews dataset
+    """Load the THUCNews Dataset to TensorBay
+
+    Arguments:
+        path: Path to THUCNews
+            The folder structure should be like::
+
+                <path>
+                    <category>/
+                        0.txt
+                        1.txt
+                        2.txt
+                        3.txt
+                        ...
+                    <category>/
+                    ...
+
+    Returns:
+        Loaded `Dataset` object
+        
     """
     root_path = os.path.abspath(os.path.expanduser(path))
     dataset = Dataset(DATASET_NAME)

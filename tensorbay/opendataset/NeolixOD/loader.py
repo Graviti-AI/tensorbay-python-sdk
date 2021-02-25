@@ -18,16 +18,20 @@ DATASET_NAME = "NeolixOD"
 def NeolixOD(path: str) -> Dataset:
     """NeolixOD  dataset dataloader
 
-    :param path: Path to NeolixOD dataset
-    The file structure should be like:
-    <path>
-        bins/
-            <id>.bin
-        labels/
-            <id>.txt
-        ...
+    Arguments:
+        path: Path to NeolixOD dataset
+            The file structure should be like::
 
-    :return: load `Dataset` object
+                <path>
+                    bins/
+                        <id>.bin
+                    labels/
+                        <id>.txt
+                    ...
+
+    Returns:
+        Loaded `Dataset` object
+        
     """
     root_path = os.path.abspath(os.path.expanduser(path))
 

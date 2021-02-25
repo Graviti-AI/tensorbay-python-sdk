@@ -22,38 +22,44 @@ _SEGMENT_SPLIT_FILES = (
 
 
 def CompCars(path: str) -> Dataset:
-    """
-    Load the CompCars dataset to TensorBay
-    :param path: the root path of dataset
-    The file structure should be like:
-    <path>
-        data/
-            image/
-                <make name id>/
-                    <model name id>/
-                        <year>/
-                            <image name>.jpg
+    """Load the CompCars dataset to TensorBay
+
+    Arguments:
+        path: the root path of dataset
+            The file structure should be like::
+
+                <path>
+                    data/
+                        image/
+                            <make name id>/
+                                <model name id>/
+                                    <year>/
+                                        <image name>.jpg
+                                        ...
+                                    ...
+                                ...
                             ...
-                        ...
-                    ...
-                ...
-            label/
-                <make name id>/
-                    <model name id>/
-                        <year>/
-                            <image name>.txt
+                        label/
+                            <make name id>/
+                                <model name id>/
+                                    <year>/
+                                        <image name>.txt
+                                        ...
+                                    ...
+                                ...
                             ...
-                        ...
-                    ...
-                ...
-            misc/
-                attributes.txt
-                car_type.mat
-                make_model_name.mat
-            train_test_split/
-                classification/
-                    train.txt
-                    test.txt
+                        misc/
+                            attributes.txt
+                            car_type.mat
+                            make_model_name.mat
+                        train_test_split/
+                            classification/
+                                train.txt
+                                test.txt
+
+    Returns:
+        Loaded `Dataset` object
+        
     """
     root_path = os.path.join(os.path.abspath(os.path.expanduser(path)), "data")
 

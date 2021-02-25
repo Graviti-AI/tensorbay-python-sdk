@@ -21,21 +21,25 @@ DATASET_NAME = "Head Pose Image"
 def HeadPoseImage(path: str) -> Dataset:
     """Load the Head Pose Image Dataset to TensorBay
 
-    :param path: the root directory of the dataset
-    The file structure should be like:
-    <path>
-        Person01/
-            person01100-90+0.jpg
-            person01100-90+0.txt
-            person01101-60-90.jpg
-            person01101-60-90.txt
-            ...
-        Person02/
-        Person03/
-        ...
-        Person15/
+    Arguments:
+        path: the root directory of the dataset
+            The file structure should be like::
 
-    :return: a loaded dataset
+                <path>
+                    Person01/
+                        person01100-90+0.jpg
+                        person01100-90+0.txt
+                        person01101-60-90.jpg
+                        person01101-60-90.txt
+                        ...
+                    Person02/
+                    Person03/
+                    ...
+                    Person15/
+
+    Returns:
+        Loaded `Dataset` object
+        
     """
 
     dataset = Dataset(DATASET_NAME)

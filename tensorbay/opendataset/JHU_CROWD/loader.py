@@ -22,21 +22,25 @@ _WEATHER_CONDITION_MAP = {0: "no weather degradationi", 1: "fog/haze", 2: "rain"
 def JHU_CROWD(path: str) -> Dataset:
     """Load the JHU-CROWD++ Dataset to TensorBay
 
-    :param path: the root directory of the dataset
-    The file structure should be like:
-    <path>
-        train/
-            images/
-                0000.jpg
-                ...
-            gt/
-                0000.txt
-                ...
-            image_labels.txt
-        test/
-        val/
+    Arguments:
+        path: the root directory of the dataset
+            The file structure should be like::
 
-    :return: a loaded dataset
+                <path>
+                    train/
+                        images/
+                            0000.jpg
+                            ...
+                        gt/
+                            0000.txt
+                            ...
+                        image_labels.txt
+                    test/
+                    val/
+
+    Returns:
+        Loaded `Dataset` object
+        
     """
 
     dataset = Dataset(DATASET_NAME)

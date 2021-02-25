@@ -33,39 +33,44 @@ SEGMENT_DESCRIPTION_DICT = {
 def Newsgroups20(path: str) -> Dataset:
     """Newsgroups20 open dataset dataloader.
 
-    :param path: Path to Newsgroups20
-    The folder structure should be like:
-    <path>
-        20news-18828/
-            alt.atheism/
-                49960
-                51060
-                51119
-                51120
-                ...
-            comp.graphics/
-            comp.os.ms-windows.misc/
-            comp.sys.ibm.pc.hardware/
-            comp.sys.mac.hardware/
-            comp.windows.x/
-            misc.forsale/
-            rec.autos/
-            rec.motorcycles/
-            rec.sport.baseball/
-            rec.sport.hockey/
-            sci.crypt/
-            sci.electronics/
-            sci.med/
-            sci.space/
-            soc.religion.christian/
-            talk.politics.guns/
-            talk.politics.mideast/
-            talk.politics.misc/
-            talk.religion.misc/
-        20news-bydate-test/
-        20news-bydate-train/
-        20_newsgroups/
-    :return: loaded Newsgroups20 Dataset
+    Arguments:
+        path: Path to Newsgroups20
+            The folder structure should be like::
+
+                <path>
+                    20news-18828/
+                        alt.atheism/
+                            49960
+                            51060
+                            51119
+                            51120
+                            ...
+                        comp.graphics/
+                        comp.os.ms-windows.misc/
+                        comp.sys.ibm.pc.hardware/
+                        comp.sys.mac.hardware/
+                        comp.windows.x/
+                        misc.forsale/
+                        rec.autos/
+                        rec.motorcycles/
+                        rec.sport.baseball/
+                        rec.sport.hockey/
+                        sci.crypt/
+                        sci.electronics/
+                        sci.med/
+                        sci.space/
+                        soc.religion.christian/
+                        talk.politics.guns/
+                        talk.politics.mideast/
+                        talk.politics.misc/
+                        talk.religion.misc/
+                    20news-bydate-test/
+                    20news-bydate-train/
+                    20_newsgroups/
+                    
+    Returns:
+        Loaded `Dataset` object
+        
     """
     root_path = os.path.abspath(os.path.expanduser(path))
     dataset = Dataset(DATASET_NAME)

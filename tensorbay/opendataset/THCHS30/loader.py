@@ -21,20 +21,25 @@ _SEGMENT_NAME_LIST = ("train", "dev", "test")
 def THCHS30(path: str) -> Dataset:
     """Load the THCHS-30 Dataset to TensorBay
 
-    :param path: the root directory of the dataset
-    The file structure should be like:
-    <path>
-        lm_word/
-            lexicon.txt
-        data/
-            A11_0.wav.trn
-            ...
-        dev/
-            A11_101.wav
-            ...
-        train/
-        test/
-    :return: a loaded dataset
+    Arguments:
+        path: the root directory of the dataset
+            The file structure should be like::
+
+                <path>
+                    lm_word/
+                        lexicon.txt
+                    data/
+                        A11_0.wav.trn
+                        ...
+                    dev/
+                        A11_101.wav
+                        ...
+                    train/
+                    test/
+
+    Returns:
+        Loaded `Dataset` object
+        
     """
     dataset = Dataset(DATASET_NAME)
     dataset.catalog.sentence = _get_subcatalog(os.path.join(path, "lm_word", "lexicon.txt"))

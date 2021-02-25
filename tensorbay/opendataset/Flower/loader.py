@@ -26,15 +26,17 @@ def Flower17(path: str) -> Dataset:
 
     Arguments:
         path: The root directory of the dataset
-            The file structure should be like:
-            <path>
-                jpg/
-                    image_0001.jpg
-                    ...
-                datasplits.mat
+            The file structure should be like::
+
+                <path>
+                    jpg/
+                        image_0001.jpg
+                        ...
+                    datasplits.mat
 
     Returns:
         A loaded dataset.
+
     """
     from scipy.io import loadmat  # pylint: disable=import-outside-toplevel
 
@@ -62,16 +64,18 @@ def Flower102(path: str) -> Dataset:
 
     Arguments:
         path: the root directory of the dataset
-            The file structure should be like:
-            <path>
-                jpg/
-                    image_00001.jpg
-                    ...
-                imagelabels.mat
-                setid.mat
+            The file structure should be like::
+
+                <path>
+                    jpg/
+                        image_00001.jpg
+                        ...
+                    imagelabels.mat
+                    setid.mat
 
     Returns:
         A loaded dataset.
+        
     """
     from scipy.io import loadmat  # pylint: disable=import-outside-toplevel
 
