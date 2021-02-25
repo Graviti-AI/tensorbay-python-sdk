@@ -83,3 +83,11 @@ repos:
           "--min-similarity-lines=10",
           "--notes=FIXME,XXX"
         ]
+  - repo: https://github.com/jorisroovers/gitlint
+    rev: v0.15.0
+    hooks:
+      - id: gitlint
+        name: gitlint
+        args: ["--contrib=CT1", "--ignore=body-is-missing", "--msg-filename"]
+        stages: [commit-msg]
+
