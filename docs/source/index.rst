@@ -43,7 +43,7 @@ data and work with TensorBay through TensorBaySDK. CLI is also available.
    examples/index
    advanced_features
    contribution
-   api
+   api/tensorbay
    exception
 
 ..

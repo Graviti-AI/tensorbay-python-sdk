@@ -359,6 +359,7 @@ class SupportAttributes(Supports):  # pylint: disable=too-few-public-methods
             name: The name of the attribute.
             type_: The type of the attribute value, could be a single type or multi-types.
                 The type must be within the followings:
+
                     - array
                     - boolean
                     - integer
@@ -366,6 +367,7 @@ class SupportAttributes(Supports):  # pylint: disable=too-few-public-methods
                     - string
                     - null
                     - instance
+
             enum: All the possible values of an enumeration attribute.
             minimum: The minimum value of number type attribute.
             maximum: The maximum value of number type attribute.
