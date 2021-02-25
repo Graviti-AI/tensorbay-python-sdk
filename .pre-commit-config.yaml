@@ -1,3 +1,5 @@
+---
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.4.0
@@ -88,6 +90,5 @@ repos:
     hooks:
       - id: gitlint
         name: gitlint
-        args: ["--contrib=CT1", "--ignore=body-is-missing", "--msg-filename"]
+        args: ["--msg-filename"]
         stages: [commit-msg]
-
