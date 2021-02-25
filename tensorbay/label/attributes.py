@@ -3,7 +3,16 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""This file defines class CatagoryInfo, AttributeInfo and Subcatalog."""
+"""Items and AttributeInfo.
+
+:class:`AttributeInfo` represents the information of an attribute.
+It refers to the `Json schema`_ method to describe an attribute.
+
+:class:`Items` is the base class of :class:`AttributeInfo`, representing the items of an attribute.
+
+.. _Json schema: https://json-schema.org/
+
+"""
 
 from enum import Enum
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Union
@@ -54,18 +63,36 @@ class _AttributeType(Enum):
 
 
 class Items(ReprMixin):
-    """The base class of :class:`AttributeInfo`, representing the item of an attribute.
+    """The base class of :class:`AttributeInfo`, representing the items of an attribute.
+
+    When the value type of an attribute is array,
+    the :class:`AttributeInfo` would contain an 'items' field.
 
     Arguments:
-        enum: All the possible values of the attribute.
-        type_: The type of the attribute value.
+        type_: The type of the attribute value, could be a single type or multi-types.
+            The type must be within the followings:
+                - array
+                - boolean
+                - integer
+                - number
+                - string
+                - null
+                - instance
+        enum: All the possible values of an enumeration attribute.
         minimum: The minimum value of number type attribute.
         maximum: The maximum value of number type attribute.
-        items: The item inside array type attributes.
+        items: The items inside array type attributes.
+
+    Attributes:
+        type: The type of the attribute value, could be a single type or multi-types.
+        enum: All the possible values of an enumeration attribute.
+        minimum: The minimum value of number type attribute.
+        maximum: The maximum value of number type attribute.
+        items: The items inside array type attributes.
 
     Raises:
         TypeError: When both enum and type_ are absent or
-            when type_ is array but items is absent.
+        when type_ is array and items is absent.
 
     """
 
@@ -95,13 +122,27 @@ class Items(ReprMixin):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Load an Items from a dict containing the items information.
+        """Load an Items from a dictionary containing the items information.
 
         Arguments:
-            contents: A dict containing the information of an Items.
+            contents: A dictionary containing the information of the items,
+                whose format should be like::
+
+                        {
+                            "type":
+                            "enum": [...]
+                            "minimum":
+                            "maximum":
+                            "items": {
+                                "enum": [...],
+                                "type":
+                                "minimum":
+                                "maximum":
+                            }
+                        }
 
         Returns:
-            The loaded Items.
+            The loaded :class:`Items` object.
 
         """
         return common_loads(cls, contents)
@@ -131,10 +172,10 @@ class Items(ReprMixin):
         return converted_type, converted_type == "array"
 
     def dumps(self) -> Dict[str, Any]:
-        """Dump the information of this item as a dictionary.
+        """Dumps the information of the items into a dictionary.
 
         Returns:
-            A dictionary contains all information of this item.
+            A dictionary containing all the information of the items.
 
         """
         contents: Dict[str, Any] = {}
@@ -157,16 +198,39 @@ class Items(ReprMixin):
 
 
 class AttributeInfo(NameMixin, Items):
-    """Information of an attribute.
+    """This class represents the information of an attribute.
 
-    :param name: The name of the attribute
-    :param enum: All the possible values of the attribute.
-    :param type_: The type of the attribute value.
-    :param minimum: The minimum value of number type attribute.
-    :param maximum: The maximum value of number type attribute.
-    :param items: The item inside array type attributes.
-    :param parent_categories: The parent categories of the attribute
-    :param description: The description of the attribute
+    It refers to the `Json schema`_ method to describe an attribute.
+
+    Arguments:
+        name: The name of the attribute.
+        type_: The type of the attribute value, could be a single type or multi-types.
+            The type must be within the followings:
+                - array
+                - boolean
+                - integer
+                - number
+                - string
+                - null
+                - instance
+        enum: All the possible values of an enumeration attribute.
+        minimum: The minimum value of number type attribute.
+        maximum: The maximum value of number type attribute.
+        items: The items inside array type attributes.
+        parent_categories: The parent categories of the attribute.
+        description: The description of the attribute.
+
+    Attributes:
+        type: The type of the attribute value, could be a single type or multi-types.
+        enum: All the possible values of an enumeration attribute.
+        minimum: The minimum value of number type attribute.
+        maximum: The maximum value of number type attribute.
+        items: The items inside array type attributes.
+        parent_categories: The parent categories of the attribute.
+        description: The description of the attribute.
+
+    .. _Json schema: https://json-schema.org/
+
     """
 
     _T = TypeVar("_T", bound="AttributeInfo")
@@ -198,10 +262,31 @@ class AttributeInfo(NameMixin, Items):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Load an AttributeInfo from a dict containing the attribute information.
+        """Load an AttributeInfo from a dictionary containing the attribute information.
 
-        :param contents: A dict containing the information of an AttributeInfo
-        :return: The loaded AttributeInfo
+        Arguments:
+            contents: A dictionary containing the information of the attribute,
+                whose format should be like::
+
+                        {
+                            "name":
+                            "type":
+                            "enum": [...]
+                            "minimum":
+                            "maximum":
+                            "items": {
+                                "enum": [...],
+                                "type":
+                                "minimum":
+                                "maximum":
+                            },
+                            "description":
+                            "parentCategories": [...]
+                        }
+
+        Returns:
+            The loaded :class:`AttributeInfo` object.
+
         """
         return common_loads(cls, contents)
 
@@ -213,9 +298,11 @@ class AttributeInfo(NameMixin, Items):
             self.parent_categories = contents["parentCategories"]
 
     def dumps(self) -> Dict[str, Any]:
-        """Dumps the information of this attribute as a dictionary.
+        """Dumps the information of this attribute into a dictionary.
 
-        :return: A dictionary contains all information of this attribute
+        Returns:
+            A dictionary containing all the information of this attribute.
+
         """
         contents: Dict[str, Any] = NameMixin.dumps(self)
         contents.update(Items.dumps(self))

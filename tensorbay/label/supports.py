@@ -3,7 +3,29 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""This file defines class CatagoryInfo, AttributeInfo and Subcatalog."""
+"""CatagoryInfo, VisibleType, KeypointsInfo and different Supports classes.
+
+:class:`CatagoryInfo` defines a category with the name and description of it.
+
+:class:`VisibleType` is an enumeration class
+representing all the optional visible types inside :class:`KeypointsInfo`.
+
+:class:`KeypointsInfo` defines the structure of a set of keypoints.
+
+:class:`Supports` is the base class of different mixin classes for subcatalog.
+
+.. table:: mixin classes for subcatalog
+   :widths: auto
+
+   ============================  ===============================================================
+   mixin classes for subcatalog  explaination
+   ============================  ===============================================================
+   :class:`SupportIsTracking`    a mixin class supporting tracking information of a subcatalog
+   :class:`SupportCategories`    a mixin class supporting category information of a subcatalog
+   :class:`SupportAttributes`    a mixin class supporting attribute information of a subcatalog
+   ============================  ===============================================================
+
+"""
 
 from enum import Enum, auto
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Union
@@ -13,24 +35,36 @@ from .attributes import AttributeInfo, Items, _ArgType, _EnumElementType
 
 
 class CategoryInfo(NameMixin):
-    """Information of a category, includes category name and description
+    """This class represents the information of a category, including category name and description.
 
-    :param name: The name of the category
-    :param description: The description of the category
+    Arguments:
+        name: The name of the category.
+        description: The description of the category.
+
+    Attributes:
+        name: The name of the category.
+        description: The description of the category.
+
     """
 
     _T = TypeVar("_T", bound="CategoryInfo")
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, str]) -> _T:
-        """Load a CategoryInfo from a dict containing the category.
+        """Loads a CategoryInfo from a dictionary containing the category.
 
-        :param contents: A dict containing the information of a CategoryInfo
-        {
-            "name": <str>
-            "description": <str>
-        }
-        :return: The loaded CategoryInfo
+        Arguments:
+            contents: A dictionary containing the information of the category,
+                whose format should be like::
+
+                    {
+                        "name": <str>
+                        "description": <str>
+                    }
+
+        Returns:
+            The loaded :class:`CategoryInfo` object.
+
         """
         return common_loads(cls, contents)
 
@@ -43,14 +77,25 @@ class VisibleType(Enum):
 
 
 class KeypointsInfo(ReprMixin):
-    """Information of a type of keypoints label.
+    """This class defines the structure of a set of keypoints.
 
-    :param number: The number of keypoints
-    :param names: All the names of keypoints
-    :param skeleton: The skeleton of keypoints
-    :param visible: The visible type of keypoints
-    :param parent_categories: The parent categories of the keypoints
-    :param description: The description of keypoints
+    Arguments:
+        number: The number of the set of keypoints.
+        names: All the names of the keypoints.
+        skeleton: The skeleton of the keypoints
+            indicating which keypoint should connect with another.
+        visible: The visible type of the keypoints.
+        parent_categories: The parent categories of the keypoints.
+        description: The description of the keypoints.
+
+    Attributes:
+        names: All the names of the keypoints.
+        skeleton: The skeleton of the keypoints
+            indicating which keypoint should connect with another.
+        visible: The visible type of the keypoints.
+        parent_categories: The parent categories of the keypoints.
+        description: The description of the keypoints.
+
     """
 
     _repr_type = ReprType.INSTANCE
@@ -96,10 +141,27 @@ class KeypointsInfo(ReprMixin):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Load a KeypointsInfo from a dict containing the information of the keypoints.
+        """Loads a KeypointsInfo from a dictionary containing the information of the keypoints.
 
-        :param contents: A dict contains all information of the KeypointsInfo
-        :return: The loaded KeypointsInfo
+        Arguments:
+            contents: A dictionary containing all the information of the set of keypoints,
+                whose format should be like::
+
+                    {
+                        "number":
+                        "names": [...],
+                        "skeleton": [
+                            [<index>, <index>],
+                            ...
+                        ],
+                        "visible": "TERNARY" or "BINARY"
+                        "parentCategories": [...],
+                        "description":
+                    }
+
+        Returns:
+            The loaded :class:`KeypointsInfo` object.
+
         """
         return common_loads(cls, contents)
 
@@ -123,16 +185,34 @@ class KeypointsInfo(ReprMixin):
 
     @property
     def number(self) -> int:
-        """Get the number of the keypoints.
+        """Return the number of the keypoints.
 
-        :return: The number of the keypoints
+        Returns:
+            The number of the keypoints.
+
         """
         return self._number
 
     def dumps(self) -> Dict[str, Any]:
-        """Dump all the keypoint information into a dictionary.
+        """Dumps all the keypoint information into a dictionary.
 
-        :return: A dictionary contains all information of the keypoint
+        Returns:
+            A dictionary containing all the information of the keypoint,
+            whose format is like::
+
+                {
+                    "number":
+                    "names": [...],
+                    "skeleton": [
+                        [<index>, <index>],
+                        ...
+                    ],
+                    "visible": "TERNARY" or "BINARY"
+                    "parentCategories": [...],
+                    "description":
+                }
+
+
         """
         contents: Dict[str, Any] = {"number": self._number}
 
@@ -155,7 +235,7 @@ class KeypointsInfo(ReprMixin):
 
 
 class Supports:  # pylint: disable=too-few-public-methods
-    """The base class of different support classes for subcatalog."""
+    """The base class of different mixin classes for subcatalog."""
 
     def _loads(self: Any, contents: Dict[str, Any]) -> None:
         raise NotImplementedError
@@ -165,7 +245,15 @@ class Supports:  # pylint: disable=too-few-public-methods
 
 
 class SupportIsTracking(Supports):  # pylint: disable=too-few-public-methods
-    """A class support isTracking of a subcatalog"""
+    """A mixin class supporting tracking information of a subcatalog.
+
+    Arguments:
+        is_tracking: Whether the Subcatalog contains tracking information.
+
+    Attributes:
+        is_tracking: Whether the Subcatalog contains tracking information.
+
+    """
 
     def __init__(self, is_tracking: bool = False) -> None:
         self.is_tracking = is_tracking
@@ -178,7 +266,16 @@ class SupportIsTracking(Supports):  # pylint: disable=too-few-public-methods
 
 
 class SupportCategories(Supports):  # pylint: disable=too-few-public-methods
-    """A class support categories of a subcatalog"""
+    """A mixin class supporting category information of a subcatalog.
+
+    Attributes:
+        categories: All the possible categories in the corresponding dataset
+            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            with the category names as keys
+            and the :class:`~graviti.label.supports.CategoryInfo` as values.
+        category_delimiter: The delimiter in category values indicating parent-child relationship.
+
+    """
 
     category_delimiter: str
     categories: NameOrderedDict[CategoryInfo]
@@ -205,10 +302,12 @@ class SupportCategories(Supports):  # pylint: disable=too-few-public-methods
         return contents
 
     def add_category(self, name: str, description: Optional[str] = None) -> None:
-        """Add a category to the Subcatalog
+        """Add a category to the Subcatalog.
 
-        :param name: The name of the category
-        :param description: The description of the category
+        Arguments:
+            name: The name of the category.
+            description: The description of the category.
+
         """
         if hasattr(self, "categories"):
             self.categories = NameOrderedDict()
@@ -217,7 +316,15 @@ class SupportCategories(Supports):  # pylint: disable=too-few-public-methods
 
 
 class SupportAttributes(Supports):  # pylint: disable=too-few-public-methods
-    """A class support attributes of a subcatalog"""
+    """A mixin class supporting attribute information of a subcatalog.
+
+    Attributes:
+        attributes: All the possible attributes in the corresponding dataset
+            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            with the attribute names as keys
+            and the :class:`~graviti.label.attribute.AttributeInfo` as values.
+
+    """
 
     attributes: NameOrderedDict[AttributeInfo]
 
@@ -246,16 +353,26 @@ class SupportAttributes(Supports):  # pylint: disable=too-few-public-methods
         parent_categories: Union[None, str, Iterable[str]] = None,
         description: Optional[str] = None,
     ) -> None:
-        """Add a attribute to the Subcatalog
+        """Add an attribute to the Subcatalog.
 
-        :param name: The name of the attribute
-        enum: All the possible values of the attribute.
-        type_: The type of the attribute value.
-        minimum: The minimum value of number type attribute.
-        maximum: The maximum value of number type attribute.
-        items: The item inside array type attributes.
-        :param parent_categories: The parent categories of the attribute
-        :param description: The description of the attributes
+        Arguments:
+            name: The name of the attribute.
+            type_: The type of the attribute value, could be a single type or multi-types.
+                The type must be within the followings:
+                    - array
+                    - boolean
+                    - integer
+                    - number
+                    - string
+                    - null
+                    - instance
+            enum: All the possible values of an enumeration attribute.
+            minimum: The minimum value of number type attribute.
+            maximum: The maximum value of number type attribute.
+            items: The items inside array type attributes.
+            parent_categories: The parent categories of the attribute.
+            description: The description of the attributes.
+
         """
         attribute_info = AttributeInfo(
             name,

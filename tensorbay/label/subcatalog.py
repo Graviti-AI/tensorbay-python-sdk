@@ -3,7 +3,32 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""This file defines class Subcatalogbase and Subcatalog classes for every LabelType."""
+"""Subcatalogbase and Subcatalog classes for every LabelType.
+
+:class:`Subcatalogbase` is the base class for different types of subcatalogs,
+which defines the basic concept of Subcatalog.
+
+Subcatalog contains the features, fields and specific definitions of the labels.
+The Subcatalog format varies by label type.
+A subcatalog class extends :class:`SubcatalogBase` and needed :class:`Supports` mixin classes.
+
+.. table:: subcatalog classes
+   :widths: auto
+
+   =================================   ==================================================
+   subcatalog classes                  explaination
+   =================================   ==================================================
+   :class:`ClassificationSubcatalog`   subcatalog for classification type of label
+   :class:`Box2DSubcatalog`            subcatalog for 2D bounding box type of label
+   :class:`Box3DSubcatalog`            subcatalog for 3D bounding box type of label
+   :class:`Keypoints2DSubcatal`        subcatalog for 2D polygon type of label
+   :class:`Polygon2DSubcatalogD`       subcatalog for 2D polyline type of label
+   :class:`Polyline2DSubcatalo2D`      subcatalog for 2D keypoints type of label
+   :class:`SentenceSubcatalog`         subcatalog for transcripted sentence type of label
+   =================================   ==================================================
+
+"""
+
 
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Union
 
@@ -22,7 +47,17 @@ _T = TypeVar("_T", bound="SubcatalogBase")
 
 
 class SubcatalogBase(TypeMixin[LabelType], ReprMixin):
-    """A base class for subcatalog."""
+    """This is the base class for different types of subcatalogs.
+
+    It defines the basic concept of Subcatalog, which is the collection of the labels information.
+    Subcatalog contains the features, fields and specific definitions of the labels.
+
+    The Subcatalog format varies by label type.
+
+    Attributes:
+        description: The description of the entire subcatalog.
+
+    """
 
     _supports: Tuple[Type[Supports], ...]
 
@@ -45,10 +80,14 @@ class SubcatalogBase(TypeMixin[LabelType], ReprMixin):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Load a subcatalog from a dict containing the attributes of the subcatalog.
+        """Loads a subcatalog from a dictionary containing the information of the subcatalog.
 
-        :param contents: A dict contains description of the subcatalog
-        :return: The loaded subcatalog
+        Arguments:
+            contents: A dictionary containing the information of the subcatalog.
+
+        Returns:
+            The loaded :class:`SubcatalogBase` object.
+
         """
         return common_loads(cls, contents)
 
@@ -59,11 +98,12 @@ class SubcatalogBase(TypeMixin[LabelType], ReprMixin):
             support._loads(self, contents)  # pylint: disable=protected-access
 
     def dumps(self) -> Dict[str, Any]:
-        """Dumps all the information of the subcatalog into a dict.
+        """Dumps all the information of the subcatalog into a dictionary.
 
-        :return: A dict containing all the information of the subcatalog
+        Returns:
+            A dictionary containing all the information of the subcatalog.
+
         """
-
         contents: Dict[str, Any] = {}
         if self.description:
             contents["description"] = self.description
@@ -77,17 +117,46 @@ class SubcatalogBase(TypeMixin[LabelType], ReprMixin):
 class ClassificationSubcatalog(  # pylint: disable=too-many-ancestors
     SubcatalogBase, SupportCategories, SupportAttributes
 ):
-    """A subcatalog contains all labels in CLASSIFICATION type."""
+    """This class defines the subcatalog for classification type of labels.
+
+    Attributes:
+        description: The description of the entire classification subcatalog.
+        categories: All the possible categories in the corresponding dataset
+            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            with the category names as keys
+            and the :class:`~graviti.label.supports.CategoryInfo` as values.
+        category_delimiter: The delimiter in category values indicating parent-child relationship.
+        attributes: All the possible attributes in the corresponding dataset
+            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            with the attribute names as keys
+            and the :class:`~graviti.label.attribute.AttributeInfo` as values.
+
+    """
 
 
 @SubcatalogTypeRegister(LabelType.BOX2D)
 class Box2DSubcatalog(  # pylint: disable=too-many-ancestors
     SubcatalogBase, SupportIsTracking, SupportCategories, SupportAttributes
 ):
-    """A subcatalog contains all labels in Box2D type
+    """This class defines the subcatalog for 2D box type of labels.
 
-    :param is_tracking: A boolean value indicates whether corresponding
-        subcatalog is tracking related
+    Arguments:
+        is_tracking: A boolean value indicates whether the corresponding
+            subcatalog contains tracking information.
+
+    Attributes:
+        description: The description of the entire 2D box subcatalog.
+        categories: All the possible categories in the corresponding dataset
+            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            with the category names as keys
+            and the :class:`~graviti.label.supports.CategoryInfo` as values.
+        category_delimiter: The delimiter in category values indicating parent-child relationship.
+        attributes: All the possible attributes in the corresponding dataset
+            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            with the attribute names as keys
+            and the :class:`~graviti.label.attribute.AttributeInfo` as values.
+        is_tracking: Whether the Subcatalog contains tracking information.
+
     """
 
     def __init__(self, is_tracking: bool = False) -> None:
@@ -98,10 +167,25 @@ class Box2DSubcatalog(  # pylint: disable=too-many-ancestors
 class Box3DSubcatalog(  # pylint: disable=too-many-ancestors
     SubcatalogBase, SupportIsTracking, SupportCategories, SupportAttributes
 ):
-    """A subcatalog contains all labels in Box3D type
+    """This class defines the subcatalog for 3D box type of labels.
 
-    :param is_tracking: A boolean value indicates whether corresponding
-        subcatalog is tracking related
+    Arguments:
+        is_tracking: A boolean value indicates whether the corresponding
+            subcatalog contains tracking information.
+
+    Attributes:
+        description: The description of the entire 3D box subcatalog.
+        categories: All the possible categories in the corresponding dataset
+            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            with the category names as keys
+            and the :class:`~graviti.label.supports.CategoryInfo` as values.
+        category_delimiter: The delimiter in category values indicating parent-child relationship.
+        attributes: All the possible attributes in the corresponding dataset
+            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            with the attribute names as keys
+            and the :class:`~graviti.label.attribute.AttributeInfo` as values.
+        is_tracking: Whether the Subcatalog contains tracking information.
+
     """
 
     def __init__(self, is_tracking: bool = False) -> None:
@@ -112,10 +196,25 @@ class Box3DSubcatalog(  # pylint: disable=too-many-ancestors
 class Polygon2DSubcatalog(  # pylint: disable=too-many-ancestors
     SubcatalogBase, SupportIsTracking, SupportCategories, SupportAttributes
 ):
-    """A subcatalog contains all labels in Polygon2D type
+    """This class defines the subcatalog for 2D polygon type of labels.
 
-    :param is_tracking: A boolean value indicates whether corresponding
-        subcatalog is tracking related
+    Arguments:
+        is_tracking: A boolean value indicates whether the corresponding
+            subcatalog contains tracking information.
+
+    Attributes:
+        description: The description of the entire 2D polygon subcatalog.
+        categories: All the possible categories in the corresponding dataset
+            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            with the category names as keys
+            and the :class:`~graviti.label.supports.CategoryInfo` as values.
+        category_delimiter: The delimiter in category values indicating parent-child relationship.
+        attributes: All the possible attributes in the corresponding dataset
+            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            with the attribute names as keys
+            and the :class:`~graviti.label.attribute.AttributeInfo` as values.
+        is_tracking: Whether the Subcatalog contains tracking information.
+
     """
 
     def __init__(self, is_tracking: bool = False) -> None:
@@ -126,10 +225,25 @@ class Polygon2DSubcatalog(  # pylint: disable=too-many-ancestors
 class Polyline2DSubcatalog(  # pylint: disable=too-many-ancestors
     SubcatalogBase, SupportIsTracking, SupportCategories, SupportAttributes
 ):
-    """A subcatalog contains all labels in Polyline2D type
+    """This class defines the subcatalog for 2D polyline type of labels.
 
-    :param is_tracking: A boolean value indicates whether corresponding
-        subcatalog is tracking related
+    Arguments:
+        is_tracking: A boolean value indicates whether the corresponding
+            subcatalog contains tracking information.
+
+    Attributes:
+        description: The description of the entire 2D polyline subcatalog.
+        categories: All the possible categories in the corresponding dataset
+            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            with the category names as keys
+            and the :class:`~graviti.label.supports.CategoryInfo` as values.
+        category_delimiter: The delimiter in category values indicating parent-child relationship.
+        attributes: All the possible attributes in the corresponding dataset
+            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            with the attribute names as keys
+            and the :class:`~graviti.label.attribute.AttributeInfo` as values.
+        is_tracking: Whether the Subcatalog contains tracking information.
+
     """
 
     def __init__(self, is_tracking: bool = False) -> None:
@@ -140,10 +254,25 @@ class Polyline2DSubcatalog(  # pylint: disable=too-many-ancestors
 class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
     SubcatalogBase, SupportIsTracking, SupportCategories, SupportAttributes
 ):
-    """A subcatalog contains all keypoints labels.
+    """This class defines the subcatalog for 2D keypoints type of labels.
 
-    :param is_tracking: A boolean value indicates whether corresponding
-        subcatalog is tracking related
+    Arguments:
+        is_tracking: A boolean value indicates whether the corresponding
+            subcatalog contains tracking information.
+
+    Attributes:
+        description: The description of the entire 2D keypoints subcatalog.
+        categories: All the possible categories in the corresponding dataset
+            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            with the category names as keys
+            and the :class:`~graviti.label.supports.CategoryInfo` as values.
+        category_delimiter: The delimiter in category values indicating parent-child relationship.
+        attributes: All the possible attributes in the corresponding dataset
+            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            with the attribute names as keys
+            and the :class:`~graviti.label.attribute.AttributeInfo` as values.
+        is_tracking: Whether the Subcatalog contains tracking information.
+
     """
 
     def __init__(self, is_tracking: bool = False) -> None:
@@ -168,12 +297,14 @@ class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
     ) -> None:
         """Add a type of keypoints to the subcatalog.
 
-        :param number: The number of keypoints
-        :param names: All the names of keypoints
-        :param skeleton: The skeleton of keypoints
-        :param visible: The visible type of keypoints
-        :param parent_categories: The parent categories of the keypoints
-        :param description: The description of keypoints
+        Arguments:
+            number: The number of keypoints.
+            names: All the names of keypoints.
+            skeleton: The skeleton of keypoints.
+            visible: The visible type of keypoints.
+            parent_categories: The parent categories of the keypoints.
+            description: The description of keypoints.
+
         """
         self._keypoints.append(
             KeypointsInfo(
@@ -188,16 +319,20 @@ class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
 
     @property
     def keypoints(self) -> List[KeypointsInfo]:
-        """Get the KeypointsInfo of the Subcatalog.
+        """Return the KeypointsInfo of the Subcatalog.
 
-        :return: A list of KeypointsInfo
+        Returns:
+            A list of :class:`~graviti.label.supports.KeypointsInfo`.
+
         """
         return self._keypoints
 
     def dumps(self) -> Dict[str, Any]:
-        """Dumps all the information of the keypoints into a dictionary
+        """Dumps all the information of the keypoints into a dictionary.
 
-        :return: A dictionary contains all the information of this Keypoints2DSubcatalog
+        Returns:
+            A dictionary containing all the information of this Keypoints2DSubcatalog.
+
         """
         contents: Dict[str, Any] = super().dumps()
         if self._keypoints:
@@ -207,12 +342,26 @@ class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
 
 @SubcatalogTypeRegister(LabelType.SENTENCE)
 class SentenceSubcatalog(SubcatalogBase, SupportAttributes):
-    """A class representing audio subcatalog.
+    """This class defines the subcatalog for audio transcripted sentence type of labels.
 
-    :param is_sample: A boolen value indicates whether time format is sample related
-    :param sample_rate: The number of samples of audio carried per second
-    :param lexicon: A list consists all of text and phone
-    :raises TypeError: When is_sample is True, sample_rate is required
+    Arguments:
+        is_sample: A boolen value indicates whether time format is sample related.
+        sample_rate: The number of samples of audio carried per second.
+        lexicon: A list consists all of text and phone.
+
+    Attributes:
+        description: The description of the entire sentence subcatalog.
+        is_sample: A boolen value indicates whether time format is sample related.
+        sample_rate: The number of samples of audio carried per second.
+        lexicon: A list consists all of text and phone.
+        attributes: All the possible attributes in the corresponding dataset
+            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            with the attribute names as keys
+            and the :class:`~graviti.label.attribute.AttributeInfo` as values.
+
+    Raises:
+        TypeError: When sample_rate is None and is_sample is True.
+
     """
 
     def __init__(
@@ -248,7 +397,9 @@ class SentenceSubcatalog(SubcatalogBase, SupportAttributes):
     def dumps(self) -> Dict[str, Any]:
         """Dumps the information of this SentenceSubcatalog into a dictionary.
 
-        :return: A dictionary contains all information of this AudioSubCatalog
+        Returns:
+            A dictionary containing all information of this SentenceSubcatalog.
+
         """
         contents = super().dumps()
 
@@ -262,11 +413,12 @@ class SentenceSubcatalog(SubcatalogBase, SupportAttributes):
         return contents
 
     def append_lexicon(self, lexemes: List[str]) -> None:
-        """Add lexemes to lexicon
+        """Add lexemes to lexicon.
 
-        :param: A list consists of text and phone
+        Arguments:
+            lexemes: A list consists of text and phone.
+
         """
-
         if hasattr(self, "lexicon"):
             self.lexicon.append(lexemes)
         else:

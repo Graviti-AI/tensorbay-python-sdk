@@ -3,7 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-""" label and labeled shape classes """
+"""Label related classes."""
 
 from .attributes import AttributeInfo, Items
 from .catalog import Catalog
