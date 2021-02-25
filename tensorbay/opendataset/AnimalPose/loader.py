@@ -45,35 +45,39 @@ _KEYPOINT_TO_INDEX = {
 def AnimalPose5(path: str) -> Dataset:
     """5 Categories AnimalPose open dataset dataloader
 
-    :param path: Path to 5 Categories AnimalPose dataset
-    The file structure should be like:
-    <path>
-        keypoint_image_part1/
-            cat/
-                2007_000549.jpg
-                2007_000876.jpg
-                ...
-            ...
-        PASCAL2011_animal_annotation/
-            cat/
-                2007_000549_1.xml
-                2007_000876_1.xml
-                2007_000876_2.xml
-                ...
-            ...
-        animalpose_image_part2/
-            cat/
-                ca1.jpeg
-                ca2.jpeg
-                ...
-            ...
-        animalpose_anno2/
-            cat/
-                ca1.xml
-                ca2.xml
-            ...
+    Arguments:
+        path: Path to 5 Categories AnimalPose dataset
+            The file structure should be like::
 
-    :return: load `Dataset` object
+                <path>
+                    keypoint_image_part1/
+                        cat/
+                            2007_000549.jpg
+                            2007_000876.jpg
+                            ...
+                        ...
+                    PASCAL2011_animal_annotation/
+                        cat/
+                            2007_000549_1.xml
+                            2007_000876_1.xml
+                            2007_000876_2.xml
+                            ...
+                        ...
+                    animalpose_image_part2/
+                        cat/
+                            ca1.jpeg
+                            ca2.jpeg
+                            ...
+                        ...
+                    animalpose_anno2/
+                        cat/
+                            ca1.xml
+                            ca2.xml
+                        ...
+
+    Returns:
+        Loaded `Dataset` object
+
     """
     root_path = os.path.abspath(os.path.expanduser(path))
 
