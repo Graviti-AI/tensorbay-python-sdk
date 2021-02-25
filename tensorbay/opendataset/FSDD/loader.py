@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file define the Free Spoken Digit Dataloader"""
+"""Dataloader of the Free Spoken Digit dataset."""
 
 import os
 
@@ -25,11 +25,10 @@ _METADATA = {
 
 
 def FSDD(path: str) -> Dataset:
-    """Load the Free Spoken Digit Dataset to TensorBay
+    """Dataloader of the Free Spoken Digit dataset.
 
     Arguments:
-
-        path: the root directory of the dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>
@@ -39,7 +38,7 @@ def FSDD(path: str) -> Dataset:
                         ...
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
     label_map = {}

@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file defines the NightOwls Dataloader"""
+"""Dataloader of the NightOwls dataset."""
 
 import json
 import os
@@ -18,10 +18,10 @@ DATASET_NAME = "NightOwls"
 
 
 def NightOwls(path: str) -> Dataset:
-    """Load the NightOwls Dataset to TensorBay
+    """Dataloader of the NightOwls dataset.
 
     Arguments:
-        path: the root directory of the dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>
@@ -38,7 +38,7 @@ def NightOwls(path: str) -> Dataset:
                     nightowls_validation.json
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file defines dataloader of Newsgroups20"""
+"""Dataloader of the Newsgroups20 dataset."""
 
 import os
 
@@ -31,10 +31,10 @@ SEGMENT_DESCRIPTION_DICT = {
 
 
 def Newsgroups20(path: str) -> Dataset:
-    """Newsgroups20 open dataset dataloader.
+    """Dataloader of the Newsgroups20 dataset.
 
     Arguments:
-        path: Path to Newsgroups20
+        path: The root directory of the dataset.
             The folder structure should be like::
 
                 <path>
@@ -69,7 +69,7 @@ def Newsgroups20(path: str) -> Dataset:
                     20_newsgroups/
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

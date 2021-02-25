@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of the Car Connection Picture Dataset"""
+"""Dataloader of the The Car Connection Picture dataset."""
 
 from .loader import CarConnection
 

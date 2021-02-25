@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of the Head Pose Image Dataset"""
+"""Dataloader of the Head Pose Image dataset."""
 
 from .loader import HeadPoseImage
 

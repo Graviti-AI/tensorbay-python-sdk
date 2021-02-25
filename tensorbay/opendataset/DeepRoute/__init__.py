@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of DeepRoute."""
+"""Dataloader of the DeepRoute dataset."""
 
 from .loader import DeepRoute
 

@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of Downsampled Imagenet."""
+"""Dataloader of the DownsampledImagenet dataset."""
 
 from .loader import DownsampledImagenet
 

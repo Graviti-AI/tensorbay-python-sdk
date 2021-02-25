@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file defines the 17 Category Flower and 102 Category Flower Dataloaders."""
+"""Dataloader of the 17 Category Flower dataset and the 102 Category Flower dataset."""
 
 import os
 
@@ -18,14 +18,14 @@ _SEGMENT_NAMES_102 = {"train": "trnid", "validation": "valid", "test": "tstid"}
 
 
 def Flower17(path: str) -> Dataset:
-    """Load the 17 Category Flower Dataset to TensorBay.
+    """Dataloader of the 17 Category Flower dataset.
 
     The dataset are 3 separate splits.
     The results in the paper are averaged over the 3 splits.
     We just use (trn1, val1, tst1) to split it.
 
     Arguments:
-        path: The root directory of the dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>
@@ -60,10 +60,10 @@ def Flower17(path: str) -> Dataset:
 
 
 def Flower102(path: str) -> Dataset:
-    """Load the 102 Category Flower Dataset to TensorBay.
+    """Dataloader of the 102 Category Flower dataset.
 
     Arguments:
-        path: the root directory of the dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>

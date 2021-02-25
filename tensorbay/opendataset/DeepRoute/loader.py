@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file handles with the DeepRoute dataset"""
+"""Dataloader of the DeepRoute dataset."""
 
 import json
 import os
@@ -17,10 +17,10 @@ DATASET_NAME = "DeepRoute"
 
 
 def DeepRoute(path: str) -> Dataset:
-    """DeepRoute dataset dataloader
+    """Dataloader of the DeepRoute dataset.
 
     Arguments:
-        path: Path to DeepRoute dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>
@@ -36,7 +36,7 @@ def DeepRoute(path: str) -> Dataset:
                         10000.txt
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

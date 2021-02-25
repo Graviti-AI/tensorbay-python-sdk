@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of DogsVsCats."""
+"""Dataloader of the DogsVsCats dataset."""
 
 from .loader import DogsVsCats
 

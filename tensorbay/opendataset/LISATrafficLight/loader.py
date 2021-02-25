@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file handles with the LISATrafficLight dataset"""
+"""Dataloader of the LISA traffic light dataset."""
 
 import csv
 import os
@@ -23,10 +23,10 @@ SUPERCATEGORY_INDEX = {
 
 
 def LISATrafficLight(path: str) -> Dataset:
-    """LISA traffic light open dataset dataloader
+    """Dataloader of the LISA traffic light dataset.
 
     Arguments:
-        path: Path to LISA traffic light dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>
@@ -61,7 +61,10 @@ def LISATrafficLight(path: str) -> Dataset:
                         nightClip5/
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
+
+    Raises:
+        TypeError: When frame number is discontinuous.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

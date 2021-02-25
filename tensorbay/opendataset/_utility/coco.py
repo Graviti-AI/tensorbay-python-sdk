@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file defines the coco method for open dataset"""
+"""Coco method for open dataset."""
 
 import json
 from collections import defaultdict
@@ -12,9 +12,7 @@ from typing import Any, Dict, List, NamedTuple
 
 
 class COCO(NamedTuple):
-    """
-    This class stores processed coco annotations
-    """
+    """This class stores processed coco annotations."""
 
     images: Dict[int, Dict[str, Any]]
     annotations: Dict[int, Dict[str, Any]]
@@ -30,14 +28,23 @@ def _generate_image_annotations_map(dataset: Dict[str, Any]) -> Dict[int, List[i
 
 
 def coco(path: str) -> COCO:
-    """
-    Parse the coco-like label files.
-    :param path: the absolute path of label file of dataset
-    :return: a dict contains four dicts:
-             "images" contains information of image files, its key is image id
-             "annotations" contains annotations, its key is annotation id
-             "categories" contains all categories, its key is category id
-             "images_annotations_map" is a map from image id to annotation id
+    """Parse the coco-like label files.
+
+    Arguments:
+        path: The label directory of the dataset.
+
+    Returns:
+        A dict containing four dicts::
+
+            ======================  =============  ==========================
+            dicts                   keys           values
+            ======================  =============  ==========================
+            images                  image id       information of image files
+            annotations             annotation id  annotations
+            categories              category id    all categories
+            images_annotations_map  image id       annotation id
+            ======================  =============  ==========================
+
     """
     with open(path, "r") as fp:
         info = json.load(fp)

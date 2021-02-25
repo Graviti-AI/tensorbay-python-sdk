@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file define the Animals with attributes 2 Dataloader"""
+"""Dataloader of the Animals with attributes 2 dataset."""
 
 import os
 
@@ -16,10 +16,10 @@ DATASET_NAME = "AnimalsWithAttributes2"
 
 
 def AnimalsWithAttributes2(path: str) -> Dataset:
-    """Load the Animals with attributes 2 to TensorBay
+    """Dataloader of the Animals with attributes 2 dataset.
 
     Arguments:
-        path: the root directory of the dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>
@@ -33,7 +33,7 @@ def AnimalsWithAttributes2(path: str) -> Dataset:
                     ...
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

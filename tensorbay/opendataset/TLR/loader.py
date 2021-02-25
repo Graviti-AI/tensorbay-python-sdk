@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file defines Traffic Lights Recognition Dataloader"""
+"""Dataloader of the TLR dataset."""
 
 import os
 from collections import defaultdict
@@ -19,10 +19,10 @@ DATASET_NAME = "TLR"
 
 
 def TLR(path: str) -> Dataset:
-    """Load Traffic Lights Recognition to TensorBay
+    """Dataloader of the TLR dataset.
 
     Arguments:
-        path: the root directory of the dataset
+        path: The root directory of the dataset.
             The file structure should like::
 
                 <path>
@@ -35,7 +35,7 @@ def TLR(path: str) -> Dataset:
                         Lara_UrbanSeq1_GroundTruth_cvml.xml
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

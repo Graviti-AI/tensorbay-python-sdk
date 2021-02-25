@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of ImageEmotion."""
+"""Dataloader of the ImageEmotionAbstract dataset and the ImageEmotionArtphoto dataset."""
 
 from .loader import ImageEmotionAbstract, ImageEmotionArtphoto
 

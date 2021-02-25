@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file handles with the DownsampledImagenet dataset"""
+"""Dataloader of the DownsampledImagenet dataset."""
 
 import os
 
@@ -16,10 +16,10 @@ SEGMENT_NAMES = ["train_32x32", "train_64x64", "valid_32x32", "valid_64x64"]
 
 
 def DownsampledImagenet(path: str) -> Dataset:
-    """DownsampledImagenet open dataset dataloader
+    """Dataloader of the DownsampledImagenet dataset.
 
     Arguments:
-        path: Path to DownsampledImagenet dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>
@@ -37,7 +37,7 @@ def DownsampledImagenet(path: str) -> Dataset:
                         ...
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

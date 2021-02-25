@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file define Kylberg Texture Dataloader"""
+"""Dataloader of the Kylberg Texture dataset."""
 
 import os
 
@@ -16,10 +16,10 @@ DATASET_NAME = "KylbergTexture"
 
 
 def KylbergTexture(path: str) -> Dataset:
-    """Load the Kylberg Texture Dataset to TensorBay
+    """Dataloader of the Kylberg Texture dataset.
 
     Arguments:
-        path: the root directory of the dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>
@@ -34,7 +34,7 @@ def KylbergTexture(path: str) -> Dataset:
                         ...
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))
@@ -57,12 +57,15 @@ def KylbergTexture(path: str) -> Dataset:
 
 
 def _get_original_png_label(stem: str) -> Classification:
-    """get label from stem of originalPng image name
+    """Get label from stem of originalPng image name.
 
-    :param stem: stem of originalPng image name like `blanket1-a`
-    :return: label of originalPng image
+    Arguments:
+        stem: Stem of originalPng image name like "blanket1-a".
+
+    Returns:
+        Label of originalPng image.
+
     """
-
     class_name, original_image_number = stem.split("-", 1)
     attributes = {
         "original image sample number": original_image_number,
@@ -73,12 +76,15 @@ def _get_original_png_label(stem: str) -> Classification:
 
 
 def _get_without_rotate_all_label(stem: str) -> Classification:
-    """get label from stem of withoutRotateAll image name
+    """Get label from stem of withoutRotateAll image name.
 
-    :param stem: stem of withoutRotateAll image name like `blanket1-a-p001`
-    :return: label of withoutRotateAll image
+    Arguments:
+        stem: Stem of withoutRotateAll image name like "blanket1-a-p001".
+
+    Returns:
+        Label of withoutRotateAll image.
+
     """
-
     class_name, original_image_number, patch_number = stem.split("-", 2)
     attributes = {
         "original image sample number": original_image_number,
@@ -89,12 +95,15 @@ def _get_without_rotate_all_label(stem: str) -> Classification:
 
 
 def _get_rotated_all_label(stem: str) -> Classification:
-    """get label from stem of RotateAll image name
+    """Get label from stem of RotateAll image name.
 
-    :param stem: stem of RotateAll image name like `blanket1-a-p001-r30`
-    :return: label of RotateAll image
+    Arguments:
+        stem: Stem of RotateAll image name like "blanket1-a-p001-r30".
+
+    Returns:
+        Label of RotateAll image.
+
     """
-
     class_name, original_image_number, patch_number, rotated_degrees = stem.split("-", 3)
     attributes = {
         "original image sample number": original_image_number,

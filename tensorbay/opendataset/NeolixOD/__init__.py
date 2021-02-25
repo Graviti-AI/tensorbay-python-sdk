@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of NeolixOD."""
+"""Dataloader of the NeolixOD dataset."""
 
 from .loader import NeolixOD
 

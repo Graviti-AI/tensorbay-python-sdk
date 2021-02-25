@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file handles with the 5 Categories AnimalPose and 7 Categories AnimalPose dataset"""
+"""Dataloader of 5 Categories AnimalPose dataset and 7 Categories AnimalPose dataset."""
 
 import json
 import os
@@ -43,10 +43,10 @@ _KEYPOINT_TO_INDEX = {
 
 
 def AnimalPose5(path: str) -> Dataset:
-    """5 Categories AnimalPose open dataset dataloader
+    """Dataloader of 5 Categories AnimalPose dataset.
 
     Arguments:
-        path: Path to 5 Categories AnimalPose dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>
@@ -76,7 +76,7 @@ def AnimalPose5(path: str) -> Dataset:
                         ...
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))
@@ -178,10 +178,10 @@ _DATA_GETTERS = {"part1": _get_data_part1, "part2": _get_data_part2}
 
 
 def AnimalPose7(path: str) -> Dataset:
-    """7 Categories AnimalPose open dataset dataloader
+    """Dataloader of 7 Categories AnimalPose dataset.
 
     Arguments:
-        path: Path to 7 Categories AnimalPose dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>
@@ -195,7 +195,7 @@ def AnimalPose7(path: str) -> Dataset:
                         ...
 
     Returns:
-        loaded `Dataset` object
+        loaded `Dataset` object.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

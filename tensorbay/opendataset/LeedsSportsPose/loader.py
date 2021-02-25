@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file defines the Leeds Sports Pose Dataloader"""
+"""Dataloader of the LeedsSportsPose dataset."""
 
 import os
 
@@ -17,10 +17,10 @@ DATASET_NAME = "LeedsSportsPose"
 
 
 def LeedsSportsPose(path: str) -> Dataset:
-    """LeedsSportsPose open dataset dataloader.
+    """Dataloader of the LeedsSportsPose dataset.
 
     Arguments:
-        path: Path to LeedsSportsPose
+        path: The root directory of the dataset.
             The folder structure should be like::
 
                 <path>
@@ -31,7 +31,7 @@ def LeedsSportsPose(path: str) -> Dataset:
                         ...
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
     from scipy.io import loadmat  # pylint: disable=import-outside-toplevel

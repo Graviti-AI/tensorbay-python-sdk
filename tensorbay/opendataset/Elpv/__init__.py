@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of Elpv."""
+"""Dataloader of the Elpv dataset."""
 
 from .loader import Elpv
 

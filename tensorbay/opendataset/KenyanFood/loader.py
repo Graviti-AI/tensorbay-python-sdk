@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file define the Kenyan Food datasets Dataloader"""
+"""Dataloader of the Kenyan Food or Nonfood dataset and Kenyan Food Type dataset."""
 
 import os
 
@@ -19,10 +19,10 @@ SEGMENTS_FOOD_OR_NONFOOD = {"test": "test.txt", "train": "train.txt"}
 
 
 def KenyanFoodOrNonfood(path: str) -> Dataset:
-    """Kenyan Food or Nonfood open dataset dataloader
+    """Dataloader of the Kenyan Food or Nonfood dataset.
 
     Arguments:
-        path: Path to KenyanFoodOrNonfood dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>
@@ -39,7 +39,7 @@ def KenyanFoodOrNonfood(path: str) -> Dataset:
                         train.txt
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))
@@ -59,10 +59,10 @@ def KenyanFoodOrNonfood(path: str) -> Dataset:
 
 
 def KenyanFoodType(path: str) -> Dataset:
-    """Kenyan Food Type open dataset dataloader
+    """Dataloader of the Kenyan Food Type dataset.
 
     Arguments:
-        path:Path to KenyanFoodType dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>
@@ -91,10 +91,9 @@ def KenyanFoodType(path: str) -> Dataset:
                             ...
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
-
     root_path = os.path.abspath(os.path.expanduser(path))
     dataset = Dataset(DATASET_NAME_FOOD_TYPE)
     dataset.load_catalog(os.path.join(os.path.dirname(__file__), "catalog_food_type.json"))

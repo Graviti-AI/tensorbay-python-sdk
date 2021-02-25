@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of Newsgroups20"""
+"""Dataloader of the Newsgroups20 dataset."""
 
 from .loader import Newsgroups20
 

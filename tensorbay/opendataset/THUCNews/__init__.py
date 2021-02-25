@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of THUCNews"""
+"""Dataloader of the THUCNews dataset."""
 
 from .loader import THUCNews
 

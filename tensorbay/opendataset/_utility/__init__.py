@@ -3,7 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""OpenDataset utility code"""
+"""OpenDataset utility code."""
 
 from .coco import coco
 from .glob import glob

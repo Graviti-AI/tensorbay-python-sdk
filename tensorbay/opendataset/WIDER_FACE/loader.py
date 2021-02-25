@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file define WIDER FACE Dataloader"""
+"""Dataloader of the WIDER FACE dataset."""
 
 import os
 from collections import OrderedDict
@@ -24,10 +24,10 @@ _ATTRIBUTE_MAP_TYPE = Dict[str, List[Union[bool, str]]]
 
 
 def WIDER_FACE(path: str) -> Dataset:
-    """Load the WIDER FACE Dataset to TensorBay
+    """Dataloader of the WIDER FACE dataset.
 
     Arguments:
-        path: the root directory of the dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>
@@ -51,10 +51,9 @@ def WIDER_FACE(path: str) -> Dataset:
                         wider_face_val_bbx_gt.txt
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
-
     dataset = Dataset(DATASET_NAME)
     dataset.load_catalog(os.path.join(os.path.dirname(__file__), "catalog.json"))
     attribute_map = _get_attribute_map(dataset)

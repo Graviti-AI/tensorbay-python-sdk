@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file define the THCHS-30 Dataloader"""
+"""Dataloader of the THCHS-30 dataset."""
 
 import os
 from itertools import islice
@@ -19,10 +19,10 @@ _SEGMENT_NAME_LIST = ("train", "dev", "test")
 
 
 def THCHS30(path: str) -> Dataset:
-    """Load the THCHS-30 Dataset to TensorBay
+    """Dataloader of the THCHS-30 dataset.
 
     Arguments:
-        path: the root directory of the dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>
@@ -38,7 +38,7 @@ def THCHS30(path: str) -> Dataset:
                     test/
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
     dataset = Dataset(DATASET_NAME)
@@ -60,7 +60,6 @@ def _get_label(label_file: str) -> List[LabeledSentence]:
 
 
 def _get_subcatalog(lexion_path: str) -> SentenceSubcatalog:
-    """Load subcatalog by raw lexicon file because the lexicon file so large"""
     subcatalog = SentenceSubcatalog()
     with open(lexion_path) as fp:
         for line in islice(fp, 4, None):

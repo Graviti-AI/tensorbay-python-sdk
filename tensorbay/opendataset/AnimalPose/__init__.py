@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of 5 Categories AnimalPose and 7 Categories AnimalPose."""
+"""Dataloader of 5 categories AnimalPose dataset and 7 categories AnimalPose dataset."""
 
 from .loader import AnimalPose5, AnimalPose7
 

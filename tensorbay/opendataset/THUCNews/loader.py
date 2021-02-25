@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This files defines dataloader of THUCNews."""
+"""Dataloader of the THUCNews dataset."""
 
 import os
 
@@ -16,10 +16,10 @@ DATASET_NAME = "THUCNews"
 
 
 def THUCNews(path: str) -> Dataset:
-    """Load the THUCNews Dataset to TensorBay
+    """Dataloader of the THUCNews dataset.
 
     Arguments:
-        path: Path to THUCNews
+        path: The root directory of the dataset.
             The folder structure should be like::
 
                 <path>
@@ -33,7 +33,7 @@ def THUCNews(path: str) -> Dataset:
                     ...
 
     Returns:
-        Loaded `Dataset` object
+        Loaded `Dataset` object.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

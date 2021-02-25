@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file defines the DogsVsCats dataloader."""
+"""Dataloader of the DogsVsCats dataset."""
 
 import os
 
@@ -17,10 +17,10 @@ _SEGMENTS = {"train": True, "test": False}
 
 
 def DogsVsCats(path: str) -> Dataset:
-    """Open dataset DogsVsCats dataloader.
+    """Dataloader of the DogsVsCats dataset.
 
     Arguments:
-        path: Path to DogsVsCats dataset
+        path: The root directory of the dataset.
             The file structure should be like::
 
                 <path>
