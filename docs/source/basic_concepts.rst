@@ -59,7 +59,7 @@ Code block below is the Catalog of dataset `Neolix OD`_.
 
 .. _Neolix OD: https://www.graviti.cn/open-datasets/NeolixOD
 
-.. literalinclude:: ../../opendataset/NeolixOD/catalog.json
+.. literalinclude:: ../../tensorbay/opendataset/NeolixOD/catalog.json
    :language: json
    :name: NeolixOD-catalog
    :linenos:

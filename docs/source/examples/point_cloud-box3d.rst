@@ -200,11 +200,11 @@ Write the Catalog
 
 Before writing the dataloader, we first need to write the :ref:`contribution:Catalog`.
 Catalog is a json file contains all label information of one dataset.
-See :ref:`this page <basic_concets:Catalog & SubCatalog>` for more details.
+See :ref:`this page <basic_concepts:Catalog & SubCatalog>` for more details.
 The only annotation type for ``Neolix OD`` is :ref:`features:Box3D`, and there are 15
 :ref:`features:Category` types and 3 :ref:`features:Attributes` types.
 
-.. literalinclude:: ../../../opendataset/NeolixOD/catalog.json
+.. literalinclude:: ../../../tensorbay/opendataset/NeolixOD/catalog.json
    :language: json
    :name: NeolixOD-catalog
    :linenos:
@@ -217,7 +217,7 @@ The function of :ref:`contribution:Dataloader` is to read the dataset into a
 :ref:`basic_concepts:Dataset` object.
 The :ref:`code block <NeolixOD-dataloader>` below displays the ``Neolix OD`` dataloader.
 
-.. literalinclude:: ../../../opendataset/NeolixOD/NeolixOD.py
+.. literalinclude:: ../../../tensorbay/opendataset/NeolixOD/loader.py
    :language: python
    :name: NeolixOD-dataloader
    :linenos:
@@ -226,7 +226,7 @@ The :ref:`code block <NeolixOD-dataloader>` below displays the ``Neolix OD`` dat
 There are mainly two steps to write a :ref:`contribution:Dataloader`:
 
 -  Create a :ref:`basic_concepts:Dataset` and its relevant :ref:`Segments <basic_concepts:Segment>`.
--  Add the :ref:`basic_concepts:Data` and corresponding :ref:`basic_concepts:Labels`
+-  Add the :ref:`basic_concepts:Data` and corresponding labels.
    to the created :ref:`Segments <basic_concepts:Segment>`.
 
 Create Dataset and Segments
