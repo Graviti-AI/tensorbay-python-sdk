@@ -2,7 +2,7 @@
  Used for doc preview
 ######################
 
-.. automodule:: graviti.dataset.data
+.. automodule:: tensorbay.dataset.data
    :members:
    :undoc-members:
    :member-order: groupwise

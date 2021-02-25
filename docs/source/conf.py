@@ -18,7 +18,7 @@
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parents[3].joinpath("tensorbay")))
+sys.path.insert(0, str(Path(__file__).parents[2]))
 
 
 # -- Project information -----------------------------------------------------
