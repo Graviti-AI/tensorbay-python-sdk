@@ -3,7 +3,13 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""This file defines class Quaternion."""
+"""Quaternion.
+
+:class:`Quaternion` contains the coordinates of a quaternion and
+can be used generically as 4D numbers,
+or as unit quaternions to represent rotations in 3D space.
+
+"""
 
 import math
 import warnings
@@ -23,55 +29,82 @@ _T = TypeVar("_T", bound="Quaternion")
 
 
 class Quaternion:
-    """Class to represent a 4-dimensional complex number or quaternion.
+    """This class defines the concept of Quaternion.
 
-    Quaternion objects can be used generically as 4D numbers,
+    :class:`Quaternion` contains the coordinates of a quaternion and
+    can be used generically as 4D numbers,
     or as unit quaternions to represent rotations in 3D space.
 
-    Quaternion can be initialized in the following ways:
-    1. Init from w, x, y, z components
-        >>> Quaternion(1)
-        >>> Quaternion(1.0, 0.0, 0.0, 0.0)
+    :class:`Quaternion` can be initialized in the following ways:
 
-        >>> Quaternion(w=1, x=0, y=0, z=0)
-        >>> Quaternion(1.0, 0.0, 0.0, 0.0)
+        1. Init from w, x, y, z components.
 
-        >>> Quaternion(1.0, 0.0, 0.0, 0.0)
-        >>> Quaternion(1.0, 0.0, 0.0, 0.0)
+            .. code:: python
 
-        >>> Quaternion([1.0, 0.0, 0.0, 0.0])
-        >>> Quaternion(1.0, 0.0, 0.0, 0.0)
+                >>> Quaternion(1)
+                >>> Quaternion(1.0, 0.0, 0.0, 0.0)
 
-    2. Init from a 3*3 or 3*4 or 4*4 sequence/numpy array
-        >>> Quaternion([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
-        >>> Quaternion(1.0, 0.0, 0.0, 0.0)
+                >>> Quaternion(w=1, x=0, y=0, z=0)
+                >>> Quaternion(1.0, 0.0, 0.0, 0.0)
 
-    3. Init from None
-        >>> Quaternion(None)
-        >>> Quaternion(1.0, 0.0, 0.0, 0.0)
+                >>> Quaternion(1.0, 0.0, 0.0, 0.0)
+                >>> Quaternion(1.0, 0.0, 0.0, 0.0)
 
-    4. Init from rotation vector
-        >>> Quaternion(rotation_vector=[0, 0, 0])
-        >>> Quaternion(1.0, 0.0, 0.0, 0.0)
+                >>> Quaternion([1.0, 0.0, 0.0, 0.0])
+                >>> Quaternion(1.0, 0.0, 0.0, 0.0)
 
-    5. Init from axis angle
-        >>> Quaternion(axis=[1, 0, 0], radians=1.57)
-        >>> Quaternion(0.7073882691671998, 0.706825181105366, 0.0, 0.0)
+        2. Init from a 3*3 or 3*4 or 4*4 sequence/numpy array.
 
-        >>> Quaternion(axis=[1, 0, 0], degrees=90)
-        >>> Quaternion(0.7073882691671998, 0.706825181105366, 0.0, 0.0)
+            .. code:: python
 
-    6. Init from spherical coordinate
-        >>> Quaternion(spherical_coords=[1.57, 0.0])
-        >>> Quaternion(0.7073882691671998, -0.0, 0.706825181105366, 0.0)
+                >>> Quaternion([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+                >>> Quaternion(1.0, 0.0, 0.0, 0.0)
 
-    7. Init from euler angle
-        >>> Quaternion(euler_angle=[0, 1.57, 0])
-        >>> Quaternion(0.7073882691671998, -0.0, 0.706825181105366, 0.0)
+        3. Init from None.
 
-    :param args: Coordinates of the Quaternion
-    :param kwargs: keyword-only argument to the Quaternion
-    :raises TypeError: When the shape of the input matrix args is not 3x3 or 3x4 or 4x4
+            .. code:: python
+
+                >>> Quaternion(None)
+                >>> Quaternion(1.0, 0.0, 0.0, 0.0)
+
+        4. Init from rotation vector.
+
+            .. code:: python
+
+                >>> Quaternion(rotation_vector=[0, 0, 0])
+                >>> Quaternion(1.0, 0.0, 0.0, 0.0)
+
+        5. Init from axis angle.
+
+            .. code:: python
+
+                >>> Quaternion(axis=[1, 0, 0], radians=1.57)
+                >>> Quaternion(0.7073882691671998, 0.706825181105366, 0.0, 0.0)
+
+                >>> Quaternion(axis=[1, 0, 0], degrees=90)
+                >>> Quaternion(0.7073882691671998, 0.706825181105366, 0.0, 0.0)
+
+        6. Init from spherical coordinate.
+
+            .. code:: python
+
+                >>> Quaternion(spherical_coords=[1.57, 0.0])
+                >>> Quaternion(0.7073882691671998, -0.0, 0.706825181105366, 0.0)
+
+        7. Init from euler angle.
+
+            .. code:: python
+
+                >>> Quaternion(euler_angle=[0, 1.57, 0])
+                >>> Quaternion(0.7073882691671998, -0.0, 0.706825181105366, 0.0)
+
+    Arguments:
+        *args: Coordinates of the :class:`Quaternion`.
+        **kwargs: keyword-only argument to the :class:`Quaternion`.
+
+    Raises:
+        TypeError: If the shape of the input matrix args is not 3x3 or 3x4 or 4x4.
+
     """
 
     ArgsType = Union[
@@ -124,16 +157,21 @@ class Quaternion:
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
-        """Load a Quaternion from a dict containing elements of the Quaternion.
+        """Load a :class:`Quaternion` from a dictionary.
 
-        :param contents: A dicitionary containing coordinates of a Quaternion
-        {
-            "w": ...
-            "x": ...
-            "y": ...
-            "z": ...
-        }
-        :return: The loaded Quaternion
+        Arguments:
+            contents: A dictionary containing coordinates of a :class:`Quaternion`::
+
+                {
+                    "w": ...
+                    "x": ...
+                    "y": ...
+                    "z": ...
+                }
+
+        Returns:
+            The loaded :class:`Quaternion` object.
+
         """
         return common_loads(cls, contents)
 
@@ -205,55 +243,100 @@ class Quaternion:
 
     @property
     def w(self) -> float:
-        """Get the w component of the quaternion."""
+        """Return the w component of the quaternion.
+
+        Returns:
+            W component of the quaternion.
+
+        """
         return self._data.w  # type: ignore[no-any-return]
 
     @property
     def x(self) -> float:
-        """Get the x component of the quaternion."""
+        """Return the x component of the quaternion.
+
+        Returns:
+            X component of the quaternion.
+
+        """
         return self._data.x  # type: ignore[no-any-return]
 
     @property
     def y(self) -> float:
-        """Get the y component of the quaternion."""
+        """Return the y component of the quaternion.
+
+        Returns:
+            Y component of the quaternion.
+
+        """
         return self._data.y  # type: ignore[no-any-return]
 
     @property
     def z(self) -> float:
-        """Get the z component of the quaternion."""
+        """Return the z component of the quaternion.
+
+        Returns:
+            Z component of the quaternion.
+
+        """
         return self._data.z  # type: ignore[no-any-return]
 
     @property
     def radians(self) -> float:
-        """Get the angle of the quaternion in radians."""
+        """Return the angle of the quaternion in radians.
+
+        Returns:
+            Angle of the quaternion in radians.
+
+        """
         return self._data.angle()  # type: ignore[no-any-return]
 
     @property
     def degrees(self) -> float:
-        """Get the angle of the quaternion in degrees."""
+        """Return the angle of the quaternion in degrees.
+
+        Returns:
+            Angle of the quaternion in degrees.
+
+        """
         return math.degrees(self._data.angle())
 
     def as_matrix(self) -> np.ndarray:
-        """Return the quaternion as a rotation matrix."""
+        """Return the quaternion as a rotation matrix.
+
+        Returns:
+            A rotation matrix contains the quaternion.
+        """
         return quaternion.as_rotation_matrix(self._data)
 
     def inverse(self: _T) -> _T:
-        """Get the inverse of this quaternion.
-        :return: Inverse quaternion
+        """Return the inverse of the quaternion.
+
+        Returns:
+            A :class:`Quaternion` object representing the inverse of this :class:`Quaternion`.
+
         """
         return self._create(self._data.inverse())
 
     def rotate(self, vector: Union[Sequence[float], np.ndarray]) -> Vector3D:
         """Rotate the input vector using this quaternion.
-        :return: Rotated vector
+
+        Arguments:
+            vector: The vector to be rotated.
+
+        Returns:
+            Rotated vector.
+
         """
         rotated_vector = Vector3D(*quaternion.rotate_vectors(self._data, vector))
         return rotated_vector
 
     def dumps(self) -> Dict[str, float]:
-        """Dumps the Quaternion as a dictionary.
+        """Dumps the Quaternion into a dictionary.
 
-        :return: A dictionary containing Quaternion information
+        Returns:
+            A dictionary containing the Quaternion information.
+
         """
         return {"w": self._data.w, "x": self._data.x, "y": self._data.y, "z": self._data.z}
 

@@ -3,7 +3,10 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""This file defines class Transform3D.
+"""Transform3D.
+
+:class:`Transform3D` contains the rotation and translation of a 3D transform.
+
 """
 
 from typing import Dict, Iterable, Optional, Sequence, Type, TypeVar, Union, overload
@@ -18,13 +21,21 @@ _T = TypeVar("_T", bound="Transform3D")
 
 
 class Transform3D(ReprMixin):
-    """A class used to represent a transformation in 3D.
+    """This class defines the concept of Transform3D.
 
-    :param transform: A Transform3D object or a 4x4 or 3x4 transfrom matrix
-    :param translation: Translation in a sequence of [x, y, z]
-    :param rotation: Rotation in a sequence of [w, x, y, z] or 3x3 rotation matrix or Quaternion
-    :param kwargs: Other parameters to initialize rotation of the transform
-    :raises ValueError: When the shape of the input matrix is wrong
+    :class:`Transform3D` contains rotation and translation of the 3D transform.
+
+    Arguments:
+        transform: A :class:`Transform3D` or a 4x4 or 3x4 transform matrix.
+        translation: Translation in a sequence of [x, y, z].
+        rotation: Rotation in a sequence of [w, x, y, z] or a
+            3x3 rotation matrix or :class:`~graviti.geometry.quaternion.Quaternion`.
+        **kwargs: Other parameters to initialize rotation of the transform.
+            See :class:`~graviti.geometry.quaternion.Quaternion` documents for details.
+
+    Raises:
+        ValueError: If the shape of the input matrix is not correct.
+
     """
 
     _repr_type = ReprType.INSTANCE
@@ -61,23 +72,28 @@ class Transform3D(ReprMixin):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Dict[str, float]]) -> _T:
-        """Load a Transform3D from a dict containing rotation and translation of the 3D transform.
+        """Load a :class:`Transform3D` from a dictionary containing rotation and translation.
 
-        :param contents: A dicitionary containing rotation and translation of a 3D transform
-        {
-            "translation": {
-                "x": ...
-                "y": ...
-                "z": ...
-            },
-            "rotation": {
-                "w": ...
-                "x": ...
-                "y": ...
-                "z": ...
-            }
-        }
-        :return: The loaded Transform3D
+        Arguments:
+            contents: A dictionary containing rotation and translation of a 3D transform::
+
+                {
+                    "translation": {
+                        "x": ...
+                        "y": ...
+                        "z": ...
+                    },
+                    "rotation": {
+                        "w": ...
+                        "x": ...
+                        "y": ...
+                        "z": ...
+                    }
+                }
+
+        Returns:
+            The loaded :class:`Transform3D` object.
+
         """
         return common_loads(cls, contents)
 
@@ -86,9 +102,12 @@ class Transform3D(ReprMixin):
         self._rotation = Quaternion.loads(contents["rotation"])
 
     def dumps(self) -> Dict[str, Dict[str, float]]:
-        """Dumps the 3D transform as a dictionary.
+        """Dumps the :class:`Transform3D` into a dictionary.
 
-        :return: A dictionary containing rotation and translation information of the transform3D
+        Returns:
+            A dictionary containing rotation and translation information
+                of the :class:`Transform3D`.
+
         """
         return {
             "translation": self._translation.dumps(),
@@ -134,26 +153,35 @@ class Transform3D(ReprMixin):
 
     @property
     def translation(self) -> Vector3D:
-        """Returns translation of the 3D transform.
+        """Return the translation of the 3D transform.
 
-        :return: Translation in Vector3D
+        Returns:
+            Translation in :class:`~graviti.geometry.vector.vector3D`.
+
         """
         return self._translation
 
     def set_translation(self, *args: Union[float, Iterable[float]], **kwargs: float) -> None:
         """Set the translation of the transform.
 
-        :param args: Coordinates of the translation vector
-        :param kwargs: keyword-only argument to set different dimension for translation vector
-            transform.set_translation(x=1, y=2, z=3)
+        Arguments:
+            *args: Coordinates of the translation vector.
+            **kwargs: Keyword-only argument to set different dimension for translation vector:
+
+                .. code:: python
+
+                    transform.set_translation(x=1, y=2, z=3)
+
         """
         self._translation = Vector3D(*args, **kwargs)
 
     @property
     def rotation(self) -> Quaternion:
-        """Returns rotation of the 3D transform.
+        """Return the rotation of the 3D transform.
 
-        :return: rotation in Quaternion
+        Returns:
+            Rotation in :class:`~graviti.geometry.quaternion.Quaternion`.
+
         """
         return self._rotation
 
@@ -164,15 +192,19 @@ class Transform3D(ReprMixin):
     ) -> None:
         """Set the rotation of the transform.
 
-        :param args: Coordinates of the Quaternion
-        :param kwargs: keyword-only argument to the Quaternion
+        Arguments:
+            *args: Coordinates of the :class:`Quaternion`.
+            **kwargs: Keyword-only argument to the :class:`Quaternion`.
+
         """
         self._rotation = Quaternion(*args, **kwargs)
 
     def as_matrix(self) -> np.ndarray:
         """Return the transform as a 4x4 transform matrix.
 
-        :return: A 4x4 numpy array representing the transform matrix
+        Returns:
+            A 4x4 numpy array represents the transform matrix.
+
         """
         matrix = np.eye(4)
         matrix[:3, 3] = self._translation
@@ -182,7 +214,9 @@ class Transform3D(ReprMixin):
     def inverse(self: _T) -> _T:
         """Return the inverse of the transform.
 
-        :return: A Transform3D object representing the inverse of this Transform3D
+        Returns:
+            A :class:`Transform3D` object representing the inverse of this :class:`Transform3D`.
+
         """
         rotation = self._rotation.inverse()
         translation = rotation.rotate(-self._translation)

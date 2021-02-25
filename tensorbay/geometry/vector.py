@@ -3,7 +3,15 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""This file defines class Basic, Vector, Vector2D, Vector3D.
+"""Vector, Vector2D, Vector3D.
+
+:class:`Vector` is the base class of :class:`Vector2D` and :class:`Vector3D`. It contains the
+coordinates of a 2D vector or a 3D vector.
+
+:class:`Vector2D` contains the coordinates of a 2D vector, extending :class:`Vector`.
+
+:class:`Vector3D` contains the coordinates of a 3D vector, extending :class:`Vector`.
+
 """
 
 from typing import Dict, Iterable, Optional, Sequence, Tuple, Type, TypeVar, Union
@@ -14,14 +22,23 @@ _T = TypeVar("_T", bound="Vector")
 
 
 class Vector(UserSequence[float]):
-    """A class used as base class of Vector2D and Vector3D, extending the :class `Sequence`.
+    """This class defines the basic concept of Vector.
 
-    :param args: Coordinates of the vector
-    :param kwargs: float
-        vector2d = Vector(x=1, y=2)
-        vector3d = Vector(x=1, y=2, z=3)
-    :raises ValueError: When the dimension of the input parameters is not correct
-    :return: The created Vector2D or Vector3D class
+    :class:`Vector` contains the coordinates of a 2D vector or a 3D vector.
+
+    Arguments:
+        *args: Coordinates of the vector.
+        **kwargs: Float coordinates of the vector:
+
+            .. code:: python
+
+                vector2d = Vector(x=1, y=2)
+                vector3d = Vector(x=1, y=2, z=3)
+
+    Raises:
+        ValueError: If the dimension of the input parameters is not correct.
+
+
     """
 
     _DIMENSION: Optional[int] = None
@@ -34,6 +51,24 @@ class Vector(UserSequence[float]):
         *args: Union[None, float, Iterable[float]],
         **kwargs: float,
     ) -> _T:
+        """Create a new instance of :class:`Vector`.
+
+        Arguments:
+            *args: Coordinates of the vector.
+            **kwargs: Float coordinates of the vector::
+
+                .. code:: python
+
+                    vector2d = Vector(x=1, y=2)
+                    vector3d = Vector(x=1, y=2, z=3)
+
+        Raises:
+            ValueError: If the dimension of the input parameters is not correct.
+
+        Returns:
+            The created :class:`Vector2D` or :class:`Vector3D` object.
+
+        """
         if kwargs:
             return cls.loads(kwargs)
 
@@ -53,20 +88,25 @@ class Vector(UserSequence[float]):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
-        """Load a Vector from a dict containing coordinates of the vector.
+        """Loads a :class:`Vector` from a dictionary containing coordinates of the vector.
 
-        :param contents: A dictionary containing coordinates of a vector
-        {
-            "x": ...
-            "y": ...
-        }
-        or
-        {
-            "x": ...
-            "y": ...
-            "z": ...
-        }
-        :return: The loaded Vector2D or Vector3D
+        Arguments:
+            contents: A dictionary containing coordinates of the vector::
+
+                {
+                    "x": ...
+                    "y": ...
+                }
+                or
+                {
+                    "x": ...
+                    "y": ...
+                    "z": ...
+                }
+
+        Returns:
+            The loaded :class:`Vector2D` or :class:`Vector3D` object.
+
         """
         if "z" in contents:
             return Vector3D.loads(contents)  # type: ignore[return-value]
@@ -76,10 +116,17 @@ class Vector(UserSequence[float]):
         return f"{self.__class__.__name__}{self._data}"
 
     def __add__(self, other: Sequence[float]) -> _T:
-        """Calculate the sum of vector and other sequence.
+        """Calculate the sum of the vector and other vector.
 
-        :raises ValueError: When the vectors to be added have different dimensions
-        :returns: The sum vector of adding two vectors
+        Arguments:
+            other: The added vector.
+
+        Returns:
+            The sum vector of adding two vectors.
+
+        Raises:
+            ValueError: If the vector to be added has different dimension.
+
         """
         if not isinstance(other, Sequence):  # pylint: disable=W1116
             return NotImplemented
@@ -91,9 +138,14 @@ class Vector(UserSequence[float]):
         return result
 
     def __radd__(self, other: Sequence[float]) -> _T:
-        """Calculate the sum of other sequence and the vector.
+        """Calculate the sum of the vector and the other vector.
 
-        :returns: The sum vector of adding two vectors
+        Arguments:
+            other: The added vector.
+
+        Returns:
+            The sum vector of adding two vectors.
+
         """
         return self.__add__(other)
 
@@ -122,7 +174,18 @@ class Vector(UserSequence[float]):
 
 
 class Vector2D(Vector):
-    """A class used to represent 2D vector extending the :class `Vector`."""
+    """This class defines the concept of Vector2D.
+
+    :class:`Vector2D` contains the coordinates of a 2D vector.
+
+    Arguments:
+        *args: Coordinates of the 2D vector.
+        **kwargs: Float x coordinate and y coordinate of the 2D vector.
+
+    Raises:
+        TypeError: If the dimension of the input parameters is not correct.
+
+    """
 
     _DIMENSION = 2
 
@@ -131,6 +194,19 @@ class Vector2D(Vector):
         *args: Union[None, float, Iterable[float]],
         **kwargs: float,
     ) -> _T:
+        """Create a new instance of :class:`Vector2D`.
+
+        Arguments:
+            *args: Coordinates of the 2D vector.
+            **kwargs: Float x coordinate and y coordinate of the 2D vector.
+
+        Raises:
+            TypeError: If the dimension of the input parameters is not correct.
+
+        Returns:
+            The created :class:`Vector2D` object.
+
+        """
         if kwargs:
             return cls.loads(kwargs)
 
@@ -155,44 +231,65 @@ class Vector2D(Vector):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
-        """Load a Vector2D from a dict containing coordinates of the 2D vector.
+        """Load a :class:`Vector2D` object from a dictionary containing coordinates of a 2D vector.
 
-        :param contents: A dictionary containing coordinates of a 2D vector
-        {
-            "x": ...
-            "y": ...
-        }
-        :return: The loaded Vector2D
+        Arguments:
+            contents: A dictionary containing coordinates of a 2D vector::
+
+                {
+                    "x": ...
+                    "y": ...
+                }
+
+        Returns:
+            The loaded :class:`Vector2D` object.
+
         """
         return common_loads(cls, contents)
 
     @property
     def x(self) -> float:
-        """Returns the x coordinate of the vector.
+        """Return the x coordinate of the vector.
 
-        :return: x coordinate in float type
+        Returns:
+            X coordinate in float type.
+
         """
         return self._data[0]
 
     @property
     def y(self) -> float:
+        """Return the y coordinate of the vector.
 
-        """Returns the y coordinate of the vector.
+        Returns:
+            Y coordinate in float type.
 
-        :return: y coordinate in float type
         """
         return self._data[1]
 
     def dumps(self) -> Dict[str, float]:
-        """Dumps the vector as a dictionary.
+        """Dumps the vector into a dictionary.
 
-        :return: A dictionary containing the vector coordinate.
+        Returns:
+            A dictionary containing the vector coordinate.
+
         """
         return {"x": self._data[0], "y": self._data[1]}
 
 
 class Vector3D(Vector):
-    """A class used to represent 3D vector extending the :class `Vector`."""
+    """This class defines the concept of Vector3D.
+
+    :class:`Vector3D` contains the coordinates of a 3D Vector.
+
+    Arguments:
+        *args: Coordinates of the 3D vector.
+        **kwargs: Float x coordinate, y coordinate and z coordinate of the 3D vector.
+
+    Raises:
+        TypeError: If the dimension of the input parameters is not correct.
+
+    """
 
     _DIMENSION = 3
 
@@ -201,6 +298,19 @@ class Vector3D(Vector):
         *args: Union[None, float, Iterable[float]],
         **kwargs: float,
     ) -> _T:
+        """Create a new instance of :class:`Vector3D`.
+
+        Arguments:
+            *args: Coordinates of the 3D vector.
+            **kwargs: Float x coordinate, y coordinate and z coordinate of the 3D vector.
+
+        Raises:
+            TypeError: If the dimension of the input parameters is not correct.
+
+        Returns:
+            The created :class:`Vector3D` object.
+
+        """
         if kwargs:
             return cls.loads(kwargs)
 
@@ -222,15 +332,20 @@ class Vector3D(Vector):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
-        """Load a Vector3D from a dict containing coordinates of the 3D vector.
+        """Load a :class:`Vector3D` object from a dictionary containing coordinates of a 3D vector.
 
-        :param contents: A dictionary containing coordinates of a 3D vector
-        {
-            "x": ...
-            "y": ...
-            "z": ...
-        }
-        :return: The loaded Vector3D
+        Arguments:
+            contents: A dictionary contains coordinates of a 3D vector::
+
+                {
+                    "x": ...
+                    "y": ...
+                    "z": ...
+                }
+
+        Returns:
+            The loaded :class:`Vector3D` object.
+
         """
         return common_loads(cls, contents)
 
@@ -239,34 +354,39 @@ class Vector3D(Vector):
 
     @property
     def x(self) -> float:
+        """Return the x coordinate of the vector.
 
-        """Returns the x coordinate of the vector.
+        Returns:
+             X coordinate in float type.
 
-        :return: x coordinate in float type
         """
         return self._data[0]
 
     @property
     def y(self) -> float:
+        """Return the y coordinate of the vector.
 
-        """Returns the y coordinate of the vector.
+        Returns:
+            Y coordinate in float type.
 
-        :return: y coordinate in float type
         """
         return self._data[1]
 
     @property
     def z(self) -> float:
+        """Return the z coordinate of the vector.
 
-        """Returns the z coordinate of the vector.
+        Returns:
+            Z coordinate in float type.
 
-        :return: z coordinate in float type
         """
         return self._data[2]
 
     def dumps(self) -> Dict[str, float]:
-        """Dumps the vector as a dictionary.
+        """Dumps the vector into a dictionary.
 
-        :return: A dictionary containing the vector coordinate.
+        Returns:
+            A dictionary containing the vector coordinates.
+
         """
         return {"x": self._data[0], "y": self._data[1], "z": self._data[2]}

@@ -3,7 +3,14 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""This file defines class Keypoints2D and Keypoint2D."""
+"""Keypoints2D, Keypoint2D.
+
+:class:`Keypoint2D` contains the information of 2D keypoint,
+such as the coordinates and visible status(optional).
+
+:class:`Keypoints2D` contains a list of 2D keypoint and is based on :class:`PointList2D`.
+
+"""
 
 from typing import Dict, Iterable, List, Optional, Sequence, Type, TypeVar, Union
 
@@ -15,15 +22,35 @@ _T = TypeVar("_T", bound=Vector2D)
 
 
 class Keypoint2D(Vector2D):
-    """A class used to represent 2D keypoint.
+    """This class defines the concept of Keypoint2D.
 
-    :param args: coordinates and visible status(optional) of the 2D keypoint
-    :param kwargs: coordinates are float type and visible status is int type
-        keypoint2d = Keypoint2D(x=1.0, y=2.0)
-        keypoint2d = Keypoint2D(x=1.0, y=2.0, v=0)
-        keypoint2d = Keypoint2D(x=1.0, y=2.0, v=1)
-        keypoint2d = Keypoint2D(x=1.0, y=2.0, v=2)
-    :raise TypeError: when input params do not meet the requirement
+    :class:`Keypoint2D` contains the information of 2D keypoint,
+    such as the coordinates and visible status(optional).
+
+    Arguments:
+        *args: Coordinates and visible status(optional) of the 2D keypoint.
+        **kwargs: Coordinates are of float type and visible status is of int type:
+
+            .. code:: python
+
+                keypoint2d = Keypoint2D(x=1.0, y=2.0)
+                keypoint2d = Keypoint2D(x=1.0, y=2.0, v=0)
+                keypoint2d = Keypoint2D(x=1.0, y=2.0, v=1)
+                keypoint2d = Keypoint2D(x=1.0, y=2.0, v=2)
+
+            Visible status can be "BINARY" or "TERNARY":
+
+            +---------------+---------+-----------+-----------+
+            | Visual Status | v = 0   | v = 1     | v = 2     |
+            +===============+=========+===========+===========+
+            | BINARY        | visible | invisible |           |
+            +---------------+---------+-----------+-----------+
+            | TERNARY       | visible | occluded  | invisible |
+            +---------------+---------+-----------+-----------+
+
+    Raises:
+        TypeError: If input parameters do not meet the requirement.
+
     """
 
     def __new__(
@@ -31,6 +58,26 @@ class Keypoint2D(Vector2D):
         *args: Union[None, float, Iterable[float]],
         **kwargs: float,
     ) -> _T:
+        """Create a new instance of :class:`Keypoint2D`.
+
+        Arguments:
+            *args: Coordinates and visible status(optional) of the 2D keypoint.
+            **kwargs: Coordinates are of float type and visible status is of int type:
+
+                .. code:: python
+
+                    keypoint2d = Keypoint2D(x=1.0, y=2.0)
+                    keypoint2d = Keypoint2D(x=1.0, y=2.0, v=0)
+                    keypoint2d = Keypoint2D(x=1.0, y=2.0, v=1)
+                    keypoint2d = Keypoint2D(x=1.0, y=2.0, v=2)
+
+        Raises:
+            TypeError: If input parameters do not meet the requirement.
+
+        Returns:
+            The created :class:`Keypoint2D` object.
+
+        """
         if kwargs:
             return cls.loads(kwargs)
 
@@ -47,16 +94,21 @@ class Keypoint2D(Vector2D):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
-        """Load a Keypoint2D from a dict containing coordinates of the 2D keypoint.
+        """Load a :class:`Keypoint2D` from a dictionary containing coordinates of a 2D keypoint.
 
-        :param contents: A dicitionary containing coordinates and visible status(optional)
-                    of a 2D keypoint
-        {
-            "x": ...
-            "y": ...
-            "v": ...
-        }
-        :return: The loaded Keypoint2D
+        Arguments:
+            contents: A dictionary containing coordinates and visible status(optional)
+                of a 2D keypoint::
+
+                    {
+                        "x": ...
+                        "y": ...
+                        "v": ...
+                    }
+
+        Returns:
+            The loaded :class:`Keypoint2D` object.
+
         """
         return common_loads(cls, contents)
 
@@ -79,18 +131,22 @@ class Keypoint2D(Vector2D):
 
     @property
     def v(self) -> Optional[int]:  # pylint: disable=invalid-name
-        """Get the visible status of the 2D keypoint.
+        """Return the visible status of the 2D keypoint.
 
-        :return: visible status of the 2D keypoint
+        Returns:
+            Visible status of the 2D keypoint.
+
         """
         if len(self._data) != self._DIMENSION:
             return self._data[2]  # type: ignore[return-value]
         return None
 
     def dumps(self) -> Dict[str, float]:
-        """Dumps the Keypoint2D into a dictionary.
+        """Dumps the :class:`Keypoint2D` into a dictionary.
 
-        :return: a dictionary containing the 2D keypoint coordinates and visible status(optional)
+        Returns:
+            A dictionary containing coordinates and visible status(optional) of the 2D keypoint.
+
         """
         contents = {"x": self._data[0], "y": self._data[1]}
         if len(self._data) != self._DIMENSION:
@@ -99,24 +155,34 @@ class Keypoint2D(Vector2D):
 
 
 class Keypoints2D(PointList2D[Keypoint2D]):
-    """A class used to represent 2D keypoints based on :class `PointList2D`."""
+    """This class defines the concept of Keypoints2D.
+
+    :class:`Keypoints2D` contains a list of 2D keypoint and is based on
+    :class:`~graviti.geometry.Polygon.PointList2D`.
+
+    """
 
     _ElementType = Keypoint2D
     _P = TypeVar("_P", bound="Keypoints2D")
 
     @classmethod
     def loads(cls: Type[_P], contents: List[Dict[str, float]]) -> _P:
-        """Load a Keypoints2D from a list of dict containing 2D keypoint within the 2D keypoints.
+        """Load a :class:`Keypoints2D` from a list of dictionaries.
 
-        :param contents: A list of dict containing 2D keypoint within the 2D keypoints
-        [
-            {
-                "x": ...
-                "y": ...
-                "v": ...           --- optional
-            },
-            ...
-        ]
-        :return: The loaded Keypoints2D
+        Arguments:
+            contents: A list of dictionaries containing 2D keypoint::
+
+                [
+                    {
+                        "x": ...
+                        "y": ...
+                        "v": ...           --- optional
+                    },
+                    ...
+                ]
+
+        Returns:
+            The loaded :class:`Keypoints2D` object.
+
         """
         return common_loads(cls, contents)
