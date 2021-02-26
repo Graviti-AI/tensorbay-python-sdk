@@ -35,10 +35,10 @@ class Polyline2D(PointList2D[Vector2D]):
 
     @classmethod
     def loads(cls: Type[_P], contents: List[Dict[str, float]]) -> _P:
-        """Load a :class:`Polyline2D` from a list of dictionaries.
+        """Load a :class:`Polyline2D` from a list of dict.
 
         Arguments:
-            contents: A list of dictionaries containing
+            contents: A list of dict containing
                 the coordinates of the vertexes of the polyline::
 
                     [
@@ -89,7 +89,7 @@ class Polyline2D(PointList2D[Vector2D]):
             info2: The inserted segment information.
 
         Returns:
-            A dictionary containing information of the inserted point.
+            A dict containing information of the inserted point.
 
         """
         ratio = (info1["time"] - info2["last_time"]) / (info2["time"] - info2["last_time"])

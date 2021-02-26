@@ -55,10 +55,10 @@ class Catalog(ReprMixin):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Load a Catalog from a dictionary containing the catalog information.
+        """Load a Catalog from a dict containing the catalog information.
 
         Arguments:
-            contents: A dictionary containing all the information of the catalog.
+            contents: A dict containing all the information of the catalog.
 
         Returns:
             The loaded :class:`Catalog` object.
@@ -72,10 +72,10 @@ class Catalog(ReprMixin):
             setattr(self, label_type.value, label_type.subcatalog_type.loads(subcatalog))
 
     def dumps(self) -> Dict[str, Any]:
-        """Dumps the catalog into a dictionary containing the information of all the subcatalog.
+        """Dumps the catalog into a dict containing the information of all the subcatalog.
 
         Returns:
-            A dictionary containing all the subcatalog information with their label types as keys.
+            A dict containing all the subcatalog information with their label types as keys.
 
         """
         contents: Dict[str, Any] = {}

@@ -59,10 +59,10 @@ class Segment(NameMixin, UserMutableSequence[Data]):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Loads a :class:`Segment` object from a dictionary containing the segment information.
+        """Loads a :class:`Segment` object from a dict containing the segment information.
 
         Arguments:
-            contents: A dictionary containing the information of a Segment,
+            contents: A dict containing the information of a Segment,
                 whose format should be like::
 
                     {
@@ -88,10 +88,10 @@ class Segment(NameMixin, UserMutableSequence[Data]):
             self._data.append(Data.loads(data))
 
     def dumps(self) -> Dict[str, Any]:
-        """Dumps the segment into a dictionary.
+        """Dumps the segment into a dict.
 
         Returns:
-            A dictionary contains the name and the data of the segment.
+            A dict contains the name and the data of the segment.
 
         """
         contents: Dict[str, Any] = super().dumps()
@@ -160,10 +160,10 @@ class FusionSegment(NameMixin, UserMutableSequence[Frame]):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Load a :class:`FusionSegment` object from a dictionary containing the information.
+        """Load a :class:`FusionSegment` object from a dict containing the information.
 
         Arguments:
-            contents: A dictionary containing the information of a fusion segment,
+            contents: A dict containing the information of a fusion segment,
                 whose format should be like::
 
                     {
@@ -199,7 +199,7 @@ class FusionSegment(NameMixin, UserMutableSequence[Frame]):
             self._data.append(Frame.loads(frame))
 
     def dumps(self) -> Dict[str, Any]:
-        """Dumps the fusion segment into a dictionary.
+        """Dumps the fusion segment into a dict.
 
         Returns:
             A dictonary contains the name, the sensors and the frames of the fusion segment.

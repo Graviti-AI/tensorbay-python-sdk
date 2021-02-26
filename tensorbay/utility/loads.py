@@ -5,7 +5,7 @@
 
 """Common_loads method.
 
-Common_loads is a common method for loading an object from a dictionary or a list of dictionary.
+Common_loads is a common method for loading an object from a dict or a list of dict.
 
 """
 
@@ -15,11 +15,11 @@ _T = TypeVar("_T")
 
 
 def common_loads(object_class: Type[_T], contents: Any) -> _T:
-    """A common method for loading an object from a dictionary or a list of dictionary.
+    """A common method for loading an object from a dict or a list of dict.
 
     Arguments:
         object_class: The class of the object to be loaded.
-        contents: The information of the object in a dictionary or a list of dictionary.
+        contents: The information of the object in a dict or a list of dict.
 
     Returns:
         The loaded object.

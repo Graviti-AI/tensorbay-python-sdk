@@ -95,10 +95,10 @@ class Box2D(UserSequence[float]):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
-        """Load a :class:`Box2D` from a dictionary containing coordinates of the 2D box.
+        """Load a :class:`Box2D` from a dict containing coordinates of the 2D box.
 
         Arguments:
-            contents: A dictionary containing coordinates of a 2D box::
+            contents: A dict containing coordinates of a 2D box::
 
                 {
                     "xmin": ...
@@ -126,10 +126,10 @@ class Box2D(UserSequence[float]):
         return f"{self.__class__.__name__}{self._data}"
 
     def dumps(self) -> Dict[str, float]:
-        """Dumps a 2D box into a dictionary.
+        """Dumps a 2D box into a dict.
 
         Returns:
-            A dictionary containing vertex coordinates of the box.
+            A dict containing vertex coordinates of the box.
 
         """
         return {
@@ -310,10 +310,10 @@ class Box3D(ReprMixin):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Dict[str, float]]) -> _T:
-        """Load a :class:`Box3D` from a dictionary containing the coordinates of the 3D box.
+        """Load a :class:`Box3D` from a dict containing the coordinates of the 3D box.
 
         Arguments:
-            contents: A dictionary containing the coordinates of a 3D box::
+            contents: A dict containing the coordinates of a 3D box::
 
                 {
                     "size": {
@@ -345,10 +345,10 @@ class Box3D(ReprMixin):
         self._transform = Transform3D.loads(contents)
 
     def dumps(self) -> Dict[str, Dict[str, float]]:
-        """Dumps the 3D box into a dictionary.
+        """Dumps the 3D box into a dict.
 
         Returns:
-            A dictionary containing translation, rotation and size information.
+            A dict containing translation, rotation and size information.
 
         """
         contents = self._transform.dumps()

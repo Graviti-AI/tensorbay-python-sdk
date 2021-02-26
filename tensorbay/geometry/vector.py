@@ -88,10 +88,10 @@ class Vector(UserSequence[float]):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
-        """Loads a :class:`Vector` from a dictionary containing coordinates of the vector.
+        """Loads a :class:`Vector` from a dict containing coordinates of the vector.
 
         Arguments:
-            contents: A dictionary containing coordinates of the vector::
+            contents: A dict containing coordinates of the vector::
 
                 {
                     "x": ...
@@ -231,10 +231,10 @@ class Vector2D(Vector):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
-        """Load a :class:`Vector2D` object from a dictionary containing coordinates of a 2D vector.
+        """Load a :class:`Vector2D` object from a dict containing coordinates of a 2D vector.
 
         Arguments:
-            contents: A dictionary containing coordinates of a 2D vector::
+            contents: A dict containing coordinates of a 2D vector::
 
                 {
                     "x": ...
@@ -268,10 +268,10 @@ class Vector2D(Vector):
         return self._data[1]
 
     def dumps(self) -> Dict[str, float]:
-        """Dumps the vector into a dictionary.
+        """Dumps the vector into a dict.
 
         Returns:
-            A dictionary containing the vector coordinate.
+            A dict containing the vector coordinate.
 
         """
         return {"x": self._data[0], "y": self._data[1]}
@@ -332,10 +332,10 @@ class Vector3D(Vector):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
-        """Load a :class:`Vector3D` object from a dictionary containing coordinates of a 3D vector.
+        """Load a :class:`Vector3D` object from a dict containing coordinates of a 3D vector.
 
         Arguments:
-            contents: A dictionary contains coordinates of a 3D vector::
+            contents: A dict contains coordinates of a 3D vector::
 
                 {
                     "x": ...
@@ -383,10 +383,10 @@ class Vector3D(Vector):
         return self._data[2]
 
     def dumps(self) -> Dict[str, float]:
-        """Dumps the vector into a dictionary.
+        """Dumps the vector into a dict.
 
         Returns:
-            A dictionary containing the vector coordinates.
+            A dict containing the vector coordinates.
 
         """
         return {"x": self._data[0], "y": self._data[1], "z": self._data[2]}

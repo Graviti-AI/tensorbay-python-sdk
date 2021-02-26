@@ -203,41 +203,41 @@ class UserMapping(Mapping[_K, _V], ReprMixin):
         ...
 
     def get(self, key: _K, default: Any = None) -> Any:
-        """Return the value for the key if it is in the dictionary, else default.
+        """Return the value for the key if it is in the dict, else default.
 
         Arguments:
-            key: The key for dictionary, which can be any immutable type.
-            default: The value to be returned if key is not in the dictionary.
+            key: The key for dict, which can be any immutable type.
+            default: The value to be returned if key is not in the dict.
 
         Returns:
-            The value for the key if it is in the dictionary, else default.
+            The value for the key if it is in the dict, else default.
 
         """
         return self._data.get(key, default)
 
     def items(self) -> AbstractSet[Tuple[_K, _V]]:
-        """Return a new view of the (key, value) pairs in dictionary.
+        """Return a new view of the (key, value) pairs in dict.
 
         Returns:
-            The (key, value) pairs in dictionary.
+            The (key, value) pairs in dict.
 
         """
         return self._data.items()
 
     def keys(self) -> AbstractSet[_K]:
-        """Return a new view of the keys in dictionary.
+        """Return a new view of the keys in dict.
 
         Returns:
-            The keys in dictionary.
+            The keys in dict.
 
         """
         return self._data.keys()
 
     def values(self) -> ValuesView[_V]:
-        """Return a new view of the values in dictionary.
+        """Return a new view of the values in dict.
 
         Returns:
-            The values in dictionary.
+            The values in dict.
 
         """
         return self._data.values()
@@ -280,8 +280,8 @@ class UserMutableMapping(UserMapping[_K, _V], MutableMapping[_K, _V]):
         """Remove specified item and return the corresponding value.
 
         Arguments:
-            key: The key for dictionary, which can be any immutable type.
-            default: The value to be returned if the key is not in the dictionary and it is given.
+            key: The key for dict, which can be any immutable type.
+            default: The value to be returned if the key is not in the dict and it is given.
 
         Returns:
             Value to be removed from the mutable mapping object.
@@ -306,15 +306,15 @@ class UserMutableMapping(UserMapping[_K, _V], MutableMapping[_K, _V]):
     def setdefault(self, key: _K, default: _V = None) -> _V:  # type: ignore[assignment]
         """Set the value of the item with the specified key.
 
-        If the key is in the dictionary, return the corresponding value.
+        If the key is in the dict, return the corresponding value.
         If not, insert the key with a value of default and return default.
 
         Arguments:
-            key: The key for dictionary, which can be any immutable type.
-            default: The value to be set if the key is not in the dictionary.
+            key: The key for dict, which can be any immutable type.
+            default: The value to be set if the key is not in the dict.
 
         Returns:
-            The value for key if it is in the dictionary, else default.
+            The value for key if it is in the dict, else default.
 
         """
         return self._data.setdefault(key, default)
@@ -332,10 +332,10 @@ class UserMutableMapping(UserMapping[_K, _V], MutableMapping[_K, _V]):
         ...
 
     def update(self, __m: Any = None, **kwargs: _V) -> None:
-        """Update the dictionary.
+        """Update the dict.
 
         Arguments:
-            __m: A dictionary object, a generator object yielding a (key, value) pair
+            __m: A dict object, a generator object yielding a (key, value) pair
                 or other object which has a `.keys()` method.
             **kwargs: The value to be added to the mutable mapping.
 

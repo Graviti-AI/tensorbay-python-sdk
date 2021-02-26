@@ -94,10 +94,10 @@ class Keypoint2D(Vector2D):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
-        """Load a :class:`Keypoint2D` from a dictionary containing coordinates of a 2D keypoint.
+        """Load a :class:`Keypoint2D` from a dict containing coordinates of a 2D keypoint.
 
         Arguments:
-            contents: A dictionary containing coordinates and visible status(optional)
+            contents: A dict containing coordinates and visible status(optional)
                 of a 2D keypoint::
 
                     {
@@ -142,10 +142,10 @@ class Keypoint2D(Vector2D):
         return None
 
     def dumps(self) -> Dict[str, float]:
-        """Dumps the :class:`Keypoint2D` into a dictionary.
+        """Dumps the :class:`Keypoint2D` into a dict.
 
         Returns:
-            A dictionary containing coordinates and visible status(optional) of the 2D keypoint.
+            A dict containing coordinates and visible status(optional) of the 2D keypoint.
 
         """
         contents = {"x": self._data[0], "y": self._data[1]}
@@ -167,7 +167,7 @@ class Keypoints2D(PointList2D[Keypoint2D]):
 
     @classmethod
     def loads(cls: Type[_P], contents: List[Dict[str, float]]) -> _P:
-        """Load a :class:`Keypoints2D` from a list of dictionaries.
+        """Load a :class:`Keypoints2D` from a list of dict.
 
         Arguments:
             contents: A list of dictionaries containing 2D keypoint::
