@@ -1,0 +1,21 @@
+#
+# Copyright 2021 Graviti. Licensed under MIT License.
+#
+
+# package dependences
+click
+filetype
+numpy
+numpy-quaternion
+requests
+requests_toolbelt
+sortedcontainers
+typing_extensions
+
+# linter
+pre-commit
+pylint
+
+# optional dependences
+scipy
+xmltodict
