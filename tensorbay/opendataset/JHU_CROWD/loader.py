@@ -40,7 +40,7 @@ def JHU_CROWD(path: str) -> Dataset:
 
     Returns:
         Loaded `Dataset` object
-        
+
     """
 
     dataset = Dataset(DATASET_NAME)

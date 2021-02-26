@@ -21,7 +21,7 @@ def AnimalsWithAttributes2(path: str) -> Dataset:
     Arguments:
         path: the root directory of the dataset
             The file structure should be like::
-            
+
                 <path>
                     classes.txt
                     predicates.txt
@@ -32,7 +32,7 @@ def AnimalsWithAttributes2(path: str) -> Dataset:
                         ...
                     ...
 
-    Returns: 
+    Returns:
         Loaded `Dataset` object
 
     """

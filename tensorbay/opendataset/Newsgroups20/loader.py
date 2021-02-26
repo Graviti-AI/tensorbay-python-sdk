@@ -67,10 +67,10 @@ def Newsgroups20(path: str) -> Dataset:
                     20news-bydate-test/
                     20news-bydate-train/
                     20_newsgroups/
-                    
+
     Returns:
         Loaded `Dataset` object
-        
+
     """
     root_path = os.path.abspath(os.path.expanduser(path))
     dataset = Dataset(DATASET_NAME)

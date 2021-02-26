@@ -24,7 +24,7 @@ def KenyanFoodOrNonfood(path: str) -> Dataset:
     Arguments:
         path: Path to KenyanFoodOrNonfood dataset
             The file structure should be like::
-            
+
                 <path>
                         images/
                             food/
@@ -92,7 +92,7 @@ def KenyanFoodType(path: str) -> Dataset:
 
     Returns:
         Loaded `Dataset` object
-        
+
     """
 
     root_path = os.path.abspath(os.path.expanduser(path))

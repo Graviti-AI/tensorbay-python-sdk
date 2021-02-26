@@ -40,7 +40,7 @@ def FSDD(path: str) -> Dataset:
 
     Returns:
         Loaded `Dataset` object
-        
+
     """
     label_map = {}
     for key, value in _METADATA.items():

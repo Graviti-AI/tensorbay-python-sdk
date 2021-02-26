@@ -32,7 +32,7 @@ def LeedsSportsPose(path: str) -> Dataset:
 
     Returns:
         Loaded `Dataset` object
-        
+
     """
     from scipy.io import loadmat  # pylint: disable=import-outside-toplevel
 

@@ -75,7 +75,7 @@ def Flower102(path: str) -> Dataset:
 
     Returns:
         A loaded dataset.
-        
+
     """
     from scipy.io import loadmat  # pylint: disable=import-outside-toplevel
 

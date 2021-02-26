@@ -29,9 +29,9 @@ def CoinImage(path: str) -> Dataset:
                     <imagename>.png
                     ...
 
-    Returns: 
+    Returns:
         Loaded `Dataset` object
-        
+
     """
     root_path = os.path.abspath(os.path.expanduser(path))
 

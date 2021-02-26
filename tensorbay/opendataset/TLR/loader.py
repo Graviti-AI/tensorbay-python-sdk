@@ -33,10 +33,10 @@ def TLR(path: str) -> Dataset:
                             frame_<frame_index>.jpg
                             ...
                         Lara_UrbanSeq1_GroundTruth_cvml.xml
-        
+
     Returns:
         Loaded `Dataset` object
-        
+
     """
     root_path = os.path.abspath(os.path.expanduser(path))
 

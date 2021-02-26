@@ -39,7 +39,7 @@ def THCHS30(path: str) -> Dataset:
 
     Returns:
         Loaded `Dataset` object
-        
+
     """
     dataset = Dataset(DATASET_NAME)
     dataset.catalog.sentence = _get_subcatalog(os.path.join(path, "lm_word", "lexicon.txt"))

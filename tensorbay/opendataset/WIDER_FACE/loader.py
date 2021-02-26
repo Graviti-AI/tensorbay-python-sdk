@@ -29,8 +29,8 @@ def WIDER_FACE(path: str) -> Dataset:
     Arguments:
         path: the root directory of the dataset
             The file structure should be like::
-    
-                <path> 
+
+                <path>
                     WIDER_train/
                         images/
                             0--Parade/
@@ -52,7 +52,7 @@ def WIDER_FACE(path: str) -> Dataset:
 
     Returns:
         Loaded `Dataset` object
-        
+
     """
 
     dataset = Dataset(DATASET_NAME)

@@ -36,7 +36,7 @@ def RP2K(path: str) -> Dataset:
                             ...
     Returns:
         Loaded `Dataset` object
-        
+
     """
     root_path = os.path.join(os.path.abspath(os.path.expanduser(path)), "all")
     dataset = Dataset(DATASET_NAME)
