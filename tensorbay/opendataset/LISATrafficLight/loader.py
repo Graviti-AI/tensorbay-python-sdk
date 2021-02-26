@@ -60,9 +60,9 @@ def LISATrafficLight(path: str) -> Dataset:
                         ...
                         nightClip5/
 
-   Returns:
+    Returns:
         Loaded `Dataset` object
-        
+
     """
     root_path = os.path.abspath(os.path.expanduser(path))
     annotation_path = os.path.join(root_path, "Annotations", "Annotations")

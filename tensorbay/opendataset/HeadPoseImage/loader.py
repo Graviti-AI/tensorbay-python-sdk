@@ -39,7 +39,7 @@ def HeadPoseImage(path: str) -> Dataset:
 
     Returns:
         Loaded `Dataset` object
-        
+
     """
 
     dataset = Dataset(DATASET_NAME)

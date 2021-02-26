@@ -34,7 +34,7 @@ def HardHatWorkers(path: str) -> Dataset:
 
     Returns:
         Loaded `Dataset` object
-        
+
     """
     dataset = Dataset(DATASET_NAME)
     dataset.load_catalog(os.path.join(os.path.dirname(__file__), "catalog.json"))

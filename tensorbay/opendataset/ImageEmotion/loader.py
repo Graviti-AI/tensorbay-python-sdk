@@ -64,14 +64,14 @@ def ImageEmotionArtphoto(path: str) -> Dataset:
     Arguments:
         path: Path to ImageEmotionArtphoto dataset
             The file structure should be like::
-            
+
                 <path>
                     <filename>.jpg
                     ...
 
     Returns:
         Loaded `Dataset` object
-        
+
     """
     root_path = os.path.abspath(os.path.expanduser(path))
 

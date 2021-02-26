@@ -37,7 +37,7 @@ def DeepRoute(path: str) -> Dataset:
 
     Returns:
         Loaded `Dataset` object
-        
+
     """
     root_path = os.path.abspath(os.path.expanduser(path))
 

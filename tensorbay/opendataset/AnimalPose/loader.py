@@ -194,7 +194,7 @@ def AnimalPose7(path: str) -> Dataset:
                         antelope.json
                         ...
 
-    Returns: 
+    Returns:
         loaded `Dataset` object
 
     """

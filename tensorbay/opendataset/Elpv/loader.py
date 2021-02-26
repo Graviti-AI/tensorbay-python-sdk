@@ -16,7 +16,7 @@ DATASET_NAME = "Elpv"
 
 def Elpv(path: str) -> Dataset:
     """Elpv open dataset dataloader
-    
+
     Arguments:
         path:Path to Elpv dataset
             The file structure should be like::
@@ -29,7 +29,7 @@ def Elpv(path: str) -> Dataset:
 
     Returns:
         Loaded `Dataset` object
-        
+
     """
     root_path = os.path.abspath(os.path.expanduser(path))
 

@@ -21,7 +21,7 @@ def DownsampledImagenet(path: str) -> Dataset:
     Arguments:
         path: Path to DownsampledImagenet dataset
             The file structure should be like::
-            
+
                 <path>
                     valid_32x32/
                         <imagename>.png
@@ -38,7 +38,7 @@ def DownsampledImagenet(path: str) -> Dataset:
 
     Returns:
         Loaded `Dataset` object
-        
+
     """
     root_path = os.path.abspath(os.path.expanduser(path))
     dataset = Dataset(DATASET_NAME)
