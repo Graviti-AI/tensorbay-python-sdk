@@ -80,10 +80,10 @@ class SubcatalogBase(TypeMixin[LabelType], ReprMixin):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Loads a subcatalog from a dictionary containing the information of the subcatalog.
+        """Loads a subcatalog from a dict containing the information of the subcatalog.
 
         Arguments:
-            contents: A dictionary containing the information of the subcatalog.
+            contents: A dict containing the information of the subcatalog.
 
         Returns:
             The loaded :class:`SubcatalogBase` object.
@@ -98,10 +98,10 @@ class SubcatalogBase(TypeMixin[LabelType], ReprMixin):
             support._loads(self, contents)  # pylint: disable=protected-access
 
     def dumps(self) -> Dict[str, Any]:
-        """Dumps all the information of the subcatalog into a dictionary.
+        """Dumps all the information of the subcatalog into a dict.
 
         Returns:
-            A dictionary containing all the information of the subcatalog.
+            A dict containing all the information of the subcatalog.
 
         """
         contents: Dict[str, Any] = {}
@@ -328,10 +328,10 @@ class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
         return self._keypoints
 
     def dumps(self) -> Dict[str, Any]:
-        """Dumps all the information of the keypoints into a dictionary.
+        """Dumps all the information of the keypoints into a dict.
 
         Returns:
-            A dictionary containing all the information of this Keypoints2DSubcatalog.
+            A dict containing all the information of this Keypoints2DSubcatalog.
 
         """
         contents: Dict[str, Any] = super().dumps()
@@ -395,10 +395,10 @@ class SentenceSubcatalog(SubcatalogBase, SupportAttributes):
             self.lexicon = contents["lexicon"]
 
     def dumps(self) -> Dict[str, Any]:
-        """Dumps the information of this SentenceSubcatalog into a dictionary.
+        """Dumps the information of this SentenceSubcatalog into a dict.
 
         Returns:
-            A dictionary containing all information of this SentenceSubcatalog.
+            A dict containing all information of this SentenceSubcatalog.
 
         """
         contents = super().dumps()

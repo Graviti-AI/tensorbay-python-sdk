@@ -98,13 +98,13 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Loads a Sensor from a dictionary containing the sensor information.
+        """Loads a Sensor from a dict containing the sensor information.
 
         Arguments:
-            contents: A dictionary containing name, description and sensor extrinsics.
+            contents: A dict containing name, description and sensor extrinsics.
 
         Returns:
-            A :class:`Sensor` instance containing the information from the contents dictionary.
+            A :class:`Sensor` instance containing the information from the contents dict.
 
         """
         sensor: _T = common_loads(SensorType(contents["type"]).type, contents)
@@ -116,10 +116,10 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
             self.extrinsics = Transform3D.loads(contents["extrinsics"])
 
     def dumps(self) -> Dict[str, Any]:
-        """Dumps the sensor into a dictionary.
+        """Dumps the sensor into a dict.
 
         Returns:
-            A dictionary containing the information of the sensor.
+            A dict containing the information of the sensor.
 
         """
         contents: Dict[str, Any] = super().dumps()
@@ -145,7 +145,7 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
             translation: Translation parameters.
             rotation: Rotation in a sequence of [w, x, y, z] or 3x3 rotation matrix
                 or ``Quaternion``.
-            contents: A dictionary containing the translation and the rotation.
+            contents: A dict containing the translation and the rotation.
             **kwargs: Other parameters to initialize rotation.
 
         Todo:
@@ -239,13 +239,13 @@ class Camera(Sensor):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Loads a Camera from a dictionary containing the camera information.
+        """Loads a Camera from a dict containing the camera information.
 
         Arguments:
-            contents: A dictionary containing name, description, extrinsics and intrinsics.
+            contents: A dict containing name, description, extrinsics and intrinsics.
 
         Returns:
-            A :class:`Camera` instance containing information from contents dictionary.
+            A :class:`Camera` instance containing information from contents dict.
 
         """
         return common_loads(cls, contents)
@@ -256,10 +256,10 @@ class Camera(Sensor):
             self.intrinsics = CameraIntrinsics.loads(contents["intrinsics"])
 
     def dumps(self) -> Dict[str, Any]:
-        """Dumps the camera into a dictionary.
+        """Dumps the camera into a dict.
 
         Returns:
-            A dictionary containing name, description, extrinsics and intrinsics.
+            A dict containing name, description, extrinsics and intrinsics.
 
         """
         contents = super().dumps()

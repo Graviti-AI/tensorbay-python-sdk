@@ -146,7 +146,7 @@ def create(obj: Dict[str, str], name: str) -> None:
     """Create a dataset.\f
 
     Arguments:
-        obj: A dictionary including config information.
+        obj: A dict including config information.
         name: The name of the dataset to be created, like "tb:KITTI".
 
     """
@@ -167,7 +167,7 @@ def commit(obj: Dict[str, str], name: str, message: str, tag: str) -> None:
     """Commit a dataset.\f
 
     Arguments:
-        obj: A dictionary including config information.
+        obj: A dict including config information.
         name: The name of the dataset to be committed, like "tb:KITTI".
         message: The message of the dataset to be committed.
         tag: The tag of the dataset to be committed.
@@ -190,7 +190,7 @@ def delete(obj: Dict[str, str], name: str, yes: bool) -> None:
     """Delete a dataset.\f
 
     Arguments:
-        obj: A dictionary including config info.
+        obj: A dict including config info.
         name: The name of the dataset to be deleted, like "tb:KITTI".
         yes: Confirm to delete the dataset completely.
 
@@ -235,7 +235,7 @@ def cp(  # pylint: disable=invalid-name, too-many-arguments
     """Copy local data to a remote path.\f
 
     Arguments:
-        obj: A dictionary contains config information.
+        obj: A dict contains config information.
         local_paths: An iterable of local paths contains data to be uploaded.
         tbrn: The path to save the uploaded data, like "tb:KITTI:seg1".
         is_recursive: Whether copy directories recursively.
@@ -482,7 +482,7 @@ def ls(  # pylint: disable=invalid-name
     """List data under the path. If path is empty, list the names of all datasets.\f
 
     Arguments:
-        obj: A dictionary contains config information.
+        obj: A dict contains config information.
         tbrn: Path to be listed, like "tb:KITTI:seg1". If empty, list names of all datasets.
         list_all_files: If true, list all files under the segment.
 
@@ -533,7 +533,7 @@ def _filter_data(
 # def rm(obj: Dict[str, str], tbrn: str, is_recursive: bool, force_delete: bool) -> None:
 #     """Remove the remote paths.\f
 #
-#     :param obj: a dictionary including config info
+#     :param obj: a dict including config info
 #     :param tbrn: path to be removed, like "tb:KITTI:seg1".
 #     :param is_recursive: whether remove directories recursively
 #     :param force_delete: sensor and its objects will also be deleted if True,
@@ -585,7 +585,7 @@ def config(obj: Dict[str, str], access_key: str, url: str) -> None:
     """Configure the accessKey (and URL) of gas.\f
 
     Arguments:
-        obj: A dictionary contains config information.
+        obj: A dict contains config information.
         access_key: The accessKey of gas to write into config file.
         url: The URL of gas to write into config file.
 

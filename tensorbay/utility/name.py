@@ -50,10 +50,10 @@ class NameMixin(ReprMixin):
 
     @classmethod
     def loads(cls: Type[_P], contents: Dict[str, str]) -> _P:
-        """Loads a NameMixin from a dictionary containing the information of the NameMixin.
+        """Loads a NameMixin from a dict containing the information of the NameMixin.
 
         Arguments:
-            contents: A dictionary containing the information of the :class:`NameMixin`.
+            contents: A dict containing the information of the :class:`NameMixin`.
 
                 {
                     "name": <str>
@@ -61,7 +61,7 @@ class NameMixin(ReprMixin):
                 }
 
         Returns:
-            A :class:`NameMixin` instance containing the information from the contents dictionary.
+            A :class:`NameMixin` instance containing the information from the contents dict.
 
         """
         return common_loads(cls, contents)
@@ -72,10 +72,10 @@ class NameMixin(ReprMixin):
             self.description = contents["description"]
 
     def dumps(self) -> Dict[str, str]:
-        """Dumps the instance into a dictionary.
+        """Dumps the instance into a dict.
 
         Returns:
-            A dictionary containing the name and the description.
+            A dict containing the name and the description.
 
         """
         contents = {"name": self._name}
@@ -99,9 +99,9 @@ _T = TypeVar("_T", bound=NameMixin)
 
 
 class NameSortedDict(UserMapping[str, _T]):
-    """Name sorted dictionary keys are maintained in sorted order.
+    """Name sorted dict keys are maintained in sorted order.
 
-    Name sorted dictionary is a sorted mapping which contains :class:`NameMixin`.
+    Name sorted dict is a sorted mapping which contains :class:`NameMixin`.
     The corrsponding key is the 'name' of :class:`NameMixin`.
 
     Arguments:
@@ -114,7 +114,7 @@ class NameSortedDict(UserMapping[str, _T]):
         self._data: SortedDict = SortedDict(data)
 
     def add(self, value: _T) -> None:
-        """Store element in name sorted dictionary.
+        """Store element in name sorted dict.
 
         Arguments:
             value: :class:`NameMixin` instance.
@@ -173,7 +173,7 @@ class NameSortedList(Sequence[_T]):
 
 
 class NameOrderedDict(UserMapping[str, _T]):
-    """Name ordered dictionary is an ordered mapping which contains NameMixin.
+    """Name ordered dict is an ordered mapping which contains NameMixin.
 
     The corrsponding key is the 'name' of :class:`NameMixin`.
 
@@ -183,7 +183,7 @@ class NameOrderedDict(UserMapping[str, _T]):
         self._data: "OrderedDict[str, _T]" = OrderedDict()
 
     def append(self, value: _T) -> None:
-        """Store element in ordered dictionary.
+        """Store element in ordered dict.
 
         Arguments:
             value: :class:`NameMixin` instance.

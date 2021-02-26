@@ -99,7 +99,7 @@ class TimeoutHTTPAdapter(HTTPAdapter):
             verify: A path string to a CA bundle to use or
                 a boolean which controls whether to verify the server's TLS certificate.
             cert: User-provided SSL certificate.
-            proxies: Proxies dictionary applying to the request.
+            proxies: Proxies dict applying to the request.
 
         Returns:
             Response object.

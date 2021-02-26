@@ -109,11 +109,11 @@ class Label(TypeMixin[LabelType], ReprMixin):
                 setattr(self, attribute_name, contents[attribute_name])
 
     def dumps(self) -> Dict[str, Any]:
-        """Dumps the label into a dictionary.
+        """Dumps the label into a dict.
 
         Returns:
-            A dictionary containing all the information of the label.
-            See dictionary format details in ``dumps()`` of different label classes .
+            A dict containing all the information of the label.
+            See dict format details in ``dumps()`` of different label classes .
 
         """
         contents: Dict[str, Any] = {}
@@ -154,10 +154,10 @@ class Classification(Label):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Loads a Classification label from a dictionary containing the label information.
+        """Loads a Classification label from a dict containing the label information.
 
         Arguments:
-            contents: A dictionary containing the information of the classification label,
+            contents: A dict containing the information of the classification label,
                 whose format should be like::
 
                     {
@@ -229,10 +229,10 @@ class LabeledBox2D(Box2D, Label):  # pylint: disable=too-many-ancestors
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Loads a LabeledBox2D from a dictionary containing the information of the label.
+        """Loads a LabeledBox2D from a dict containing the information of the label.
 
         Arguments:
-            contents: A dictionary containing the information of the 2D bounding box label,
+            contents: A dict containing the information of the 2D bounding box label,
                 whose format should be like::
 
                     {
@@ -262,10 +262,10 @@ class LabeledBox2D(Box2D, Label):  # pylint: disable=too-many-ancestors
         Label._loads(self, contents)
 
     def dumps(self) -> Dict[str, Any]:
-        """Dumps the current 2D bounding box label into a dictionary.
+        """Dumps the current 2D bounding box label into a dict.
 
         Returns:
-            A dictionary containing all the information of the 2D box label,
+            A dict containing all the information of the 2D box label,
             whose format is like::
 
                 {
@@ -348,10 +348,10 @@ class LabeledBox3D(Box3D, Label):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Loads a LabeledBox3D from a dictionary containing the information of the label.
+        """Loads a LabeledBox3D from a dict containing the information of the label.
 
         Arguments:
-            contents: A dictionary containing the information of the 3D bounding box label,
+            contents: A dict containing the information of the 3D bounding box label,
                 whose format should be like::
 
                     {
@@ -406,10 +406,10 @@ class LabeledBox3D(Box3D, Label):
         return NotImplemented  # type: ignore[unreachable]
 
     def dumps(self) -> Dict[str, Any]:
-        """Dumps the current 3D bounding box label into a dictionary.
+        """Dumps the current 3D bounding box label into a dict.
 
         Returns:
-            A dictionary containing all the information of the 3D bounding box label,
+            A dict containing all the information of the 3D bounding box label,
             whose format is like::
 
                 {
@@ -483,10 +483,10 @@ class LabeledPolygon2D(Polygon2D, Label):  # pylint: disable=too-many-ancestors
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:  # type: ignore[override]
-        """Loads a LabeledPolygon2D from a dictionary containing the information of the label.
+        """Loads a LabeledPolygon2D from a dict containing the information of the label.
 
         Arguments:
-            contents: A dictionary containing the information of the 2D polygon label,
+            contents: A dict containing the information of the 2D polygon label,
                 whose format should be like::
 
                     {
@@ -517,10 +517,10 @@ class LabeledPolygon2D(Polygon2D, Label):  # pylint: disable=too-many-ancestors
         Label._loads(self, contents)
 
     def dumps(self) -> Dict[str, Any]:  # type: ignore[override]
-        """Dumps the current 2D polygon label into a dictionary.
+        """Dumps the current 2D polygon label into a dict.
 
         Returns:
-            A dictionary containing all the information of the 2D polygon label,
+            A dict containing all the information of the 2D polygon label,
             whose format is like::
 
                 {
@@ -584,10 +584,10 @@ class LabeledPolyline2D(Polyline2D, Label):  # pylint: disable=too-many-ancestor
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:  # type: ignore[override]
-        """Loads a LabeledPolyline2D from a dictionary containing the information of the label.
+        """Loads a LabeledPolyline2D from a dict containing the information of the label.
 
         Arguments:
-            contents: A dictionary containing the information of the 2D polyline label,
+            contents: A dict containing the information of the 2D polyline label,
                 whose format should be like::
 
                     {
@@ -618,10 +618,10 @@ class LabeledPolyline2D(Polyline2D, Label):  # pylint: disable=too-many-ancestor
         Label._loads(self, contents)
 
     def dumps(self) -> Dict[str, Any]:  # type: ignore[override]
-        """Dumps the current 2D polyline label into a dictionary.
+        """Dumps the current 2D polyline label into a dict.
 
         Returns:
-            A dictionary containing all the information of the 2D polyline label,
+            A dict containing all the information of the 2D polyline label,
             whose format is like::
 
                 {
@@ -683,10 +683,10 @@ class Word(ReprMixin):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Union[str, float]]) -> _T:
-        """Loads a Word from a dictionary containing the information of the word.
+        """Loads a Word from a dict containing the information of the word.
 
         Arguments:
-            contents: A dictionary containing the information of the word,
+            contents: A dict containing the information of the word,
                 whose format should be like::
 
                     {
@@ -711,10 +711,10 @@ class Word(ReprMixin):
             self.end = contents["end"]
 
     def dumps(self) -> Dict[str, Union[str, float]]:
-        """Dumps the current word into a dictionary.
+        """Dumps the current word into a dict.
 
         Returns:
-            A dictionary containing all the information of the word,
+            A dict containing all the information of the word,
             whose format is like::
 
                 {
@@ -776,10 +776,10 @@ class LabeledSentence(Label):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Loads a LabeledSentence from a dictionary containing the information of the label.
+        """Loads a LabeledSentence from a dict containing the information of the label.
 
         Arguments:
-            contents: A dictionary containing the information of the sentence label,
+            contents: A dict containing the information of the sentence label,
                 whose format should be like::
 
                     {
@@ -840,10 +840,10 @@ class LabeledSentence(Label):
         return [Word.loads(word) for word in contents]
 
     def dumps(self) -> Dict[str, Any]:
-        """Dumps the current label into a dictionary.
+        """Dumps the current label into a dict.
 
         Returns:
-            A dictionary containing all the information of the sentence label,
+            A dict containing all the information of the sentence label,
             whose format is like::
 
                 {
@@ -929,10 +929,10 @@ class LabeledKeypoints2D(Keypoints2D, Label):  # pylint: disable=too-many-ancest
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:  # type: ignore[override]
-        """Loads a LabeledKeypoints2D from a dictionary containing the information of the label.
+        """Loads a LabeledKeypoints2D from a dict containing the information of the label.
 
         Arguments:
-            contents: A dictionary containing the information of the 2D keypoints label,
+            contents: A dict containing the information of the 2D keypoints label,
                 whose format should be like::
 
                     {
@@ -964,10 +964,10 @@ class LabeledKeypoints2D(Keypoints2D, Label):  # pylint: disable=too-many-ancest
         Label._loads(self, contents)
 
     def dumps(self) -> Dict[str, Any]:  # type: ignore[override]
-        """Dumps the current 2D keypoints label into a dictionary.
+        """Dumps the current 2D keypoints label into a dict.
 
         Returns:
-            A dictionary containing all the information of the 2D keypoints label,
+            A dict containing all the information of the 2D keypoints label,
             whose format is like::
 
                 {

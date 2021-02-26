@@ -271,7 +271,7 @@ class CheckParentCategories:  # pylint: disable=too-few-public-methods
     """This error is raised to indicate that :class:`AttributeInfo` has invalid parent_categories.
 
     Arguments:
-        categories: The dictionary of :class:`CategoryInfo`
+        categories: The dict of :class:`CategoryInfo`
             which indicates all valid parent categories.
 
     """

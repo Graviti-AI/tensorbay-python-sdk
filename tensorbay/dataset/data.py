@@ -60,10 +60,10 @@ class Labels(ReprMixin):
         return False
 
     def dumps(self) -> Dict[str, Any]:
-        """Dumps all labels into a dictionary.
+        """Dumps all labels into a dict.
 
         Returns:
-            Dumped labels dictionary, which looks like::
+            Dumped labels dict, which looks like::
 
                 {
                     "CLASSIFICATION": {...},
@@ -90,10 +90,10 @@ class Labels(ReprMixin):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Loads data from a dictionary containing the labels information.
+        """Loads data from a dict containing the labels information.
 
         Arguments:
-            contents: A dictionary containing the labels information, which looks like::
+            contents: A dict containing the labels information, which looks like::
 
                     {
                         "CLASSIFICATION": {...},
@@ -107,7 +107,7 @@ class Labels(ReprMixin):
 
         Returns:
             A :class:`~tensorbay.label.label.Label` instance containing labels information
-            from the given dictionary.
+            from the given dict.
 
         """
         return common_loads(cls, contents)
@@ -173,10 +173,10 @@ class Data(ReprMixin):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Loads data from a dictionary containing data information.
+        """Loads data from a dict containing data information.
 
         Arguments:
-            contents: A dictionary containing the information of the data, which looks like::
+            contents: A dict containing the information of the data, which looks like::
 
                     {
                         "fileuri": <str>,
@@ -191,7 +191,7 @@ class Data(ReprMixin):
                     }
 
         Returns:
-            A :class:`Data` instance containing information from the given dictionary.
+            A :class:`Data` instance containing information from the given dict.
 
         """
         return common_loads(cls, contents)
@@ -214,10 +214,10 @@ class Data(ReprMixin):
         self._local_path = self._fileuri if isinstance(self._fileuri, str) else ""
 
     def dumps(self) -> Dict[str, Any]:
-        """Dumps a data into a dictionary.
+        """Dumps a data into a dict.
 
         Returns:
-            Dumped data dictionary, which looks like::
+            Dumped data dict, which looks like::
 
                     {
                         "fileuri": <str>,

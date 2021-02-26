@@ -30,7 +30,7 @@ class Frame(UserMutableMapping[str, Data]):
     corresponding to different sensors.
 
     Since :class:`Frame` extends :class:`~graviti.utility.user.UserMutableMapping`,
-    its basic operations are the same as a dictionary's.
+    its basic operations are the same as a dict's.
 
     To initialize a Frame and add a :class:`~graviti.dataset.data.Data` to it:
 
@@ -53,10 +53,10 @@ class Frame(UserMutableMapping[str, Data]):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Loads a :class:`Frame` object from a dictionary containing the frame information.
+        """Loads a :class:`Frame` object from a dict containing the frame information.
 
         Arguments:
-            contents: A dictionary containing the information of a frame,
+            contents: A dict containing the information of a frame,
                 whose format should be like::
 
                     {
@@ -94,10 +94,10 @@ class Frame(UserMutableMapping[str, Data]):
         self._pose = Transform3D.loads(contents["pose"]) if "pose" in contents else None
 
     def dumps(self) -> Dict[str, Any]:
-        """Dumps the current frame into a dictionary.
+        """Dumps the current frame into a dict.
 
         Returns:
-            A dictionary containing all the information of the frame.
+            A dict containing all the information of the frame.
 
         """
         contents: Dict[str, Any] = {}
@@ -141,7 +141,7 @@ class Frame(UserMutableMapping[str, Data]):
             rotation: Rotation of the frame pose in a sequence of [w, x, y, z]
                 or a 3x3 rotation matrix
                 or a :class:`~graviti.geometry.quaternion.Quaternion` object.
-            contents: A dictionary containing the translation and the rotation of the frame pose.
+            contents: A dict containing the translation and the rotation of the frame pose.
             **kwargs: Other parameters to initialize the rotation of the frame pose.
                 See :class:`~graviti.geometry.quaternion.Quaternion` documents for details.
 

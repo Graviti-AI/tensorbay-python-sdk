@@ -72,10 +72,10 @@ class Transform3D(ReprMixin):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Dict[str, float]]) -> _T:
-        """Load a :class:`Transform3D` from a dictionary containing rotation and translation.
+        """Load a :class:`Transform3D` from a dict containing rotation and translation.
 
         Arguments:
-            contents: A dictionary containing rotation and translation of a 3D transform::
+            contents: A dict containing rotation and translation of a 3D transform::
 
                 {
                     "translation": {
@@ -102,10 +102,10 @@ class Transform3D(ReprMixin):
         self._rotation = Quaternion.loads(contents["rotation"])
 
     def dumps(self) -> Dict[str, Dict[str, float]]:
-        """Dumps the :class:`Transform3D` into a dictionary.
+        """Dumps the :class:`Transform3D` into a dict.
 
         Returns:
-            A dictionary containing rotation and translation information
+            A dict containing rotation and translation information
                 of the :class:`Transform3D`.
 
         """

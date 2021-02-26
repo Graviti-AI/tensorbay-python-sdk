@@ -123,10 +123,10 @@ class Items(ReprMixin):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Load an Items from a dictionary containing the items information.
+        """Load an Items from a dict containing the items information.
 
         Arguments:
-            contents: A dictionary containing the information of the items,
+            contents: A dict containing the information of the items,
                 whose format should be like::
 
                         {
@@ -173,10 +173,10 @@ class Items(ReprMixin):
         return converted_type, converted_type == "array"
 
     def dumps(self) -> Dict[str, Any]:
-        """Dumps the information of the items into a dictionary.
+        """Dumps the information of the items into a dict.
 
         Returns:
-            A dictionary containing all the information of the items.
+            A dict containing all the information of the items.
 
         """
         contents: Dict[str, Any] = {}
@@ -263,10 +263,10 @@ class AttributeInfo(NameMixin, Items):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Load an AttributeInfo from a dictionary containing the attribute information.
+        """Load an AttributeInfo from a dict containing the attribute information.
 
         Arguments:
-            contents: A dictionary containing the information of the attribute,
+            contents: A dict containing the information of the attribute,
                 whose format should be like::
 
                         {
@@ -299,10 +299,10 @@ class AttributeInfo(NameMixin, Items):
             self.parent_categories = contents["parentCategories"]
 
     def dumps(self) -> Dict[str, Any]:
-        """Dumps the information of this attribute into a dictionary.
+        """Dumps the information of this attribute into a dict.
 
         Returns:
-            A dictionary containing all the information of this attribute.
+            A dict containing all the information of this attribute.
 
         """
         contents: Dict[str, Any] = NameMixin.dumps(self)

@@ -87,13 +87,13 @@ class CameraMatrix(ReprMixin):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
-        """Loads CameraMatrix from a dictionary containing the information of the camera matrix.
+        """Loads CameraMatrix from a dict containing the information of the camera matrix.
 
         Arguments:
-            contents: A dictionary containing the information of the camera matrix.
+            contents: A dict containing the information of the camera matrix.
 
         Returns:
-            A :class:`CameraMatrix` instance contains the information from the contents dictionary.
+            A :class:`CameraMatrix` instance contains the information from the contents dict.
 
         """
         return common_loads(cls, contents)
@@ -106,10 +106,10 @@ class CameraMatrix(ReprMixin):
         self.skew = contents.get("skew", 0)
 
     def dumps(self) -> Dict[str, float]:
-        """Dumps the camera matrix into a dictionary.
+        """Dumps the camera matrix into a dict.
 
         Returns:
-            A dictionary containing the information of the camera matrix.
+            A dict containing the information of the camera matrix.
 
         """
         return {
@@ -193,14 +193,14 @@ class DistortionCoefficients(ReprMixin):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
-        """Loads DistortionCoefficients from a dictionary containing the information.
+        """Loads DistortionCoefficients from a dict containing the information.
 
         Arguments:
-            contents: A dictionary containig distortion coefficients of a camera.
+            contents: A dict containig distortion coefficients of a camera.
 
         Returns:
             A :class:`DistortionCoefficients` instance containing information from
-            the contents dictionary.
+            the contents dict.
 
         """
         return common_loads(cls, contents)
@@ -211,10 +211,10 @@ class DistortionCoefficients(ReprMixin):
                 setattr(self, key, value)
 
     def dumps(self) -> Dict[str, float]:
-        """Dumps the distortion coefficients into a dictionary.
+        """Dumps the distortion coefficients into a dict.
 
         Returns:
-            A dictionary containing the information of distortion coefficients.
+            A dict containing the information of distortion coefficients.
 
         """
         contents = {}
@@ -367,14 +367,14 @@ class CameraIntrinsics(ReprMixin):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Dict[str, float]]) -> _T:
-        """Loads CameraIntrinsics from a dictionary containing the information.
+        """Loads CameraIntrinsics from a dict containing the information.
 
         Arguments:
-            contents: A dictionary containig camera matrix and distortion coefficients.
+            contents: A dict containig camera matrix and distortion coefficients.
 
         Returns:
             A :class:`CameraIntrinsics` instance containing information from
-            the contents dictionary.
+            the contents dict.
 
         """
         return common_loads(cls, contents)
@@ -389,10 +389,10 @@ class CameraIntrinsics(ReprMixin):
             self._distortion_coefficients = None
 
     def dumps(self) -> Dict[str, Dict[str, float]]:
-        """Dumps the camera intrinsics into a dictionary.
+        """Dumps the camera intrinsics into a dict.
 
         Returns:
-            A dictionary containing camera intrinsics.
+            A dict containing camera intrinsics.
 
         """
         contents = {"cameraMatrix": self._camera_matrix.dumps()}

@@ -157,10 +157,10 @@ class Quaternion:
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
-        """Load a :class:`Quaternion` from a dictionary.
+        """Load a :class:`Quaternion` from a dict.
 
         Arguments:
-            contents: A dictionary containing coordinates of a :class:`Quaternion`::
+            contents: A dict containing coordinates of a :class:`Quaternion`::
 
                 {
                     "w": ...
@@ -332,10 +332,10 @@ class Quaternion:
         return rotated_vector
 
     def dumps(self) -> Dict[str, float]:
-        """Dumps the Quaternion into a dictionary.
+        """Dumps the Quaternion into a dict.
 
         Returns:
-            A dictionary containing the Quaternion information.
+            A dict containing the Quaternion information.
 
         """
         return {"w": self._data.w, "x": self._data.x, "y": self._data.y, "z": self._data.z}

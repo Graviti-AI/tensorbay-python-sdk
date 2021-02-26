@@ -52,7 +52,7 @@ class GAS:
         """Get the user info corresponding to the AccessKey.
 
         Returns:
-            A dictionary which contains the username and clientTag.
+            A dict which contains the username and clientTag.
 
         """
         post_data = {"token": self._client.access_key}

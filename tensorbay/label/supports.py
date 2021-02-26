@@ -51,10 +51,10 @@ class CategoryInfo(NameMixin):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, str]) -> _T:
-        """Loads a CategoryInfo from a dictionary containing the category.
+        """Loads a CategoryInfo from a dict containing the category.
 
         Arguments:
-            contents: A dictionary containing the information of the category,
+            contents: A dict containing the information of the category,
                 whose format should be like::
 
                     {
@@ -141,10 +141,10 @@ class KeypointsInfo(ReprMixin):
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Loads a KeypointsInfo from a dictionary containing the information of the keypoints.
+        """Loads a KeypointsInfo from a dict containing the information of the keypoints.
 
         Arguments:
-            contents: A dictionary containing all the information of the set of keypoints,
+            contents: A dict containing all the information of the set of keypoints,
                 whose format should be like::
 
                     {
@@ -194,10 +194,10 @@ class KeypointsInfo(ReprMixin):
         return self._number
 
     def dumps(self) -> Dict[str, Any]:
-        """Dumps all the keypoint information into a dictionary.
+        """Dumps all the keypoint information into a dict.
 
         Returns:
-            A dictionary containing all the information of the keypoint,
+            A dict containing all the information of the keypoint,
             whose format is like::
 
                 {
