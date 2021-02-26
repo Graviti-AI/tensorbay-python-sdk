@@ -296,7 +296,7 @@ def _get_segment_object(
         if not os.path.isdir(local_abspath):
             data = Data(
                 local_abspath,
-                remote_path=str(PurePosixPath(remote_path, os.path.basename(local_abspath))),
+                target_remote_path=str(PurePosixPath(remote_path, os.path.basename(local_abspath))),
             )
             segment.append(data)
             continue
@@ -315,7 +315,7 @@ def _get_segment_object(
             for filename in filenames:
                 data = Data(
                     os.path.join(root, filename),
-                    remote_path=str(
+                    target_remote_path=str(
                         PurePosixPath(Path(remote_path, folder_name, relpath, filename))
                     ),
                 )
@@ -348,9 +348,17 @@ def _echo_segment(
             for index, _ in enumerate(frames):
                 click.echo(TBRN(dataset_name, segment_name, index).get_tbrn())
         else:
-            for frame in frames:
-                for data in frame.values():
-                    click.echo(data.tbrn)
+            for index, frame in enumerate(frames):
+                for sensor_name, data in frame.items():
+                    click.echo(
+                        TBRN(
+                            dataset_name,
+                            segment_name,
+                            index,
+                            sensor_name,
+                            remote_path=data.path,
+                        )
+                    )
 
 
 def _echo_data(dataset_name: str, segment_name: str, data_iter: Iterable[str]) -> None:
@@ -402,8 +410,16 @@ def _ls_frame(gas: GAS, info: TBRN, list_all_files: bool) -> None:
         for sensor_name in frame:
             click.echo(TBRN(info.dataset_name, info.segment_name, info.frame_index, sensor_name))
     else:
-        for data in frame.values():
-            click.echo(data.tbrn)
+        for sensor_name, data in frame.items():
+            click.echo(
+                TBRN(
+                    info.dataset_name,
+                    info.segment_name,
+                    info.frame_index,
+                    sensor_name,
+                    remote_path=data.path,
+                )
+            )
 
 
 def _ls_sensor(
@@ -422,7 +438,15 @@ def _ls_sensor(
         sys.exit(1)
 
     data = frame[info.sensor_name]
-    click.echo(data.tbrn)
+    click.echo(
+        TBRN(
+            info.dataset_name,
+            info.segment_name,
+            info.frame_index,
+            info.sensor_name,
+            remote_path=data.path,
+        )
+    )
 
 
 def _ls_fusion_file(
@@ -440,7 +464,7 @@ def _ls_fusion_file(
         click.echo(f'No such frame: "{info.frame_index}"!', err=True)
         sys.exit(1)
 
-    if frame[info.sensor_name].remote_path != info.remote_path:
+    if frame[info.sensor_name].path != info.remote_path:
         click.echo(f'No such file: "{info.remote_path}"!', err=True)
         sys.exit(1)
 

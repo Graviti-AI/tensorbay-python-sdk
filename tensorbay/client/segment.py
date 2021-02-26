@@ -37,9 +37,8 @@ from typing import Any, Dict, Iterable, Iterator, Optional, Tuple, Union
 import filetype
 from requests_toolbelt import MultipartEncoder
 
-from ..dataset import Data, Frame
+from ..dataset import Data, Frame, RemoteData
 from ..sensor.sensor import Sensor, _SensorType
-from ..utility import TBRN, TBRNType
 from .exceptions import GASException, GASPathError
 from .requests import Client, default_config, paging_range
 
@@ -113,22 +112,20 @@ class SegmentClientBase:
         """
         return self._commit_id
 
-    def _get_url(self, tbrn: TBRN) -> str:
+    def _get_url(self, remote_path: str) -> str:
         """Get url of a specific remote path.
 
         Arguments:
-            tbrn: TensorBay Resource Name.
+            remote_path: The remote path of the file.
 
         Returns:
-            The url of the input remote_path and sensor_name.
+            The url of the remote file.
 
         """
         params = {
             "segmentName": self._name,
-            "remotePath": tbrn.remote_path,
+            "remotePath": remote_path,
         }
-        if tbrn.type == TBRNType.FUSION_FILE:
-            params["sensorName"] = tbrn.sensor_name
         response = self._client.open_api_do("GET", "data/urls", self.dataset_id, params=params)
         return response.json()["url"]  # type: ignore[no-any-return]
 
@@ -215,7 +212,7 @@ class SegmentClientBase:
     def _upload_label(self, data: Data, sensor_name: Optional[str] = None) -> None:
         post_data: Dict[str, Any] = {
             "segmentName": self.name,
-            "remotePath": data.remote_path,
+            "remotePath": data.target_remote_path,
             "labelValues": data.labels.dumps(),
         }
         if sensor_name:
@@ -305,7 +302,7 @@ class SegmentClient(SegmentClientBase):
             data: The data object which represents the local file to upload.
 
         """
-        self.upload_data(data.local_path, data.remote_path)
+        self.upload_data(data.path, data.target_remote_path)
         self._upload_label(data)
 
     def _list_data(
@@ -347,7 +344,7 @@ class SegmentClient(SegmentClientBase):
         """
         yield from (item["remotePath"] for item in self._list_data(start=start, stop=stop))
 
-    def list_data_objects(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[Data]:
+    def list_data_objects(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[RemoteData]:
         """List required Data object in a dataset segment.
 
         Arguments:
@@ -360,8 +357,7 @@ class SegmentClient(SegmentClientBase):
         """
         for labels in self._list_labels(start=start, stop=stop):
             remote_path = labels["remotePath"]
-            tbrn = TBRN(self._dataset_name, self._name, remote_path=remote_path)
-            data = Data(tbrn, url_getter=self._get_url)
+            data = RemoteData(remote_path, url_getter=self._get_url)
             data.labels._loads(labels["label"])  # pylint: disable=protected-access
             yield data
 
@@ -432,7 +428,10 @@ class FusionSegmentClient(SegmentClientBase):
         frame_id = str(uuid.uuid4())
 
         for sensor_name, data in frame.items():
-            remote_path = data.remote_path
+            if not isinstance(data, Data):
+                continue
+
+            remote_path = data.target_remote_path
 
             if "\\" in remote_path:
                 raise GASPathError(remote_path)
@@ -454,7 +453,7 @@ class FusionSegmentClient(SegmentClientBase):
             try:
                 version_id, etag = self._post_multipart_formdata(
                     permission["extra"]["host"],
-                    data.local_path,
+                    data.path,
                     remote_path,
                     post_data,
                 )
@@ -520,14 +519,9 @@ class FusionSegmentClient(SegmentClientBase):
             for data_info in labels["frame"]:
                 sensor_name = data_info["sensorName"]
                 remote_path = data_info["remotePath"]
-                tbrn = TBRN(
-                    self._dataset_name,
-                    self._name,
-                    frame_index,
-                    sensor_name,
-                    remote_path=remote_path,
+                data = RemoteData(
+                    remote_path, timestamp=data_info["timestamp"], url_getter=self._get_url
                 )
-                data = Data(tbrn, timestamp=data_info["timestamp"], url_getter=self._get_url)
                 data.labels._loads(data_info["label"])  # pylint: disable=protected-access
                 frame[sensor_name] = data
             yield frame
