@@ -275,9 +275,9 @@ class SupportCategories(Supports):  # pylint: disable=too-few-public-methods
 
     Attributes:
         categories: All the possible categories in the corresponding dataset
-            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            stored in a :class:`~tensorbay.utility.name.NameOrderedDict`
             with the category names as keys
-            and the :class:`~graviti.label.supports.CategoryInfo` as values.
+            and the :class:`~tensorbay.label.supports.CategoryInfo` as values.
         category_delimiter: The delimiter in category values indicating parent-child relationship.
 
     """
@@ -325,9 +325,9 @@ class SupportAttributes(Supports):  # pylint: disable=too-few-public-methods
 
     Attributes:
         attributes: All the possible attributes in the corresponding dataset
-            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            stored in a :class:`~tensorbay.utility.name.NameOrderedDict`
             with the attribute names as keys
-            and the :class:`~graviti.label.attribute.AttributeInfo` as values.
+            and the :class:`~tensorbay.label.attribute.AttributeInfo` as values.
 
     """
 

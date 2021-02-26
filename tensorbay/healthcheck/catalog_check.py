@@ -5,14 +5,11 @@
 
 """Method check_catalog.
 
-:meth:`check_catalog` checks the catalog of :class:`Dataset` or :class:`FusionDataset`,
-including subcatalog, categories and attributes. For :class:`AttributeInfo`,
+:meth:`check_catalog` checks the catalog of :class:`~tensorbay.dataset.dataset.Dataset`
+or :class:`~tensorbay.dataset.dataset.FusionDataset`,
+including subcatalog, categories and attributes.
+For :class:`~tensorbay.label.attributes.AttributeInfo`,
 it finds errors in fields such as 'type', 'enum', 'range' and 'parent categories'.
-
-Todo:
-    Add `../dataset/dataset.py` link.
-    Add `../label/catalog.py` link.
-    Add `../label/supports.py` link.
 
 """
 
@@ -42,14 +39,14 @@ ATTRIBUTE_INFO_PIPELINE: PipelineForIterable[
 
 
 def check_catalog(catalog: Catalog) -> Iterator[Tuple[LabelType, AttributeInfoError]]:
-    """The health check method for :class:`Catalog`.
+    """The health check method for :class:`~tensorbay.label.catalog.Catalog`.
 
     Arguments:
-        catalog: The :class:`Catalog` needs to be checked.
+        catalog: The :class:`~tensorbay.label.catalog.Catalog` needs to be checked.
 
     Yields:
         The label type and :class:`AttributeInfoError` indicating that
-        :class:`AttributeInfo` has invalid 'type', 'enum', 'range'
+        :class:`~tensorbay.label.attributes.AttributeInfo` has invalid 'type', 'enum', 'range'
         or 'parent categories' field.
 
     """
@@ -66,7 +63,12 @@ def check_catalog(catalog: Catalog) -> Iterator[Tuple[LabelType, AttributeInfoEr
 
 
 class InvalidTypeError(AttributeInfoError):  # pylint: disable=too-few-public-methods
-    """This error is raised to indicate that :class:`AttributeInfo` has invalid 'type' field."""
+    """The health check class for invalid.
+
+    This error is raised to indicate that
+    :class:`~tensorbay.label.attributes.AttributeInfo` has invalid 'type' field.
+
+    """
 
     def __str__(self) -> str:
         return f'AttributeInfo "{self._name}": "type" field is invalid'
@@ -74,14 +76,16 @@ class InvalidTypeError(AttributeInfoError):  # pylint: disable=too-few-public-me
 
 @ATTRIBUTE_INFO_PIPELINE.register
 def check_invalid_type(attribute_info: AttributeInfo) -> Iterator[InvalidTypeError]:
-    """The health check method for invalid :class:`AttributeInfo` 'type' field.
+    """The health check method for invalid type.
+
+    :class:`~tensorbay.label.attributes.AttributeInfo` 'type' field.
 
     Arguments:
-        attribute_info: The :class:`AttributeInfo` needs to be checked.
+        attribute_info: The :class:`~tensorbay.label.attributes.AttributeInfo` needs to be checked.
 
     Yields:
         :class:`InvalidTypeError` indicating that
-        :class:`AttributeInfo` has invalid 'type' field.
+        :class:`~tensorbay.label.attributes.AttributeInfo` has invalid 'type' field.
 
     """
     if not hasattr(attribute_info, "type"):
@@ -106,7 +110,12 @@ def check_invalid_type(attribute_info: AttributeInfo) -> Iterator[InvalidTypeErr
 
 
 class InvalidEnumError(AttributeInfoError):  # pylint: disable=too-few-public-methods
-    """This error is raised to indicate that :class:`AttributeInfo` has invalid 'enum' field."""
+    """The health check class for invalid enum.
+
+    This error is raised to indicate that
+    :class:`~tensorbay.label.attributes.AttributeInfo` has invalid 'enum' field.
+
+    """
 
     def __str__(self) -> str:
         return f'AttributeInfo "{self._name}": "enum" field is invalid'
@@ -114,13 +123,16 @@ class InvalidEnumError(AttributeInfoError):  # pylint: disable=too-few-public-me
 
 @ATTRIBUTE_INFO_PIPELINE.register
 def check_invalid_enum(attribute_info: AttributeInfo) -> Iterator[InvalidEnumError]:
-    """The health check method for invalid :class:`AttributeInfo` 'enum' field.
+    """The health check method for invalid enum.
+
+    :class:`~tensorbay.label.attributes.AttributeInfo` 'enum' field.
 
     Arguments:
-        attribute_info: The :class:`AttributeInfo` needs to be checked.
+        attribute_info: The :class:`~tensorbay.label.attributes.AttributeInfo` needs to be checked.
 
     Yields:
-        :class:`InvalidEnumError` indicating that :class:`AttributeInfo` has invalid 'enum' field.
+        :class:`InvalidEnumError` indicating that
+        :class:`~tensorbay.label.attributes.AttributeInfo` has invalid 'enum' field.
 
     """
     if not hasattr(attribute_info, "enum"):
@@ -137,7 +149,12 @@ def check_invalid_enum(attribute_info: AttributeInfo) -> Iterator[InvalidEnumErr
 
 
 class NeitherTypeNorEnumError(AttributeInfoError):  # pylint: disable=too-few-public-methods
-    """This error is raised to indicate :class:`AttributeInfo` has neither 'enum' nor 'type'."""
+    """The health check class for either type enum.
+
+    This error is raised to indicate
+    :class:`~tensorbay.label.attributes.AttributeInfo` has neither 'enum' nor 'type'.
+
+    """
 
     def __str__(self) -> str:
         return f'AttributeInfo "{self._name}": Neither "type" nor "enum" field exists'
@@ -145,14 +162,16 @@ class NeitherTypeNorEnumError(AttributeInfoError):  # pylint: disable=too-few-pu
 
 @ATTRIBUTE_INFO_PIPELINE.register
 def check_neither_type_nor_enum(attribute_info: AttributeInfo) -> Iterator[NeitherTypeNorEnumError]:
-    """The health check method for :class:`AttributeInfo` which has neither 'enum' nor 'type' field.
+    """The health check method for :class:`~tensorbay.label.attributes.AttributeInfo`.
+
+    which has neither 'enum' nor 'type' field.
 
     Arguments:
-        attribute_info: The :class:`AttributeInfo` needs to be checked.
+        attribute_info: The :class:`~tensorbay.label.attributes.AttributeInfo` needs to be checked.
 
     Yields:
         :class:`NeitherTypeNorEnumError` indicating that
-        :class:`AttributeInfo` has neither 'enum' nor 'type' field.
+        :class:`~tensorbay.label.attributes.AttributeInfo` has neither 'enum' nor 'type' field.
 
     """
     if not hasattr(attribute_info, "enum") and not hasattr(attribute_info, "type"):
@@ -160,7 +179,12 @@ def check_neither_type_nor_enum(attribute_info: AttributeInfo) -> Iterator[Neith
 
 
 class RedundantTypeError(AttributeInfoError):  # pylint: disable=too-few-public-methods
-    """This error is raised to indicate that :class:`AttributeInfo` has both 'enum' and 'type'."""
+    """The health check class for redundant type error.
+
+    This error is raised to indicate that
+    :class:`~tensorbay.label.attributes.AttributeInfo` has both 'enum' and 'type'.
+
+    """
 
     def __str__(self) -> str:
         return f'AttributeInfo "{self._name}": "type" field is redundant when "enum" field exists'
@@ -168,14 +192,17 @@ class RedundantTypeError(AttributeInfoError):  # pylint: disable=too-few-public-
 
 @ATTRIBUTE_INFO_PIPELINE.register
 def check_redundant_type(attribute_info: AttributeInfo) -> Iterator[RedundantTypeError]:
-    """The health check method for :class:`AttributeInfo` which has both 'enum' and 'type' field.
+    """The health check method for redundant type.
+
+    :class:`~tensorbay.label.attributes.AttributeInfo`
+    which has both 'enum' and 'type' field.
 
     Arguments:
-        attribute_info: The :class:`AttributeInfo` needs to be checked.
+        attribute_info: The :class:`~tensorbay.label.attributes.AttributeInfo` needs to be checked.
 
     Yields:
         :class:`RedundantTypeError` indicating that
-        :class:`AttributeInfo` has both 'enum' and 'type' field.
+        :class:`~tensorbay.label.attributes.AttributeInfo` has both 'enum' and 'type' field.
 
     """
     if hasattr(attribute_info, "enum") and hasattr(attribute_info, "type"):
@@ -183,7 +210,12 @@ def check_redundant_type(attribute_info: AttributeInfo) -> Iterator[RedundantTyp
 
 
 class RangeNotSupportError(AttributeInfoError):  # pylint: disable=too-few-public-methods
-    """This error is raised to indicate :class:`AttributeInfo` has range for non number type."""
+    """The health check class for range not support error.
+
+    This error is raised to indicate :class:`~tensorbay.label.attributes.AttributeInfo`
+    has range for non number type.
+
+    """
 
     def __str__(self) -> str:
         return f'AttributeInfo "{self._name}": Only "number" and "integer" type supports range'
@@ -191,14 +223,16 @@ class RangeNotSupportError(AttributeInfoError):  # pylint: disable=too-few-publi
 
 @ATTRIBUTE_INFO_PIPELINE.register
 def check_range_not_support(attribute_info: AttributeInfo) -> Iterator[RangeNotSupportError]:
-    """The health check method for :class:`AttributeInfo` which has range for non number type.
+    """The health check method for range not support.
+
+    :class:`~tensorbay.label.attributes.AttributeInfo` which has range for non number type.
 
     Arguments:
-        attribute_info: The :class:`AttributeInfo` needs to be checked.
+        attribute_info: The :class:`~tensorbay.label.attributes.AttributeInfo` needs to be checked.
 
     Yields:
         :class:`RangeNotSupportError` indicating that
-        :class:`AttributeInfo` has range for non number type.
+        :class:`~tensorbay.label.attributes.AttributeInfo` has range for non number type.
 
     """
     if not hasattr(attribute_info, "maximum") and not hasattr(attribute_info, "minimum"):
@@ -219,7 +253,12 @@ def check_range_not_support(attribute_info: AttributeInfo) -> Iterator[RangeNotS
 
 
 class InvalidRangeError(AttributeInfoError):  # pylint: disable=too-few-public-methods
-    """This error is raised to indicate that :class:`AttributeInfo` has invalid range."""
+    """The health check class for invalid range error.
+
+    This error is raised to indicate that
+    :class:`~tensorbay.label.attributes.AttributeInfo` has invalid range.
+
+    """
 
     def __str__(self) -> str:
         return f'AttributeInfo "{self._name}": Maximum is not larger than minimum'
@@ -227,13 +266,17 @@ class InvalidRangeError(AttributeInfoError):  # pylint: disable=too-few-public-m
 
 @ATTRIBUTE_INFO_PIPELINE.register
 def check_invalid_range(attribute_info: AttributeInfo) -> Iterator[InvalidRangeError]:
-    """The health check method for :class:`AttributeInfo` which has invalid range.
+    """The health check method for invalid range.
+
+    :class:`~tensorbay.label.attributes.AttributeInfo`
+    which has invalid range.
 
     Arguments:
-        attribute_info: The :class:`AttributeInfo` needs to be checked.
+        attribute_info: The :class:`~tensorbay.label.attributes.AttributeInfo` needs to be checked.
 
     Yields:
-        :class:`InvalidRangeError` indicating that :class:`AttributeInfo` has invalid range.
+        :class:`InvalidRangeError` indicating that
+        :class:`~tensorbay.label.attributes.AttributeInfo` has invalid range.
 
     """
     if attribute_info.maximum is None or attribute_info.minimum is None:
@@ -246,9 +289,11 @@ def check_invalid_range(attribute_info: AttributeInfo) -> Iterator[InvalidRangeE
 
 
 class InvalidParentCategories(AttributeInfoError):  # pylint: disable=too-few-public-methods
-    """This error is raised to indicate that :class:`AttributeInfo` has invalid parent categories.
+    """The health check class for invalid parent categories.
 
-     This means the category in parent_categories cannot be found in Subcatalog.categories.
+    This error is raised to indicate that :class:`~tensorbay.label.attributes.AttributeInfo`
+    has invalid parent categories.This means the category in parent_categories
+    cannot be found in Subcatalog.categories.
 
     Arguments:
         name: The name of the incorrect attribute.
@@ -268,10 +313,13 @@ class InvalidParentCategories(AttributeInfoError):  # pylint: disable=too-few-pu
 
 
 class CheckParentCategories:  # pylint: disable=too-few-public-methods
-    """This error is raised to indicate that :class:`AttributeInfo` has invalid parent_categories.
+    """The health check class for parent categories.
+
+    This error is raised to indicate that :class:`~tensorbay.label.attributes.AttributeInfo`
+    has invalid parent_categories.
 
     Arguments:
-        categories: The dict of :class:`CategoryInfo`
+        categories: The dictionary of :class:`~tensorbay.label.supports.CategoryInfo`
             which indicates all valid parent categories.
 
     """
@@ -282,14 +330,17 @@ class CheckParentCategories:  # pylint: disable=too-few-public-methods
         self._categories = categories
 
     def __call__(self, attribute_info: AttributeInfo) -> Iterator[InvalidParentCategories]:
-        """The health check method for :class:`AttributeInfo` which has invalid parent categories.
+        """The health check method for parent categories.
+
+        :class:`~tensorbay.label.attributes.AttributeInfo`
+        which has invalid parent categories.
 
         Arguments:
-            attribute_info: :class:`AttributeInfo` needs to be checked.
+            attribute_info: :class:`~tensorbay.label.attributes.AttributeInfo` needs to be checked.
 
         Yields:
             :class:`InvalidParentCategories` indicating that
-            :class:`AttributeInfo` has invalid parent categories.
+            :class:`~tensorbay.label.attributes.AttributeInfo` has invalid parent categories.
 
         """
         for parent_category in attribute_info.parent_categories:

@@ -6,11 +6,9 @@
 """HealthReport.
 
 :class:`HealthReport` contains all the errors found through healthcheck
-within :class:`Dataset` or :class:`FusionDataset`, including the result of
+within :class:`~tensorbay.dataset.dataset.Dataset` or
+:class:`~tensorbay.dataset.dataset.FusionDataset`, including the result of
 basic checking and catalog checking.
-
-Todo:
-    Add `../dataset/dataset.py` link.
 
 """
 

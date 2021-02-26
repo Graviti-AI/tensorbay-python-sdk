@@ -19,9 +19,6 @@ Use 'gas cp' to upload data.
 
 Use 'gas rm' to delete data.
 
-Todo:
-    Add `gas.py` link.
-
 """
 
 import logging
@@ -79,7 +76,7 @@ def _read_config(config_filepath: str, config_name: str) -> Tuple[str, str]:
 
 
 def _gas(access_key: str, url: str, config_name: str) -> GAS:
-    """Load an object of :class:`GAS`.
+    """Load an object of :class:`~tensorbay.client.gas.GAS`.
 
     We will read accessKey and URL from the appointed config_name and login gas.
 

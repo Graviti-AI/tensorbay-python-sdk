@@ -7,13 +7,9 @@
 
 The :class:`GAS` defines the initial client to interact between local and TensorBay.
 It provides some operations on datasets level such as :meth:`GAS.create_dataset`,
-:meth:`GAS.list_datasets` and :meth:`GAS.upload_data_object`.
+:meth:`GAS.list_datasets` and :meth:`GAS.upload_dataset_object`.
 
 AccessKey is required when operating with dataset.
-
-Todo:
-    Add `../client/dataset.py` link.
-    Add `../dataset/dataset.py` link.
 
 """
 
@@ -35,7 +31,7 @@ class GAS:
     """:class:`GAS` defines the initial client to interact between local and TensorBay.
 
     :class:`GAS` provides some operations on dataset level such as
-    :meth:`GAS.create_dataset` :meth:`GAS.list_datasets` and :meth:`GAS.upload_data_object`.
+    :meth:`GAS.create_dataset` :meth:`GAS.list_datasets` and :meth:`GAS.upload_dataset_object`.
 
     Arguments:
         access_key: User's access key.
@@ -108,7 +104,7 @@ class GAS:
         is_continuous: bool = False,
         region: Optional[str] = None,  # beijing, hangzhou, shanghai
     ) -> DatasetClient:
-        """Create a TensorBay dataset with given name.
+        """Create a :class:`~tensorbay.client.dataset.DatasetClient` with given name.
 
         Arguments:
             name: Name of the dataset, unique for a user.
@@ -128,7 +124,7 @@ class GAS:
         is_continuous: bool = False,
         region: Optional[str] = None,  # beijing, hangzhou, shanghai
     ) -> FusionDatasetClient:
-        """Create a TensorBay fusion dataset with given name.
+        """Create a :class:`~tensorbay.client.dataset.FusionDatasetClient` with given name.
 
         Arguments:
             name: Name of the fusion dataset, unique for a user.
@@ -148,14 +144,14 @@ class GAS:
         return ReturnType(name, dataset_id, self._client, commit_id)
 
     def get_dataset(self, name: str, commit_id: Optional[str] = None) -> DatasetClient:
-        """Get the TensorBay dataset with given name and commit ID.
+        """Get a :class:`~tensorbay.client.dataset.DatasetClient` with given name and commit ID.
 
         Arguments:
             name: The name of the requested dataset.
             commit_id: The dataset commit ID.
 
         Returns:
-            The :class:`~tensorbay.client.dataset.DatasetClient`.
+            The requested :class:`~tensorbay.client.dataset.DatasetClient`.
 
         Raises:
             GASDatasetTypeError: When the requested dataset is a fusion dataset.
@@ -171,7 +167,7 @@ class GAS:
         """Get the TensorBay fusion dataset with given name and commit ID.
 
         Arguments:
-            name: The name of the required fusion dataset.
+            name: The name of the required :class:`~tensorbay.client.dataset.FusionDatasetClient`.
             commit_id: The dataset commit ID.
 
         Returns:
@@ -304,8 +300,8 @@ class GAS:
         or :class:`~tensorbay.dataset.dataset.FusionDataset`, which includes:
 
             - Create a TensorBay dataset with the name and type of input local dataset.
-            - Upload all :class:`tensorbay.dataset.segment.Segment`
-                or :class:`tensorbay.dataset.segment.FusionSegment` in the dataset to TensorBay.
+            - Upload all :class:`~tensorbay.dataset.segment.Segment`
+                or :class:`~tensorbay.dataset.segment.FusionSegment` in the dataset to TensorBay.
 
         Arguments:
             dataset: The :class:`~tensorbay.dataset.dataset.Dataset` or
@@ -340,7 +336,7 @@ class GAS:
         """Delete a dataset with given name.
 
         Arguments:
-            name: Name of the dataset, unique for a user.
+            name: Name of the :class:`~tensorbay.dataset.dataset.Dataset`, unique for a user.
 
         """
         dataset_id, _ = self._get_dataset_id_and_type(name)

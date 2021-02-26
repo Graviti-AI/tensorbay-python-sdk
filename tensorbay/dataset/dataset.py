@@ -13,10 +13,10 @@ and is the base class of :class:`Dataset` and :class:`FusionDataset`.
 
 :class:`Dataset` is made up of data collected from only one sensor
 or data without sensor information.
-It consists of a list of :class:`~graviti.dataset.segment.Segment`.
+It consists of a list of :class:`~tensorbay.dataset.segment.Segment`.
 
 :class:`FusionDataset` is made up of data collected from multiple sensors.
-It consists of a list of :class:`~graviti.dataset.segment.FusionSegment`.
+It consists of a list of :class:`~tensorbay.dataset.segment.FusionSegment`.
 
 """
 
@@ -36,7 +36,7 @@ class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestor
     DatasetBase represents a whole dataset contains several segments
     and is the base class of :class:`Dataset` and :class:`FusionDataset`.
 
-    A dataset with labels should contain a :class:`~graviti.label.catalog.Catalog`
+    A dataset with labels should contain a :class:`~tensorbay.label.catalog.Catalog`
     indicating all the possible values of the labels.
 
     Arguments:
@@ -82,7 +82,7 @@ class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestor
         """Return the catalog of the dataset.
 
         Returns:
-            The :class:`Catalog` of the dataset.
+            The :class:`~tensorbay.label.catalog.Catalog` of the dataset.
 
         """
         return self._catalog
@@ -124,7 +124,7 @@ class Dataset(DatasetBase[Segment]):
     """This class defines the concept of dataset.
 
     Dataset is made up of data collected from only one sensor or data without sensor information.
-    It consists of a list of :class:`~graviti.dataset.segment.Segment`.
+    It consists of a list of :class:`~tensorbay.dataset.segment.Segment`.
 
     """
 
@@ -135,7 +135,7 @@ class Dataset(DatasetBase[Segment]):
             segment_name: The name of the segment to create, which default value is an empty string.
 
         Returns:
-            The created :class:`~graviti.dataset.segment.Segment`.
+            The created :class:`~tensorbay.dataset.segment.Segment`.
 
         """
         segment = Segment(segment_name)
@@ -147,7 +147,7 @@ class FusionDataset(DatasetBase[FusionSegment]):
     """This class defines the concept of fusion dataset.
 
     FusionDataset is made up of data collected from multiple sensors.
-    It consists of a list of :class:`~graviti.dataset.segment.FusionSegment`.
+    It consists of a list of :class:`~tensorbay.dataset.segment.FusionSegment`.
     """
 
     def create_segment(self, segment_name: str = "") -> FusionSegment:
@@ -158,7 +158,7 @@ class FusionDataset(DatasetBase[FusionSegment]):
                 which default value is an empty string.
 
         Returns:
-            The created :class:`~graviti.dataset.segment.FusionSegment`.
+            The created :class:`~tensorbay.dataset.segment.FusionSegment`.
 
         """
         segment = FusionSegment(segment_name)

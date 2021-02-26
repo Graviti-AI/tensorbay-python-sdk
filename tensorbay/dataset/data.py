@@ -218,7 +218,7 @@ class Data(DataBase):
 
     Attributes:
         path: The file local path.
-        target_remote_path: The file remote path after uploading to tensorbay.
+        _target_remote_path: The file remote path after uploading to tensorbay.
         timestamp: The timestamp for the file.
         labels: The :class:`Labels` that contains all the label information of the file.
 

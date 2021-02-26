@@ -120,14 +120,14 @@ class ClassificationSubcatalog(  # pylint: disable=too-many-ancestors
     Attributes:
         description: The description of the entire classification subcatalog.
         categories: All the possible categories in the corresponding dataset
-            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            stored in a :class:`~tensorbay.utility.name.NameOrderedDict`
             with the category names as keys
-            and the :class:`~graviti.label.supports.CategoryInfo` as values.
+            and the :class:`~tensorbay.label.supports.CategoryInfo` as values.
         category_delimiter: The delimiter in category values indicating parent-child relationship.
         attributes: All the possible attributes in the corresponding dataset
-            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            stored in a :class:`~tensorbay.utility.name.NameOrderedDict`
             with the attribute names as keys
-            and the :class:`~graviti.label.attribute.AttributeInfo` as values.
+            and the :class:`~tensorbay.label.attribute.AttributeInfo` as values.
 
     """
 
@@ -145,14 +145,14 @@ class Box2DSubcatalog(  # pylint: disable=too-many-ancestors
     Attributes:
         description: The description of the entire 2D box subcatalog.
         categories: All the possible categories in the corresponding dataset
-            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            stored in a :class:`~tensorbay.utility.name.NameOrderedDict`
             with the category names as keys
-            and the :class:`~graviti.label.supports.CategoryInfo` as values.
+            and the :class:`~tensorbay.label.supports.CategoryInfo` as values.
         category_delimiter: The delimiter in category values indicating parent-child relationship.
         attributes: All the possible attributes in the corresponding dataset
-            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            stored in a :class:`~tensorbay.utility.name.NameOrderedDict`
             with the attribute names as keys
-            and the :class:`~graviti.label.attribute.AttributeInfo` as values.
+            and the :class:`~tensorbay.label.attribute.AttributeInfo` as values.
         is_tracking: Whether the Subcatalog contains tracking information.
 
     """
@@ -174,14 +174,14 @@ class Box3DSubcatalog(  # pylint: disable=too-many-ancestors
     Attributes:
         description: The description of the entire 3D box subcatalog.
         categories: All the possible categories in the corresponding dataset
-            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            stored in a :class:`~tensorbay.utility.name.NameOrderedDict`
             with the category names as keys
-            and the :class:`~graviti.label.supports.CategoryInfo` as values.
+            and the :class:`~tensorbay.label.supports.CategoryInfo` as values.
         category_delimiter: The delimiter in category values indicating parent-child relationship.
         attributes: All the possible attributes in the corresponding dataset
-            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            stored in a :class:`~tensorbay.utility.name.NameOrderedDict`
             with the attribute names as keys
-            and the :class:`~graviti.label.attribute.AttributeInfo` as values.
+            and the :class:`~tensorbay.label.attribute.AttributeInfo` as values.
         is_tracking: Whether the Subcatalog contains tracking information.
 
     """
@@ -203,14 +203,14 @@ class Polygon2DSubcatalog(  # pylint: disable=too-many-ancestors
     Attributes:
         description: The description of the entire 2D polygon subcatalog.
         categories: All the possible categories in the corresponding dataset
-            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            stored in a :class:`~tensorbay.utility.name.NameOrderedDict`
             with the category names as keys
-            and the :class:`~graviti.label.supports.CategoryInfo` as values.
+            and the :class:`~tensorbay.label.supports.CategoryInfo` as values.
         category_delimiter: The delimiter in category values indicating parent-child relationship.
         attributes: All the possible attributes in the corresponding dataset
-            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            stored in a :class:`~tensorbay.utility.name.NameOrderedDict`
             with the attribute names as keys
-            and the :class:`~graviti.label.attribute.AttributeInfo` as values.
+            and the :class:`~tensorbay.label.attribute.AttributeInfo` as values.
         is_tracking: Whether the Subcatalog contains tracking information.
 
     """
@@ -232,14 +232,14 @@ class Polyline2DSubcatalog(  # pylint: disable=too-many-ancestors
     Attributes:
         description: The description of the entire 2D polyline subcatalog.
         categories: All the possible categories in the corresponding dataset
-            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            stored in a :class:`~tensorbay.utility.name.NameOrderedDict`
             with the category names as keys
-            and the :class:`~graviti.label.supports.CategoryInfo` as values.
+            and the :class:`~tensorbay.label.supports.CategoryInfo` as values.
         category_delimiter: The delimiter in category values indicating parent-child relationship.
         attributes: All the possible attributes in the corresponding dataset
-            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            stored in a :class:`~tensorbay.utility.name.NameOrderedDict`
             with the attribute names as keys
-            and the :class:`~graviti.label.attribute.AttributeInfo` as values.
+            and the :class:`~tensorbay.label.attribute.AttributeInfo` as values.
         is_tracking: Whether the Subcatalog contains tracking information.
 
     """
@@ -261,14 +261,14 @@ class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
     Attributes:
         description: The description of the entire 2D keypoints subcatalog.
         categories: All the possible categories in the corresponding dataset
-            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            stored in a :class:`~tensorbay.utility.name.NameOrderedDict`
             with the category names as keys
-            and the :class:`~graviti.label.supports.CategoryInfo` as values.
+            and the :class:`~tensorbay.label.supports.CategoryInfo` as values.
         category_delimiter: The delimiter in category values indicating parent-child relationship.
         attributes: All the possible attributes in the corresponding dataset
-            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            stored in a :class:`~tensorbay.utility.name.NameOrderedDict`
             with the attribute names as keys
-            and the :class:`~graviti.label.attribute.AttributeInfo` as values.
+            and the :class:`~tensorbay.label.attribute.AttributeInfo` as values.
         is_tracking: Whether the Subcatalog contains tracking information.
 
     """
@@ -323,7 +323,7 @@ class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
         """Return the KeypointsInfo of the Subcatalog.
 
         Returns:
-            A list of :class:`~graviti.label.supports.KeypointsInfo`.
+            A list of :class:`~tensorbay.label.supports.KeypointsInfo`.
 
         """
         return self._keypoints
@@ -356,9 +356,9 @@ class SentenceSubcatalog(SubcatalogBase, SupportAttributes):
         sample_rate: The number of samples of audio carried per second.
         lexicon: A list consists all of text and phone.
         attributes: All the possible attributes in the corresponding dataset
-            stored in a :class:`~graviti.utility.name.NameOrderedDict`
+            stored in a :class:`~tensorbay.utility.name.NameOrderedDict`
             with the attribute names as keys
-            and the :class:`~graviti.label.attribute.AttributeInfo` as values.
+            and the :class:`~tensorbay.label.attribute.AttributeInfo` as values.
 
     Raises:
         TypeError: When sample_rate is None and is_sample is True.

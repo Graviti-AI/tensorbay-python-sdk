@@ -5,7 +5,7 @@
 
 """Logging utility functions.
 
-:meth:`Dump_request_and_response` dumps http request and response.
+:meth:`Dump_request_and_response <dump_request_and_response>` dumps http request and response.
 
 """
 

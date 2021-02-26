@@ -337,8 +337,8 @@ class CameraIntrinsics(ReprMixin):
             :class:`DistortionCoefficients`.
 
     Attributes:
-        camera_matrix: A 3x3 Sequence of the camera matrix.
-        distortion_coefficients: It is the deviation from rectilinear projection. It includes
+        _camera_matrix: A 3x3 Sequence of the camera matrix.
+        _distortion_coefficients: It is the deviation from rectilinear projection. It includes
             radial distortion and tangential distortion.
 
     """

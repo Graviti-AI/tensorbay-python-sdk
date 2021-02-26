@@ -7,19 +7,18 @@
 
 :class:`DatasetClient` is a remote concept. It contains the information
 needed for determining a unique dataset on TensorBay, and provides a series of methods within
-dataset scope, such as :meth:`DataClient.get_segment`,
-:meth:`DataClient.list_segments`, :meth:`DataClient.commit`, and so on.
-In contrast to the :class:`DatasetClient`, :class:`Dataset` is a local concept. It represents a
-dataset created locally. Please refer to :class:`Dataset` for more information.
+dataset scope, such as :meth:`DatasetClient.get_segment`, :meth:`DatasetClient.list_segments`,
+:meth:`DatasetClient.commit <DatasetClientBase.commit>`, and so on.
+In contrast to the :class:`DatasetClient`,
+:class:`~tensorbay.dataset.dataset.Dataset` is a local concept. It represents a
+dataset created locally. Please refer to
+:class:`~tensorbay.dataset.dataset.Dataset` for more information.
 
-Similar to the :class:`DatasetClient`, the :class:`FusionDatasetClient` represents
-the fusion dataset on TensorBay, and its local counterpart is :class:`FusionDataset`.
-Please refer to :class:`FusionDataset` for more information.
-
-Todo:
-    Add `../dataset/dataset.py` link.
-    Add `../label/catalog.py` link.
-    Add `../dataset/segment.py`
+Similar to the :class:`DatasetClient`, the
+:class:`FusionDatasetClient` represents
+the fusion dataset on TensorBay, and its local counterpart is
+:class:`~tensorbay.dataset.dataset.FusionDataset`.
+Please refer to :class:`~tensorbay.dataset.dataset.FusionDataset` for more information.
 
 """
 
@@ -38,8 +37,8 @@ class DatasetClientBase:
 
     A :class:`DatasetClientBase` contains the information needed for
     determining a unique dataset on TensorBay, and provides a series of
-    method within dataset scope, such as :meth:`DatasetClient.list_segments`
-    and :meth:`DatasetClient.upload_catalog`.
+    method within dataset scope, such as :meth:`DatasetClientBase.list_segments`
+    and :meth:`DatasetClientBase.upload_catalog`.
 
     Arguments:
         name: Dataset name.
@@ -191,8 +190,10 @@ class DatasetClient(DatasetClientBase):
 
     :class:`DatasetClient` inherits from :class:`DataClientBase` and
     provides more methods within a dataset scope, such as :meth:`DatasetClient.get_segment`,
-    :meth:`DatasetClient.commit` and :meth:`DatasetClient.upload_segment_object`.
-    In contrast to :class:`FusionDatasetClient`, a :class:`DatasetClient` has only one sensor.
+    :meth:`DatasetClient.commit <DatasetClientBase.commit>` and
+    :meth:`DatasetClient.upload_segment_object`.
+    In contrast to :class:`FusionDatasetClient`, a
+    :class:`DatasetClient` has only one sensor.
 
     """
 
@@ -229,10 +230,10 @@ class DatasetClient(DatasetClientBase):
         return SegmentClient(name, self._dataset_id, self._name, self._client, self.commit_id)
 
     def get_segment_object(self, name: str = "") -> Segment:
-        """Get a segment object in a certain commit according to given name.
+        """Get a :class:`~tensorbay.dataset.segment.Segment` according to given name.
 
         Arguments:
-            name: The name of the required segment.
+            name: The name of the required :class:`~tensorbay.dataset.segment.Segment`.
 
         Returns:
             The required :class:`~tensorbay.dataset.segment.Segment`.
@@ -252,16 +253,17 @@ class DatasetClient(DatasetClientBase):
         jobs: int = 1,
         skip_uploaded_files: bool = False,
     ) -> SegmentClient:
-        """Upload a segment object to the draft.
+        """Upload a :class:`~tensorbay.dataset.segment.Segment` to the dataset.
 
-        This function will upload all info contains in the input
-        :class:`~tensorbay.dataset.segment.Segment`, which includes:
-
-            - Create a segment using the name of the input segment object.
-            - Upload all Data in the segment object to the dataset.
+        This function will upload all info contains in
+        the input :class:`~tensorbay.dataset.segment.Segment`,
+        which includes:
+        - Create a segment using the name of input Segment.
+        - Upload all Data in the Segment to the dataset.
 
         Arguments:
-            segment: The :class:`~tensorbay.dataset.segment.Segment`.
+            segment: The :class:`~tensorbay.dataset.segment.Segment`
+                contains the information needs to be upload.
             jobs: The number of the max workers in multi-thread uploading method.
             skip_uploaded_files: True for skipping the uploaded files.
 
@@ -289,11 +291,13 @@ class DatasetClient(DatasetClientBase):
 class FusionDatasetClient(DatasetClientBase):
     """This class defines :class:`FusionDatasetClient`.
 
-    :class:`FusionDatasetClient` inherits from :class:`DataClientBase` and
+    :class:`FusionDatasetClient` inherits from :class:`DatasetClientBase` and
     provides more methods within a fusion dataset scope,
-    such as :meth:`FusionDataset.get_segment`, :meth:`FusionDataset.commit`
-    and :meth:`FusionDataset.upload_segment_object`.
-    In contrast to :class:`DatasetClient`, a :class:`FusionDatasetClient` has multiple sensors.
+    such as :meth:`FusionDatasetClient.get_segment`,
+    :meth:`FusionDatasetClient.commit <DatasetClientBase.commit>`
+    and :meth:`FusionDatasetClient.upload_segment_object`.
+    In contrast to :class:`DatasetClient`, a
+    :class:`FusionDatasetClient` has multiple sensors.
 
     """
 
@@ -329,13 +333,13 @@ class FusionDatasetClient(DatasetClientBase):
         return FusionSegmentClient(name, self._dataset_id, self._name, self._client, self.commit_id)
 
     def get_segment_object(self, name: str = "") -> FusionSegment:
-        """Get a fusion segment object in a certain commit according to given name.
+        """Get a :class:`~tensorbay.dataset.segment.Segment` according to given name.
 
         Arguments:
-            name: The name of the required fusion segment.
+            name: The name of the required :class:`~tensorbay.dataset.segment.Segment`.
 
         Returns:
-            The required :class:`~tensorbay.dataset.segment.FusionSegment`.
+            The required :class:`~tensorbay.dataset.segment.Segment`.
 
         """
         segment_client = self.get_segment(name)

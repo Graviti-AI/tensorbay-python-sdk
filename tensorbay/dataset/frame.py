@@ -5,10 +5,10 @@
 
 """Frame.
 
-:class:`Frame` is a concept in :class:`~graviti.dataset.dataset.FusionDataset`.
+:class:`Frame` is a concept in :class:`~tensorbay.dataset.dataset.FusionDataset`.
 
-It is the structure that composes a :class:`~graviti.dataset.segment.FusionSegment`,
-and consists of multiple :class:`~graviti.dataset.data.Data` collected at the same time
+It is the structure that composes a :class:`~tensorbay.dataset.segment.FusionSegment`,
+and consists of multiple :class:`~tensorbay.dataset.data.Data` collected at the same time
 from different sensors.
 
 """
@@ -23,16 +23,16 @@ from .data import DataBase
 class Frame(UserMutableMapping[str, "DataBase._Type"]):
     """This class defines the concept of frame.
 
-    Frame is a concept in :class:`~graviti.dataset.dataset.FusionDataset`.
+    Frame is a concept in :class:`~tensorbay.dataset.dataset.FusionDataset`.
 
-    It is the structure that composes :class:`~graviti.dataset.segment.FusionSegment`,
-    and consists of multiple :class:`~graviti.dataset.data.Data` collected at the same time
+    It is the structure that composes :class:`~tensorbay.dataset.segment.FusionSegment`,
+    and consists of multiple :class:`~tensorbay.dataset.data.Data` collected at the same time
     corresponding to different sensors.
 
-    Since :class:`Frame` extends :class:`~graviti.utility.user.UserMutableMapping`,
-    its basic operations are the same as a dict's.
+    Since :class:`Frame` extends :class:`~tensorbay.utility.user.UserMutableMapping`,
+    its basic operations are the same as a dictionary's.
 
-    To initialize a Frame and add a :class:`~graviti.dataset.data.Data` to it:
+    To initialize a Frame and add a :class:`~tensorbay.dataset.data.Data` to it:
 
     .. code:: python
 
@@ -116,7 +116,7 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
         """Return the pose of the frame.
 
         Returns:
-            A :class:`~graviti.geometry.transform.Transform3D` object
+            A :class:`~tensorbay.geometry.transform.Transform3D` object
             representing the pose of the frame.
 
         """
@@ -135,15 +135,15 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
 
         Arguments:
             transform: The transform representing the frame pose in
-                a :class:`~graviti.geometry.transform.Transform3D` object
+                a :class:`~tensorbay.geometry.transform.Transform3D` object
                 or a 4x4 or 3x4 transformation matrix.
             translation: Translation of the frame pose in a sequence of [x, y, z].
             rotation: Rotation of the frame pose in a sequence of [w, x, y, z]
                 or a 3x3 rotation matrix
-                or a :class:`~graviti.geometry.quaternion.Quaternion` object.
-            contents: A dict containing the translation and the rotation of the frame pose.
+                or a :class:`~tensorbay.geometry.quaternion.Quaternion` object.
+            contents: A dictionary containing the translation and the rotation of the frame pose.
             **kwargs: Other parameters to initialize the rotation of the frame pose.
-                See :class:`~graviti.geometry.quaternion.Quaternion` documents for details.
+                See :class:`~tensorbay.geometry.quaternion.Quaternion` documents for details.
 
         """
         if contents:
