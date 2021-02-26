@@ -79,20 +79,31 @@ def _get_attribute_map(dataset: Dataset) -> _ATTRIBUTE_MAP_TYPE:
 
 
 def _load_data(path: str, attribute_map: _ATTRIBUTE_MAP_TYPE, segment_name: str) -> Iterator[Data]:
-    """The train and val label file context like this:
-    0--Parade/0_Parade_marchingband_1_849.jpg
-    1
-    449 330 122 149 0 0 0 0 0 0
-    0--Parade/0_Parade_Parade_0_452.jpg
-    0
-    0 0 0 0 0 0 0 0 0 0
-    0--Parade/0_Parade_marchingband_1_799.jpg
-    21
-    78 221 7 8 2 0 0 0 0 0
-    78 238 14 17 2 0 0 0 0 0
-    113 212 11 15 2 0 0 0 0 0
-    134 260 15 15 2 0 0 0 0 0
-    ...
+    """Loads the box2d and classification label in to data.
+
+    The train and val label file context should be like::
+
+        0--Parade/0_Parade_marchingband_1_849.jpg
+        1
+        449 330 122 149 0 0 0 0 0 0
+        0--Parade/0_Parade_Parade_0_452.jpg
+        0
+        0 0 0 0 0 0 0 0 0 0
+        0--Parade/0_Parade_marchingband_1_799.jpg
+        21
+        78 221 7 8 2 0 0 0 0 0
+        78 238 14 17 2 0 0 0 0 0
+        113 212 11 15 2 0 0 0 0 0
+        134 260 15 15 2 0 0 0 0 0
+
+    Arguments:
+        path: The path of label file.
+        attribute_map: A attribute value enum table.
+        segment_name: Name of the segment.
+
+    Yields:
+        Data with loaded lables.
+
     """
     is_test = segment_name == "test"
     with open(path) as fp:
