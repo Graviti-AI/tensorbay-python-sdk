@@ -5,11 +5,9 @@
 
 """Healthcheck related methods.
 
-:meth:`healthcheck` finds all errors in the :class:`Dataset` or :class:`FusionDataset`,
+:meth:`healthcheck` finds all errors in the :class:`~tensorbay.dataset.dataset.Dataset`
+or :class:`~tensorbay.dataset.dataset.FusionDataset`,
 including basic errors and catalog errors.
-
-Todo:
-    Add `../dataset/dataset.py` link.
 
 """
 
@@ -22,10 +20,11 @@ from .report import HealthReport
 
 
 def healthcheck(dataset: Union[Dataset, FusionDataset]) -> HealthReport:
-    """Healthcheck for :class:`Dataset` or :class:`FusionDataset`.
+    """Healthcheck for Dataset or FusionDataset.
 
     Arguments:
-        dataset: The :class:`Dataset` or :class:`FusionDataset` for healthchecking.
+        dataset: The :class:`~tensorbay.dataset.dataset.Dataset`
+            or :class:`~tensorbay.dataset.dataset.FusionDataset` for healthchecking.
 
     Returns:
         The full result of the healthcheck which contains all errors found.

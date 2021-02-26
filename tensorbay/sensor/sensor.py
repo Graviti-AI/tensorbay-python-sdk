@@ -151,10 +151,6 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
             contents: A dict containing the translation and the rotation.
             **kwargs: Other parameters to initialize rotation.
 
-        Todo:
-            See ``Transform3D`` document for details.
-            See ``Quaternion`` document for details.
-
         """
         if contents:
             self.extrinsics = Transform3D.loads(contents)
@@ -193,9 +189,6 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
         Arguments:
             *args: Coordinates of the ``Quaternion``.
             **kwargs: Keyword-only argument to initialize the ``Quaternion``.
-
-        Todo:
-            See ``Quaternion`` document for details.
 
         """
         if not hasattr(self, "extrinsics"):

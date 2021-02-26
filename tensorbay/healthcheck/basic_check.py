@@ -5,12 +5,10 @@
 
 """Method check_basic.
 
-:meth:`basic_check` checks whether :class:`Dataset` or :class:`FusionDataset`
-is empty and whether the :class:`Segment` or :class:`FusionSegment` in the object is empty.
-
-Todo:
-    Add `../dataset/dataset.py` link.
-    Add `../dataset/segment.py` link.
+:meth:`check_basic` checks whether :class:`~tensorbay.dataset.dataset.Dataset`
+or :class:`~tensorbay.dataset.dataset.FusionDataset`
+is empty and whether the :class:`~tensorbay.dataset.segment.Segment`
+or :class:`~tensorbay.dataset.dataset.FusionDataset` in the object is empty.
 
 """
 
@@ -33,14 +31,26 @@ class BasicError(Error):  # pylint: disable=too-few-public-methods
 
 
 class EmptyDatasetError(BasicError):  # pylint: disable=too-few-public-methods
-    """This error is raised to indicate that :class:`Dataset` or :class:`FusionDataset` is empty."""
+    """The health check function for empty dataset.
+
+    Arguments:
+        This error is raised to indicate that :class:`~tensorbay.dataset.dataset.Dataset`
+        or :class:`~tensorbay.dataset.dataset.FusionDataset` is empty.
+
+    """
 
     def __str__(self) -> str:
         return f"Dataset '{self._name}' is empty"
 
 
 class EmptySegmentError(BasicError):  # pylint: disable=too-few-public-methods
-    """This error is raised to indicate that :class:`Segment` or :class:`FusionSegment` is empty."""
+    """The health check function for empty segment.
+
+    Arguments:
+        This error is raised to indicate that :class:`~tensorbay.dataset.segment.Segment`
+        or :class:`~tensorbay.dataset.dataset.FusionDataset` is empty.
+
+    """
 
     def __str__(self) -> str:
         return f"Segment '{self._name}' is empty"
@@ -50,11 +60,14 @@ def check_basic(dataset: Union[Dataset, FusionDataset]) -> Iterator[BasicError]:
     """The health check function for basic error.
 
     Arguments:
-        dataset: The :class:`Dataset` or :class:`FusionDataset` needs to be checked.
+        dataset: The :class:`~tensorbay.dataset.dataset.Dataset` or
+            :class:`~tensorbay.dataset.dataset.FusionDataset` needs to be checked.
 
     Yields:
-        BasicError indicating that :class:`Dataset`, :class:`FusionDataset`,
-        :class:`FusionSegment` or :class:`Segment` is empty.
+        BasicError indicating that :class:`~tensorbay.dataset.dataset.Dataset`,
+        :class:`~tensorbay.dataset.dataset.FusionDataset`,
+        :class:`~tensorbay.dataset.dataset.FusionDataset` or
+        :class:`~tensorbay.dataset.segment.Segment` is empty.
 
     """
     if not dataset:

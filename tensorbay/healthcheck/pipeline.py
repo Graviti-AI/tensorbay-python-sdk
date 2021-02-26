@@ -9,7 +9,7 @@
 :class:`PipelineForIterable` is a healthcheck pipeline to processes iterable objects.
 
 Checker functions can be registered to the healthcheck pipeline by :meth:`Pipeline.register` or
-:meth:`PipelineForIterable.register`.
+:meth:`PipelineForIterable.register <Pipeline.register>`.
 
 """
 

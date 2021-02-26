@@ -29,9 +29,9 @@ class Transform3D(ReprMixin):
         transform: A :class:`Transform3D` or a 4x4 or 3x4 transform matrix.
         translation: Translation in a sequence of [x, y, z].
         rotation: Rotation in a sequence of [w, x, y, z] or a
-            3x3 rotation matrix or :class:`~graviti.geometry.quaternion.Quaternion`.
+            3x3 rotation matrix or :class:`~tensorbay.geometry.quaternion.Quaternion`.
         **kwargs: Other parameters to initialize rotation of the transform.
-            See :class:`~graviti.geometry.quaternion.Quaternion` documents for details.
+            See :class:`~tensorbay.geometry.quaternion.Quaternion` documents for details.
 
     Raises:
         ValueError: If the shape of the input matrix is not correct.
@@ -156,7 +156,7 @@ class Transform3D(ReprMixin):
         """Return the translation of the 3D transform.
 
         Returns:
-            Translation in :class:`~graviti.geometry.vector.vector3D`.
+            Translation in :class:`~tensorbay.geometry.vector.Vector3D`.
 
         """
         return self._translation
@@ -180,7 +180,7 @@ class Transform3D(ReprMixin):
         """Return the rotation of the 3D transform.
 
         Returns:
-            Rotation in :class:`~graviti.geometry.quaternion.Quaternion`.
+            Rotation in :class:`~tensorbay.geometry.quaternion.Quaternion`.
 
         """
         return self._rotation

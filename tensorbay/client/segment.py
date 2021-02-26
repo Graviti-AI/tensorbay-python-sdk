@@ -10,12 +10,15 @@ contains the information needed for determining a unique segment in a dataset
 on TensorBay, and provides a series of methods within a segment scope,
 such as :meth:`SegmentClient.upload_label`, :meth:`SegmentClient.upload_data`,
 :meth:`SegmentClient.list_data` and so on.
-In contrast to the :class:`SegmentClient`, :class:`Segment` is a local concept.
-It represents a segment created locally. Please refer to :class:`Segment` for more information.
+In contrast to the :class:`SegmentClient`,
+:class:`~tensorbay.dataset.segment.Segment` is a local concept.
+It represents a segment created locally. Please refer to
+:class:`~tensorbay.dataset.segment.Segment` for more information.
 
 Similarly to the :class:`SegmentClient`, the :class:`FusionSegmentClient` represents
 the fusion segment in a fusion dataset on TensorBay, and its local counterpart
-is :class:`FusionSegment`. Please refer to :class:`FusionSegment`
+is :class:`~tensorbay.dataset.segment.FusionSegment`.
+Please refer to :class:`~tensorbay.dataset.segment.FusionSegment`
 for more information.
 
 Todo:
@@ -52,7 +55,7 @@ class SegmentClientBase:
     """This class defines the basic concept of :class:`SegmentClient`.
 
     A :class:`SegmentClientBase` contains the information needed for determining
-    a unique segment in a dataset on TensorBay.
+        a unique segment in a dataset on TensorBay.
 
     Arguments:
         name: Segment name.
@@ -366,8 +369,10 @@ class FusionSegmentClient(SegmentClientBase):
     """This class defines :class:`FusionSegmentClient`.
 
     :class:`FusionSegmentClient` inherits from :class:`SegmentClientBase` and provides
-    methods within a fusion segment scope, such as :meth:`FusionSegment.upload_sensor_object`,
-    :meth:`FusionSegment.upload_frame_object` and :meth:`FusionSegment.list_frame_objects`.
+    methods within a fusion segment scope, such as
+    :meth:`FusionSegmentClient.upload_sensor_object`,
+    :meth:`FusionSegmentClient.upload_frame_object`
+    and :meth:`FusionSegmentClient.list_frame_objects`.
 
     In contrast to :class:`SegmentClient`, :class:`FusionSegmentClient` has multiple sensors.
 

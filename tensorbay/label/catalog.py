@@ -6,8 +6,8 @@
 """Catalog.
 
 :class:`Catalog` is used to describe the types of labels
-contained in a :class:`~graviti.dataset.dataset.DatasetBase`
-and all the optional values of the label contents.
+contained in a :class:`~tensorbay.dataset.dataset.DatasetBase` and
+all the optional values of the label contents.
 
 """
 
@@ -30,12 +30,12 @@ class Catalog(ReprMixin):
     """This class defines the concept of catalog.
 
     :class:`Catalog` is used to describe the types of labels
-    contained in a :class:`~graviti.dataset.dataset.DatasetBase`
+    contained in a :class:`~tensorbay.dataset.dataset.DatasetBase`
     and all the optional values of the label contents.
 
-    A :class:`Catalog` contains one or several :class:`~graviti.label.subcatalog.SubcatalogBase`,
+    A :class:`Catalog` contains one or several :class:`~tensorbay.label.subcatalog.SubcatalogBase`,
     corresponding to different types of labels.
-    Each of the :class:`~graviti.label.subcatalog.SubcatalogBase`
+    Each of the :class:`~tensorbay.label.subcatalog.SubcatalogBase`
     contains the features, fields and the specific definitions of the labels.
 
     """

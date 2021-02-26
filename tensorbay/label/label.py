@@ -6,12 +6,12 @@
 """Label, LabelType and different types of labels.
 
 :class:`LabelType` is an enumeration type
-which includes all the supported label types within :class:`~graviti.dataset.data.Labels`.
+which includes all the supported label types within :class:`~tensorbay.dataset.data.Labels`.
 
 :class:`Label` is the most basic label level in the TensorBay dataset structure,
 and is the base class for the following various types of label classes.
 
-Each :class:`Label` object contains one annotaion of a :class:`~graviti.dataset.data.Data` object.
+Each :class:`Label` object contains one annotaion of a :class:`~tensorbay.dataset.data.Data` object.
 
 .. table:: label classes
    :widths: auto
@@ -39,7 +39,7 @@ _T = TypeVar("_T", bound="Label")
 
 
 class LabelType(TypeEnum):
-    """This class defines all the supported types within :class:`~graviti.dataset.data.Labels`."""
+    """This class defines all the supported types within :class:`~tensorbay.dataset.data.Labels`."""
 
     __subcatalog_registry__: Dict[TypeEnum, Type[Any]] = {}
 
@@ -70,7 +70,7 @@ class Label(TypeMixin[LabelType], ReprMixin):
     and is the base class for the following various types of label classes.
 
     Each :class:`Label` object
-    contains one annotaion of a :class:`~graviti.dataset.data.Data` object.
+    contains one annotaion of a :class:`~tensorbay.dataset.data.Data` object.
 
     Arguments:
         category: The category of the label.
@@ -297,18 +297,18 @@ class LabeledBox3D(Box3D, Label):
 
     Arguments:
         transform: The transform of the 3D bounding box label in
-            a :class:`~graviti.geometry.transform.Transform3D` object
+            a :class:`~tensorbay.geometry.transform.Transform3D` object
             or a 4x4 or 3x4 transformation matrix.
         translation: Translation of the 3D bounding box label in a sequence of [x, y, z].
         rotation: Rotation of the 3D bounding box label in a sequence of [w, x, y, z]
             or a 3x3 rotation matrix
-            or a :class:`~graviti.geometry.quaternion.Quaternion` object.
+            or a :class:`~tensorbay.geometry.quaternion.Quaternion` object.
         size: Size of the 3D bounding box label in a sequence of [x, y, z].
         category: Category of the 3D bounding box label.
         attributes: Attributs of the 3D bounding box label.
         instance: The instance id of the 3D bounding box label.
         **kwargs: Other parameters to initialize the rotation of the 3D bounding box label.
-            See :class:`~graviti.geometry.quaternion.Quaternion` documents for details.
+            See :class:`~tensorbay.geometry.quaternion.Quaternion` documents for details.
 
     Attributes:
         category: The category of the label.

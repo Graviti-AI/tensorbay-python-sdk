@@ -280,14 +280,14 @@ class Box3D(ReprMixin):
     It provides :meth:`Box3D.iou` to calculate the intersection over union of two 3D boxes.
 
     Arguments:
-        transform: A :class:`~graviti.geometry.transform.Transform3D` object
+        transform: A :class:`~tensorbay.geometry.transform.Transform3D` object
             or a 4x4 or 3x4 transform matrix.
         translation: Translation in a sequence of [x, y, z].
         rotation: Rotation in a sequence of [w, x, y, z] or a 3x3 rotation matrix
-            or a :class:`~graviti.geometry.quaternion.Quaternion` object.
+            or a :class:`~tensorbay.geometry.quaternion.Quaternion` object.
         size: Size in a sequence of [x, y, z].
         **kwargs: Other parameters to initialize rotation of the transform.
-            See :class:`~graviti.geometry.quaternion.Quaternion` documents for details.
+            See :class:`~tensorbay.geometry.quaternion.Quaternion` documents for details.
 
     """
 

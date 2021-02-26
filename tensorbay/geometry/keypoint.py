@@ -8,7 +8,8 @@
 :class:`Keypoint2D` contains the information of 2D keypoint,
 such as the coordinates and visible status(optional).
 
-:class:`Keypoints2D` contains a list of 2D keypoint and is based on :class:`PointList2D`.
+:class:`Keypoints2D` contains a list of 2D keypoint and is based on
+:class:`~tensorbay.geometry.polygon.PointList2D`.
 
 """
 
@@ -158,7 +159,7 @@ class Keypoints2D(PointList2D[Keypoint2D]):
     """This class defines the concept of Keypoints2D.
 
     :class:`Keypoints2D` contains a list of 2D keypoint and is based on
-    :class:`~graviti.geometry.Polygon.PointList2D`.
+    :class:`~tensorbay.geometry.polygon.PointList2D`.
 
     """
 

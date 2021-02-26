@@ -5,14 +5,14 @@
 
 """Segment and FusionSegment.
 
-Segment is a concept in :class:`~graviti.dataset.dataset.Dataset`.
-It is the structure that composes :class:`~graviti.dataset.dataset.Dataset`,
-and consists of a series of :class:`~graviti.dataset.data.Data` without sensor information.
+Segment is a concept in :class:`~tensorbay.dataset.dataset.Dataset`.
+It is the structure that composes :class:`~tensorbay.dataset.dataset.Dataset`,
+and consists of a series of :class:`~tensorbay.dataset.data.Data` without sensor information.
 
-Fusion segment is a concept in :class:`~graviti.dataset.dataset.FusionDataset`.
-It is the structure that composes :class:`~graviti.dataset.dataset.FusionDataset`,
-and consists of a list of :class:`~graviti.dataset.frame.Frame`
-along with multiple :class:`~graviti.sensor.sensor.Sensor`.
+Fusion segment is a concept in :class:`~tensorbay.dataset.dataset.FusionDataset`.
+It is the structure that composes :class:`~tensorbay.dataset.dataset.FusionDataset`,
+and consists of a list of :class:`~tensorbay.dataset.frame.Frame`
+along with multiple :class:`~tensorbay.sensor.sensor.Sensor`.
 
 """
 
@@ -27,18 +27,18 @@ from .frame import Frame
 class Segment(NameMixin, UserMutableSequence["DataBase._Type"]):
     """This class defines the concept of segment.
 
-    Segment is a concept in :class:`~graviti.dataset.dataset.Dataset`.
-    It is the structure that composes :class:`~graviti.dataset.dataset.Dataset`,
-    and consists of a series of :class:`~graviti.dataset.data.Data` without sensor information.
+    Segment is a concept in :class:`~tensorbay.dataset.dataset.Dataset`.
+    It is the structure that composes :class:`~tensorbay.dataset.dataset.Dataset`,
+    and consists of a series of :class:`~tensorbay.dataset.data.Data` without sensor information.
 
-    If the segment is inside of a time-continuous :class:`~graviti.dataset.dataset.Dataset`,
+    If the segment is inside of a time-continuous :class:`~tensorbay.dataset.dataset.Dataset`,
     the time continuity of the data should be indicated by
     :meth`~graviti.dataset.data.Data.remote_path`.
 
-    Since :class:`Segment` extends :class:`~graviti.utility.user.UserMutableSequence`,
+    Since :class:`Segment` extends :class:`~tensorbay.utility.user.UserMutableSequence`,
     its basic operations are the same as a list's.
 
-    To initialize a Segment and add a :class:`~graviti.dataset.data.Data` to it:
+    To initialize a Segment and add a :class:`~tensorbay.dataset.data.Data` to it:
 
     .. code:: python
 
@@ -123,21 +123,22 @@ class Segment(NameMixin, UserMutableSequence["DataBase._Type"]):
 class FusionSegment(NameMixin, UserMutableSequence[Frame]):
     """This class defines the concept of fusion segment.
 
-    Fusion segment is a concept in :class:`~graviti.dataset.dataset.FusionDataset`.
-    It is the structure that composes :class:`~graviti.dataset.dataset.FusionDataset`,
-    and consists of a list of :class:`~graviti.dataset.frame.Frame`.
+    Fusion segment is a concept in :class:`~tensorbay.dataset.dataset.FusionDataset`.
+    It is the structure that composes :class:`~tensorbay.dataset.dataset.FusionDataset`,
+    and consists of a list of :class:`~tensorbay.dataset.frame.Frame`.
 
-    Besides, a fusion segment contains multiple :class:`~graviti.sensor.sensor.Sensor`
-    corresponding to the :class:`~graviti.dataset.data.Data`
-    under each :class:`~graviti.dataset.frame.Frame`.
+    Besides, a fusion segment contains multiple :class:`~tensorbay.sensor.sensor.Sensor`
+    correspoinding to the :class:`~tensorbay.dataset.data.Data`
+    under each :class:`~tensorbay.dataset.frame.Frame`.
 
-    If the segment is inside of a time-continuous :class:`~graviti.dataset.dataset.FusionDataset`,
+    If the segment is inside of a time-continuous :class:`~tensorbay.dataset.dataset.FusionDataset`,
     the time continuity of the frames should be indicated by the index inside the fusion segment.
 
-    Since :class:`FusionSegment` extends :class:`~graviti.utility.user.UserMutableSequence`,
+    Since :class:`FusionSegment` extends :class:`~tensorbay.utility.user.UserMutableSequence`,
     its basic operations are the same as a list's.
 
-    To initialize a :class:`FusionSegment` and add a :class:`~graviti.dataset.frame.Frame` to it:
+    To initialize a :class:`FusionSegment` and add a
+    :class:`~tensorbay.dataset.frame.Frame` to it:
 
     .. code:: python
 
