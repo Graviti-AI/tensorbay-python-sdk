@@ -17,10 +17,10 @@ from typing import Any, Dict, Iterable, Optional, Type, TypeVar
 
 from ..geometry import Quaternion, Transform3D
 from ..utility import UserMutableMapping, common_loads
-from .data import Data
+from .data import DataBase
 
 
-class Frame(UserMutableMapping[str, Data]):
+class Frame(UserMutableMapping[str, DataBase.Type]):
     """This class defines the concept of frame.
 
     Frame is a concept in :class:`~graviti.dataset.dataset.FusionDataset`.
@@ -44,7 +44,7 @@ class Frame(UserMutableMapping[str, Data]):
     _T = TypeVar("_T", bound="Frame")
 
     def __init__(self, index: Optional[float] = None, frame_id: Optional[str] = None) -> None:
-        self._data: Dict[str, Data] = {}
+        self._data: Dict[str, DataBase.Type] = {}
         self._pose: Optional[Transform3D] = None
         if index is not None:
             self._index = index
@@ -90,7 +90,7 @@ class Frame(UserMutableMapping[str, Data]):
     def _loads(self, contents: Dict[str, Any]) -> None:
         self._data = {}
         for sensor, data in contents["frame"].items():
-            self._data[sensor] = Data.loads(data)
+            self._data[sensor] = DataBase.loads(data)
         self._pose = Transform3D.loads(contents["pose"]) if "pose" in contents else None
 
     def dumps(self) -> Dict[str, Any]:

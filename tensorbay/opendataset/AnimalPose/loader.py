@@ -98,7 +98,7 @@ def _get_data_part1(root_path: str, aniamls: Iterable[str]) -> Iterator[Data]:
 
     for animal in aniamls:
         for image_path in glob(os.path.join(root_path, "keypoint_image_part1", animal, "*.jpg")):
-            data = Data(image_path, remote_path=f"{animal}/{os.path.basename(image_path)}")
+            data = Data(image_path, target_remote_path=f"{animal}/{os.path.basename(image_path)}")
 
             for annotation_path in glob(
                 os.path.join(
@@ -140,7 +140,7 @@ def _get_data_part2(root_path: str, aniamls: Iterable[str]) -> Iterator[Data]:
 
     for animal in aniamls:
         for image_path in glob(os.path.join(root_path, "animalpose_image_part2", animal, "*.jpeg")):
-            data = Data(image_path, remote_path=f"{animal}/{os.path.basename(image_path)}")
+            data = Data(image_path, target_remote_path=f"{animal}/{os.path.basename(image_path)}")
 
             annotation_path = os.path.join(
                 root_path,
@@ -211,7 +211,7 @@ def AnimalPose7(path: str) -> Dataset:
             annotations = json.load(fp)
         for image_name, box2ds in annotations.items():
             image_path = os.path.join(root_path, "bndbox_image", animal, image_name)
-            data = Data(image_path, remote_path=f"{animal}/{image_name}")
+            data = Data(image_path, target_remote_path=f"{animal}/{image_name}")
             data.labels.box2d = []
 
             for box2d in box2ds:

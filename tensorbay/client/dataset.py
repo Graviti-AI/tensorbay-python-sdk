@@ -269,12 +269,16 @@ class DatasetClient(DatasetClientBase):
 
         """
         segment_client = self.get_or_create_segment(segment.name)
-        segment_filter: Iterable[Data]
+        local_data: Iterator[Data] = filter(
+            lambda data: isinstance(data, Data), segment  # type: ignore[arg-type]
+        )
         if skip_uploaded_files:
             done_set = set(segment_client.list_data())
-            segment_filter = filter(lambda data: data.remote_path not in done_set, segment)
+            segment_filter = filter(
+                lambda data: data.target_remote_path not in done_set, local_data
+            )
         else:
-            segment_filter = segment
+            segment_filter = local_data
 
         multithread_upload(segment_client.upload_data_object, segment_filter, jobs=jobs)
         return segment_client

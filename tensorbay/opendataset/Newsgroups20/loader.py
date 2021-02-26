@@ -88,7 +88,9 @@ def Newsgroups20(path: str) -> Dataset:
         for text_path in text_paths:
             category = os.path.basename(os.path.dirname(text_path))
 
-            data = Data(text_path, remote_path=f"{category}/{os.path.basename(text_path)}.txt")
+            data = Data(
+                text_path, target_remote_path=f"{category}/{os.path.basename(text_path)}.txt"
+            )
             data.labels.classification = Classification(category)
             segment.append(data)
 

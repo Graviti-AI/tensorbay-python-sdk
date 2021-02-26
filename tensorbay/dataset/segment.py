@@ -20,11 +20,11 @@ from typing import Any, Callable, Dict, List, Type, TypeVar
 
 from ..sensor import Sensor
 from ..utility import NameMixin, NameSortedDict, ReprType, UserMutableSequence, common_loads
-from .data import Data
+from .data import DataBase
 from .frame import Frame
 
 
-class Segment(NameMixin, UserMutableSequence[Data]):
+class Segment(NameMixin, UserMutableSequence[DataBase.Type]):
     """This class defines the concept of segment.
 
     Segment is a concept in :class:`~graviti.dataset.dataset.Dataset`.
@@ -55,7 +55,7 @@ class Segment(NameMixin, UserMutableSequence[Data]):
 
     def __init__(self, name: str = "") -> None:
         super().__init__(name)
-        self._data: List[Data] = []
+        self._data: List[DataBase.Type] = []
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -85,7 +85,7 @@ class Segment(NameMixin, UserMutableSequence[Data]):
     def _loads(self, contents: Dict[str, Any]) -> None:
         super()._loads(contents)
         for data in contents["data"]:
-            self._data.append(Data.loads(data))
+            self._data.append(DataBase.loads(data))
 
     def dumps(self) -> Dict[str, Any]:
         """Dumps the segment into a dict.
@@ -100,7 +100,10 @@ class Segment(NameMixin, UserMutableSequence[Data]):
         return contents
 
     def sort(
-        self, *, key: Callable[[Data], Any] = lambda data: data.fileuri, reverse: bool = False
+        self,
+        *,
+        key: Callable[[DataBase.Type], Any] = lambda data: data.path,
+        reverse: bool = False,
     ) -> None:
         """Sort the list in ascending order and return None.
 
