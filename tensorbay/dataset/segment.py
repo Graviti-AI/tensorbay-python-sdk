@@ -128,7 +128,7 @@ class FusionSegment(NameMixin, UserMutableSequence[Frame]):
     and consists of a list of :class:`~graviti.dataset.frame.Frame`.
 
     Besides, a fusion segment contains multiple :class:`~graviti.sensor.sensor.Sensor`
-    correspoinding to the :class:`~graviti.dataset.data.Data`
+    corresponding to the :class:`~graviti.dataset.data.Data`
     under each :class:`~graviti.dataset.frame.Frame`.
 
     If the segment is inside of a time-continuous :class:`~graviti.dataset.dataset.FusionDataset`,

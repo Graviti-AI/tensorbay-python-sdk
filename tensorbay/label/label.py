@@ -166,8 +166,7 @@ class Classification(Label):
                             <key>: <value>
                             ...
                             ...
-                        },
-                        "instance": <str>
+                        }
                     }
 
         Returns:

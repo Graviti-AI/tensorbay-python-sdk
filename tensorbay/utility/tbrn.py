@@ -52,27 +52,47 @@ class TBRNType(Enum):
     """TBRNType defines the type of a TBRN.
 
     It has 7 types:
-    1. `TBRNType.DATASET`:
-        "tb:VOC2012"
+    1. `TBRNType.DATASET`::
+
+            "tb:VOC2012"
+
         which means the dataset "VOC2012".
-    2. `TBRNType.SEGMENT`:
-        "tb:VOC2010:train"
+
+    2. `TBRNType.SEGMENT`::
+
+            "tb:VOC2010:train"
+
         which means the "train" segment of dataset "VOC2012".
-    3. `TBRNType.FRAME`:
-        "tb:KITTI:test:10"
+
+    3. `TBRNType.FRAME`::
+
+            "tb:KITTI:test:10"
+
         which means the 10th frame of the "test" segment in dataset "KITTI".
-    4. `TBRNType.SEGMENT_SENSOR`:
-        "tb:KITTI:test::lidar"
+
+    4. `TBRNType.SEGMENT_SENSOR`::
+
+            "tb:KITTI:test::lidar"
+
         which means the sensor "lidar" of the "test" segment in dataset "KITTI".
-    5. `TBRNType.FRAME_SENSOR`:
-        "tb:KITTI:test:10:lidar"
+
+    5. `TBRNType.FRAME_SENSOR`::
+
+            "tb:KITTI:test:10:lidar"
+
         which means the sensor "lidar" which belongs to the 10th frame of the "test" segment in
         dataset "KITTI".
-    6. `TBRNType.NORMAL_FILE`:
+
+        6. `TBRNType.NORMAL_FILE`::
+
         "tb:VOC2012:train://2012_004330.jpg"
+
         which means the file "2012_004330.jpg" of the "train" segment in normal dataset "VOC2012".
-    7. `TBRNType.FUSION_FILE`
+
+        7. `TBRNType.FUSION_FILE`::
+
         "tb:KITTI:test:10:lidar://000024.bin"
+
         which means the file "000024.bin" in fusion dataset "KITTI", its segment, frame index and
         sensor is "test", 10 and "lidar".
 
