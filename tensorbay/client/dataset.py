@@ -256,6 +256,7 @@ class DatasetClient(DatasetClientBase):
 
         This function will upload all info contains in the input :class:`Segment`,
         which includes:
+
             - Create a segment using the name of input :class:`Segment`.
             - Upload all Data in the :class:`Segment` to the dataset.
 
@@ -355,6 +356,7 @@ class FusionDatasetClient(DatasetClientBase):
 
         This function will upload all info contains in the input :class:`FusionSegment`,
         which includes:
+
             - Create a segment using the name of input :class:`FusionSegment`.
             - Upload all Sensor in the segment to the dataset.
             - Upload all Frame in the segment to the dataset.

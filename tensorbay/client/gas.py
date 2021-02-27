@@ -311,6 +311,7 @@ class GAS:
 
         This function will upload all information contains in the :class:`Dataset`
         or :class:`FusionDataset`, which includes:
+
             - Create a dataset using the name and type of input
               :class:`Dataset` or :class:`FusionDataset`.
             - Upload all :class:`Segment` or :class:`FusionSegment` in the dataset to TensorBay.
