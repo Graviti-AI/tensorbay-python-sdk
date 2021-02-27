@@ -309,7 +309,7 @@ class SupportCategories(Supports):  # pylint: disable=too-few-public-methods
             description: The description of the category.
 
         """
-        if hasattr(self, "categories"):
+        if not hasattr(self, "categories"):
             self.categories = NameOrderedDict()
 
         self.categories.append(CategoryInfo(name, description))
@@ -385,7 +385,7 @@ class SupportAttributes(Supports):  # pylint: disable=too-few-public-methods
             description=description,
         )
 
-        if hasattr(self, "attributes"):
+        if not hasattr(self, "attributes"):
             self.attributes = NameOrderedDict()
 
         self.attributes.append(attribute_info)
