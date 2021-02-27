@@ -53,12 +53,12 @@ class NameMixin(ReprMixin):
         """Loads a NameMixin from a dict containing the information of the NameMixin.
 
         Arguments:
-            contents: A dict containing the information of the :class:`NameMixin`.
+            contents: A dict containing the information of the :class:`NameMixin`::
 
-                {
-                    "name": <str>
-                    "description": <str>
-                }
+                    {
+                        "name": <str>
+                        "description": <str>
+                    }
 
         Returns:
             A :class:`NameMixin` instance containing the information from the contents dict.
