@@ -38,7 +38,7 @@ import filetype
 from requests_toolbelt import MultipartEncoder
 
 from ..dataset import Data, Frame, RemoteData
-from ..sensor.sensor import Sensor, _SensorType
+from ..sensor.sensor import Sensor
 from .exceptions import GASException, GASPathError
 from .requests import Client, default_config, paging_range
 
@@ -373,7 +373,7 @@ class FusionSegmentClient(SegmentClientBase):
 
     """
 
-    def list_sensor_objects(self) -> Iterator[_SensorType]:
+    def list_sensor_objects(self) -> Iterator["Sensor._Type"]:
         """List required sensor object in a segment client.
 
         Yields:
@@ -387,7 +387,7 @@ class FusionSegmentClient(SegmentClientBase):
         response = self._client.open_api_do("GET", "sensors", self.dataset_id, params=params).json()
 
         for sensor_info in response["sensors"]:
-            yield Sensor.loads(sensor_info)  # type: ignore[misc]
+            yield Sensor.loads(sensor_info)
 
     def upload_sensor_object(self, sensor: Sensor) -> None:
         """Upload sensor to the :class:`SegmentClient`.
