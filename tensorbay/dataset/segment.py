@@ -24,7 +24,7 @@ from .data import DataBase
 from .frame import Frame
 
 
-class Segment(NameMixin, UserMutableSequence[DataBase.Type]):
+class Segment(NameMixin, UserMutableSequence["DataBase._Type"]):
     """This class defines the concept of segment.
 
     Segment is a concept in :class:`~graviti.dataset.dataset.Dataset`.
@@ -55,7 +55,7 @@ class Segment(NameMixin, UserMutableSequence[DataBase.Type]):
 
     def __init__(self, name: str = "") -> None:
         super().__init__(name)
-        self._data: List[DataBase.Type] = []
+        self._data: List[DataBase._Type] = []
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -102,7 +102,7 @@ class Segment(NameMixin, UserMutableSequence[DataBase.Type]):
     def sort(
         self,
         *,
-        key: Callable[[DataBase.Type], Any] = lambda data: data.path,
+        key: Callable[["DataBase._Type"], Any] = lambda data: data.path,
         reverse: bool = False,
     ) -> None:
         """Sort the list in ascending order and return None.

@@ -66,9 +66,12 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
 
     """
 
+    _Type = Union["Radar", "Lidar", "FisheyeCamera", "Camera"]
+
     _repr_type = ReprType.INSTANCE
     _repr_attrs: Tuple[str, ...] = ("extrinsics",)
     _repr_maxlevel = 3
+
     extrinsics: Transform3D
 
     def __new__(
@@ -96,8 +99,8 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
     def __init__(self, name: str) -> None:
         super().__init__(name)
 
-    @classmethod
-    def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
+    @staticmethod
+    def loads(contents: Dict[str, Any]) -> "_Type":
         """Loads a Sensor from a dict containing the sensor information.
 
         Arguments:
@@ -107,7 +110,7 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
             A :class:`Sensor` instance containing the information from the contents dict.
 
         """
-        sensor: _T = common_loads(SensorType(contents["type"]).type, contents)
+        sensor: "Sensor._Type" = common_loads(SensorType(contents["type"]).type, contents)
         return sensor
 
     def _loads(self, contents: Dict[str, Any]) -> None:
@@ -308,6 +311,3 @@ class FisheyeCamera(Camera):
     to create a wide panoramic or hemispherical image.
 
     """
-
-
-_SensorType = Union[Radar, Lidar, FisheyeCamera, Camera]

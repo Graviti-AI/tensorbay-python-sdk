@@ -20,7 +20,7 @@ from ..utility import UserMutableMapping, common_loads
 from .data import DataBase
 
 
-class Frame(UserMutableMapping[str, DataBase.Type]):
+class Frame(UserMutableMapping[str, "DataBase._Type"]):
     """This class defines the concept of frame.
 
     Frame is a concept in :class:`~graviti.dataset.dataset.FusionDataset`.
@@ -44,7 +44,7 @@ class Frame(UserMutableMapping[str, DataBase.Type]):
     _T = TypeVar("_T", bound="Frame")
 
     def __init__(self, index: Optional[float] = None, frame_id: Optional[str] = None) -> None:
-        self._data: Dict[str, DataBase.Type] = {}
+        self._data: Dict[str, DataBase._Type] = {}
         self._pose: Optional[Transform3D] = None
         if index is not None:
             self._index = index

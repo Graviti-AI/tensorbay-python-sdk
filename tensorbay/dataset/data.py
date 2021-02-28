@@ -142,7 +142,7 @@ class DataBase(ReprMixin):  # pylint: disable=too-few-public-methods
 
     """
 
-    Type = Union["Data", "RemoteData"]
+    _Type = Union["Data", "RemoteData"]
 
     _repr_maxlevel = 3
     _repr_type = ReprType.INSTANCE
@@ -162,7 +162,7 @@ class DataBase(ReprMixin):  # pylint: disable=too-few-public-methods
         return f'{self.__class__.__name__}("{self.path}")'
 
     @staticmethod
-    def loads(contents: Dict[str, Any]) -> "Type":
+    def loads(contents: Dict[str, Any]) -> "_Type":
         """Loads :class:`Data` or :class:`RemoteData` from a dict containing data information.
 
         Arguments:
