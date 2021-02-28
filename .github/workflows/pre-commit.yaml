@@ -1,3 +1,7 @@
+#
+# Copyright 2021 Graviti. Licensed under MIT License.
+#
+
 ---
 name: Pre-commit check
 
