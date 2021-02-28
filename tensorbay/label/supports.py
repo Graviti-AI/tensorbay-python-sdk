@@ -3,12 +3,9 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""CatagoryInfo, VisibleType, KeypointsInfo and different Supports classes.
+"""CatagoryInfo, KeypointsInfo and different Supports classes.
 
 :class:`CatagoryInfo` defines a category with the name and description of it.
-
-:class:`VisibleType` is an enumeration class
-representing all the optional visible types inside :class:`KeypointsInfo`.
 
 :class:`KeypointsInfo` defines the structure of a set of keypoints.
 
@@ -69,7 +66,7 @@ class CategoryInfo(NameMixin):
         return common_loads(cls, contents)
 
 
-class VisibleType(Enum):
+class _VisibleType(Enum):
     """All the possible visible types of keypoints labels."""
 
     TERNARY = auto()
@@ -84,7 +81,9 @@ class KeypointsInfo(ReprMixin):
         names: All the names of the keypoints.
         skeleton: The skeleton of the keypoints
             indicating which keypoint should connect with another.
-        visible: The visible type of the keypoints.
+        visible: The visible type of the keypoints, can only be 'BINARY' or 'TERNARY'.
+            It determines the range of the
+            :attr:`Keypoint2D.v<tensorbay.geometry.keypoint.Keypoint2D.v>`.
         parent_categories: The parent categories of the keypoints.
         description: The description of the keypoints.
 
@@ -92,7 +91,9 @@ class KeypointsInfo(ReprMixin):
         names: All the names of the keypoints.
         skeleton: The skeleton of the keypoints
             indicating which keypoint should connect with another.
-        visible: The visible type of the keypoints.
+        visible: The visible type of the keypoints, can only be 'BINARY' or 'TERNARY'.
+            It determines the range of the
+            :attr:`Keypoint2D.v<tensorbay.geometry.keypoint.Keypoint2D.v>`.
         parent_categories: The parent categories of the keypoints.
         description: The description of the keypoints.
 
@@ -115,7 +116,7 @@ class KeypointsInfo(ReprMixin):
         *,
         names: Optional[Iterable[str]] = None,
         skeleton: Optional[Iterable[Iterable[int]]] = None,
-        visible: Optional[VisibleType] = None,
+        visible: Optional[str] = None,
         parent_categories: Union[None, str, Iterable[str]] = None,
         description: Optional[str] = None,
     ):
@@ -127,7 +128,11 @@ class KeypointsInfo(ReprMixin):
                 tuple(line) for line in skeleton  # type: ignore[misc]
             ]
         if visible:
-            self.visible = visible
+            try:
+                self.visible = _VisibleType[visible.upper()].name
+            except KeyError as error:
+                raise ValueError("Visible can only be 'BINARY' or 'TERNARY'") from error
+
         if description:
             self.description = description
 
@@ -175,7 +180,7 @@ class KeypointsInfo(ReprMixin):
             self.skeleton = [tuple(line) for line in contents["skeleton"]]  # type: ignore[misc]
 
         if "visible" in contents:
-            self.visible = VisibleType[contents["visible"]]
+            self.visible = _VisibleType[contents["visible"]].name
 
         if "parentCategories" in contents:
             self.parent_categories = contents["parentCategories"]
@@ -223,7 +228,7 @@ class KeypointsInfo(ReprMixin):
             contents["skeleton"] = self.skeleton
 
         if hasattr(self, "visible"):
-            contents["visible"] = self.visible.name
+            contents["visible"] = self.visible
 
         if hasattr(self, "parent_categories"):
             contents["parentCategories"] = self.parent_categories
