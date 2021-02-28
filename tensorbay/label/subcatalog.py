@@ -40,7 +40,6 @@ from .supports import (
     SupportCategories,
     SupportIsTracking,
     Supports,
-    VisibleType,
 )
 
 _T = TypeVar("_T", bound="SubcatalogBase")
@@ -291,7 +290,7 @@ class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
         *,
         names: Optional[Iterable[str]] = None,
         skeleton: Optional[Iterable[Iterable[int]]] = None,
-        visible: Optional[VisibleType] = None,
+        visible: Optional[str] = None,
         parent_categories: Union[None, str, Iterable[str]] = None,
         description: Optional[str] = None,
     ) -> None:
@@ -300,8 +299,11 @@ class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
         Arguments:
             number: The number of keypoints.
             names: All the names of keypoints.
-            skeleton: The skeleton of keypoints.
-            visible: The visible type of keypoints.
+            skeleton: The skeleton of the keypoints
+                indicating which keypoint should connect with another.
+            visible: The visible type of the keypoints, can only be 'BINARY' or 'TERNARY'.
+                It determines the range of the
+                :attr:`Keypoint2D.v<tensorbay.geometry.keypoint.Keypoint2D.v>`.
             parent_categories: The parent categories of the keypoints.
             description: The description of keypoints.
 

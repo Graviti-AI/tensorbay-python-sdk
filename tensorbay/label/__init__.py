@@ -29,7 +29,7 @@ from .subcatalog import (
     SentenceSubcatalog,
     Subcatalogs,
 )
-from .supports import CategoryInfo, KeypointsInfo, VisibleType
+from .supports import CategoryInfo, KeypointsInfo
 
 __all__ = [
     "AttributeInfo",
@@ -54,6 +54,5 @@ __all__ = [
     "LabeledPolygon2D",
     "LabeledPolyline2D",
     "LabeledSentence",
-    "VisibleType",
     "Word",
 ]
