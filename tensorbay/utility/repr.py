@@ -12,6 +12,7 @@
 
 """
 
+from abc import ABC
 from enum import Enum, auto
 from typing import Any, Callable, Dict, Iterable, Mapping, Sequence, Tuple, Type, Union
 
@@ -85,13 +86,15 @@ class _ReprConfig:  # pylint: disable=too-few-public-methods
 repr_config = _ReprConfig()
 
 
-class _ReprSequence(ReprMixin, Sequence[Any]):  # pylint: disable=too-few-public-methods
+# Explicitly inherit from 'abc.ABC' to tell pylint it is a abstract class
+# Reference:
+# - https://github.com/PyCQA/pylint/issues/3098
+# - https://github.com/PyCQA/pylint/pull/3446
+class _ReprSequence(ReprMixin, Sequence[Any], ABC):  # pylint: disable=too-few-public-methods
     ...
 
 
-class _ReprMapping(
-    ReprMixin, Mapping[Any, Any]
-):  # pylint: disable=too-few-public-methods,too-many-ancestors
+class _ReprMapping(ReprMixin, Mapping[Any, Any], ABC):  # pylint: disable=too-many-ancestors
     ...
 
 
