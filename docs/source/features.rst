@@ -988,7 +988,7 @@ You can set the accessKey and URL into configuration:
 
     gas config Accesskey-***** https://gas.graviti.cn/
 
-To show configuration information of all environments:
+To show configuration information:
 
 .. code:: shell
 
