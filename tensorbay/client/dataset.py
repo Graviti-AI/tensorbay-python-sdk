@@ -34,7 +34,7 @@ from .segment import FusionSegmentClient, SegmentClient
 
 
 class DatasetClientBase:
-    """This class defines the basic concept of :class:`DatasetClient`.
+    """This class defines the basic concept of the dataset client.
 
     A :class:`DatasetClientBase` contains the information needed for
     determining a unique dataset on TensorBay, and provides a series of
@@ -59,20 +59,20 @@ class DatasetClientBase:
 
     @property
     def commit_id(self) -> Optional[str]:
-        """Get the dataset commit ID.
+        """Return the commit ID.
 
         Returns:
-            The dataset commit ID.
+            The commit ID.
 
         """
         return self._commit_id
 
     @property
     def dataset_id(self) -> str:
-        """Get the dataset ID.
+        """Return the TensorBay dataset ID.
 
         Returns:
-            The dataset ID.
+            The TensorBay dataset ID.
 
         """
         return self._dataset_id
@@ -88,10 +88,10 @@ class DatasetClientBase:
         return response.json()["commitId"]  # type: ignore[no-any-return]
 
     def commit(self, message: str, tag: Optional[str] = None) -> None:
-        """Commit the draft of dataset/fusion dataset.
+        """Commit the draft.
 
         Arguments:
-            message: The commit message of this commit.
+            message: The commit message.
             tag: A tag for current commit.
 
         """
@@ -118,11 +118,11 @@ class DatasetClientBase:
                 break
 
     def list_segments(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[str]:
-        """List all segment names in a dataset.
+        """List all segment names in a certain commit.
 
         Arguments:
-            start: The segment index to start.
-            stop: The segment index to end.
+            start: The index to start.
+            stop: The index to end.
 
         Returns:
             Required segment names.
@@ -131,23 +131,23 @@ class DatasetClientBase:
         return self._list_segments(start=start, stop=stop)
 
     def get_catalog(self) -> Catalog:
-        """Get the catalog of the Tensorbay dataset.
+        """Get the catalog of the certain commit.
 
         Returns:
-            Required :class:`Catalog`.
+            Required :class:`~tensorbay.label.catalog.Catalog`.
 
         """
         response = self._client.open_api_do("GET", "labels/catalogs", self.dataset_id).json()
         return Catalog.loads(response["catalog"])
 
     def upload_catalog(self, catalog: Catalog) -> None:
-        """Upload a :class:`Catalog` to the dataset.
+        """Upload a catalog to the draft.
 
         Arguments:
-            catalog: :class:`Catalog` to upload.
+            catalog: :class:`~tensorbay.label.catalog.Catalog` to upload.
 
         Raises:
-            TypeError: If the catalog is empty.
+            TypeError: When the catalog is empty.
 
         """
         put_data = catalog.dumps()
@@ -159,11 +159,11 @@ class DatasetClientBase:
     def update_information(
         self, *, is_continuous: Optional[bool] = None, description: Optional[str] = None
     ) -> None:
-        """Update information in draft of TensorBay dataset with the given content.
+        """Update information of draft with the given content.
 
         Arguments:
-            is_continuous: Whether the dataset is continuous.
-            description: Description of the dataset.
+            is_continuous: Whether the TensorBay dataset is continuous.
+            description: Description of the TensorBay dataset.
 
         """
         patch_data: Dict[str, Any] = {}
@@ -175,7 +175,7 @@ class DatasetClientBase:
         self._client.open_api_do("PATCH", "", self.dataset_id, json=patch_data)
 
     def delete_segment(self, name: str) -> None:
-        """Delete a segment in Tensorbay dataset.
+        """Delete a segment of the draft.
 
         Arguments:
             name: Segment name.
@@ -197,13 +197,13 @@ class DatasetClient(DatasetClientBase):
     """
 
     def get_or_create_segment(self, name: str = "") -> SegmentClient:
-        """Create a segment set according to given name.
+        """Create a segment with the given name to the draft.
 
         Arguments:
             name: Segment name, can not be "_default".
 
         Returns:
-            Created segment with given name, or created default segment.
+            Created :class:`~tensorbay.client.segment.SegmentClient` with given name.
 
         """
         if name not in self._list_segments():
@@ -211,16 +211,16 @@ class DatasetClient(DatasetClientBase):
         return SegmentClient(name, self._dataset_id, self._name, self._client, self.commit_id)
 
     def get_segment(self, name: str = "") -> SegmentClient:
-        """Get a segment according to given name.
+        """Get a segment in a certain commit according to given name.
 
         Arguments:
             name: The name of the required segment.
 
         Returns:
-            The required segment.
+            The required class:`~tensorbay.client.segment.SegmentClient`.
 
         Raises:
-            GASSegmentError: If the required segment does not exist.
+            GASSegmentError: When the required segment does not exist.
 
         """
         if name not in self._list_segments():
@@ -229,13 +229,13 @@ class DatasetClient(DatasetClientBase):
         return SegmentClient(name, self._dataset_id, self._name, self._client, self.commit_id)
 
     def get_segment_object(self, name: str = "") -> Segment:
-        """Get a :class:`Segment` according to given name.
+        """Get a segment object in a certain commit according to given name.
 
         Arguments:
-            name: The name of the required :class:`Segment`.
+            name: The name of the required segment.
 
         Returns:
-            The required :class:`Segment`.
+            The required :class:`~tensorbay.dataset.segment.Segment`.
 
         """
         segment_client = self.get_segment(name)
@@ -252,21 +252,22 @@ class DatasetClient(DatasetClientBase):
         jobs: int = 1,
         skip_uploaded_files: bool = False,
     ) -> SegmentClient:
-        """Upload a :class:`Segment` to the dataset.
+        """Upload a segment object to the draft.
 
-        This function will upload all info contains in the input :class:`Segment`,
-        which includes:
+        This function will upload all info contains in the input
+        :class:`~tensorbay.dataset.segment.Segment`, which includes:
 
-            - Create a segment using the name of input :class:`Segment`.
-            - Upload all Data in the :class:`Segment` to the dataset.
+            - Create a segment using the name of the input segment object.
+            - Upload all Data in the segment object to the dataset.
 
         Arguments:
-            segment: The :class:`Segment` contains the information needs to be upload.
+            segment: The :class:`~tensorbay.dataset.segment.Segment`.
             jobs: The number of the max workers in multi-thread uploading method.
             skip_uploaded_files: True for skipping the uploaded files.
 
         Returns:
-            The client used for uploading the data in the Segment.
+            The :class:`~tensorbay.client.segment.SegmentClient`
+                used for uploading the data in the segment.
 
         """
         segment_client = self.get_or_create_segment(segment.name)
@@ -297,13 +298,13 @@ class FusionDatasetClient(DatasetClientBase):
     """
 
     def get_or_create_segment(self, name: str = "") -> FusionSegmentClient:
-        """Create a fusion segment set according to the given name.
+        """Create a fusion segment with the given name to the draft.
 
         Arguments:
             name: Segment name, can not be "_default".
 
         Returns:
-            Created fusion segment with given name, or created default segment.
+            Created :class:`~tensorbay.client.segment.FusionSegmentClient` with given name.
 
         """
         if name not in self._list_segments():
@@ -311,16 +312,16 @@ class FusionDatasetClient(DatasetClientBase):
         return FusionSegmentClient(name, self._dataset_id, self._name, self._client, self.commit_id)
 
     def get_segment(self, name: str = "") -> FusionSegmentClient:
-        """Get a fusion segment according to given name.
+        """Get a fusion segment in a certain commit according to given name.
 
         Arguments:
             name: The name of the required fusion segment.
 
         Returns:
-            The required fusion segment.
+            The required class:`~tensorbay.client.segment.FusionSegmentClient`.
 
         Raises:
-            GASSegmentError: If the required fusion segment does not exist.
+            GASSegmentError: When the required fusion segment does not exist.
 
         """
         if name not in self._list_segments():
@@ -328,13 +329,13 @@ class FusionDatasetClient(DatasetClientBase):
         return FusionSegmentClient(name, self._dataset_id, self._name, self._client, self.commit_id)
 
     def get_segment_object(self, name: str = "") -> FusionSegment:
-        """Get a :class:`Segment` according to given name.
+        """Get a fusion segment object in a certain commit according to given name.
 
         Arguments:
-            name: The name of the required :class:`Segment`.
+            name: The name of the required fusion segment.
 
         Returns:
-            The required :class:`Segment`.
+            The required :class:`~tensorbay.dataset.segment.FusionSegment`.
 
         """
         segment_client = self.get_segment(name)
@@ -352,22 +353,23 @@ class FusionDatasetClient(DatasetClientBase):
         jobs: int = 1,
         skip_uploaded_files: bool = False,
     ) -> FusionSegmentClient:
-        """Upload a :class:`FusionSegment` to the dataset.
+        """Upload a fusion segment object to the draft.
 
-        This function will upload all info contains in the input :class:`FusionSegment`,
-        which includes:
+        This function will upload all info contains in the input
+        :class:`~tensorbay.dataset.segment.FusionSegment`, which includes:
 
-            - Create a segment using the name of input :class:`FusionSegment`.
-            - Upload all Sensor in the segment to the dataset.
-            - Upload all Frame in the segment to the dataset.
+            - Create a segment using the name of input fusion segment object.
+            - Upload all sensors in the segment to the dataset.
+            - Upload all frames in the segment to the dataset.
 
         Arguments:
-            segment: The :class:`FusionSegment` needs to be uploaded.
+            segment: The :class:`~tensorbay.dataset.segment.FusionSegment`.
             jobs: The number of the max workers in multi-thread upload.
             skip_uploaded_files: Set it to True to skip the uploaded files.
 
         Returns:
-            The client used for uploading the data in the :class:`FusionSegment`.
+            The :class:`~tensorbay.client.segment.FusionSegmentClient`
+                used for uploading the data in the segment.
 
         """
         segment_client = self.get_or_create_segment(segment.name)
