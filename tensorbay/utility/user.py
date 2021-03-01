@@ -60,19 +60,19 @@ class UserSequence(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancesto
     def __len__(self) -> int:
         return self._data.__len__()
 
-    def index(self, value: _T, start: int = 0, end: int = -1) -> int:
+    def index(self, value: _T, start: int = 0, stop: int = -1) -> int:
         """Return the first index of the value.
 
         Arguments:
             value: The value to be found.
             start: The start index of the subsequence.
-            end: The end index of the subsequence.
+            stop: The end index of the subsequence.
 
         Returns:
             The First index of value.
 
         """
-        return self._data.index(value, start, end)
+        return self._data.index(value, start, stop)
 
     def count(self, value: _T) -> int:
         """Return the number of occurrences of value.
@@ -146,14 +146,14 @@ class UserMutableSequence(MutableSequence[_T], ReprMixin):  # pylint: disable=to
         """Remove all items from the mutable sequence."""
         self._data.clear()
 
-    def extend(self, value: Iterable[_T]) -> None:
+    def extend(self, values: Iterable[_T]) -> None:
         """Extend mutable sequence by appending elements from the iterable.
 
         Arguments:
-            value: Elements to be Extended into the mutable sequence.
+            values: Elements to be Extended into the mutable sequence.
 
         """
-        self._data.extend(value)
+        self._data.extend(values)
 
     def reverse(self) -> None:
         """Reverse the items of the mutable sequence in place."""
@@ -195,7 +195,7 @@ class UserMapping(Mapping[_K, _V], ReprMixin):  # pylint: disable=too-many-ances
         return self._data.__getitem__(key)
 
     @overload
-    def get(self, key: _K) -> Optional[_V]:
+    def get(self, key: _K) -> Optional[_V]:  # pylint: disable=arguments-differ
         ...
 
     @overload
@@ -271,7 +271,7 @@ class UserMutableMapping(
         self._data.clear()
 
     @overload
-    def pop(self, key: _K) -> _V:
+    def pop(self, key: _K) -> _V:  # pylint: disable=arguments-differ
         ...
 
     @overload
@@ -322,18 +322,22 @@ class UserMutableMapping(
         return self._data.setdefault(key, default)
 
     @overload
-    def update(self, __m: Mapping[_K, _V], **kwargs: _V) -> None:
+    def update(  # pylint: disable=arguments-differ
+        self, __m: Mapping[_K, _V], **kwargs: _V
+    ) -> None:
         ...
 
     @overload
-    def update(self, __m: Iterable[Tuple[_K, _V]], **kwargs: _V) -> None:
+    def update(  # pylint: disable=arguments-differ
+        self, __m: Iterable[Tuple[_K, _V]], **kwargs: _V
+    ) -> None:
         ...
 
     @overload
-    def update(self, **kwargs: _V) -> None:
+    def update(self, **kwargs: _V) -> None:  # pylint: disable=arguments-differ,signature-differs
         ...
 
-    def update(self, __m: Any = None, **kwargs: _V) -> None:
+    def update(self, __m: Any = (), **kwargs: _V) -> None:  # pylint: disable=arguments-differ
         """Update the dict.
 
         Arguments:

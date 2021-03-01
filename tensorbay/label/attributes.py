@@ -51,14 +51,14 @@ class _AttributeType(Enum):
             ValueError: When the input type_ is not supported.
 
         """
-        if type_ in cls.__members__:  # pylint: disable=unsupported-membership-test
+        if type_ in cls.__members__:
             return type_  # type: ignore[return-value]
 
         try:
             return cls(type_).name
         except ValueError as error:
             raise ValueError(
-                "Invalid type_ values for attribute. "  # pylint: disable=no-member
+                "Invalid type_ values for attribute. "
                 f"Only support {tuple(cls.__members__.keys())} attribute types"
             ) from error
 
