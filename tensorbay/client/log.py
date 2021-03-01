@@ -55,6 +55,7 @@ class ResponseLogging:  # pylint: disable=too-few-public-methods
 
     Arguments:
         response: The response of the request.
+
     """
 
     def __init__(self, response: Response) -> None:

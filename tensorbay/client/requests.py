@@ -197,7 +197,7 @@ class Client:
     def open_api_do(
         self, method: str, section: str, dataset_id: str = "", **kwargs: Any
     ) -> Response:
-        """Send a POST request to the TensorBay Open API.
+        """Send a request to the TensorBay Open API.
 
         Arguments:
             method: The method of the request.
@@ -214,7 +214,7 @@ class Client:
         return self.do(method=method, url=self._url_make(section, dataset_id), **kwargs)
 
     def do(self, method: str, url: str, **kwargs: Any) -> Response:  # pylint: disable=invalid-name
-        """Send a GET request to the TensorBay Open API.
+        """Send a request.
 
         Arguments:
             method: The method of the request.

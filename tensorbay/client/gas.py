@@ -39,7 +39,7 @@ class GAS:
 
     Arguments:
         access_key: User's access key.
-        url: The URL of the gas website.
+        url: The host URL of the gas website.
 
     """
 
@@ -108,16 +108,16 @@ class GAS:
         is_continuous: bool = False,
         region: Optional[str] = None,  # beijing, hangzhou, shanghai
     ) -> DatasetClient:
-        """Create a :class:`DatasetClient` with given name.
+        """Create a TensorBay dataset with given name.
 
         Arguments:
             name: Name of the dataset, unique for a user.
             is_continuous: Whether the data in dataset is continuous,
-            region: Region of the fusion contentset to be stored,
+            region: Region of the dataset to be stored,
                 only support "beijing", "hangzhou", "shanghai", default is "shanghai".
 
         Returns:
-            The created :class:`DatasetClient`.
+            The created :class:`~tensorbay.client.dataset.DatasetClient`.
 
         """
         return self._create_dataset(name, is_continuous, region, False)
@@ -128,47 +128,37 @@ class GAS:
         is_continuous: bool = False,
         region: Optional[str] = None,  # beijing, hangzhou, shanghai
     ) -> FusionDatasetClient:
-        """Create a :class:`FusionDatasetClient` with given name.
+        """Create a TensorBay fusion dataset with given name.
 
         Arguments:
             name: Name of the fusion dataset, unique for a user.
             is_continuous: Whether the data in dataset is continuous,
-            region: Region of the fusion contentset to be stored,
+            region: Region of the fusion dataset to be stored,
                 only support "beijing", "hangzhou", "shanghai", default is "shanghai".
 
         Returns:
-            The created :class:`FusionDatasetClient`.
+            The created :class:`~tensorbay.client.dataset.FusionDatasetClient`.
 
         """
         return self._create_dataset(name, is_continuous, region, True)
 
     def _get_dataset(self, name: str, commit_id: Optional[str] = None) -> DatasetClientType:
-        """Get the client of the dataset with the input name no matter the type of the dataset.
-
-        Arguments:
-            name: The name of the requested dataset.
-            commit_id: The dataset commit Id.
-
-        Returns:
-            The client of the request dataset.
-
-        """
         dataset_id, is_fusion = self._get_dataset_id_and_type(name)
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
         return ReturnType(name, dataset_id, self._client, commit_id)
 
     def get_dataset(self, name: str, commit_id: Optional[str] = None) -> DatasetClient:
-        """Get a :class:`DatasetClient` with given name.
+        """Get the TensorBay dataset with given name and commit ID.
 
         Arguments:
             name: The name of the requested dataset.
-            commit_id: The dataset commit Id.
+            commit_id: The dataset commit ID.
 
         Returns:
-            The requested :class:`DatasetClient`.
+            The :class:`~tensorbay.client.dataset.DatasetClient`.
 
         Raises:
-            GASDatasetTypeError: If the requested dataset is a fusion dataset.
+            GASDatasetTypeError: When the requested dataset is a fusion dataset.
 
         """
         client = self._get_dataset(name, commit_id)
@@ -178,17 +168,17 @@ class GAS:
         return client
 
     def get_fusion_dataset(self, name: str, commit_id: Optional[str] = None) -> FusionDatasetClient:
-        """Get a :class:`FusionDatasetClient` with given name.
+        """Get the TensorBay fusion dataset with given name and commit ID.
 
         Arguments:
             name: The name of the required fusion dataset.
             commit_id: The dataset commit ID.
 
         Returns:
-            The required :class:`FusionDatasetClient`.
+            The :class:`~tensorbay.client.dataset.FusionDatasetClient`.
 
         Raises:
-            GASDatasetTypeError: If the requested dataset is not a fusion dataset.
+            GASDatasetTypeError: When the requested dataset is not a fusion dataset.
 
         """
         client = self._get_dataset(name, commit_id)
@@ -220,11 +210,11 @@ class GAS:
                 break
 
     def list_datasets(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[str]:
-        """List names of all datasets.
+        """List names of all TensorBay datasets.
 
         Arguments:
-            start: The index of dataset to start.
-            stop: The index of dataset to stop.
+            start: The index to start.
+            stop: The index to stop.
 
         Yields:
             Names of all datasets.
@@ -233,7 +223,7 @@ class GAS:
         yield from (item["name"] for item in self._list_datasets(start=start, stop=stop))
 
     def _get_dataset_id_and_type(self, name: str) -> Tuple[str, bool]:
-        """Get the dataset ID and the type of the dataset with the input name.
+        """Get the ID and the type of the TensorBay dataset with the input name.
 
         Arguments:
             name: The name of the requested dataset.
@@ -242,7 +232,7 @@ class GAS:
             The tuple of dataset ID and type, True for fusion dataset.
 
         Raises:
-            GASDatasetError: Error indicating that the required dataset does not exist.
+            GASDatasetError: When the required dataset does not exist.
 
         """
         if not name:
@@ -259,7 +249,7 @@ class GAS:
         )
 
     def rename_dataset(self, name: str, new_name: str) -> None:
-        """Rename a tensorBay Dataset with given name.
+        """Rename a TensorBay Dataset with given name.
 
         Arguments:
             name: Name of the dataset, unique for a user.
@@ -307,23 +297,26 @@ class GAS:
         jobs: int = 1,
         skip_uploaded_files: bool = False,
     ) -> DatasetClientType:
-        """Upload a :class:`Dataset` or :class:`FusionDataset` to TensorBay.
+        """Upload a local dataset to TensorBay.
 
-        This function will upload all information contains in the :class:`Dataset`
-        or :class:`FusionDataset`, which includes:
+        This function will upload all information contains
+        in the :class:`~tensorbay.dataset.dataset.Dataset`
+        or :class:`~tensorbay.dataset.dataset.FusionDataset`, which includes:
 
-            - Create a dataset using the name and type of input
-              :class:`Dataset` or :class:`FusionDataset`.
-            - Upload all :class:`Segment` or :class:`FusionSegment` in the dataset to TensorBay.
+            - Create a TensorBay dataset with the name and type of input local dataset.
+            - Upload all :class:`tensorbay.dataset.segment.Segment`
+                or :class:`tensorbay.dataset.segment.FusionSegment` in the dataset to TensorBay.
 
         Arguments:
-            dataset: The :class:`Dataset` or :class:`FusionDataset` needs to be uploaded.
+            dataset: The :class:`~tensorbay.dataset.dataset.Dataset` or
+                :class:`~tensorbay.dataset.dataset. FusionDataset` needs to be uploaded.
             jobs: The number of the max workers in multi-thread upload.
             skip_uploaded_files: Set it to True to skip the uploaded files.
 
         Returns:
-            The :class:`DatasetClient` or :class:`FusionDatasetClient` bound with
-            the uploaded :class:`Dataset` or :class:`FusionDataset`.
+            The :class:`~tensorbay.client.dataset.DatasetClient` or
+                :class:`~tensorbay.client.dataset.FusionDatasetClient`
+                bound with the uploaded dataset.
 
         """
         if isinstance(dataset, FusionDataset):
@@ -344,7 +337,7 @@ class GAS:
         return dataset_client
 
     def delete_dataset(self, name: str) -> None:
-        """Delete a :class:`Dataset` with given name.
+        """Delete a dataset with given name.
 
         Arguments:
             name: Name of the dataset, unique for a user.

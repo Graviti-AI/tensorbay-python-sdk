@@ -59,7 +59,7 @@ class SegmentClientBase:
         dataset_id: Dataset ID.
         dataset_name: Dataset name.
         client: The client used for sending request to TensorBay.
-        commit_id: Dataset commit ID.
+        commit_id: The commit ID.
 
     """
 
@@ -84,42 +84,42 @@ class SegmentClientBase:
 
     @property
     def name(self) -> str:
-        """Get the name of this segment client.
+        """Return the segment name.
 
         Returns:
-            The name of the segment.
+            The segment name.
 
         """
         return self._name
 
     @property
     def dataset_id(self) -> str:
-        """Get the dataset ID.
+        """Return the TensorBay dataset ID.
 
         Returns:
-            The dataset ID.
+            The TensorBay dataset ID.
 
         """
         return self._dataset_id
 
     @property
     def commit_id(self) -> Optional[str]:
-        """Get the dataset commit ID.
+        """Return the commit ID.
 
         Returns:
-            The dataset commit ID.
+            The commit ID.
 
         """
         return self._commit_id
 
     def _get_url(self, remote_path: str) -> str:
-        """Get url of a specific remote path.
+        """Get URL of a specific remote path.
 
         Arguments:
             remote_path: The remote path of the file.
 
         Returns:
-            The url of the remote file.
+            The URL of the remote file.
 
         """
         params = {
@@ -132,15 +132,15 @@ class SegmentClientBase:
     def _list_labels(
         self, *, start: int = 0, stop: int = sys.maxsize, page_size: int = 128
     ) -> Iterator[Dict[str, Any]]:
-        """List labels in a segment client.
+        """List labels of the segment in a certain commit.
 
         Arguments:
-            start: The index of label to start.
-            stop: The index of label to stop.
+            start: The index to start.
+            stop: The index to stop.
             page_size: The page size for the listed labels.
 
         Yields:
-            Labels in a segment client.
+            Labels in a segment in a certain commit.
 
         """
         params: Dict[str, Any] = {"segmentName": self._name}
@@ -220,10 +220,10 @@ class SegmentClientBase:
         self._client.open_api_do("PUT", "labels", self.dataset_id, json=post_data)
 
     def delete_data(self, remote_paths: Union[str, Iterable[str]]) -> None:
-        """DELETE data in a TensorBay segment with the given remote paths.
+        """Delete data of a segment in a certain commit with the given remote paths.
 
         Arguments:
-            remote_paths: The remote paths of data in a TensorBay segment.
+            remote_paths: The remote paths of data in a segment.
 
         """
         all_paths = iter((remote_paths,)) if isinstance(remote_paths, str) else iter(remote_paths)
@@ -249,15 +249,15 @@ class SegmentClient(SegmentClientBase):
     """
 
     def upload_data(self, local_path: str, remote_path: str = "") -> None:
-        """Upload data with local path to the segment.
+        """Upload data with local path to the draft.
 
         Arguments:
             local_path: The local path of the data to upload.
             remote_path: The path to save the data in segment client.
 
         Raises:
-            GASPathError: If remote_path does not follow linux style.
-            GASException: If uploading data failed.
+            GASPathError: When remote_path does not follow linux style.
+            GASException: When uploading data failed.
 
         """
         if not remote_path:
@@ -287,7 +287,7 @@ class SegmentClient(SegmentClientBase):
             raise
 
     def upload_label(self, data: Data) -> None:
-        """Upload label with Data object to the segment.
+        """Upload label with Data object to the draft.
 
         Arguments:
             data: The data object which represents the local file to upload.
@@ -296,10 +296,10 @@ class SegmentClient(SegmentClientBase):
         self._upload_label(data)
 
     def upload_data_object(self, data: Data) -> None:
-        """Upload data with Data object to the segment.
+        """Upload Data object to the draft.
 
         Arguments:
-            data: The data object which represents the local file to upload.
+            data: The :class:`~tensorbay.dataset.data.Data`.
 
         """
         self.upload_data(data.path, data.target_remote_path)
@@ -308,11 +308,11 @@ class SegmentClient(SegmentClientBase):
     def _list_data(
         self, *, start: int = 0, stop: int = sys.maxsize, page_size: int = 128
     ) -> Iterator[Dict[str, Any]]:
-        """List data in a segment client.
+        """List data in a segment in a certain commit.
 
         Arguments:
-            start: The index of data to start.
-            stop: The index of data to stop.
+            start: The index to start.
+            stop: The index to stop.
             page_size: The page size for listed data.
 
         Yields:
@@ -332,14 +332,14 @@ class SegmentClient(SegmentClientBase):
                 break
 
     def list_data(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[str]:
-        """List required data path in a segment client.
+        """List required data path in a segment in a certain commit.
 
         Arguments:
             start: The index to start.
             stop: The index to end.
 
         Yields:
-            Required data paths in a segment client.
+            Required data paths.
 
         """
         yield from (item["remotePath"] for item in self._list_data(start=start, stop=stop))
@@ -377,7 +377,7 @@ class FusionSegmentClient(SegmentClientBase):
         """List required sensor object in a segment client.
 
         Yields:
-            Required sensor objects in a segment client.
+            Required sensor objects.
 
         """
         params: Dict[str, Any] = {"segmentName": self._name}
@@ -390,7 +390,7 @@ class FusionSegmentClient(SegmentClientBase):
             yield Sensor.loads(sensor_info)
 
     def upload_sensor_object(self, sensor: Sensor) -> None:
-        """Upload sensor to the :class:`SegmentClient`.
+        """Upload sensor to the draft.
 
         Arguments:
             sensor: The sensor to upload.
@@ -402,7 +402,7 @@ class FusionSegmentClient(SegmentClientBase):
         self._client.open_api_do("POST", "sensors", self.dataset_id, json=post_data)
 
     def delete_sensor(self, sensor_name: str) -> None:
-        """Delete a TensorBay sensor with the given sensor name.
+        """Delete a TensorBay sensor of the draft with the given sensor name.
 
         Arguments:
             sensor_name: The TensorBay sensor to delete.
@@ -413,16 +413,16 @@ class FusionSegmentClient(SegmentClientBase):
         self._client.open_api_do("DELETE", "sensors", self.dataset_id, json=delete_data)
 
     def upload_frame_object(self, frame: Frame, frame_index: Optional[int] = None) -> None:
-        """Upload :class:`Frame` to the :class:`SegmentClient`.
+        """Upload frame object to the draft.
 
         Arguments:
-            frame: The :class:`Frame` to upload.
+            frame: The :class:`~tensorbay.dataset.frame.Frame` to upload.
             frame_index: The frame index, used for TensorBay to sort the frame.
 
         Raises:
-            GASPathError: If remote_path does not follow linux style.
-            TypeError: If frame has no frame index or has no timestamp.
-            GASException: If uploading frame failed.
+            GASPathError: When remote_path does not follow linux style.
+            TypeError: When frame has no frame index or has no timestamp.
+            GASException: When uploading frame failed.
 
         """
         frame_id = str(uuid.uuid4())
@@ -478,15 +478,15 @@ class FusionSegmentClient(SegmentClientBase):
     def _list_frames(
         self, *, start: int = 0, stop: int = sys.maxsize, page_size: int = 128
     ) -> Iterator[Dict[str, Any]]:
-        """List all frames in a segment client(Fusion dataset).
+        """List all frames in a segment in a certain commit.
 
         Arguments:
-            start: The index of frame to start.
-            stop: The index of frame to stop.
+            start: The index to start.
+            stop: The index to stop.
             page_size: The page size for listed frames.
 
         Yields:
-             All fusion data.
+             Required frames.
 
         """
         params: Dict[str, Any] = {"segmentName": self._name}
@@ -502,14 +502,14 @@ class FusionSegmentClient(SegmentClientBase):
                 break
 
     def list_frame_objects(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[Frame]:
-        """List required frames in the segment.
+        """List required frames in the segment in a certain commit.
 
         Arguments:
-            start: The index of frame to start.
-            stop: The index of frame to stop.
+            start: The index to start.
+            stop: The index to stop.
 
         Yields:
-            Required :class:`Frame`.
+            Required :class:`~tensorbay.dataset.frame.Frame`.
 
         """
         for labels in self._list_labels(start=start, stop=stop):
