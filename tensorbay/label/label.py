@@ -35,6 +35,8 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Un
 from ..geometry import Box2D, Box3D, Keypoints2D, Polygon2D, Polyline2D, Quaternion, Transform3D
 from ..utility import ReprMixin, ReprType, TypeEnum, TypeMixin, TypeRegister, common_loads
 
+_T = TypeVar("_T", bound="Label")
+
 
 class LabelType(TypeEnum):
     """This class defines all the supported types within :class:`~graviti.dataset.data.Labels`."""
@@ -82,7 +84,6 @@ class Label(TypeMixin[LabelType], ReprMixin):
 
     """
 
-    _T = TypeVar("_T", bound="Label")
     _label_attrs: Tuple[str, ...] = ("category", "attributes", "instance")
     _repr_attrs = _label_attrs
 
@@ -141,7 +142,6 @@ class Classification(Label):
 
     """
 
-    _T = TypeVar("_T", bound="Classification")
     _label_attrs = ("category", "attributes")
     _repr_attrs = _label_attrs
 
@@ -208,7 +208,6 @@ class LabeledBox2D(Box2D, Label):  # pylint: disable=too-many-ancestors
 
     """
 
-    _T = TypeVar("_T", bound="LabeledBox2D")
     _repr_type = ReprType.INSTANCE
     _repr_attrs = Label._repr_attrs
 
@@ -465,7 +464,6 @@ class LabeledPolygon2D(Polygon2D, Label):  # pylint: disable=too-many-ancestors
 
     """
 
-    _T = TypeVar("_T", bound="LabeledPolygon2D")
     _repr_type = ReprType.SEQUENCE
     _repr_attrs = Label._repr_attrs
 
@@ -566,7 +564,6 @@ class LabeledPolyline2D(Polyline2D, Label):  # pylint: disable=too-many-ancestor
 
     """
 
-    _T = TypeVar("_T", bound="LabeledPolyline2D")
     _repr_type = ReprType.SEQUENCE
     _repr_attrs = Label._repr_attrs
 
@@ -752,7 +749,6 @@ class LabeledSentence(Label):
 
     """
 
-    _T = TypeVar("_T", bound="LabeledSentence")
     _label_attrs = ("attributes",)
     _repr_maxlevel = 3
     _repr_attrs = ("sentence", "spell", "phone") + _label_attrs
@@ -911,7 +907,6 @@ class LabeledKeypoints2D(Keypoints2D, Label):  # pylint: disable=too-many-ancest
 
     """
 
-    _T = TypeVar("_T", bound="LabeledKeypoints2D")
     _repr_type = ReprType.SEQUENCE
     _repr_attrs = Label._repr_attrs
 
