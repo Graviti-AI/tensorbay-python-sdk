@@ -39,7 +39,7 @@ _K = TypeVar("_K")
 _V = TypeVar("_V")
 
 
-class UserSequence(Sequence[_T], ReprMixin):
+class UserSequence(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancestors
     """UserSequence is a user-defined wrapper around sequence objects."""
 
     _data: Sequence[_T]
@@ -87,7 +87,7 @@ class UserSequence(Sequence[_T], ReprMixin):
         return self._data.count(value)
 
 
-class UserMutableSequence(MutableSequence[_T], ReprMixin):
+class UserMutableSequence(MutableSequence[_T], ReprMixin):  # pylint: disable=too-many-ancestors
     """UserMutableSequence is a user-defined wrapper around mutable sequence objects."""
 
     _data: MutableSequence[_T]
@@ -184,7 +184,7 @@ class UserMutableSequence(MutableSequence[_T], ReprMixin):
         return self._data.__iadd__(value)
 
 
-class UserMapping(Mapping[_K, _V], ReprMixin):
+class UserMapping(Mapping[_K, _V], ReprMixin):  # pylint: disable=too-many-ancestors
     """UserMapping is a user-defined wrapper around mapping objects."""
 
     _data: Mapping[_K, _V]
@@ -252,7 +252,9 @@ class UserMapping(Mapping[_K, _V], ReprMixin):
         return self._data.__len__()
 
 
-class UserMutableMapping(UserMapping[_K, _V], MutableMapping[_K, _V]):
+class UserMutableMapping(
+    UserMapping[_K, _V], MutableMapping[_K, _V]
+):  # pylint: disable=too-many-ancestors
     """UserMutableMapping is a user-defined wrapper around mutable mapping objects."""
 
     _data: MutableMapping[_K, _V]

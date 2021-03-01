@@ -123,7 +123,7 @@ class NameSortedDict(UserMapping[str, _T]):
         self._data[value.name] = value
 
 
-class NameSortedList(Sequence[_T]):
+class NameSortedList(Sequence[_T]):  # pylint: disable=too-many-ancestors
     """Name sorted list is a sorted sequence which contains NameMixin.
 
     It is maintained in sorted order according to the 'name' of :class:`NameMixin`.

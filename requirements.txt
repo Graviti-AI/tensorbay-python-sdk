@@ -14,7 +14,7 @@ typing_extensions
 
 # linter
 pre-commit
-pylint
+pylint==2.7.2
 
 # optional dependences
 scipy

@@ -30,7 +30,7 @@ from .segment import FusionSegment, Segment
 _T = TypeVar("_T", FusionSegment, Segment)
 
 
-class DatasetBase(NameMixin, Sequence[_T]):
+class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestors
     """This class defines the concept of a basic dataset.
 
     DatasetBase represents a whole dataset contains several segments
