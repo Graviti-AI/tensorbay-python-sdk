@@ -89,7 +89,9 @@ class _ReprSequence(ReprMixin, Sequence[Any]):  # pylint: disable=too-few-public
     ...
 
 
-class _ReprMapping(ReprMixin, Mapping[Any, Any]):  # pylint: disable=too-few-public-methods
+class _ReprMapping(
+    ReprMixin, Mapping[Any, Any]
+):  # pylint: disable=too-few-public-methods,too-many-ancestors
     ...
 
 
