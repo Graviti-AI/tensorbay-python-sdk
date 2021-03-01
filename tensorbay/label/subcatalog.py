@@ -42,8 +42,6 @@ from .supports import (
     Supports,
 )
 
-_T = TypeVar("_T", bound="SubcatalogBase")
-
 
 class SubcatalogBase(TypeMixin[LabelType], ReprMixin):
     """This is the base class for different types of subcatalogs.
@@ -58,6 +56,7 @@ class SubcatalogBase(TypeMixin[LabelType], ReprMixin):
 
     """
 
+    _T = TypeVar("_T", bound="SubcatalogBase")
     _supports: Tuple[Type[Supports], ...]
 
     _repr_type = ReprType.INSTANCE
