@@ -2,9 +2,12 @@
  Examples
 ##########
 
+We write an example for each
+:ref:`supported label types <supported_label_types:Supported Label Types>`.
+Click following links for details.
+
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents
+   :maxdepth: 1
 
    examples/image-classification
    examples/image-box2d

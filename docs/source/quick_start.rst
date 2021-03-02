@@ -45,7 +45,8 @@ Please visit `Graviti AI Service(GAS)`_ to sign up.
 An AccessKey is needed to authenticate identity on TensorBay via SDK or CLI.
 See `this page <https://gas.graviti.cn/access-key>`_ for how to get an AccessKey.
 
-To authenticate identity via SDK, initialize a ``GAS`` client by AccessKey:
+To authenticate identity via SDK, initialize a ``GAS`` (:ref:`features/tensorbay_client:GAS Client`)
+client by AccessKey:
 
 .. code:: python
 
