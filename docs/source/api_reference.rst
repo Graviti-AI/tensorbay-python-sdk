@@ -1,8 +1,8 @@
-tensorbaySDK API
-================
+API Reference
+=============
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 1
 
    api/client/client_module
    api/dataset/dataset_module
