@@ -8,7 +8,7 @@
 import pytest
 
 from ...label import Classification
-from ..data import Data, Labels
+from ..data import Data, Labels, RemoteData
 
 _LABEL_DATA = [
     {"CLASSIFICATION": {"category": "test_categoty", "attributes": {"test_attribute1": "a"}}},
@@ -66,12 +66,8 @@ _LABEL_DATA = [
     },
 ]
 
-_DATA = {"fileuri": "test.json", "timestamp": 20201023}
-
-
-@pytest.fixture
-def data_object():
-    return Data("test.json")
+_DATA = {"localPath": "test.json", "timestamp": 1614667532}
+_REMOTE_DATA = {"remotePath": "test.json", "timestamp": 1614667532}
 
 
 class TestLabels:
@@ -93,26 +89,39 @@ class TestLabels:
 class TestData:
     """Test Data class."""
 
+    def test_init(self) -> None:
+        local_path = "test.json"
+        target_remote_path = "A/test.json"
+        timestamp = 1614667532
+
+        data = Data(local_path, target_remote_path=target_remote_path, timestamp=timestamp)
+        assert data.path == local_path
+        assert data.target_remote_path == target_remote_path
+        assert data.timestamp == timestamp
+
     def test_loads_dumps(self) -> None:
         data = Data.loads(_DATA)
         assert data.dumps() == _DATA
 
-    def test_get_url(self, data_object) -> None:
+    def test_target_remote_path(self) -> None:
+        target_remote_path = "test2.json"
+        data_object = Data("test.json")
+        data_object.target_remote_path = target_remote_path
+        assert data_object.target_remote_path == target_remote_path
+
+
+class TestRemoteData:
+    """Test RemoteData class."""
+
+    def test_init(self) -> None:
+        remote_path = "A/test.json"
+        timestamp = 1614667532
+        remote_data = RemoteData(remote_path, timestamp=timestamp, url_getter=lambda x: x)
+        assert remote_data.path == remote_path
+        assert remote_data.timestamp == timestamp
+        assert remote_data.get_url() == remote_path
+
+    def test_get_url(self) -> None:
+        remote_data = RemoteData("A/test.josn")
         with pytest.raises(ValueError):
-            data_object.get_url()
-
-    def test_get_tbrn(self, data_object) -> None:
-        with pytest.raises(ValueError):
-            data_object.tbrn
-
-    def test_remote_path(self, data_object) -> None:
-        assert data_object.remote_path == "test.json"
-
-        data_object.remote_path = "test2.json"
-        assert data_object.remote_path == "test2.json"
-
-    def test_local_path(self, data_object) -> None:
-        assert data_object.local_path == "test.json"
-
-        data_object = Data.loads({"fileuri": "tb:datasetname:segmentname://test.json"})
-        assert data_object.local_path == ""
+            remote_data.get_url()
