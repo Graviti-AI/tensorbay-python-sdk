@@ -6,4 +6,4 @@ contrib=CT1
 line-length=72
 
 [contrib-title-conventional-commits]
-types = build, ci, docs, feat, fix, perf, refactor, style, test, release
+types = build, chore, ci, docs, feat, fix, perf, refactor, style, test, release, revert
