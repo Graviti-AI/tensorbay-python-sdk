@@ -160,6 +160,9 @@ class Vector(UserSequence[float]):
 
         return False
 
+    def __bool__(self) -> bool:
+        return any(self._data)
+
     @staticmethod
     def _process_args(*args: Union[None, float, Iterable[float]]) -> Tuple[float, ...]:
         data: Optional[Iterable[float]]

@@ -192,6 +192,9 @@ class Quaternion:
             return self._data.__eq__(other._data)  # type: ignore[no-any-return]
         return False
 
+    def __bool__(self) -> bool:
+        return self._data.__bool__()  # type: ignore[no-any-return]
+
     def __neg__(self: _T) -> _T:
         return self._create(self._data.__neg__())
 
