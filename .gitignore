@@ -132,3 +132,6 @@ dmypy.json
 *.swp
 *.swo
 *.swn
+
+# idea ignore
+.idea/
