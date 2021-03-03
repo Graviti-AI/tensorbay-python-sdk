@@ -43,7 +43,7 @@ def NeolixOD(path: str) -> Dataset:
 
     for point_cloud_path in point_cloud_paths:
         data = Data(point_cloud_path)
-        data.labels.box3d = []
+        data.label.box3d = []
 
         point_cloud_id = os.path.basename(point_cloud_path)[:6]
         label_path = os.path.join(root_path, "labels", f"{point_cloud_id}.txt")
@@ -67,7 +67,7 @@ def NeolixOD(path: str) -> Dataset:
                     axis=[0, 0, 1],
                     radians=float(label_value[14]),
                 )
-                data.labels.box3d.append(label)
+                data.label.box3d.append(label)
 
         segment.append(data)
     return dataset

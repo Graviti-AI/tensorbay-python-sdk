@@ -55,8 +55,8 @@ def JHU_CROWD(path: str) -> Dataset:
             data = Data(image_path)
             image_file = os.path.basename(image_path)
             label_file = image_file.replace("jpg", "txt")
-            data.labels.box2d = _load_box_labels(os.path.join(segment_path, "gt", label_file))
-            data.labels.classification = image_labels[os.path.splitext(image_file)[0]]
+            data.label.box2d = _load_box_labels(os.path.join(segment_path, "gt", label_file))
+            data.label.classification = image_labels[os.path.splitext(image_file)[0]]
             segment.append(data)
     return dataset
 

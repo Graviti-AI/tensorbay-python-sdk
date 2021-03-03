@@ -53,7 +53,7 @@ def Flower17(path: str) -> Dataset:
             data = Data(os.path.join(root_path, "jpg", f"image_{index:04d}.jpg"))
 
             # There are 80 images for each category
-            data.labels.classification = Classification(category=categories[(index - 1) // 80])
+            data.label.classification = Classification(category=categories[(index - 1) // 80])
             segment.append(data)
 
     return dataset
@@ -91,6 +91,6 @@ def Flower102(path: str) -> Dataset:
         segment_info[value][0].sort()
         for index in segment_info[value][0]:
             data = Data(os.path.join(root_path, "jpg", f"image_{index:05d}.jpg"))
-            data.labels.classification = Classification(categories[int(labels[index - 1]) - 1])
+            data.label.classification = Classification(categories[int(labels[index - 1]) - 1])
             segment.append(data)
     return dataset

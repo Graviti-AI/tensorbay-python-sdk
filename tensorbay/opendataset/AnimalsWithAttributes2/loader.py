@@ -63,7 +63,7 @@ def AnimalsWithAttributes2(path: str) -> Dataset:
         label = attribute_mapping[class_name]
         for image_path in image_paths:
             data = Data(image_path)
-            data.labels.classification = label
+            data.label.classification = label
             segment.append(data)
 
     return dataset

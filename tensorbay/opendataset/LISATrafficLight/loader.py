@@ -90,9 +90,9 @@ def LISATrafficLight(path: str) -> Dataset:
 
         for image_path in image_paths:
             data = Data(image_path)
-            data.labels.box2d = []
+            data.label.box2d = []
             if classification:
-                data.labels.classification = Classification(classification)
+                data.label.classification = Classification(classification)
             segment.append(data)
 
         _add_labels(segment, box_csv_path)
@@ -150,4 +150,4 @@ def _add_labels(segment: Segment, csv_path: str) -> None:
                 int(row["Lower right corner Y"]),
                 category=".".join([supercategory, row["Annotation tag"]]),
             )
-            data.labels.box2d.append(label)
+            data.label.box2d.append(label)

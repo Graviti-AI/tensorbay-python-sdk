@@ -52,7 +52,7 @@ def DeepRoute(path: str) -> Dataset:
         label_path = os.path.join(root_path, "groundtruth", f"{point_cloud_id}.txt")
 
         data = Data(point_cloud_path)
-        data.labels.box3d = []
+        data.label.box3d = []
 
         with open(label_path) as fp:
             annotations = json.load(fp)["objects"]
@@ -68,7 +68,7 @@ def DeepRoute(path: str) -> Dataset:
                 axis=(0, 0, 1),
                 radians=annotation["heading"],
             )
-            data.labels.box3d.append(label)
+            data.label.box3d.append(label)
 
         segment.append(data)
 

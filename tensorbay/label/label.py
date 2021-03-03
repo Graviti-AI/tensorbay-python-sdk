@@ -3,15 +3,12 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Label, LabelType and different types of labels.
+"""LabelType and different types of labels.
 
 :class:`LabelType` is an enumeration type
-which includes all the supported label types within :class:`~tensorbay.dataset.data.Labels`.
+which includes all the supported label types within :class:`~tensorbay.dataset.data.Label`.
 
-:class:`Label` is the most basic label level in the TensorBay dataset structure,
-and is the base class for the following various types of label classes.
-
-Each :class:`Label` object contains one annotaion of a :class:`~tensorbay.dataset.data.Data` object.
+Different label types correspond to different label classes.
 
 .. table:: label classes
    :widths: auto
@@ -35,11 +32,11 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Un
 from ..geometry import Box2D, Box3D, Keypoints2D, Polygon2D, Polyline2D, Quaternion, Transform3D
 from ..utility import ReprMixin, ReprType, TypeEnum, TypeMixin, TypeRegister, common_loads
 
-_T = TypeVar("_T", bound="Label")
+_T = TypeVar("_T", bound="_LabelBase")
 
 
 class LabelType(TypeEnum):
-    """This class defines all the supported types within :class:`~tensorbay.dataset.data.Labels`."""
+    """This class defines all the supported types within :class:`~tensorbay.dataset.data.Label`."""
 
     __subcatalog_registry__: Dict[TypeEnum, Type[Any]] = {}
 
@@ -63,13 +60,13 @@ class LabelType(TypeEnum):
         return self.__subcatalog_registry__[self]
 
 
-class Label(TypeMixin[LabelType], ReprMixin):
+class _LabelBase(TypeMixin[LabelType], ReprMixin):
     """This class defines the basic concept of label.
 
-    :class:`Label` is the most basic label level in the TensorBay dataset structure,
+    :class:`_LabelBase` is the most basic label level in the TensorBay dataset structure,
     and is the base class for the following various types of label classes.
 
-    Each :class:`Label` object
+    Each :class:`_LabelBase` object
     contains one annotaion of a :class:`~tensorbay.dataset.data.Data` object.
 
     Arguments:
@@ -126,7 +123,7 @@ class Label(TypeMixin[LabelType], ReprMixin):
 
 
 @TypeRegister(LabelType.CLASSIFICATION)
-class Classification(Label):
+class Classification(_LabelBase):
     """This class defines the concept of classification label.
 
     :class:`Classification` is the classification type of label,
@@ -150,7 +147,7 @@ class Classification(Label):
         category: Optional[str] = None,
         attributes: Optional[Dict[str, Any]] = None,
     ):
-        Label.__init__(self, category, attributes)
+        _LabelBase.__init__(self, category, attributes)
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -177,7 +174,7 @@ class Classification(Label):
 
 
 @TypeRegister(LabelType.BOX2D)
-class LabeledBox2D(Box2D, Label):  # pylint: disable=too-many-ancestors
+class LabeledBox2D(Box2D, _LabelBase):  # pylint: disable=too-many-ancestors
     """This class defines the concept of 2D bounding box label.
 
     :class:`LabeledBox2D` is the 2D bounding box type of label,
@@ -209,7 +206,7 @@ class LabeledBox2D(Box2D, Label):  # pylint: disable=too-many-ancestors
     """
 
     _repr_type = ReprType.INSTANCE
-    _repr_attrs = Label._repr_attrs
+    _repr_attrs = _LabelBase._repr_attrs
 
     def __init__(
         self,
@@ -223,7 +220,7 @@ class LabeledBox2D(Box2D, Label):  # pylint: disable=too-many-ancestors
         height: Optional[float] = None,
     ):
         Box2D.__init__(self, *args, x=x, y=y, width=width, height=height)
-        Label.__init__(self, category, attributes, instance)
+        _LabelBase.__init__(self, category, attributes, instance)
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -257,7 +254,7 @@ class LabeledBox2D(Box2D, Label):  # pylint: disable=too-many-ancestors
 
     def _loads(self, contents: Dict[str, Any]) -> None:
         Box2D._loads(self, contents["box2d"])
-        Label._loads(self, contents)
+        _LabelBase._loads(self, contents)
 
     def dumps(self) -> Dict[str, Any]:
         """Dumps the current 2D bounding box label into a dict.
@@ -283,13 +280,13 @@ class LabeledBox2D(Box2D, Label):  # pylint: disable=too-many-ancestors
                 }
 
         """
-        contents = Label.dumps(self)
+        contents = _LabelBase.dumps(self)
         contents["box2d"] = Box2D.dumps(self)
         return contents
 
 
 @TypeRegister(LabelType.BOX3D)
-class LabeledBox3D(Box3D, Label):
+class LabeledBox3D(Box3D, _LabelBase):
     """This class defines the concept of 3D bounding box label.
 
     :class:`LabeledBox3D` is the 3D bounding box type of label,
@@ -320,7 +317,7 @@ class LabeledBox3D(Box3D, Label):
     """
 
     _T = TypeVar("_T", bound="LabeledBox3D")
-    _repr_attrs = Box3D._repr_attrs + Label._repr_attrs
+    _repr_attrs = Box3D._repr_attrs + _LabelBase._repr_attrs
 
     def __init__(
         self,
@@ -342,7 +339,7 @@ class LabeledBox3D(Box3D, Label):
             size=size,
             **kwargs,
         )
-        Label.__init__(self, category, attributes, instance)
+        _LabelBase.__init__(self, category, attributes, instance)
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -388,7 +385,7 @@ class LabeledBox3D(Box3D, Label):
 
     def _loads(self, contents: Dict[str, Any]) -> None:
         Box3D._loads(self, contents["box3d"])
-        Label._loads(self, contents)
+        _LabelBase._loads(self, contents)
 
     def __rmul__(self: _T, other: Transform3D) -> _T:
         if isinstance(other, Transform3D):
@@ -439,13 +436,13 @@ class LabeledBox3D(Box3D, Label):
                 },
 
         """
-        contents = Label.dumps(self)
+        contents = _LabelBase.dumps(self)
         contents["box3d"] = Box3D.dumps(self)
         return contents
 
 
 @TypeRegister(LabelType.POLYGON2D)
-class LabeledPolygon2D(Polygon2D, Label):  # pylint: disable=too-many-ancestors
+class LabeledPolygon2D(Polygon2D, _LabelBase):  # pylint: disable=too-many-ancestors
     """This class defines the concept of polygon2D label.
 
     :class:`LabeledPolygon2D` is the 2D polygon type of label,
@@ -465,7 +462,7 @@ class LabeledPolygon2D(Polygon2D, Label):  # pylint: disable=too-many-ancestors
     """
 
     _repr_type = ReprType.SEQUENCE
-    _repr_attrs = Label._repr_attrs
+    _repr_attrs = _LabelBase._repr_attrs
 
     def __init__(
         self,
@@ -476,7 +473,7 @@ class LabeledPolygon2D(Polygon2D, Label):  # pylint: disable=too-many-ancestors
         instance: Optional[str] = None,
     ):
         super().__init__(points)
-        Label.__init__(self, category, attributes, instance)
+        _LabelBase.__init__(self, category, attributes, instance)
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:  # type: ignore[override]
@@ -511,7 +508,7 @@ class LabeledPolygon2D(Polygon2D, Label):  # pylint: disable=too-many-ancestors
 
     def _loads(self, contents: Dict[str, Any]) -> None:  # type: ignore[override]
         super()._loads(contents["polygon2d"])
-        Label._loads(self, contents)
+        _LabelBase._loads(self, contents)
 
     def dumps(self) -> Dict[str, Any]:  # type: ignore[override]
         """Dumps the current 2D polygon label into a dict.
@@ -538,14 +535,14 @@ class LabeledPolygon2D(Polygon2D, Label):  # pylint: disable=too-many-ancestors
                 }
 
         """
-        contents = Label.dumps(self)
+        contents = _LabelBase.dumps(self)
         contents["polygon2d"] = super().dumps()
 
         return contents
 
 
 @TypeRegister(LabelType.POLYLINE2D)
-class LabeledPolyline2D(Polyline2D, Label):  # pylint: disable=too-many-ancestors
+class LabeledPolyline2D(Polyline2D, _LabelBase):  # pylint: disable=too-many-ancestors
     """This class defines the concept of polyline2D label.
 
     :class:`LabeledPolyline2D` is the 2D polyline type of label,
@@ -565,7 +562,7 @@ class LabeledPolyline2D(Polyline2D, Label):  # pylint: disable=too-many-ancestor
     """
 
     _repr_type = ReprType.SEQUENCE
-    _repr_attrs = Label._repr_attrs
+    _repr_attrs = _LabelBase._repr_attrs
 
     def __init__(
         self,
@@ -576,7 +573,7 @@ class LabeledPolyline2D(Polyline2D, Label):  # pylint: disable=too-many-ancestor
         instance: Optional[str] = None,
     ):
         super().__init__(points)
-        Label.__init__(self, category, attributes, instance)
+        _LabelBase.__init__(self, category, attributes, instance)
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:  # type: ignore[override]
@@ -611,7 +608,7 @@ class LabeledPolyline2D(Polyline2D, Label):  # pylint: disable=too-many-ancestor
 
     def _loads(self, contents: Dict[str, Any]) -> None:  # type: ignore[override]
         super()._loads(contents["polyline2d"])
-        Label._loads(self, contents)
+        _LabelBase._loads(self, contents)
 
     def dumps(self) -> Dict[str, Any]:  # type: ignore[override]
         """Dumps the current 2D polyline label into a dict.
@@ -638,7 +635,7 @@ class LabeledPolyline2D(Polyline2D, Label):  # pylint: disable=too-many-ancestor
                 }
 
         """
-        contents = Label.dumps(self)
+        contents = _LabelBase.dumps(self)
         contents["polyline2d"] = super().dumps()
 
         return contents
@@ -729,7 +726,7 @@ class Word(ReprMixin):
 
 
 @TypeRegister(LabelType.SENTENCE)  # pylint: disable=too-few-public-methods
-class LabeledSentence(Label):
+class LabeledSentence(_LabelBase):
     """This class defines the concept of phonetic transcription lable.
 
     :class:`LabeledSentence` is the transcripted sentence type of label.
@@ -877,7 +874,7 @@ class LabeledSentence(Label):
                 }
 
         """
-        contents = Label.dumps(self)
+        contents = _LabelBase.dumps(self)
         if hasattr(self, "sentence"):
             contents["sentence"] = [word.dumps() for word in self.sentence]
         if hasattr(self, "spell"):
@@ -888,7 +885,7 @@ class LabeledSentence(Label):
 
 
 @TypeRegister(LabelType.KEYPOINTS2D)
-class LabeledKeypoints2D(Keypoints2D, Label):  # pylint: disable=too-many-ancestors
+class LabeledKeypoints2D(Keypoints2D, _LabelBase):  # pylint: disable=too-many-ancestors
     """This class defines the concept of 2D keypoints label.
 
     :class:`LabeledKeypoints2D` is the 2D keypoints type of label,
@@ -908,7 +905,7 @@ class LabeledKeypoints2D(Keypoints2D, Label):  # pylint: disable=too-many-ancest
     """
 
     _repr_type = ReprType.SEQUENCE
-    _repr_attrs = Label._repr_attrs
+    _repr_attrs = _LabelBase._repr_attrs
 
     def __init__(
         self,
@@ -919,7 +916,7 @@ class LabeledKeypoints2D(Keypoints2D, Label):  # pylint: disable=too-many-ancest
         instance: Optional[str] = None,
     ) -> None:
         super().__init__(keypoints)
-        Label.__init__(self, category, attributes, instance)
+        _LabelBase.__init__(self, category, attributes, instance)
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:  # type: ignore[override]
@@ -955,7 +952,7 @@ class LabeledKeypoints2D(Keypoints2D, Label):  # pylint: disable=too-many-ancest
 
     def _loads(self, contents: Dict[str, Any]) -> None:  # type: ignore[override]
         super()._loads(contents["keypoints2d"])
-        Label._loads(self, contents)
+        _LabelBase._loads(self, contents)
 
     def dumps(self) -> Dict[str, Any]:  # type: ignore[override]
         """Dumps the current 2D keypoints label into a dict.
@@ -983,7 +980,7 @@ class LabeledKeypoints2D(Keypoints2D, Label):  # pylint: disable=too-many-ancest
                 }
 
         """
-        contents = Label.dumps(self)
+        contents = _LabelBase.dumps(self)
         contents["keypoints2d"] = super().dumps()
 
         return contents

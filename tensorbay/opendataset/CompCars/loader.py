@@ -89,10 +89,10 @@ def CompCars(path: str) -> Dataset:
                     root_path, "label", *(os.path.splitext(image_file_name)[0] + ".txt").split("/")
                 )
                 data = Data(image_path)
-                data.labels.classification = _create_classification_label(
+                data.label.classification = _create_classification_label(
                     image_path, model_to_attributes, classification_categories
                 )
-                data.labels.box2d = _create_box_label(label_path, box_categories)
+                data.label.box2d = _create_box_label(label_path, box_categories)
                 segment.append(data)
 
     return dataset

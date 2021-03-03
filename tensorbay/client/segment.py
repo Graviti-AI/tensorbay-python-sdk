@@ -216,7 +216,7 @@ class SegmentClientBase:
         post_data: Dict[str, Any] = {
             "segmentName": self.name,
             "remotePath": data.target_remote_path,
-            "labelValues": data.labels.dumps(),
+            "labelValues": data.label.dumps(),
         }
         if sensor_name:
             post_data["sensorName"] = sensor_name
@@ -361,7 +361,7 @@ class SegmentClient(SegmentClientBase):
         for labels in self._list_labels(start=start, stop=stop):
             remote_path = labels["remotePath"]
             data = RemoteData(remote_path, url_getter=self._get_url)
-            data.labels._loads(labels["label"])  # pylint: disable=protected-access
+            data.label._loads(labels["label"])  # pylint: disable=protected-access
             yield data
 
 
@@ -527,6 +527,6 @@ class FusionSegmentClient(SegmentClientBase):
                 data = RemoteData(
                     remote_path, timestamp=data_info["timestamp"], url_getter=self._get_url
                 )
-                data.labels._loads(data_info["label"])  # pylint: disable=protected-access
+                data.label._loads(data_info["label"])  # pylint: disable=protected-access
                 frame[sensor_name] = data
             yield frame

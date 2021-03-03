@@ -98,7 +98,7 @@ You can get the annotation by the attrs of labels.
 
 .. code:: python
 
-   >>> label_classification = data.labels.classification
+   >>> label_classification = data.label.classification
    >>> label_classification
    Classification(
      (category): 'alt.atheism'

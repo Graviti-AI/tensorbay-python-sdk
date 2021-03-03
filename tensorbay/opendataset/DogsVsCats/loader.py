@@ -48,7 +48,7 @@ def DogsVsCats(path: str) -> Dataset:
         for image_path in image_paths:
             data = Data(image_path)
             if is_labeled:
-                data.labels.classification = Classification(os.path.basename(image_path)[:3])
+                data.label.classification = Classification(os.path.basename(image_path)[:3])
             segment.append(data)
 
     return dataset

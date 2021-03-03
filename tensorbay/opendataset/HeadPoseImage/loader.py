@@ -49,7 +49,7 @@ def HeadPoseImage(path: str) -> Dataset:
     for image_path in image_paths:
         image_name = os.path.basename(image_path)
         data = Data(image_path)
-        data.labels.box2d = [
+        data.label.box2d = [
             LabeledBox2D(
                 _load_label_box(image_path.replace("jpg", "txt")),
                 category=image_name[6:8],

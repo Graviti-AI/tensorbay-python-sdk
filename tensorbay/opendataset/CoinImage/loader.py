@@ -50,7 +50,7 @@ def CoinImage(path: str) -> Dataset:
         data = Data(image_path)
         filename = os.path.basename(image_path)
         class_id = filename[5:].split("_", 1)[0]
-        data.labels.classification = Classification(category=mapping[class_id])
+        data.label.classification = Classification(category=mapping[class_id])
         segment.append(data)
 
     return dataset

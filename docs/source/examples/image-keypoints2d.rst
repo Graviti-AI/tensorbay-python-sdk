@@ -91,7 +91,7 @@ You can get one by index.
 
 .. code:: python
 
-    >>> label_keypoints2d = data.labels.keypoints2d[0]
+    >>> label_keypoints2d = data.label.keypoints2d[0]
     >>> label_keypoints2d
     LabeledKeypoints2D [
       Keypoint2D(29.74645940655481, 143.34544031478885, 1),

@@ -52,7 +52,7 @@ def ImageEmotionAbstract(path: str) -> Dataset:
             data = Data(image_path)
             values = {key: int(value) for key, value in row.items()}
 
-            data.labels.classification = Classification(attributes=values)
+            data.label.classification = Classification(attributes=values)
             segment.append(data)
 
     return dataset
@@ -85,7 +85,7 @@ def ImageEmotionArtphoto(path: str) -> Dataset:
         image_category = os.path.basename(image_path).split("_", 1)[0]
 
         data = Data(image_path)
-        data.labels.classification = Classification(category=image_category)
+        data.label.classification = Classification(category=image_category)
         segment.append(data)
 
     return dataset

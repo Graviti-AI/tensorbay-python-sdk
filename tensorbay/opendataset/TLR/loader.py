@@ -51,7 +51,7 @@ def TLR(path: str) -> Dataset:
         # frame_000001.jpg
         frame_index = int(os.path.basename(file_path)[6:-4])
         data = Data(file_path)
-        data.labels.box2d = labels[frame_index]
+        data.label.box2d = labels[frame_index]
         segment.append(data)
     return dataset
 

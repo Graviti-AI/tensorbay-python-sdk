@@ -5,9 +5,9 @@
 TensorBay supports multiple types of labels.
 
 Each :class:`~tensorbay.dataset.data.Data` object
-can have multiple types of :class:`labels<tensorbay.dataset.data.Labels>`.
+can have multiple types of :class:.label<tensorbay.dataset.data.Label>`.
 
-And each type of :class:`labels<tensorbay.dataset.data.Labels>` is supported with a specific label
+And each type of :class:.label<tensorbay.dataset.data.Label>` is supported with a specific label
 class,
 and has a corresponding :ref:`subcatalog<basic_concepts:Catalog & Subcatalog>` class.
 
@@ -242,7 +242,7 @@ To add a :class:`~tensorbay.label.label.Classification` label to one data:
 
     >>> from tensorbay.dataset import Data
     >>> data = Data("local_path")
-    >>> data.labels.classification = classification_label
+    >>> data.label.classification = classification_label
 
 .. note::
 
@@ -366,13 +366,13 @@ To add a :class:`~tensorbay.label.label.LabeledBox2D` label to one data:
 
     >>> from tensorbay.dataset import Data
     >>> data = Data("local_path")
-    >>> data.labels.box2d = []
-    >>> data.labels.box2d.append(box2d_label)
+    >>> data.label.box2d = []
+    >>> data.label.box2d.append(box2d_label)
 
 .. note::
 
    One data may contain multiple Box2D labels,
-   so the :attr:`Data.labels.box2d<tensorbay.dataset.data.Data.labels.box2d>` must be a list.
+   so the :attr:`Data.label.box2d<tensorbay.dataset.data.Data.label.box2d>` must be a list.
 
 *******
  Box3D
@@ -526,13 +526,13 @@ To add a :class:`~tensorbay.label.label.LabeledBox3D` label to one data:
 
     >>> from tensorbay.dataset import Data
     >>> data = Data("local_path")
-    >>> data.labels.box3d = []
-    >>> data.labels.box3d.append(box3d_label)
+    >>> data.label.box3d = []
+    >>> data.label.box3d.append(box3d_label)
 
 .. note::
 
    One data may contain multiple Box3D labels,
-   so the :attr:`Data.labels.box3d<tensorbay.dataset.data.Data.labels.box3d>` must be a list.
+   so the :attr:`Data.label.box3d<tensorbay.dataset.data.Data.label.box3d>` must be a list.
 
 *************
  Keypoints2D
@@ -703,13 +703,13 @@ To add a :class:`~tensorbay.label.label.LabeledKeypoints2D` label to one data:
 
     >>> from tensorbay.dataset import Data
     >>> data = Data("local_path")
-    >>> data.labels.keypoints2d = []
-    >>> data.labels.keypoints2d.append(keypoints2d_label)
+    >>> data.label.keypoints2d = []
+    >>> data.label.keypoints2d.append(keypoints2d_label)
 
 .. note::
 
    One data may contain multiple Keypoints2D labels,
-   so the :attr:`Data.labels.keypoints2d<tensorbay.dataset.data.Data.labels.keypoints2d>`
+   so the :attr:`Data.label.keypoints2d<tensorbay.dataset.data.Data.label.keypoints2d>`
    must be a list.
 
 
@@ -916,10 +916,10 @@ To add a :class:`~tensorbay.label.label.LabeledSentence` label to one data:
 
     >>> from tensorbay.dataset import Data
     >>> data = Data("local_path")
-    >>> data.labels.sentence = []
-    >>> data.labels.sentence.append(sentence_label)
+    >>> data.label.sentence = []
+    >>> data.label.sentence.append(sentence_label)
 
 .. note::
 
    One data may contain multiple Sentence labels,
-   so the :attr:`Data.labels.sentence<tensorbay.dataset.data.Data.labels.sentence>` must be a list.
+   so the :attr:`Data.label.sentence<tensorbay.dataset.data.Data.label.sentence>` must be a list.

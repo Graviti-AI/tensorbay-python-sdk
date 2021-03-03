@@ -54,7 +54,7 @@ def RP2K(path: str) -> Dataset:
             image_paths = glob(os.path.join(segment_path, catagory, "*.jpg"))
             for image_path in image_paths:
                 data = Data(image_path)
-                data.labels.classification = Classification(catagory)
+                data.label.classification = Classification(catagory)
                 segment.append(data)
 
     return dataset

@@ -54,6 +54,6 @@ def FSDD(path: str) -> Dataset:
     for audio_path in audio_paths:
         category, name = os.path.basename(audio_path).split("_")[:2]
         data = Data(audio_path)
-        data.labels.classification = Classification(category, label_map[name])
+        data.label.classification = Classification(category, label_map[name])
         segment.append(data)
     return dataset

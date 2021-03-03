@@ -85,7 +85,7 @@ You can get one by index.
 
 .. code:: python
 
-   >>> label_audio = data.labels.sentence[0]
+   >>> label_audio = data.label.sentence[0]
    >>> label_audio
    LabeledSentence(
        (sentence): [
