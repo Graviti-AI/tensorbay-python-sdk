@@ -15,7 +15,6 @@ AccessKey is required when operating with dataset.
 
 import sys
 from typing import Any, Dict, Iterator, Optional, Tuple, Type, Union, overload
-from urllib.parse import urljoin
 
 from typing_extensions import Literal
 
@@ -43,21 +42,6 @@ class GAS:
 
     def __init__(self, access_key: str, url: str = "") -> None:
         self._client = Client(access_key, url)
-
-    def get_user_info(self) -> Dict[str, str]:
-        """Get the user info corresponding to the AccessKey.
-
-        Returns:
-            A dict which contains the username and clientTag.
-
-        """
-        post_data = {"token": self._client.access_key}
-        url = urljoin(self._client.gateway_url, "user/api/v3/token/get-user-profile")
-        response = self._client.do("GET", url, params=post_data).json()["data"]
-        return {
-            "username": response["userName"],
-            "version": GAS._VERSIONS[response["clientTag"]],
-        }
 
     @overload
     def _create_dataset(
