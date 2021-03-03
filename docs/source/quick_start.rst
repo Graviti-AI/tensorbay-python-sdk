@@ -78,7 +78,7 @@ If you are not sure about the dataset name, you can visit our `Opendataset Platf
 
 .. code:: python
 
-   >>> gas.list_datasets()
+   >>> gas.list_dataset_names()
    ['Dogs vs. Cats', 'nuScenes']
 
 In :ref:`basic_concepts:Dataset` ``Dogs vs. Cats``, there are two :ref:`basic_concepts:Segment`:
@@ -86,7 +86,7 @@ In :ref:`basic_concepts:Dataset` ``Dogs vs. Cats``, there are two :ref:`basic_co
 
 .. code:: python
 
-   >>> dataset_client.list_segments()
+   >>> dataset_client.list_segment_names()
    ['test', 'train']
    >>> train_segment = dataset_client.get_segment_object("train")
 

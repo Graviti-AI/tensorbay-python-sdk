@@ -55,7 +55,7 @@ You can use the list method to print all your forked open datasets.
 
 .. code:: python
 
-   >>> list(gas.list_datasets())
+   >>> list(gas.list_dataset_names())
    ['Head Pose Image', 'THCHS-30', 'LeedsSportsPose']
 
 In :ref:`basic_concepts:Dataset` ``LeedsSportsPose``, there is one default

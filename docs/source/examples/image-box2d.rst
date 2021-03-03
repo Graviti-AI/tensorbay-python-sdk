@@ -55,7 +55,7 @@ You can use the list method to print all your forked open datasets.
 
 .. code:: python
 
-    >>> list(gas.list_datasets())
+    >>> list(gas.list_dataset_names())
     ['Head Pose Image', 'TLR', 'BSTLD']
 
 In :ref:`basic_concepts:Dataset` ``BSTLD``, there are three
@@ -64,7 +64,7 @@ you can get the segment names by list them all.
 
 .. code::
 
-    >>> list(dataset_client.list_segments())
+    >>> list(dataset_client.list_segment_names())
     ['additional', 'test', 'train']
 
 You can get a segment by passing the required segment name.

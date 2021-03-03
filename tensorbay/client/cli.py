@@ -373,7 +373,7 @@ def _echo_data(dataset_name: str, segment_name: str, data_iter: Iterable[str]) -
 
 def _ls_dataset(gas: GAS, info: TBRN, list_all_files: bool) -> None:
     dataset = gas._get_dataset(info.dataset_name)  # pylint: disable=protected-access
-    segment_names = dataset.list_segments()
+    segment_names = dataset.list_segment_names()
     if not list_all_files:
         for segment_name in segment_names:
             click.echo(TBRN(info.dataset_name, segment_name).get_tbrn())
@@ -511,7 +511,7 @@ def ls(  # pylint: disable=invalid-name
     gas = _gas(**obj)
 
     if not tbrn:
-        for dataset_name in gas.list_datasets():
+        for dataset_name in gas.list_dataset_names():
             click.echo(TBRN(dataset_name).get_tbrn())
         return
 
@@ -568,7 +568,7 @@ def _filter_data(
 #         if not is_recursive:
 #             click.echo("Error: please use -r option to remove the whole dataset", err=True)
 #             sys.exit(1)
-#         segment_names = dataset.list_segments()
+#         segment_names = dataset.list_segment_names()
 #         dataset.delete_segments(segment_names, force_delete)
 #         return
 #

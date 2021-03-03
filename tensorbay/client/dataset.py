@@ -7,7 +7,7 @@
 
 :class:`DatasetClient` is a remote concept. It contains the information
 needed for determining a unique dataset on TensorBay, and provides a series of methods within
-dataset scope, such as :meth:`DatasetClient.get_segment`, :meth:`DatasetClient.list_segments`,
+dataset scope, such as :meth:`DatasetClient.get_segment`, :meth:`DatasetClient.list_segment_names`,
 :meth:`DatasetClient.commit <DatasetClientBase.commit>`, and so on.
 In contrast to the :class:`DatasetClient`,
 :class:`~tensorbay.dataset.dataset.Dataset` is a local concept. It represents a
@@ -37,7 +37,7 @@ class DatasetClientBase:
 
     A :class:`DatasetClientBase` contains the information needed for
     determining a unique dataset on TensorBay, and provides a series of
-    method within dataset scope, such as :meth:`DatasetClientBase.list_segments`
+    method within dataset scope, such as :meth:`DatasetClientBase.list_segment_names`
     and :meth:`DatasetClientBase.upload_catalog`.
 
     Arguments:
@@ -116,7 +116,7 @@ class DatasetClientBase:
             if response["recordSize"] + response["offset"] >= response["totalCount"]:
                 break
 
-    def list_segments(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[str]:
+    def list_segment_names(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[str]:
         """List all segment names in a certain commit.
 
         Arguments:
