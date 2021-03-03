@@ -56,7 +56,7 @@ You can use the list method to get all the open datasets you forked.
 
 .. code:: python
 
-   >>> list(gas.list_datasets())
+   >>> list(gas.list_dataset_names())
    ['Dogs vs. Cats', 'nuScenes', 'Neolix OD', "20 Newsgroups"]
 
 In :ref:`basic_concepts:Dataset` ``20 Newsgroups``,
@@ -67,7 +67,7 @@ You can use the list method to get all the segment names under the
 
 .. code:: python
 
-    >>> list(dataset_client.list_segments())
+    >>> list(dataset_client.list_segment_names())
     >>> ['20news-18828', '20news-bydate-test', '20news-bydate-train', '20_newsgroups']
 
 And you can get a specific segment by passing the corresponding segment name.

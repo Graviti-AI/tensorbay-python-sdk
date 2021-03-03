@@ -33,7 +33,7 @@ about user and datasets.
    :meth:`~graviti.client.gas.GAS.create_fusion_dataset`  create a fusion dataset with the given name
    :meth:`~graviti.client.gas.GAS.get_dataset`            get dataset with the given name
    :meth:`~graviti.client.gas.GAS.get_fusion_dataset`     get fusion dataset with the given name
-   :meth:`~graviti.client.gas.GAS.list_datasets`          list all forked datasets
+   :meth:`~graviti.client.gas.GAS.list_dataset_names`          list all forked datasets
    :meth:`~graviti.client.gas.GAS.upload_dataset_object`  upload a dataset to TensorBay
    :meth:`~graviti.client.gas.GAS.delete_dataset`         delete a dataset on TensorBay
    =====================================================  ===========================================
@@ -55,7 +55,7 @@ See :numref:`Table. %s <dataset_client>` for more details.
    ==========================================  ================================================================
    Ojects to be operated                       methods
    ==========================================  ================================================================
-   :ref:`basic_concepts:Segment`               :meth:`~graviti.client.dataset.DatasetClient.list_segments`
+   :ref:`basic_concepts:Segment`               :meth:`~graviti.client.dataset.DatasetClient.list_segment_names`
                                                :meth:`~graviti.client.dataset.DatasetClient.get_segment_object`
                                                :meth:`~graviti.client.dataset.DatasetClient.delete_segments`
    :ref:`basic_concepts:Catalog & SubCatalog`  :meth:`~graviti.client.dataset.DatasetClient.get_catalog`

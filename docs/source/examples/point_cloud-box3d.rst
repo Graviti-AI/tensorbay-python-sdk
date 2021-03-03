@@ -55,7 +55,7 @@ You can use the list method to print all your forked open datasets.
 
 .. code:: python
 
-   >>> list(gas.list_datasets())
+   >>> list(gas.list_dataset_names())
    ['Dogs vs. Cats', 'nuScenes', 'Neolix PD']
 
 In :ref:`basic_concepts:Dataset` ``Neolix OD``, there is one default :ref:`basic_concepts:Segment`

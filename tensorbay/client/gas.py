@@ -7,7 +7,7 @@
 
 The :class:`GAS` defines the initial client to interact between local and TensorBay.
 It provides some operations on datasets level such as :meth:`GAS.create_dataset`,
-:meth:`GAS.list_datasets` and :meth:`GAS.upload_dataset_object`.
+:meth:`GAS.list_dataset_names` and :meth:`GAS.upload_dataset_object`.
 
 AccessKey is required when operating with dataset.
 
@@ -30,7 +30,7 @@ class GAS:
     """:class:`GAS` defines the initial client to interact between local and TensorBay.
 
     :class:`GAS` provides some operations on dataset level such as
-    :meth:`GAS.create_dataset` :meth:`GAS.list_datasets` and :meth:`GAS.upload_dataset_object`.
+    :meth:`GAS.create_dataset` :meth:`GAS.list_dataset_names` and :meth:`GAS.upload_dataset_object`.
 
     Arguments:
         access_key: User's access key.
@@ -189,7 +189,7 @@ class GAS:
             if response["recordSize"] + response["offset"] >= response["totalCount"]:
                 break
 
-    def list_datasets(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[str]:
+    def list_dataset_names(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[str]:
         """List names of all TensorBay datasets.
 
         Arguments:
