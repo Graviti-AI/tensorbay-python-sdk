@@ -154,28 +154,28 @@ def create(obj: Dict[str, str], name: str) -> None:
     _gas(**obj).create_dataset(info.dataset_name)
 
 
-@cli.command()
-@click.argument("name", type=str)
-@click.argument("message", type=str)
-@click.argument("tag", type=str, required=False)
-@click.pass_obj
-def commit(obj: Dict[str, str], name: str, message: str, tag: str) -> None:
-    # noqa: D415, D301
-    """Commit a dataset.\f
+# @cli.command()
+# @click.argument("name", type=str)
+# @click.argument("message", type=str)
+# @click.argument("tag", type=str, required=False)
+# @click.pass_obj
+# def commit(obj: Dict[str, str], name: str, message: str, tag: str) -> None:
+#     # noqa: D415, D301
+#     """Commit a dataset.\f
 
-    Arguments:
-        obj: A dict including config information.
-        name: The name of the dataset to be committed, like "tb:KITTI".
-        message: The message of the dataset to be committed.
-        tag: The tag of the dataset to be committed.
+#     Arguments:
+#         obj: A dict including config information.
+#         name: The name of the dataset to be committed, like "tb:KITTI".
+#         message: The message of the dataset to be committed.
+#         tag: The tag of the dataset to be committed.
 
-    """
-    info = TBRN(tbrn=name)
-    if info.type != TBRNType.DATASET:
-        click.echo(f'"{name}" is not a dataset', err=True)
-        sys.exit(1)
-    dataset = _gas(**obj)._get_dataset(info.dataset_name)  # pylint: disable=protected-access
-    dataset.commit(message, tag=tag)
+#     """
+#     info = TBRN(tbrn=name)
+#     if info.type != TBRNType.DATASET:
+#         click.echo(f'"{name}" is not a dataset', err=True)
+#         sys.exit(1)
+#     dataset = _gas(**obj)._get_dataset(info.dataset_name)  # pylint: disable=protected-access
+#     dataset.commit(message, tag=tag)
 
 
 @cli.command()
