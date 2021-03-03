@@ -46,7 +46,7 @@ def THUCNews(path: str) -> Dataset:
         text_paths = glob(os.path.join(root_path, category, "*.txt"))
         for text_path in text_paths:
             data = Data(text_path)
-            data.labels.classification = Classification(category)
+            data.label.classification = Classification(category)
 
             segment.append(data)
 

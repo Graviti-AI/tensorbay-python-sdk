@@ -107,7 +107,7 @@ You can get one by index.
 
 .. code:: python
 
-   >>> label_box3d = data.labels.box3d[0]
+   >>> label_box3d = data.label.box3d[0]
    >>> label_box3d
    LabeledBox3D(
        (translation): Vector3D(1.4035304, -0.8393294, 0.725594224),

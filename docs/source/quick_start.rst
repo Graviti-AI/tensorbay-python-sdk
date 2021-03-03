@@ -106,7 +106,7 @@ get a Data object by index.
        (instance): None
      )
    }
-   >>> data.labels.classification.category
+   >>> data.label.classification.category
    'cat'
    >>> image = Image.open(data.open())
    >>> image.format

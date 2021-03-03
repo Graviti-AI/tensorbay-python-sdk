@@ -9,7 +9,7 @@
 It contains path information of a data sample and its corresponding labels.
 
 A :class:`Data` instance contains one or several types of labels,
-all of which are stored in :attr:`Data.labels`.
+all of which are stored in :attr:`Data.label`.
 
 """
 
@@ -33,8 +33,8 @@ from ..label import (
 from ..utility import ReprMixin, ReprType, common_loads
 
 
-class Labels(ReprMixin):
-    """This class defines :attr:`Data.labels`.
+class Label(ReprMixin):
+    """This class defines :attr:`Data.label`.
 
     It contains growing types of labels referring to different tasks.
 
@@ -48,7 +48,7 @@ class Labels(ReprMixin):
     keypoints2d: List[LabeledKeypoints2D]
     sentence: List[LabeledSentence]
 
-    _T = TypeVar("_T", bound="Labels")
+    _T = TypeVar("_T", bound="Label")
     _repr_maxlevel = 2
     _repr_type = ReprType.INSTANCE
     _repr_attrs = tuple(label_type.value for label_type in LabelType)
@@ -156,7 +156,7 @@ class DataBase(ReprMixin):  # pylint: disable=too-few-public-methods
         if timestamp is not None:
             self.timestamp = timestamp
 
-        self.labels = Labels()
+        self.label = Label()
 
     def _repr_head(self) -> str:
         return f'{self.__class__.__name__}("{self.path}")'
@@ -192,14 +192,14 @@ class DataBase(ReprMixin):  # pylint: disable=too-few-public-methods
         if "timestamp" in contents:
             self.timestamp = contents["timestamp"]
 
-        self.labels = Labels.loads(contents)
+        self.label = Label.loads(contents)
 
     def _dumps(self) -> Dict[str, Any]:
         contents: Dict[str, Any] = {self._PATH_KEY: self.path}
         if hasattr(self, "timestamp"):
             contents["timestamp"] = self.timestamp
 
-        contents.update(self.labels.dumps())
+        contents.update(self.label.dumps())
         return contents
 
 

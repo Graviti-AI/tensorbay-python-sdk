@@ -48,7 +48,7 @@ def LeedsSportsPose(path: str) -> Dataset:
     image_paths = glob(os.path.join(root_path, "images", "*.jpg"))
     for image_path in image_paths:
         data = Data(image_path)
-        data.labels.keypoints2d = []
+        data.label.keypoints2d = []
         index = int(os.path.basename(image_path)[2:6]) - 1  # get image index from "im0001.jpg"
 
         keypoints = LabeledKeypoints2D()
@@ -57,6 +57,6 @@ def LeedsSportsPose(path: str) -> Dataset:
                 Keypoint2D(keypoint[0], keypoint[1], int(not keypoint[2]))
             )
 
-        data.labels.keypoints2d.append(keypoints)
+        data.label.keypoints2d.append(keypoints)
         segment.append(data)
     return dataset

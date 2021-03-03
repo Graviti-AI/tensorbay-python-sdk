@@ -53,7 +53,7 @@ def KenyanFoodOrNonfood(path: str) -> Dataset:
                 image_path = os.path.join(root_path, image_path)
                 data = Data(image_path.strip())
                 category = image_path.split("/")[1]
-                data.labels.classification = Classification(category)
+                data.label.classification = Classification(category)
                 segment.append(data)
     return dataset
 
@@ -106,6 +106,6 @@ def KenyanFoodType(path: str) -> Dataset:
             label = Classification(category)
             for image_path in image_paths:
                 data = Data(image_path)
-                data.labels.classification = label
+                data.label.classification = label
                 segment.append(data)
     return dataset

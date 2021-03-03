@@ -50,7 +50,7 @@ def KylbergTexture(path: str) -> Dataset:
         for image_path in image_paths:
             data = Data(image_path)
             stem = os.path.splitext(os.path.basename(image_path))[0]
-            data.labels.classification = label_getter(stem)
+            data.label.classification = label_getter(stem)
             segment.append(data)
 
     return dataset

@@ -113,7 +113,7 @@ def _get_data_part1(root_path: str, aniamls: Iterable[str]) -> Iterator[Data]:
                     labels = xmltodict.parse(fp.read())
 
                 box2d = labels["annotation"]["visible_bounds"]
-                data.labels.box2d = [
+                data.label.box2d = [
                     LabeledBox2D(
                         x=float(box2d["@xmin"]),
                         y=float(box2d["@ymin"]),
@@ -130,7 +130,7 @@ def _get_data_part1(root_path: str, aniamls: Iterable[str]) -> Iterator[Data]:
                         float(keypoint["@y"]),
                         int(keypoint["@visible"]),
                     )
-                data.labels.keypoints2d = [LabeledKeypoints2D(keypoints2d, category=animal)]
+                data.label.keypoints2d = [LabeledKeypoints2D(keypoints2d, category=animal)]
 
             yield data
 
@@ -153,7 +153,7 @@ def _get_data_part2(root_path: str, aniamls: Iterable[str]) -> Iterator[Data]:
                 labels = xmltodict.parse(fp.read())
 
             box2d = labels["annotation"]["visible_bounds"]
-            data.labels.box2d = [
+            data.label.box2d = [
                 LabeledBox2D(
                     x=float(box2d["@xmin"]),
                     y=float(box2d["@xmax"]),  # xmax means ymin in the annotation
@@ -170,7 +170,7 @@ def _get_data_part2(root_path: str, aniamls: Iterable[str]) -> Iterator[Data]:
                         float(keypoint["@x"]), float(keypoint["@y"]), int(keypoint["@visible"])
                     )
                 )
-            data.labels.keypoints2d = [keypoints2d]
+            data.label.keypoints2d = [keypoints2d]
             yield data
 
 
@@ -212,11 +212,11 @@ def AnimalPose7(path: str) -> Dataset:
         for image_name, box2ds in annotations.items():
             image_path = os.path.join(root_path, "bndbox_image", animal, image_name)
             data = Data(image_path, target_remote_path=f"{animal}/{image_name}")
-            data.labels.box2d = []
+            data.label.box2d = []
 
             for box2d in box2ds:
                 coordinates = box2d["bndbox"]
-                data.labels.box2d.append(
+                data.label.box2d.append(
                     LabeledBox2D(
                         float(coordinates["xmin"]),
                         float(coordinates["ymin"]),

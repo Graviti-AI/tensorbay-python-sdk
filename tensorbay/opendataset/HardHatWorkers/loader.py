@@ -43,7 +43,7 @@ def HardHatWorkers(path: str) -> Dataset:
     for image_path in image_paths:
         data = Data(image_path)
         file_name = os.path.splitext(os.path.basename(image_path))[0]
-        data.labels.box2d = _load_labels(os.path.join(path, "annotations", file_name + ".xml"))
+        data.label.box2d = _load_labels(os.path.join(path, "annotations", file_name + ".xml"))
         segment.append(data)
     return dataset
 

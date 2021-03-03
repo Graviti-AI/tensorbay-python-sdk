@@ -102,7 +102,7 @@ You can get one by index.
 
 .. code:: python
 
-    >>> label_box2d = data.labels.box2d[0]
+    >>> label_box2d = data.label.box2d[0]
     >>> label_box2d
     LabeledBox2D(612, 354.75, 615.5, 360.375)(
       (category): 'RedLeft',

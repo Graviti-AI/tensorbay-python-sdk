@@ -45,7 +45,7 @@ def CarConnection(path: str) -> Dataset:
         data = Data(image_path)
         basename = os.path.basename(image_path)
         label = _extract_label_from_basename(keys, basename)
-        data.labels.classification = label
+        data.label.classification = label
         segment.append(data)
 
     return dataset

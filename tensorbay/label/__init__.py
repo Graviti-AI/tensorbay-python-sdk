@@ -9,7 +9,6 @@ from .attributes import AttributeInfo, Items
 from .catalog import Catalog
 from .label import (
     Classification,
-    Label,
     LabeledBox2D,
     LabeledBox3D,
     LabeledKeypoints2D,
@@ -45,7 +44,6 @@ __all__ = [
     "Polygon2DSubcatalog",
     "Polyline2DSubcatalog",
     "Subcatalogs",
-    "Label",
     "Catalog",
     "LabelType",
     "LabeledBox2D",

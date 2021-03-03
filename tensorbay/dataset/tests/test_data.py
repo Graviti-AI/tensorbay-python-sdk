@@ -8,7 +8,7 @@
 import pytest
 
 from ...label import Classification
-from ..data import Data, Labels, RemoteData
+from ..data import Data, Label, RemoteData
 
 _LABEL_DATA = [
     {"CLASSIFICATION": {"category": "test_categoty", "attributes": {"test_attribute1": "a"}}},
@@ -70,11 +70,11 @@ _DATA = {"localPath": "test.json", "timestamp": 1614667532}
 _REMOTE_DATA = {"remotePath": "test.json", "timestamp": 1614667532}
 
 
-class TestLabels:
+class TestLabel:
     """Test Labels class."""
 
     def test_bool(self) -> None:
-        labels = Labels()
+        labels = Label()
         assert bool(labels) == False
 
         labels.classification = Classification()
@@ -82,7 +82,7 @@ class TestLabels:
 
     @pytest.mark.parametrize("loads", _LABEL_DATA)
     def test_loads_dumps(self, loads) -> None:
-        labels = Labels.loads(loads)
+        labels = Label.loads(loads)
         assert labels.dumps() == loads
 
 

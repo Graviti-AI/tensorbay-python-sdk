@@ -74,7 +74,7 @@ def BSTLD(path: str) -> Dataset:
                 # ./rgb/additional/2015-10-05-10-52-01_bag/<image_name>.png
                 file_path = os.path.join(root_path, *label["path"][2:].split("/"))
             data = Data(file_path)
-            data.labels.box2d = [
+            data.label.box2d = [
                 LabeledBox2D(
                     box["x_min"],
                     box["y_min"],

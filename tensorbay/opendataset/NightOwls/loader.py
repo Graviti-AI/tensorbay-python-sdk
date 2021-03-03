@@ -89,7 +89,7 @@ def _load_labels(root_path: str, labels_filename: Optional[str]) -> Dict[str, An
 
 def _generate_data(image_path: str, labels: Dict[str, Any]) -> Data:
     data = Data(image_path)
-    data.labels.box2d = []
+    data.label.box2d = []
 
     image_id = labels["image_name_id_map"][os.path.basename(image_path)]
     image_annotations_map = labels["image_annotations_map"]
@@ -111,7 +111,7 @@ def _generate_data(image_path: str, labels: Dict[str, Any]) -> Data:
             "truncated": annotation["truncated"],
         }
 
-        data.labels.box2d.append(
+        data.label.box2d.append(
             LabeledBox2D(
                 x=x_top,
                 y=y_top,

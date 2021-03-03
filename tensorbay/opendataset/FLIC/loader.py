@@ -73,13 +73,13 @@ def _get_data(path: str, annotations: Any, flag: bool) -> Iterator[Tuple[Data, s
 
         if filepath not in filepath_to_data:
             data = Data(os.path.join(path, "images", filepath))
-            data.labels.keypoints2d = [keypoints]
-            data.labels.box2d = [box2d]
+            data.label.keypoints2d = [keypoints]
+            data.label.box2d = [box2d]
             attribute = {"currframe": int(annotation["currframe"][0][0])}
 
             if flag:
                 attribute["isunchecked"] = bool(annotation["isunchecked"])
-            data.labels.classification = Classification(
+            data.label.classification = Classification(
                 category=annotation["moviename"][0], attributes=attribute
             )
             filepath_to_data[filepath] = data
@@ -94,5 +94,5 @@ def _get_data(path: str, annotations: Any, flag: bool) -> Iterator[Tuple[Data, s
 
         else:
             image_data = filepath_to_data[filepath]
-            image_data.labels.keypoints2d.append(keypoints)
-            image_data.labels.box2d.append(box2d)
+            image_data.label.keypoints2d.append(keypoints)
+            image_data.label.box2d.append(box2d)

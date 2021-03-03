@@ -45,7 +45,7 @@ def Elpv(path: str) -> Dataset:
             dirname, basename = image_name.split("/")
             image_path = os.path.join(root_path, dirname, basename)
             data = Data(image_path)
-            data.labels.classification = Classification(
+            data.label.classification = Classification(
                 attributes={"defect probability": float(attributes)}, category=category
             )
             segment.append(data)

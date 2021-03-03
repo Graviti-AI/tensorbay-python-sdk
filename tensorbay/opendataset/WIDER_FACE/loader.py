@@ -114,21 +114,21 @@ def _load_data(path: str, attribute_map: _ATTRIBUTE_MAP_TYPE, segment_name: str)
             data = Data(
                 os.path.join(root_path, f"WIDER_{segment_name}", "images", event, file_name)
             )
-            data.labels.classification = Classification(category)
+            data.label.classification = Classification(category)
             if not is_test:
                 label_num = int(fp.readline())
 
                 # when the label num is 0, a line of "0 0 0 0 0 0 0 0 0 0" also given
                 if label_num == 0:
                     fp.readline()
-                data.labels.box2d = []
+                data.label.box2d = []
                 for line in islice(fp, label_num):
                     labels = line.strip().split()
                     attributes = {
                         key: mapping[int(value)]
                         for (key, mapping), value in zip(attribute_map.items(), labels[4:10])
                     }
-                    data.labels.box2d.append(
+                    data.label.box2d.append(
                         LabeledBox2D(
                             x=int(labels[0]),
                             y=int(labels[1]),

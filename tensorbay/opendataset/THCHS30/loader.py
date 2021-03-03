@@ -48,7 +48,7 @@ def THCHS30(path: str) -> Dataset:
         for filename in glob(os.path.join(path, segment_name, "*.wav")):
             data = Data(filename)
             label_file = os.path.join(path, "data", os.path.basename(filename) + ".trn")
-            data.labels.sentence = _get_label(label_file)
+            data.label.sentence = _get_label(label_file)
             segment.append(data)
     return dataset
 
