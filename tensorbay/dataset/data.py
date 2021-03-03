@@ -171,13 +171,15 @@ class DataBase(ReprMixin):  # pylint: disable=too-few-public-methods
                     {
                         "localPath" or "remotePath": <str>,
                         "timestamp": <float>,
-                        "CLASSIFICATION": {...},
-                        "BOX2D": {...},
-                        "BOX3D": {...},
-                        "POLYGON2D": {...},
-                        "POLYLINE2D": {...},
-                        "KEYPOINTS2D": {...},
-                        "SENTENCE": {...},
+                        "label": {
+                            "CLASSIFICATION": {...},
+                            "BOX2D": {...},
+                            "BOX3D": {...},
+                            "POLYGON2D": {...},
+                            "POLYLINE2D": {...},
+                            "KEYPOINTS2D": {...},
+                            "SENTENCE": {...}
+                        }
                     }
 
         Returns:
@@ -192,14 +194,16 @@ class DataBase(ReprMixin):  # pylint: disable=too-few-public-methods
         if "timestamp" in contents:
             self.timestamp = contents["timestamp"]
 
-        self.label = Label.loads(contents)
+        self.label = Label.loads(contents["label"])
 
     def _dumps(self) -> Dict[str, Any]:
         contents: Dict[str, Any] = {self._PATH_KEY: self.path}
+
         if hasattr(self, "timestamp"):
             contents["timestamp"] = self.timestamp
 
-        contents.update(self.label.dumps())
+        contents["label"] = self.label.dumps()
+
         return contents
 
 
@@ -278,13 +282,15 @@ class Data(DataBase):
                     {
                         "localPath": <str>,
                         "timestamp": <float>,
-                        "CLASSIFICATION": {...},
-                        "BOX2D": {...},
-                        "BOX3D": {...},
-                        "POLYGON2D": {...},
-                        "POLYLINE2D": {...},
-                        "KEYPOINTS2D": {...},
-                        "SENTENCE": {...},
+                        "label": {
+                            "CLASSIFICATION": {...},
+                            "BOX2D": {...},
+                            "BOX3D": {...},
+                            "POLYGON2D": {...},
+                            "POLYLINE2D": {...},
+                            "KEYPOINTS2D": {...},
+                            "SENTENCE": {...}
+                        }
                     }
 
         Returns:
@@ -302,13 +308,15 @@ class Data(DataBase):
                     {
                         "localPath": <str>,
                         "timestamp": <float>,
-                        "CLASSIFICATION": {...},
-                        "BOX2D": {...},
-                        "BOX3D": {...},
-                        "POLYGON2D": {...},
-                        "POLYLINE2D": {...},
-                        "KEYPOINTS2D": {...},
-                        "SENTENCE": {...},
+                        "label": {
+                            "CLASSIFICATION": {...},
+                            "BOX2D": {...},
+                            "BOX3D": {...},
+                            "POLYGON2D": {...},
+                            "POLYLINE2D": {...},
+                            "KEYPOINTS2D": {...},
+                            "SENTENCE": {...}
+                        }
                     }
 
         """
@@ -386,13 +394,15 @@ class RemoteData(DataBase):
                     {
                         "remotePath": <str>,
                         "timestamp": <float>,
-                        "CLASSIFICATION": {...},
-                        "BOX2D": {...},
-                        "BOX3D": {...},
-                        "POLYGON2D": {...},
-                        "POLYLINE2D": {...},
-                        "KEYPOINTS2D": {...},
-                        "SENTENCE": {...},
+                        "label": {
+                            "CLASSIFICATION": {...},
+                            "BOX2D": {...},
+                            "BOX3D": {...},
+                            "POLYGON2D": {...},
+                            "POLYLINE2D": {...},
+                            "KEYPOINTS2D": {...},
+                            "SENTENCE": {...}
+                        }
                     }
 
         Returns:
@@ -410,13 +420,15 @@ class RemoteData(DataBase):
                     {
                         "remotePath": <str>,
                         "timestamp": <float>,
-                        "CLASSIFICATION": {...},
-                        "BOX2D": {...},
-                        "BOX3D": {...},
-                        "POLYGON2D": {...},
-                        "POLYLINE2D": {...},
-                        "KEYPOINTS2D": {...},
-                        "SENTENCE": {...},
+                        "label": {
+                            "CLASSIFICATION": {...},
+                            "BOX2D": {...},
+                            "BOX3D": {...},
+                            "POLYGON2D": {...},
+                            "POLYLINE2D": {...},
+                            "KEYPOINTS2D": {...},
+                            "SENTENCE": {...}
+                        }
                     }
 
         """

@@ -358,10 +358,9 @@ class SegmentClient(SegmentClientBase):
             Required Data object.
 
         """
-        for labels in self._list_labels(start=start, stop=stop):
-            remote_path = labels["remotePath"]
-            data = RemoteData(remote_path, url_getter=self._get_url)
-            data.label._loads(labels["label"])  # pylint: disable=protected-access
+        for data_content in self._list_labels(start=start, stop=stop):
+            data = RemoteData.loads(data_content)
+            data._url_getter = self._get_url  # pylint: disable=protected-access
             yield data
 
 
@@ -517,16 +516,12 @@ class FusionSegmentClient(SegmentClientBase):
             Required :class:`~tensorbay.dataset.frame.Frame`.
 
         """
-        for labels in self._list_labels(start=start, stop=stop):
-            frame_index = labels["frameIndex"]
-            frame_id = labels["frameId"]
+        for frame_content in self._list_labels(start=start, stop=stop):
+            frame_index = frame_content["frameIndex"]
+            frame_id = frame_content["frameId"]
             frame = Frame(frame_index, frame_id)
-            for data_info in labels["frame"]:
-                sensor_name = data_info["sensorName"]
-                remote_path = data_info["remotePath"]
-                data = RemoteData(
-                    remote_path, timestamp=data_info["timestamp"], url_getter=self._get_url
-                )
-                data.label._loads(data_info["label"])  # pylint: disable=protected-access
-                frame[sensor_name] = data
+            for data_content in frame_content["frame"]:
+                data = RemoteData.loads(data_content)
+                data._url_getter = self._get_url  # pylint: disable=protected-access
+                frame[data_content["sensorName"]] = data
             yield frame
