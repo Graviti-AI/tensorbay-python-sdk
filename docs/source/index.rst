@@ -17,36 +17,56 @@
  What is TensorBay?
 ####################
 
-As an expert in unstructured data management, TensorBay provides services like data hosting, complex
-data version management, online data visualization, and data collaboration. TensorBay's unified
-authority management makes your data sharing and collaborative use more secure. You can integrate
-data and work with TensorBay through TensorBaySDK. CLI is also available.
+As an expert in unstructured data management, `TensorBay`_ provides services like data hosting,
+complex data version management, online data visualization, and data collaboration.
+TensorBay's unified authority management makes your data sharing and collaborative use more secure.
+This documentation describes :ref:`SDK <quick_start:Quick Start>` and
+:ref:`CLI <features/tensor_cli:Tensorbay CLI>` tools for using TensorBay.
 
-###########################
- What can TensorBaySDK do?
-###########################
+.. _TensorBay: https://www.graviti.cn/
 
--  TensorBay supports methods to :ref:`quick_start:Read Dataset from TensorBay`.
--  TensorBay supports methods to :ref:`quick_start:Read Dataset from Local`.
--  TensorBay supports methods to :ref:`quick_start:Upload Local Dataset to TensorBay`.
--  Please visit our `Official Website`_ for more features.
 
-.. _official website: https://www.graviti.cn/
+############################
+ What can TensorBay SDK do? 
+############################
+
+.. #image:: images/read_pipeline.png
+
+TensorBay SDK supports methods to:
+
+- :ref:`create dataset from local <quick_start:Create Dataset from Local>`
+- :ref:`upload dataset to TensorBay <quick_start:Upload Local Dataset to TensorBay>`
+- :ref:`read dataset from TensorBay <quick_start:Read Dataset from TensorBay>`
+- :ref:`manage dataset versions <features/version_control:Version Control>`
+
+.. ############################
+..  What can TensorBay CLI do? 
+.. ############################
+
+You can also use TensorBay CLI to operate your datasets.
+See :ref:`this page <features/tensorbay_cli:TensorBay CLI>` for more details.
+
+
+##########
+ Contents
+##########
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents
 
    quick_start
    basic_concepts
    supported_label_types
    features
    examples
-   advanced_features
-   contribution
    tensorbay_sdk_api
-   exception
 
+..
+   advanced_features
+..
+   contribution
+..
+   exception
 ..
    Indices and tables
 
