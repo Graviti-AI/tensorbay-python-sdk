@@ -138,7 +138,6 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
         *,
         translation: Optional[Iterable[float]] = None,
         rotation: Quaternion.ArgsType = None,
-        contents: Optional[Dict[str, Dict[str, float]]] = None,
         **kwargs: Quaternion.KwargsType,
     ) -> None:
         """Set the extrinsics of the sensor.
@@ -148,14 +147,9 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
             translation: Translation parameters.
             rotation: Rotation in a sequence of [w, x, y, z] or 3x3 rotation matrix
                 or ``Quaternion``.
-            contents: A dict containing the translation and the rotation.
             **kwargs: Other parameters to initialize rotation.
 
         """
-        if contents:
-            self.extrinsics = Transform3D.loads(contents)
-            return
-
         self.extrinsics = Transform3D(
             transform, translation=translation, rotation=rotation, **kwargs
         )
