@@ -194,27 +194,6 @@ class Client:
         self.session = UserSession()
         self._open_api = urljoin(self.gateway_url, "tensorbay-open-api/v1/")
 
-    def _url_make(self, section: str, dataset_id: str = "") -> str:
-        """Generate Open API URL.
-
-        Arguments:
-            section: The section of the request.
-            dataset_id: Dataset ID.
-
-        Returns:
-             Open API URL.
-
-        """
-        if dataset_id:
-            dataset_url = urljoin(self._open_api, "datasets/")
-            if section:
-                url = urljoin(urljoin(dataset_url, dataset_id + "/"), section)
-            else:
-                url = urljoin(dataset_url, dataset_id)
-        else:
-            url = urljoin(self._open_api, "datasets")
-        return url
-
     def open_api_do(
         self, method: str, section: str, dataset_id: str = "", **kwargs: Any
     ) -> Response:
@@ -247,6 +226,27 @@ class Client:
 
         """
         return self.session.request(method=method, url=url, **kwargs)
+
+    def _url_make(self, section: str, dataset_id: str = "") -> str:
+        """Generate Open API URL.
+
+        Arguments:
+            section: The section of the request.
+            dataset_id: Dataset ID.
+
+        Returns:
+             Open API URL.
+
+        """
+        if dataset_id:
+            dataset_url = urljoin(self._open_api, "datasets/")
+            if section:
+                url = urljoin(urljoin(dataset_url, dataset_id + "/"), section)
+            else:
+                url = urljoin(dataset_url, dataset_id)
+        else:
+            url = urljoin(self._open_api, "datasets")
+        return url
 
 
 _T = TypeVar("_T")
