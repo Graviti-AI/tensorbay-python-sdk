@@ -394,7 +394,7 @@ def _ls_segment(gas: GAS, info: TBRN, list_all_files: bool) -> None:
 
 
 def _ls_frame(gas: GAS, info: TBRN, list_all_files: bool) -> None:
-    dataset = gas.get_fusion_dataset(info.dataset_name)
+    dataset = gas.get_dataset(info.dataset_name, is_fusion=True)
     fusion_segment = dataset.get_segment(info.segment_name)
 
     try:
@@ -426,7 +426,7 @@ def _ls_sensor(
     info: TBRN,
     list_all_files: bool,  # pylint: disable=unused-argument
 ) -> None:
-    dataset = gas.get_fusion_dataset(info.dataset_name)
+    dataset = gas.get_dataset(info.dataset_name, is_fusion=True)
     fusion_segment = dataset.get_segment(info.segment_name)
     try:
         frame = next(
@@ -453,7 +453,7 @@ def _ls_fusion_file(
     info: TBRN,
     list_all_files: bool,  # pylint: disable=unused-argument
 ) -> None:
-    dataset = gas.get_fusion_dataset(info.dataset_name)
+    dataset = gas.get_dataset(info.dataset_name, is_fusion=True)
     fusion_segment = dataset.get_segment(info.segment_name)
     try:
         frame = next(
