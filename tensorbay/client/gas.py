@@ -44,32 +44,56 @@ class GAS:
         self._client = Client(access_key, url)
 
     @overload
-    def _create_dataset(
+    def create_dataset(
         self,
         name: str,
+        is_fusion: Literal[False],
         is_continuous: bool,
         region: Optional[str],
-        is_fusion: Literal[False],
     ) -> DatasetClient:
         ...
 
     @overload
-    def _create_dataset(
+    def create_dataset(
         self,
         name: str,
+        is_fusion: Literal[True],
         is_continuous: bool,
         region: Optional[str],
-        is_fusion: Literal[True],
     ) -> FusionDatasetClient:
         ...
 
-    def _create_dataset(
+    @overload
+    def create_dataset(
         self,
         name: str,
-        is_continuous: bool,
-        region: Optional[str],
-        is_fusion: bool,
+        is_fusion: bool = False,
+        is_continuous: bool = False,
+        region: Optional[str] = None,
     ) -> DatasetClientType:
+        ...
+
+    def create_dataset(
+        self,
+        name: str,
+        is_fusion: bool = False,
+        is_continuous: bool = False,
+        region: Optional[str] = None,  # beijing, hangzhou, shanghai
+    ) -> DatasetClientType:
+        """Create a TensorBay dataset with given name.
+
+        Arguments:
+            name: Name of the dataset, unique for a user.
+            is_fusion: Whether dataset is fusion, True for fusion dataset.
+            is_continuous: Whether the data in dataset is continuous.
+            region: Region of the dataset to be stored,
+                only support "beijing", "hangzhou", "shanghai", default is "shanghai".
+
+        Returns:
+            The created :class:`~tensorbay.client.dataset.DatasetClient` or
+                :class:`~tensorbay.client.dataset.FusionDatasetClient`(if is_fusion=True)
+
+        """
         post_data = {
             "name": name,
             "type": int(is_fusion),  # normal dataset: 0, fusion dataset: 1
@@ -82,88 +106,36 @@ class GAS:
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
         return ReturnType(name, response.json()["id"], self._client)
 
-    def create_dataset(
-        self,
-        name: str,
-        is_continuous: bool = False,
-        region: Optional[str] = None,  # beijing, hangzhou, shanghai
-    ) -> DatasetClient:
-        """Create a :class:`~tensorbay.client.dataset.DatasetClient` with given name.
-
-        Arguments:
-            name: Name of the dataset, unique for a user.
-            is_continuous: Whether the data in dataset is continuous,
-            region: Region of the dataset to be stored,
-                only support "beijing", "hangzhou", "shanghai", default is "shanghai".
-
-        Returns:
-            The created :class:`~tensorbay.client.dataset.DatasetClient`.
-
-        """
-        return self._create_dataset(name, is_continuous, region, False)
-
-    def create_fusion_dataset(
-        self,
-        name: str,
-        is_continuous: bool = False,
-        region: Optional[str] = None,  # beijing, hangzhou, shanghai
-    ) -> FusionDatasetClient:
-        """Create a :class:`~tensorbay.client.dataset.FusionDatasetClient` with given name.
-
-        Arguments:
-            name: Name of the fusion dataset, unique for a user.
-            is_continuous: Whether the data in dataset is continuous,
-            region: Region of the fusion dataset to be stored,
-                only support "beijing", "hangzhou", "shanghai", default is "shanghai".
-
-        Returns:
-            The created :class:`~tensorbay.client.dataset.FusionDatasetClient`.
-
-        """
-        return self._create_dataset(name, is_continuous, region, True)
-
     def _get_dataset(self, name: str, commit_id: Optional[str] = None) -> DatasetClientType:
         dataset_id, is_fusion = self._get_dataset_id_and_type(name)
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
         return ReturnType(name, dataset_id, self._client, commit_id)
 
-    def get_dataset(self, name: str, commit_id: Optional[str] = None) -> DatasetClient:
-        """Get a :class:`~tensorbay.client.dataset.DatasetClient` with given name and commit ID.
+    def get_dataset(
+        self, name: str, is_fusion: bool = False, commit_id: Optional[str] = None
+    ) -> DatasetClientType:
+        """Get a TensorBay dataset with given name and commit ID.
 
         Arguments:
             name: The name of the requested dataset.
+            is_fusion: Whether dataset is fusion, True for fusion dataset.
             commit_id: The dataset commit ID.
 
         Returns:
-            The requested :class:`~tensorbay.client.dataset.DatasetClient`.
+            The requested :class:`~tensorbay.client.dataset.DatasetClient` or
+                :class:`~tensorbay.client.dataset.FusionDatasetClient`(if is_fusion=True)
 
         Raises:
             GASDatasetTypeError: When the requested dataset is a fusion dataset.
 
         """
         client = self._get_dataset(name, commit_id)
-        if not isinstance(client, DatasetClient):
-            raise GASDatasetTypeError(name, True)
-
-        return client
-
-    def get_fusion_dataset(self, name: str, commit_id: Optional[str] = None) -> FusionDatasetClient:
-        """Get the TensorBay fusion dataset with given name and commit ID.
-
-        Arguments:
-            name: The name of the required :class:`~tensorbay.client.dataset.FusionDatasetClient`.
-            commit_id: The dataset commit ID.
-
-        Returns:
-            The :class:`~tensorbay.client.dataset.FusionDatasetClient`.
-
-        Raises:
-            GASDatasetTypeError: When the requested dataset is not a fusion dataset.
-
-        """
-        client = self._get_dataset(name, commit_id)
-        if not isinstance(client, FusionDatasetClient):
-            raise GASDatasetTypeError(name, False)
+        if not is_fusion:
+            if not isinstance(client, DatasetClient):
+                raise GASDatasetTypeError(name, True)
+        else:
+            if not isinstance(client, FusionDatasetClient):
+                raise GASDatasetTypeError(name, False)
 
         return client
 
@@ -300,9 +272,9 @@ class GAS:
 
         """
         if isinstance(dataset, FusionDataset):
-            dataset_client = self.get_fusion_dataset(dataset.name)
+            dataset_client = self.get_dataset(dataset.name, is_fusion=True)
         else:
-            dataset_client = self.get_dataset(dataset.name)  # type: ignore[assignment]
+            dataset_client = self.get_dataset(dataset.name)
 
         if dataset.catalog:
             dataset_client.upload_catalog(dataset.catalog)
