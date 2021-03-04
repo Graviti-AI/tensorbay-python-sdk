@@ -51,8 +51,9 @@ class Box2D(UserSequence[float]):
 
     """
 
-    _repr_type = ReprType.INSTANCE
     _T = TypeVar("_T", bound="Box2D")
+
+    _repr_type = ReprType.INSTANCE
 
     _LENGTH = 4
 
@@ -93,6 +94,61 @@ class Box2D(UserSequence[float]):
         else:
             self._data = (xmin, ymin, xmax, ymax)
 
+    def __len__(self) -> int:
+        return Box2D._LENGTH
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, self.__class__):
+            return self._data.__eq__(other._data)
+        return False
+
+    def __and__(self, other: "Box2D") -> "Box2D":
+        """Calculate the intersect box of two boxes.
+
+        Arguments:
+            other: The other box.
+
+        Returns:
+            The intersect box of the two boxes.
+
+        """
+        xmin = max(self._data[0], other._data[0])
+        ymin = max(self._data[1], other._data[1])
+        xmax = min(self._data[2], other._data[2])
+        ymax = min(self._data[3], other._data[3])
+        return Box2D(xmin, ymin, xmax, ymax)
+
+    def _loads(self, contents: Dict[str, float]) -> None:
+        self._data = (contents["xmin"], contents["ymin"], contents["xmax"], contents["ymax"])
+
+    def _repr_head(self) -> str:
+        """Return basic information of the Box2D.
+
+        Returns:
+            Basic information of the Box2D.
+
+        """
+        return f"{self.__class__.__name__}{self._data}"
+
+    @staticmethod
+    def iou(box1: "Box2D", box2: "Box2D") -> float:
+        """Calculate the intersection over union of two 2D boxes.
+
+        Arguments:
+            box1: A 2D box.
+            box2: A 2D box.
+
+        Returns:
+            The intersection over union between the two input boxes.
+
+        """
+        area1 = box1.area()
+        area2 = box2.area()
+        intersect_box = box1 & box2
+        intersect = intersect_box.area()
+        union = area1 + area2 - intersect
+        return intersect / union
+
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
         """Load a :class:`Box2D` from a dict containing coordinates of the 2D box.
@@ -112,56 +168,6 @@ class Box2D(UserSequence[float]):
 
         """
         return common_loads(cls, contents)
-
-    def _loads(self, contents: Dict[str, float]) -> None:
-        self._data = (contents["xmin"], contents["ymin"], contents["xmax"], contents["ymax"])
-
-    def _repr_head(self) -> str:
-        """Return basic information of the Box2D.
-
-        Returns:
-            Basic information of the Box2D.
-
-        """
-        return f"{self.__class__.__name__}{self._data}"
-
-    def dumps(self) -> Dict[str, float]:
-        """Dumps a 2D box into a dict.
-
-        Returns:
-            A dict containing vertex coordinates of the box.
-
-        """
-        return {
-            "xmin": self._data[0],
-            "ymin": self._data[1],
-            "xmax": self._data[2],
-            "ymax": self._data[3],
-        }
-
-    def __and__(self, other: "Box2D") -> "Box2D":
-        """Calculate the intersect box of two boxes.
-
-        Arguments:
-            other: The other box.
-
-        Returns:
-            The intersect box of the two boxes.
-
-        """
-        xmin = max(self._data[0], other._data[0])
-        ymin = max(self._data[1], other._data[1])
-        xmax = min(self._data[2], other._data[2])
-        ymax = min(self._data[3], other._data[3])
-        return Box2D(xmin, ymin, xmax, ymax)
-
-    def __len__(self) -> int:
-        return Box2D._LENGTH
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, self.__class__):
-            return self._data.__eq__(other._data)
-        return False
 
     @property
     def xmin(self) -> float:
@@ -243,6 +249,20 @@ class Box2D(UserSequence[float]):
         """
         return self._data[3] - self._data[1]
 
+    def dumps(self) -> Dict[str, float]:
+        """Dumps a 2D box into a dict.
+
+        Returns:
+            A dict containing vertex coordinates of the box.
+
+        """
+        return {
+            "xmin": self._data[0],
+            "ymin": self._data[1],
+            "xmax": self._data[2],
+            "ymax": self._data[3],
+        }
+
     def area(self) -> float:
         """Return the area of the 2D box.
 
@@ -251,25 +271,6 @@ class Box2D(UserSequence[float]):
 
         """
         return self.width * self.height
-
-    @staticmethod
-    def iou(box1: "Box2D", box2: "Box2D") -> float:
-        """Calculate the intersection over union of two 2D boxes.
-
-        Arguments:
-            box1: A 2D box.
-            box2: A 2D box.
-
-        Returns:
-            The intersection over union between the two input boxes.
-
-        """
-        area1 = box1.area()
-        area2 = box2.area()
-        intersect_box = box1 & box2
-        intersect = intersect_box.area()
-        union = area1 + area2 - intersect
-        return intersect / union
 
 
 class Box3D(ReprMixin):
@@ -308,6 +309,44 @@ class Box3D(ReprMixin):
         )
         self._size = Vector3D(size)
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, self.__class__):
+            return self._size.__eq__(other._size) and self._transform.__eq__(other._transform)
+        return False
+
+    def __rmul__(self: _T, other: Transform3D) -> _T:
+        if isinstance(other, Transform3D):
+            box: _T = object.__new__(self.__class__)
+            box._transform = other * self._transform
+            box._size = self._size
+            return box
+
+        return NotImplemented  # type: ignore[unreachable]
+
+    @staticmethod
+    def _line_intersect(length1: float, length2: float, midpoint_distance: float) -> float:
+        """Calculate the intersect length between two parallel lines.
+
+        Arguments:
+            length1: The length of line1.
+            length2: the length of line2.
+            midpoint_distance: The distance between midpoints of the two lines.
+
+        Returns:
+            The intersect length between line1 and line2.
+
+        """
+        line1_min = -length1 / 2
+        line1_max = length1 / 2
+        line2_min = -length2 / 2 + midpoint_distance
+        line2_max = length2 / 2 + midpoint_distance
+        intersect_length = min(line1_max, line2_max) - max(line1_min, line2_min)
+        return intersect_length if intersect_length > 0 else 0
+
+    def _loads(self, contents: Dict[str, Dict[str, float]]) -> None:
+        self._size = Vector3D.loads(contents["size"])
+        self._transform = Transform3D.loads(contents)
+
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Dict[str, float]]) -> _T:
         """Load a :class:`Box3D` from a dict containing the coordinates of the 3D box.
@@ -340,34 +379,30 @@ class Box3D(ReprMixin):
         """
         return common_loads(cls, contents)
 
-    def _loads(self, contents: Dict[str, Dict[str, float]]) -> None:
-        self._size = Vector3D.loads(contents["size"])
-        self._transform = Transform3D.loads(contents)
+    @classmethod
+    def iou(cls, box1: "Box3D", box2: "Box3D", angle_threshold: float = 5) -> float:
+        """Calculate the intersection over union between two 3D boxes.
 
-    def dumps(self) -> Dict[str, Dict[str, float]]:
-        """Dumps the 3D box into a dict.
+        Arguments:
+            box1: A 3D box.
+            box2: A 3D box.
+            angle_threshold: The threshold of the relative angles
+                between two input 3d boxes in degree.
 
         Returns:
-            A dict containing translation, rotation and size information.
+            The intersection over union of the two 3D boxes.
 
         """
-        contents = self._transform.dumps()
-        contents["size"] = self.size.dumps()
-        return contents
+        box2 = box1.transform.inverse() * box2
+        if abs(box2.rotation.degrees) > angle_threshold:
+            return 0
 
-    def __rmul__(self: _T, other: Transform3D) -> _T:
-        if isinstance(other, Transform3D):
-            box: _T = object.__new__(self.__class__)
-            box._transform = other * self._transform
-            box._size = self._size
-            return box
-
-        return NotImplemented  # type: ignore[unreachable]
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, self.__class__):
-            return self._size.__eq__(other._size) and self._transform.__eq__(other._transform)
-        return False
+        intersect_size = [
+            cls._line_intersect(*args) for args in zip(box1.size, box2.size, box2.translation)
+        ]
+        intersect = intersect_size[0] * intersect_size[1] * intersect_size[2]
+        union = box1.volume() + box2.volume() - intersect
+        return intersect / union
 
     @property
     def translation(self) -> Vector3D:
@@ -418,47 +453,13 @@ class Box3D(ReprMixin):
         """
         return self.size.x * self.size.y * self.size.z
 
-    @classmethod
-    def iou(cls, box1: "Box3D", box2: "Box3D", angle_threshold: float = 5) -> float:
-        """Calculate the intersection over union between two 3D boxes.
-
-        Arguments:
-            box1: A 3D box.
-            box2: A 3D box.
-            angle_threshold: The threshold of the relative angles
-                between two input 3d boxes in degree.
+    def dumps(self) -> Dict[str, Dict[str, float]]:
+        """Dumps the 3D box into a dict.
 
         Returns:
-            The intersection over union of the two 3D boxes.
+            A dict containing translation, rotation and size information.
 
         """
-        box2 = box1.transform.inverse() * box2
-        if abs(box2.rotation.degrees) > angle_threshold:
-            return 0
-
-        intersect_size = [
-            cls._line_intersect(*args) for args in zip(box1.size, box2.size, box2.translation)
-        ]
-        intersect = intersect_size[0] * intersect_size[1] * intersect_size[2]
-        union = box1.volume() + box2.volume() - intersect
-        return intersect / union
-
-    @staticmethod
-    def _line_intersect(length1: float, length2: float, midpoint_distance: float) -> float:
-        """Calculate the intersect length between two parallel lines.
-
-        Arguments:
-            length1: The length of line1.
-            length2: the length of line2.
-            midpoint_distance: The distance between midpoints of the two lines.
-
-        Returns:
-            The intersect length between line1 and line2.
-
-        """
-        line1_min = -length1 / 2
-        line1_max = length1 / 2
-        line2_min = -length2 / 2 + midpoint_distance
-        line2_max = length2 / 2 + midpoint_distance
-        intersect_length = min(line1_max, line2_max) - max(line1_min, line2_min)
-        return intersect_length if intersect_length > 0 else 0
+        contents = self._transform.dumps()
+        contents["size"] = self.size.dumps()
+        return contents

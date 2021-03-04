@@ -93,6 +93,23 @@ class Keypoint2D(Vector2D):
         obj._data = data
         return obj
 
+    def __neg__(self) -> Vector2D:  # type: ignore[override]
+        result: Vector2D = object.__new__(Vector2D)
+        result._data = tuple(-coordinate for coordinate in self._data[: self._DIMENSION])
+        return result
+
+    def __add__(self, other: Sequence[float]) -> Vector2D:  # type: ignore[override]
+        # Result of adding Keypoint2D with another sequence should be a Vector2D.
+        # Add function of Vector2D should also add support for adding with a Keypoint2D.
+        # Will be implemented in the future.
+        return NotImplemented
+
+    def _loads(self: _T, contents: Dict[str, float]) -> None:
+        if "v" in contents:
+            self._data = (contents["x"], contents["y"], contents["v"])
+        else:
+            self._data = (contents["x"], contents["y"])
+
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
         """Load a :class:`Keypoint2D` from a dict containing coordinates of a 2D keypoint.
@@ -112,23 +129,6 @@ class Keypoint2D(Vector2D):
 
         """
         return common_loads(cls, contents)
-
-    def _loads(self: _T, contents: Dict[str, float]) -> None:
-        if "v" in contents:
-            self._data = (contents["x"], contents["y"], contents["v"])
-        else:
-            self._data = (contents["x"], contents["y"])
-
-    def __add__(self, other: Sequence[float]) -> Vector2D:  # type: ignore[override]
-        # Result of adding Keypoint2D with another sequence should be a Vector2D.
-        # Add function of Vector2D should also add support for adding with a Keypoint2D.
-        # Will be implemented in the future.
-        return NotImplemented
-
-    def __neg__(self) -> Vector2D:  # type: ignore[override]
-        result: Vector2D = object.__new__(Vector2D)
-        result._data = tuple(-coordinate for coordinate in self._data[: self._DIMENSION])
-        return result
 
     @property
     def v(self) -> Optional[int]:  # pylint: disable=invalid-name
@@ -163,8 +163,9 @@ class Keypoints2D(PointList2D[Keypoint2D]):
 
     """
 
-    _ElementType = Keypoint2D
     _P = TypeVar("_P", bound="Keypoints2D")
+
+    _ElementType = Keypoint2D
 
     @classmethod
     def loads(cls: Type[_P], contents: List[Dict[str, float]]) -> _P:

@@ -31,8 +31,9 @@ class PointList2D(UserMutableSequence[_T]):
 
     """
 
-    _ElementType: Type[_T]
     _P = TypeVar("_P", bound="PointList2D[_T]")
+
+    _ElementType: Type[_T]
 
     def __init__(
         self,
@@ -44,6 +45,16 @@ class PointList2D(UserMutableSequence[_T]):
 
         for point in points:
             self._data.append(self._ElementType(point))
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, self.__class__):
+            return self._data.__eq__(other._data)
+        return False
+
+    def _loads(self: _P, contents: List[Dict[str, float]]) -> None:
+        self._data = []
+        for point in contents:
+            self._data.append(self._ElementType.loads(point))
 
     @classmethod
     def loads(cls: Type[_P], contents: List[Dict[str, float]]) -> _P:
@@ -66,16 +77,6 @@ class PointList2D(UserMutableSequence[_T]):
 
         """
         return common_loads(cls, contents)
-
-    def _loads(self: _P, contents: List[Dict[str, float]]) -> None:
-        self._data = []
-        for point in contents:
-            self._data.append(self._ElementType.loads(point))
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, self.__class__):
-            return self._data.__eq__(other._data)
-        return False
 
     def dumps(self) -> List[Dict[str, float]]:
         """Dumps a :class:`PointList2D` into a point list.
@@ -119,26 +120,9 @@ class Polygon2D(PointList2D[Vector2D]):
 
     """
 
-    _ElementType = Vector2D
     _P = TypeVar("_P", bound="Polygon2D")
 
-    def area(self) -> float:
-        """Return the area of the polygon.
-
-        The area is positive if the rotating direction of the points is counterclockwise,
-        and negative if clockwise.
-
-        Returns:
-            The area of the polygon.
-
-        """
-        area = 0.0
-        for i in range(len(self._data)):
-            # pylint: disable=invalid-name
-            x1, y1 = self._data[i - 1]
-            x2, y2 = self._data[i]
-            area += x1 * y2 - x2 * y1
-        return area / 2
+    _ElementType = Vector2D
 
     @classmethod
     def loads(cls: Type[_P], contents: List[Dict[str, float]]) -> _P:
@@ -161,3 +145,21 @@ class Polygon2D(PointList2D[Vector2D]):
 
         """
         return common_loads(cls, contents)
+
+    def area(self) -> float:
+        """Return the area of the polygon.
+
+        The area is positive if the rotating direction of the points is counterclockwise,
+        and negative if clockwise.
+
+        Returns:
+            The area of the polygon.
+
+        """
+        area = 0.0
+        for i in range(len(self._data)):
+            # pylint: disable=invalid-name
+            x1, y1 = self._data[i - 1]
+            x2, y2 = self._data[i]
+            area += x1 * y2 - x2 * y1
+        return area / 2

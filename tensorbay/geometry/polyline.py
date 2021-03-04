@@ -30,30 +30,9 @@ class Polyline2D(PointList2D[Vector2D]):
 
     """
 
-    _ElementType = Vector2D
     _P = TypeVar("_P", bound="Polyline2D")
 
-    @classmethod
-    def loads(cls: Type[_P], contents: List[Dict[str, float]]) -> _P:
-        """Load a :class:`Polyline2D` from a list of dict.
-
-        Arguments:
-            contents: A list of dict containing
-                the coordinates of the vertexes of the polyline::
-
-                    [
-                        {
-                            "x": ...
-                            "y": ...
-                        },
-                        ...
-                    ]
-
-        Returns:
-            The loaded :class:`Polyline2D` object.
-
-        """
-        return common_loads(cls, contents)
+    _ElementType = Vector2D
 
     @staticmethod
     def _distance(point1: Sequence[float], point2: Sequence[float]) -> float:
@@ -230,3 +209,25 @@ class Polyline2D(PointList2D[Vector2D]):
                 if distance > max_distance:
                     max_distance = distance
         return 1 - min_distance / max_distance
+
+    @classmethod
+    def loads(cls: Type[_P], contents: List[Dict[str, float]]) -> _P:
+        """Load a :class:`Polyline2D` from a list of dict.
+
+        Arguments:
+            contents: A list of dict containing
+                the coordinates of the vertexes of the polyline::
+
+                    [
+                        {
+                            "x": ...
+                            "y": ...
+                        },
+                        ...
+                    ]
+
+        Returns:
+            The loaded :class:`Polyline2D` object.
+
+        """
+        return common_loads(cls, contents)
