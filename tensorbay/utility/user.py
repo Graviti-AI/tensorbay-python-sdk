@@ -90,9 +90,9 @@ class UserSequence(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancesto
 class UserMutableSequence(MutableSequence[_T], ReprMixin):  # pylint: disable=too-many-ancestors
     """UserMutableSequence is a user-defined wrapper around mutable sequence objects."""
 
-    _repr_type = ReprType.SEQUENCE
-
     _data: MutableSequence[_T]
+
+    _repr_type = ReprType.SEQUENCE
 
     def __len__(self) -> int:
         return self._data.__len__()
@@ -187,9 +187,9 @@ class UserMutableSequence(MutableSequence[_T], ReprMixin):  # pylint: disable=to
 class UserMapping(Mapping[_K, _V], ReprMixin):  # pylint: disable=too-many-ancestors
     """UserMapping is a user-defined wrapper around mapping objects."""
 
-    _repr_type = ReprType.MAPPING
-
     _data: Mapping[_K, _V]
+
+    _repr_type = ReprType.MAPPING
 
     def __len__(self) -> int:
         return self._data.__len__()
