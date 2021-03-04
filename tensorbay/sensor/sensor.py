@@ -125,7 +125,7 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
             A dict containing the information of the sensor.
 
         """
-        contents: Dict[str, Any] = super().dumps()
+        contents: Dict[str, Any] = super()._dumps()
         contents["type"] = self.enum.value
         if hasattr(self, "extrinsics"):
             contents["extrinsics"] = self.extrinsics.dumps()

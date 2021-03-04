@@ -309,7 +309,7 @@ class AttributeInfo(NameMixin, Items):
             A dict containing all the information of this attribute.
 
         """
-        contents: Dict[str, Any] = NameMixin.dumps(self)
+        contents: Dict[str, Any] = NameMixin._dumps(self)
         contents.update(Items.dumps(self))
 
         if hasattr(self, "parent_categories"):

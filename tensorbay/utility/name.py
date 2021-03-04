@@ -54,6 +54,25 @@ class NameMixin(ReprMixin):
         if "description" in contents:
             self.description = contents["description"]
 
+    def _dumps(self) -> Dict[str, str]:
+        """Dumps the instance into a dict.
+
+        Returns:
+            A dict containing the name and the description,
+            whose format is like::
+
+                {
+                    "name": <str>
+                    "description": <str>
+                }
+
+        """
+        contents = {"name": self._name}
+        if self.description:
+            contents["description"] = self.description
+
+        return contents
+
     @classmethod
     def loads(cls: Type[_P], contents: Dict[str, str]) -> _P:
         """Loads a NameMixin from a dict containing the information of the NameMixin.
@@ -81,19 +100,6 @@ class NameMixin(ReprMixin):
 
         """
         return self._name
-
-    def dumps(self) -> Dict[str, str]:
-        """Dumps the instance into a dict.
-
-        Returns:
-            A dict containing the name and the description.
-
-        """
-        contents = {"name": self._name}
-        if self.description:
-            contents["description"] = self.description
-
-        return contents
 
 
 _T = TypeVar("_T", bound=NameMixin)

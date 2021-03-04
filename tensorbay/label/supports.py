@@ -65,6 +65,21 @@ class CategoryInfo(NameMixin):
         """
         return common_loads(cls, contents)
 
+    def dumps(self) -> Dict[str, str]:
+        """Dumps the CatagoryInfo into a dict.
+
+        Returns:
+            A dict containing the information in the CategoryInfo,
+            whose format is like::
+
+                {
+                    "name": <str>
+                    "description": <str>
+                }
+
+        """
+        return super()._dumps()
+
 
 class _VisibleType(Enum):
     """All the possible visible types of keypoints labels."""
@@ -216,7 +231,6 @@ class KeypointsInfo(ReprMixin):
                     "parentCategories": [...],
                     "description":
                 }
-
 
         """
         contents: Dict[str, Any] = {"number": self._number}

@@ -95,7 +95,7 @@ class Segment(NameMixin, UserMutableSequence["DataBase._Type"]):
             A dict contains the name and the data of the segment.
 
         """
-        contents: Dict[str, Any] = super().dumps()
+        contents: Dict[str, Any] = super()._dumps()
         contents["data"] = [data.dumps() for data in self._data]
 
         return contents
@@ -211,7 +211,7 @@ class FusionSegment(NameMixin, UserMutableSequence[Frame]):
             A dictonary contains the name, the sensors and the frames of the fusion segment.
 
         """
-        contents: Dict[str, Any] = super().dumps()
+        contents: Dict[str, Any] = super()._dumps()
         contents["sensors"] = [sensor.dumps() for sensor in self.sensors.values()]
         contents["frames"] = [frame.dumps() for frame in self._data]
 
