@@ -28,19 +28,6 @@ class Pipeline(Generic[_A, _R]):
     def __init__(self) -> None:
         self._pipeline: List[_Checker[_A, _R]] = []
 
-    def register(self, checker: _Checker[_A, _R]) -> _Checker[_A, _R]:
-        """Decorator function to register checkers into pipeline.
-
-        Arguments:
-            checker: The checker function needs to be registered.
-
-        Returns:
-            The checker function unchanged.
-
-        """
-        self._pipeline.append(checker)
-        return checker
-
     def __call__(self, args: _A) -> Iterator[_R]:
         """Call the :class:`Pipeline` as a function.
 
@@ -53,6 +40,19 @@ class Pipeline(Generic[_A, _R]):
         """
         for checker in self._pipeline:
             yield from checker(args)
+
+    def register(self, checker: _Checker[_A, _R]) -> _Checker[_A, _R]:
+        """Decorator function to register checkers into pipeline.
+
+        Arguments:
+            checker: The checker function needs to be registered.
+
+        Returns:
+            The checker function unchanged.
+
+        """
+        self._pipeline.append(checker)
+        return checker
 
     def copy(self: _S) -> _S:
         """Copy method to get a shallow copy of pipeline.
