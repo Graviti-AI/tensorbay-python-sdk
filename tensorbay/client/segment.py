@@ -66,6 +66,7 @@ class SegmentClientBase:
 
     """
 
+    _PERMISSION_CATEGORY: str
     _EXPIRED_IN_SECOND = 240
 
     def __init__(  # pylint: disable=too-many-arguments
@@ -83,6 +84,36 @@ class SegmentClientBase:
         self._commit_id = commit_id
         self._permission: Dict[str, Any] = {"expireAt": 0}
         self._permission_lock = threading.Lock()
+
+    @property
+    def name(self) -> str:
+        """Return the segment name.
+
+        Returns:
+            The segment name.
+
+        """
+        return self._name
+
+    @property
+    def dataset_id(self) -> str:
+        """Return the TensorBay dataset ID.
+
+        Returns:
+            The TensorBay dataset ID.
+
+        """
+        return self._dataset_id
+
+    @property
+    def commit_id(self) -> Optional[str]:
+        """Return the commit ID.
+
+        Returns:
+            The commit ID.
+
+        """
+        return self._commit_id
 
     def _get_url(self, remote_path: str) -> str:
         """Get URL of a specific remote path.
@@ -191,36 +222,6 @@ class SegmentClientBase:
             post_data["sensorName"] = sensor_name
         self._client.open_api_do("PUT", "labels", self.dataset_id, json=post_data)
 
-    @property
-    def name(self) -> str:
-        """Return the segment name.
-
-        Returns:
-            The segment name.
-
-        """
-        return self._name
-
-    @property
-    def dataset_id(self) -> str:
-        """Return the TensorBay dataset ID.
-
-        Returns:
-            The TensorBay dataset ID.
-
-        """
-        return self._dataset_id
-
-    @property
-    def commit_id(self) -> Optional[str]:
-        """Return the commit ID.
-
-        Returns:
-            The commit ID.
-
-        """
-        return self._commit_id
-
     def delete_data(self, remote_paths: Union[str, Iterable[str]]) -> None:
         """Delete data of a segment in a certain commit with the given remote paths.
 
@@ -250,33 +251,7 @@ class SegmentClient(SegmentClientBase):
 
     """
 
-    def _list_data(
-        self, *, start: int = 0, stop: int = sys.maxsize, page_size: int = 128
-    ) -> Iterator[Dict[str, Any]]:
-        """List data in a segment in a certain commit.
-
-        Arguments:
-            start: The index to start.
-            stop: The index to stop.
-            page_size: The page size for listed data.
-
-        Yields:
-            Data in a segment client.
-
-        """
-        params: Dict[str, Any] = {"segmentName": self._name}
-        if self._commit_id:
-            params["commit"] = self._commit_id
-
-        for params["offset"], params["limit"] in paging_range(start, stop, page_size):
-            response = self._client.open_api_do(
-                "GET", "data", self.dataset_id, params=params
-            ).json()
-            yield from response["data"]
-            if response["recordSize"] + response["offset"] >= response["totalCount"]:
-                break
-
-    def upload_data(self, local_path: str, remote_path: str = "") -> None:
+    def upload_data(self, local_path: str, target_remote_path: str = "") -> None:
         """Upload data with local path to the draft.
 
         Arguments:
@@ -333,6 +308,32 @@ class SegmentClient(SegmentClientBase):
         self.upload_data(data.path, data.target_remote_path)
         self._upload_label(data)
 
+    def _list_data(
+        self, *, start: int = 0, stop: int = sys.maxsize, page_size: int = 128
+    ) -> Iterator[Dict[str, Any]]:
+        """List data in a segment in a certain commit.
+
+        Arguments:
+            start: The index to start.
+            stop: The index to stop.
+            page_size: The page size for listed data.
+
+        Yields:
+            Data in a segment client.
+
+        """
+        params: Dict[str, Any] = {"segmentName": self._name}
+        if self._commit_id:
+            params["commit"] = self._commit_id
+
+        for params["offset"], params["limit"] in paging_range(start, stop, page_size):
+            response = self._client.open_api_do(
+                "GET", "data", self.dataset_id, params=params
+            ).json()
+            yield from response["data"]
+            if response["recordSize"] + response["offset"] >= response["totalCount"]:
+                break
+
     def list_data(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[str]:
         """List required data path in a segment in a certain commit.
 
@@ -375,32 +376,6 @@ class FusionSegmentClient(SegmentClientBase):
     In contrast to :class:`SegmentClient`, :class:`FusionSegmentClient` has multiple sensors.
 
     """
-
-    def _list_frames(
-        self, *, start: int = 0, stop: int = sys.maxsize, page_size: int = 128
-    ) -> Iterator[Dict[str, Any]]:
-        """List all frames in a segment in a certain commit.
-
-        Arguments:
-            start: The index to start.
-            stop: The index to stop.
-            page_size: The page size for listed frames.
-
-        Yields:
-             Required frames.
-
-        """
-        params: Dict[str, Any] = {"segmentName": self._name}
-        if self._commit_id:
-            params["commit"] = self._commit_id
-
-        for params["offset"], params["limit"] in paging_range(start, stop, page_size):
-            response = self._client.open_api_do(
-                "GET", "data", self.dataset_id, params=params
-            ).json()
-            yield from response["data"]
-            if response["recordSize"] + response["offset"] >= response["totalCount"]:
-                break
 
     def list_sensor_objects(self) -> Iterator["Sensor._Type"]:
         """List required sensor object in a segment client.
@@ -503,6 +478,32 @@ class FusionSegmentClient(SegmentClientBase):
                 self._clear_upload_permission()
                 raise
             self._upload_label(data, sensor_name)
+
+    def _list_frames(
+        self, *, start: int = 0, stop: int = sys.maxsize, page_size: int = 128
+    ) -> Iterator[Dict[str, Any]]:
+        """List all frames in a segment in a certain commit.
+
+        Arguments:
+            start: The index to start.
+            stop: The index to stop.
+            page_size: The page size for listed frames.
+
+        Yields:
+             Required frames.
+
+        """
+        params: Dict[str, Any] = {"segmentName": self._name}
+        if self._commit_id:
+            params["commit"] = self._commit_id
+
+        for params["offset"], params["limit"] in paging_range(start, stop, page_size):
+            response = self._client.open_api_do(
+                "GET", "data", self.dataset_id, params=params
+            ).json()
+            yield from response["data"]
+            if response["recordSize"] + response["offset"] >= response["totalCount"]:
+                break
 
     def list_frame_objects(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[Frame]:
         """List required frames in the segment in a certain commit.
