@@ -41,10 +41,10 @@ class Vector(UserSequence[float]):
 
     """
 
-    _DIMENSION: Optional[int] = None
-
-    _data: Tuple[float, ...]
     _repr_type = ReprType.INSTANCE
+
+    _DIMENSION: Optional[int] = None
+    _data: Tuple[float, ...]
 
     def __new__(
         cls: Type[_T],
@@ -86,34 +86,19 @@ class Vector(UserSequence[float]):
         obj._data = data
         return obj
 
-    @classmethod
-    def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
-        """Loads a :class:`Vector` from a dict containing coordinates of the vector.
+    def __bool__(self) -> bool:
+        return any(self._data)
 
-        Arguments:
-            contents: A dict containing coordinates of the vector::
+    def __neg__(self) -> _T:
+        result: _T = object.__new__(self.__class__)
+        result._data = tuple(-coordinate for coordinate in self._data)
+        return result
 
-                {
-                    "x": ...
-                    "y": ...
-                }
-                or
-                {
-                    "x": ...
-                    "y": ...
-                    "z": ...
-                }
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, self.__class__):
+            return self._data.__eq__(other._data)
 
-        Returns:
-            The loaded :class:`Vector2D` or :class:`Vector3D` object.
-
-        """
-        if "z" in contents:
-            return Vector3D.loads(contents)  # type: ignore[return-value]
-        return Vector2D.loads(contents)  # type: ignore[return-value]
-
-    def _repr_head(self) -> str:
-        return f"{self.__class__.__name__}{self._data}"
+        return False
 
     def __add__(self, other: Sequence[float]) -> _T:
         """Calculate the sum of the vector and other vector.
@@ -149,20 +134,6 @@ class Vector(UserSequence[float]):
         """
         return self.__add__(other)
 
-    def __neg__(self) -> _T:
-        result: _T = object.__new__(self.__class__)
-        result._data = tuple(-coordinate for coordinate in self._data)
-        return result
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, self.__class__):
-            return self._data.__eq__(other._data)
-
-        return False
-
-    def __bool__(self) -> bool:
-        return any(self._data)
-
     @staticmethod
     def _process_args(*args: Union[None, float, Iterable[float]]) -> Tuple[float, ...]:
         data: Optional[Iterable[float]]
@@ -174,6 +145,35 @@ class Vector(UserSequence[float]):
             return tuple(data)
         except TypeError as error:
             raise TypeError("Require 2 or 3 dimensional data to construct a vector.") from error
+
+    def _repr_head(self) -> str:
+        return f"{self.__class__.__name__}{self._data}"
+
+    @classmethod
+    def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
+        """Loads a :class:`Vector` from a dict containing coordinates of the vector.
+
+        Arguments:
+            contents: A dict containing coordinates of the vector::
+
+                {
+                    "x": ...
+                    "y": ...
+                }
+                or
+                {
+                    "x": ...
+                    "y": ...
+                    "z": ...
+                }
+
+        Returns:
+            The loaded :class:`Vector2D` or :class:`Vector3D` object.
+
+        """
+        if "z" in contents:
+            return Vector3D.loads(contents)  # type: ignore[return-value]
+        return Vector2D.loads(contents)  # type: ignore[return-value]
 
 
 class Vector2D(Vector):
@@ -333,6 +333,9 @@ class Vector3D(Vector):
                 f"Require {cls._DIMENSION} dimensional data to construct {cls.__name__}."
             ) from error
 
+    def _loads(self: _T, contents: Dict[str, float]) -> None:
+        self._data = (contents["x"], contents["y"], contents["z"])
+
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
         """Load a :class:`Vector3D` object from a dict containing coordinates of a 3D vector.
@@ -351,9 +354,6 @@ class Vector3D(Vector):
 
         """
         return common_loads(cls, contents)
-
-    def _loads(self: _T, contents: Dict[str, float]) -> None:
-        self._data = (contents["x"], contents["y"], contents["z"])
 
     @property
     def x(self) -> float:

@@ -70,49 +70,11 @@ class Transform3D(ReprMixin):
         self._translation = Vector3D(translation)
         self._rotation = Quaternion(rotation, **kwargs)
 
-    @classmethod
-    def loads(cls: Type[_T], contents: Dict[str, Dict[str, float]]) -> _T:
-        """Load a :class:`Transform3D` from a dict containing rotation and translation.
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, self.__class__):
+            return self._translation.__eq__(other.translation) and self._rotation == other.rotation
 
-        Arguments:
-            contents: A dict containing rotation and translation of a 3D transform::
-
-                {
-                    "translation": {
-                        "x": ...
-                        "y": ...
-                        "z": ...
-                    },
-                    "rotation": {
-                        "w": ...
-                        "x": ...
-                        "y": ...
-                        "z": ...
-                    }
-                }
-
-        Returns:
-            The loaded :class:`Transform3D` object.
-
-        """
-        return common_loads(cls, contents)
-
-    def _loads(self, contents: Dict[str, Dict[str, float]]) -> None:
-        self._translation = Vector3D.loads(contents["translation"])
-        self._rotation = Quaternion.loads(contents["rotation"])
-
-    def dumps(self) -> Dict[str, Dict[str, float]]:
-        """Dumps the :class:`Transform3D` into a dict.
-
-        Returns:
-            A dict containing rotation and translation information
-                of the :class:`Transform3D`.
-
-        """
-        return {
-            "translation": self._translation.dumps(),
-            "rotation": self._rotation.dumps(),
-        }
+        return False
 
     @overload
     def __mul__(self: _T, other: _T) -> _T:
@@ -145,11 +107,43 @@ class Transform3D(ReprMixin):
 
         return NotImplemented  # type: ignore[unreachable]
 
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, self.__class__):
-            return self._translation.__eq__(other.translation) and self._rotation == other.rotation
+    @classmethod
+    def _create(cls: Type[_T], translation: Vector3D, rotation: Quaternion) -> _T:
+        transform: _T = object.__new__(cls)
+        transform._translation = translation  # pylint: disable=protected-access
+        transform._rotation = rotation  # pylint: disable=protected-access
+        return transform
 
-        return False
+    def _loads(self, contents: Dict[str, Dict[str, float]]) -> None:
+        self._translation = Vector3D.loads(contents["translation"])
+        self._rotation = Quaternion.loads(contents["rotation"])
+
+    @classmethod
+    def loads(cls: Type[_T], contents: Dict[str, Dict[str, float]]) -> _T:
+        """Load a :class:`Transform3D` from a dict containing rotation and translation.
+
+        Arguments:
+            contents: A dict containing rotation and translation of a 3D transform::
+
+                {
+                    "translation": {
+                        "x": ...
+                        "y": ...
+                        "z": ...
+                    },
+                    "rotation": {
+                        "w": ...
+                        "x": ...
+                        "y": ...
+                        "z": ...
+                    }
+                }
+
+        Returns:
+            The loaded :class:`Transform3D` object.
+
+        """
+        return common_loads(cls, contents)
 
     @property
     def translation(self) -> Vector3D:
@@ -160,6 +154,29 @@ class Transform3D(ReprMixin):
 
         """
         return self._translation
+
+    @property
+    def rotation(self) -> Quaternion:
+        """Return the rotation of the 3D transform.
+
+        Returns:
+            Rotation in :class:`~tensorbay.geometry.quaternion.Quaternion`.
+
+        """
+        return self._rotation
+
+    def dumps(self) -> Dict[str, Dict[str, float]]:
+        """Dumps the :class:`Transform3D` into a dict.
+
+        Returns:
+            A dict containing rotation and translation information
+                of the :class:`Transform3D`.
+
+        """
+        return {
+            "translation": self._translation.dumps(),
+            "rotation": self._rotation.dumps(),
+        }
 
     def set_translation(self, *args: Union[float, Iterable[float]], **kwargs: float) -> None:
         """Set the translation of the transform.
@@ -174,16 +191,6 @@ class Transform3D(ReprMixin):
 
         """
         self._translation = Vector3D(*args, **kwargs)
-
-    @property
-    def rotation(self) -> Quaternion:
-        """Return the rotation of the 3D transform.
-
-        Returns:
-            Rotation in :class:`~tensorbay.geometry.quaternion.Quaternion`.
-
-        """
-        return self._rotation
 
     def set_rotation(
         self,
@@ -221,10 +228,3 @@ class Transform3D(ReprMixin):
         rotation = self._rotation.inverse()
         translation = rotation.rotate(-self._translation)
         return self._create(translation, rotation)
-
-    @classmethod
-    def _create(cls: Type[_T], translation: Vector3D, rotation: Quaternion) -> _T:
-        transform: _T = object.__new__(cls)
-        transform._translation = translation  # pylint: disable=protected-access
-        transform._rotation = rotation  # pylint: disable=protected-access
-        return transform

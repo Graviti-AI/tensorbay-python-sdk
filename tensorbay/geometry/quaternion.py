@@ -155,29 +155,6 @@ class Quaternion:
 
         self._data = quaternion.quaternion(arg)
 
-    @classmethod
-    def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
-        """Load a :class:`Quaternion` from a dict.
-
-        Arguments:
-            contents: A dict containing coordinates of a :class:`Quaternion`::
-
-                {
-                    "w": ...
-                    "x": ...
-                    "y": ...
-                    "z": ...
-                }
-
-        Returns:
-            The loaded :class:`Quaternion` object.
-
-        """
-        return common_loads(cls, contents)
-
-    def _loads(self, contents: Dict[str, float]) -> None:
-        self._data = self._quaternion_from_wxyz(contents)
-
     def __repr__(self) -> str:
         return (
             f"{self.__class__.__name__}("
@@ -187,16 +164,16 @@ class Quaternion:
             f"{self._data.z})"
         )
 
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, Quaternion):
-            return self._data.__eq__(other._data)  # type: ignore[no-any-return]
-        return False
-
     def __bool__(self) -> bool:
         return self._data.__bool__()  # type: ignore[no-any-return]
 
     def __neg__(self: _T) -> _T:
         return self._create(self._data.__neg__())
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Quaternion):
+            return self._data.__eq__(other._data)  # type: ignore[no-any-return]
+        return False
 
     def __add__(self: _T, other: object) -> _T:
         if not isinstance(other, Quaternion):
@@ -238,11 +215,64 @@ class Quaternion:
 
         return NotImplemented
 
+    @staticmethod
+    def _quaternion_from_kwargs(kwargs: Dict[str, KwargsType]) -> Optional[quaternion.quaternion]:
+        if "rotation_vector" in kwargs:
+            return quaternion.from_rotation_vector(kwargs["rotation_vector"])
+
+        if "spherical_coords" in kwargs:
+            return quaternion.from_spherical_coords(kwargs["spherical_coords"])
+
+        if "euler_angle" in kwargs:
+            return quaternion.from_euler_angles(kwargs["euler_angle"])
+
+        if "axis" in kwargs:
+            if "degrees" in kwargs:
+                angle = math.radians(kwargs["degrees"])  # type: ignore[arg-type]
+            else:
+                angle = kwargs["radians"]  # type: ignore[assignment]
+            norm = np.linalg.norm(kwargs["axis"])
+            return quaternion.from_rotation_vector(
+                [x * angle / norm for x in kwargs["axis"]]  # type: ignore[union-attr]
+            )
+
+        if "w" in kwargs or "x" in kwargs or "y" in kwargs or "z" in kwargs:
+            return Quaternion._quaternion_from_wxyz(kwargs)  # type: ignore[arg-type]
+
+        return None
+
+    @staticmethod
+    def _quaternion_from_wxyz(kwargs: Dict[str, float]) -> quaternion.quaternion:
+        return quaternion.quaternion(kwargs["w"], kwargs["x"], kwargs["y"], kwargs["z"])
+
     @classmethod
     def _create(cls: Type[_T], data: quaternion.quaternion) -> _T:
         obj: _T = object.__new__(cls)
         obj._data = data  # pylint: disable=protected-access
         return obj
+
+    def _loads(self, contents: Dict[str, float]) -> None:
+        self._data = self._quaternion_from_wxyz(contents)
+
+    @classmethod
+    def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
+        """Load a :class:`Quaternion` from a dict.
+
+        Arguments:
+            contents: A dict containing coordinates of a :class:`Quaternion`::
+
+                {
+                    "w": ...
+                    "x": ...
+                    "y": ...
+                    "z": ...
+                }
+
+        Returns:
+            The loaded :class:`Quaternion` object.
+
+        """
+        return common_loads(cls, contents)
 
     @property
     def w(self) -> float:
@@ -342,33 +372,3 @@ class Quaternion:
 
         """
         return {"w": self._data.w, "x": self._data.x, "y": self._data.y, "z": self._data.z}
-
-    @staticmethod
-    def _quaternion_from_kwargs(kwargs: Dict[str, KwargsType]) -> Optional[quaternion.quaternion]:
-        if "rotation_vector" in kwargs:
-            return quaternion.from_rotation_vector(kwargs["rotation_vector"])
-
-        if "spherical_coords" in kwargs:
-            return quaternion.from_spherical_coords(kwargs["spherical_coords"])
-
-        if "euler_angle" in kwargs:
-            return quaternion.from_euler_angles(kwargs["euler_angle"])
-
-        if "axis" in kwargs:
-            if "degrees" in kwargs:
-                angle = math.radians(kwargs["degrees"])  # type: ignore[arg-type]
-            else:
-                angle = kwargs["radians"]  # type: ignore[assignment]
-            norm = np.linalg.norm(kwargs["axis"])
-            return quaternion.from_rotation_vector(
-                [x * angle / norm for x in kwargs["axis"]]  # type: ignore[union-attr]
-            )
-
-        if "w" in kwargs or "x" in kwargs or "y" in kwargs or "z" in kwargs:
-            return Quaternion._quaternion_from_wxyz(kwargs)  # type: ignore[arg-type]
-
-        return None
-
-    @staticmethod
-    def _quaternion_from_wxyz(kwargs: Dict[str, float]) -> quaternion.quaternion:
-        return quaternion.quaternion(kwargs["w"], kwargs["x"], kwargs["y"], kwargs["z"])
