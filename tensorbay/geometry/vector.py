@@ -18,7 +18,11 @@ from typing import Dict, Iterable, Optional, Sequence, Tuple, Type, TypeVar, Uni
 
 from ..utility import ReprType, UserSequence, common_loads
 
-_T = TypeVar("_T", bound="Vector")
+_V = TypeVar("_V", bound="Vector")
+_V2 = TypeVar("_V2", bound="Vector2D")
+_V3 = TypeVar("_V3", bound="Vector3D")
+
+_T = Union["Vector2D", "Vector3D"]
 
 
 class Vector(UserSequence[float]):
@@ -38,16 +42,16 @@ class Vector(UserSequence[float]):
     Raises:
         ValueError: If the dimension of the input parameters is not correct.
 
-
     """
+
+    _data: Tuple[float, ...]
 
     _repr_type = ReprType.INSTANCE
 
     _DIMENSION: Optional[int] = None
-    _data: Tuple[float, ...]
 
-    def __new__(
-        cls: Type[_T],
+    def __new__(  # type: ignore[misc]
+        cls: Type[_V],
         *args: Union[None, float, Iterable[float]],
         **kwargs: float,
     ) -> _T:
@@ -89,8 +93,8 @@ class Vector(UserSequence[float]):
     def __bool__(self) -> bool:
         return any(self._data)
 
-    def __neg__(self) -> _T:
-        result: _T = object.__new__(self.__class__)
+    def __neg__(self: _V) -> _V:
+        result: _V = object.__new__(self.__class__)
         result._data = tuple(-coordinate for coordinate in self._data)
         return result
 
@@ -100,7 +104,7 @@ class Vector(UserSequence[float]):
 
         return False
 
-    def __add__(self, other: Sequence[float]) -> _T:
+    def __add__(self: _V, other: Sequence[float]) -> _V:
         """Calculate the sum of the vector and other vector.
 
         Arguments:
@@ -118,11 +122,11 @@ class Vector(UserSequence[float]):
 
         if len(self._data) != len(other):
             raise ValueError("Vectors to be added must have the same dimension")
-        result: _T = object.__new__(self.__class__)
+        result: _V = object.__new__(self.__class__)
         result._data = tuple(i + j for i, j in zip(self._data, other))
         return result
 
-    def __radd__(self, other: Sequence[float]) -> _T:
+    def __radd__(self: _V, other: Sequence[float]) -> _V:
         """Calculate the sum of the vector and the other vector.
 
         Arguments:
@@ -149,8 +153,8 @@ class Vector(UserSequence[float]):
     def _repr_head(self) -> str:
         return f"{self.__class__.__name__}{self._data}"
 
-    @classmethod
-    def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
+    @staticmethod
+    def loads(contents: Dict[str, float]) -> _T:
         """Loads a :class:`Vector` from a dict containing coordinates of the vector.
 
         Arguments:
@@ -172,8 +176,8 @@ class Vector(UserSequence[float]):
 
         """
         if "z" in contents:
-            return Vector3D.loads(contents)  # type: ignore[return-value]
-        return Vector2D.loads(contents)  # type: ignore[return-value]
+            return Vector3D.loads(contents)
+        return Vector2D.loads(contents)
 
 
 class Vector2D(Vector):
@@ -193,10 +197,10 @@ class Vector2D(Vector):
     _DIMENSION = 2
 
     def __new__(
-        cls: Type[_T],
+        cls: Type[_V2],
         *args: Union[None, float, Iterable[float]],
         **kwargs: float,
-    ) -> _T:
+    ) -> _V2:
         """Create a new instance of :class:`Vector2D`.
 
         Arguments:
@@ -213,7 +217,7 @@ class Vector2D(Vector):
         if kwargs:
             return cls.loads(kwargs)
 
-        obj: _T = object.__new__(cls)
+        obj: _V2 = object.__new__(cls)
         data: Optional[Iterable[float]]
         data = args[0] if len(args) == 1 else args  # type: ignore[assignment]
         if not data:
@@ -229,11 +233,11 @@ class Vector2D(Vector):
                 f"Require {cls._DIMENSION} dimensional data to construct {cls.__name__}."
             ) from error
 
-    def _loads(self: _T, contents: Dict[str, float]) -> None:
+    def _loads(self, contents: Dict[str, float]) -> None:
         self._data = (contents["x"], contents["y"])
 
     @classmethod
-    def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
+    def loads(cls: Type[_V2], contents: Dict[str, float]) -> _V2:
         """Load a :class:`Vector2D` object from a dict containing coordinates of a 2D vector.
 
         Arguments:
@@ -297,10 +301,10 @@ class Vector3D(Vector):
     _DIMENSION = 3
 
     def __new__(
-        cls: Type[_T],
+        cls: Type[_V3],
         *args: Union[None, float, Iterable[float]],
         **kwargs: float,
-    ) -> _T:
+    ) -> _V3:
         """Create a new instance of :class:`Vector3D`.
 
         Arguments:
@@ -317,7 +321,7 @@ class Vector3D(Vector):
         if kwargs:
             return cls.loads(kwargs)
 
-        obj: _T = object.__new__(cls)
+        obj: _V3 = object.__new__(cls)
         data: Optional[Iterable[float]]
         data = args[0] if len(args) == 1 else args  # type: ignore[assignment]
         if not data:
@@ -333,11 +337,11 @@ class Vector3D(Vector):
                 f"Require {cls._DIMENSION} dimensional data to construct {cls.__name__}."
             ) from error
 
-    def _loads(self: _T, contents: Dict[str, float]) -> None:
+    def _loads(self: _V3, contents: Dict[str, float]) -> None:
         self._data = (contents["x"], contents["y"], contents["z"])
 
     @classmethod
-    def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
+    def loads(cls: Type[_V3], contents: Dict[str, float]) -> _V3:
         """Load a :class:`Vector3D` object from a dict containing coordinates of a 3D vector.
 
         Arguments:
