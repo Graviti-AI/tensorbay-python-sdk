@@ -3,8 +3,6 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""This file defines class TestVector"""
-
 import pytest
 
 from ...label import Classification
@@ -71,8 +69,6 @@ _REMOTE_DATA = {"remotePath": "test.json", "timestamp": 1614667532, "label": {}}
 
 
 class TestLabel:
-    """Test Labels class."""
-
     def test_bool(self) -> None:
         labels = Label()
         assert bool(labels) == False
@@ -87,8 +83,6 @@ class TestLabel:
 
 
 class TestData:
-    """Test Data class."""
-
     def test_init(self) -> None:
         local_path = "test.json"
         target_remote_path = "A/test.json"
@@ -111,8 +105,6 @@ class TestData:
 
 
 class TestRemoteData:
-    """Test RemoteData class."""
-
     def test_init(self) -> None:
         remote_path = "A/test.json"
         timestamp = 1614667532
