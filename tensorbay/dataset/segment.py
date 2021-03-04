@@ -60,8 +60,7 @@ class Segment(NameMixin, UserMutableSequence["DataBase._Type"]):
 
     def _loads(self, contents: Dict[str, Any]) -> None:
         super()._loads(contents)
-        for data in contents["data"]:
-            self._data.append(DataBase.loads(data))
+        self._data = [DataBase.loads(data) for data in contents["data"]]
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
