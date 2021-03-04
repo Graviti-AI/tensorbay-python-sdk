@@ -247,22 +247,24 @@ def cp(  # pylint: disable=invalid-name, too-many-arguments
         sys.exit(1)
 
     if info.type in [TBRNType.SEGMENT, TBRNType.NORMAL_FILE]:
-        remote_path = info.remote_path if info.type == TBRNType.NORMAL_FILE else ""
+        target_remote_path = info.remote_path if info.type == TBRNType.NORMAL_FILE else ""
 
         dataset = _gas(**obj).get_dataset(info.dataset_name)
         local_abspaths: List[str] = [os.path.abspath(local_path) for local_path in local_paths]
         if (
             len(local_abspaths) == 1
             and not os.path.isdir(local_abspaths[0])
-            and remote_path
-            and not remote_path.endswith("/")
+            and target_remote_path
+            and not target_remote_path.endswith("/")
         ):
             dataset.get_or_create_segment(info.segment_name).upload_data(
-                local_abspaths[0], remote_path
+                local_abspaths[0], target_remote_path
             )
             return
 
-        segment = _get_segment_object(info.segment_name, local_abspaths, remote_path, is_recursive)
+        segment = _get_segment_object(
+            info.segment_name, local_abspaths, target_remote_path, is_recursive
+        )
         dataset.upload_segment_object(segment, jobs=jobs, skip_uploaded_files=skip_uploaded_files)
         return
 

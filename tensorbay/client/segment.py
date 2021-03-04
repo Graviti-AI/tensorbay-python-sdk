@@ -251,27 +251,27 @@ class SegmentClient(SegmentClientBase):
 
     """
 
-    def upload_data(self, local_path: str, remote_path: str = "") -> None:
+    def upload_data(self, local_path: str, target_remote_path: str = "") -> None:
         """Upload data with local path to the draft.
 
         Arguments:
             local_path: The local path of the data to upload.
-            remote_path: The path to save the data in segment client.
+            target_remote_path: The path to save the data in segment client.
 
         Raises:
-            GASPathError: When remote_path does not follow linux style.
+            GASPathError: When target_remote_path does not follow linux style.
             GASException: When uploading data failed.
 
         """
-        if not remote_path:
-            remote_path = os.path.basename(local_path)
+        if not target_remote_path:
+            target_remote_path = os.path.basename(local_path)
 
-        if "\\" in remote_path:
-            raise GASPathError(remote_path)
+        if "\\" in target_remote_path:
+            raise GASPathError(target_remote_path)
 
         permission = self._get_upload_permission()
         post_data = permission["result"]
-        post_data["key"] = permission["extra"]["objectPrefix"] + remote_path
+        post_data["key"] = permission["extra"]["objectPrefix"] + target_remote_path
 
         del post_data["x:category"]
         del post_data["x:id"]
@@ -279,7 +279,7 @@ class SegmentClient(SegmentClientBase):
             version_id, etag = self._post_multipart_formdata(
                 permission["extra"]["host"],
                 local_path,
-                remote_path,
+                target_remote_path,
                 post_data,
             )
 
