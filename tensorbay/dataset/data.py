@@ -40,6 +40,12 @@ class Label(ReprMixin):
 
     """
 
+    _T = TypeVar("_T", bound="Label")
+
+    _repr_type = ReprType.INSTANCE
+    _repr_attrs = tuple(label_type.value for label_type in LabelType)
+    _repr_maxlevel = 2
+
     classification: Classification
     box2d: List[LabeledBox2D]
     box3d: List[LabeledBox3D]
@@ -48,16 +54,50 @@ class Label(ReprMixin):
     keypoints2d: List[LabeledKeypoints2D]
     sentence: List[LabeledSentence]
 
-    _T = TypeVar("_T", bound="Label")
-    _repr_maxlevel = 2
-    _repr_type = ReprType.INSTANCE
-    _repr_attrs = tuple(label_type.value for label_type in LabelType)
-
     def __bool__(self) -> bool:
         for label_type in LabelType:
             if hasattr(self, label_type.value):
                 return True
         return False
+
+    def _loads(self, contents: Dict[str, Any]) -> None:
+        for key, labels in contents.items():
+            if key not in LabelType.__members__:
+                continue
+
+            label_type = LabelType[key]
+            if label_type == LabelType.CLASSIFICATION:
+                setattr(self, label_type.value, label_type.type.loads(labels))
+            else:
+                setattr(
+                    self,
+                    label_type.value,
+                    [label_type.type.loads(label) for label in labels],
+                )
+
+    @classmethod
+    def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
+        """Loads data from a dict containing the labels information.
+
+        Arguments:
+            contents: A dict containing the labels information, which looks like::
+
+                    {
+                        "CLASSIFICATION": {...},
+                        "BOX2D": {...},
+                        "BOX3D": {...},
+                        "POLYGON2D": {...},
+                        "POLYLINE2D": {...},
+                        "KEYPOINTS2D": {...},
+                        "SENTENCE": {...},
+                    }
+
+        Returns:
+            A :class:`~tensorbay.label.label.Label` instance containing labels information
+            from the given dict.
+
+        """
+        return common_loads(cls, contents)
 
     def dumps(self) -> Dict[str, Any]:
         """Dumps all labels into a dict.
@@ -88,45 +128,6 @@ class Label(ReprMixin):
 
         return contents
 
-    @classmethod
-    def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Loads data from a dict containing the labels information.
-
-        Arguments:
-            contents: A dict containing the labels information, which looks like::
-
-                    {
-                        "CLASSIFICATION": {...},
-                        "BOX2D": {...},
-                        "BOX3D": {...},
-                        "POLYGON2D": {...},
-                        "POLYLINE2D": {...},
-                        "KEYPOINTS2D": {...},
-                        "SENTENCE": {...},
-                    }
-
-        Returns:
-            A :class:`~tensorbay.label.label.Label` instance containing labels information
-            from the given dict.
-
-        """
-        return common_loads(cls, contents)
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        for key, labels in contents.items():
-            if key not in LabelType.__members__:
-                continue
-
-            label_type = LabelType[key]
-            if label_type == LabelType.CLASSIFICATION:
-                setattr(self, label_type.value, label_type.type.loads(labels))
-            else:
-                setattr(
-                    self,
-                    label_type.value,
-                    [label_type.type.loads(label) for label in labels],
-                )
-
 
 class DataBase(ReprMixin):  # pylint: disable=too-few-public-methods
     """DataBase is a base class for the file and label combination.
@@ -142,13 +143,13 @@ class DataBase(ReprMixin):  # pylint: disable=too-few-public-methods
 
     """
 
+    _T = TypeVar("_T", bound="DataBase")
     _Type = Union["Data", "RemoteData"]
 
-    _repr_maxlevel = 3
     _repr_type = ReprType.INSTANCE
     _repr_attrs = ("timestamp", "labels")
+    _repr_maxlevel = 3
 
-    _T = TypeVar("_T", bound="DataBase")
     _PATH_KEY = ""
 
     def __init__(self, path: str, *, timestamp: Optional[float] = None) -> None:
@@ -160,6 +161,23 @@ class DataBase(ReprMixin):  # pylint: disable=too-few-public-methods
 
     def _repr_head(self) -> str:
         return f'{self.__class__.__name__}("{self.path}")'
+
+    def _loads(self, contents: Dict[str, Any]) -> None:
+        self.path = contents[self._PATH_KEY]
+        if "timestamp" in contents:
+            self.timestamp = contents["timestamp"]
+
+        self.label = Label.loads(contents["label"])
+
+    def _dumps(self) -> Dict[str, Any]:
+        contents: Dict[str, Any] = {self._PATH_KEY: self.path}
+
+        if hasattr(self, "timestamp"):
+            contents["timestamp"] = self.timestamp
+
+        contents["label"] = self.label.dumps()
+
+        return contents
 
     @staticmethod
     def loads(contents: Dict[str, Any]) -> "_Type":
@@ -189,23 +207,6 @@ class DataBase(ReprMixin):  # pylint: disable=too-few-public-methods
         cls = Data if Data._PATH_KEY in contents else RemoteData  # pylint: disable=protected-access
         return common_loads(cls, contents)
 
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        self.path = contents[self._PATH_KEY]
-        if "timestamp" in contents:
-            self.timestamp = contents["timestamp"]
-
-        self.label = Label.loads(contents["label"])
-
-    def _dumps(self) -> Dict[str, Any]:
-        contents: Dict[str, Any] = {self._PATH_KEY: self.path}
-
-        if hasattr(self, "timestamp"):
-            contents["timestamp"] = self.timestamp
-
-        contents["label"] = self.label.dumps()
-
-        return contents
-
 
 class Data(DataBase):
     """Data is a combination of a specific local file and its label.
@@ -229,6 +230,7 @@ class Data(DataBase):
     """
 
     _T = TypeVar("_T", bound="Data")
+
     _PATH_KEY = "localPath"
 
     def __init__(
@@ -239,37 +241,6 @@ class Data(DataBase):
         timestamp: Optional[float] = None,
     ) -> None:
         super().__init__(local_path, timestamp=timestamp)
-        self._target_remote_path = target_remote_path
-
-    def open(self) -> BufferedReader:
-        """Return the binary file pointer of this file.
-
-        The local file pointer will be obtained by build-in ``open()``.
-
-        Returns:
-            The local file pointer for this data.
-
-        """
-        return open(self.path, "rb")
-
-    @property
-    def target_remote_path(self) -> str:
-        """Return the target remote path of the data.
-
-        Target remote path will be used when this data is uploaded to tensorbay, and the target
-        remote path will be the uploaded file's remote path.
-
-        Returns:
-            The target remote path of the data.
-
-        """
-        if not self._target_remote_path:
-            self._target_remote_path = os.path.basename(self.path)
-
-        return self._target_remote_path
-
-    @target_remote_path.setter
-    def target_remote_path(self, target_remote_path: str) -> None:
         self._target_remote_path = target_remote_path
 
     @classmethod
@@ -298,6 +269,37 @@ class Data(DataBase):
 
         """
         return common_loads(cls, contents)
+
+    @property
+    def target_remote_path(self) -> str:
+        """Return the target remote path of the data.
+
+        Target remote path will be used when this data is uploaded to tensorbay, and the target
+        remote path will be the uploaded file's remote path.
+
+        Returns:
+            The target remote path of the data.
+
+        """
+        if not self._target_remote_path:
+            self._target_remote_path = os.path.basename(self.path)
+
+        return self._target_remote_path
+
+    @target_remote_path.setter
+    def target_remote_path(self, target_remote_path: str) -> None:
+        self._target_remote_path = target_remote_path
+
+    def open(self) -> BufferedReader:
+        """Return the binary file pointer of this file.
+
+        The local file pointer will be obtained by build-in ``open()``.
+
+        Returns:
+            The local file pointer for this data.
+
+        """
+        return open(self.path, "rb")
 
     def dumps(self) -> Dict[str, Any]:
         """Dumps the local data into a dict.
@@ -344,6 +346,7 @@ class RemoteData(DataBase):
     """
 
     _T = TypeVar("_T", bound="RemoteData")
+
     _PATH_KEY = "remotePath"
 
     def __init__(
@@ -355,6 +358,33 @@ class RemoteData(DataBase):
     ) -> None:
         super().__init__(remote_path, timestamp=timestamp)
         self._url_getter = url_getter
+
+    @classmethod
+    def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
+        """Loads :class:`RemoteData` from a dict containing remote data information.
+
+        Arguments:
+            contents: A dict containing the information of the data, which looks like::
+
+                    {
+                        "remotePath": <str>,
+                        "timestamp": <float>,
+                        "label": {
+                            "CLASSIFICATION": {...},
+                            "BOX2D": {...},
+                            "BOX3D": {...},
+                            "POLYGON2D": {...},
+                            "POLYLINE2D": {...},
+                            "KEYPOINTS2D": {...},
+                            "SENTENCE": {...}
+                        }
+                    }
+
+        Returns:
+            A :class:`Data` instance containing information from the given dict.
+
+        """
+        return common_loads(cls, contents)
 
     def get_url(self) -> str:
         """Return the url of the data hosted by tensorbay.
@@ -383,33 +413,6 @@ class RemoteData(DataBase):
 
         """
         return urlopen(self.get_url())  # type: ignore[no-any-return]
-
-    @classmethod
-    def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Loads :class:`RemoteData` from a dict containing remote data information.
-
-        Arguments:
-            contents: A dict containing the information of the data, which looks like::
-
-                    {
-                        "remotePath": <str>,
-                        "timestamp": <float>,
-                        "label": {
-                            "CLASSIFICATION": {...},
-                            "BOX2D": {...},
-                            "BOX3D": {...},
-                            "POLYGON2D": {...},
-                            "POLYLINE2D": {...},
-                            "KEYPOINTS2D": {...},
-                            "SENTENCE": {...}
-                        }
-                    }
-
-        Returns:
-            A :class:`Data` instance containing information from the given dict.
-
-        """
-        return common_loads(cls, contents)
 
     def dumps(self) -> Dict[str, Any]:
         """Dumps the remote data into a dict.

@@ -53,6 +53,9 @@ class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestor
         self._catalog: Catalog = Catalog()
         self._is_continuous = is_continuous
 
+    def __len__(self) -> int:
+        return self._segments.__len__()
+
     @overload
     def __getitem__(self, index: int) -> _T:
         ...
@@ -63,9 +66,6 @@ class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestor
 
     def __getitem__(self, index: Union[int, slice]) -> Union[Sequence[_T], _T]:
         return self._segments.__getitem__(index)
-
-    def __len__(self) -> int:
-        return self._segments.__len__()
 
     @property
     def is_continuous(self) -> bool:

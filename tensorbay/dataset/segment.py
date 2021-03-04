@@ -50,12 +50,18 @@ class Segment(NameMixin, UserMutableSequence["DataBase._Type"]):
 
     """
 
-    _repr_type = ReprType.SEQUENCE
     _T = TypeVar("_T", bound="Segment")
+
+    _repr_type = ReprType.SEQUENCE
 
     def __init__(self, name: str = "") -> None:
         super().__init__(name)
         self._data: List[DataBase._Type] = []
+
+    def _loads(self, contents: Dict[str, Any]) -> None:
+        super()._loads(contents)
+        for data in contents["data"]:
+            self._data.append(DataBase.loads(data))
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -81,11 +87,6 @@ class Segment(NameMixin, UserMutableSequence["DataBase._Type"]):
 
         """
         return common_loads(cls, contents)
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        super()._loads(contents)
-        for data in contents["data"]:
-            self._data.append(DataBase.loads(data))
 
     def dumps(self) -> Dict[str, Any]:
         """Dumps the segment into a dict.
@@ -152,15 +153,25 @@ class FusionSegment(NameMixin, UserMutableSequence[Frame]):
 
     """
 
+    _T = TypeVar("_T", bound="FusionSegment")
+
     _repr_type = ReprType.SEQUENCE
     _repr_attrs = ("sensors",)
     _repr_maxlevel = 2
-    _T = TypeVar("_T", bound="FusionSegment")
 
     def __init__(self, name: str = "") -> None:
         super().__init__(name)
         self._data: List[Frame] = []
         self.sensors: NameSortedDict[Sensor] = NameSortedDict()
+
+    def _loads(self, contents: Dict[str, Any]) -> None:
+        super()._loads(contents)
+        self._data = []
+        self.sensors = NameSortedDict()
+        for sensor in contents["sensors"]:
+            self.sensors.add(Sensor.loads(sensor))
+        for frame in contents["frames"]:
+            self._data.append(Frame.loads(frame))
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -192,15 +203,6 @@ class FusionSegment(NameMixin, UserMutableSequence[Frame]):
 
         """
         return common_loads(cls, contents)
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        super()._loads(contents)
-        self._data = []
-        self.sensors = NameSortedDict()
-        for sensor in contents["sensors"]:
-            self.sensors.add(Sensor.loads(sensor))
-        for frame in contents["frames"]:
-            self._data.append(Frame.loads(frame))
 
     def dumps(self) -> Dict[str, Any]:
         """Dumps the fusion segment into a dict.

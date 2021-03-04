@@ -51,6 +51,12 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
         if frame_id:
             self._frame_id = frame_id
 
+    def _loads(self, contents: Dict[str, Any]) -> None:
+        self._data = {}
+        for sensor, data in contents["frame"].items():
+            self._data[sensor] = DataBase.loads(data)
+        self._pose = Transform3D.loads(contents["pose"]) if "pose" in contents else None
+
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
         """Loads a :class:`Frame` object from a dict containing the frame information.
@@ -87,11 +93,16 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
         """
         return common_loads(cls, contents)
 
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        self._data = {}
-        for sensor, data in contents["frame"].items():
-            self._data[sensor] = DataBase.loads(data)
-        self._pose = Transform3D.loads(contents["pose"]) if "pose" in contents else None
+    @property
+    def pose(self) -> Optional[Transform3D]:
+        """Return the pose of the frame.
+
+        Returns:
+            A :class:`~tensorbay.geometry.transform.Transform3D` object
+            representing the pose of the frame.
+
+        """
+        return self._pose
 
     def dumps(self) -> Dict[str, Any]:
         """Dumps the current frame into a dict.
@@ -110,17 +121,6 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
         contents["frame"] = frame
 
         return contents
-
-    @property
-    def pose(self) -> Optional[Transform3D]:
-        """Return the pose of the frame.
-
-        Returns:
-            A :class:`~tensorbay.geometry.transform.Transform3D` object
-            representing the pose of the frame.
-
-        """
-        return self._pose
 
     def set_pose(
         self,
