@@ -56,9 +56,10 @@ class CameraMatrix(ReprMixin):
 
     """
 
+    _T = TypeVar("_T", bound="CameraMatrix")
+
     _repr_type = ReprType.INSTANCE
     _repr_attrs = ("fx", "fy", "cx", "cy", "skew")
-    _T = TypeVar("_T", bound="CameraMatrix")
 
     def __init__(
         self,
@@ -85,6 +86,13 @@ class CameraMatrix(ReprMixin):
 
         raise TypeError(f"Require 'fx', 'fy', 'cx', 'cy' to initialize {self.__class__.__name__}")
 
+    def _loads(self, contents: Dict[str, float]) -> None:
+        self.fx = contents["fx"]
+        self.fy = contents["fy"]
+        self.cx = contents["cx"]
+        self.cy = contents["cy"]
+        self.skew = contents.get("skew", 0)
+
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
         """Loads CameraMatrix from a dict containing the information of the camera matrix.
@@ -97,13 +105,6 @@ class CameraMatrix(ReprMixin):
 
         """
         return common_loads(cls, contents)
-
-    def _loads(self, contents: Dict[str, float]) -> None:
-        self.fx = contents["fx"]
-        self.fy = contents["fy"]
-        self.cx = contents["cx"]
-        self.cy = contents["cy"]
-        self.skew = contents.get("skew", 0)
 
     def dumps(self) -> Dict[str, float]:
         """Dumps the camera matrix into a dict.
@@ -176,11 +177,11 @@ class DistortionCoefficients(ReprMixin):
 
     """
 
+    _T = TypeVar("_T", bound="DistortionCoefficients")
+
     _repr_type = ReprType.INSTANCE
 
-    _T = TypeVar("_T", bound="DistortionCoefficients")
     _DISTORTION_KEYS = ("p", "k")
-
     _FISHEYE_MINIMUM_R = 1e-8
 
     def __init__(self, **kwargs: float) -> None:
@@ -190,6 +191,74 @@ class DistortionCoefficients(ReprMixin):
             raise TypeError(
                 f"Require tangential or radial distortion to initialize {self.__class__.__name__}"
             )
+
+    @staticmethod
+    def _distortion_generator(
+        distortion_keyword: str, data: Dict[str, float]
+    ) -> Iterator[Tuple[str, float]]:
+        for index in range(1, len(data) + 1):
+            key = f"{distortion_keyword}{index}"
+            if key not in data:
+                break
+            yield (key, data[key])
+
+    @property
+    def _repr_attrs(self) -> Iterator[str]:  # type: ignore[override]
+        for distortion_key in self._DISTORTION_KEYS:
+            for index in count(1):
+                distortion_name = f"{distortion_key}{index}"
+                if not hasattr(self, distortion_name):
+                    break
+                yield distortion_name
+
+    def _calculate_radial_distortion(self, r2: float, is_fisheye: bool = False) -> float:
+        # pylint: disable=invalid-name
+        if is_fisheye:
+            r = math.sqrt(r2)
+            factor = math.atan(r)
+            factor2 = factor ** 2
+        else:
+            factor2 = r2
+
+        radial_distortion = 1.0
+        for i, value in enumerate(self._list_distortions("k"), 1):
+            radial_distortion += value * factor2 ** i
+
+        if is_fisheye:
+            radial_distortion = radial_distortion * factor / r if r > self._FISHEYE_MINIMUM_R else 1
+        return radial_distortion
+
+    def _calculate_tangential_distortion(  # pylint: disable=too-many-arguments
+        self, r2: float, x2: float, y2: float, xy2: float, is_fisheye: bool
+    ) -> Tuple[float, float]:
+        # pylint: disable=invalid-name
+        if is_fisheye:
+            return (0, 0)
+
+        p1 = self.p1  # type: ignore[attr-defined]  # pylint: disable=no-member
+        p2 = self.p2  # type: ignore[attr-defined]  # pylint: disable=no-member
+        return (p1 * xy2 + p2 * (r2 + 2 * x2), p1 * (r2 + 2 * y2) + p2 * xy2)
+
+    def _loads(self, contents: Dict[str, float]) -> None:
+        for distortion_key in self._DISTORTION_KEYS:
+            for key, value in self._distortion_generator(distortion_key, contents):
+                setattr(self, key, value)
+
+    def _list_distortions(self, distortion_key: Literal["p", "k"]) -> Iterator[float]:
+        """Return the tangential or radial distortion coefficients list.
+
+        Arguments:
+            distortion_key: "p" or "k" indicating tangential or radial distortion.
+
+        Yields:
+            All the tangential or radial distortion coefficients.
+
+        """
+        for index in count(1):
+            distortion_value = getattr(self, f"{distortion_key}{index}", None)
+            if distortion_value is None:
+                break
+            yield distortion_value
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
@@ -205,11 +274,6 @@ class DistortionCoefficients(ReprMixin):
         """
         return common_loads(cls, contents)
 
-    def _loads(self, contents: Dict[str, float]) -> None:
-        for distortion_key in self._DISTORTION_KEYS:
-            for key, value in self._distortion_generator(distortion_key, contents):
-                setattr(self, key, value)
-
     def dumps(self) -> Dict[str, float]:
         """Dumps the distortion coefficients into a dict.
 
@@ -224,15 +288,6 @@ class DistortionCoefficients(ReprMixin):
                 contents[f"{distortion_key}{index}"] = value
 
         return contents
-
-    @property
-    def _repr_attrs(self) -> Iterator[str]:  # type: ignore[override]
-        for distortion_key in self._DISTORTION_KEYS:
-            for index in count(1):
-                distortion_name = f"{distortion_key}{index}"
-                if not hasattr(self, distortion_name):
-                    break
-                yield distortion_name
 
     def distort(self, point: Sequence[float], *, is_fisheye: bool = False) -> Vector2D:
         """Add distortion to a point.
@@ -269,60 +324,6 @@ class DistortionCoefficients(ReprMixin):
         y = y * radial_distortion + tangential_distortion[1]
         return Vector2D(x, y)
 
-    def _calculate_radial_distortion(self, r2: float, is_fisheye: bool = False) -> float:
-        # pylint: disable=invalid-name
-        if is_fisheye:
-            r = math.sqrt(r2)
-            factor = math.atan(r)
-            factor2 = factor ** 2
-        else:
-            factor2 = r2
-
-        radial_distortion = 1.0
-        for i, value in enumerate(self._list_distortions("k"), 1):
-            radial_distortion += value * factor2 ** i
-
-        if is_fisheye:
-            radial_distortion = radial_distortion * factor / r if r > self._FISHEYE_MINIMUM_R else 1
-        return radial_distortion
-
-    def _calculate_tangential_distortion(  # pylint: disable=too-many-arguments
-        self, r2: float, x2: float, y2: float, xy2: float, is_fisheye: bool
-    ) -> Tuple[float, float]:
-        # pylint: disable=invalid-name
-        if is_fisheye:
-            return (0, 0)
-
-        p1 = self.p1  # type: ignore[attr-defined]  # pylint: disable=no-member
-        p2 = self.p2  # type: ignore[attr-defined]  # pylint: disable=no-member
-        return (p1 * xy2 + p2 * (r2 + 2 * x2), p1 * (r2 + 2 * y2) + p2 * xy2)
-
-    def _list_distortions(self, distortion_key: Literal["p", "k"]) -> Iterator[float]:
-        """Return the tangential or radial distortion coefficients list.
-
-        Arguments:
-            distortion_key: "p" or "k" indicating tangential or radial distortion.
-
-        Yields:
-            All the tangential or radial distortion coefficients.
-
-        """
-        for index in count(1):
-            distortion_value = getattr(self, f"{distortion_key}{index}", None)
-            if distortion_value is None:
-                break
-            yield distortion_value
-
-    @staticmethod
-    def _distortion_generator(
-        distortion_keyword: str, data: Dict[str, float]
-    ) -> Iterator[Tuple[str, float]]:
-        for index in range(1, len(data) + 1):
-            key = f"{distortion_keyword}{index}"
-            if key not in data:
-                break
-            yield (key, data[key])
-
 
 class CameraIntrinsics(ReprMixin):
     """CameraIntrinsics represents camera intrinsics.
@@ -343,10 +344,11 @@ class CameraIntrinsics(ReprMixin):
 
     """
 
+    _T = TypeVar("_T", bound="CameraIntrinsics")
+
     _repr_type = ReprType.INSTANCE
     _repr_attrs = ("camera_matrix", "distortion_coefficients")
     _repr_maxlevel = 2
-    _T = TypeVar("_T", bound="CameraIntrinsics")
 
     def __init__(
         self,
@@ -365,6 +367,15 @@ class CameraIntrinsics(ReprMixin):
                 pass
         self._distortion_coefficients = None
 
+    def _loads(self, contents: Dict[str, Dict[str, float]]) -> None:
+        self._camera_matrix = CameraMatrix.loads(contents["cameraMatrix"])
+        if "distortionCoefficients" in contents:
+            self._distortion_coefficients = DistortionCoefficients.loads(
+                contents["distortionCoefficients"]
+            )
+        else:
+            self._distortion_coefficients = None
+
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Dict[str, float]]) -> _T:
         """Loads CameraIntrinsics from a dict containing the information.
@@ -378,28 +389,6 @@ class CameraIntrinsics(ReprMixin):
 
         """
         return common_loads(cls, contents)
-
-    def _loads(self, contents: Dict[str, Dict[str, float]]) -> None:
-        self._camera_matrix = CameraMatrix.loads(contents["cameraMatrix"])
-        if "distortionCoefficients" in contents:
-            self._distortion_coefficients = DistortionCoefficients.loads(
-                contents["distortionCoefficients"]
-            )
-        else:
-            self._distortion_coefficients = None
-
-    def dumps(self) -> Dict[str, Dict[str, float]]:
-        """Dumps the camera intrinsics into a dict.
-
-        Returns:
-            A dict containing camera intrinsics.
-
-        """
-        contents = {"cameraMatrix": self._camera_matrix.dumps()}
-        if self._distortion_coefficients:
-            contents["distortionCoefficients"] = self._distortion_coefficients.dumps()
-
-        return contents
 
     @property
     def camera_matrix(self) -> CameraMatrix:
@@ -421,6 +410,19 @@ class CameraIntrinsics(ReprMixin):
 
         """
         return self._distortion_coefficients
+
+    def dumps(self) -> Dict[str, Dict[str, float]]:
+        """Dumps the camera intrinsics into a dict.
+
+        Returns:
+            A dict containing camera intrinsics.
+
+        """
+        contents = {"cameraMatrix": self._camera_matrix.dumps()}
+        if self._distortion_coefficients:
+            contents["distortionCoefficients"] = self._distortion_coefficients.dumps()
+
+        return contents
 
     def set_camera_matrix(
         self,

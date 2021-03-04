@@ -99,6 +99,11 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
     def __init__(self, name: str) -> None:
         super().__init__(name)
 
+    def _loads(self, contents: Dict[str, Any]) -> None:
+        super()._loads(contents)
+        if "extrinsics" in contents:
+            self.extrinsics = Transform3D.loads(contents["extrinsics"])
+
     @staticmethod
     def loads(contents: Dict[str, Any]) -> "_Type":
         """Loads a Sensor from a dict containing the sensor information.
@@ -112,11 +117,6 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
         """
         sensor: "Sensor._Type" = common_loads(SensorType(contents["type"]).type, contents)
         return sensor
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        super()._loads(contents)
-        if "extrinsics" in contents:
-            self.extrinsics = Transform3D.loads(contents["extrinsics"])
 
     def dumps(self) -> Dict[str, Any]:
         """Dumps the sensor into a dict.
@@ -223,9 +223,16 @@ class Camera(Sensor):
 
     """
 
-    _repr_attrs = Sensor._repr_attrs + ("intrinsics",)
     _T = TypeVar("_T", bound="Camera")
+
+    _repr_attrs = Sensor._repr_attrs + ("intrinsics",)
+
     intrinsics: CameraIntrinsics
+
+    def _loads(self, contents: Dict[str, Any]) -> None:
+        super()._loads(contents)
+        if "intrinsics" in contents:
+            self.intrinsics = CameraIntrinsics.loads(contents["intrinsics"])
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -239,11 +246,6 @@ class Camera(Sensor):
 
         """
         return common_loads(cls, contents)
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        super()._loads(contents)
-        if "intrinsics" in contents:
-            self.intrinsics = CameraIntrinsics.loads(contents["intrinsics"])
 
     def dumps(self) -> Dict[str, Any]:
         """Dumps the camera into a dict.
