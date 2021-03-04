@@ -57,7 +57,6 @@ class SubcatalogBase(TypeMixin[LabelType], ReprMixin):
     """
 
     _T = TypeVar("_T", bound="SubcatalogBase")
-    _supports: Tuple[Type[Supports], ...]
 
     _repr_type = ReprType.INSTANCE
     _repr_attrs = (
@@ -71,10 +70,18 @@ class SubcatalogBase(TypeMixin[LabelType], ReprMixin):
         "lexicon",
     )
 
+    _supports: Tuple[Type[Supports], ...]
+
     description = ""
 
     def __init_subclass__(cls) -> None:
         cls._supports = tuple(filter(lambda class_: issubclass(class_, Supports), cls.__bases__))
+
+    def _loads(self, contents: Dict[str, Any]) -> None:
+        if "description" in contents:
+            self.description = contents["description"]
+        for support in self._supports:
+            support._loads(self, contents)  # pylint: disable=protected-access
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -88,12 +95,6 @@ class SubcatalogBase(TypeMixin[LabelType], ReprMixin):
 
         """
         return common_loads(cls, contents)
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        if "description" in contents:
-            self.description = contents["description"]
-        for support in self._supports:
-            support._loads(self, contents)  # pylint: disable=protected-access
 
     def dumps(self) -> Dict[str, Any]:
         """Dumps all the information of the subcatalog into a dict.
@@ -283,6 +284,16 @@ class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
         for keypoint in contents["keypoints"]:
             self._keypoints.append(KeypointsInfo.loads(keypoint))
 
+    @property
+    def keypoints(self) -> List[KeypointsInfo]:
+        """Return the KeypointsInfo of the Subcatalog.
+
+        Returns:
+            A list of :class:`~tensorbay.label.supports.KeypointsInfo`.
+
+        """
+        return self._keypoints
+
     def add_keypoints(
         self,
         number: int,
@@ -317,16 +328,6 @@ class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
                 description=description,
             )
         )
-
-    @property
-    def keypoints(self) -> List[KeypointsInfo]:
-        """Return the KeypointsInfo of the Subcatalog.
-
-        Returns:
-            A list of :class:`~tensorbay.label.supports.KeypointsInfo`.
-
-        """
-        return self._keypoints
 
     def dumps(self) -> Dict[str, Any]:
         """Dumps all the information of the keypoints into a dict.

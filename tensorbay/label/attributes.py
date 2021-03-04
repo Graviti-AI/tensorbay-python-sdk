@@ -100,6 +100,7 @@ class Items(ReprMixin):
     """
 
     _T = TypeVar("_T", bound="Items")
+
     _repr_attrs: Tuple[str, ...] = ("type", "enum", "minimum", "maximum", "items")
 
     def __init__(
@@ -122,6 +123,30 @@ class Items(ReprMixin):
             self.minimum = minimum
         if minimum is not None:
             self.maximum = maximum
+
+    @staticmethod
+    def _convert_type(type_: _ArgType) -> Tuple[Union[str, List[str]], bool]:
+        if isinstance(type_, Iterable) and not isinstance(type_, str):  # pylint: disable=W1116
+            converted_types = [_AttributeType.get_type_name(single_type) for single_type in type_]
+            return converted_types, "array" in converted_types
+
+        converted_type = _AttributeType.get_type_name(type_)
+        return converted_type, converted_type == "array"
+
+    def _loads(self, contents: Dict[str, Any]) -> None:
+        if "type" in contents:
+            self.type, has_array = self._convert_type(contents["type"])
+            if has_array:
+                self.items = Items.loads(contents["items"])
+
+        if "enum" in contents:
+            self.enum = contents["enum"]
+
+        if "minimum" in contents:
+            self.minimum = contents["minimum"]
+
+        if "maximum" in contents:
+            self.maximum = contents["maximum"]
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -149,30 +174,6 @@ class Items(ReprMixin):
 
         """
         return common_loads(cls, contents)
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        if "type" in contents:
-            self.type, has_array = self._convert_type(contents["type"])
-            if has_array:
-                self.items = Items.loads(contents["items"])
-
-        if "enum" in contents:
-            self.enum = contents["enum"]
-
-        if "minimum" in contents:
-            self.minimum = contents["minimum"]
-
-        if "maximum" in contents:
-            self.maximum = contents["maximum"]
-
-    @staticmethod
-    def _convert_type(type_: _ArgType) -> Tuple[Union[str, List[str]], bool]:
-        if isinstance(type_, Iterable) and not isinstance(type_, str):  # pylint: disable=W1116
-            converted_types = [_AttributeType.get_type_name(single_type) for single_type in type_]
-            return converted_types, "array" in converted_types
-
-        converted_type = _AttributeType.get_type_name(type_)
-        return converted_type, converted_type == "array"
 
     def dumps(self) -> Dict[str, Any]:
         """Dumps the information of the items into a dict.
@@ -239,6 +240,7 @@ class AttributeInfo(NameMixin, Items):
     """
 
     _T = TypeVar("_T", bound="AttributeInfo")
+
     _repr_attrs = ("name", "parent_categories") + Items._repr_attrs
     _repr_maxlevel = 2
 
@@ -264,6 +266,13 @@ class AttributeInfo(NameMixin, Items):
             self.parent_categories = [parent_categories]
         else:
             self.parent_categories = list(parent_categories)
+
+    def _loads(self, contents: Dict[str, Any]) -> None:
+        NameMixin._loads(self, contents)
+        Items._loads(self, contents)
+
+        if "parentCategories" in contents:
+            self.parent_categories = contents["parentCategories"]
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -294,13 +303,6 @@ class AttributeInfo(NameMixin, Items):
 
         """
         return common_loads(cls, contents)
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        NameMixin._loads(self, contents)
-        Items._loads(self, contents)
-
-        if "parentCategories" in contents:
-            self.parent_categories = contents["parentCategories"]
 
     def dumps(self) -> Dict[str, Any]:
         """Dumps the information of this attribute into a dict.

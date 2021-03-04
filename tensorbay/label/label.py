@@ -82,6 +82,7 @@ class _LabelBase(TypeMixin[LabelType], ReprMixin):
     """
 
     _label_attrs: Tuple[str, ...] = ("category", "attributes", "instance")
+
     _repr_attrs = _label_attrs
 
     category: str
@@ -140,6 +141,7 @@ class Classification(_LabelBase):
     """
 
     _label_attrs = ("category", "attributes")
+
     _repr_attrs = _label_attrs
 
     def __init__(
@@ -222,6 +224,10 @@ class LabeledBox2D(Box2D, _LabelBase):  # pylint: disable=too-many-ancestors
         Box2D.__init__(self, *args, x=x, y=y, width=width, height=height)
         _LabelBase.__init__(self, category, attributes, instance)
 
+    def _loads(self, contents: Dict[str, Any]) -> None:
+        Box2D._loads(self, contents["box2d"])
+        _LabelBase._loads(self, contents)
+
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
         """Loads a LabeledBox2D from a dict containing the information of the label.
@@ -251,10 +257,6 @@ class LabeledBox2D(Box2D, _LabelBase):  # pylint: disable=too-many-ancestors
 
         """
         return common_loads(cls, contents)
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        Box2D._loads(self, contents["box2d"])
-        _LabelBase._loads(self, contents)
 
     def dumps(self) -> Dict[str, Any]:
         """Dumps the current 2D bounding box label into a dict.
@@ -317,6 +319,7 @@ class LabeledBox3D(Box3D, _LabelBase):
     """
 
     _T = TypeVar("_T", bound="LabeledBox3D")
+
     _repr_attrs = Box3D._repr_attrs + _LabelBase._repr_attrs
 
     def __init__(
@@ -340,6 +343,23 @@ class LabeledBox3D(Box3D, _LabelBase):
             **kwargs,
         )
         _LabelBase.__init__(self, category, attributes, instance)
+
+    def __rmul__(self: _T, other: Transform3D) -> _T:
+        if isinstance(other, Transform3D):
+            labeled_box_3d = Box3D.__rmul__(self, other)
+            if hasattr(self, "category"):
+                labeled_box_3d.category = self.category
+            if hasattr(self, "attributes"):
+                labeled_box_3d.attributes = self.attributes
+            if hasattr(self, "instance"):
+                labeled_box_3d.instance = self.instance
+            return labeled_box_3d
+
+        return NotImplemented  # type: ignore[unreachable]
+
+    def _loads(self, contents: Dict[str, Any]) -> None:
+        Box3D._loads(self, contents["box3d"])
+        _LabelBase._loads(self, contents)
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -382,23 +402,6 @@ class LabeledBox3D(Box3D, _LabelBase):
 
         """
         return common_loads(cls, contents)
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        Box3D._loads(self, contents["box3d"])
-        _LabelBase._loads(self, contents)
-
-    def __rmul__(self: _T, other: Transform3D) -> _T:
-        if isinstance(other, Transform3D):
-            labeled_box_3d = Box3D.__rmul__(self, other)
-            if hasattr(self, "category"):
-                labeled_box_3d.category = self.category
-            if hasattr(self, "attributes"):
-                labeled_box_3d.attributes = self.attributes
-            if hasattr(self, "instance"):
-                labeled_box_3d.instance = self.instance
-            return labeled_box_3d
-
-        return NotImplemented  # type: ignore[unreachable]
 
     def dumps(self) -> Dict[str, Any]:
         """Dumps the current 3D bounding box label into a dict.
@@ -475,6 +478,10 @@ class LabeledPolygon2D(Polygon2D, _LabelBase):  # pylint: disable=too-many-ances
         super().__init__(points)
         _LabelBase.__init__(self, category, attributes, instance)
 
+    def _loads(self, contents: Dict[str, Any]) -> None:  # type: ignore[override]
+        super()._loads(contents["polygon2d"])
+        _LabelBase._loads(self, contents)
+
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:  # type: ignore[override]
         """Loads a LabeledPolygon2D from a dict containing the information of the label.
@@ -505,10 +512,6 @@ class LabeledPolygon2D(Polygon2D, _LabelBase):  # pylint: disable=too-many-ances
 
         """
         return common_loads(cls, contents)
-
-    def _loads(self, contents: Dict[str, Any]) -> None:  # type: ignore[override]
-        super()._loads(contents["polygon2d"])
-        _LabelBase._loads(self, contents)
 
     def dumps(self) -> Dict[str, Any]:  # type: ignore[override]
         """Dumps the current 2D polygon label into a dict.
@@ -575,6 +578,10 @@ class LabeledPolyline2D(Polyline2D, _LabelBase):  # pylint: disable=too-many-anc
         super().__init__(points)
         _LabelBase.__init__(self, category, attributes, instance)
 
+    def _loads(self, contents: Dict[str, Any]) -> None:  # type: ignore[override]
+        super()._loads(contents["polyline2d"])
+        _LabelBase._loads(self, contents)
+
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:  # type: ignore[override]
         """Loads a LabeledPolyline2D from a dict containing the information of the label.
@@ -605,10 +612,6 @@ class LabeledPolyline2D(Polyline2D, _LabelBase):  # pylint: disable=too-many-anc
 
         """
         return common_loads(cls, contents)
-
-    def _loads(self, contents: Dict[str, Any]) -> None:  # type: ignore[override]
-        super()._loads(contents["polyline2d"])
-        _LabelBase._loads(self, contents)
 
     def dumps(self) -> Dict[str, Any]:  # type: ignore[override]
         """Dumps the current 2D polyline label into a dict.
@@ -660,6 +663,7 @@ class Word(ReprMixin):
     """
 
     _T = TypeVar("_T", bound="Word")
+
     _repr_attrs = ("text", "begin", "end")
 
     def __init__(
@@ -673,6 +677,15 @@ class Word(ReprMixin):
             self.begin = begin
         if end is not None:
             self.end = end
+
+    def _loads(self, contents: Dict[str, Any]) -> None:
+        self.text = contents["text"]
+
+        if "begin" in contents:
+            self.begin = contents["begin"]
+
+        if "end" in contents:
+            self.end = contents["end"]
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Union[str, float]]) -> _T:
@@ -693,15 +706,6 @@ class Word(ReprMixin):
 
         """
         return common_loads(cls, contents)
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        self.text = contents["text"]
-
-        if "begin" in contents:
-            self.begin = contents["begin"]
-
-        if "end" in contents:
-            self.end = contents["end"]
 
     def dumps(self) -> Dict[str, Union[str, float]]:
         """Dumps the current word into a dict.
@@ -747,8 +751,9 @@ class LabeledSentence(_LabelBase):
     """
 
     _label_attrs = ("attributes",)
-    _repr_maxlevel = 3
+
     _repr_attrs = ("sentence", "spell", "phone") + _label_attrs
+    _repr_maxlevel = 3
 
     def __init__(
         self,
@@ -765,6 +770,22 @@ class LabeledSentence(_LabelBase):
             self.spell = list(spell)
         if phone:
             self.phone = list(phone)
+
+    @staticmethod
+    def _load_word(contents: Iterable[Dict[str, Any]]) -> List[Word]:
+        return [Word.loads(word) for word in contents]
+
+    def _loads(self, contents: Dict[str, Any]) -> None:
+        super()._loads(contents)
+
+        if "sentence" in contents:
+            self.sentence = self._load_word(contents["sentence"])
+
+        if "spell" in contents:
+            self.spell = self._load_word(contents["spell"])
+
+        if "phone" in contents:
+            self.phone = self._load_word(contents["phone"])
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -814,22 +835,6 @@ class LabeledSentence(_LabelBase):
 
         """
         return common_loads(cls, contents)
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        super()._loads(contents)
-
-        if "sentence" in contents:
-            self.sentence = self._load_word(contents["sentence"])
-
-        if "spell" in contents:
-            self.spell = self._load_word(contents["spell"])
-
-        if "phone" in contents:
-            self.phone = self._load_word(contents["phone"])
-
-    @staticmethod
-    def _load_word(contents: Iterable[Dict[str, Any]]) -> List[Word]:
-        return [Word.loads(word) for word in contents]
 
     def dumps(self) -> Dict[str, Any]:
         """Dumps the current label into a dict.
@@ -918,6 +923,10 @@ class LabeledKeypoints2D(Keypoints2D, _LabelBase):  # pylint: disable=too-many-a
         super().__init__(keypoints)
         _LabelBase.__init__(self, category, attributes, instance)
 
+    def _loads(self, contents: Dict[str, Any]) -> None:  # type: ignore[override]
+        super()._loads(contents["keypoints2d"])
+        _LabelBase._loads(self, contents)
+
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:  # type: ignore[override]
         """Loads a LabeledKeypoints2D from a dict containing the information of the label.
@@ -949,10 +958,6 @@ class LabeledKeypoints2D(Keypoints2D, _LabelBase):  # pylint: disable=too-many-a
 
         """
         return common_loads(cls, contents)
-
-    def _loads(self, contents: Dict[str, Any]) -> None:  # type: ignore[override]
-        super()._loads(contents["keypoints2d"])
-        _LabelBase._loads(self, contents)
 
     def dumps(self) -> Dict[str, Any]:  # type: ignore[override]
         """Dumps the current 2D keypoints label into a dict.
