@@ -16,6 +16,9 @@ typing_extensions
 pre-commit
 pylint==2.7.2
 
+# test
+pytest==6.2.2
+
 # optional dependences
 scipy
 xmltodict

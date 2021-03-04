@@ -3,7 +3,7 @@
 #
 
 ---
-name: Pre-commit check
+name: Run unit test
 
 on: [push, pull_request]
 
@@ -12,8 +12,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: [3.8.0]
-        os: [ubuntu-18.04]
+        python-version: [3.6.8, 3.8.0]
+        os: [ubuntu-18.04, macos-10.15, windows-2019]
 
     steps:
       - uses: actions/checkout@v2
@@ -22,10 +22,17 @@ jobs:
         with:
           ruby-version: 2.6
           bundler-cache: true
-      - name: Cache python ${{ matrix.python-version }}
+      - name: Cache python ${{ matrix.python-version }} in ubuntu
+        if: startsWith(matrix.os, 'ubuntu')
         uses: actions/cache@v2
         with:
           path: /opt/hostedtoolcache/Python/${{ matrix.python-version }}
+          key: ${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}
+      - name: Cache python ${{ matrix.python-version }} in macos
+        if: startsWith(matrix.os, 'macos')
+        uses: actions/cache@v2
+        with:
+          path: /Users/runner/hostedtoolcache/Python/${{ matrix.python-version }}
           key: ${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
@@ -33,13 +40,5 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: pip install -r requirements.txt
-      - name: Cache linters
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pre-commit
-          key: ${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
-      - name: Run pre commit
-        run: |
-          pre-commit run --all-files
-          git show --format=%B --no-patch > commit-msg
-          pre-commit run --commit-msg-filename commit-msg --hook-stage commit-msg gitlint
+      - name: Run pytest
+        run: pytest
