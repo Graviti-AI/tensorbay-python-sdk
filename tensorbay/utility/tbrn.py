@@ -214,6 +214,9 @@ class TBRN:
         except KeyError as error:
             raise TypeError("Invalid TensorBay Resource Name") from error
 
+    def __repr__(self) -> str:
+        return self.get_tbrn()
+
     def _check_type(self) -> Tuple[TBRNType, int]:
         # https://github.com/PyCQA/pylint/issues/2224
         flag = _TBRNFlag.FIELD_HEAD.value  # pylint: disable=no-member
@@ -222,9 +225,6 @@ class TBRN:
                 flag |= 1 << i
 
         return TBRN._FLAG_TO_TYPE[_TBRNFlag(flag)]
-
-    def __repr__(self) -> str:
-        return self.get_tbrn()
 
     def _raise_when_none(self, value: Optional[_T], field: str) -> _T:
         if value is None:

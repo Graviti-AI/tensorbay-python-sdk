@@ -36,11 +36,11 @@ class ReprMixin:  # pylint: disable=too-few-public-methods
     _repr_attrs: Iterable[str] = ()
     _repr_maxlevel = 1
 
-    def __str__(self) -> str:
-        return _repr1(self, self._repr_maxlevel, self._repr_maxlevel, False)
-
     def __repr__(self) -> str:
         return _repr1(self, self._repr_maxlevel, self._repr_maxlevel, True)
+
+    def __str__(self) -> str:
+        return _repr1(self, self._repr_maxlevel, self._repr_maxlevel, False)
 
     def _repr_head(self) -> str:
         return self.__class__.__name__
