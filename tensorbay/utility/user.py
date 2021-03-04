@@ -46,6 +46,9 @@ class UserSequence(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancesto
 
     _repr_type = ReprType.SEQUENCE
 
+    def __len__(self) -> int:
+        return self._data.__len__()
+
     @overload
     def __getitem__(self, index: int) -> _T:
         ...
@@ -56,9 +59,6 @@ class UserSequence(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancesto
 
     def __getitem__(self, index: Union[int, slice]) -> Union[Sequence[_T], _T]:
         return self._data.__getitem__(index)
-
-    def __len__(self) -> int:
-        return self._data.__len__()
 
     def index(self, value: _T, start: int = 0, stop: int = -1) -> int:
         """Return the first index of the value.
@@ -90,9 +90,12 @@ class UserSequence(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancesto
 class UserMutableSequence(MutableSequence[_T], ReprMixin):  # pylint: disable=too-many-ancestors
     """UserMutableSequence is a user-defined wrapper around mutable sequence objects."""
 
+    _repr_type = ReprType.SEQUENCE
+
     _data: MutableSequence[_T]
 
-    _repr_type = ReprType.SEQUENCE
+    def __len__(self) -> int:
+        return self._data.__len__()
 
     @overload
     def __getitem__(self, index: int) -> _T:
@@ -117,11 +120,11 @@ class UserMutableSequence(MutableSequence[_T], ReprMixin):  # pylint: disable=to
         # https://github.com/python/mypy/issues/7858
         self._data.__setitem__(index, value)  # type: ignore[index, assignment]
 
-    def __len__(self) -> int:
-        return self._data.__len__()
-
     def __delitem__(self, index: Union[int, slice]) -> None:
         self._data.__delitem__(index)
+
+    def __iadd__(self, value: Iterable[_T]) -> MutableSequence[_T]:
+        return self._data.__iadd__(value)
 
     def insert(self, index: int, value: _T) -> None:
         """Insert object before index.
@@ -180,19 +183,25 @@ class UserMutableSequence(MutableSequence[_T], ReprMixin):  # pylint: disable=to
         """
         self._data.remove(value)
 
-    def __iadd__(self, value: Iterable[_T]) -> MutableSequence[_T]:
-        return self._data.__iadd__(value)
-
 
 class UserMapping(Mapping[_K, _V], ReprMixin):  # pylint: disable=too-many-ancestors
     """UserMapping is a user-defined wrapper around mapping objects."""
 
+    _repr_type = ReprType.MAPPING
+
     _data: Mapping[_K, _V]
 
-    _repr_type = ReprType.MAPPING
+    def __len__(self) -> int:
+        return self._data.__len__()
 
     def __getitem__(self, key: _K) -> _V:
         return self._data.__getitem__(key)
+
+    def __contains__(self, key: object) -> bool:
+        return self._data.__contains__(key)
+
+    def __iter__(self) -> Iterator[_K]:
+        return self._data.__iter__()
 
     @overload
     def get(self, key: _K) -> Optional[_V]:  # pylint: disable=arguments-differ
@@ -242,23 +251,15 @@ class UserMapping(Mapping[_K, _V], ReprMixin):  # pylint: disable=too-many-ances
         """
         return self._data.values()
 
-    def __contains__(self, key: object) -> bool:
-        return self._data.__contains__(key)
-
-    def __iter__(self) -> Iterator[_K]:
-        return self._data.__iter__()
-
-    def __len__(self) -> int:
-        return self._data.__len__()
-
 
 class UserMutableMapping(
     UserMapping[_K, _V], MutableMapping[_K, _V]
 ):  # pylint: disable=too-many-ancestors
     """UserMutableMapping is a user-defined wrapper around mutable mapping objects."""
 
-    _data: MutableMapping[_K, _V]
     __marker = object()
+
+    _data: MutableMapping[_K, _V]
 
     def __setitem__(self, key: _K, value: _V) -> None:
         self._data.__setitem__(key, value)

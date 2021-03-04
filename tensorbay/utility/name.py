@@ -38,6 +38,7 @@ class NameMixin(ReprMixin):
     """
 
     _P = TypeVar("_P", bound="NameMixin")
+
     description = ""
 
     def __init__(self, name: str, description: Optional[str] = None) -> None:
@@ -47,6 +48,11 @@ class NameMixin(ReprMixin):
 
     def _repr_head(self) -> str:
         return f'{self.__class__.__name__}("{self._name}")'
+
+    def _loads(self, contents: Dict[str, str]) -> None:
+        self._name = contents["name"]
+        if "description" in contents:
+            self.description = contents["description"]
 
     @classmethod
     def loads(cls: Type[_P], contents: Dict[str, str]) -> _P:
@@ -66,10 +72,15 @@ class NameMixin(ReprMixin):
         """
         return common_loads(cls, contents)
 
-    def _loads(self, contents: Dict[str, str]) -> None:
-        self._name = contents["name"]
-        if "description" in contents:
-            self.description = contents["description"]
+    @property
+    def name(self) -> str:
+        """Return name of the instance.
+
+        Returns:
+            Name of the instance.
+
+        """
+        return self._name
 
     def dumps(self) -> Dict[str, str]:
         """Dumps the instance into a dict.
@@ -83,16 +94,6 @@ class NameMixin(ReprMixin):
             contents["description"] = self.description
 
         return contents
-
-    @property
-    def name(self) -> str:
-        """Return name of the instance.
-
-        Returns:
-            Name of the instance.
-
-        """
-        return self._name
 
 
 _T = TypeVar("_T", bound=NameMixin)
@@ -133,6 +134,9 @@ class NameSortedList(Sequence[_T]):  # pylint: disable=too-many-ancestors
     def __init__(self) -> None:
         self._data = SortedDict()
 
+    def __len__(self) -> int:
+        return self._data.__len__()  # type: ignore[no-any-return]
+
     @overload
     def __getitem__(self, index: int) -> _T:
         ...
@@ -143,9 +147,6 @@ class NameSortedList(Sequence[_T]):  # pylint: disable=too-many-ancestors
 
     def __getitem__(self, index: Union[int, slice]) -> Union[_T, List[_T]]:
         return self._data.values()[index]  # type: ignore[no-any-return]
-
-    def __len__(self) -> int:
-        return self._data.__len__()  # type: ignore[no-any-return]
 
     def __iter__(self) -> Iterator[_T]:
         return self._data.values().__iter__()  # type: ignore[no-any-return]
