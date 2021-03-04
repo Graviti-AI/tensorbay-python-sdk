@@ -82,6 +82,59 @@ class GAS:
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
         return ReturnType(name, response.json()["id"], self._client)
 
+    def _get_dataset(self, name: str, commit_id: Optional[str] = None) -> DatasetClientType:
+        dataset_id, is_fusion = self._get_dataset_id_and_type(name)
+        ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
+        return ReturnType(name, dataset_id, self._client, commit_id)
+
+    def _list_datasets(
+        self,
+        name: Optional[str] = None,
+        need_team_dataset: bool = False,  # personal: False, all: True
+        *,
+        start: int = 0,
+        stop: int = sys.maxsize,
+        page_size: int = 128,
+    ) -> Iterator[Dict[str, Any]]:
+
+        params: Dict[str, Any] = {}
+        if name:
+            params["name"] = name
+        if need_team_dataset:
+            params["needTeamDataset"] = need_team_dataset
+
+        for params["offset"], params["limit"] in paging_range(start, stop, page_size):
+            response = self._client.open_api_do("GET", "", params=params).json()
+            yield from response["datasets"]
+            if response["recordSize"] + response["offset"] >= response["totalCount"]:
+                break
+
+    def _get_dataset_id_and_type(self, name: str) -> Tuple[str, bool]:
+        """Get the ID and the type of the TensorBay dataset with the input name.
+
+        Arguments:
+            name: The name of the requested dataset.
+
+        Returns:
+            The tuple of dataset ID and type, True for fusion dataset.
+
+        Raises:
+            GASDatasetError: When the required dataset does not exist.
+
+        """
+        if not name:
+            raise GASDatasetError(name)
+
+        try:
+            info = next(self._list_datasets(name))
+        except StopIteration as error:
+            raise GASDatasetError(name) from error
+
+        return (
+            info["id"],
+            bool(info["type"]),
+        )
+
     def create_dataset(
         self,
         name: str,
@@ -121,11 +174,6 @@ class GAS:
 
         """
         return self._create_dataset(name, is_continuous, region, True)
-
-    def _get_dataset(self, name: str, commit_id: Optional[str] = None) -> DatasetClientType:
-        dataset_id, is_fusion = self._get_dataset_id_and_type(name)
-        ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
-        return ReturnType(name, dataset_id, self._client, commit_id)
 
     def get_dataset(self, name: str, commit_id: Optional[str] = None) -> DatasetClient:
         """Get a :class:`~tensorbay.client.dataset.DatasetClient` with given name and commit ID.
@@ -167,28 +215,6 @@ class GAS:
 
         return client
 
-    def _list_datasets(
-        self,
-        name: Optional[str] = None,
-        need_team_dataset: bool = False,  # personal: False, all: True
-        *,
-        start: int = 0,
-        stop: int = sys.maxsize,
-        page_size: int = 128,
-    ) -> Iterator[Dict[str, Any]]:
-
-        params: Dict[str, Any] = {}
-        if name:
-            params["name"] = name
-        if need_team_dataset:
-            params["needTeamDataset"] = need_team_dataset
-
-        for params["offset"], params["limit"] in paging_range(start, stop, page_size):
-            response = self._client.open_api_do("GET", "", params=params).json()
-            yield from response["datasets"]
-            if response["recordSize"] + response["offset"] >= response["totalCount"]:
-                break
-
     def list_dataset_names(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[str]:
         """List names of all TensorBay datasets.
 
@@ -201,32 +227,6 @@ class GAS:
 
         """
         yield from (item["name"] for item in self._list_datasets(start=start, stop=stop))
-
-    def _get_dataset_id_and_type(self, name: str) -> Tuple[str, bool]:
-        """Get the ID and the type of the TensorBay dataset with the input name.
-
-        Arguments:
-            name: The name of the requested dataset.
-
-        Returns:
-            The tuple of dataset ID and type, True for fusion dataset.
-
-        Raises:
-            GASDatasetError: When the required dataset does not exist.
-
-        """
-        if not name:
-            raise GASDatasetError(name)
-
-        try:
-            info = next(self._list_datasets(name))
-        except StopIteration as error:
-            raise GASDatasetError(name) from error
-
-        return (
-            info["id"],
-            bool(info["type"]),
-        )
 
     def rename_dataset(self, name: str, new_name: str) -> None:
         """Rename a TensorBay Dataset with given name.

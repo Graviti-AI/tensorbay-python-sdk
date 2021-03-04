@@ -56,26 +56,6 @@ class DatasetClientBase:
         self._client = client
         self._commit_id = commit_id
 
-    @property
-    def commit_id(self) -> Optional[str]:
-        """Return the commit ID.
-
-        Returns:
-            The commit ID.
-
-        """
-        return self._commit_id
-
-    @property
-    def dataset_id(self) -> str:
-        """Return the TensorBay dataset ID.
-
-        Returns:
-            The TensorBay dataset ID.
-
-        """
-        return self._dataset_id
-
     def _commit(self, message: str, tag: Optional[str] = None) -> str:
         post_data = {
             "message": message,
@@ -85,17 +65,6 @@ class DatasetClientBase:
 
         response = self._client.open_api_do("POST", "", self.dataset_id, json=post_data)
         return response.json()["commitId"]  # type: ignore[no-any-return]
-
-    def commit(self, message: str, tag: Optional[str] = None) -> None:
-        """Commit the draft.
-
-        Arguments:
-            message: The commit message.
-            tag: A tag for current commit.
-
-        """
-        commit_id = self._commit(message, tag)
-        self._commit_id = commit_id
 
     def _create_segment(self, name: str) -> None:
         post_data = {"name": name}
@@ -115,6 +84,37 @@ class DatasetClientBase:
             yield from response["segments"]
             if response["recordSize"] + response["offset"] >= response["totalCount"]:
                 break
+
+    @property
+    def dataset_id(self) -> str:
+        """Return the TensorBay dataset ID.
+
+        Returns:
+            The TensorBay dataset ID.
+
+        """
+        return self._dataset_id
+
+    @property
+    def commit_id(self) -> Optional[str]:
+        """Return the commit ID.
+
+        Returns:
+            The commit ID.
+
+        """
+        return self._commit_id
+
+    def commit(self, message: str, tag: Optional[str] = None) -> None:
+        """Commit the draft.
+
+        Arguments:
+            message: The commit message.
+            tag: A tag for current commit.
+
+        """
+        commit_id = self._commit(message, tag)
+        self._commit_id = commit_id
 
     def list_segment_names(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[str]:
         """List all segment names in a certain commit.
