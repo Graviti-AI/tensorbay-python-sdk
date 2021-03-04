@@ -128,7 +128,6 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
         *,
         translation: Optional[Iterable[float]] = None,
         rotation: Quaternion.ArgsType = None,
-        contents: Optional[Dict[str, Dict[str, float]]] = None,
         **kwargs: Quaternion.KwargsType,
     ) -> None:
         """Set the pose of the current frame.
@@ -141,13 +140,8 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
             rotation: Rotation of the frame pose in a sequence of [w, x, y, z]
                 or a 3x3 rotation matrix
                 or a :class:`~tensorbay.geometry.quaternion.Quaternion` object.
-            contents: A dictionary containing the translation and the rotation of the frame pose.
             **kwargs: Other parameters to initialize the rotation of the frame pose.
                 See :class:`~tensorbay.geometry.quaternion.Quaternion` documents for details.
 
         """
-        if contents:
-            self._pose = Transform3D.loads(contents)
-            return
-
         self._pose = Transform3D(transform, translation=translation, rotation=rotation, **kwargs)
