@@ -66,8 +66,8 @@ _LABEL_DATA = [
     },
 ]
 
-_DATA = {"localPath": "test.json", "timestamp": 1614667532}
-_REMOTE_DATA = {"remotePath": "test.json", "timestamp": 1614667532}
+_DATA = {"localPath": "test.json", "timestamp": 1614667532, "label": {}}
+_REMOTE_DATA = {"remotePath": "test.json", "timestamp": 1614667532, "label": {}}
 
 
 class TestLabel:
