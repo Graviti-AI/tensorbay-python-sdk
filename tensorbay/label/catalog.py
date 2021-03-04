@@ -40,6 +40,12 @@ class Catalog(ReprMixin):
 
     """
 
+    _T = TypeVar("_T", bound="Catalog")
+
+    _repr_type = ReprType.INSTANCE
+    _repr_attrs = tuple(label_type.value for label_type in LabelType)
+    _repr_maxlevel = 2
+
     classification: ClassificationSubcatalog
     box2d: Box2DSubcatalog
     box3d: Box3DSubcatalog
@@ -48,10 +54,16 @@ class Catalog(ReprMixin):
     keypoints2d: Keypoints2DSubcatalog
     sentence: SentenceSubcatalog
 
-    _T = TypeVar("_T", bound="Catalog")
-    _repr_maxlevel = 2
-    _repr_type = ReprType.INSTANCE
-    _repr_attrs = tuple(label_type.value for label_type in LabelType)
+    def __bool__(self) -> bool:
+        for label_type in LabelType:
+            if hasattr(self, label_type.value):
+                return True
+        return False
+
+    def _loads(self, contents: Dict[str, Any]) -> None:
+        for type_name, subcatalog in contents.items():
+            label_type = LabelType[type_name]
+            setattr(self, label_type.value, label_type.subcatalog_type.loads(subcatalog))
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -66,11 +78,6 @@ class Catalog(ReprMixin):
         """
         return common_loads(cls, contents)
 
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        for type_name, subcatalog in contents.items():
-            label_type = LabelType[type_name]
-            setattr(self, label_type.value, label_type.subcatalog_type.loads(subcatalog))
-
     def dumps(self) -> Dict[str, Any]:
         """Dumps the catalog into a dict containing the information of all the subcatalog.
 
@@ -84,9 +91,3 @@ class Catalog(ReprMixin):
             if subcatalog:
                 contents[label_type.name] = subcatalog.dumps()
         return contents
-
-    def __bool__(self) -> bool:
-        for label_type in LabelType:
-            if hasattr(self, label_type.value):
-                return True
-        return False

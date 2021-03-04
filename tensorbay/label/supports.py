@@ -114,6 +114,8 @@ class KeypointsInfo(ReprMixin):
 
     """
 
+    _T = TypeVar("_T", bound="KeypointsInfo")
+
     _repr_type = ReprType.INSTANCE
     _repr_attrs = (
         "number",
@@ -122,7 +124,7 @@ class KeypointsInfo(ReprMixin):
         "visible",
         "parent_categories",
     )
-    _T = TypeVar("_T", bound="KeypointsInfo")
+
     description = ""
 
     def __init__(
@@ -159,6 +161,24 @@ class KeypointsInfo(ReprMixin):
         else:
             self.parent_categories = list(parent_categories)
 
+    def _loads(self, contents: Dict[str, Any]) -> None:
+        self._number = contents["number"]
+
+        if "names" in contents:
+            self.names = contents["names"]
+
+        if "skeleton" in contents:
+            self.skeleton = [tuple(line) for line in contents["skeleton"]]  # type: ignore[misc]
+
+        if "visible" in contents:
+            self.visible = _VisibleType[contents["visible"]].name
+
+        if "parentCategories" in contents:
+            self.parent_categories = contents["parentCategories"]
+
+        if "description" in contents:
+            self.description = contents["description"]
+
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
         """Loads a KeypointsInfo from a dict containing the information of the keypoints.
@@ -184,24 +204,6 @@ class KeypointsInfo(ReprMixin):
 
         """
         return common_loads(cls, contents)
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        self._number = contents["number"]
-
-        if "names" in contents:
-            self.names = contents["names"]
-
-        if "skeleton" in contents:
-            self.skeleton = [tuple(line) for line in contents["skeleton"]]  # type: ignore[misc]
-
-        if "visible" in contents:
-            self.visible = _VisibleType[contents["visible"]].name
-
-        if "parentCategories" in contents:
-            self.parent_categories = contents["parentCategories"]
-
-        if "description" in contents:
-            self.description = contents["description"]
 
     @property
     def number(self) -> int:
