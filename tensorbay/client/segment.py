@@ -512,11 +512,8 @@ class FusionSegmentClient(SegmentClientBase):
 
         """
         for frame_content in self._list_labels(start=start, stop=stop):
-            frame_index = frame_content["frameIndex"]
-            frame_id = frame_content["frameId"]
-            frame = Frame(frame_index, frame_id)
-            for data_content in frame_content["frame"]:
-                data = RemoteData.loads(data_content)
-                data._url_getter = self._get_url  # pylint: disable=protected-access
-                frame[data_content["sensorName"]] = data
+            frame = Frame.loads(frame_content)
+            for data in frame.values():  # pylint: disable=no-member # pylint issue: #3131
+                # pylint: disable=protected-access
+                data._url_getter = self._get_url  # type: ignore[union-attr]
             yield frame
