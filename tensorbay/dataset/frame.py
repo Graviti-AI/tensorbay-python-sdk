@@ -13,9 +13,8 @@ from different sensors.
 
 """
 
-from typing import Any, Dict, Iterable, Optional, Type, TypeVar
+from typing import Any, Dict, Optional, Type, TypeVar
 
-from ..geometry import Quaternion, Transform3D
 from ..utility import UserMutableMapping, common_loads
 from .data import DataBase
 
@@ -45,7 +44,7 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
 
     def __init__(self, index: Optional[float] = None, frame_id: Optional[str] = None) -> None:
         self._data: Dict[str, DataBase._Type] = {}
-        self._pose: Optional[Transform3D] = None
+        # self._pose: Optional[Transform3D] = None
         if index is not None:
             self._index = index
         if frame_id:
@@ -55,7 +54,7 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
         self._data = {}
         for sensor, data in contents["frame"].items():
             self._data[sensor] = DataBase.loads(data)
-        self._pose = Transform3D.loads(contents["pose"]) if "pose" in contents else None
+        # self._pose = Transform3D.loads(contents["pose"]) if "pose" in contents else None
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -66,19 +65,6 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
                 whose format should be like::
 
                     {
-                        "pose": {
-                            "translation": {
-                                "x":
-                                "y":
-                                "z":
-                            },
-                            "rotation": {
-                                "w":
-                                "x":
-                                "y":
-                                "z":
-                            },
-                        },
                         "frame": {
                             <key>: data_dict{...},
                             <key>: data_dict{...},
@@ -93,16 +79,16 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
         """
         return common_loads(cls, contents)
 
-    @property
-    def pose(self) -> Optional[Transform3D]:
-        """Return the pose of the frame.
+    # @property
+    # def pose(self) -> Optional[Transform3D]:
+    #     """Return the pose of the frame.
 
-        Returns:
-            A :class:`~tensorbay.geometry.transform.Transform3D` object
-            representing the pose of the frame.
+    #     Returns:
+    #         A :class:`~tensorbay.geometry.transform.Transform3D` object
+    #         representing the pose of the frame.
 
-        """
-        return self._pose
+    #     """
+    #     return self._pose
 
     def dumps(self) -> Dict[str, Any]:
         """Dumps the current frame into a dict.
@@ -112,8 +98,8 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
 
         """
         contents: Dict[str, Any] = {}
-        if self._pose:
-            contents["pose"] = self._pose.dumps()
+        # if self._pose:
+        #     contents["pose"] = self._pose.dumps()
 
         frame = {}
         for sensor, data in self._data.items():
@@ -122,26 +108,26 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
 
         return contents
 
-    def set_pose(
-        self,
-        transform: Transform3D.TransformType = None,
-        *,
-        translation: Optional[Iterable[float]] = None,
-        rotation: Quaternion.ArgsType = None,
-        **kwargs: Quaternion.KwargsType,
-    ) -> None:
-        """Set the pose of the current frame.
+    # def set_pose(
+    #     self,
+    #     transform: Transform3D.TransformType = None,
+    #     *,
+    #     translation: Optional[Iterable[float]] = None,
+    #     rotation: Quaternion.ArgsType = None,
+    #     **kwargs: Quaternion.KwargsType,
+    # ) -> None:
+    #     """Set the pose of the current frame.
 
-        Arguments:
-            transform: The transform representing the frame pose in
-                a :class:`~tensorbay.geometry.transform.Transform3D` object
-                or a 4x4 or 3x4 transformation matrix.
-            translation: Translation of the frame pose in a sequence of [x, y, z].
-            rotation: Rotation of the frame pose in a sequence of [w, x, y, z]
-                or a 3x3 rotation matrix
-                or a :class:`~tensorbay.geometry.quaternion.Quaternion` object.
-            **kwargs: Other parameters to initialize the rotation of the frame pose.
-                See :class:`~tensorbay.geometry.quaternion.Quaternion` documents for details.
+    #     Arguments:
+    #         transform: The transform representing the frame pose in
+    #             a :class:`~tensorbay.geometry.transform.Transform3D` object
+    #             or a 4x4 or 3x4 transformation matrix.
+    #         translation: Translation of the frame pose in a sequence of [x, y, z].
+    #         rotation: Rotation of the frame pose in a sequence of [w, x, y, z]
+    #             or a 3x3 rotation matrix
+    #             or a :class:`~tensorbay.geometry.quaternion.Quaternion` object.
+    #         **kwargs: Other parameters to initialize the rotation of the frame pose.
+    #             See :class:`~tensorbay.geometry.quaternion.Quaternion` documents for details.
 
-        """
-        self._pose = Transform3D(transform, translation=translation, rotation=rotation, **kwargs)
+    #     """
+    #     self._pose = Transform3D(transform, translation=translation, rotation=rotation, **kwargs)
