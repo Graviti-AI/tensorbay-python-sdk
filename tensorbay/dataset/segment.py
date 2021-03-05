@@ -16,10 +16,10 @@ along with multiple :class:`~tensorbay.sensor.sensor.Sensor`.
 
 """
 
-from typing import Any, Callable, Dict, List, Type, TypeVar
+from typing import Any, Callable, List, TypeVar
 
 from ..sensor import Sensor
-from ..utility import NameMixin, NameSortedDict, ReprType, UserMutableSequence, common_loads
+from ..utility import NameMixin, NameSortedDict, ReprType, UserMutableSequence
 from .data import DataBase
 from .frame import Frame
 
@@ -57,47 +57,6 @@ class Segment(NameMixin, UserMutableSequence["DataBase._Type"]):
     def __init__(self, name: str = "") -> None:
         super().__init__(name)
         self._data: List[DataBase._Type] = []
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        super()._loads(contents)
-        self._data = [DataBase.loads(data) for data in contents["data"]]
-
-    @classmethod
-    def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Loads a :class:`Segment` object from a dict containing the segment information.
-
-        Arguments:
-            contents: A dict containing the information of a Segment,
-                whose format should be like::
-
-                    {
-                        "name": <str>
-                        "description": <str>
-                        "data": [
-                            data_dict{...},
-                            data_dict{...},
-                            ...
-                            ...
-                        ]
-                    }
-
-        Returns:
-            The loaded :class:`Segment` object.
-
-        """
-        return common_loads(cls, contents)
-
-    def dumps(self) -> Dict[str, Any]:
-        """Dumps the segment into a dict.
-
-        Returns:
-            A dict contains the name and the data of the segment.
-
-        """
-        contents: Dict[str, Any] = super()._dumps()
-        contents["data"] = [data.dumps() for data in self._data]
-
-        return contents
 
     def sort(
         self,
@@ -162,56 +121,3 @@ class FusionSegment(NameMixin, UserMutableSequence[Frame]):
         super().__init__(name)
         self._data: List[Frame] = []
         self.sensors: NameSortedDict[Sensor] = NameSortedDict()
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        super()._loads(contents)
-        self._data = []
-        self.sensors = NameSortedDict()
-        for sensor in contents["sensors"]:
-            self.sensors.add(Sensor.loads(sensor))
-        for frame in contents["frames"]:
-            self._data.append(Frame.loads(frame))
-
-    @classmethod
-    def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Load a :class:`FusionSegment` object from a dict containing the information.
-
-        Arguments:
-            contents: A dict containing the information of a fusion segment,
-                whose format should be like::
-
-                    {
-                        "name": <str>
-                        "description": <str>
-                        "sensors": [
-                            sensor_dict{...},
-                            sensor_dict{...},
-                            ...
-                            ...
-                        ]
-                        "frames": [
-                            frame_dict{...},
-                            frame_dict{...},
-                            ...
-                            ...
-                        ]
-                    }
-
-        Returns:
-            The loaded :class:`FusionSegment` object.
-
-        """
-        return common_loads(cls, contents)
-
-    def dumps(self) -> Dict[str, Any]:
-        """Dumps the fusion segment into a dict.
-
-        Returns:
-            A dictonary contains the name, the sensors and the frames of the fusion segment.
-
-        """
-        contents: Dict[str, Any] = super()._dumps()
-        contents["sensors"] = [sensor.dumps() for sensor in self.sensors.values()]
-        contents["frames"] = [frame.dumps() for frame in self._data]
-
-        return contents
