@@ -56,6 +56,35 @@ class DatasetClientBase:
         self._client = client
         self._commit_id = commit_id
 
+    def _commit(self, message: str, tag: Optional[str] = None) -> str:
+        post_data = {
+            "message": message,
+        }
+        if tag:
+            post_data["tag"] = tag
+
+        response = self._client.open_api_do("POST", "", self.dataset_id, json=post_data)
+        return response.json()["commitId"]  # type: ignore[no-any-return]
+
+    def _create_segment(self, name: str) -> None:
+        post_data = {"name": name}
+        self._client.open_api_do("POST", "segments", self.dataset_id, json=post_data)
+
+    def _list_segments(
+        self, *, start: int = 0, stop: int = sys.maxsize, page_size: int = 128
+    ) -> Iterator[str]:
+        params: Dict[str, Any] = {}
+        if self._commit_id:
+            params["commit"] = self._commit_id
+
+        for params["offset"], params["limit"] in paging_range(start, stop, page_size):
+            response = self._client.open_api_do(
+                "GET", "segments", self.dataset_id, params=params
+            ).json()
+            yield from response["segments"]
+            if response["recordSize"] + response["offset"] >= response["totalCount"]:
+                break
+
     @property
     def commit_id(self) -> Optional[str]:
         """Return the commit ID.
@@ -76,16 +105,6 @@ class DatasetClientBase:
         """
         return self._dataset_id
 
-    def _commit(self, message: str, tag: Optional[str] = None) -> str:
-        post_data = {
-            "message": message,
-        }
-        if tag:
-            post_data["tag"] = tag
-
-        response = self._client.open_api_do("POST", "", self.dataset_id, json=post_data)
-        return response.json()["commitId"]  # type: ignore[no-any-return]
-
     def commit(self, message: str, tag: Optional[str] = None) -> None:
         """Commit the draft.
 
@@ -96,25 +115,6 @@ class DatasetClientBase:
         """
         commit_id = self._commit(message, tag)
         self._commit_id = commit_id
-
-    def _create_segment(self, name: str) -> None:
-        post_data = {"name": name}
-        self._client.open_api_do("POST", "segments", self.dataset_id, json=post_data)
-
-    def _list_segments(
-        self, *, start: int = 0, stop: int = sys.maxsize, page_size: int = 128
-    ) -> Iterator[str]:
-        params: Dict[str, Any] = {}
-        if self._commit_id:
-            params["commit"] = self._commit_id
-
-        for params["offset"], params["limit"] in paging_range(start, stop, page_size):
-            response = self._client.open_api_do(
-                "GET", "segments", self.dataset_id, params=params
-            ).json()
-            yield from response["segments"]
-            if response["recordSize"] + response["offset"] >= response["totalCount"]:
-                break
 
     def list_segment_names(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[str]:
         """List all segment names in a certain commit.
