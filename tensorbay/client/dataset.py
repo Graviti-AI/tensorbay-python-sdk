@@ -72,7 +72,7 @@ class DatasetClientBase:
 
     def _list_segments(
         self, *, start: int = 0, stop: int = sys.maxsize, page_size: int = 128
-    ) -> Iterator[str]:
+    ) -> Iterator[Dict[str, str]]:
         params: Dict[str, Any] = {}
         if self._commit_id:
             params["commit"] = self._commit_id
@@ -123,11 +123,11 @@ class DatasetClientBase:
             start: The index to start.
             stop: The index to end.
 
-        Returns:
+        Yields:
             Required segment names.
 
         """
-        return self._list_segments(start=start, stop=stop)
+        yield from (segment["name"] for segment in self._list_segments(start=start, stop=stop))
 
     def get_catalog(self) -> Catalog:
         """Get the catalog of the certain commit.
@@ -207,7 +207,7 @@ class DatasetClient(DatasetClientBase):
             Created :class:`~tensorbay.client.segment.SegmentClient` with given name.
 
         """
-        if name not in self._list_segments():
+        if name not in self.list_segment_names():
             self._create_segment(name)
         return SegmentClient(name, self._dataset_id, self._name, self._client, self.commit_id)
 
@@ -224,7 +224,7 @@ class DatasetClient(DatasetClientBase):
             GASSegmentError: When the required segment does not exist.
 
         """
-        if name not in self._list_segments():
+        if name not in self.list_segment_names():
             raise GASSegmentError(name)
 
         return SegmentClient(name, self._dataset_id, self._name, self._client, self.commit_id)
@@ -311,7 +311,7 @@ class FusionDatasetClient(DatasetClientBase):
             Created :class:`~tensorbay.client.segment.FusionSegmentClient` with given name.
 
         """
-        if name not in self._list_segments():
+        if name not in self.list_segment_names():
             self._create_segment(name)
         return FusionSegmentClient(name, self._dataset_id, self._name, self._client, self.commit_id)
 
@@ -328,7 +328,7 @@ class FusionDatasetClient(DatasetClientBase):
             GASSegmentError: When the required fusion segment does not exist.
 
         """
-        if name not in self._list_segments():
+        if name not in self.list_segment_names():
             raise GASSegmentError(name)
         return FusionSegmentClient(name, self._dataset_id, self._name, self._client, self.commit_id)
 
