@@ -9,10 +9,20 @@ from ...geometry import Transform3D
 from .. import Frame
 
 _FRAME_DATA = {
-    "frame": {
-        "sensor1": {"localPath": "test1.png", "label": {}},
-        "sensor2": {"localPath": "test2.png", "label": {}},
-    },
+    "frame": [
+        {
+            "sensorName": "sensor1",
+            "localPath": "test1.png",
+            "timestamp": 1614945883,
+            "label": {},
+        },
+        {
+            "sensorName": "sensor2",
+            "localPath": "test2.png",
+            "timestamp": 1614945884,
+            "label": {},
+        },
+    ],
 }
 
 
