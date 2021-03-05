@@ -20,9 +20,7 @@ between different versions of a dataset.
  Commit
 ********
 
-As mentioned in :ref:`quick start <quick_start:Upload Local Dataset to TensorBay>`,
-after uploading a local dataset to TensorBay, a commit step should be done.
-Actually, the commit step is used for turning a dataset from draft status into committed status.
+The commit step is used for turning a dataset from draft status into committed status.
 
 There are scenarios when new versions of dataset are required,
 such as correcting errors, enlarging dataset, adding more types of labels, etc.
@@ -31,3 +29,19 @@ Under these circumstances, you can continue editing the dataset based on the cur
 such as uploading some more data to it.
 After finishing the editing, you can do the commit step again to create a new version.
 Note that only committed versions can be used.
+
+.. code:: python
+
+   from tensorbay import GAS
+
+   ACCESS_KEY = "Accesskey-*****"
+   gas = GAS(ACCESS_KEY)
+
+   # dataset is the original dataset.
+   gas.create_dataset(dataset.name)
+   dataset_client = gas.upload_dataset(dataset)
+   dataset_client.commit("first_commit")
+
+   # segment contains extra data that you want to add to the dataset.
+   dataset_client.upload_segment(segment)
+   dataset_client.commit("secod_commit")
