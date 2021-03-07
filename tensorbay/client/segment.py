@@ -30,7 +30,6 @@ import time
 import uuid
 from copy import deepcopy
 from itertools import islice
-from pathlib import PurePosixPath
 from typing import Any, Dict, Iterable, Iterator, Optional, Tuple, Union
 
 import filetype
@@ -177,14 +176,12 @@ class SegmentClientBase:
 
         self._client.open_api_do("PUT", "callback", self.dataset_id, json=put_data)
 
-    def _upload_label(self, data: Data, sensor_name: Optional[str] = None) -> None:
+    def _upload_label(self, data: Data) -> None:
         post_data: Dict[str, Any] = {
             "segmentName": self.name,
             "remotePath": data.target_remote_path,
             "labelValues": data.label.dumps(),
         }
-        if sensor_name:
-            post_data["sensorName"] = sensor_name
         self._client.open_api_do("PUT", "labels", self.dataset_id, json=post_data)
 
     @property
@@ -468,9 +465,7 @@ class FusionSegmentClient(SegmentClientBase):
 
             permission = self._get_upload_permission()
             post_data = permission["result"]
-
-            path = str(PurePosixPath(sensor_name, remote_path))
-            post_data["key"] = permission["extra"]["objectPrefix"] + path
+            post_data["key"] = permission["extra"]["objectPrefix"] + remote_path
 
             del post_data["x:category"]
             del post_data["x:id"]
@@ -498,7 +493,7 @@ class FusionSegmentClient(SegmentClientBase):
             except GASException:
                 self._clear_upload_permission()
                 raise
-            self._upload_label(data, sensor_name)
+            self._upload_label(data)
 
     def list_frame_objects(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[Frame]:
         """List required frames in the segment in a certain commit.
