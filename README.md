@@ -1,6 +1,6 @@
 # TensorBay Python SDK
 
-TensorBay Python SDK is a python library to access [TensorBay](https://www.graviti.com/tensorBay)
+TensorBay Python SDK is a python library to access [TensorBay](https://www.graviti.cn/tensorBay)
 and manage your datasets.  
 It provides:
 
