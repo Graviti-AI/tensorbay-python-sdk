@@ -48,16 +48,16 @@ def _config_filepath() -> str:
     return os.path.join(os.environ[home], ".gasconfig")
 
 
-def _read_config(config_filepath: str, config_name: str) -> Tuple[str, str]:
+def _read_config(config_filepath: str, profile_name: str) -> Tuple[str, str]:
     """Read accessKey and URL from the config file.
 
     Arguments:
         config_filepath: The file containing config info.
-        config_name: The environment to login.
+        profile_name: The environment to login.
 
     Returns:
-        The accessKey of config_name read from the config file.
-        The URL of config_name read from the config file.
+        The accessKey of profile_name read from the config file.
+        The URL of profile_name read from the config file.
 
     """
     if not os.path.exists(config_filepath):
@@ -70,27 +70,27 @@ def _read_config(config_filepath: str, config_name: str) -> Tuple[str, str]:
 
     config_parser = ConfigParser()
     config_parser.read(config_filepath)
-    access_key = config_parser[config_name]["accessKey"]
-    url = config_parser[config_name]["url"] if "url" in config_parser[config_name] else ""
+    access_key = config_parser[profile_name]["accessKey"]
+    url = config_parser[profile_name]["url"] if "url" in config_parser[profile_name] else ""
     return access_key, url
 
 
-def _gas(access_key: str, url: str, config_name: str) -> GAS:
+def _gas(access_key: str, url: str, profile_name: str) -> GAS:
     """Load an object of :class:`~tensorbay.client.gas.GAS`.
 
-    We will read accessKey and URL from the appointed config_name and login gas.
+    We will read accessKey and URL from the appointed profile_name and login gas.
 
     Arguments:
         access_key: The accessKey of gas.
         url: The login URL.
-        config_name: The environment to login.
+        profile_name: The environment to login.
 
     Returns:
         Gas client logged in with accessKey and URL.
 
     """
     if not access_key and not url:
-        access_key, url = _read_config(_config_filepath(), config_name)
+        access_key, url = _read_config(_config_filepath(), profile_name)
 
     if not access_key:
         click.echo("accessKey should be appointed", err=True)
@@ -104,16 +104,16 @@ def _gas(access_key: str, url: str, config_name: str) -> GAS:
 @click.option("-k", "--key", "access_key", type=str, default="", help="The accessKey of gas.")
 @click.option("-u", "--url", type=str, default="", help="The login url.")
 @click.option(
-    "-c",
-    "--config",
-    "config_name",
+    "-p",
+    "--profile",
+    "profile_name",
     type=str,
     default="default",
     help="The environment to login.",
 )
 @click.option("-d", "--debug", is_flag=True, help="Debug mode.")
 @click.pass_context
-def cli(ctx: click.Context, access_key: str, url: str, config_name: str, debug: bool) -> None:
+def cli(ctx: click.Context, access_key: str, url: str, profile_name: str, debug: bool) -> None:
     # noqa: D415, D301
     """You can use 'gas' + COMMAND to operate on your dataset.\f
 
@@ -121,14 +121,14 @@ def cli(ctx: click.Context, access_key: str, url: str, config_name: str, debug: 
         ctx: The context to be passed as the first argument.
         access_key: The accessKey of gas.
         url: The login URL.
-        config_name: The environment to login.
+        profile_name: The environment to login.
         debug: Debug mode flag.
 
     """
     ctx.obj = {
         "access_key": access_key,
         "url": url,
-        "config_name": config_name,
+        "profile_name": profile_name,
     }
 
     if debug:
@@ -618,9 +618,9 @@ def config(obj: Dict[str, str], access_key: str, url: str) -> None:
     config_parser.read(config_file)
 
     if not access_key:
-        for config_name in config_parser.sections():
-            click.echo(f"[{config_name}]")
-            for key, value in config_parser[config_name].items():
+        for profile_name in config_parser.sections():
+            click.echo(f"[{profile_name}]")
+            for key, value in config_parser[profile_name].items():
                 click.echo(f"{key} = {value}")
         return
 
@@ -628,15 +628,19 @@ def config(obj: Dict[str, str], access_key: str, url: str) -> None:
         click.echo("Error: Wrong accesskey format", err=True)
         sys.exit(1)
 
-    config_name = obj["config_name"]
-    if config_name not in config_parser:
-        config_parser.add_section(config_name)
+    profile_name = obj["profile_name"]
+    if profile_name == "config":
+        click.echo("Error: name 'config' is preserved for gas basic config", err=True)
+        sys.exit(1)
 
-    config_parser[config_name]["accessKey"] = access_key
+    if profile_name not in config_parser:
+        config_parser.add_section(profile_name)
+
+    config_parser[profile_name]["accessKey"] = access_key
     if url:
-        config_parser[config_name]["url"] = url
+        config_parser[profile_name]["url"] = url
     else:
-        config_parser.remove_option(config_name, "url")
+        config_parser.remove_option(profile_name, "url")
 
     with open(config_file, "w") as fp:
         config_parser.write(fp)
