@@ -74,7 +74,8 @@ And you can get a specific segment by passing the corresponding segment name.
 
 .. code:: python
 
-   >>> segment = dataset_client.get_segment_object("20_newsgroups")
+   >>> from tensorbay.dataset import Segment
+   >>> segment = Segment("20_newsgroups", dataset_client)
 
 In each :ref:`basic_concepts:Segment`, there is a sequence of :ref:`basic_concepts:Data`. You
 can get one by index.
@@ -303,7 +304,7 @@ Once you write your own :ref:`contribution:Dataloader` and read the local datase
 .. code:: python
 
    >>> gas.create_dataset("20 Newsgroups")
-   >>> dataset_client = gas.upload_dataset_object(dataset, jobs=8, skip_uploaded_files=False)
+   >>> dataset_client = gas.upload_dataset(dataset, jobs=8, skip_uploaded_files=False)
    >>> dataset_client.commit("20 Newsgroups")
 
 Note that you need to create a dataset with the correct name on TensorBay first

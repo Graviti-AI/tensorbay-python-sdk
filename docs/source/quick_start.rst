@@ -25,7 +25,7 @@ To verify the SDK and CLI version, run the following command:
 
 
 **************
- Registration 
+ Registration
 **************
 
 Users can use local features without registration to do operations
@@ -104,7 +104,7 @@ Run the following code to upload the dataset created above:
 .. code:: python
 
    gas.create_dataset(dataset.name)
-   dataset_client = gas.upload_dataset_object(dataset)
+   dataset_client = gas.upload_dataset(dataset)
    dataset_client.commit()
 
 
@@ -118,7 +118,11 @@ Run the following code to read the uploaded dataset above.
 
    from PIL import Image
 
+   from tensorbay.dataset import Segment
+
    dataset_client = gas.get_dataset("a_dataset_demo")
-   segment = dataset_client.get_segment_object()
+
+   segment = Segment("", dataset_client)
+
    data = segment[0]
    image = Image.open(data.open())

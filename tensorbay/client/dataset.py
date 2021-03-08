@@ -191,7 +191,7 @@ class DatasetClient(DatasetClientBase):
     :class:`DatasetClient` inherits from :class:`DataClientBase` and
     provides more methods within a dataset scope, such as :meth:`DatasetClient.get_segment`,
     :meth:`DatasetClient.commit <DatasetClientBase.commit>` and
-    :meth:`DatasetClient.upload_segment_object`.
+    :meth:`DatasetClient.upload_segment`.
     In contrast to :class:`FusionDatasetClient`, a
     :class:`DatasetClient` has only one sensor.
 
@@ -229,24 +229,7 @@ class DatasetClient(DatasetClientBase):
 
         return SegmentClient(name, self._dataset_id, self._name, self._client, self.commit_id)
 
-    def get_segment_object(self, name: str = "") -> Segment:
-        """Get a :class:`~tensorbay.dataset.segment.Segment` according to given name.
-
-        Arguments:
-            name: The name of the required :class:`~tensorbay.dataset.segment.Segment`.
-
-        Returns:
-            The required :class:`~tensorbay.dataset.segment.Segment`.
-
-        """
-        segment_client = self.get_segment(name)
-        segment = Segment(name)
-        for data in segment_client.list_data_objects():
-            segment.append(data)
-
-        return segment
-
-    def upload_segment_object(
+    def upload_segment(
         self,
         segment: Segment,
         *,
@@ -277,14 +260,14 @@ class DatasetClient(DatasetClientBase):
             lambda data: isinstance(data, Data), segment  # type: ignore[arg-type]
         )
         if skip_uploaded_files:
-            done_set = set(segment_client.list_data())
+            done_set = set(segment_client.list_data_paths())
             segment_filter = filter(
                 lambda data: data.target_remote_path not in done_set, local_data
             )
         else:
             segment_filter = local_data
 
-        multithread_upload(segment_client.upload_data_object, segment_filter, jobs=jobs)
+        multithread_upload(segment_client.upload_data, segment_filter, jobs=jobs)
         return segment_client
 
 
@@ -295,7 +278,7 @@ class FusionDatasetClient(DatasetClientBase):
     provides more methods within a fusion dataset scope,
     such as :meth:`FusionDatasetClient.get_segment`,
     :meth:`FusionDatasetClient.commit <DatasetClientBase.commit>`
-    and :meth:`FusionDatasetClient.upload_segment_object`.
+    and :meth:`FusionDatasetClient.upload_segment`.
     In contrast to :class:`DatasetClient`, a
     :class:`FusionDatasetClient` has multiple sensors.
 
@@ -332,25 +315,7 @@ class FusionDatasetClient(DatasetClientBase):
             raise GASSegmentError(name)
         return FusionSegmentClient(name, self._dataset_id, self._name, self._client, self.commit_id)
 
-    def get_segment_object(self, name: str = "") -> FusionSegment:
-        """Get a :class:`~tensorbay.dataset.segment.Segment` according to given name.
-
-        Arguments:
-            name: The name of the required :class:`~tensorbay.dataset.segment.Segment`.
-
-        Returns:
-            The required :class:`~tensorbay.dataset.segment.Segment`.
-
-        """
-        segment_client = self.get_segment(name)
-        segment = FusionSegment(name)
-        for sensor in segment_client.list_sensor_objects():
-            segment.sensors.add(sensor)
-        for frame in segment_client.list_frame_objects():
-            segment.append(frame)
-        return segment
-
-    def upload_segment_object(
+    def upload_segment(
         self,
         segment: FusionSegment,
         *,
@@ -378,7 +343,7 @@ class FusionDatasetClient(DatasetClientBase):
         """
         segment_client = self.get_or_create_segment(segment.name)
         for sensor in segment.sensors.values():
-            segment_client.upload_sensor_object(sensor)
+            segment_client.upload_sensor(sensor)
 
         segment_filter: Iterable[Tuple[int, Frame]]
         if skip_uploaded_files:
@@ -388,7 +353,7 @@ class FusionDatasetClient(DatasetClientBase):
             segment_filter = enumerate(segment)
 
         multithread_upload(
-            lambda args: segment_client.upload_frame_object(args[1], args[0]),
+            lambda args: segment_client.upload_frame(args[1], args[0]),
             segment_filter,
             jobs=jobs,
         )

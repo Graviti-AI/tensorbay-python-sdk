@@ -53,7 +53,7 @@ segment = dataset.create_segment()
 segment.append(Data("0000001.jpg"))
 segment.append(Data("0000002.jpg"))
 
-gas.upload_dataset_object(dataset)
+gas.upload_dataset(dataset)
 ```
 
 ### Read images from the Dataset
@@ -61,9 +61,11 @@ gas.upload_dataset_object(dataset)
 ```python
 from PIL import Image
 
+from tensorbay.dataset import Segment
+
 dataset_client = gas.get_dataset("DatasetName")
 
-segment = dataset_client.get_segment_object()
+segment = Segment("", dataset_client)
 
 for data in segment:
     with data.open() as fp:

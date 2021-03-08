@@ -16,12 +16,15 @@ along with multiple :class:`~tensorbay.sensor.sensor.Sensor`.
 
 """
 
-from typing import Any, Callable, List, TypeVar
+from typing import TYPE_CHECKING, Any, Callable, List, Optional, TypeVar
 
 from ..sensor import Sensor
 from ..utility import NameMixin, NameSortedDict, ReprType, UserMutableSequence
 from .data import DataBase
 from .frame import Frame
+
+if TYPE_CHECKING:
+    from ..client.dataset import DatasetClient, FusionDatasetClient
 
 
 class Segment(NameMixin, UserMutableSequence["DataBase._Type"]):
@@ -47,6 +50,7 @@ class Segment(NameMixin, UserMutableSequence["DataBase._Type"]):
 
     Arguments:
         name: The name of the segment, whose default value is an empty string.
+        client: The DatasetClient if you want to read the segment from tensorbay.
 
     """
 
@@ -54,9 +58,15 @@ class Segment(NameMixin, UserMutableSequence["DataBase._Type"]):
 
     _repr_type = ReprType.SEQUENCE
 
-    def __init__(self, name: str = "") -> None:
+    def __init__(self, name: str = "", client: Optional["DatasetClient"] = None) -> None:
         super().__init__(name)
-        self._data: List[DataBase._Type] = []
+
+        self._data: List[DataBase._Type]
+        if client:
+            self._client = client.get_segment(name)
+            self._data = list(self._client.list_data())
+        else:
+            self._data = []
 
     def sort(
         self,
@@ -108,6 +118,7 @@ class FusionSegment(NameMixin, UserMutableSequence[Frame]):
 
     Arguments:
         name: The name of the fusion segment, whose default value is an empty string.
+        client: The FusionDatasetClient if you want to read the segment from tensorbay.
 
     """
 
@@ -117,7 +128,15 @@ class FusionSegment(NameMixin, UserMutableSequence[Frame]):
     _repr_attrs = ("sensors",)
     _repr_maxlevel = 2
 
-    def __init__(self, name: str = "") -> None:
+    def __init__(self, name: str = "", client: Optional["FusionDatasetClient"] = None) -> None:
         super().__init__(name)
-        self._data: List[Frame] = []
         self.sensors: NameSortedDict[Sensor] = NameSortedDict()
+
+        self._data: List[Frame]
+        if client:
+            self._client = client.get_segment(name)
+            self._data = list(self._client.list_frames())
+            for sensor in self._client.list_sensors():
+                self.sensors.add(sensor)
+        else:
+            self._data = []

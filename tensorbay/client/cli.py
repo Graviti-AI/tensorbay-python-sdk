@@ -257,7 +257,7 @@ def cp(  # pylint: disable=invalid-name, too-many-arguments
             and target_remote_path
             and not target_remote_path.endswith("/")
         ):
-            dataset.get_or_create_segment(info.segment_name).upload_data(
+            dataset.get_or_create_segment(info.segment_name).upload_file(
                 local_abspaths[0], target_remote_path
             )
             return
@@ -265,7 +265,7 @@ def cp(  # pylint: disable=invalid-name, too-many-arguments
         segment = _get_segment_object(
             info.segment_name, local_abspaths, target_remote_path, is_recursive
         )
-        dataset.upload_segment_object(segment, jobs=jobs, skip_uploaded_files=skip_uploaded_files)
+        dataset.upload_segment(segment, jobs=jobs, skip_uploaded_files=skip_uploaded_files)
         return
 
     click.echo(f'"{tbrn}" is an invalid path', err=True)
@@ -340,9 +340,9 @@ def _echo_segment(
 
     """
     if isinstance(segment, SegmentClient):
-        _echo_data(dataset_name, segment_name, segment.list_data())
+        _echo_data(dataset_name, segment_name, segment.list_data_paths())
     else:
-        frames = segment.list_frame_objects()
+        frames = segment.list_frames()
         if not list_all_files:
             for index, _ in enumerate(frames):
                 click.echo(TBRN(dataset_name, segment_name, index).get_tbrn())
@@ -398,9 +398,7 @@ def _ls_frame(gas: GAS, info: TBRN, list_all_files: bool) -> None:
     fusion_segment = dataset.get_segment(info.segment_name)
 
     try:
-        frame = next(
-            fusion_segment.list_frame_objects(start=info.frame_index, stop=info.frame_index + 1)
-        )
+        frame = next(fusion_segment.list_frames(start=info.frame_index, stop=info.frame_index + 1))
     except StopIteration:
         click.echo(f'No such frame: "{info.frame_index}"!', err=True)
         sys.exit(1)
@@ -429,9 +427,7 @@ def _ls_sensor(
     dataset = gas.get_dataset(info.dataset_name, is_fusion=True)
     fusion_segment = dataset.get_segment(info.segment_name)
     try:
-        frame = next(
-            fusion_segment.list_frame_objects(start=info.frame_index, stop=info.frame_index + 1)
-        )
+        frame = next(fusion_segment.list_frames(start=info.frame_index, stop=info.frame_index + 1))
     except StopIteration:
         click.echo(f'No such frame: "{info.frame_index}"!', err=True)
         sys.exit(1)
@@ -456,9 +452,7 @@ def _ls_fusion_file(
     dataset = gas.get_dataset(info.dataset_name, is_fusion=True)
     fusion_segment = dataset.get_segment(info.segment_name)
     try:
-        frame = next(
-            fusion_segment.list_frame_objects(start=info.frame_index, stop=info.frame_index + 1)
-        )
+        frame = next(fusion_segment.list_frames(start=info.frame_index, stop=info.frame_index + 1))
     except StopIteration:
         click.echo(f'No such frame: "{info.frame_index}"!', err=True)
         sys.exit(1)
@@ -478,7 +472,7 @@ def _ls_normal_file(  # pylint: disable=unused-argument
     _echo_data(
         info.dataset_name,
         info.segment_name,
-        _filter_data(segment.list_data(), info.remote_path),
+        _filter_data(segment.list_data_paths(), info.remote_path),
     )
 
 

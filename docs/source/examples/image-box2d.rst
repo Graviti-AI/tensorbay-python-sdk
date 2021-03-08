@@ -71,7 +71,8 @@ You can get a segment by passing the required segment name.
 
 .. code:: python
 
-    >>> train_segment = dataset_client.get_segment_object("train")
+    >>> from tensorbay.dataset import Segment
+    >>> train_segment = Segment("train", dataset_client)
 
 In the train :ref:`basic_concepts:Segment`, there is a sequence of :ref:`basic_concepts:Data`. You
 can get one by index.
@@ -270,7 +271,7 @@ Once you write your own :ref:`contribution:Dataloader` and read the local datase
 .. code:: python
 
     >>> gas.create_dataset("BSTLD")
-    >>> dataset_client = gas.upload_dataset_object(dataset, jobs=8, skip_uploaded_files=False)
+    >>> dataset_client = gas.upload_dataset(dataset, jobs=8, skip_uploaded_files=False)
     >>> dataset_client.commit("BSTLD")
 
 Remember to execute the :ref:`features/version_control:Commit` step after uploading.
