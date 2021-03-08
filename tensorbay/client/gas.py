@@ -102,7 +102,6 @@ class GAS:
         name: str,
         is_fusion: Literal[False] = False,
         *,
-        is_continuous: bool = False,
         region: Optional[str] = None,
     ) -> DatasetClient:
         ...
@@ -113,7 +112,6 @@ class GAS:
         name: str,
         is_fusion: Literal[True],
         *,
-        is_continuous: bool = False,
         region: Optional[str] = None,
     ) -> FusionDatasetClient:
         ...
@@ -124,7 +122,6 @@ class GAS:
         name: str,
         is_fusion: bool = False,
         *,
-        is_continuous: bool = False,
         region: Optional[str] = None,
     ) -> DatasetClientType:
         ...
@@ -134,7 +131,6 @@ class GAS:
         name: str,
         is_fusion: bool = False,
         *,
-        is_continuous: bool = False,
         region: Optional[str] = None,  # beijing, hangzhou, shanghai
     ) -> DatasetClientType:
         """Create a TensorBay dataset with given name.
@@ -142,7 +138,6 @@ class GAS:
         Arguments:
             name: Name of the dataset, unique for a user.
             is_fusion: Whether the dataset is a fusion dataset, True for fusion dataset.
-            is_continuous: Whether the data in dataset is continuous.
             region: Region of the dataset to be stored,
                 only support "beijing", "hangzhou", "shanghai", default is "shanghai".
 
@@ -154,7 +149,6 @@ class GAS:
         post_data = {
             "name": name,
             "type": int(is_fusion),  # normal dataset: 0, fusion dataset: 1
-            "isContinuous": is_continuous,
         }
         if region:
             post_data["region"] = region
