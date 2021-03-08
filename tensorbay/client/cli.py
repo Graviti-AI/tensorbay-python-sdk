@@ -44,7 +44,7 @@ def _config_filepath() -> str:
         The path of the config file.
 
     """
-    home = "HOMEPATH" if os.name == "nt" else "HOME"
+    home = "USERPROFILE" if os.name == "nt" else "HOME"
     return os.path.join(os.environ[home], ".gasconfig")
 
 
