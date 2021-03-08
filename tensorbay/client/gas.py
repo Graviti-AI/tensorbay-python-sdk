@@ -7,7 +7,7 @@
 
 The :class:`GAS` defines the initial client to interact between local and TensorBay.
 It provides some operations on datasets level such as :meth:`GAS.create_dataset`,
-:meth:`GAS.list_dataset_names` and :meth:`GAS.upload_dataset_object`.
+:meth:`GAS.list_dataset_names` and :meth:`GAS.upload_dataset`.
 
 AccessKey is required when operating with dataset.
 
@@ -30,7 +30,7 @@ class GAS:
     """:class:`GAS` defines the initial client to interact between local and TensorBay.
 
     :class:`GAS` provides some operations on dataset level such as
-    :meth:`GAS.create_dataset` :meth:`GAS.list_dataset_names` and :meth:`GAS.upload_dataset_object`.
+    :meth:`GAS.create_dataset` :meth:`GAS.list_dataset_names` and :meth:`GAS.upload_dataset`.
 
     Arguments:
         access_key: User's access key.
@@ -225,7 +225,7 @@ class GAS:
         self._client.open_api_do("PATCH", "settings", dataset_id, json=patch_data)
 
     @overload
-    def upload_dataset_object(
+    def upload_dataset(
         self,
         dataset: Dataset,
         *,
@@ -235,7 +235,7 @@ class GAS:
         ...
 
     @overload
-    def upload_dataset_object(
+    def upload_dataset(
         self,
         dataset: FusionDataset,
         *,
@@ -245,7 +245,7 @@ class GAS:
         ...
 
     @overload
-    def upload_dataset_object(
+    def upload_dataset(
         self,
         dataset: Union[Dataset, FusionDataset],
         *,
@@ -254,7 +254,7 @@ class GAS:
     ) -> DatasetClientType:
         ...
 
-    def upload_dataset_object(
+    def upload_dataset(
         self,
         dataset: Union[Dataset, FusionDataset],
         *,
@@ -289,7 +289,7 @@ class GAS:
             dataset_client.upload_catalog(dataset.catalog)
 
         for segment in dataset:
-            dataset_client.upload_segment_object(
+            dataset_client.upload_segment(
                 segment,  # type: ignore[arg-type]
                 jobs=jobs,
                 skip_uploaded_files=skip_uploaded_files,

@@ -269,7 +269,7 @@ class SegmentClient(SegmentClientBase):
             if response["recordSize"] + response["offset"] >= response["totalCount"]:
                 break
 
-    def upload_data(self, local_path: str, target_remote_path: str = "") -> None:
+    def upload_file(self, local_path: str, target_remote_path: str = "") -> None:
         """Upload data with local path to the draft.
 
         Arguments:
@@ -316,17 +316,17 @@ class SegmentClient(SegmentClientBase):
         """
         self._upload_label(data)
 
-    def upload_data_object(self, data: Data) -> None:
+    def upload_data(self, data: Data) -> None:
         """Upload Data object to the draft.
 
         Arguments:
             data: The :class:`~tensorbay.dataset.data.Data`.
 
         """
-        self.upload_data(data.path, data.target_remote_path)
+        self.upload_file(data.path, data.target_remote_path)
         self._upload_label(data)
 
-    def list_data(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[str]:
+    def list_data_paths(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[str]:
         """List required data path in a segment in a certain commit.
 
         Arguments:
@@ -339,7 +339,7 @@ class SegmentClient(SegmentClientBase):
         """
         yield from (item["remotePath"] for item in self._list_data(start=start, stop=stop))
 
-    def list_data_objects(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[RemoteData]:
+    def list_data(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[RemoteData]:
         """List required Data object in a dataset segment.
 
         Arguments:
@@ -361,9 +361,9 @@ class FusionSegmentClient(SegmentClientBase):
 
     :class:`FusionSegmentClient` inherits from :class:`SegmentClientBase` and provides
     methods within a fusion segment scope, such as
-    :meth:`FusionSegmentClient.upload_sensor_object`,
-    :meth:`FusionSegmentClient.upload_frame_object`
-    and :meth:`FusionSegmentClient.list_frame_objects`.
+    :meth:`FusionSegmentClient.upload_sensor`,
+    :meth:`FusionSegmentClient.upload_frame`
+    and :meth:`FusionSegmentClient.list_frames`.
 
     In contrast to :class:`SegmentClient`, :class:`FusionSegmentClient` has multiple sensors.
 
@@ -395,7 +395,7 @@ class FusionSegmentClient(SegmentClientBase):
             if response["recordSize"] + response["offset"] >= response["totalCount"]:
                 break
 
-    def list_sensor_objects(self) -> Iterator["Sensor._Type"]:
+    def list_sensors(self) -> Iterator["Sensor._Type"]:
         """List required sensor object in a segment client.
 
         Yields:
@@ -411,7 +411,7 @@ class FusionSegmentClient(SegmentClientBase):
         for sensor_info in response["sensors"]:
             yield Sensor.loads(sensor_info)
 
-    def upload_sensor_object(self, sensor: Sensor) -> None:
+    def upload_sensor(self, sensor: Sensor) -> None:
         """Upload sensor to the draft.
 
         Arguments:
@@ -434,7 +434,7 @@ class FusionSegmentClient(SegmentClientBase):
 
         self._client.open_api_do("DELETE", "sensors", self.dataset_id, json=delete_data)
 
-    def upload_frame_object(self, frame: Frame, frame_index: Optional[int] = None) -> None:
+    def upload_frame(self, frame: Frame, frame_index: Optional[int] = None) -> None:
         """Upload frame object to the draft.
 
         Arguments:
@@ -495,7 +495,7 @@ class FusionSegmentClient(SegmentClientBase):
                 raise
             self._upload_label(data)
 
-    def list_frame_objects(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[Frame]:
+    def list_frames(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[Frame]:
         """List required frames in the segment in a certain commit.
 
         Arguments:

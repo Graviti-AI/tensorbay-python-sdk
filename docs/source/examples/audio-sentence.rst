@@ -56,7 +56,8 @@ Take :ref:`basic_concepts:Segment` ``"dev"`` as an example, it could be obtained
 
 .. code:: python
 
-   >>> dev_segment = dataset_client.get_segment_object("dev")
+   >>> from tensorbay.dataset import Segment
+   >>> dev_segment = Segment("dev", dataset_client)
 
 The :ref:`basic_concepts:Segment` `"dev"` contains a sequence of :ref:`basic_concepts:Data`. 
 You can get one by index.
@@ -310,7 +311,7 @@ Once you write your own :ref:`contribution:Dataloader` and read the local datase
 .. code:: python
 
    >>> dataset = gas.create("THCHS-30")
-   >>> dataset_client = gas.upload_dataset_object(dataset, jobs=8, skip_uploaded_files=False)
+   >>> dataset_client = gas.upload_dataset(dataset, jobs=8, skip_uploaded_files=False)
    >>> dataset_client.commit("THCHS-30")
 
 Remember to execute the :ref:`features/version_control:Commit` step after uploading.

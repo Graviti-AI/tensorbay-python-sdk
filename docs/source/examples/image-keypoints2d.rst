@@ -63,7 +63,8 @@ In :ref:`basic_concepts:Dataset` ``LeedsSportsPose``, there is one default
 
 .. code:: python
 
-   >>> default_segment = dataset_client.get_segment_object("")
+   >>> from tensorbay.dataset import Segment
+   >>> default_segment = Segment("", dataset_client)
 
 In the default :ref:`basic_concepts:Segment`, there is a sequence of :ref:`basic_concepts:Data`. You
 can get one by index.
@@ -253,7 +254,7 @@ Once you write your own :ref:`contribution:Dataloader` and read the local datase
 .. code:: python
 
     >>> gas.create_dataset("LeedsSportsPose")
-    >>> dataset_client = gas.upload_dataset_object(dataset, jobs=8, skip_uploaded_files=False)
+    >>> dataset_client = gas.upload_dataset(dataset, jobs=8, skip_uploaded_files=False)
     >>> dataset_client.commit("LeedsSportsPose")
 
 Remember to execute the :ref:`features/version_control:Commit` step after uploading.
