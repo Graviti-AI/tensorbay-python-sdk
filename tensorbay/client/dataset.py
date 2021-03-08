@@ -23,7 +23,7 @@ Please refer to :class:`~tensorbay.dataset.dataset.FusionDataset` for more infor
 """
 
 import sys
-from typing import Any, Dict, Iterable, Iterator, Optional, Tuple
+from typing import Any, Dict, Iterator, Optional, Tuple
 
 from ..dataset import Data, Frame, FusionSegment, Segment
 from ..label import Catalog
@@ -320,7 +320,7 @@ class FusionDatasetClient(DatasetClientBase):
         segment: FusionSegment,
         *,
         jobs: int = 1,
-        skip_uploaded_files: bool = False,
+        skip_uploaded_files: bool = False,  # pylint: disable=unused-argument
     ) -> FusionSegmentClient:
         """Upload a fusion segment object to the draft.
 
@@ -336,6 +336,9 @@ class FusionDatasetClient(DatasetClientBase):
             jobs: The number of the max workers in multi-thread upload.
             skip_uploaded_files: Set it to True to skip the uploaded files.
 
+        Raises:
+            TypeError: When all the frames have the same patterns(both have frame id or not).
+
         Returns:
             The :class:`~tensorbay.client.segment.FusionSegmentClient`
                 used for uploading the data in the segment.
@@ -345,15 +348,26 @@ class FusionDatasetClient(DatasetClientBase):
         for sensor in segment.sensors.values():
             segment_client.upload_sensor(sensor)
 
-        segment_filter: Iterable[Tuple[int, Frame]]
-        if skip_uploaded_files:
-            # TODO: skip_uploaded_files
-            segment_filter = enumerate(segment)
+        segment_filter: Iterator[Tuple[Frame, Optional[int]]]
+
+        if not segment:
+            return segment_client
+
+        have_frame_id = hasattr(segment[0], "frame_id")
+
+        for frame in segment:
+            if not hasattr(frame, "frame_id") == have_frame_id:
+                raise TypeError(
+                    "All the frames should have the same patterns(both have frame id or not)."
+                )
+
+        if have_frame_id:
+            segment_filter = ((frame, None) for frame in segment)
         else:
-            segment_filter = enumerate(segment)
+            segment_filter = ((frame, 10 * index + 10) for index, frame in enumerate(segment))
 
         multithread_upload(
-            lambda args: segment_client.upload_frame(args[1], args[0]),
+            lambda args: segment_client.upload_frame(*args),
             segment_filter,
             jobs=jobs,
         )

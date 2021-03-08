@@ -27,12 +27,12 @@ import os
 import sys
 import threading
 import time
-import uuid
 from copy import deepcopy
 from itertools import islice
 from typing import Any, Dict, Iterable, Iterator, Optional, Tuple, Union
 
 import filetype
+import ulid
 from requests_toolbelt import MultipartEncoder
 
 from ..dataset import Data, Frame, RemoteData
@@ -434,20 +434,31 @@ class FusionSegmentClient(SegmentClientBase):
 
         self._client.open_api_do("DELETE", "sensors", self.dataset_id, json=delete_data)
 
-    def upload_frame(self, frame: Frame, frame_index: Optional[int] = None) -> None:
-        """Upload frame object to the draft.
+    def upload_frame(self, frame: Frame, timestamp: Optional[float] = None) -> None:
+        """Upload frame to the draft.
 
         Arguments:
             frame: The :class:`~tensorbay.dataset.frame.Frame` to upload.
-            frame_index: The frame index, used for TensorBay to sort the frame.
+            timestamp: The mark to sort frames, supporting timestamp and float.
 
         Raises:
             GASPathError: When remote_path does not follow linux style.
-            TypeError: When frame has no frame index or has no timestamp.
             GASException: When uploading frame failed.
+            TypeError: When frame id conflicts。                                `
 
         """
-        frame_id = str(uuid.uuid4())
+        if timestamp is None:
+            try:
+                frame_id = frame.frame_id
+            except AttributeError as error:
+                raise TypeError(
+                    "Lack frame id, please add frame id in frame or "
+                    "give timestamp to the function!"
+                ) from error
+        elif hasattr(frame, "frame_id"):
+            raise TypeError("Frame id conflicts, please do not give timestamp to the function!.")
+        else:
+            frame_id = str(ulid.from_timestamp(timestamp))
 
         for sensor_name, data in frame.items():
             if not isinstance(data, Data):
@@ -457,11 +468,6 @@ class FusionSegmentClient(SegmentClientBase):
 
             if "\\" in remote_path:
                 raise GASPathError(remote_path)
-
-            if frame_index is None and not hasattr(data, "timestamp"):
-                raise TypeError(
-                    "Either 'frame_index' or 'timestamp' is necessary for sorting frames"
-                )
 
             permission = self._get_upload_permission()
             post_data = permission["result"]
@@ -485,8 +491,6 @@ class FusionSegmentClient(SegmentClientBase):
                 }
                 if hasattr(data, "timestamp"):
                     frame_info["timestamp"] = data.timestamp
-                if frame_index is not None:
-                    frame_info["frameIndex"] = frame_index
 
                 self._synchronize_upload_info(post_data["key"], version_id, etag, frame_info)
 

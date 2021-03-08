@@ -42,16 +42,16 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
 
     _T = TypeVar("_T", bound="Frame")
 
-    def __init__(self, index: Optional[float] = None, frame_id: Optional[str] = None) -> None:
+    def __init__(self, frame_id: Optional[str] = None) -> None:
         self._data: Dict[str, DataBase._Type] = {}
         # self._pose: Optional[Transform3D] = None
-        if index is not None:
-            self._index = index
         if frame_id:
-            self._frame_id = frame_id
+            self.frame_id = frame_id
 
     def _loads(self, contents: Dict[str, Any]) -> None:
         self._data = {}
+        if "frameId" in contents:
+            self.frame_id = contents["frameId"]
         for data_contents in contents["frame"]:
             self._data[data_contents["sensorName"]] = DataBase.loads(data_contents)
 
@@ -66,6 +66,7 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
                 whose format should be like::
 
                     {
+                        "frameId": <str>,
                         "frame": [
                             {
                                 "sensorName": <str>,
@@ -105,6 +106,8 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
         contents: Dict[str, Any] = {}
         # if self._pose:
         #     contents["pose"] = self._pose.dumps()
+        if hasattr(self, "frame_id"):
+            contents["frameId"] = self.frame_id
 
         frame = []
         for sensor_name, data in self._data.items():
