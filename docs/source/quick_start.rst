@@ -117,7 +117,6 @@ Run the following code to read the uploaded dataset above.
 .. code:: python
 
    from PIL import Image
-
    from tensorbay.dataset import Segment
 
    dataset_client = gas.get_dataset("a_dataset_demo")

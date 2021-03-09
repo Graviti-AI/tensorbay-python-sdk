@@ -60,7 +60,6 @@ gas.upload_dataset(dataset)
 
 ```python
 from PIL import Image
-
 from tensorbay.dataset import Segment
 
 dataset_client = gas.get_dataset("DatasetName")
