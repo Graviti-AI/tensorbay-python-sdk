@@ -25,7 +25,6 @@ from itertools import count
 from typing import Dict, Iterator, Optional, Sequence, Tuple, Type, TypeVar
 
 import numpy as np
-from typing_extensions import Literal
 
 from ..geometry import Vector2D
 from ..utility import ReprMixin, ReprType, common_loads
@@ -85,6 +84,17 @@ class CameraMatrix(ReprMixin):
             return
 
         raise TypeError(f"Require 'fx', 'fy', 'cx', 'cy' to initialize {self.__class__.__name__}")
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, self.__class__):
+            return (
+                self.fx == other.fx
+                and self.fy == other.fy
+                and self.cx == other.cx
+                and self.cy == other.cy
+                and self.skew == other.skew
+            )
+        return False
 
     def _loads(self, contents: Dict[str, float]) -> None:
         self.fx = contents["fx"]
@@ -192,6 +202,16 @@ class DistortionCoefficients(ReprMixin):
                 f"Require tangential or radial distortion to initialize {self.__class__.__name__}"
             )
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, self.__class__):
+            for key in self._DISTORTION_KEYS:
+                if tuple(self._list_distortions(key)) != tuple(other._list_distortions(key)):
+                    return False
+
+            return True
+
+        return False
+
     @staticmethod
     def _distortion_generator(
         distortion_keyword: str, data: Dict[str, float]
@@ -244,7 +264,7 @@ class DistortionCoefficients(ReprMixin):
             for key, value in self._distortion_generator(distortion_key, contents):
                 setattr(self, key, value)
 
-    def _list_distortions(self, distortion_key: Literal["p", "k"]) -> Iterator[float]:
+    def _list_distortions(self, distortion_key: str) -> Iterator[float]:
         """Return the tangential or radial distortion coefficients list.
 
         Arguments:
@@ -283,7 +303,7 @@ class DistortionCoefficients(ReprMixin):
         """
         contents = {}
         for distortion_key in self._DISTORTION_KEYS:
-            distortions = self._list_distortions(distortion_key)  # type: ignore[arg-type]
+            distortions = self._list_distortions(distortion_key)
             for index, value in enumerate(distortions, 1):
                 contents[f"{distortion_key}{index}"] = value
 
@@ -366,6 +386,14 @@ class CameraIntrinsics(ReprMixin):
             except TypeError:
                 pass
         self._distortion_coefficients = None
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, self.__class__):
+            return (
+                self.camera_matrix == other.camera_matrix
+                and self.distortion_coefficients == other.distortion_coefficients
+            )
+        return False
 
     def _loads(self, contents: Dict[str, Dict[str, float]]) -> None:
         self._camera_matrix = CameraMatrix.loads(contents["cameraMatrix"])
