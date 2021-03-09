@@ -25,8 +25,12 @@ class TestKeypoint2D:
         keypoint = Keypoint2D(1, 1, 1)
         assert -keypoint == Vector2D(-1, -1)
 
-    def test_loads_and_dumps(self):
+    def test_loads(self):
         keypoint = Keypoint2D.loads(_DATA_KEYPOINT)
+        assert keypoint._data == (1, 1, 1)
+
+    def test_dumps(self):
+        keypoint = Keypoint2D(1, 1, 1)
         assert keypoint.dumps() == _DATA_KEYPOINT
 
 
@@ -38,4 +42,4 @@ class TestKeypoints2D:
 
     def test_loads(self):
         keypoints = Keypoints2D.loads(_DATA_KEYPOINTS)
-        assert keypoints == Keypoints2D([Keypoint2D(1.0, 1.0, 1), Keypoint2D(2.0, 2.0, 2)])
+        assert keypoints._data == [Keypoint2D(1.0, 1.0, 1), Keypoint2D(2.0, 2.0, 2)]

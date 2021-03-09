@@ -61,8 +61,12 @@ class TestBox2D:
         box2d_2 = Box2D(2, 2, 3, 4)
         assert Box2D.iou(box2d_1, box2d_2) == 0.5
 
-    def test_loads_dumps(self):
+    def test_loads(self):
         box2d = Box2D.loads(_DATA_2D)
+        assert box2d._data == (1, 2, 3, 4)
+
+    def test_dumps(self):
+        box2d = Box2D(1, 2, 3, 4)
         assert box2d.dumps() == _DATA_2D
 
     def test_area(self):
@@ -104,8 +108,17 @@ class TestBox3D:
     def test_line_intersect(self):
         assert Box3D._line_intersect(4, 4, 1) == 3.0
 
-    def test_loads_dumps(self):
+    def test_loads(self):
         box3d = Box3D.loads(_DATA_3D)
+        assert box3d.translation == Vector3D(1, 2, 3)
+        assert box3d.rotation == Quaternion(0, 1, 0, 0)
+        assert box3d.size == Vector3D(1, 2, 3)
+
+    def test_dumps(self):
+
+        box3d = Box3D(
+            translation=Vector3D(1, 2, 3), rotation=Quaternion(0, 1, 0, 0), size=Vector3D(1, 2, 3)
+        )
         assert box3d.dumps() == _DATA_3D
 
     def test_iou(self):

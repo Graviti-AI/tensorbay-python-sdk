@@ -64,10 +64,19 @@ class TestVector:
         vector = Vector(1, 2)
         assert vector._repr_head() == "Vector2D(1, 2)"
 
-    @pytest.mark.parametrize("loads", _DATA)
-    def test_loads_and_dumps(self, loads):
-        vector = Vector.loads(loads)
-        assert vector.dumps() == loads
+    def test_loads(self):
+        vector = Vector.loads(_DATA[0])
+        assert vector._data == (1, 2)
+
+        vector = Vector.loads(_DATA[1])
+        assert vector._data == (1, 2, 3)
+
+    def test_dumps(self):
+        vector = Vector(1, 2)
+        assert vector.dumps() == _DATA[0]
+
+        vector = Vector(1, 2, 3)
+        assert vector.dumps() == _DATA[1]
 
 
 class TestVector2D:
@@ -82,9 +91,13 @@ class TestVector2D:
         assert vector_2d.x == 1
         assert vector_2d.y == 2
 
-    def test_loads_and_dumps(self):
-        vector_2d = Vector2D.loads(_DATA[0])
-        assert vector_2d.dumps() == _DATA[0]
+    def test_loads(self):
+        vector = Vector2D.loads(_DATA[0])
+        assert vector._data == (1, 2)
+
+    def test_dumps(self):
+        vector = Vector2D(1, 2)
+        assert vector.dumps() == _DATA[0]
 
 
 class TestVector3D:
@@ -100,6 +113,10 @@ class TestVector3D:
         assert vector_3d.y == 2
         assert vector_3d.z == 3
 
-    def test_loads_and_dumps(self):
-        vector_3d = Vector3D.loads(_DATA[1])
-        assert vector_3d.dumps() == _DATA[1]
+    def test_loads(self):
+        vector = Vector3D.loads(_DATA[1])
+        assert vector._data == (1, 2, 3)
+
+    def test_dumps(self):
+        vector = Vector3D(1, 2, 3)
+        assert vector.dumps() == _DATA[1]
