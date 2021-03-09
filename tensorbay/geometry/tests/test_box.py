@@ -22,7 +22,6 @@ class TestBox2D:
         with pytest.raises(TypeError):
             Box2D(x=0)
         assert Box2D(None) == Box2D(0.0, 0.0, 0.0, 0.0)
-        assert Box2D(1, 2, 3, 4) == Box2D(1, 2, 3, 4)
         assert Box2D([1, 2, 3, 4]) == Box2D(1, 2, 3, 4)
         assert Box2D(x=1, y=2, width=3, height=4) == Box2D(1, 2, 4, 6)
 
