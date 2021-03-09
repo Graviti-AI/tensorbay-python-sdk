@@ -4,7 +4,6 @@
 #
 
 import warnings
-from typing import TypeVar
 
 import numpy as np
 import pytest
