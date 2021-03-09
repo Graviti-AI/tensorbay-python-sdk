@@ -249,7 +249,7 @@ def cp(  # pylint: disable=invalid-name, too-many-arguments
     if info.type in [TBRNType.SEGMENT, TBRNType.NORMAL_FILE]:
         target_remote_path = info.remote_path if info.type == TBRNType.NORMAL_FILE else ""
 
-        dataset = _gas(**obj).get_dataset(info.dataset_name)
+        dataset_client = _gas(**obj).get_dataset(info.dataset_name)
         local_abspaths: List[str] = [os.path.abspath(local_path) for local_path in local_paths]
         if (
             len(local_abspaths) == 1
@@ -257,15 +257,14 @@ def cp(  # pylint: disable=invalid-name, too-many-arguments
             and target_remote_path
             and not target_remote_path.endswith("/")
         ):
-            dataset.get_or_create_segment(info.segment_name).upload_file(
-                local_abspaths[0], target_remote_path
-            )
+            segment_client = dataset_client.get_or_create_segment(info.segment_name)
+            segment_client.upload_file(local_abspaths[0], target_remote_path)
             return
 
         segment = _get_segment_object(
             info.segment_name, local_abspaths, target_remote_path, is_recursive
         )
-        dataset.upload_segment(segment, jobs=jobs, skip_uploaded_files=skip_uploaded_files)
+        dataset_client.upload_segment(segment, jobs=jobs, skip_uploaded_files=skip_uploaded_files)
         return
 
     click.echo(f'"{tbrn}" is an invalid path', err=True)
@@ -394,11 +393,11 @@ def _ls_segment(gas: GAS, info: TBRN, list_all_files: bool) -> None:
 
 
 def _ls_frame(gas: GAS, info: TBRN, list_all_files: bool) -> None:
-    dataset = gas.get_dataset(info.dataset_name, is_fusion=True)
-    fusion_segment = dataset.get_segment(info.segment_name)
+    dataset_client = gas.get_dataset(info.dataset_name, is_fusion=True)
+    segment_client = dataset_client.get_segment(info.segment_name)
 
     try:
-        frame = next(fusion_segment.list_frames(start=info.frame_index, stop=info.frame_index + 1))
+        frame = next(segment_client.list_frames(start=info.frame_index, stop=info.frame_index + 1))
     except StopIteration:
         click.echo(f'No such frame: "{info.frame_index}"!', err=True)
         sys.exit(1)
@@ -424,10 +423,10 @@ def _ls_sensor(
     info: TBRN,
     list_all_files: bool,  # pylint: disable=unused-argument
 ) -> None:
-    dataset = gas.get_dataset(info.dataset_name, is_fusion=True)
-    fusion_segment = dataset.get_segment(info.segment_name)
+    dataset_client = gas.get_dataset(info.dataset_name, is_fusion=True)
+    segment_client = dataset_client.get_segment(info.segment_name)
     try:
-        frame = next(fusion_segment.list_frames(start=info.frame_index, stop=info.frame_index + 1))
+        frame = next(segment_client.list_frames(start=info.frame_index, stop=info.frame_index + 1))
     except StopIteration:
         click.echo(f'No such frame: "{info.frame_index}"!', err=True)
         sys.exit(1)
@@ -449,10 +448,10 @@ def _ls_fusion_file(
     info: TBRN,
     list_all_files: bool,  # pylint: disable=unused-argument
 ) -> None:
-    dataset = gas.get_dataset(info.dataset_name, is_fusion=True)
-    fusion_segment = dataset.get_segment(info.segment_name)
+    dataset_client = gas.get_dataset(info.dataset_name, is_fusion=True)
+    segment_client = dataset_client.get_segment(info.segment_name)
     try:
-        frame = next(fusion_segment.list_frames(start=info.frame_index, stop=info.frame_index + 1))
+        frame = next(segment_client.list_frames(start=info.frame_index, stop=info.frame_index + 1))
     except StopIteration:
         click.echo(f'No such frame: "{info.frame_index}"!', err=True)
         sys.exit(1)
@@ -467,12 +466,12 @@ def _ls_fusion_file(
 def _ls_normal_file(  # pylint: disable=unused-argument
     gas: GAS, info: TBRN, list_all_files: bool
 ) -> None:
-    dataset = gas.get_dataset(info.dataset_name)
-    segment = dataset.get_segment(info.segment_name)
+    dataset_client = gas.get_dataset(info.dataset_name)
+    segment_client = dataset_client.get_segment(info.segment_name)
     _echo_data(
         info.dataset_name,
         info.segment_name,
-        _filter_data(segment.list_data_paths(), info.remote_path),
+        _filter_data(segment_client.list_data_paths(), info.remote_path),
     )
 
 
