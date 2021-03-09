@@ -90,8 +90,12 @@ class TestQuaternion:
     def test_create(self):
         assert Quaternion._create(quaternion.quaternion(1, 0, 0, 0)) == Quaternion(1, 0, 0, 0)
 
-    def test_loads_dumps(self):
+    def test_loads(self):
         quaternion_1 = Quaternion.loads(_DATA)
+        assert quaternion.allclose(quaternion_1._data, quaternion.quaternion(1, 0, 0, 0))
+
+    def test_dumps(self):
+        quaternion_1 = Quaternion(1.0, 0.0, 0.0, 0.0)
         assert quaternion_1.dumps() == _DATA
 
     def test_as_matrix(self):

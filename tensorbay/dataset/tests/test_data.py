@@ -5,85 +5,73 @@
 
 import pytest
 
-from ...label import Classification
+from ...label import Classification, LabeledBox2D
 from ..data import Data, Label, RemoteData
 
-_LABEL_DATA = [
-    {"CLASSIFICATION": {"category": "test_categoty", "attributes": {"test_attribute1": "a"}}},
-    {
-        "BOX2D": [
-            {
-                "box2d": {"xmin": 1, "ymin": 1, "xmax": 2, "ymax": 2},
-                "category": "test_categoty",
-                "attributes": {"test_attribute1": "a"},
-            }
-        ]
-    },
-    {
-        "BOX3D": [
-            {
-                "box3d": {
-                    "translation": {"x": 1, "y": 1, "z": 1},
-                    "rotation": {"w": 1, "x": 1, "y": 1, "z": 1},
-                    "size": {"x": 1, "y": 1, "z": 1},
-                },
-                "category": "test_categoty",
-                "attributes": {"test_attribute1": "a"},
-            }
-        ]
-    },
-    {
-        "POLYGON2D": [
-            {
-                "polygon2d": [{"x": 1, "y": 1}, {"x": 2, "y": 2}, {"x": 1, "y": 2}],
-                "category": "test_categoty",
-                "attributes": {"test_attribute1": "a"},
-            }
-        ]
-    },
-    {
-        "POLYLINE2D": [
-            {
-                "polyline2d": [{"x": 1, "y": 1}, {"x": 2, "y": 2}, {"x": 1, "y": 2}],
-                "category": "test_categoty",
-                "attributes": {"test_attribute1": "a"},
-            }
-        ]
-    },
-    {
-        "KEYPOINTS2D": [
-            {
-                "keypoints2d": [{"x": 1, "y": 1}, {"x": 2, "y": 2}],
-                "category": "test_categoty",
-                "attributes": {"test_attribute1": "a"},
-            }
-        ]
-    },
-    {
-        "SENTENCE": [{"sentence": [{"text": "she"}, {"text": "like"}, {"text": "cat"}]}],
-    },
-]
+_FAILED_DATA = {
+    "box2d": [
+        {
+            "box2d": {"xmin": 1, "ymin": 1, "xmax": 2, "ymax": 2},
+        }
+    ]
+}
+_CLASSIFICATION_DATA = {
+    "CLASSIFICATION": {"category": "test_categoty", "attributes": {"test_attribute1": "a"}}
+}
+_BOX2D_DATA = {
+    "BOX2D": [
+        {
+            "box2d": {"xmin": 1, "ymin": 1, "xmax": 2, "ymax": 2},
+            "category": "test_categoty",
+            "attributes": {"test_attribute1": "a"},
+        }
+    ]
+}
 
 _DATA = {"localPath": "test.json", "timestamp": 1614667532, "label": {}}
 _REMOTE_DATA = {"remotePath": "test.json", "timestamp": 1614667532, "label": {}}
 
 
 class TestLabel:
-    def test_bool(self) -> None:
-        labels = Label()
-        assert bool(labels) == False
+    def test_bool(self):
+        label = Label()
+        assert bool(label) == False
 
-        labels.classification = Classification()
-        assert bool(labels) == True
+        label.classification = Classification()
+        assert bool(label) == True
 
-    @pytest.mark.parametrize("loads", _LABEL_DATA)
-    def test_loads_dumps(self, loads) -> None:
-        labels = Label.loads(loads)
-        assert labels.dumps() == loads
+    def test_loads(self):
+        label = Label.loads(_FAILED_DATA)
+        assert hasattr(label, "box2d") == False
+
+        label = Label.loads(_CLASSIFICATION_DATA)
+        assert label.classification.category == _CLASSIFICATION_DATA["CLASSIFICATION"]["category"]
+        assert (
+            label.classification.attributes == _CLASSIFICATION_DATA["CLASSIFICATION"]["attributes"]
+        )
+
+        label = Label.loads(_BOX2D_DATA)
+        box2d_object = label.box2d[0]
+        box2d = _BOX2D_DATA["BOX2D"][0]
+        assert box2d_object.category == box2d["category"]
+        assert box2d_object.attributes == box2d["attributes"]
+        assert box2d_object._data == (1, 1, 2, 2)
+
+    def test_dumps(self):
+        category = "test_categoty"
+        attributes = {"test_attribute1": "a"}
+        label = Label()
+        label.classification = Classification(category, attributes)
+        assert label.dumps() == _CLASSIFICATION_DATA
+
+        box = [1, 1, 2, 2]
+        label = Label()
+        label.box2d = [LabeledBox2D(box, category=category, attributes=attributes)]
+        assert label.dumps() == _BOX2D_DATA
 
 
 class TestData:
-    def test_init(self) -> None:
+    def test_init(self):
         local_path = "test.json"
         target_remote_path = "A/test.json"
         timestamp = 1614667532
@@ -93,11 +81,16 @@ class TestData:
         assert data.target_remote_path == target_remote_path
         assert data.timestamp == timestamp
 
-    def test_loads_dumps(self) -> None:
+    def test_loads(self):
         data = Data.loads(_DATA)
+        assert data.path == _DATA["localPath"]
+        assert data.timestamp == _DATA["timestamp"]
+
+    def test_dumps(self):
+        data = Data("test.json", timestamp=_DATA["timestamp"])
         assert data.dumps() == _DATA
 
-    def test_target_remote_path(self) -> None:
+    def test_target_remote_path(self):
         target_remote_path = "test2.json"
         data_object = Data("test.json")
         data_object.target_remote_path = target_remote_path
@@ -105,7 +98,7 @@ class TestData:
 
 
 class TestRemoteData:
-    def test_init(self) -> None:
+    def test_init(self):
         remote_path = "A/test.json"
         timestamp = 1614667532
         remote_data = RemoteData(remote_path, timestamp=timestamp, url_getter=lambda x: x)
@@ -113,7 +106,16 @@ class TestRemoteData:
         assert remote_data.timestamp == timestamp
         assert remote_data.get_url() == remote_path
 
-    def test_get_url(self) -> None:
+    def test_get_url(self):
         remote_data = RemoteData("A/test.josn")
         with pytest.raises(ValueError):
             remote_data.get_url()
+
+    def test_loads(self):
+        data = RemoteData.loads(_REMOTE_DATA)
+        assert data.path == _REMOTE_DATA["remotePath"]
+        assert data.timestamp == _REMOTE_DATA["timestamp"]
+
+    def test_dumps(self):
+        data = RemoteData("test.json", timestamp=_DATA["timestamp"])
+        assert data.dumps() == _REMOTE_DATA

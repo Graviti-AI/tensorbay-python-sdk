@@ -6,7 +6,7 @@
 import pytest
 
 from ...geometry import Transform3D
-from .. import Frame
+from .. import Data, Frame
 
 _FRAME_DATA = {
     "frame": [
@@ -27,6 +27,15 @@ _FRAME_DATA = {
 
 
 class TestFrame:
-    def test_loads_dumps(self):
+    def test_loads(self):
         frame = Frame.loads(_FRAME_DATA)
+        assert frame["sensor1"].path == "test1.png"
+        assert frame["sensor1"].timestamp == 1614945883
+        assert frame["sensor2"].path == "test2.png"
+        assert frame["sensor2"].timestamp == 1614945884
+
+    def test_dumps(self):
+        frame = Frame()
+        frame["sensor1"] = Data("test1.png", timestamp=1614945883)
+        frame["sensor2"] = Data("test2.png", timestamp=1614945884)
         assert frame.dumps() == _FRAME_DATA
