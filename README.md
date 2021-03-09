@@ -35,7 +35,7 @@ gas.create_dataset("DatasetName")
 ### List Dataset names
 
 ```python
-# Method "list_dataset_names()" returns a iterator, use "list()" to transfer it to a "list".
+# Method "list_dataset_names()" returns an iterator, use "list()" to transfer it to a "list".
 dataset_list = list(gas.list_dataset_names())
 ```
 
