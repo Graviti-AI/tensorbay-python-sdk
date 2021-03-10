@@ -177,10 +177,13 @@ class SegmentClientBase:
         self._client.open_api_do("PUT", "callback", self.dataset_id, json=put_data)
 
     def _upload_label(self, data: Data) -> None:
+        label = data.label.dumps()
+        if not label:
+            return
         post_data: Dict[str, Any] = {
             "segmentName": self.name,
             "remotePath": data.target_remote_path,
-            "labelValues": data.label.dumps(),
+            "labelValues": label,
         }
         self._client.open_api_do("PUT", "labels", self.dataset_id, json=post_data)
 
