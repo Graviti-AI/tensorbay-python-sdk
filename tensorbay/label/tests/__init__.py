@@ -2,4 +2,4 @@
 #
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
-"""Unittests for sensor module."""
+"""Unittests for label module."""
