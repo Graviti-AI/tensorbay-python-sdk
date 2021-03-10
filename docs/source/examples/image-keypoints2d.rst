@@ -84,7 +84,8 @@ can get one by index.
 
 .. note::
 
-   If the :ref:`basic_concepts:Segment` or :ref:`basic_concepts:FusionSegment` is created without
+   If the :ref:`basic_concepts:segment` or
+   :ref:`advanced_features/fusion_dataset/concepts:fusion segment` is created without
    given name, then its name will be "".
 
 In each :ref:`basic_concepts:Data`, there is a sequence of :ref:`supported_label_types:Keypoints2D` annotations.
