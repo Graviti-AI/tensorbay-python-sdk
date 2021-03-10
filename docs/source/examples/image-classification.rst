@@ -164,7 +164,7 @@ can print all your uploaded datasets.
    # ['Dogs vs. Cats']
 
 .. note::
-   The list method will also list all your forked (:ref:`ref <features/read_dataset:Read Dataset>`)
+   The list method will also list all your forked (:ref:`ref <features/manage_dataset:Read Dataset>`)
    **datasets**.
 
 To get a **segment** (:ref:`ref <basic_concepts:segment>`), run:

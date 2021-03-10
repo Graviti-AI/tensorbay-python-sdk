@@ -16,9 +16,9 @@
    ========================================================  ============================================
    :ref:`features/tensorbay_client:TensorBay Client`         The Client manner for using TensorBay.
    :ref:`features/tensorbay_cli:TensorBay CLI`               The CLI manner for using TensorBay.
-   :ref:`features/read_dataset:Read Dataset`                 Read dataset from TensorBay.
-   :ref:`features/create_and_upload_dataset:Create Dataset`  Create dataset from local.   
-   :ref:`features/create_and_upload_dataset:Upload Dataset`  Upload dataset from local to TensorBay.   
+   :ref:`features/manage_dataset:Create Dataset`             Create dataset from local.
+   :ref:`features/manage_dataset:Upload Dataset`             Upload dataset from local to TensorBay.
+   :ref:`features/manage_dataset:Read Dataset`               Read dataset from TensorBay.
    :ref:`features/version_control:Version Control`           The version control of dataset on TensorBay.
    ========================================================  ============================================
 
@@ -29,6 +29,5 @@ Please click the links below for more details.
 
    features/tensorbay_client
    features/tensorbay_cli
-   features/create_and_upload_dataset
-   features/read_dataset
+   features/manage_dataset
    features/version_control
