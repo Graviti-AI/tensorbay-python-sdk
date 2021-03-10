@@ -222,7 +222,7 @@ class GAS:
         """
         dataset_id, _ = self._get_dataset_id_and_type(name)
         patch_data: Dict[str, str] = {"name": new_name}
-        self._client.open_api_do("PATCH", "settings", dataset_id, json=patch_data)
+        self._client.open_api_do("PATCH", "", dataset_id, json=patch_data)
 
     @overload
     def upload_dataset(
