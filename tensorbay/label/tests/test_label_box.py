@@ -3,8 +3,11 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
+import pytest
+
 from ...geometry import Quaternion, Transform3D, Vector3D
-from .. import LabeledBox2D, LabeledBox3D
+from .. import Box2DSubcatalog, Box3DSubcatalog, LabeledBox2D, LabeledBox3D
+from ..supports import SupportAttributes, SupportCategories, SupportIsTracking
 
 _CATEGORY = "test"
 _ATTRIBUTES = {"key": "value"}
@@ -26,6 +29,11 @@ _LABELEDBOX3D_DATA = {
     "category": "test",
     "attributes": {"key": "value"},
     "instance": "12345",
+}
+_SUBCATALOG_CONTENT = {
+    "isTracking": True,
+    "categories": [{"name": "0"}, {"name": "1"}],
+    "attributes": [{"name": "gender", "enum": ["male", "female"]}],
 }
 
 
@@ -176,3 +184,51 @@ class TestLabeledBox3D:
         )
 
         assert labeledbox3d.dumps() == _LABELEDBOX3D_DATA
+
+
+class TestBox2dAndBox3dSubcatalog:
+    """This class used to test Box2DSubcatalog and Box3DSubcatalog classes."""
+
+    @pytest.mark.parametrize("SUBCATALOG", (Box2DSubcatalog, Box3DSubcatalog))
+    def test_init_subclass(self, SUBCATALOG):
+        subcatalog = SUBCATALOG()
+        assert subcatalog._supports == (
+            SupportIsTracking,
+            SupportCategories,
+            SupportAttributes,
+        )
+
+    @pytest.mark.parametrize("SUBCATALOG", (Box2DSubcatalog, Box3DSubcatalog))
+    def test_eq(self, SUBCATALOG):
+        content1 = {
+            "isTracking": True,
+            "categories": [{"name": "0"}, {"name": "1"}],
+            "attributes": [{"name": "gender", "enum": ["male", "female"]}],
+        }
+        content2 = {
+            "isTracking": False,
+            "categories": [{"name": "0"}, {"name": "1"}],
+            "attributes": [{"name": "gender", "enum": ["male", "female"]}],
+        }
+        subcatalog1 = SUBCATALOG.loads(content1)
+        subcatalog2 = SUBCATALOG.loads(content1)
+        subcatalog3 = SUBCATALOG.loads(content2)
+
+        assert subcatalog1 == subcatalog2
+        assert subcatalog1 != subcatalog3
+
+    @pytest.mark.parametrize("SUBCATALOG", (Box2DSubcatalog, Box3DSubcatalog))
+    def test_loads(self, SUBCATALOG, categories, attributes):
+        subcatalog = SUBCATALOG.loads(_SUBCATALOG_CONTENT)
+
+        assert subcatalog.is_tracking == _SUBCATALOG_CONTENT["isTracking"]
+        assert subcatalog.categories == categories
+        assert subcatalog.attributes == attributes
+
+    @pytest.mark.parametrize("SUBCATALOG", (Box2DSubcatalog, Box3DSubcatalog))
+    def test_dumps(self, SUBCATALOG, categories, attributes):
+        subcatalog = SUBCATALOG()
+        subcatalog.is_tracking = _SUBCATALOG_CONTENT["isTracking"]
+        subcatalog.categories = categories
+        subcatalog.attributes = attributes
+        assert subcatalog.dumps() == _SUBCATALOG_CONTENT

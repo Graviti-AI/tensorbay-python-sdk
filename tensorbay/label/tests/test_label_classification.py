@@ -3,12 +3,18 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-from .. import Classification
+from .. import Classification, ClassificationSubcatalog
+from ..supports import SupportAttributes, SupportCategories
 
 _CATEGORY = "test"
 _ATTRIBUTES = {"key": "value"}
 
 _CLASSIFICATION_DATA = {"category": "test", "attributes": {"key": "value"}}
+_CLASSIFICATION_SUBCATALOG = {
+    "categories": [{"name": "0"}, {"name": "1"}],
+    "attributes": [{"name": "gender", "enum": ["male", "female"]}],
+    "categoryDelimiter": "-",
+}
 
 
 class TestClassification:
@@ -36,3 +42,31 @@ class TestClassification:
         classification = Classification(category=_CATEGORY, attributes=_ATTRIBUTES)
 
         assert classification.dumps() == _CLASSIFICATION_DATA
+
+
+class TestClassificationSubcatalog:
+    def test_init_subclass(self):
+        classification_subcatalog = ClassificationSubcatalog()
+        classification_subcatalog._supports = (SupportCategories, SupportAttributes)
+
+    def test_eq(self):
+        content1 = {"category": "cat", "attributes": [{"name": "color", "enum": ["white", "red"]}]}
+        content2 = {"category": "cat", "attributes": [{"name": "color", "enum": ["white", "blue"]}]}
+        classification_subcatalog1 = ClassificationSubcatalog.loads(content1)
+        classification_subcatalog2 = ClassificationSubcatalog.loads(content1)
+        classification_subcatalog3 = ClassificationSubcatalog.loads(content2)
+
+        assert classification_subcatalog1 == classification_subcatalog2
+        assert classification_subcatalog1 != classification_subcatalog3
+
+    def test_loads(self, categories, attributes):
+        classification_subcatalog = ClassificationSubcatalog.loads(_CLASSIFICATION_SUBCATALOG)
+        assert classification_subcatalog.categories == categories
+        assert classification_subcatalog.attributes == attributes
+
+    def test_dumps(self, categories, attributes):
+        classification_subcatalog = ClassificationSubcatalog()
+        classification_subcatalog.category_delimiter = "-"
+        classification_subcatalog.categories = categories
+        classification_subcatalog.attributes = attributes
+        assert classification_subcatalog.dumps() == _CLASSIFICATION_SUBCATALOG
