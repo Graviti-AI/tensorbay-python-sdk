@@ -30,7 +30,7 @@ produces strong visual distortion intended to create a wide panoramic or hemisph
 
 from typing import Any, Dict, Iterable, Optional, Sequence, Tuple, Type, TypeVar, Union
 
-from ..geometry import Quaternion, Transform3D
+from ..geometry import Transform3D
 from ..utility import NameMixin, ReprType, TypeEnum, TypeMixin, TypeRegister, common_loads
 from .intrinsics import CameraIntrinsics
 
@@ -137,8 +137,7 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
         transform: Transform3D.TransformType = None,
         *,
         translation: Iterable[float] = (0, 0, 0),
-        rotation: Quaternion.ArgsType = None,
-        **kwargs: Quaternion.KwargsType,
+        rotation: Transform3D.RotationType = (1, 0, 0, 0),
     ) -> None:
         """Set the extrinsics of the sensor.
 
@@ -146,13 +145,10 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
             transform: A ``Transform3D`` object representing the extrinsics.
             translation: Translation parameters.
             rotation: Rotation in a sequence of [w, x, y, z] or 3x3 rotation matrix
-                or ``Quaternion``.
-            **kwargs: Other parameters to initialize rotation.
+                or numpy quaternion.
 
         """
-        self.extrinsics = Transform3D(
-            transform, translation=translation, rotation=rotation, **kwargs
-        )
+        self.extrinsics = Transform3D(transform, translation=translation, rotation=rotation)
 
     def set_translation(self, x: float, y: float, z: float) -> None:
         """Set the translation of the sensor.
@@ -169,21 +165,16 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
             self.extrinsics = Transform3D()
         self.extrinsics.set_translation(x, y, z)
 
-    def set_rotation(
-        self,
-        *args: Union[Quaternion.ArgsType, float],
-        **kwargs: Quaternion.KwargsType,
-    ) -> None:
+    def set_rotation(self, rotation: Transform3D.RotationType) -> None:
         """Set the rotation of the sensor.
 
         Arguments:
-            *args: Coordinates of the ``Quaternion``.
-            **kwargs: Keyword-only argument to initialize the ``Quaternion``.
+            rotation: Rotation in a sequence of [w, x, y, z] or numpy quaternion.
 
         """
         if not hasattr(self, "extrinsics"):
             self.extrinsics = Transform3D()
-        self.extrinsics.set_rotation(*args, **kwargs)
+        self.extrinsics.set_rotation(rotation)
 
 
 @TypeRegister(SensorType.LIDAR)

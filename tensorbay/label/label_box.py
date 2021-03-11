@@ -19,7 +19,7 @@ which is often used for object detection in 3D point cloud.
 
 from typing import Any, Dict, Iterable, Optional, Type, TypeVar
 
-from ..geometry import Box2D, Box3D, Quaternion, Transform3D
+from ..geometry import Box2D, Box3D, Transform3D
 from ..utility import ReprType, SubcatalogTypeRegister, TypeRegister, common_loads
 from .basic import LabelType, SubcatalogBase, _LabelBase
 from .supports import SupportAttributes, SupportCategories, SupportIsTracking
@@ -233,13 +233,11 @@ class LabeledBox3D(Box3D, _LabelBase):
         translation: Translation of the 3D bounding box label in a sequence of [x, y, z].
         rotation: Rotation of the 3D bounding box label in a sequence of [w, x, y, z]
             or a 3x3 rotation matrix
-            or a :class:`~tensorbay.geometry.quaternion.Quaternion` object.
+            or a numpy quaternion object.
         size: Size of the 3D bounding box label in a sequence of [x, y, z].
         category: Category of the 3D bounding box label.
         attributes: Attributs of the 3D bounding box label.
         instance: The instance id of the 3D bounding box label.
-        **kwargs: Other parameters to initialize the rotation of the 3D bounding box label.
-            See :class:`~tensorbay.geometry.quaternion.Quaternion` documents for details.
 
     Attributes:
         category: The category of the label.
@@ -259,12 +257,11 @@ class LabeledBox3D(Box3D, _LabelBase):
         transform: Transform3D.TransformType = None,
         *,
         translation: Iterable[float] = (0, 0, 0),
-        rotation: Quaternion.ArgsType = None,
+        rotation: Transform3D.RotationType = (1, 0, 0, 0),
         size: Iterable[float] = (0, 0, 0),
         category: Optional[str] = None,
         attributes: Optional[Dict[str, Any]] = None,
         instance: Optional[str] = None,
-        **kwargs: Quaternion.KwargsType,
     ):
         Box3D.__init__(
             self,
@@ -272,7 +269,6 @@ class LabeledBox3D(Box3D, _LabelBase):
             translation=translation,
             rotation=rotation,
             size=size,
-            **kwargs,
         )
         _LabelBase.__init__(self, category, attributes, instance)
 

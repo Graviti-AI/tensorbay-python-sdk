@@ -431,7 +431,7 @@ To create a :class:`~tensorbay.label.label_box.LabeledBox3D` label:
     >>> box3d_label
     LabeledBox3D(
       (translation): Vector3D(0, 0, 0),
-      (rotation): Quaternion(1.0, 0.0, 0.0, 0.0),
+      (rotation): quaternion(1.0, 0.0, 0.0, 0.0),
       (size): Vector3D(10, 20, 30),
       (category): 'category',
       (attributes): {...},
@@ -457,7 +457,7 @@ or you can use translation and rotation to represent the transform of the 3D bou
     ... )
     LabeledBox3D(
       (translation): Vector3D(0, 0, 0),
-      (rotation): Quaternion(1.0, -0.0, -0.0, -0.0),
+      (rotation): quaternion(1.0, -0.0, -0.0, -0.0),
       (size): Vector3D(10, 20, 30)
     )
     >>> LabeledBox3D(
@@ -467,7 +467,7 @@ or you can use translation and rotation to represent the transform of the 3D bou
     ... )
     LabeledBox3D(
       (translation): Vector3D(0, 0, 0),
-      (rotation): Quaternion(1.0, 0.0, 0.0, 0.0),
+      (rotation): quaternion(1.0, 0.0, 0.0, 0.0),
       (size): Vector3D(10, 20, 30)
     )
 
@@ -478,12 +478,12 @@ It contains the basic geometry information of the 3D bounding box.
     >>> box3d_label.transform
     Transform3D(
       (translation): Vector3D(0, 0, 0),
-      (rotation): Quaternion(1.0, 0.0, 0.0, 0.0)
+      (rotation): quaternion(1.0, 0.0, 0.0, 0.0)
     )
     >>> box3d_label.translation
     Vector3D(0, 0, 0)
     >>> box3d_label.rotation
-    Quaternion(1.0, 0.0, 0.0, 0.0)
+    quaternion(1.0, 0.0, 0.0, 0.0)
     >>> box3d_label.size
     Vector3D(10, 20, 30)
     >>> box3d_label.volumn()

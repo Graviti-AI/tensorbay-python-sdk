@@ -8,6 +8,5 @@ tensorbay.geometry
    keypoint
    polygon
    polyline
-   quaternion
    transform
    vector

@@ -4,8 +4,9 @@
 #
 
 import pytest
+from quaternion import quaternion
 
-from .. import Box2D, Box3D, Quaternion, Transform3D, Vector2D, Vector3D
+from .. import Box2D, Box3D, Transform3D, Vector2D, Vector3D
 
 _DATA_2D = {"xmin": 1.0, "ymin": 2.0, "xmax": 3.0, "ymax": 4.0}
 _DATA_3D = {
@@ -86,7 +87,7 @@ class TestBox2D:
 class TestBox3D:
     def test_init(self):
         translation = Vector3D(1, 2, 3)
-        rotation = Quaternion(0, 1, 0, 0)
+        rotation = quaternion(0, 1, 0, 0)
         size = Vector3D(1, 2, 3)
         transform = Transform3D(translation=translation, rotation=rotation)
 
@@ -107,10 +108,10 @@ class TestBox3D:
         assert (box3d_1 == box3d_3) == False
 
     def test_rmul(self):
-        transform = Transform3D(translation=[1, 2, 3], rotation=Quaternion(0, 1, 0, 0))
+        transform = Transform3D(translation=[1, 2, 3], rotation=quaternion(0, 1, 0, 0))
         box3d = Box3D(transform)
         assert box3d.__rmul__(transform) == Box3D(
-            translation=[2, 0, 0], rotation=Quaternion(-1, 0, 0, 0)
+            translation=[2, 0, 0], rotation=quaternion(-1, 0, 0, 0)
         )
         assert box3d.__rmul__(1) == NotImplemented
 
@@ -120,13 +121,15 @@ class TestBox3D:
     def test_loads(self):
         box3d = Box3D.loads(_DATA_3D)
         assert box3d.translation == Vector3D(1, 2, 3)
-        assert box3d.rotation == Quaternion(0, 1, 0, 0)
+        assert box3d.rotation == quaternion(0, 1, 0, 0)
         assert box3d.size == Vector3D(1, 2, 3)
 
     def test_dumps(self):
 
         box3d = Box3D(
-            translation=Vector3D(1, 2, 3), rotation=Quaternion(0, 1, 0, 0), size=Vector3D(1, 2, 3)
+            translation=Vector3D(1, 2, 3),
+            rotation=quaternion(0, 1, 0, 0),
+            size=Vector3D(1, 2, 3),
         )
         assert box3d.dumps() == _DATA_3D
 

@@ -15,12 +15,18 @@ It provides :meth:`Box3D.iou` to calculate the intersection over union of two 3D
 
 """
 
+import math
+import warnings
 from typing import Dict, Iterable, Tuple, Type, TypeVar
 
 from ..utility import ReprMixin, ReprType, UserSequence, common_loads
-from .quaternion import Quaternion
 from .transform import Transform3D
 from .vector import Vector2D, Vector3D
+
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    from quaternion import quaternion
+
 
 _B2 = TypeVar("_B2", bound="Box2D")
 _B3 = TypeVar("_B3", bound="Box3D")
@@ -265,10 +271,8 @@ class Box3D(ReprMixin):
             or a 4x4 or 3x4 transform matrix.
         translation: Translation in a sequence of [x, y, z].
         rotation: Rotation in a sequence of [w, x, y, z] or a 3x3 rotation matrix
-            or a :class:`~tensorbay.geometry.quaternion.Quaternion` object.
+            or a numpy quaternion object.
         size: Size in a sequence of [x, y, z].
-        **kwargs: Other parameters to initialize rotation of the transform.
-            See :class:`~tensorbay.geometry.quaternion.Quaternion` documents for details.
 
     """
 
@@ -280,13 +284,10 @@ class Box3D(ReprMixin):
         transform: Transform3D.TransformType = None,
         *,
         translation: Iterable[float] = (0, 0, 0),
-        rotation: Quaternion.ArgsType = None,
+        rotation: Transform3D.RotationType = (1, 0, 0, 0),
         size: Iterable[float] = (0, 0, 0),
-        **kwargs: Quaternion.KwargsType,
     ) -> None:
-        self._transform = Transform3D(
-            transform, translation=translation, rotation=rotation, **kwargs
-        )
+        self._transform = Transform3D(transform, translation=translation, rotation=rotation)
         self._size = Vector3D(*size)
 
     def __eq__(self, other: object) -> bool:
@@ -375,7 +376,7 @@ class Box3D(ReprMixin):
 
         """
         box2 = box1.transform.inverse() * box2
-        if abs(box2.rotation.degrees) > angle_threshold:
+        if abs(math.degrees(box2.rotation.angle())) > angle_threshold:
             return 0
 
         intersect_size = [
@@ -396,7 +397,7 @@ class Box3D(ReprMixin):
         return self._transform.translation
 
     @property
-    def rotation(self) -> Quaternion:
+    def rotation(self) -> quaternion:
         """Return the rotation of the 3D box.
 
         Returns:
