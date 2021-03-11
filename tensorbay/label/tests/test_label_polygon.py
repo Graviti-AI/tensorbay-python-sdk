@@ -4,11 +4,13 @@
 #
 
 from ...geometry import Polygon2D, Vector2D
-from .. import LabeledPolygon2D
+from .. import LabeledPolygon2D, Polygon2DSubcatalog
+from ..supports import SupportAttributes, SupportCategories, SupportIsTracking
 
 _CATEGORY = "test"
 _ATTRIBUTES = {"key": "value"}
 _INSTANCE = "12345"
+
 
 _LABELEDPOLYGON2D_DATA = {
     "polygon2d": [
@@ -17,6 +19,11 @@ _LABELEDPOLYGON2D_DATA = {
     "category": "test",
     "attributes": {"key": "value"},
     "instance": "12345",
+}
+_POLYGON_SUBCATALOG = {
+    "isTracking": True,
+    "categories": [{"name": "0"}, {"name": "1"}],
+    "attributes": [{"name": "gender", "enum": ["male", "female"]}],
 }
 
 
@@ -53,3 +60,45 @@ class TestLabeledPolygon2D:
         )
 
         assert labeledpolygon2d.dumps() == _LABELEDPOLYGON2D_DATA
+
+
+class TestKeypoints2DSubcatalog:
+    def test_init_subclass(self):
+        subcatalog = Polygon2DSubcatalog()
+        assert subcatalog._supports == (
+            SupportIsTracking,
+            SupportCategories,
+            SupportAttributes,
+        )
+
+    def test_eq(self):
+        content1 = {
+            "isTracking": True,
+            "categories": [{"name": "0"}, {"name": "1"}],
+            "attributes": [{"name": "gender", "enum": ["male", "female"]}],
+        }
+        content2 = {
+            "isTracking": False,
+            "categories": [{"name": "0"}, {"name": "1"}],
+            "attributes": [{"name": "gender", "enum": ["male", "female"]}],
+        }
+        polygon2d_subcatalog1 = Polygon2DSubcatalog.loads(content1)
+        polygon2d_subcatalog2 = Polygon2DSubcatalog.loads(content1)
+        polygon2d_subcatalog3 = Polygon2DSubcatalog.loads(content2)
+
+        assert polygon2d_subcatalog1 == polygon2d_subcatalog2
+        assert polygon2d_subcatalog1 != polygon2d_subcatalog3
+
+    def test_loads(self, categories, attributes):
+        subcatalog = Polygon2DSubcatalog.loads(_POLYGON_SUBCATALOG)
+
+        assert subcatalog.is_tracking == _POLYGON_SUBCATALOG["isTracking"]
+        assert subcatalog.categories == categories
+        assert subcatalog.attributes == attributes
+
+    def test_dumps(self, categories, attributes):
+        subcatalog = Polygon2DSubcatalog()
+        subcatalog.is_tracking = _POLYGON_SUBCATALOG["isTracking"]
+        subcatalog.categories = categories
+        subcatalog.attributes = attributes
+        assert subcatalog.dumps() == _POLYGON_SUBCATALOG

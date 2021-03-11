@@ -3,9 +3,13 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-from .. import LabeledSentence, Word
+import pytest
+
+from .. import LabeledSentence, SentenceSubcatalog, Word
+from ..supports import SupportAttributes
 
 _ATTRIBUTES = {"key": "value"}
+_ENUMS = ["male", "female"]
 
 _TEXT = "Hello, World"
 _BEGIN = 1
@@ -18,6 +22,13 @@ _LABELEDSENTENCE_DATA = {
     "spell": [{"text": "qi1", "begin": 1, "end": 1}],
     "phone": [{"text": "q", "begin": 1, "end": 1}],
     "attributes": {"key": "value"},
+}
+_LEXICON = ["mean", "m", "iy", "n"]
+_SENTENCE_SUBCATALOG = {
+    "isSample": True,
+    "sampleRate": 16000,
+    "lexicon": [_LEXICON],
+    "attributes": [{"name": "gender", "enum": _ENUMS}],
 }
 
 
@@ -114,3 +125,58 @@ class TestLabeledSentence:
         )
 
         labeledsentence.dumps = _LABELEDSENTENCE_DATA
+
+
+class TestSentenceSubcatalog:
+    def test_init_subclass(self):
+        sentence_subcatalog = SentenceSubcatalog()
+        assert sentence_subcatalog._supports == (SupportAttributes,)
+
+    def test_init(self):
+        with pytest.raises(TypeError):
+            SentenceSubcatalog(True)
+        sentence_subcatalog = SentenceSubcatalog(True, 16000, [_LEXICON])
+        assert sentence_subcatalog.is_sample == True
+        assert sentence_subcatalog.sample_rate == 16000
+        assert sentence_subcatalog.lexicon == [_LEXICON]
+
+    def test_eq(self):
+        content1 = {
+            "isSample": True,
+            "sampleRate": 16000,
+            "lexicon": ["mean", "m", "iy", "n"],
+            "attributes": [{"name": "gender", "enum": ["male", "female"]}],
+        }
+        content2 = {
+            "isSample": True,
+            "sampleRate": 16000,
+            "lexicon": ["mean", "m"],
+            "attributes": [{"name": "gender", "enum": ["male", "female"]}],
+        }
+        sentence_subcatalog1 = SentenceSubcatalog.loads(content1)
+        sentence_subcatalog2 = SentenceSubcatalog.loads(content1)
+        sentence_subcatalog3 = SentenceSubcatalog.loads(content2)
+
+        assert sentence_subcatalog1 == sentence_subcatalog2
+        assert sentence_subcatalog1 != sentence_subcatalog3
+
+    def test_loads(self, attributes):
+        sentence_subcatalog = SentenceSubcatalog.loads(_SENTENCE_SUBCATALOG)
+        assert sentence_subcatalog.is_sample == _SENTENCE_SUBCATALOG["isSample"]
+        assert sentence_subcatalog.sample_rate == _SENTENCE_SUBCATALOG["sampleRate"]
+        assert sentence_subcatalog.lexicon == _SENTENCE_SUBCATALOG["lexicon"]
+        assert sentence_subcatalog.attributes == attributes
+
+    def test_dumps(self, attributes):
+        sentence_subcatalog = SentenceSubcatalog(
+            _SENTENCE_SUBCATALOG["isSample"],
+            _SENTENCE_SUBCATALOG["sampleRate"],
+            _SENTENCE_SUBCATALOG["lexicon"],
+        )
+        sentence_subcatalog.attributes = attributes
+        assert sentence_subcatalog.dumps() == _SENTENCE_SUBCATALOG
+
+    def append_lexicon(self):
+        sentence_subcatalog = SentenceSubcatalog()
+        sentence_subcatalog.append_lexicon(_LEXICON)
+        assert sentence_subcatalog.lexicon == [_LEXICON]
