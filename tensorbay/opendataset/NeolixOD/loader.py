@@ -8,6 +8,8 @@
 
 import os
 
+from quaternion import from_rotation_vector
+
 from ...dataset import Data, Dataset
 from ...label import LabeledBox3D
 from .._utility import glob
@@ -64,8 +66,7 @@ def NeolixOD(path: str) -> Dataset:
                         float(label_value[12]),
                         float(label_value[13]) + 0.5 * float(label_value[8]),
                     ],
-                    axis=[0, 0, 1],
-                    radians=float(label_value[14]),
+                    rotation=from_rotation_vector((0, 0, float(label_value[14]))),
                 )
                 data.label.box3d.append(label)
 

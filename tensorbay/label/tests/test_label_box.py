@@ -4,8 +4,9 @@
 #
 
 import pytest
+from quaternion import quaternion
 
-from ...geometry import Quaternion, Transform3D, Vector3D
+from ...geometry import Transform3D, Vector3D
 from .. import Box2DSubcatalog, Box3DSubcatalog, LabeledBox2D, LabeledBox3D
 from ..supports import SupportAttributes, SupportCategories, SupportIsTracking
 
@@ -120,7 +121,7 @@ class TestLabeledBox2D:
 class TestLabeledBox3D:
     def test_init(self):
         translation = Vector3D(1, 2, 3)
-        rotation = Quaternion(1, 2, 3, 4)
+        rotation = quaternion(1, 2, 3, 4)
         size = Vector3D(1, 2, 3)
         transform = Transform3D(translation=translation, rotation=rotation)
 
@@ -137,7 +138,7 @@ class TestLabeledBox3D:
 
     def test_rmul(self):
         translation = [1, 2, 3]
-        rotation = Quaternion(0, 1, 0, 0)
+        rotation = quaternion(0, 1, 0, 0)
         transform = Transform3D(translation=translation, rotation=rotation)
 
         labeledbox3d = LabeledBox3D(
@@ -152,7 +153,7 @@ class TestLabeledBox3D:
 
     def test_eq(self):
         translation = [1, 2, 3]
-        rotation = Quaternion(1, 2, 3, 4)
+        rotation = quaternion(1, 2, 3, 4)
         transform = Transform3D(translation=translation, rotation=rotation)
 
         box3d1 = LabeledBox3D(transform, size=[1, 2, 3], category=_CATEGORY, attributes=_ATTRIBUTES)
@@ -170,12 +171,12 @@ class TestLabeledBox3D:
         assert labeledbox3d.instance == _LABELEDBOX3D_DATA["instance"]
 
         assert labeledbox3d.translation == Vector3D(1, 2, 3)
-        assert labeledbox3d.rotation == Quaternion(1, 2, 3, 4)
+        assert labeledbox3d.rotation == quaternion(1, 2, 3, 4)
         assert labeledbox3d.size == Vector3D(1, 2, 3)
 
     def test_dumps(self):
         translation = [1, 2, 3]
-        rotation = Quaternion(1, 2, 3, 4)
+        rotation = quaternion(1, 2, 3, 4)
         size = [1, 2, 3]
         transform = Transform3D(translation=translation, rotation=rotation)
 

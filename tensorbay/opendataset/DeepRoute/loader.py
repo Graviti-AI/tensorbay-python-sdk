@@ -9,6 +9,8 @@
 import json
 import os
 
+from quaternion import from_rotation_vector
+
 from ...dataset import Data, Dataset
 from ...label import LabeledBox3D
 from .._utility import glob
@@ -65,8 +67,7 @@ def DeepRoute(path: str) -> Dataset:
                 category=annotation["type"],
                 size=(bounding_box["length"], bounding_box["width"], bounding_box["height"]),
                 translation=(position["x"], position["y"], position["z"]),
-                axis=(0, 0, 1),
-                radians=annotation["heading"],
+                rotation=from_rotation_vector((0, 0, annotation["heading"])),
             )
             data.label.box3d.append(label)
 

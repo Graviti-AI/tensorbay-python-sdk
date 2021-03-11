@@ -6,8 +6,9 @@
 from typing import Type
 
 import pytest
+from quaternion import quaternion
 
-from ...geometry import Quaternion, Transform3D, Vector3D
+from ...geometry import Transform3D, Vector3D
 from .. import (
     Camera,
     CameraIntrinsics,
@@ -21,7 +22,7 @@ from .. import (
 )
 
 _TRANSLATION = Vector3D(1, 2, 3)
-_ROTATION = Quaternion(1, 2, 3, 4)
+_ROTATION = quaternion(1, 2, 3, 4)
 
 _LIDAR_DATA = {
     "name": "Lidar1",
@@ -103,7 +104,7 @@ class TestLidar:
 
     def test_set_rotation(self):
         lidar = Lidar("test")
-        lidar.set_rotation(w=1, x=2, y=3, z=4)
+        lidar.set_rotation([1, 2, 3, 4])
         assert lidar.extrinsics.rotation == _ROTATION
 
     def test_dumps(self):
@@ -134,7 +135,7 @@ class TestRadar:
 
     def test_set_rotation(self):
         radar = Radar("test")
-        radar.set_rotation(w=1, x=2, y=3, z=4)
+        radar.set_rotation([1, 2, 3, 4])
         assert radar.extrinsics.rotation == _ROTATION
 
     def test_dumps(self):
@@ -165,7 +166,7 @@ class TestCamera:
 
     def test_set_rotation(self):
         camera = Camera("test")
-        camera.set_rotation(w=1, x=2, y=3, z=4)
+        camera.set_rotation([1, 2, 3, 4])
         assert camera.extrinsics.rotation == _ROTATION
 
     def test_set_camera_matrix(self):
@@ -216,7 +217,7 @@ class FisheyeCamera:
 
     def test_set_rotation(self):
         fisheye_camera = FisheyeCamera("test")
-        fisheye_camera.set_rotation(w=1, x=2, y=3, z=4)
+        fisheye_camera.set_rotation([1, 2, 3, 4])
         assert fisheye_camera.extrinsics.rotation == _ROTATION
 
     def test_dumps(self):
