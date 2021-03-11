@@ -309,7 +309,7 @@ class DistortionCoefficients(ReprMixin):
 
         return contents
 
-    def distort(self, point: Sequence[float], *, is_fisheye: bool = False) -> Vector2D:
+    def distort(self, point: Sequence[float], is_fisheye: bool = False) -> Vector2D:
         """Add distortion to a point.
 
         Arguments:
@@ -489,5 +489,5 @@ class CameraIntrinsics(ReprMixin):
 
         """
         if self._distortion_coefficients:
-            point = self._distortion_coefficients.distort(point, is_fisheye)  # type: ignore[misc]
+            point = self._distortion_coefficients.distort(point, is_fisheye)
         return self._camera_matrix.project(point)
