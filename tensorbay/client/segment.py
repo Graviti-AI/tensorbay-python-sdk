@@ -183,7 +183,7 @@ class SegmentClientBase:
         post_data: Dict[str, Any] = {
             "segmentName": self.name,
             "remotePath": data.target_remote_path,
-            "labelValues": label,
+            "label": label,
         }
         self._client.open_api_do("PUT", "labels", self.dataset_id, json=post_data)
 
