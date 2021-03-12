@@ -15,4 +15,4 @@ for the comparison between the fusion dataset and the dataset.
 .. toctree::
    :maxdepth: 1
 
-   fusion_dataset/concepts
+   fusion_dataset/fusion_dataset_structure

@@ -1,6 +1,6 @@
-#######################
- Supported Label Types
-#######################
+##############
+ Label Format
+##############
 
 TensorBay supports multiple types of labels.
 

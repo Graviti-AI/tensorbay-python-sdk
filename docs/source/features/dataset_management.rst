@@ -1,7 +1,6 @@
-
-################
- Manage Dataset
-################
+####################
+ Dataset Management 
+####################
 
 This topic describes the basic operations towards your dataset, including:
 
@@ -9,9 +8,15 @@ This topic describes the basic operations towards your dataset, including:
 - Upload dataset to TensorBay
 - Read dataset from TensorBay
 
+
 ****************
  Create Dataset
 ****************
+
+
+******************
+ Organize Dataset
+******************
 
 To create a dataset,
 you need to write a **dataloader** and a **catalog** (:ref:`basic_concepts:catalog & subcatalog`),

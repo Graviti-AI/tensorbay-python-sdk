@@ -1,6 +1,6 @@
-#################################
- Fusion Dataset related Concepts
-#################################
+##########################
+ Fusion Dataset Structure
+##########################
 
 TensorBay also defines a uniform fusion dataset format.
 In this topic, we explain the related concepts.

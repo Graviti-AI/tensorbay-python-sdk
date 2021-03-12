@@ -9,9 +9,9 @@ Click following links for details.
 .. toctree::
    :maxdepth: 1
 
-   examples/image-classification
-   examples/image-box2d
-   examples/image-keypoints2d
-   examples/point_cloud-box3d
-   examples/audio-sentence
-   examples/text-classification
+   ../examples/DogsVsCats
+   ../examples/BSTLD
+   ../examples/LeedsSportsPose
+   ../examples/NeolixOD
+   ../examples/THCHS30
+   ../examples/NewsGroups20

@@ -26,22 +26,49 @@ You can also use TensorBay CLI to operate your datasets.
 See :ref:`this page <features/tensorbay_cli:TensorBay CLI>` for more details.
 
 
-#######
- Index
-#######
+.. toctree::
+   :maxdepth: 1
+   :caption: Quick Start
+
+   quick_start/getting_start_with_tensorbay
+   quick_start/examples
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
+   :caption: Features
 
-   quick_start
-   basic_concepts
-   supported_label_types
-   features
-   examples
-   advanced_features
-   api_reference
+   features/dataset_management
+   features/version_control
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Advanced Features
+
+   advanced_features/fusion_dataset
+
+.. toctree::
+   :maxdepth: 1
+   :caption: CLI
+
+   tensorbay_cli/getting_start_with_CLI
+   tensorbay_cli/dataset_management
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Reference
+
+   reference/glossary
+   reference/dataset_structure
+   reference/label_format
+   reference/api_reference
 
 ..
-   contribution
+   reference/release_note
+
 ..
-   exception
+.. toctree::
+   :maxdepth: 1
+   :caption: Community
+
+   community/contribution
+   community/roadmap
