@@ -36,10 +36,12 @@ class Vector(UserSequence[float]):
         y: The y coordinate of the vector.
         z: The z coordinate of the vector.
 
-            .. code:: python
+    Examples:
+        >>> Vector(1, 2)
+        Vector2D(1, 2)
 
-                vector2d = Vector(x=1, y=2)
-                vector3d = Vector(x=1, y=2, z=3)
+        >>> Vector(1, 2, 3)
+        Vector3D(1, 2, 3)
 
     """
 
@@ -61,11 +63,6 @@ class Vector(UserSequence[float]):
             x: The x coordinate of the vector.
             y: The y coordinate of the vector.
             z: The z coordinate of the vector.
-
-                .. code:: python
-
-                    vector2d = Vector(x=1, y=2)
-                    vector3d = Vector(x=1, y=2, z=3)
 
         Returns:
             The created :class:`Vector2D` or :class:`Vector3D` object.
@@ -127,21 +124,19 @@ class Vector(UserSequence[float]):
         """Loads a :class:`Vector` from a dict containing coordinates of the vector.
 
         Arguments:
-            contents: A dict containing coordinates of the vector::
-
-                {
-                    "x": ...
-                    "y": ...
-                }
-                or
-                {
-                    "x": ...
-                    "y": ...
-                    "z": ...
-                }
+            contents: A dict containing coordinates of the vector.
 
         Returns:
             The loaded :class:`Vector2D` or :class:`Vector3D` object.
+
+        Examples:
+            >>> contents = {"x": 1.0, "y": 2.0}
+            >>> Vector.loads(contents)
+            Vector2D(1.0, 2.0)
+
+            >>> contents = {"x": 1.0, "y": 2.0, "z": 3.0}
+            >>> Vector.loads(contents)
+            Vector3D(1.0, 2.0, 3.0)
 
         """
         if "z" in contents:
@@ -157,6 +152,10 @@ class Vector2D(Vector):
     Arguments:
         x: The x coordinate of the 2D vector.
         y: The y coordinate of the 2D vector.
+
+    Examples:
+        >>> Vector2D(1, 2)
+        Vector2D(1, 2)
 
     """
 
@@ -186,15 +185,15 @@ class Vector2D(Vector):
         """Load a :class:`Vector2D` object from a dict containing coordinates of a 2D vector.
 
         Arguments:
-            contents: A dict containing coordinates of a 2D vector::
-
-                {
-                    "x": ...
-                    "y": ...
-                }
+            contents: A dict containing coordinates of a 2D vector.
 
         Returns:
             The loaded :class:`Vector2D` object.
+
+        Examples:
+            >>> contents = {"x": 1.0, "y": 2.0}
+            >>> Vector2D.loads(contents)
+            Vector2D(1.0, 2.0)
 
         """
         return cls(**contents)
@@ -206,6 +205,11 @@ class Vector2D(Vector):
         Returns:
             X coordinate in float type.
 
+        Examples:
+            >>> vector_2d = Vector2D(1, 2)
+            >>> vector_2d.x
+            1
+
         """
         return self._data[0]
 
@@ -216,6 +220,11 @@ class Vector2D(Vector):
         Returns:
             Y coordinate in float type.
 
+        Examples:
+            >>> vector_2d = Vector2D(1, 2)
+            >>> vector_2d.y
+            2
+
         """
         return self._data[1]
 
@@ -224,6 +233,11 @@ class Vector2D(Vector):
 
         Returns:
             A dict containing the vector coordinate.
+
+        Examples:
+                >>> vector_2d = Vector2D(1, 2)
+                >>> vector_2d.dumps()
+                {'x': 1, 'y': 2}
 
         """
         return {"x": self._data[0], "y": self._data[1]}
@@ -238,6 +252,10 @@ class Vector3D(Vector):
         x: The x coordinate of the 3D vector.
         y: The y coordinate of the 3D vector.
         z: The z coordinate of the 3D vector.
+
+    Examples:
+        >>> Vector3D(1, 2, 3)
+        Vector3D(1, 2, 3)
 
     """
 
@@ -267,16 +285,15 @@ class Vector3D(Vector):
         """Load a :class:`Vector3D` object from a dict containing coordinates of a 3D vector.
 
         Arguments:
-            contents: A dict contains coordinates of a 3D vector::
-
-                {
-                    "x": ...
-                    "y": ...
-                    "z": ...
-                }
+            contents: A dict contains coordinates of a 3D vector.
 
         Returns:
             The loaded :class:`Vector3D` object.
+
+        Examples:
+            >>> contents = {"x": 1.0, "y": 2.0, "z": 3.0}
+            >>> Vector3D.loads(contents)
+            Vector3D(1.0, 2.0, 3.0)
 
         """
         return cls(**contents)
@@ -288,6 +305,11 @@ class Vector3D(Vector):
         Returns:
              X coordinate in float type.
 
+        Examples:
+            >>> vector_3d = Vector3D(1, 2, 3)
+            >>> vector_3d.x
+            1
+
         """
         return self._data[0]
 
@@ -297,6 +319,11 @@ class Vector3D(Vector):
 
         Returns:
             Y coordinate in float type.
+
+        Examples:
+            >>> vector_3d = Vector3D(1, 2, 3)
+            >>> vector_3d.y
+            2
 
         """
         return self._data[1]
@@ -308,6 +335,11 @@ class Vector3D(Vector):
         Returns:
             Z coordinate in float type.
 
+        Examples:
+            >>> vector_3d = Vector3D(1, 2, 3)
+            >>> vector_3d.z
+            3
+
         """
         return self._data[2]
 
@@ -316,6 +348,11 @@ class Vector3D(Vector):
 
         Returns:
             A dict containing the vector coordinates.
+
+        Examples:
+            >>> vector_3d = Vector3D(1, 2, 3)
+            >>> vector_3d.dumps()
+            {'x': 1, 'y': 2, 'z': 3}
 
         """
         return {"x": self._data[0], "y": self._data[1], "z": self._data[2]}
