@@ -1,10 +1,6 @@
-###############
- TensorBay CLI
-###############
-
-*************
- Description
-*************
+########################
+ Getting Start with CLI
+########################
 
 The TensorBay Command Line Interface is a tool to operate on your datasets.
 It supports Windows, Linux, and Mac platforms.

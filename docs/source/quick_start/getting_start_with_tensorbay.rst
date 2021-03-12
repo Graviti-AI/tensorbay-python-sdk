@@ -1,6 +1,6 @@
-#############
- Quick Start
-#############
+##############################
+ Getting start with TensorBay
+##############################
 
 **************
  Installation
@@ -12,11 +12,6 @@ To install TensorBay SDK and CLI by **pip**, run the following command:
 
    pip3 install tensorbay
 
-
-**************
- Verification
-**************
-
 To verify the SDK and CLI version, run the following command:
 
 .. code:: console
@@ -24,9 +19,9 @@ To verify the SDK and CLI version, run the following command:
    gas --version
 
 
-**************
- Registration
-**************
+****************
+ Authentication
+****************
 
 Users can use local features without registration to do operations
 such as :ref:`quick_start:Create Dataset from Local`.
@@ -36,11 +31,6 @@ such as :ref:`quick_start:Read Dataset from TensorBay`, registration is required
 Please visit `Graviti AI Service(GAS)`_ to sign up.
 
 .. _graviti ai service(gas): https://www.graviti.cn/tensorBay
-
-
-****************
- Authentication
-****************
 
 An AccessKey is needed to authenticate identity on TensorBay via SDK or CLI.
 See `this page <https://gas.graviti.cn/access-key>`_ for how to get an AccessKey.

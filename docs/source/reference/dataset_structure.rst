@@ -1,6 +1,6 @@
-################
- Basic Concepts
-################
+###################
+ Dataset Structure
+###################
 
 For ease of use, TensorBay defines a uniform dataset format.
 In this topic, we explain the related concepts.
@@ -30,9 +30,9 @@ Each dataset includes a catalog and a certain number of segments.
 
 The corresponding class of dataset is :class:`~tensorbay.dataset.dataset.Dataset`.
 
-**********************
- catalog & subcatalog
-**********************
+*********
+ catalog 
+*********
 
 Catalog is used for storing label meta information.
 It collects all the labels corresponding to a dataset.
