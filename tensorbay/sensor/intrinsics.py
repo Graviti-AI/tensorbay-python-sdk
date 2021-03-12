@@ -197,7 +197,7 @@ class DistortionCoefficients(ReprMixin):
     def __init__(self, **kwargs: float) -> None:
         self._loads(kwargs)
 
-        if not hasattr(self, "k1") or not hasattr(self, "p1"):
+        if not hasattr(self, "k1") and not hasattr(self, "p1"):
             raise TypeError(
                 f"Require tangential or radial distortion to initialize {self.__class__.__name__}"
             )
