@@ -147,7 +147,7 @@ class DataBase(ReprMixin):  # pylint: disable=too-few-public-methods
     _Type = Union["Data", "RemoteData"]
 
     _repr_type = ReprType.INSTANCE
-    _repr_attrs = ("timestamp", "labels")
+    _repr_attrs = ("timestamp", "label")
     _repr_maxlevel = 3
 
     _PATH_KEY = ""
