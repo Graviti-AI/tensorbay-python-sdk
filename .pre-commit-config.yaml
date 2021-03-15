@@ -18,7 +18,13 @@ repos:
     hooks:
       - id: isort
         types: [python]
+        exclude: "^examples"
         args: ["--profile=black", "-w 100"]
+      - id: isort
+        name: isort-examples
+        types: [python]
+        files: "^examples"
+        args: ["--profile=black", "-w 100", "--thirdparty=tensorbay"]
 
   - repo: https://github.com/ambv/black
     rev: 20.8b1
@@ -41,6 +47,7 @@ repos:
             "--docstring-convention=google",
             "--ignore-decorators=overload",
             "--ignore=E203,W503,D105,D107,DAR203",
+            "--per-file-ignores=examples/*:E402,F811",
           ]
 
   - repo: https://github.com/pre-commit/mirrors-mypy
