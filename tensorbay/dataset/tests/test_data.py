@@ -64,9 +64,8 @@ class TestLabel:
         label.classification = Classification(category, attributes)
         assert label.dumps() == _CLASSIFICATION_DATA
 
-        box = [1, 1, 2, 2]
         label = Label()
-        label.box2d = [LabeledBox2D(box, category=category, attributes=attributes)]
+        label.box2d = [LabeledBox2D(1, 1, 2, 2, category=category, attributes=attributes)]
         assert label.dumps() == _BOX2D_DATA
 
 

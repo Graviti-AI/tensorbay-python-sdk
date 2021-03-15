@@ -136,7 +136,7 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
         self,
         transform: Transform3D.TransformType = None,
         *,
-        translation: Optional[Iterable[float]] = None,
+        translation: Iterable[float] = (0, 0, 0),
         rotation: Quaternion.ArgsType = None,
         **kwargs: Quaternion.KwargsType,
     ) -> None:
@@ -154,24 +154,20 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
             transform, translation=translation, rotation=rotation, **kwargs
         )
 
-    def set_translation(
-        self,
-        *args: Union[float, Iterable[float]],
-        **kwargs: float,
-    ) -> None:
+    def set_translation(self, x: float, y: float, z: float) -> None:
         """Set the translation of the sensor.
 
         Arguments:
-            *args: Coordinates of the translation vector.
-            **kwargs: keyword-only argument `x`, `y` and `z` to set different dimension for
-                the translation vector.
+            x: The x coordinate of the translation.
+            y: The y coordinate of the translation.
+            z: The z coordinate of the translation.
 
                     sensor.set_translation(x=1, y=2, z=3)
 
         """
         if not hasattr(self, "extrinsics"):
             self.extrinsics = Transform3D()
-        self.extrinsics.set_translation(*args, **kwargs)
+        self.extrinsics.set_translation(x, y, z)
 
     def set_rotation(
         self,

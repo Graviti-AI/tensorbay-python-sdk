@@ -212,7 +212,11 @@ class LabeledBox2D(Box2D, _LabelBase):  # pylint: disable=too-many-ancestors
 
     def __init__(
         self,
-        *args: Union[None, float, Iterable[float]],
+        xmin: Optional[float] = None,
+        ymin: Optional[float] = None,
+        xmax: Optional[float] = None,
+        ymax: Optional[float] = None,
+        *,
         category: Optional[str] = None,
         attributes: Optional[Dict[str, Any]] = None,
         instance: Optional[str] = None,
@@ -221,7 +225,7 @@ class LabeledBox2D(Box2D, _LabelBase):  # pylint: disable=too-many-ancestors
         width: Optional[float] = None,
         height: Optional[float] = None,
     ):
-        Box2D.__init__(self, *args, x=x, y=y, width=width, height=height)
+        Box2D.__init__(self, xmin, ymin, xmax, ymax, x=x, y=y, width=width, height=height)
         _LabelBase.__init__(self, category, attributes, instance)
 
     def _loads(self, contents: Dict[str, Any]) -> None:
@@ -326,9 +330,9 @@ class LabeledBox3D(Box3D, _LabelBase):
         self,
         transform: Transform3D.TransformType = None,
         *,
-        translation: Optional[Iterable[float]] = None,
+        translation: Iterable[float] = (0, 0, 0),
         rotation: Quaternion.ArgsType = None,
-        size: Optional[Iterable[float]] = None,
+        size: Iterable[float] = (0, 0, 0),
         category: Optional[str] = None,
         attributes: Optional[Dict[str, Any]] = None,
         instance: Optional[str] = None,

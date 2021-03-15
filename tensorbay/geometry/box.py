@@ -15,7 +15,7 @@ It provides :meth:`Box3D.iou` to calculate the intersection over union of two 3D
 
 """
 
-from typing import Dict, Iterable, Optional, Tuple, Type, TypeVar, Union
+from typing import Dict, Iterable, Optional, Tuple, Type, TypeVar
 
 from ..utility import ReprMixin, ReprType, UserSequence, common_loads
 from .quaternion import Quaternion
@@ -33,21 +33,14 @@ class Box2D(UserSequence[float]):
     It provides :meth:`Box2D.iou` to calculate the intersection over union of two 2D boxes.
 
     Arguments:
-        args: Coordinates of a 2D bounding box:
-
-            .. code:: python
-
-                box = Box2D()
-                box = Box2D(10, 20, 30, 40)
-                box = Box2D([10, 20, 30, 40])
-
+        xmin: The x coordinate of the top-left vertex of the 2D box.
+        ymin: The y coordinate of the top-left vertex of the 2D box.
+        xmax: The x coordinate of the bottom-right vertex of the 2D box.
+        ymax: The y coordinate of the bottom-right vertex of the 2D box.
         x: X coordinate of the top left vertex of the box.
         y: Y coordinate of the top left vertex of the box.
         width: Length along the x axis.
         height: Length along the y axis.
-
-    Raises:
-        TypeError: If input parameters do not meet the requirement.
 
     """
 
@@ -59,7 +52,11 @@ class Box2D(UserSequence[float]):
 
     def __init__(
         self,
-        *args: Union[None, float, Iterable[float]],
+        xmin: Optional[float] = None,
+        ymin: Optional[float] = None,
+        xmax: Optional[float] = None,
+        ymax: Optional[float] = None,
+        *,
         x: Optional[float] = None,
         y: Optional[float] = None,
         width: Optional[float] = None,
@@ -67,32 +64,24 @@ class Box2D(UserSequence[float]):
     ) -> None:
         if x is not None or y is not None or width is not None or height is not None:
             try:
-                xmin: float = x  # type: ignore[assignment]
-                ymin: float = y  # type: ignore[assignment]
+                xmin = x
+                ymin = y
                 xmax = x + width  # type: ignore[operator]
                 ymax = y + height  # type: ignore[operator]
             except TypeError as error:
                 raise TypeError(
                     "Require x, y, width, height keyword arguments to construct a 2D box."
                 ) from error
-        else:
-            arg: Optional[Iterable[float]]
-            arg = args[0] if len(args) == 1 else args  # type: ignore[assignment]
-            if arg is None:
+
+        try:
+            if xmin >= xmax or ymin >= ymax:  # type: ignore[operator]
                 self._data = (0.0,) * Box2D._LENGTH
-                return
-
-            try:
-                xmin, ymin, xmax, ymax = arg
-            except (ValueError, TypeError) as error:
-                raise TypeError(
-                    f"Require 4 dimensional data to construct {self.__class__.__name__}."
-                ) from error
-
-        if xmin >= xmax or ymin >= ymax:
-            self._data = (0.0,) * Box2D._LENGTH
-        else:
-            self._data = (xmin, ymin, xmax, ymax)
+            else:
+                self._data = (xmin, ymin, xmax, ymax)  # type: ignore[assignment]
+        except TypeError as error:
+            raise TypeError(
+                f"Require xmin, ymin, xmax, ymax to construct {self.__class__.__name__}."
+            ) from error
 
     def __len__(self) -> int:
         return Box2D._LENGTH
@@ -217,7 +206,7 @@ class Box2D(UserSequence[float]):
             The top left point.
 
         """
-        return Vector2D(self._data[:2])
+        return Vector2D(self._data[0], self._data[1])
 
     @property
     def br(self) -> Vector2D:  # pylint: disable=invalid-name
@@ -227,7 +216,7 @@ class Box2D(UserSequence[float]):
             The bottom right point.
 
         """
-        return Vector2D(self._data[2:])
+        return Vector2D(self._data[2], self._data[3])
 
     @property
     def width(self) -> float:
@@ -299,15 +288,15 @@ class Box3D(ReprMixin):
         self,
         transform: Transform3D.TransformType = None,
         *,
-        translation: Optional[Iterable[float]] = None,
+        translation: Iterable[float] = (0, 0, 0),
         rotation: Quaternion.ArgsType = None,
-        size: Optional[Iterable[float]] = None,
+        size: Iterable[float] = (0, 0, 0),
         **kwargs: Quaternion.KwargsType,
     ) -> None:
         self._transform = Transform3D(
             transform, translation=translation, rotation=rotation, **kwargs
         )
-        self._size = Vector3D(size)
+        self._size = Vector3D(*size)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, self.__class__):

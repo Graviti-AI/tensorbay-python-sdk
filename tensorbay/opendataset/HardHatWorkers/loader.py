@@ -53,6 +53,10 @@ def _load_labels(label_file: str) -> List[LabeledBox2D]:
     labels = []
     for obj in label_tree.findall("object"):
         bndbox = obj.find("bndbox")
-        box = (int(child.text) for child in bndbox)  # type: ignore[arg-type, union-attr]
-        labels.append(LabeledBox2D(box, category=obj.find("name").text))  # type: ignore[union-attr]
+        labels.append(
+            LabeledBox2D(
+                *(int(child.text) for child in bndbox),  # type: ignore[arg-type, union-attr]
+                category=obj.find("name").text  # type: ignore[union-attr]
+            )
+        )
     return labels
