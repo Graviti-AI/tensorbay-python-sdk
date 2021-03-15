@@ -2,9 +2,39 @@
  Examples
 ##########
 
-We write an example for each
-:ref:`supported label types <supported_label_types:Supported Label Types>`.
-Click following links for details.
+| We write examples for labels in :ref:`reference/label_format:Label Format`.
+| :numref:`Table. %s <examples_table>` lists the examples, including their data types and label types.
+
+.. _examples_table:
+
+.. table:: Examples
+   :align: center
+   :widths: auto
+
+   =====================================================================================  ====================================================================================
+   Examples                                                                               Description
+   =====================================================================================  ====================================================================================
+   :ref:`Dataset Management: Dogs vs. Cats <examples/DogsVsCats:Dogs vs. Cats>`           | This example describes how to manage `Dogs vs. Cats`_ dataset,
+                                                                                          | which is an image dataset with :ref:`reference/label_format:Classification` label.
+   :ref:`Dataset Management: 20 Newsgroups <examples/NewsGroups20:20 Newsgroups>`         | This example describes how to manage `20 Newsgroups`_
+                                                                                          | dataset, which is a text dataset with :ref:`reference/label_format:Classification` label.
+   :ref:`Dataset Management: BSTLD <examples/BSTLD:BSTLD>`                                | This example describes how to manage `BSTLD`_ dataset,
+                                                                                          | which is an image dataset with :ref:`reference/label_format:Box2D` label.
+   :ref:`Dataset Management: Neolix OD <examples/NeolixOD:Neolix OD>`                     | This example describes how to manage `Neolix OD`_ dataset,
+                                                                                          | which is an Point Cloud dataset with :ref:`reference/label_format:Box3D` label.
+   :ref:`Dataset Management: LeedsSportsPose <examples/LeedsSportsPose:LeedsSportsPose>`  | This example describes how to manage `LeedsSportsPose`_
+                                                                                          | dataset, which is an image dataset with :ref:`reference/label_format:Keypoints2D` label.
+   :ref:`Dataset Management: THCHS-30 <examples/THCHS30:THCHS-30>`                        | This example describes how to manage `THCHS-30`_ dataset,
+                                                                                          | which is an audio dataset with :ref:`reference/label_format:Sentence` label.
+   =====================================================================================  ====================================================================================
+
+.. _Dogs vs. Cats: https://www.graviti.cn/open-datasets/DogsVsCats
+.. _20 Newsgroups: https://www.graviti.cn/open-datasets/Newsgroups20
+.. _BSTLD: https://www.graviti.cn/open-datasets/BSTLD
+.. _Neolix OD: https://www.graviti.cn/open-datasets/NeolixOD
+.. _LeedsSportsPose: https://www.graviti.cn/open-datasets/LeedsSportsPose
+.. _THCHS-30: https://www.graviti.cn/open-datasets/THCHS30
+
 
 .. toctree::
    :hidden:
