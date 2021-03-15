@@ -102,7 +102,7 @@ def _gas(access_key: str, url: str, profile_name: str) -> GAS:
 @click.group()
 @click.version_option(version=__version__, message="%(version)s")
 @click.option("-k", "--key", "access_key", type=str, default="", help="The accessKey of gas.")
-@click.option("-u", "--url", type=str, default="", help="The login url.")
+@click.option("-u", "--url", type=str, default="", help="The login url.", hidden=True)
 @click.option(
     "-p",
     "--profile",
