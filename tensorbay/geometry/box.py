@@ -45,6 +45,10 @@ class Box2D(UserSequence[float]):
         xmax: The x coordinate of the bottom-right vertex of the 2D box.
         ymax: The y coordinate of the bottom-right vertex of the 2D box.
 
+    Examples:
+        >>> Box2D(1, 2, 3, 4)
+        Box2D(1, 2, 3, 4)
+
     """
 
     _repr_type = ReprType.INSTANCE
@@ -114,6 +118,12 @@ class Box2D(UserSequence[float]):
         Returns:
             The intersection over union between the two input boxes.
 
+        Examples:
+            >>> box2d_1 = Box2D(1, 2, 3, 4)
+            >>> box2d_2 = Box2D(2, 2, 3, 4)
+            >>> Box2D.iou(box2d_1, box2d_2)
+            0.5
+
         """
         area1 = box1.area()
         area2 = box2.area()
@@ -135,6 +145,10 @@ class Box2D(UserSequence[float]):
         Returns:
             The created :class:`Box2D` instance.
 
+        Examples:
+            >>> Box2D.from_xywh(1, 2, 3, 4)
+            Box2D(1, 2, 4, 6)
+
         """
         return cls(x, y, x + width, y + height)
 
@@ -143,17 +157,15 @@ class Box2D(UserSequence[float]):
         """Load a :class:`Box2D` from a dict containing coordinates of the 2D box.
 
         Arguments:
-            contents: A dict containing coordinates of a 2D box::
-
-                {
-                    "xmin": ...
-                    "ymin": ...
-                    "xmax": ...
-                    "ymax": ...
-                }
+            contents: A dict containing coordinates of a 2D box.
 
         Returns:
             The loaded :class:`Box2D` object.
+
+        Examples:
+            >>> contents = {"xmin": 1.0, "ymin": 2.0, "xmax": 3.0, "ymax": 4.0}
+            >>> Box2D.loads(contents)
+            Box2D(1.0, 2.0, 3.0, 4.0)
 
         """
         return common_loads(cls, contents)
@@ -165,6 +177,11 @@ class Box2D(UserSequence[float]):
         Returns:
             Minimum x coordinate.
 
+        Examples:
+            >>> box2d = Box2D(1, 2, 3, 4)
+            >>> box2d.xmin
+            1
+
         """
         return self._data[0]
 
@@ -174,6 +191,11 @@ class Box2D(UserSequence[float]):
 
         Returns:
             Minimum y coordinate.
+
+        Examples:
+            >>> box2d = Box2D(1, 2, 3, 4)
+            >>> box2d.ymin
+            2
 
         """
         return self._data[1]
@@ -185,6 +207,11 @@ class Box2D(UserSequence[float]):
         Returns:
             Maximum x coordinate.
 
+        Examples:
+            >>> box2d = Box2D(1, 2, 3, 4)
+            >>> box2d.xmax
+            3
+
         """
         return self._data[2]
 
@@ -194,6 +221,11 @@ class Box2D(UserSequence[float]):
 
         Returns:
             Maximum y coordinate.
+
+        Examples:
+            >>> box2d = Box2D(1, 2, 3, 4)
+            >>> box2d.ymax
+            4
 
         """
         return self._data[3]
@@ -205,6 +237,11 @@ class Box2D(UserSequence[float]):
         Returns:
             The top left point.
 
+        Examples:
+            >>> box2d = Box2D(1, 2, 3, 4)
+            >>> box2d.tl
+            Vector2D(1, 2)
+
         """
         return Vector2D(self._data[0], self._data[1])
 
@@ -214,6 +251,11 @@ class Box2D(UserSequence[float]):
 
         Returns:
             The bottom right point.
+
+        Examples:
+            >>> box2d = Box2D(1, 2, 3, 4)
+            >>> box2d.br
+            Vector2D(3, 4)
 
         """
         return Vector2D(self._data[2], self._data[3])
@@ -225,6 +267,11 @@ class Box2D(UserSequence[float]):
         Returns:
             The width of the 2D box.
 
+        Examples:
+            >>> box2d = Box2D(1, 2, 3, 6)
+            >>> box2d.width
+            2
+
         """
         return self._data[2] - self._data[0]
 
@@ -235,6 +282,11 @@ class Box2D(UserSequence[float]):
         Returns:
             The height of the 2D box.
 
+        Examples:
+            >>> box2d = Box2D(1, 2, 3, 6)
+            >>> box2d.height
+            4
+
         """
         return self._data[3] - self._data[1]
 
@@ -243,6 +295,11 @@ class Box2D(UserSequence[float]):
 
         Returns:
             A dict containing vertex coordinates of the box.
+
+        Examples:
+            >>> box2d = Box2D(1, 2, 3, 4)
+            >>> box2d.dumps()
+            {'xmin': 1, 'ymin': 2, 'xmax': 3, 'ymax': 4}
 
         """
         return {
@@ -257,6 +314,11 @@ class Box2D(UserSequence[float]):
 
         Returns:
             The area of the 2D box.
+
+        Examples:
+            >>> box2d = Box2D(1, 2, 3, 4)
+            >>> box2d.area()
+            4
 
         """
         return self.width * self.height
@@ -276,6 +338,27 @@ class Box3D(ReprMixin):
         rotation: Rotation in a sequence of [w, x, y, z] or a 3x3 rotation matrix
             or a numpy quaternion object.
         size: Size in a sequence of [x, y, z].
+
+    Examples:
+        *Initialization Method 1:* Init from translation, rotation and size.
+
+        >>> Box3D(translation=[1, 2, 3], rotation=[0, 1, 0, 0], size=[1, 2, 3])
+        Box3D(
+          (translation): Vector3D(1, 2, 3),
+          (rotation): quaternion(0, 1, 0, 0),
+          (size): Vector3D(1, 2, 3)
+        )
+
+        *Initialization Method 2:* Init from transform and size.
+
+        >>> from tensorbay.geometry import Transform3D
+        >>> transform = Transform3D(translation=[1, 2, 3], rotation=[0, 1, 0, 0])
+        >>> Box3D(transform, size=[1, 2, 3])
+        Box3D(
+          (translation): Vector3D(1, 2, 3),
+          (rotation): quaternion(0, 1, 0, 0),
+          (size): Vector3D(1, 2, 3)
+        )
 
     """
 
@@ -320,6 +403,10 @@ class Box3D(ReprMixin):
         Returns:
             The intersect length between line1 and line2.
 
+        Examples:
+            >>> Box3D._line_intersect(4, 4, 1)
+            3.0
+
         """
         line1_min = -length1 / 2
         line1_max = length1 / 2
@@ -337,29 +424,23 @@ class Box3D(ReprMixin):
         """Load a :class:`Box3D` from a dict containing the coordinates of the 3D box.
 
         Arguments:
-            contents: A dict containing the coordinates of a 3D box::
-
-                {
-                    "size": {
-                        "x": ...
-                        "y": ...
-                        "z": ...
-                    },
-                    "translation": {
-                        "x": ...
-                        "y": ...
-                        "z": ...
-                    },
-                    "rotation": {
-                        "w": ...
-                        "x": ...
-                        "y": ...
-                        "z": ...
-                    }
-                }
+            contents: A dict containing the coordinates of a 3D box.
 
         Returns:
             The loaded :class:`Box3D` object.
+
+        Examples:
+            >>> contents = {
+            ...     "size": {"x": 1.0, "y": 2.0, "z": 3.0},
+            ...     "translation": {"x": 1.0, "y": 2.0, "z": 3.0},
+            ...     "rotation": {"w": 0.0, "x": 1.0, "y": 0.0, "z": 0.0},
+            ... }
+            >>> Box3D.loads(contents)
+            Box3D(
+              (translation): Vector3D(1.0, 2.0, 3.0),
+              (rotation): quaternion(0, 1, 0, 0),
+              (size): Vector3D(1.0, 2.0, 3.0)
+            )
 
         """
         return common_loads(cls, contents)
@@ -376,6 +457,12 @@ class Box3D(ReprMixin):
 
         Returns:
             The intersection over union of the two 3D boxes.
+
+        Examples:
+            >>> box3d_1 = Box3D(size=[1, 1, 1])
+            >>> box3d_2 = Box3D(size=[2, 2, 2])
+            >>> Box3D.iou(box3d_1, box3d_2)
+            0.125
 
         """
         box2 = box1.transform.inverse() * box2
@@ -396,6 +483,11 @@ class Box3D(ReprMixin):
         Returns:
             The translation of the 3D box.
 
+        Examples:
+            >>> box3d = Box3D(translation=(1, 2, 3))
+            >>> box3d.translation
+            Vector3D(1, 2, 3)
+
         """
         return self._transform.translation
 
@@ -405,6 +497,11 @@ class Box3D(ReprMixin):
 
         Returns:
             The rotation of the 3D box.
+
+        Examples:
+            >>> box3d = Box3D(rotation=(0, 1, 0, 0))
+            >>> box3d.rotation
+            quaternion(0, 1, 0, 0)
 
         """
         return self._transform.rotation
@@ -416,6 +513,16 @@ class Box3D(ReprMixin):
         Returns:
             The transform of the 3D box.
 
+        Examples:
+            >>> from tensorbay.geometry import Transform3D
+            >>> transform = Transform3D(translation=(1, 2, 3), rotation = (1, 0, 0, 0))
+            >>> box3d = Box3D(transform)
+            >>> box3d.transform
+            Transform3D(
+              (translation): Vector3D(1, 2, 3),
+              (rotation): quaternion(1, 0, 0, 0)
+            )
+
         """
         return self._transform
 
@@ -426,6 +533,11 @@ class Box3D(ReprMixin):
         Returns:
             The size of the 3D box.
 
+        Examples:
+            >>> box3d = Box3D(size=(1, 1, 1))
+            >>> box3d.size
+            Vector3D(1, 1, 1)
+
         """
         return self._size
 
@@ -435,6 +547,11 @@ class Box3D(ReprMixin):
         Returns:
             The volume of the 3D box.
 
+        Examples:
+            >>> box3d = Box3D(size=(1, 2, 3))
+            >>> box3d.volume()
+            6
+
         """
         return self.size.x * self.size.y * self.size.z
 
@@ -443,6 +560,15 @@ class Box3D(ReprMixin):
 
         Returns:
             A dict containing translation, rotation and size information.
+
+        Examples:
+            >>> box3d = Box3D(translation=(1, 2, 3), rotation=(0, 1, 0, 0), size=(1, 2, 3))
+            >>> box3d.dumps()
+            {
+                "translation": {"x": 1, "y": 2, "z": 3},
+                "rotation": {"w": 0.0, "x": 1.0, "y": 0.0, "z": 0.0},
+                "size": {"x": 1, "y": 2, "z": 3},
+            }
 
         """
         contents = self._transform.dumps()
