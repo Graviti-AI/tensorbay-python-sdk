@@ -13,12 +13,14 @@ _DATA = [{"x": 1.0, "y": 2.0}, {"x": 1.0, "y": 2.0, "z": 3.0}]
 class TestVector:
     def test_new_class(self):
         with pytest.raises(TypeError):
+            Vector([1, 2])
+        with pytest.raises(TypeError):
             Vector(1)
-        with pytest.raises(ValueError):
+        with pytest.raises(TypeError):
             Vector(1, 2, 3, 4)
         assert Vector(1, 2) == Vector2D(1, 2)
         assert Vector(1, 2, 3) == Vector3D(1, 2, 3)
-        assert Vector([1, 2]) == Vector2D(1, 2)
+        assert Vector(*[1, 2]) == Vector2D(1, 2)
 
     def test_bool(self):
         vector = Vector(0, 0)
@@ -54,12 +56,6 @@ class TestVector:
         vector = Vector(1, 2)
         assert [1, 1] + vector == Vector(2, 3)
 
-    def test_process_args(self):
-        with pytest.raises(TypeError):
-            Vector._process_args(1)
-        assert Vector._process_args(1, 2) == (1, 2)
-        assert Vector._process_args([1, 2]) == (1, 2)
-
     def test_repr_head(self):
         vector = Vector(1, 2)
         assert vector._repr_head() == "Vector2D(1, 2)"
@@ -80,11 +76,15 @@ class TestVector:
 
 
 class TestVector2D:
-    def test_new(self):
+    def test_init(self):
         with pytest.raises(TypeError):
             Vector2D(1, 2, 3)
-        assert Vector2D(None) == Vector2D(0.0, 0.0)
-        assert Vector2D([1, 2]) == Vector2D(1, 2)
+        with pytest.raises(TypeError):
+            Vector2D([1, 2])
+        with pytest.raises(TypeError):
+            Vector2D()
+
+        assert Vector2D(*[1, 2]) == Vector2D(1, 2)
         assert Vector2D(x=1, y=1) == Vector2D(1, 1)
 
         vector_2d = Vector2D(1, 2)
@@ -101,11 +101,15 @@ class TestVector2D:
 
 
 class TestVector3D:
-    def test_new(self):
+    def test_init(self):
         with pytest.raises(TypeError):
             Vector3D(1, 2)
-        assert Vector3D(None) == Vector3D(0.0, 0.0, 0.0)
-        assert Vector3D([1, 2, 3]) == Vector3D(1, 2, 3)
+        with pytest.raises(TypeError):
+            Vector3D([1, 2, 3])
+        with pytest.raises(TypeError):
+            Vector3D()
+
+        assert Vector3D(*[1, 2, 3]) == Vector3D(1, 2, 3)
         assert Vector3D(x=1, y=2, z=3) == Vector3D(1, 2, 3)
 
         vector_3d = Vector3D(1, 2, 3)

@@ -9,7 +9,7 @@
 
 """
 
-from typing import Dict, Iterable, Optional, Sequence, Type, TypeVar, Union, overload
+from typing import Dict, Iterable, Sequence, Type, TypeVar, Union, overload
 
 import numpy as np
 
@@ -48,7 +48,7 @@ class Transform3D(ReprMixin):
         self,
         transform: TransformType = None,
         *,
-        translation: Optional[Iterable[float]] = None,
+        translation: Iterable[float] = (0, 0, 0),
         rotation: Quaternion.ArgsType = None,
         **kwargs: Quaternion.KwargsType,
     ) -> None:
@@ -67,7 +67,7 @@ class Transform3D(ReprMixin):
             self._rotation = Quaternion(transform)
             return
 
-        self._translation = Vector3D(translation)
+        self._translation = Vector3D(*translation)
         self._rotation = Quaternion(rotation, **kwargs)
 
     def __eq__(self, other: object) -> bool:
@@ -178,19 +178,19 @@ class Transform3D(ReprMixin):
             "rotation": self._rotation.dumps(),
         }
 
-    def set_translation(self, *args: Union[float, Iterable[float]], **kwargs: float) -> None:
+    def set_translation(self, x: float, y: float, z: float) -> None:
         """Set the translation of the transform.
 
         Arguments:
-            *args: Coordinates of the translation vector.
-            **kwargs: Keyword-only argument to set different dimension for translation vector:
-
+            x: The x coordinate of the translation.
+            y: The y coordinate of the translation.
+            z: The z coordinate of the translation.
                 .. code:: python
 
                     transform.set_translation(x=1, y=2, z=3)
 
         """
-        self._translation = Vector3D(*args, **kwargs)
+        self._translation = Vector3D(x, y, z)
 
     def set_rotation(
         self,

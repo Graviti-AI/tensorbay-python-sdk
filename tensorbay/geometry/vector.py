@@ -14,9 +14,9 @@ coordinates of a 2D vector or a 3D vector.
 
 """
 
-from typing import Dict, Iterable, Optional, Sequence, Tuple, Type, TypeVar, Union
+from typing import Dict, Optional, Sequence, Tuple, Type, TypeVar, Union
 
-from ..utility import ReprType, UserSequence, common_loads
+from ..utility import ReprType, UserSequence
 
 _V = TypeVar("_V", bound="Vector")
 _V2 = TypeVar("_V2", bound="Vector2D")
@@ -31,16 +31,14 @@ class Vector(UserSequence[float]):
     :class:`Vector` contains the coordinates of a 2D vector or a 3D vector.
 
     Arguments:
-        *args: Coordinates of the vector.
-        **kwargs: Float coordinates of the vector:
+        x: The x coordinate of the vector.
+        y: The y coordinate of the vector.
+        z: The z coordinate of the vector.
 
             .. code:: python
 
                 vector2d = Vector(x=1, y=2)
                 vector3d = Vector(x=1, y=2, z=3)
-
-    Raises:
-        ValueError: If the dimension of the input parameters is not correct.
 
     """
 
@@ -50,44 +48,31 @@ class Vector(UserSequence[float]):
 
     _DIMENSION: Optional[int] = None
 
-    def __new__(  # type: ignore[misc]
+    def __new__(  # type: ignore[misc]  # pylint: disable=unused-argument
         cls: Type[_V],
-        *args: Union[None, float, Iterable[float]],
-        **kwargs: float,
+        x: float,
+        y: float,
+        z: Optional[float] = None,
     ) -> _T:
         """Create a new instance of :class:`Vector`.
 
         Arguments:
-            *args: Coordinates of the vector.
-            **kwargs: Float coordinates of the vector::
+            x: The x coordinate of the vector.
+            y: The y coordinate of the vector.
+            z: The z coordinate of the vector.
 
                 .. code:: python
 
                     vector2d = Vector(x=1, y=2)
                     vector3d = Vector(x=1, y=2, z=3)
 
-        Raises:
-            ValueError: If the dimension of the input parameters is not correct.
-
         Returns:
             The created :class:`Vector2D` or :class:`Vector3D` object.
 
         """
-        if kwargs:
-            return cls.loads(kwargs)
-
-        data = cls._process_args(*args)
-
-        ReturnType: Type["Vector"] = cls
-        if len(data) == Vector2D._DIMENSION:
-            ReturnType = Vector2D
-        elif len(data) == Vector3D._DIMENSION:
-            ReturnType = Vector3D
-        else:
-            raise ValueError("Require 2 or 3 dimensional data to construct a Vector.")
+        ReturnType = Vector2D if z is None else Vector3D
 
         obj: _T = object.__new__(ReturnType)
-        obj._data = data
         return obj
 
     def __bool__(self) -> bool:
@@ -138,18 +123,6 @@ class Vector(UserSequence[float]):
         """
         return self.__add__(other)
 
-    @staticmethod
-    def _process_args(*args: Union[None, float, Iterable[float]]) -> Tuple[float, ...]:
-        data: Optional[Iterable[float]]
-        data = args[0] if len(args) == 1 else args  # type: ignore[assignment]
-        if not data:
-            return ()
-
-        try:
-            return tuple(data)
-        except TypeError as error:
-            raise TypeError("Require 2 or 3 dimensional data to construct a vector.") from error
-
     def _repr_head(self) -> str:
         return f"{self.__class__.__name__}{self._data}"
 
@@ -186,55 +159,31 @@ class Vector2D(Vector):
     :class:`Vector2D` contains the coordinates of a 2D vector.
 
     Arguments:
-        *args: Coordinates of the 2D vector.
-        **kwargs: Float x coordinate and y coordinate of the 2D vector.
-
-    Raises:
-        TypeError: If the dimension of the input parameters is not correct.
+        x: The x coordinate of the 2D vector.
+        y: The y coordinate of the 2D vector.
 
     """
 
     _DIMENSION = 2
 
-    def __new__(
-        cls: Type[_V2],
-        *args: Union[None, float, Iterable[float]],
-        **kwargs: float,
+    def __new__(  # pylint: disable=unused-argument
+        cls: Type[_V2], *args: float, **kwargs: float
     ) -> _V2:
-        """Create a new instance of :class:`Vector2D`.
+        """Create a :class:`Vector2D` instance.
 
         Arguments:
-            *args: Coordinates of the 2D vector.
-            **kwargs: Float x coordinate and y coordinate of the 2D vector.
-
-        Raises:
-            TypeError: If the dimension of the input parameters is not correct.
+            args: The coordinates of the 2D vector.
+            kwargs: The coordinates of the 2D vector.
 
         Returns:
-            The created :class:`Vector2D` object.
+            The created :class:`Vector2D` instance.
 
         """
-        if kwargs:
-            return cls.loads(kwargs)
-
         obj: _V2 = object.__new__(cls)
-        data: Optional[Iterable[float]]
-        data = args[0] if len(args) == 1 else args  # type: ignore[assignment]
-        if not data:
-            obj._data = (0.0, 0.0)
-            return obj
+        return obj
 
-        try:
-            x, y = data
-            obj._data = (x, y)
-            return obj
-        except (ValueError, TypeError) as error:
-            raise TypeError(
-                f"Require {cls._DIMENSION} dimensional data to construct {cls.__name__}."
-            ) from error
-
-    def _loads(self, contents: Dict[str, float]) -> None:
-        self._data = (contents["x"], contents["y"])
+    def __init__(self, x: float, y: float) -> None:
+        self._data = (x, y)
 
     @classmethod
     def loads(cls: Type[_V2], contents: Dict[str, float]) -> _V2:
@@ -252,7 +201,7 @@ class Vector2D(Vector):
             The loaded :class:`Vector2D` object.
 
         """
-        return common_loads(cls, contents)
+        return cls(**contents)
 
     @property
     def x(self) -> float:
@@ -290,55 +239,32 @@ class Vector3D(Vector):
     :class:`Vector3D` contains the coordinates of a 3D Vector.
 
     Arguments:
-        *args: Coordinates of the 3D vector.
-        **kwargs: Float x coordinate, y coordinate and z coordinate of the 3D vector.
-
-    Raises:
-        TypeError: If the dimension of the input parameters is not correct.
+        x: The x coordinate of the 3D vector.
+        y: The y coordinate of the 3D vector.
+        z: The z coordinate of the 3D vector.
 
     """
 
     _DIMENSION = 3
 
-    def __new__(
-        cls: Type[_V3],
-        *args: Union[None, float, Iterable[float]],
-        **kwargs: float,
+    def __new__(  # pylint: disable=unused-argument
+        cls: Type[_V3], *args: float, **kwargs: float
     ) -> _V3:
-        """Create a new instance of :class:`Vector3D`.
+        """Create a :class:`Vector3D` instance.
 
         Arguments:
-            *args: Coordinates of the 3D vector.
-            **kwargs: Float x coordinate, y coordinate and z coordinate of the 3D vector.
-
-        Raises:
-            TypeError: If the dimension of the input parameters is not correct.
+            args: The coordinates of the 3D vector.
+            kwargs: The coordinates of the 3D vector.
 
         Returns:
-            The created :class:`Vector3D` object.
+            The created :class:`Vector3D` instance.
 
         """
-        if kwargs:
-            return cls.loads(kwargs)
-
         obj: _V3 = object.__new__(cls)
-        data: Optional[Iterable[float]]
-        data = args[0] if len(args) == 1 else args  # type: ignore[assignment]
-        if not data:
-            obj._data = (0.0, 0.0, 0.0)
-            return obj
+        return obj
 
-        try:
-            x, y, z = data
-            obj._data = (x, y, z)
-            return obj
-        except (ValueError, TypeError) as error:
-            raise TypeError(
-                f"Require {cls._DIMENSION} dimensional data to construct {cls.__name__}."
-            ) from error
-
-    def _loads(self: _V3, contents: Dict[str, float]) -> None:
-        self._data = (contents["x"], contents["y"], contents["z"])
+    def __init__(self, x: float, y: float, z: float) -> None:
+        self._data = (x, y, z)
 
     @classmethod
     def loads(cls: Type[_V3], contents: Dict[str, float]) -> _V3:
@@ -357,7 +283,7 @@ class Vector3D(Vector):
             The loaded :class:`Vector3D` object.
 
         """
-        return common_loads(cls, contents)
+        return cls(**contents)
 
     @property
     def x(self) -> float:

@@ -135,10 +135,7 @@ def _create_box_label(label_path: str, categories: Tuple[str, ...]) -> List[Labe
         fp.readline()
 
         category = categories[viewpoint_index]
-        box2d = [
-            LabeledBox2D(box, category=category)
-            for box in ((int(item) for item in line.strip().split()) for line in fp)
-        ]
+        box2d = [LabeledBox2D(*map(int, line.strip().split()), category=category) for line in fp]
 
     return box2d
 

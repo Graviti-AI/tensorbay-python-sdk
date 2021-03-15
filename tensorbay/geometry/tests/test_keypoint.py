@@ -12,10 +12,8 @@ _DATA_KEYPOINTS = [{"x": 1.0, "y": 1.0, "v": 1}, {"x": 2.0, "y": 2.0, "v": 2}]
 
 
 class TestKeypoint2D:
-    def test_new(self):
-        with pytest.raises(TypeError):
-            Keypoint2D(1)
-        assert Keypoint2D([1, 1, 1]) == Keypoint2D(1, 1, 1)
+    def test_init(self):
+        assert Keypoint2D(*[1, 1, 1]) == Keypoint2D(1, 1, 1)
         assert Keypoint2D(x=1, y=1, v=1) == Keypoint2D(1, 1, 1)
 
         keypoint = Keypoint2D(1, 1, 1)

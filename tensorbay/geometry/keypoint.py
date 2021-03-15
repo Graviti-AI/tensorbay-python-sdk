@@ -13,7 +13,7 @@ such as the coordinates and visible status(optional).
 
 """
 
-from typing import Dict, Iterable, List, Optional, Sequence, Type, TypeVar, Union
+from typing import Dict, List, Optional, Sequence, Type, TypeVar
 
 from ..utility import common_loads
 from .polygon import PointList2D
@@ -29,8 +29,9 @@ class Keypoint2D(Vector2D):
     such as the coordinates and visible status(optional).
 
     Arguments:
-        *args: Coordinates and visible status(optional) of the 2D keypoint.
-        **kwargs: Coordinates are of float type and visible status is of int type:
+        x: The x coordinate of the 2D keypoint.
+        y: The y coordinate of the 2D keypoint.
+        v: The visible status(optional) of the 2D keypoint.
 
             .. code:: python
 
@@ -49,49 +50,13 @@ class Keypoint2D(Vector2D):
             | TERNARY       | visible | occluded  | invisible |
             +---------------+---------+-----------+-----------+
 
-    Raises:
-        TypeError: If input parameters do not meet the requirement.
 
     """
 
-    def __new__(
-        cls: Type[_T],
-        *args: Union[None, float, Iterable[float]],
-        **kwargs: float,
-    ) -> _T:
-        """Create a new instance of :class:`Keypoint2D`.
-
-        Arguments:
-            *args: Coordinates and visible status(optional) of the 2D keypoint.
-            **kwargs: Coordinates are of float type and visible status is of int type:
-
-                .. code:: python
-
-                    keypoint2d = Keypoint2D(x=1.0, y=2.0)
-                    keypoint2d = Keypoint2D(x=1.0, y=2.0, v=0)
-                    keypoint2d = Keypoint2D(x=1.0, y=2.0, v=1)
-                    keypoint2d = Keypoint2D(x=1.0, y=2.0, v=2)
-
-        Raises:
-            TypeError: If input parameters do not meet the requirement.
-
-        Returns:
-            The created :class:`Keypoint2D` object.
-
-        """
-        if kwargs:
-            return cls.loads(kwargs)
-
-        obj: _T = object.__new__(cls)
-        data: Optional[Iterable[float]]
-        data = args[0] if len(args) == 1 else args  # type: ignore[assignment]
-
-        data = tuple(data)  # type: ignore[arg-type]
-        if len(data) not in (2, 3):
-            raise TypeError(f"Require two or three dimensional data to construct {cls.__name__}.")
-
-        obj._data = data
-        return obj
+    def __init__(  # pylint: disable=super-init-not-called
+        self, x: float, y: float, v: Optional[int] = None
+    ) -> None:
+        self._data = (x, y, v) if v is not None else (x, y)
 
     def __neg__(self) -> Vector2D:  # type: ignore[override]
         result: Vector2D = object.__new__(Vector2D)
@@ -103,12 +68,6 @@ class Keypoint2D(Vector2D):
         # Add function of Vector2D should also add support for adding with a Keypoint2D.
         # Will be implemented in the future.
         return NotImplemented
-
-    def _loads(self: _T, contents: Dict[str, float]) -> None:
-        if "v" in contents:
-            self._data = (contents["x"], contents["y"], contents["v"])
-        else:
-            self._data = (contents["x"], contents["y"])
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
@@ -128,7 +87,7 @@ class Keypoint2D(Vector2D):
             The loaded :class:`Keypoint2D` object.
 
         """
-        return common_loads(cls, contents)
+        return cls(**contents)
 
     @property
     def v(self) -> Optional[int]:  # pylint: disable=invalid-name

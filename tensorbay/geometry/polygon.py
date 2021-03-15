@@ -44,7 +44,7 @@ class PointList2D(UserMutableSequence[_T]):
             return
 
         for point in points:
-            self._data.append(self._ElementType(point))
+            self._data.append(self._ElementType(*point))
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, self.__class__):
