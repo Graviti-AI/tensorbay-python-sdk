@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3  # pylint: disable=cyclic-import  #pylint issue: 3525
 #
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
@@ -23,13 +23,17 @@ Please refer to :class:`~tensorbay.dataset.dataset.FusionDataset` for more infor
 """
 
 import sys
-from typing import Any, Dict, Iterator, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Dict, Iterator, Optional, Tuple
 
 from ..dataset import Data, Frame, FusionSegment, Segment
 from ..label import Catalog
+from .commit_status import CommitStatus
 from .exceptions import GASSegmentError
 from .requests import Client, multithread_upload, paging_range
 from .segment import FusionSegmentClient, SegmentClient
+
+if TYPE_CHECKING:
+    from .gas import GAS
 
 
 class DatasetClientBase:
@@ -43,39 +47,59 @@ class DatasetClientBase:
     Arguments:
         name: Dataset name.
         dataset_id: Dataset ID.
-        client: The client used for sending request to TensorBay.
-        commit_id: The dataset commit ID.
+        gas_client: The initial client to interact between local and TensorBay.
+        commit_id: The commit ID (if the status is commit).
 
     """
 
+    _client: Client
+
     def __init__(
-        self, name: str, dataset_id: str, client: Client, commit_id: Optional[str] = None
+        self,
+        name: str,
+        dataset_id: str,
+        gas_client: "GAS",
+        *,
+        commit_id: Optional[str] = None,
     ) -> None:
         self._name = name
         self._dataset_id = dataset_id
-        self._client = client
-        self._commit_id = commit_id
+        self._gas_client = gas_client
+        self._client = gas_client._client  # pylint: disable=protected-access
+
+        self._status = CommitStatus(commit_id=commit_id)
 
     def _commit(self, message: str, tag: Optional[str] = None) -> str:
-        post_data = {
+        post_data: Dict[str, Any] = {
             "message": message,
         }
+        post_data.update(self._status.get_status_info())
+
         if tag:
             post_data["tag"] = tag
 
         response = self._client.open_api_do("POST", "", self.dataset_id, json=post_data)
         return response.json()["commitId"]  # type: ignore[no-any-return]
 
+    def _create_draft(self, title: Optional[str] = None) -> int:
+        post_data: Dict[str, Any] = {}
+
+        if title:
+            post_data["name"] = title
+
+        response = self._client.open_api_do("POST", "drafts", self.dataset_id, json=post_data)
+        return response.json()["draftNumber"]  # type: ignore[no-any-return]
+
     def _create_segment(self, name: str) -> None:
-        post_data = {"name": name}
+        post_data: Dict[str, Any] = {"name": name}
+        post_data.update(self._status.get_status_info())
+
         self._client.open_api_do("POST", "segments", self.dataset_id, json=post_data)
 
     def _list_segments(
         self, *, start: int = 0, stop: int = sys.maxsize, page_size: int = 128
     ) -> Iterator[Dict[str, str]]:
-        params: Dict[str, Any] = {}
-        if self._commit_id:
-            params["commit"] = self._commit_id
+        params: Dict[str, Any] = self._status.get_status_info()
 
         for params["offset"], params["limit"] in paging_range(start, stop, page_size):
             response = self._client.open_api_do(
@@ -86,14 +110,14 @@ class DatasetClientBase:
                 break
 
     @property
-    def commit_id(self) -> Optional[str]:
-        """Return the commit ID.
+    def name(self) -> str:
+        """Return the TensorBay dataset name.
 
         Returns:
-            The commit ID.
+            The TensorBay dataset name.
 
         """
-        return self._commit_id
+        return self._name
 
     @property
     def dataset_id(self) -> str:
@@ -105,7 +129,45 @@ class DatasetClientBase:
         """
         return self._dataset_id
 
-    def commit(self, message: str, tag: Optional[str] = None) -> None:
+    @property
+    def status(self) -> CommitStatus:
+        """Return the status of the dataset client.
+
+        Returns:
+            The status of the dataset client.
+
+        """
+        return self._status
+
+    def create_draft(self, title: Optional[str] = None) -> None:
+        """Create the draft.
+
+        Arguments:
+            title: The draft title.
+
+        """
+        self._status.check_authority_for_commit()
+        self._status.checkout(draft_number=self._create_draft(title))
+
+    def checkout(self, commit: Optional[str] = None, draft_number: Optional[int] = None) -> None:
+        """Checkout to commit or draft.
+
+        Arguments:
+            commit: The commit ID.
+            draft_number: The draft number.
+
+        Raises:
+            TypeError: When both commit ID and draft number are provided or neither.
+
+        """
+        if commit is None and draft_number is None:
+            raise TypeError("Neither commit ID nor draft number is given, please give one ID")
+        if commit is not None and draft_number is not None:
+            raise TypeError("Both commit ID and draft number are given, please only give one ID")
+
+        self._status.checkout(commit=commit, draft_number=draft_number)
+
+    def commit(self, message: str, *, tag: Optional[str] = None) -> None:
         """Commit the draft.
 
         Arguments:
@@ -113,8 +175,8 @@ class DatasetClientBase:
             tag: A tag for current commit.
 
         """
-        commit_id = self._commit(message, tag)
-        self._commit_id = commit_id
+        self._status.check_authority_for_draft()
+        self._status.checkout(commit=self._commit(message, tag))
 
     def list_segment_names(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[str]:
         """List all segment names in a certain commit.
@@ -136,7 +198,11 @@ class DatasetClientBase:
             Required :class:`~tensorbay.label.catalog.Catalog`.
 
         """
-        response = self._client.open_api_do("GET", "labels/catalogs", self.dataset_id).json()
+        params: Dict[str, Any] = self._status.get_status_info()
+
+        response = self._client.open_api_do(
+            "GET", "labels/catalogs", self.dataset_id, params=params
+        ).json()
         return Catalog.loads(response["catalog"])
 
     def upload_catalog(self, catalog: Catalog) -> None:
@@ -149,9 +215,12 @@ class DatasetClientBase:
             TypeError: When the catalog is empty.
 
         """
-        put_data = catalog.dumps()
+        self._status.check_authority_for_draft()
+
+        put_data: Dict[str, Any] = catalog.dumps()
         if not put_data:
             raise TypeError("Empty catalog")
+        put_data.update(self._status.get_status_info())
 
         self._client.open_api_do("PUT", "labels/catalogs", self.dataset_id, json=put_data)
 
@@ -165,7 +234,10 @@ class DatasetClientBase:
             description: Description of the TensorBay dataset.
 
         """
-        patch_data: Dict[str, Any] = {}
+        self._status.check_authority_for_draft()
+
+        patch_data: Dict[str, Any] = self._status.get_status_info()
+
         if is_continuous is not None:
             patch_data["isContinuous"] = is_continuous
         if description is not None:
@@ -180,7 +252,10 @@ class DatasetClientBase:
             name: Segment name.
 
         """
-        delete_data = {"segmentName": name}
+        self._status.check_authority_for_draft()
+
+        delete_data: Dict[str, Any] = {"segmentName": name}
+        delete_data.update(self._status.get_status_info())
 
         self._client.open_api_do("DELETE", "segments", self.dataset_id, json=delete_data)
 
@@ -207,9 +282,10 @@ class DatasetClient(DatasetClientBase):
             Created :class:`~tensorbay.client.segment.SegmentClient` with given name.
 
         """
+        self._status.check_authority_for_draft()
         if name not in self.list_segment_names():
             self._create_segment(name)
-        return SegmentClient(name, self._dataset_id, self._name, self._client, self.commit_id)
+        return SegmentClient(name, self)
 
     def get_segment(self, name: str = "") -> SegmentClient:
         """Get a segment in a certain commit according to given name.
@@ -227,7 +303,7 @@ class DatasetClient(DatasetClientBase):
         if name not in self.list_segment_names():
             raise GASSegmentError(name)
 
-        return SegmentClient(name, self._dataset_id, self._name, self._client, self.commit_id)
+        return SegmentClient(name, self)
 
     def upload_segment(
         self,
@@ -255,6 +331,8 @@ class DatasetClient(DatasetClientBase):
                 used for uploading the data in the segment.
 
         """
+        self._status.check_authority_for_draft()
+
         segment_client = self.get_or_create_segment(segment.name)
         local_data: Iterator[Data] = filter(
             lambda data: isinstance(data, Data), segment  # type: ignore[arg-type]
@@ -294,9 +372,11 @@ class FusionDatasetClient(DatasetClientBase):
             Created :class:`~tensorbay.client.segment.FusionSegmentClient` with given name.
 
         """
+        self._status.check_authority_for_draft()
+
         if name not in self.list_segment_names():
             self._create_segment(name)
-        return FusionSegmentClient(name, self._dataset_id, self._name, self._client, self.commit_id)
+        return FusionSegmentClient(name, self)
 
     def get_segment(self, name: str = "") -> FusionSegmentClient:
         """Get a fusion segment in a certain commit according to given name.
@@ -313,7 +393,7 @@ class FusionDatasetClient(DatasetClientBase):
         """
         if name not in self.list_segment_names():
             raise GASSegmentError(name)
-        return FusionSegmentClient(name, self._dataset_id, self._name, self._client, self.commit_id)
+        return FusionSegmentClient(name, self)
 
     def upload_segment(
         self,
@@ -344,6 +424,8 @@ class FusionDatasetClient(DatasetClientBase):
                 used for uploading the data in the segment.
 
         """
+        self._status.check_authority_for_draft()
+
         segment_client = self.get_or_create_segment(segment.name)
         for sensor in segment.sensors.values():
             segment_client.upload_sensor(sensor)

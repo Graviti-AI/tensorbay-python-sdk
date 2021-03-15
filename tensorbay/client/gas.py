@@ -7,7 +7,7 @@
 
 The :class:`GAS` defines the initial client to interact between local and TensorBay.
 It provides some operations on datasets level such as :meth:`GAS.create_dataset`,
-:meth:`GAS.list_dataset_names` and :meth:`GAS.upload_dataset`.
+:meth:`GAS.list_dataset_names` and :meth:`GAS.get_dataset`.
 
 AccessKey is required when operating with dataset.
 
@@ -30,7 +30,7 @@ class GAS:
     """:class:`GAS` defines the initial client to interact between local and TensorBay.
 
     :class:`GAS` provides some operations on dataset level such as
-    :meth:`GAS.create_dataset` :meth:`GAS.list_dataset_names` and :meth:`GAS.upload_dataset`.
+    :meth:`GAS.create_dataset` :meth:`GAS.list_dataset_names` and :meth:`GAS.get_dataset`.
 
     Arguments:
         access_key: User's access key.
@@ -44,7 +44,7 @@ class GAS:
     def _get_dataset(self, name: str, commit_id: Optional[str] = None) -> DatasetClientType:
         dataset_id, is_fusion = self._get_dataset_id_and_type(name)
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
-        return ReturnType(name, dataset_id, self._client, commit_id)
+        return ReturnType(name, dataset_id, self, commit_id=commit_id)
 
     def _list_datasets(
         self,
@@ -141,7 +141,8 @@ class GAS:
 
         Returns:
             The created :class:`~tensorbay.client.dataset.DatasetClient` instance or
-                :class:`~tensorbay.client.dataset.FusionDatasetClient` instance (is_fusion=True).
+                :class:`~tensorbay.client.dataset.FusionDatasetClient` instance (is_fusion=True),
+                and the status of dataset client is "commit".
 
         """
         post_data = {
@@ -153,7 +154,7 @@ class GAS:
 
         response = self._client.open_api_do("POST", "", json=post_data)
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
-        return ReturnType(name, response.json()["id"], self._client)
+        return ReturnType(name, response.json()["id"], self)
 
     @overload
     def get_dataset(
@@ -185,7 +186,8 @@ class GAS:
 
         Returns:
             The requested :class:`~tensorbay.client.dataset.DatasetClient` instance or
-                :class:`~tensorbay.client.dataset.FusionDatasetClient` instance (is_fusion=True).
+                :class:`~tensorbay.client.dataset.FusionDatasetClient` instance (is_fusion=True),
+                and the status of dataset client is "commit".
 
         Raises:
             GASDatasetTypeError: When the requested dataset type is not the same as given.
@@ -195,7 +197,7 @@ class GAS:
         if is_fusion != type_flag:
             raise GASDatasetTypeError(name, type_flag)
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
-        return ReturnType(name, dataset_id, self._client, commit_id)
+        return ReturnType(name, dataset_id, self, commit_id=commit_id)
 
     def list_dataset_names(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[str]:
         """List names of all TensorBay datasets.
@@ -227,6 +229,7 @@ class GAS:
         self,
         dataset: Dataset,
         *,
+        draft_number: Optional[int],
         jobs: int = 1,
         skip_uploaded_files: bool = False,
     ) -> DatasetClient:
@@ -237,6 +240,7 @@ class GAS:
         self,
         dataset: FusionDataset,
         *,
+        draft_number: Optional[int],
         jobs: int = 1,
         skip_uploaded_files: bool = False,
     ) -> FusionDatasetClient:
@@ -247,6 +251,7 @@ class GAS:
         self,
         dataset: Union[Dataset, FusionDataset],
         *,
+        draft_number: Optional[int],
         jobs: int = 1,
         skip_uploaded_files: bool = False,
     ) -> DatasetClientType:
@@ -256,6 +261,7 @@ class GAS:
         self,
         dataset: Union[Dataset, FusionDataset],
         *,
+        draft_number: Optional[int],
         jobs: int = 1,
         skip_uploaded_files: bool = False,
     ) -> DatasetClientType:
@@ -274,6 +280,7 @@ class GAS:
                 :class:`~tensorbay.dataset.dataset. FusionDataset` needs to be uploaded.
             jobs: The number of the max workers in multi-thread upload.
             skip_uploaded_files: Set it to True to skip the uploaded files.
+            draft_number: The draft number.
 
         Returns:
             The :class:`~tensorbay.client.dataset.DatasetClient` or
@@ -282,6 +289,10 @@ class GAS:
 
         """
         dataset_client = self.get_dataset(dataset.name, isinstance(dataset, FusionDataset))
+        if draft_number:
+            dataset_client.checkout(draft_number=draft_number)
+        else:
+            dataset_client.create_draft()
 
         if dataset.catalog:
             dataset_client.upload_catalog(dataset.catalog)
@@ -296,10 +307,10 @@ class GAS:
         return dataset_client
 
     def delete_dataset(self, name: str) -> None:
-        """Delete a dataset with given name.
+        """Delete a TensorBay dataset with given name.
 
         Arguments:
-            name: Name of the :class:`~tensorbay.dataset.dataset.Dataset`, unique for a user.
+            name: Name of the dataset, unique for a user.
 
         """
         dataset_id, _ = self._get_dataset_id_and_type(name)
