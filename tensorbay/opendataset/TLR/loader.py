@@ -73,7 +73,7 @@ def _parse_xml(xml_path: str) -> Dict[int, List[LabeledBox2D]]:
             box_yc = int(box.getAttribute("yc"))
 
             labels[index].append(
-                LabeledBox2D(
+                LabeledBox2D.from_xywh(
                     x=box_xc - box_w // 2,
                     y=box_yc - box_h // 2,
                     width=box_w,

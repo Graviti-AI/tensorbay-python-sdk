@@ -68,7 +68,7 @@ def _load_box_labels(file_path: str) -> List[LabeledBox2D]:
             center_x, center_y, width, height, occlusion, blur = map(int, line.strip().split())
             attributes = {"occlusion-level": _OCCLUSION_MAP[occlusion], "blur-level": bool(blur)}
             box_labels.append(
-                LabeledBox2D(
+                LabeledBox2D.from_xywh(
                     x=center_x - width / 2,
                     y=center_y - height / 2,
                     width=width,

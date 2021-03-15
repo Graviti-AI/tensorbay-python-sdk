@@ -62,22 +62,13 @@ class LabeledBox2D(Box2D, _LabelBase):  # pylint: disable=too-many-ancestors
     which is often used for CV tasks such as object detection.
 
     Arguments:
-        *args: The coordinates of the top-left and bottom-right vertex of the 2D box,
-            which can be initialized like:
-
-            .. code:: python
-
-                box = LabeledBox2D()
-                box = LabeledBox2D(10, 20, 30, 40)
-                box = LabeledBox2D([10, 20, 30, 40])
-
+        xmin: The x coordinate of the top-left vertex of the labeled 2D box.
+        ymin: The y coordinate of the top-left vertex of the labeled 2D box.
+        xmax: The x coordinate of the bottom-right vertex of the labeled 2D box.
+        ymax: The y coordinate of the bottom-right vertex of the labeled 2D box.
         category: The category of the label.
         attributes: The attributs of the label.
         instance: The instance id of the label.
-        x: X coordinate of the top-left vertex of the box.
-        y: Y coordinate of the top-left vertex of the box.
-        width: Length of the 2D bounding box along the x axis.
-        height: Length of the 2D bounding box along the y axis.
 
     Attributes:
         category: The category of the label.
@@ -93,25 +84,52 @@ class LabeledBox2D(Box2D, _LabelBase):  # pylint: disable=too-many-ancestors
 
     def __init__(
         self,
-        xmin: Optional[float] = None,
-        ymin: Optional[float] = None,
-        xmax: Optional[float] = None,
-        ymax: Optional[float] = None,
+        xmin: float,
+        ymin: float,
+        xmax: float,
+        ymax: float,
         *,
         category: Optional[str] = None,
         attributes: Optional[Dict[str, Any]] = None,
         instance: Optional[str] = None,
-        x: Optional[float] = None,
-        y: Optional[float] = None,
-        width: Optional[float] = None,
-        height: Optional[float] = None,
     ):
-        Box2D.__init__(self, xmin, ymin, xmax, ymax, x=x, y=y, width=width, height=height)
+        Box2D.__init__(self, xmin, ymin, xmax, ymax)
         _LabelBase.__init__(self, category, attributes, instance)
 
     def _loads(self, contents: Dict[str, Any]) -> None:
         Box2D._loads(self, contents["box2d"])
         _LabelBase._loads(self, contents)
+
+    @classmethod
+    def from_xywh(  # pylint: disable=arguments-differ
+        cls: Type[_T],
+        x: float,
+        y: float,
+        width: float,
+        height: float,
+        *,
+        category: Optional[str] = None,
+        attributes: Optional[Dict[str, Any]] = None,
+        instance: Optional[str] = None,
+    ) -> _T:
+        """Create a :class:`LabeledBox2D` instance from the top-left vertex, the width and height.
+
+        Arguments:
+            x: X coordinate of the top left vertex of the box.
+            y: Y coordinate of the top left vertex of the box.
+            width: Length of the box along the x axis.
+            height: Length of the box along the y axis.
+            category: The category of the label.
+            attributes: The attributs of the label.
+            instance: The instance id of the label.
+
+        Returns:
+            The created :class:`LabeledBox2D` instance.
+
+        """
+        return cls(
+            x, y, x + width, y + height, category=category, attributes=attributes, instance=instance
+        )
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:

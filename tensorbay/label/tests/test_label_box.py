@@ -31,17 +31,39 @@ _LABELEDBOX3D_DATA = {
 
 class TestLabeledBox2D:
     def test_init(self):
-        x, y, width, height = 1, 2, 3, 4
         xmin, xmax, ymin, ymax = 1, 2, 4, 6
 
         labeledbox2d = LabeledBox2D(
+            xmin,
+            ymin,
+            xmax,
+            ymax,
             category=_CATEGORY,
             attributes=_ATTRIBUTES,
             instance=_INSTANCE,
-            x=x,
-            y=y,
-            width=width,
-            height=height,
+        )
+
+        assert labeledbox2d.category == _CATEGORY
+        assert labeledbox2d.attributes == _ATTRIBUTES
+        assert labeledbox2d.instance == _INSTANCE
+
+        assert labeledbox2d[0] == xmin
+        assert labeledbox2d[1] == ymin
+        assert labeledbox2d[2] == xmax
+        assert labeledbox2d[3] == ymax
+
+    def test_from_xywh(self):
+        x, y, width, height = 1, 2, 3, 4
+        xmin, xmax, ymin, ymax = 1, 2, 4, 6
+
+        labeledbox2d = LabeledBox2D.from_xywh(
+            x,
+            y,
+            width,
+            height,
+            category=_CATEGORY,
+            attributes=_ATTRIBUTES,
+            instance=_INSTANCE,
         )
 
         assert labeledbox2d.category == _CATEGORY
@@ -67,13 +89,13 @@ class TestLabeledBox2D:
 
     def test_dumps(self):
         labeledbox2d = LabeledBox2D(
+            1,
+            2,
+            5,
+            8,
             category=_CATEGORY,
             attributes=_ATTRIBUTES,
             instance=_INSTANCE,
-            x=1,
-            y=2,
-            width=4,
-            height=6,
         )
 
         assert labeledbox2d.dumps() == _LABELEDBOX2D_DATA
