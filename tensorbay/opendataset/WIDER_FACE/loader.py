@@ -129,7 +129,7 @@ def _load_data(path: str, attribute_map: _ATTRIBUTE_MAP_TYPE, segment_name: str)
                         for (key, mapping), value in zip(attribute_map.items(), labels[4:10])
                     }
                     data.label.box2d.append(
-                        LabeledBox2D(
+                        LabeledBox2D.from_xywh(
                             x=int(labels[0]),
                             y=int(labels[1]),
                             width=int(labels[2]),

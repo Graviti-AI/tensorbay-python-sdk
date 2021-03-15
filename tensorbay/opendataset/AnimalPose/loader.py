@@ -114,7 +114,7 @@ def _get_data_part1(root_path: str, aniamls: Iterable[str]) -> Iterator[Data]:
 
                 box2d = labels["annotation"]["visible_bounds"]
                 data.label.box2d = [
-                    LabeledBox2D(
+                    LabeledBox2D.from_xywh(
                         x=float(box2d["@xmin"]),
                         y=float(box2d["@ymin"]),
                         width=float(box2d["@width"]),
@@ -154,7 +154,7 @@ def _get_data_part2(root_path: str, aniamls: Iterable[str]) -> Iterator[Data]:
 
             box2d = labels["annotation"]["visible_bounds"]
             data.label.box2d = [
-                LabeledBox2D(
+                LabeledBox2D.from_xywh(
                     x=float(box2d["@xmin"]),
                     y=float(box2d["@xmax"]),  # xmax means ymin in the annotation
                     width=float(box2d["@width"]),

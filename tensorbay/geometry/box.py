@@ -15,14 +15,15 @@ It provides :meth:`Box3D.iou` to calculate the intersection over union of two 3D
 
 """
 
-from typing import Dict, Iterable, Optional, Tuple, Type, TypeVar
+from typing import Dict, Iterable, Tuple, Type, TypeVar
 
 from ..utility import ReprMixin, ReprType, UserSequence, common_loads
 from .quaternion import Quaternion
 from .transform import Transform3D
 from .vector import Vector2D, Vector3D
 
-_T = TypeVar("_T", bound="Box3D")
+_B2 = TypeVar("_B2", bound="Box2D")
+_B3 = TypeVar("_B3", bound="Box3D")
 
 
 class Box2D(UserSequence[float]):
@@ -37,14 +38,8 @@ class Box2D(UserSequence[float]):
         ymin: The y coordinate of the top-left vertex of the 2D box.
         xmax: The x coordinate of the bottom-right vertex of the 2D box.
         ymax: The y coordinate of the bottom-right vertex of the 2D box.
-        x: X coordinate of the top left vertex of the box.
-        y: Y coordinate of the top left vertex of the box.
-        width: Length along the x axis.
-        height: Length along the y axis.
 
     """
-
-    _T = TypeVar("_T", bound="Box2D")
 
     _repr_type = ReprType.INSTANCE
 
@@ -52,36 +47,15 @@ class Box2D(UserSequence[float]):
 
     def __init__(
         self,
-        xmin: Optional[float] = None,
-        ymin: Optional[float] = None,
-        xmax: Optional[float] = None,
-        ymax: Optional[float] = None,
-        *,
-        x: Optional[float] = None,
-        y: Optional[float] = None,
-        width: Optional[float] = None,
-        height: Optional[float] = None,
+        xmin: float,
+        ymin: float,
+        xmax: float,
+        ymax: float,
     ) -> None:
-        if x is not None or y is not None or width is not None or height is not None:
-            try:
-                xmin = x
-                ymin = y
-                xmax = x + width  # type: ignore[operator]
-                ymax = y + height  # type: ignore[operator]
-            except TypeError as error:
-                raise TypeError(
-                    "Require x, y, width, height keyword arguments to construct a 2D box."
-                ) from error
-
-        try:
-            if xmin >= xmax or ymin >= ymax:  # type: ignore[operator]
-                self._data = (0.0,) * Box2D._LENGTH
-            else:
-                self._data = (xmin, ymin, xmax, ymax)  # type: ignore[assignment]
-        except TypeError as error:
-            raise TypeError(
-                f"Require xmin, ymin, xmax, ymax to construct {self.__class__.__name__}."
-            ) from error
+        if xmin >= xmax or ymin >= ymax:
+            self._data = (0.0,) * Box2D._LENGTH
+        else:
+            self._data = (xmin, ymin, xmax, ymax)
 
     def __len__(self) -> int:
         return Box2D._LENGTH
@@ -139,7 +113,23 @@ class Box2D(UserSequence[float]):
         return intersect / union
 
     @classmethod
-    def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
+    def from_xywh(cls: Type[_B2], x: float, y: float, width: float, height: float) -> _B2:
+        """Create a :class:`Box2D` instance from the top-left vertex and the width and the height.
+
+        Arguments:
+            x: X coordinate of the top left vertex of the box.
+            y: Y coordinate of the top left vertex of the box.
+            width: Length of the box along the x axis.
+            height: Length of the box along the y axis.
+
+        Returns:
+            The created :class:`Box2D` instance.
+
+        """
+        return cls(x, y, x + width, y + height)
+
+    @classmethod
+    def loads(cls: Type[_B2], contents: Dict[str, float]) -> _B2:
         """Load a :class:`Box2D` from a dict containing coordinates of the 2D box.
 
         Arguments:
@@ -303,9 +293,9 @@ class Box3D(ReprMixin):
             return self._size.__eq__(other._size) and self._transform.__eq__(other._transform)
         return False
 
-    def __rmul__(self: _T, other: Transform3D) -> _T:
+    def __rmul__(self: _B3, other: Transform3D) -> _B3:
         if isinstance(other, Transform3D):
-            box: _T = object.__new__(self.__class__)
+            box: _B3 = object.__new__(self.__class__)
             box._transform = other * self._transform
             box._size = self._size
             return box
@@ -337,7 +327,7 @@ class Box3D(ReprMixin):
         self._transform = Transform3D.loads(contents)
 
     @classmethod
-    def loads(cls: Type[_T], contents: Dict[str, Dict[str, float]]) -> _T:
+    def loads(cls: Type[_B3], contents: Dict[str, Dict[str, float]]) -> _B3:
         """Load a :class:`Box3D` from a dict containing the coordinates of the 3D box.
 
         Arguments:

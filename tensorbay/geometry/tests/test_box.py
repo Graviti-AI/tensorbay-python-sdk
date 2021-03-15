@@ -18,6 +18,8 @@ _DATA_3D = {
 class TestBox2D:
     def test_init(self):
         with pytest.raises(TypeError):
+            Box2D()
+        with pytest.raises(TypeError):
             Box2D(1)
         with pytest.raises(TypeError):
             Box2D(x=0)
@@ -27,7 +29,6 @@ class TestBox2D:
             Box2D([1, 2, 3, 4])
 
         assert Box2D(*[1, 2, 3, 4]) == Box2D(1, 2, 3, 4)
-        assert Box2D(x=1, y=2, width=3, height=4) == Box2D(1, 2, 4, 6)
 
         box2d = Box2D(1, 2, 3, 4)
         assert box2d.xmin == 1
@@ -64,6 +65,10 @@ class TestBox2D:
         box2d_1 = Box2D(1, 2, 3, 4)
         box2d_2 = Box2D(2, 2, 3, 4)
         assert Box2D.iou(box2d_1, box2d_2) == 0.5
+
+    def test_from_xywh(self):
+        assert Box2D.from_xywh(x=1, y=2, width=3, height=4) == Box2D(1, 2, 4, 6)
+        assert Box2D.from_xywh(x=1, y=2, width=-1, height=2) == Box2D(0, 0, 0, 0)
 
     def test_loads(self):
         box2d = Box2D.loads(_DATA_2D)

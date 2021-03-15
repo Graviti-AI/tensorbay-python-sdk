@@ -104,6 +104,7 @@ def _generate_data(image_path: str, labels: Dict[str, Any]) -> Data:
     for annotation_id in image_annotations_map[image_id]:
         annotation = annotations[annotation_id]
         x_top, y_top, width, height = annotation["bbox"]
+
         attributes = {
             "occluded": annotation["occluded"],
             "difficult": annotation["difficult"],
@@ -112,7 +113,7 @@ def _generate_data(image_path: str, labels: Dict[str, Any]) -> Data:
         }
 
         data.label.box2d.append(
-            LabeledBox2D(
+            LabeledBox2D.from_xywh(
                 x=x_top,
                 y=y_top,
                 width=width,

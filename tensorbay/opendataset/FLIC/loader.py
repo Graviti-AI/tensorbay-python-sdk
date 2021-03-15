@@ -69,7 +69,7 @@ def _get_data(path: str, annotations: Any, flag: bool) -> Iterator[Tuple[Data, s
             annotation["coords"].T[_VALID_KEYPOINT_INDICES],
             attributes={"poselet_hit_idx": annotation["poselet_hit_idx"].T.tolist()},
         )
-        box2d = LabeledBox2D(annotation["torsobox"][0].tolist())
+        box2d = LabeledBox2D(*annotation["torsobox"][0].tolist())
 
         if filepath not in filepath_to_data:
             data = Data(os.path.join(path, "images", filepath))
