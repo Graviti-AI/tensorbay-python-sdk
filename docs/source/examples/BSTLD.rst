@@ -1,283 +1,182 @@
-########################
- Image with Box2D Label
-########################
+########
+ BSTLD
+########
 
-:ref:`supported_label_types:Box2D` is a kind of label type. It represents the 2D Box labels on
-images. (:numref:`Fig. %s <example-Box2D>`)
+This topic describes how to manage the "BSTLD" dataset.
 
-.. _example-Box2D:
+"BSTLD" is a dataset with :ref:`reference/label_format:Box2D` label type (:numref:`Fig. %s <example-bstld>`).
+See `this page <https://www.graviti.cn/open-datasets/BSTLD>`_  for more details about this dataset.
+
+.. _example-bstld:
 
 .. figure:: ../images/example-Box2D.png
    :scale: 50 %
    :align: center
 
-   The preview of an image with Box2D annotations.
+   The preview of a cropped image with labels from "BSTLD".
 
-*************
- Preparation
-*************
+***************************
+ Authorize a Client Object
+***************************
 
 First of all, create a :ref:`features/tensorbay_client:GAS Client`.
 
 .. code:: python
 
-    >>> from graviti import GAS
+   from tensorbay import GAS
 
-    >>> ACCESS_KEY = "Accesskey-*****"
-    >>> gas = GAS(ACCESS_KEY)
+   ACCESS_KEY = "Accesskey-*****"
+   gas = GAS(ACCESS_KEY)
 
-*****************************
- Read Dataset from TensorBay
-*****************************
+******************
+ Create a Dataset
+******************
 
-As mentioned in :ref:`quick_start:Quick Start`, obtain_ and fork_ should be done before reading a
-dataset from TensorBay. Then, pass the correct dataset name to the GAS client, and you will get a
-:ref:`features/tensorbay_client:Dataset Client`.
-
-Here, we take `BSTLD`_ as an example.
-
-.. _fork: https://docs.graviti.cn/guide/opendataset/fork
-
-.. _BSTLD: https://www.graviti.cn/open-datasets/BSTLD
-
-.. _obtain: https://docs.graviti.cn/guide/opendataset/get
+Then, create a dataset client by passing the dataset name to the GAS client.
 
 .. code:: python
 
-   >>> dataset_client = gas.get_dataset("BSTLD")
+   gas.create_dataset("BSTLD")
 
-If you are not sure about the dataset name, you can visit our `Opendataset Platform`_ to check all
-"forkable" open datasets.
+********************
+ List Dataset Names
+********************
 
-.. _opendataset platform: https://www.graviti.cn/open-datasets
-
-You can use the list method to print all your forked open datasets.
-
-.. code:: python
-
-    >>> list(gas.list_dataset_names())
-    ['Head Pose Image', 'TLR', 'BSTLD']
-
-In :ref:`basic_concepts:Dataset` ``BSTLD``, there are three
-:ref:`Segments <basic_concepts:Segment>`: ``train``, ``test`` and ``additional``,
-you can get the segment names by list them all.
-
-.. code::
-
-    >>> list(dataset_client.list_segment_names())
-    ['additional', 'test', 'train']
-
-You can get a segment by passing the required segment name.
+To check if you have created "BSTLD" dataset, you can list all your available datasets.
+See :ref:`this page <features/dataset_management:Read Dataset>` for details.
 
 .. code:: python
 
-    >>> from tensorbay.dataset import Segment
-    >>> train_segment = Segment("train", dataset_client)
-
-In the train :ref:`basic_concepts:Segment`, there is a sequence of :ref:`basic_concepts:Data`. You
-can get one by index.
-
-.. code:: python
-
-    >>> data = train_segment[3]
-    >>> data
-    Data("tb:BSTLD:train://207390.png")(
-     (fileuri): tb:BSTLD:train://207390.png,
-     (labels): Labels(
-       (box2d): [
-         LabeledBox2D(612, 354.75, 615.5, 360.375)(...),
-         LabeledBox2D(632.25, 346.375, 636.625, 355.375)(...),
-         LabeledBox2D(649.25, 353.5, 653.875, 364.875)(...)
-       ]
-     )
-    )
+   list(gas.list_dataset_names())
 
 .. note::
 
-   If the :ref:`basic_concepts:segment` or
-   :ref:`advanced_features/fusion_dataset/concepts:fusion segment` is created without
-   given name, then its name will be "".
+   Note that Method ``list_dataset_names()`` returns an iterator, use ``list()`` to transfer it to a "list".
 
-In each :ref:`basic_concepts:Data`,
-there is a sequence of :ref:`supported_label_types:Box2D` annotations.
-You can get one by index.
+******************
+ Organize Dataset
+******************
 
-.. code:: python
-
-    >>> label_box2d = data.label.box2d[0]
-    >>> label_box2d
-    LabeledBox2D(612, 354.75, 615.5, 360.375)(
-      (category): 'RedLeft',
-      (attributes): {...},
-      (instance): ''
-    )
-    >>> label_box2d.category
-    'RedLeft'
-    >>> label_box2d.attributes
-    {'occluded': True}
-
-There is only one label type in ``BSTLD`` dataset, which is ``box2d``. The annotation "RedLeft" is
-stored in :ref:`supported_label_types:Category` of :ref:`supported_label_types:Box2D`. The annotation "{'occluded': True}"
-is stored in :ref:`supported_label_types:Attributes` of :ref:`supported_label_types:Box2D`.
-
-*************************
- Read Dataset from Local
-*************************
-
-If you want to read a dataset from local and there is an available :ref:`contribution:Dataloader`,
-just import the dataloader function and pass the local dataset directory to it. The directory
-structure for ``BSTLD`` should be like:
-
-.. code:: console
-
-    <path>
-       rgb/
-           additional/
-               2015-10-05-10-52-01_bag/
-                   <image_name>.jpg
-                   ...
-               ...
-           test/
-               <image_name>.jpg
-               ...
-           train/
-               2015-05-29-15-29-39_arastradero_traffic_light_loop_bag/
-                   <image_name>.jpg
-                   ...
-               ...
-       test.yaml
-       train.yaml
-       additional_train.yaml
-
-.. code:: python
-
-    >>> from graviti.opendataset import BSTLD
-
-    >>> dataset = BSTLD("path/to/dataset/directory")
-    >>> dataset
-    Dataset("BSTLD") [
-      Segment("additional") [...],
-      Segment("test") [...],
-      Segment("train") [...],
-    ]
-
-.. note::
-
-   Note that :ref:`basic_concepts:Dataset` and :ref:`features/tensorbay_client:Dataset Client`
-   are different concepts.
-
-.. warning::
-
-   TensorBay dataloader works well only with the original dataset directory structure.
-   Downloading datasets from either official website or `Graviti Opendatset Platform`_ is highly
-   recommended.
-
-.. _graviti opendatset platform: https://www.graviti.cn/open-datasets
-
-TensorBay supplies two methods to fetch :ref:`basic_concepts:Segment` from
-:ref:`basic_concepts:Dataset`.
-
-.. code:: python
-
-    >>> train_segment = dataset.get_segment_by_name("train")
-
-    >>> first_segment = dataset[0]
-
-The :ref:`basic_concepts:Segment` you get now is the same as the one you read from TensorBay in the
-:ref:`quick_start:Read Dataset from TensorBay` part.
-
-**************************
- Write Dataset Dataloader
-**************************
-
-If there is no :ref:`contribution:Dataloader` available to your target dataset,
-you can write one and contribute it.
-Now we take ``BSTLD`` as an example to explain how to write a dataloader for datasets with Box2D
-labels.
+Now we describe how to organize the "BSTLD" dataset by the :class:`~tensorbay.dataset.dataset.Dataset`
+object before uploading it to TensorBay. It takes the following steps to organize "BSTLD".
 
 Write the Catalog
 =================
 
-Before writing the dataloader, we first need to write the :ref:`contribution:Catalog`.
+The first step is to write the :ref:`reference/dataset_structure:Catalog`.
 Catalog is a json file contains all label information of one dataset.
-See :ref:`this page <basic_concepts:Catalog & SubCatalog>` for more details.
-The only annotation type for ``BSTLD`` is :ref:`supported_label_types:Box2D`, and there are 13
-:ref:`supported_label_types:Category` types and one :ref:`supported_label_types:Attributes` type.
+See :ref:`this page <reference/dataset_structure:Catalog>` for more details.
+The only annotation type for "BSTLD" is :ref:`reference/label_format:Box2D`, and there are 13
+:ref:`reference/label_format:Category` types and one :ref:`reference/label_format:Attributes` type.
 
 .. literalinclude:: ../../../tensorbay/opendataset/BSTLD/catalog.json
    :language: json
    :name: BSTLD-catalog
    :linenos:
 
-
 Write the Dataloader
 ====================
 
-The function of :ref:`contribution:Dataloader` is to read the dataset into a
-:ref:`basic_concepts:Dataset` object.
-The :ref:`code block <BSTLD-dataloader>` below displays the ``BSTLD`` dataloader.
+The second step is to write the :ref:`reference/glossary:Dataloader`.
+The function of :ref:`reference/glossary:Dataloader` is to read the dataset into a
+:class:`~tensorbay.dataset.dataset.Dataset`object.
+The :ref:`code block <BSTLD-dataloader>` below displays the "BSTLD" dataloader.
 
 .. literalinclude:: ../../../tensorbay/opendataset/BSTLD/loader.py
    :language: python
    :name: BSTLD-dataloader
    :linenos:
-   :emphasize-lines: 11-12,52
+   :emphasize-lines: 11-12,58
 
-There are mainly two steps to write a :ref:`contribution:Dataloader`:
-
--  Create a :ref:`basic_concepts:Dataset` and its relevant :ref:`Segments <basic_concepts:Segment>`.
--  Add the :ref:`basic_concepts:Data` and corresponding Labels
-   to the created :ref:`Segments <basic_concepts:Segment>`.
-
-Create Dataset and Segments
----------------------------
-
-Note that after creating the :ref:`basic_concepts:Dataset`,
-you need to load the :ref:`contribution:Catalog`.(L52)
-The catalog file ``catalog.json`` is in the same directory with dataloader file.
+Note that after creating the :ref:`reference/dataset_structure:Dataset`,
+you need to load the :ref:`reference/dataset_structure:catalog`.(L58)
+The catalog file "catalog.json" is in the same directory with dataloader file.
 
 In this example, we create segments by ``dataset.create_segment(SEGMENT_NAME)``.
 You can also create a default segment without giving a specific name, then its name
 will be "".
 
-Add Data and Labels
--------------------
-
-It takes four key substeps to add the data and the labels:
-
--  Creating :ref:`basic_concepts:Data` and adding content.
--  Creating :ref:`supported_label_types:Box2D` and adding annotations.
--  Appending the Box2D labels to the created Data.
--  Appending the Data to the created Segment.
-
-See :ref:`this page <supported_label_types:Box2D>` for more details for about Box2D annotation details.
+See :ref:`this page <reference/label_format:Box2D>` for more details for about Box2D annotation details.
 
 .. note::
    The :ref:`BSTLD dataloader <BSTLD-dataloader>` above uses relative import(L11-12).
-   However, when you write your own dataloader you should use regular import as shown below.
+   However, when you write your own dataloader you should use regular import.
    And when you want to contribute your own dataloader, remember to use relative import.
 
-.. code:: python
+****************
+ Upload Dataset
+****************
 
-    >>> from graviti.dataset import Data, Dataset
-    >>> from graviti.label import LabeledBox2D
-
-***********************************
- Upload Local Dataset to TensorBay
-***********************************
-
-Once you write your own :ref:`contribution:Dataloader` and read the local dataset into a
-:ref:`basic_concepts:Dataset` object, you can upload it to TensorBay to share with the community.
+After you finish the :ref:`reference/glossary:Dataloader` and organize the "BSTLD" into a
+:class:`~tensorbay.dataset.dataset.Dataset` object, you can upload it
+to TensorBay for sharing, reuse, etc.
 
 .. code:: python
 
-    >>> gas.create_dataset("BSTLD")
-    >>> dataset_client = gas.upload_dataset(dataset, jobs=8, skip_uploaded_files=False)
-    >>> dataset_client.commit("BSTLD")
+   from tensorbay.opendataset import BSTLD
+
+   dataset = BSTLD("path/to/dataset/directory")
+   dataset_client = gas.upload_dataset(dataset, jobs=8, skip_uploaded_files=False)
+   dataset_client.commit("BSTLD")
+
+**************
+ Read Dataset
+**************
+
+Now you can read "BSTLD" dataset from TensorBay.
+
+.. code:: python
+
+   dataset_client = gas.get_dataset("BSTLD")
+
+In :ref:`reference/dataset_structure:Dataset` "BSTLD", there are three
+:ref:`Segments <reference/dataset_structure:Segment>`: ``train``, ``test`` and ``additional``,
+you can get the segment names by list them all.
+
+.. code:: python
+
+   list(dataset_client.list_segment_names())
+
+You can get a segment by passing the required segment name or by index.
+
+.. code:: python
+
+   from tensorbay.dataset import Segment
+   train_segment = Segment("train", dataset_client)
+   first_segment = dataset[0]
+
+
+In the train :ref:`reference/dataset_structure:Segment`, there is a sequence of :ref:`reference/dataset_structure:Data`. You
+can get one by index.
+
+.. code::python
+
+   data = train_segment[3]
+
+.. note::
+
+   If the :ref:`reference/dataset_structure:Segment` or
+   :ref:`advanced_features/fusion_dataset/fusion_dataset_structure:fusion segment`
+   is created  without given name, then its name will be "".
+
+In each :ref:`reference/dataset_structure:Data`,
+there is a sequence of :ref:`reference/label_format:Box2D` annotations.
+You can get one by index.
+
+.. code:: python
+
+   label_box2d = data.label.box2d[0]
+   category = label_box2d.category
+   attributes = label_box2d.attributes
+
+There is only one label type in "BSTLD" dataset, which is ``box2d``. The annotation "RedLeft" is
+stored in :ref:`reference/label_format:Category` of :ref:`reference/label_format:Box2D`.
+The annotation "{'occluded': True}" is stored in :ref:`reference/label_format:Attributes`
+of :ref:`reference/label_format:Box2D`.
 
 Remember to execute the :ref:`features/version_control:Commit` step after uploading.
 If needed, you can re-upload and commit again.
-Please see :ref:`features/version_control:Version Control` for more details.
+Please see :ref:`this page <features/version_control:Version Control>` for more details about version control.
 
 .. note::
 
@@ -285,4 +184,12 @@ Please see :ref:`features/version_control:Version Control` for more details.
 
 .. _gas: https://www.graviti.cn/tensorBay
 
-Please see :ref:`contribution:Contribution` for how to contribute your dataloader.
+******************
+ Delete a Dataset
+******************
+
+To delete "BSTLD", run the following code:
+
+.. code:: python
+
+   gas.delete_dataset("BSTLD")
