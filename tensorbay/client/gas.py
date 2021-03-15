@@ -38,8 +38,6 @@ class GAS:
 
     """
 
-    _VERSIONS = {1: "COMMUNITY", 2: "ENTERPRISE"}
-
     def __init__(self, access_key: str, url: str = "") -> None:
         self._client = Client(access_key, url)
 
