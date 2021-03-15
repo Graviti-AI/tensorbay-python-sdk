@@ -29,7 +29,7 @@ import threading
 import time
 from copy import deepcopy
 from itertools import islice
-from typing import Any, Dict, Iterable, Iterator, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Dict, Iterable, Iterator, Optional, Tuple, Union
 
 import filetype
 import ulid
@@ -37,8 +37,13 @@ from requests_toolbelt import MultipartEncoder
 
 from ..dataset import Data, Frame, RemoteData
 from ..sensor.sensor import Sensor
+from .commit_status import CommitStatus
 from .exceptions import GASException, GASPathError
-from .requests import Client, default_config, paging_range
+from .requests import default_config, paging_range
+
+if TYPE_CHECKING:
+    from .dataset import DatasetClient, FusionDatasetClient
+
 
 _SERVER_VERSION_MATCH: Dict[str, str] = {
     "AmazonS3": "x-amz-version-id",
@@ -46,7 +51,7 @@ _SERVER_VERSION_MATCH: Dict[str, str] = {
 }
 
 
-class SegmentClientBase:
+class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
     """This class defines the basic concept of :class:`SegmentClient`.
 
     A :class:`SegmentClientBase` contains the information needed for determining
@@ -54,28 +59,21 @@ class SegmentClientBase:
 
     Arguments:
         name: Segment name.
-        dataset_id: Dataset ID.
-        dataset_name: Dataset name.
-        client: The client used for sending request to TensorBay.
-        commit_id: The commit ID.
+        dataset_client: The dataset client.
 
     """
 
     _EXPIRED_IN_SECOND = 240
 
-    def __init__(  # pylint: disable=too-many-arguments
-        self,
-        name: str,
-        dataset_id: str,
-        dataset_name: str,
-        client: Client,
-        commit_id: Optional[str] = None,
+    def __init__(
+        self, name: str, dataset_client: "Union[DatasetClient, FusionDatasetClient]"
     ) -> None:
+
         self._name = name
-        self._dataset_id = dataset_id
-        self._dataset_name = dataset_name
-        self._client = client
-        self._commit_id = commit_id
+        self._dataset_id = dataset_client.dataset_id
+        self._dataset_client = dataset_client
+        self._status = dataset_client.status
+        self._client = dataset_client._client  # pylint: disable=protected-access
         self._permission: Dict[str, Any] = {"expireAt": 0}
         self._permission_lock = threading.Lock()
 
@@ -89,11 +87,13 @@ class SegmentClientBase:
             The URL of the remote file.
 
         """
-        params = {
+        params: Dict[str, Any] = {
             "segmentName": self._name,
             "remotePath": remote_path,
         }
-        response = self._client.open_api_do("GET", "data/urls", self.dataset_id, params=params)
+        params.update(self._status.get_status_info())
+
+        response = self._client.open_api_do("GET", "data/urls", self._dataset_id, params=params)
         return response.json()["url"]  # type: ignore[no-any-return]
 
     def _list_labels(
@@ -111,12 +111,11 @@ class SegmentClientBase:
 
         """
         params: Dict[str, Any] = {"segmentName": self._name}
-        if self._commit_id:
-            params["commit"] = self._commit_id
+        params.update(self._status.get_status_info())
 
         for params["offset"], params["limit"] in paging_range(start, stop, page_size):
             response = self._client.open_api_do(
-                "GET", "labels", self.dataset_id, params=params
+                "GET", "labels", self._dataset_id, params=params
             ).json()
             yield from response["labels"]
             if response["recordSize"] + response["offset"] >= response["totalCount"]:
@@ -125,12 +124,14 @@ class SegmentClientBase:
     def _get_upload_permission(self) -> Dict[str, Any]:
         with self._permission_lock:
             if int(time.time()) >= self._permission["expireAt"]:
-                params = {
+                params: Dict[str, Any] = {
                     "expired": self._EXPIRED_IN_SECOND,
                     "segmentName": self._name,
                 }
+                params.update(self._status.get_status_info())
+
                 self._permission = self._client.open_api_do(
-                    "GET", "policies", self.dataset_id, params=params
+                    "GET", "policies", self._dataset_id, params=params
                 ).json()
 
                 if default_config.is_intern:
@@ -166,26 +167,31 @@ class SegmentClientBase:
     def _synchronize_upload_info(
         self, key: str, version_id: str, etag: str, frame_info: Optional[Dict[str, Any]] = None
     ) -> None:
-        put_data = {
+        put_data: Dict[str, Any] = {
             "key": key,
             "versionId": version_id,
             "etag": etag,
         }
+        put_data.update(self._status.get_status_info())
+
         if frame_info:
             put_data.update(frame_info)
 
-        self._client.open_api_do("PUT", "callback", self.dataset_id, json=put_data)
+        self._client.open_api_do("PUT", "callback", self._dataset_id, json=put_data)
 
     def _upload_label(self, data: Data) -> None:
         label = data.label.dumps()
         if not label:
             return
+
         post_data: Dict[str, Any] = {
             "segmentName": self.name,
             "remotePath": data.target_remote_path,
             "label": label,
         }
-        self._client.open_api_do("PUT", "labels", self.dataset_id, json=post_data)
+        post_data.update(self._status.get_status_info())
+
+        self._client.open_api_do("PUT", "labels", self._dataset_id, json=post_data)
 
     @property
     def name(self) -> str:
@@ -198,24 +204,14 @@ class SegmentClientBase:
         return self._name
 
     @property
-    def dataset_id(self) -> str:
-        """Return the TensorBay dataset ID.
+    def status(self) -> CommitStatus:
+        """Return the status of the dataset client.
 
         Returns:
-            The TensorBay dataset ID.
+            The status of the dataset client.
 
         """
-        return self._dataset_id
-
-    @property
-    def commit_id(self) -> Optional[str]:
-        """Return the commit ID.
-
-        Returns:
-            The commit ID.
-
-        """
-        return self._commit_id
+        return self._status
 
     def delete_data(self, remote_paths: Union[str, Iterable[str]]) -> None:
         """Delete data of a segment in a certain commit with the given remote paths.
@@ -224,6 +220,8 @@ class SegmentClientBase:
             remote_paths: The remote paths of data in a segment.
 
         """
+        self._status.check_authority_for_draft()
+
         all_paths = iter((remote_paths,)) if isinstance(remote_paths, str) else iter(remote_paths)
 
         while True:
@@ -234,7 +232,9 @@ class SegmentClientBase:
                 "segmentName": self.name,
                 "remotePaths": request_remote_paths,
             }
-            self._client.open_api_do("DELETE", "data", self.dataset_id, json=delete_data)
+            delete_data.update(self._status.get_status_info())
+
+            self._client.open_api_do("DELETE", "data", self._dataset_id, json=delete_data)
 
 
 class SegmentClient(SegmentClientBase):
@@ -245,6 +245,11 @@ class SegmentClient(SegmentClientBase):
     In contrast to FusionSegmentClient, :class:`SegmentClient` has only one sensor.
 
     """
+
+    _dataset_client: "DatasetClient"
+
+    def __init__(self, name: str, data_client: "DatasetClient") -> None:
+        super().__init__(name, data_client)
 
     def _list_data(
         self, *, start: int = 0, stop: int = sys.maxsize, page_size: int = 128
@@ -261,12 +266,11 @@ class SegmentClient(SegmentClientBase):
 
         """
         params: Dict[str, Any] = {"segmentName": self._name}
-        if self._commit_id:
-            params["commit"] = self._commit_id
+        params.update(self._status.get_status_info())
 
         for params["offset"], params["limit"] in paging_range(start, stop, page_size):
             response = self._client.open_api_do(
-                "GET", "data", self.dataset_id, params=params
+                "GET", "data", self._dataset_id, params=params
             ).json()
             yield from response["data"]
             if response["recordSize"] + response["offset"] >= response["totalCount"]:
@@ -284,6 +288,8 @@ class SegmentClient(SegmentClientBase):
             GASException: When uploading data failed.
 
         """
+        self._status.check_authority_for_draft()
+
         if not target_remote_path:
             target_remote_path = os.path.basename(local_path)
 
@@ -317,6 +323,8 @@ class SegmentClient(SegmentClientBase):
             data: The data object which represents the local file to upload.
 
         """
+        self._status.check_authority_for_draft()
+
         self._upload_label(data)
 
     def upload_data(self, data: Data) -> None:
@@ -326,6 +334,8 @@ class SegmentClient(SegmentClientBase):
             data: The :class:`~tensorbay.dataset.data.Data`.
 
         """
+        self._status.check_authority_for_draft()
+
         self.upload_file(data.path, data.target_remote_path)
         self._upload_label(data)
 
@@ -372,6 +382,11 @@ class FusionSegmentClient(SegmentClientBase):
 
     """
 
+    _dataset_client: "FusionDatasetClient"
+
+    def __init__(self, name: str, data_client: "FusionDatasetClient") -> None:
+        super().__init__(name, data_client)
+
     def _list_frames(
         self, *, start: int = 0, stop: int = sys.maxsize, page_size: int = 128
     ) -> Iterator[Dict[str, Any]]:
@@ -387,12 +402,11 @@ class FusionSegmentClient(SegmentClientBase):
 
         """
         params: Dict[str, Any] = {"segmentName": self._name}
-        if self._commit_id:
-            params["commit"] = self._commit_id
+        params.update(self._status.get_status_info())
 
         for params["offset"], params["limit"] in paging_range(start, stop, page_size):
             response = self._client.open_api_do(
-                "GET", "data", self.dataset_id, params=params
+                "GET", "data", self._dataset_id, params=params
             ).json()
             yield from response["data"]
             if response["recordSize"] + response["offset"] >= response["totalCount"]:
@@ -406,10 +420,11 @@ class FusionSegmentClient(SegmentClientBase):
 
         """
         params: Dict[str, Any] = {"segmentName": self._name}
-        if self._commit_id:
-            params["commit"] = self._commit_id
+        params.update(self._status.get_status_info())
 
-        response = self._client.open_api_do("GET", "sensors", self.dataset_id, params=params).json()
+        response = self._client.open_api_do(
+            "GET", "sensors", self._dataset_id, params=params
+        ).json()
 
         for sensor_info in response["sensors"]:
             yield Sensor.loads(sensor_info)
@@ -421,10 +436,13 @@ class FusionSegmentClient(SegmentClientBase):
             sensor: The sensor to upload.
 
         """
+        self._status.check_authority_for_draft()
+
         post_data = sensor.dumps()
+        post_data.update(self._status.get_status_info())
 
         post_data["segmentName"] = self._name
-        self._client.open_api_do("POST", "sensors", self.dataset_id, json=post_data)
+        self._client.open_api_do("POST", "sensors", self._dataset_id, json=post_data)
 
     def delete_sensor(self, sensor_name: str) -> None:
         """Delete a TensorBay sensor of the draft with the given sensor name.
@@ -433,9 +451,12 @@ class FusionSegmentClient(SegmentClientBase):
             sensor_name: The TensorBay sensor to delete.
 
         """
-        delete_data: Dict[str, str] = {"segmentName": self._name, "sensorName": sensor_name}
+        self._status.check_authority_for_draft()
 
-        self._client.open_api_do("DELETE", "sensors", self.dataset_id, json=delete_data)
+        delete_data: Dict[str, Any] = {"segmentName": self._name, "sensorName": sensor_name}
+        delete_data.update(self._status.get_status_info())
+
+        self._client.open_api_do("DELETE", "sensors", self._dataset_id, json=delete_data)
 
     def upload_frame(self, frame: Frame, timestamp: Optional[float] = None) -> None:
         """Upload frame to the draft.
@@ -450,6 +471,8 @@ class FusionSegmentClient(SegmentClientBase):
             TypeError: When frame id conflicts。                                `
 
         """
+        self._status.check_authority_for_draft()
+
         if timestamp is None:
             try:
                 frame_id = frame.frame_id
