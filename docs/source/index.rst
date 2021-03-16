@@ -54,7 +54,7 @@ It provides:
    :maxdepth: 1
    :caption: CLI
 
-   tensorbay_cli/getting_start_with_CLI
+   tensorbay_cli/getting_started_with_cli
    tensorbay_cli/dataset_management
 
 .. toctree::
