@@ -5,8 +5,10 @@
 As an expert in unstructured data management, `TensorBay`_ provides services like data hosting,
 complex data version management, online data visualization, and data collaboration.
 TensorBay's unified authority management makes your data sharing and collaborative use more secure.
-This documentation describes :ref:`SDK <quick_start:Quick Start>` and
-:ref:`CLI <features/tensorbay_cli:Tensorbay CLI>` tools for using TensorBay.
+
+This documentation describes
+:ref:`SDK <quick_start/getting_start_with_tensorbay:Getting Start with TensorBay>` and
+:ref:`CLI <tensorbay_cli/getting_start_with_CLI:Getting Start with CLI>` tools for using TensorBay.
 
 .. _TensorBay: https://www.graviti.cn/
 
@@ -15,15 +17,17 @@ This documentation describes :ref:`SDK <quick_start:Quick Start>` and
  What can TensorBay SDK do? 
 ############################
 
-TensorBay SDK supports methods to:
+TensorBay Python SDK is a python library to access TensorBay and manage your datasets.
+It provides:
 
-- :ref:`create local dataset <quick_start:Create Dataset from Local>`
-- :ref:`upload local dataset to TensorBay <quick_start:Upload Local Dataset to TensorBay>`
-- :ref:`read dataset from TensorBay <quick_start:Read Dataset from TensorBay>`
-- :ref:`manage dataset versions <features/version_control:Version Control>`
+- A :ref:`pythonic way <quick_start/getting_start_with_tensorbay:Getting Start with TensorBay>`
+  to access your TensorBay resources by TensorBay `OpenAPI`_.
+- An easy-to-use CLI tool :ref:`gas <tensorbay_cli/getting_start_with_CLI:Getting Start with CLI>`
+  (Graviti AI service) to communicate with TensorBay.
+- A consistent :ref:`dataset structure <reference/dataset_structure:Dataset Structure>`
+  to read and write your datasets.
 
-You can also use TensorBay CLI to operate your datasets.
-See :ref:`this page <features/tensorbay_cli:TensorBay CLI>` for more details.
+.. _OpenAPI: https://docs.graviti.cn/dev-doc/tools/api-center
 
 
 .. toctree::
