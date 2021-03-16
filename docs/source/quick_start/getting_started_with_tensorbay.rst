@@ -42,9 +42,10 @@ Before using TensorBay SDK, please finish the following registration steps:
 Authorize a Client Object
 =========================
 
-.. literalinclude:: ../../../examples/getting_start_with_tensorbay.py
+.. literalinclude:: ../../../examples/getting_started_with_tensorbay.py
       :language: python
-      :lines: 11-13
+      :start-after: """Authorize a Client Object"""
+      :end-before: """"""
 
 See :ref:`this page <tensorbay_cli/getting_start_with_CLI:Config>` for details
 about authenticating identity via CLI.
@@ -52,34 +53,39 @@ about authenticating identity via CLI.
 Create a Dataset 
 ================
 
-.. literalinclude:: ../../../examples/getting_start_with_tensorbay.py
+.. literalinclude:: ../../../examples/getting_started_with_tensorbay.py
       :language: python
-      :lines: 16
+      :start-after: """Create a Dataset"""
+      :end-before: """"""
 
 List Dataset Names
 ==================
 
-.. literalinclude:: ../../../examples/getting_start_with_tensorbay.py
+.. literalinclude:: ../../../examples/getting_started_with_tensorbay.py
       :language: python
-      :lines: 19
+      :start-after: """List Dataset Names"""
+      :end-before: """"""
 
 Upload Images to the Dataset
 ============================
 
-.. literalinclude:: ../../../examples/getting_start_with_tensorbay.py
+.. literalinclude:: ../../../examples/getting_started_with_tensorbay.py
       :language: python
-      :lines: 22-33
+      :start-after: """Upload Images to the Dataset"""
+      :end-before: """"""
 
 Read Images from the Dataset
 ============================
 
-.. literalinclude:: ../../../examples/getting_start_with_tensorbay.py
+.. literalinclude:: ../../../examples/getting_started_with_tensorbay.py
       :language: python
-      :lines: 36-47
+      :start-after: """Read Images from the Dataset"""
+      :end-before: """"""
 
 Delete the Dataset
 ==================
 
-.. literalinclude:: ../../../examples/getting_start_with_tensorbay.py
+.. literalinclude:: ../../../examples/getting_started_with_tensorbay.py
       :language: python
-      :lines: 50
+      :start-after: """Delete the Dataset"""
+      :end-before: """"""

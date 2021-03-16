@@ -8,28 +8,28 @@
 # pylint: disable=not-callable
 # pylint: disable=ungrouped-imports
 # pylint: disable=import-error
+# pylint: disable=pointless-string-statement
 
 """This file includes the python code of getting_started_with_tensorbay.rst."""
 
-# Authorize a Client Object
-# =========================
+"""Authorize a Client Object"""
 from tensorbay import GAS
 
 gas = GAS("<YOUR_ACCESSKEY>")
+""""""
 
-# Create a Dataset
-# ================
+"""Create a Dataset"""
 gas.create_dataset("DatasetName")
+""""""
 
-# List Dataset Names
-# ==================
+"""List Dataset Names"""
 dataset_list = list(gas.list_dataset_names())
+""""""
 
-# Upload Images to the Dataset
-# ============================
-# Organize the local dataset by the "Dataset" class before uploading.
+"""Upload Images to the Dataset"""
 from tensorbay.dataset import Data, Dataset
 
+# Organize the local dataset by the "Dataset" class before uploading.
 dataset = Dataset("DatasetName")
 
 # TensorBay uses "segment" to separate different parts in a dataset.
@@ -39,9 +39,9 @@ segment.append(Data("0000001.jpg"))
 segment.append(Data("0000002.jpg"))
 
 gas.upload_dataset(dataset)
+""""""
 
-# Read Images from the Dataset
-# ============================
+"""Read Images from the Dataset"""
 from PIL import Image
 from tensorbay.dataset import Segment
 
@@ -54,7 +54,8 @@ for data in segment:
         image = Image(fp)
         width, height = image.size
         image.show()
+""""""
 
-# Delete the Dataset
-# ===================
+"""Delete the Dataset"""
 gas.delete_dataset("DatasetName")
+""""""
