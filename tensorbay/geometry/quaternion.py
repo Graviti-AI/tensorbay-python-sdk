@@ -13,7 +13,7 @@ or as unit quaternions to represent rotations in 3D space.
 
 import math
 import warnings
-from typing import Dict, Optional, Sequence, Type, TypeVar, Union, overload
+from typing import Any, Dict, Optional, Sequence, Type, TypeVar, Union, overload
 
 import numpy as np
 
@@ -192,11 +192,15 @@ class Quaternion:
         ...
 
     @overload
-    def __mul__(self: _T, other: Sequence[float]) -> Vector3D:
+    def __mul__(self: _T, other: float) -> _T:
         ...
 
     @overload
-    def __mul__(self: _T, other: np.ndarray) -> Vector3D:
+    def __mul__(self: _T, other: Sequence[float]) -> Sequence[_T]:
+        ...
+
+    @overload
+    def __mul__(self: _T, other: np.ndarray) -> np.ndarray:
         ...
 
     # mypy errors to be figured out
@@ -206,14 +210,28 @@ class Quaternion:
     # when use Union to describe overload 2 and 3 in one
     # 2) Overloaded function signatures 1 and 2 overlap with incompatible return types
 
-    def __mul__(self: _T, other: Union[_T, np.ndarray, Sequence[float]]) -> Union[_T, Vector3D]:
+    def __mul__(
+        self: _T, other: Union[_T, np.ndarray, Sequence[float]]
+    ) -> Union[_T, Sequence[_T], np.ndarray]:
         if isinstance(other, Quaternion):
             return self._create(self._data.__mul__(other._data))
 
-        if isinstance(other, (Sequence, np.ndarray)):  # pylint: disable=W1116
-            return self.rotate(other)
+        if isinstance(other, (int, float)):
+            return self._create(self._data.__mul__(other))
+
+        if isinstance(other, Sequence):  # pylint: disable=W1116
+            return other.__class__(  # type: ignore[call-arg]
+                [self._create(self._data * value) for value in other]
+            )
+
+        if isinstance(other, np.ndarray):
+            res = np.array([self._create(self._data * value) for value in other.reshape(-1)])
+            return res.reshape(other.shape)
 
         return NotImplemented
+
+    def __rmul__(self: _T, other: Any) -> Union[_T, Sequence[_T], np.ndarray]:
+        return self.__mul__(other)
 
     @staticmethod
     def _quaternion_from_kwargs(kwargs: Dict[str, KwargsType]) -> Optional[quaternion.quaternion]:
@@ -360,8 +378,15 @@ class Quaternion:
         Returns:
             Rotated vector.
 
+        Raises:
+            ValueError: When the element number of the input vector is not three.
+
         """
-        rotated_vector = Vector3D(*quaternion.rotate_vectors(self._data, vector))
+        vector_array = np.array(vector)
+        if vector_array.size != 3:
+            raise ValueError("Only support rotation for three dimensional vector.")
+
+        rotated_vector = Vector3D(*quaternion.rotate_vectors(self._data, vector_array).reshape(-1))
         return rotated_vector
 
     def dumps(self) -> Dict[str, float]:

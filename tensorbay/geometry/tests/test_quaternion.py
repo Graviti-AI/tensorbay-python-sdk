@@ -82,10 +82,50 @@ class TestQuaternion:
         assert quaternion_1.__sub__(0) == NotImplemented
 
     def test_mul(self):
-        quaternion_1 = Quaternion()
+        quaternion_1 = Quaternion(1, 2, 3, 4)
         quaternion_2 = Quaternion()
-        assert quaternion_1 * quaternion_2 == Quaternion(1.0, 0.0, 0.0, 0.0)
-        assert quaternion_1.__mul__(0) == NotImplemented
+        assert quaternion_1 * quaternion_2 == Quaternion(1.0, 2.0, 3.0, 4.0)
+        assert quaternion_1 * 2 == Quaternion(2.0, 4.0, 6.0, 8.0)
+        assert quaternion_1 * [1, 2] == [
+            Quaternion(1.0, 2.0, 3.0, 4.0),
+            Quaternion(2.0, 4.0, 6.0, 8.0),
+        ]
+        assert quaternion_1 * Vector3D(1, 2, 3) == Vector3D(
+            Quaternion(1.0, 2.0, 3.0, 4.0),
+            Quaternion(2.0, 4.0, 6.0, 8.0),
+            Quaternion(3.0, 6.0, 9.0, 12.0),
+        )
+        np.testing.assert_equal(
+            quaternion_1 * np.array([[1, 2], [3, 4]]),
+            np.array(
+                [
+                    [Quaternion(1.0, 2.0, 3.0, 4.0), Quaternion(2.0, 4.0, 6.0, 8.0)],
+                    [Quaternion(3.0, 6.0, 9.0, 12.0), Quaternion(4.0, 8.0, 12.0, 16.0)],
+                ]
+            ),
+        )
+
+    def test_rmul(self):
+        quaternion_1 = Quaternion(1, 2, 3, 4)
+        assert 2 * quaternion_1 == Quaternion(2.0, 4.0, 6.0, 8.0)
+        assert [1, 2] * quaternion_1 == [
+            Quaternion(1.0, 2.0, 3.0, 4.0),
+            Quaternion(2.0, 4.0, 6.0, 8.0),
+        ]
+        assert Vector3D(1, 2, 3) * quaternion_1 == Vector3D(
+            Quaternion(1.0, 2.0, 3.0, 4.0),
+            Quaternion(2.0, 4.0, 6.0, 8.0),
+            Quaternion(3.0, 6.0, 9.0, 12.0),
+        )
+        np.testing.assert_equal(
+            np.array([[1, 2], [3, 4]]) * quaternion_1,
+            np.array(
+                [
+                    [Quaternion(1.0, 2.0, 3.0, 4.0), Quaternion(2.0, 4.0, 6.0, 8.0)],
+                    [Quaternion(3.0, 6.0, 9.0, 12.0), Quaternion(4.0, 8.0, 12.0, 16.0)],
+                ]
+            ),
+        )
 
     def test_create(self):
         assert Quaternion._create(quaternion.quaternion(1, 0, 0, 0)) == Quaternion(1, 0, 0, 0)
@@ -110,4 +150,11 @@ class TestQuaternion:
 
     def test_rotate(self):
         quaternion_1 = Quaternion()
+
+        with pytest.raises(ValueError):
+            quaternion_1.rotate([1, 2])
+        with pytest.raises(ValueError):
+            quaternion_1.rotate([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+
         assert quaternion_1.rotate([1, 2, 3]) == Vector3D(1.0, 2.0, 3.0)
+        assert quaternion_1.rotate(np.array([1, 2, 3])) == Vector3D(1.0, 2.0, 3.0)

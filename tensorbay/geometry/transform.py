@@ -103,7 +103,7 @@ class Transform3D(ReprMixin):
 
     def __rmul__(self: _T, other: Quaternion) -> _T:
         if isinstance(other, Quaternion):
-            return self._create(other * self._translation, other * self._rotation)
+            return self._create(other.rotate(self._translation), other * self._rotation)
 
         return NotImplemented  # type: ignore[unreachable]
 
