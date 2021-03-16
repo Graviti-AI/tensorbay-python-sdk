@@ -42,11 +42,9 @@ Before using TensorBay SDK, please finish the following registration steps:
 Authorize a Client Object
 =========================
 
-.. code:: python
-
-   from tensorbay import GAS
-
-   gas = GAS("<YOUR_ACCESSKEY>")
+.. literalinclude:: ../../../examples/getting_start_with_tensorbay.py
+      :language: python
+      :lines: 11-13
 
 See :ref:`this page <tensorbay_cli/getting_start_with_CLI:Config>` for details
 about authenticating identity via CLI.
@@ -54,56 +52,34 @@ about authenticating identity via CLI.
 Create a Dataset 
 ================
 
-.. code:: python
-   
-   gas.create_dataset("DatasetName")
+.. literalinclude:: ../../../examples/getting_start_with_tensorbay.py
+      :language: python
+      :lines: 16
 
 List Dataset Names
 ==================
 
-.. code:: python
-
-   dataset_list = list(gas.list_dataset_names())
+.. literalinclude:: ../../../examples/getting_start_with_tensorbay.py
+      :language: python
+      :lines: 19
 
 Upload Images to the Dataset
 ============================
 
-.. code:: python
-
-   # Organize the local dataset by the "Dataset" class before uploading.
-   from tensorbay.dataset import Data, Dataset
-
-   dataset = Dataset("DatasetName")
-
-   # TensorBay uses "segment" to separate different parts in a dataset.
-   segment = dataset.create_segment()
-
-   segment.append(Data("0000001.jpg"))
-   segment.append(Data("0000002.jpg"))
-
-   gas.upload_dataset(dataset)
+.. literalinclude:: ../../../examples/getting_start_with_tensorbay.py
+      :language: python
+      :lines: 22-33
 
 Read Images from the Dataset
 ============================
 
-.. code:: python
-
-   from PIL import Image
-   from tensorbay.dataset import Segment
-
-   dataset_client = gas.get_dataset("DatasetName")
-
-   segment = Segment("", dataset_client)
-
-   for data in segment:
-       with data.open() as fp:
-           image = Image(fp)
-           width, height = image.size
-           image.show()
+.. literalinclude:: ../../../examples/getting_start_with_tensorbay.py
+      :language: python
+      :lines: 36-47
 
 Delete the Dataset
 ==================
 
-.. code:: python
-
-   gas.delete_dataset("DatasetName")
+.. literalinclude:: ../../../examples/getting_start_with_tensorbay.py
+      :language: python
+      :lines: 50
