@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.8.0]
-        os: [ubuntu-18.04]
+        os: [macos-10.15]
 
     steps:
       - uses: actions/checkout@v2
@@ -27,7 +27,7 @@ jobs:
       - name: Cache python ${{ matrix.python-version }}
         uses: actions/cache@v2
         with:
-          path: /opt/hostedtoolcache/Python/${{ matrix.python-version }}
+          path: /Users/runner/hostedtoolcache/Python/${{ matrix.python-version }}
           key: ${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}
 
       - name: Set up Python ${{ matrix.python-version }}
