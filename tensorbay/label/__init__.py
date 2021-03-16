@@ -6,45 +6,26 @@
 """Label related classes."""
 
 from .attributes import AttributeInfo, Items
-from .catalog import Catalog
-from .label import (
-    Classification,
-    LabeledBox2D,
-    LabeledBox3D,
-    LabeledKeypoints2D,
-    LabeledPolygon2D,
-    LabeledPolyline2D,
-    LabeledSentence,
-    LabelType,
-    Word,
-)
-from .subcatalog import (
-    Box2DSubcatalog,
-    Box3DSubcatalog,
-    ClassificationSubcatalog,
-    Keypoints2DSubcatalog,
-    Polygon2DSubcatalog,
-    Polyline2DSubcatalog,
-    SentenceSubcatalog,
-    Subcatalogs,
-)
+from .basic import LabelType
+from .catalog import Catalog, Subcatalogs
+from .label_box import Box2DSubcatalog, Box3DSubcatalog, LabeledBox2D, LabeledBox3D
+from .label_classification import Classification, ClassificationSubcatalog
+from .label_keypoints import Keypoints2DSubcatalog, LabeledKeypoints2D
+from .label_polygon import LabeledPolygon2D, Polygon2DSubcatalog
+from .label_polyline import LabeledPolyline2D, Polyline2DSubcatalog
+from .label_sentence import LabeledSentence, SentenceSubcatalog, Word
 from .supports import CategoryInfo, KeypointsInfo
 
 __all__ = [
     "AttributeInfo",
-    "Items",
-    "SentenceSubcatalog",
-    "CategoryInfo",
-    "Classification",
-    "KeypointsInfo",
-    "Keypoints2DSubcatalog",
-    "ClassificationSubcatalog",
     "Box2DSubcatalog",
     "Box3DSubcatalog",
-    "Polygon2DSubcatalog",
-    "Polyline2DSubcatalog",
-    "Subcatalogs",
     "Catalog",
+    "CategoryInfo",
+    "Classification",
+    "ClassificationSubcatalog",
+    "KeypointsInfo",
+    "Keypoints2DSubcatalog",
     "LabelType",
     "LabeledBox2D",
     "LabeledBox3D",
@@ -52,5 +33,10 @@ __all__ = [
     "LabeledPolygon2D",
     "LabeledPolyline2D",
     "LabeledSentence",
+    "Items",
+    "Polygon2DSubcatalog",
+    "Polyline2DSubcatalog",
+    "SentenceSubcatalog",
+    "Subcatalogs",
     "Word",
 ]

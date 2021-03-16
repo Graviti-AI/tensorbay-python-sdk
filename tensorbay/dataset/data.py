@@ -93,8 +93,7 @@ class Label(ReprMixin):
                     }
 
         Returns:
-            A :class:`~tensorbay.label.label.Label` instance containing labels information
-            from the given dict.
+            A :class:`Label` instance containing labels information from the given dict.
 
         """
         return common_loads(cls, contents)
