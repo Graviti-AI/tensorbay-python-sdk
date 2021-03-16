@@ -34,7 +34,7 @@ It provides:
    :maxdepth: 1
    :caption: Quick Start
 
-   quick_start/getting_start_with_tensorbay
+   quick_start/getting_started_with_tensorbay
    quick_start/examples
 
 .. toctree::
