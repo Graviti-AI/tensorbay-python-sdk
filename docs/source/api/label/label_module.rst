@@ -5,7 +5,12 @@ tensorbay.label
    :maxdepth: 4
 
    attributes
+   basic
    catalog
-   label
-   subcatalog
+   label_box
+   label_classification
+   label_keypoints
+   label_polygon
+   label_polyline
+   label_sentence
    supports

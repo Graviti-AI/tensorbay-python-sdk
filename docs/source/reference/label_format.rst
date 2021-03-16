@@ -14,15 +14,15 @@ and has a corresponding :ref:`subcatalog<basic_concepts:Catalog & Subcatalog>` c
 .. table:: supported label types
    :widths: auto
 
-   ============================================   ==================================================   =============================================================
-   supported label types                           label classes                                       subcatalog classes
-   ============================================   ==================================================   =============================================================
-   :ref:`reference/label_format:Classification`   :class:`~tensorbay.label.label.Classification`       :class:`~tensorbay.label.subcatalog.ClassificationSubcatalog`
-   :ref:`reference/label_format:Box2D`            :class:`~tensorbay.label.label.LabeledBox2D`         :class:`~tensorbay.label.subcatalog.Box2DSubcatalog`
-   :ref:`reference/label_format:Box3D`            :class:`~tensorbay.label.label.LabeledBox3D`         :class:`~tensorbay.label.subcatalog.Box3DSubcatalog`
-   :ref:`reference/label_format:Keypoints2D`      :class:`~tensorbay.label.label.LabeledKeypoints2D`   :class:`~tensorbay.label.subcatalog.Keypoints2DSubcatalog`
-   :ref:`reference/label_format:Sentence`         :class:`~tensorbay.label.label.LabeledSentence`      :class:`~tensorbay.label.subcatalog.SentenceSubcatalog`
-   ============================================   ==================================================   =============================================================
+   ============================================  =============================================================  =======================================================================
+   supported label types                           label classes                                                  subcatalog classes
+   ============================================  =============================================================  =======================================================================
+   :ref:`reference/label_format:Classification`  :class:`~tensorbay.label.label_classification.Classification`  :class:`~tensorbay.label.label_classification.ClassificationSubcatalog`
+   :ref:`reference/label_format:Box2D`           :class:`~tensorbay.label.label_box.LabeledBox2D`               :class:`~tensorbay.label.label_box.Box2DSubcatalog`
+   :ref:`reference/label_format:Box3D`           :class:`~tensorbay.label.label_box.LabeledBox3D`               :class:`~tensorbay.label.label_box.Box3DSubcatalog`
+   :ref:`reference/label_format:Keypoints2D`     :class:`~tensorbay.label.label_keypoints.LabeledKeypoints2D`   :class:`~tensorbay.label.label_keypoints.Keypoints2DSubcatalog`
+   :ref:`reference/label_format:Sentence`        :class:`~tensorbay.label.label_sentence.LabeledSentence`       :class:`~tensorbay.label.label_sentence.SetenceSubcatalog`
+   ============================================  =============================================================  =======================================================================
 
 *************************
  Common Label Properties
@@ -91,7 +91,7 @@ which is subcatalog.
 
 Different label types have different subcatalog classes.
 
-Here we take :class:`~tensorbay.label.subcatalog.Box2DSubcatalog` as an example
+Here we take :class:`~tensorbay.label.label_box.Box2DSubcatalog` as an example
 to describe some common features of subcatalog.
 
 .. code:: python
@@ -193,7 +193,7 @@ The structure of one classification label is like::
 
 
 
-To create a :class:`~tensorbay.label.label.Classification` label:
+To create a :class:`~tensorbay.label.label_classification.Classification` label:
 
 .. code:: python
 
@@ -229,14 +229,14 @@ ClassificationSubcatalog
 ========================
 
 Before adding the classification label to data,
-:class:`~tensorbay.label.subcatalog.ClassificationSubcatalog` should be defined.
+:class:`~tensorbay.label.label_classification.ClassificationSubcatalog` should be defined.
 
-:class:`~tensorbay.label.subcatalog.ClassificationSubcatalog`
+:class:`~tensorbay.label.label_classification.ClassificationSubcatalog`
 has categories and attributes information,
 see :ref:`reference/label_format:CategoryInformation` and
 :ref:`reference/label_format:AttributesInformation` for details.
 
-To add a :class:`~tensorbay.label.label.Classification` label to one data:
+To add a :class:`~tensorbay.label.label_classification.Classification` label to one data:
 
 .. code:: python
 
@@ -275,7 +275,7 @@ The structure of one Box2D label is like::
         "instance": <str>
     }
 
-To create a :class:`~tensorbay.label.label.LabeledBox2D` label:
+To create a :class:`~tensorbay.label.label_box.LabeledBox2D` label:
 
 .. code:: python
 
@@ -296,9 +296,9 @@ To create a :class:`~tensorbay.label.label.LabeledBox2D` label:
 Box2D.box2d
 ===========
 
-:class:`~tensorbay.label.label.LabeledBox2D` extends :class:`~tensorbay.geometry.box.Box2D`.
+:class:`~tensorbay.label.label_box.LabeledBox2D` extends :class:`~tensorbay.geometry.box.Box2D`.
 
-To construct a :class:`~tensorbay.label.label.LabeledBox2D` instance with only the geometry
+To construct a :class:`~tensorbay.label.label_box.LabeledBox2D` instance with only the geometry
 information,
 you can use the coordinates of the top-left and bottom-right vertexes of the 2D bounding box,
 or you can use the coordinate of the top-left vertex, the height and the width of the bounding box.
@@ -352,15 +352,15 @@ Box2DSubcatalog
 ===============
 
 Before adding the Box2D labels to data,
-:class:`~tensorbay.label.subcatalog.Box2DSubcatalog` should be defined.
+:class:`~tensorbay.label.label_box.Box2DSubcatalog` should be defined.
 
-:class:`~tensorbay.label.subcatalog.Box2DSubcatalog`
+:class:`~tensorbay.label.label_box.Box2DSubcatalog`
 has categories, attributes and tracking information,
 see :ref:`reference/label_format:CategoryInformation`,
 :ref:`reference/label_format:AttributesInformation` and
 :ref:`reference/label_format:TrackingInformation` for details.
 
-To add a :class:`~tensorbay.label.label.LabeledBox2D` label to one data:
+To add a :class:`~tensorbay.label.label_box.LabeledBox2D` label to one data:
 
 .. code:: python
 
@@ -415,7 +415,7 @@ The structure of one Box3D label is like::
         "instance": <str>
     }
 
-To create a :class:`~tensorbay.label.label.LabeledBox3D` label:
+To create a :class:`~tensorbay.label.label_box.LabeledBox3D` label:
 
 .. code:: python
 
@@ -442,9 +442,9 @@ To create a :class:`~tensorbay.label.label.LabeledBox3D` label:
 Box3D.box3d
 ===========
 
-:class:`~tensorbay.label.label.LabeledBox3D` extends :class:`~tensorbay.geometry.box.Box3D`.
+:class:`~tensorbay.label.label_box.LabeledBox3D` extends :class:`~tensorbay.geometry.box.Box3D`.
 
-To construct a :class:`~tensorbay.label.label.LabeledBox3D` instance with only the geometry
+To construct a :class:`~tensorbay.label.label_box.LabeledBox3D` instance with only the geometry
 information,
 you can use the transform matrix and the size of the 3D bounding box,
 or you can use translation and rotation to represent the transform of the 3D bounding box.
@@ -512,15 +512,15 @@ Box3DSubcatalog
 ===============
 
 Before adding the Box2D labels to data,
-:class:`~tensorbay.label.subcatalog.Box2DSubcatalog` should be defined.
+:class:`~tensorbay.label.label_box.Box2DSubcatalog` should be defined.
 
-:class:`~tensorbay.label.subcatalog.Box2DSubcatalog`
+:class:`~tensorbay.label.label_box.Box2DSubcatalog`
 has categories, attributes and tracking information,
 see :ref:`reference/label_format:CategoryInformation`,
 :ref:`reference/label_format:AttributesInformation` and
 :ref:`reference/label_format:TrackingInformation` for details.
 
-To add a :class:`~tensorbay.label.label.LabeledBox3D` label to one data:
+To add a :class:`~tensorbay.label.label_box.LabeledBox3D` label to one data:
 
 .. code:: python
 
@@ -565,7 +565,7 @@ The structure of one Keypoints2D label is like::
         "instance": <str>
     }
 
-To create a :class:`~tensorbay.label.label.LabeledKeypoints2D` label:
+To create a :class:`~tensorbay.label.label_keypoints.LabeledKeypoints2D` label:
 
 .. code:: python
 
@@ -590,10 +590,10 @@ To create a :class:`~tensorbay.label.label.LabeledKeypoints2D` label:
 Keypoints2D.keypoints2d
 =======================
 
-:class:`~tensorbay.label.label.LabeledKeypoints2D` extends
+:class:`~tensorbay.label.label_keypoints.LabeledKeypoints2D` extends
 :class:`~tensorbay.geometry.box.Keypoints2D`.
 
-To construct a :class:`~tensorbay.label.label.LabeledKeypoints2D` instance with only the geometry
+To construct a :class:`~tensorbay.label.label_keypoints.LabeledKeypoints2D` instance with only the geometry
 information,
 you need the coordinates of the set of 2D keypoints.
 You can also add the visible status of each 2D keypoint.
@@ -644,13 +644,13 @@ Keypoints2DSubcatalog
 =====================
 
 Before adding 2D keypoints labels to the dataset,
-:class:`~tensorbay.label.subcatalog.Keypoints2DSubcatalog` should be defined.
+:class:`~tensorbay.label.label_keypoints.Keypoints2DSubcatalog` should be defined.
 
 Besides :ref:`reference/label_format:AttributesInformation`,
 :ref:`reference/label_format:CategoryInformation`,
 :ref:`reference/label_format:TrackingInformation` in
-:class:`~tensorbay.label.subcatalog.Keypoints2DSubcatalog`,
-it also has :attr:`~tensorbay.label.subcatalog.Keypoints2DSubcatalog.keypoints`
+:class:`~tensorbay.label.label_keypoints.Keypoints2DSubcatalog`,
+it also has :attr:`~tensorbay.label.label_keypoints.Keypoints2DSubcatalog.keypoints`
 to describe a set of keypoints corresponding to certain categories.
 
 .. code:: python
@@ -676,7 +676,7 @@ to describe a set of keypoints corresponding to certain categories.
 
 We use :class:`~tensorbay.label.supports.KeypointsInfo` to describe a set of 2D keypoints.
 
-The first parameter of :meth:`~tensorbay.label.subcatalog.Keypoints2DSubcatalog.add_keypoints`
+The first parameter of :meth:`~tensorbay.label.label_keypoints.Keypoints2DSubcatalog.add_keypoints`
 is the number of the set of 2D keypoints, which is required.
 
 The ``names`` is a list of string representing the names for each 2D keypoint,
@@ -697,7 +697,7 @@ applies.
 Mostly, ``parent_categories`` is not given,
 which means the keypoints rule applies to all the categories of the entire dataset.
 
-To add a :class:`~tensorbay.label.label.LabeledKeypoints2D` label to one data:
+To add a :class:`~tensorbay.label.label_keypoints.LabeledKeypoints2D` label to one data:
 
 .. code:: python
 
@@ -761,7 +761,7 @@ The structure of one sentence label is like::
 
 
 
-To create a :class:`~tensorbay.label.label.LabeledSentence` label:
+To create a :class:`~tensorbay.label.label_sentence.LabeledSentence` label:
 
 .. code:: python
 
@@ -803,18 +803,18 @@ To create a :class:`~tensorbay.label.label.LabeledSentence` label:
 Sentence.sentence
 =================
 
-The :attr:`~tensorbay.label.label.LabeledSentence.sentence` of a
-:class:`~tensorbay.label.label.LabeledSentence` is a list of
-:class:`~tensorbay.label.label.Word`,
+The :attr:`~tensorbay.label.label_sentence.LabeledSentence.sentence` of a
+:class:`~tensorbay.label.label_sentence.LabeledSentence` is a list of
+:class:`~tensorbay.label.label_sentence.Word`,
 representing the transcripted sentence of the audio.
 
 
 Sentence.spell
 ==============
 
-The :attr:`~tensorbay.label.label.LabeledSentence.spell` of a
-:class:`~tensorbay.label.label.LabeledSentence` is a list of
-:class:`~tensorbay.label.label.Word`,
+The :attr:`~tensorbay.label.label_sentence.LabeledSentence.spell` of a
+:class:`~tensorbay.label.label_sentence.LabeledSentence` is a list of
+:class:`~tensorbay.label.label_sentence.Word`,
 representing the spell within the sentence.
 
 It is only for Chinese language.
@@ -822,16 +822,16 @@ It is only for Chinese language.
 Sentence.phone
 ==============
 
-The :attr:`~tensorbay.label.label.LabeledSentence.phone` of a
-:class:`~tensorbay.label.label.LabeledSentence` is a list of
-:class:`~tensorbay.label.label.Word`,
+The :attr:`~tensorbay.label.label_sentence.LabeledSentence.phone` of a
+:class:`~tensorbay.label.label_sentence.LabeledSentence` is a list of
+:class:`~tensorbay.label.label_sentence.Word`,
 representing the phone of the sentence label.
 
 
 Word
 ====
 
-:class:`~tensorbay.label.label.Word` is the basic component of a phonetic transcription sentence,
+:class:`~tensorbay.label.label_sentence.Word` is the basic component of a phonetic transcription sentence,
 containing the content of the word, the start and the end time in the audio.
 
 .. code:: python
@@ -844,10 +844,10 @@ containing the content of the word, the start and the end time in the audio.
       (end): 2
     )
 
-:attr:`~tensorbay.label.label.LabeledSentence.sentence`,
-:attr:`~tensorbay.label.label.LabeledSentence.spell`,
-and :attr:`~tensorbay.label.label.LabeledSentence.phone` of a sentence label all compose of
-:class:`~tensorbay.label.label.Word`.
+:attr:`~tensorbay.label.label_sentence.LabeledSentence.sentence`,
+:attr:`~tensorbay.label.label_sentence.LabeledSentence.spell`,
+and :attr:`~tensorbay.label.label_sentence.LabeledSentence.phone` of a sentence label all compose of
+:class:`~tensorbay.label.label_sentence.Word`.
 
 Sentence.Attributes
 ===================
@@ -859,13 +859,13 @@ SentenceSubcatalog
 ==================
 
 Before adding sentence labels to the dataset,
-:class:`~tensorbay.label.subcatalog.SentenceSubcatalog` should be defined.
+:class:`~tensorbay.label.label_sentence.SetenceSubcatalog` should be defined.
 
 Besides :ref:`reference/label_format:AttributesInformation` in
-:class:`~tensorbay.label.subcatalog.SentenceSubcatalog`,
-it also has :attr:`~tensorbay.label.subcatalog.SentenceSubcatalog.is_sample`,
-:attr:`~tensorbay.label.subcatalog.SentenceSubcatalog.sample_rate`
-and :attr:`~tensorbay.label.subcatalog.SentenceSubcatalog.lexicon`.
+:class:`~tensorbay.label.label_sentence.SetenceSubcatalog`,
+it also has :attr:`~tensorbay.label.label_sentence.SetenceSubcatalog.is_sample`,
+:attr:`~tensorbay.label.label_sentence.SetenceSubcatalog.sample_rate`
+and :attr:`~tensorbay.label.label_sentence.SetenceSubcatalog.lexicon`.
 to describe the transcripted sentences of the audio.
 
 .. code:: python
@@ -893,7 +893,7 @@ If ``is_sample`` is Ture, then ``sample_rate`` must be provided.
 The ``lexicon`` is a list consists all of text and phone.
 
 Besides giving the parameters while initialing
-:class:`~tensorbay.label.subcatalog.SentenceSubcatalog`,
+:class:`~tensorbay.label.label_sentence.SetenceSubcatalog`,
 you can set them after intialization.
 
 .. code:: python
@@ -910,7 +910,7 @@ you can set them after intialization.
      (lexicon): [...]
    )
 
-To add a :class:`~tensorbay.label.label.LabeledSentence` label to one data:
+To add a :class:`~tensorbay.label.label_sentence.LabeledSentence` label to one data:
 
 .. code:: python
 
