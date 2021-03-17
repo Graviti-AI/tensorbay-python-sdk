@@ -19,7 +19,7 @@ ACCESS_KEY = "Accesskey-*****"
 gas = GAS(ACCESS_KEY)
 """"""
 
-"""Create a Dataset"""
+"""Create Dataset"""
 gas.create_dataset("BSTLD")
 """"""
 
@@ -59,6 +59,6 @@ category = label_box2d.category
 attributes = label_box2d.attributes
 """"""
 
-"""Delete a Dataset"""
+"""Delete Dataset"""
 gas.delete_dataset("BSTLD")
 """"""

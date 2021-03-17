@@ -26,15 +26,15 @@ First of all, create a :ref:`features/tensorbay_client:GAS Client`.
    :start-after: """Authorize a Client Object"""
    :end-before: """"""
 
-******************
- Create a Dataset
-******************
+****************
+ Create Dataset
+****************
 
 Then, create a dataset client by passing the dataset name to the GAS client.
 
 .. literalinclude:: ../../../examples/bstld.py
    :language: python
-   :start-after: """Create a Dataset"""
+   :start-after: """Create Dataset"""
    :end-before: """"""
 
 ********************
@@ -182,13 +182,13 @@ Please see :ref:`this page <features/version_control:Version Control>` for more 
 
 .. _gas: https://www.graviti.cn/tensorBay
 
-******************
- Delete a Dataset
-******************
+****************
+ Delete Dataset
+****************
 
 To delete "BSTLD", run the following code:
 
 .. literalinclude:: ../../../examples/bstld.py
    :language: python
-   :start-after: """Delete a Dataset"""
+   :start-after: """Delete Dataset"""
    :end-before: """"""
