@@ -21,12 +21,10 @@ See `this page <https://www.graviti.cn/open-datasets/BSTLD>`_  for more details 
 
 First of all, create a :ref:`features/tensorbay_client:GAS Client`.
 
-.. code:: python
-
-   from tensorbay import GAS
-
-   ACCESS_KEY = "Accesskey-*****"
-   gas = GAS(ACCESS_KEY)
+.. literalinclude:: ../../../examples/bstld.py
+   :language: python
+   :start-after: """Authorize a Client Object"""
+   :end-before: """"""
 
 ******************
  Create a Dataset
@@ -34,9 +32,10 @@ First of all, create a :ref:`features/tensorbay_client:GAS Client`.
 
 Then, create a dataset client by passing the dataset name to the GAS client.
 
-.. code:: python
-
-   gas.create_dataset("BSTLD")
+.. literalinclude:: ../../../examples/bstld.py
+   :language: python
+   :start-after: """Create a Dataset"""
+   :end-before: """"""
 
 ********************
  List Dataset Names
@@ -45,9 +44,10 @@ Then, create a dataset client by passing the dataset name to the GAS client.
 To check if you have created "BSTLD" dataset, you can list all your available datasets.
 See :ref:`this page <features/dataset_management:Read Dataset>` for details.
 
-.. code:: python
-
-   list(gas.list_dataset_names())
+.. literalinclude:: ../../../examples/bstld.py
+   :language: python
+   :start-after: """List Dataset Names"""
+   :end-before: """"""
 
 .. note::
 
@@ -79,7 +79,7 @@ Write the Dataloader
 
 The second step is to write the :ref:`reference/glossary:Dataloader`.
 The function of :ref:`reference/glossary:Dataloader` is to read the dataset into a
-:class:`~tensorbay.dataset.dataset.Dataset`object.
+:class:`~tensorbay.dataset.dataset.Dataset` object.
 The :ref:`code block <BSTLD-dataloader>` below displays the "BSTLD" dataloader.
 
 .. literalinclude:: ../../../tensorbay/opendataset/BSTLD/loader.py
@@ -111,13 +111,10 @@ After you finish the :ref:`reference/glossary:Dataloader` and organize the "BSTL
 :class:`~tensorbay.dataset.dataset.Dataset` object, you can upload it
 to TensorBay for sharing, reuse, etc.
 
-.. code:: python
-
-   from tensorbay.opendataset import BSTLD
-
-   dataset = BSTLD("path/to/dataset/directory")
-   dataset_client = gas.upload_dataset(dataset, jobs=8, skip_uploaded_files=False)
-   dataset_client.commit("BSTLD")
+.. literalinclude:: ../../../examples/bstld.py
+   :language: python
+   :start-after: """Upload Dataset"""
+   :end-before: """"""
 
 **************
  Read Dataset
@@ -125,33 +122,35 @@ to TensorBay for sharing, reuse, etc.
 
 Now you can read "BSTLD" dataset from TensorBay.
 
-.. code:: python
-
-   dataset_client = gas.get_dataset("BSTLD")
+.. literalinclude:: ../../../examples/bstld.py
+   :language: python
+   :start-after: """Read Dataset / get dataset"""
+   :end-before: """"""
 
 In :ref:`reference/dataset_structure:Dataset` "BSTLD", there are three
 :ref:`Segments <reference/dataset_structure:Segment>`: ``train``, ``test`` and ``additional``,
 you can get the segment names by list them all.
 
-.. code:: python
+.. literalinclude:: ../../../examples/bstld.py
+   :language: python
+   :start-after: """Read Dataset / list segment names"""
+   :end-before: """"""
 
-   list(dataset_client.list_segment_names())
+You can get a segment by passing the required segment name.
 
-You can get a segment by passing the required segment name or by index.
-
-.. code:: python
-
-   from tensorbay.dataset import Segment
-   train_segment = Segment("train", dataset_client)
-   first_segment = dataset[0]
+.. literalinclude:: ../../../examples/bstld.py
+   :language: python
+   :start-after: """Read Dataset / get segment"""
+   :end-before: """"""
 
 
 In the train :ref:`reference/dataset_structure:Segment`, there is a sequence of :ref:`reference/dataset_structure:Data`. You
 can get one by index.
 
-.. code::python
-
-   data = train_segment[3]
+.. literalinclude:: ../../../examples/bstld.py
+   :language: python
+   :start-after: """Read Dataset / get data"""
+   :end-before: """"""
 
 .. note::
 
@@ -163,11 +162,10 @@ In each :ref:`reference/dataset_structure:Data`,
 there is a sequence of :ref:`reference/label_format:Box2D` annotations.
 You can get one by index.
 
-.. code:: python
-
-   label_box2d = data.label.box2d[0]
-   category = label_box2d.category
-   attributes = label_box2d.attributes
+.. literalinclude:: ../../../examples/bstld.py
+   :language: python
+   :start-after: """Read Dataset / get label"""
+   :end-before: """"""
 
 There is only one label type in "BSTLD" dataset, which is ``box2d``. The annotation "RedLeft" is
 stored in :ref:`reference/label_format:Category` of :ref:`reference/label_format:Box2D`.
@@ -190,6 +188,7 @@ Please see :ref:`this page <features/version_control:Version Control>` for more 
 
 To delete "BSTLD", run the following code:
 
-.. code:: python
-
-   gas.delete_dataset("BSTLD")
+.. literalinclude:: ../../../examples/bstld.py
+   :language: python
+   :start-after: """Delete a Dataset"""
+   :end-before: """"""
