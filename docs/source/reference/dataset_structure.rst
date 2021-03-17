@@ -36,7 +36,7 @@ The corresponding class of dataset is :class:`~tensorbay.dataset.dataset.Dataset
 
 Catalog is used for storing label meta information.
 It collects all the labels corresponding to a dataset.
-There could be one or several subcatalogs (:ref:`ref <supported_label_types:supported label types>`)
+There could be one or several subcatalogs (:ref:`reference/label_format:Label Format`)
 under one catalog, each of which only stores label meta information of one label type.
 
 For example, there is only one subcatalog ("BOX3D") in the catalog of dataset `Neolix OD`_.
