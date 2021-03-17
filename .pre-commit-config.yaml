@@ -121,7 +121,7 @@ repos:
             "--good-names=i,j,k,x,y,z,w,fp",
             "--disable=bad-continuation",
             "--generated-members=torch.*,cv2.*",
-            "--min-similarity-lines=10",
+            "--min-similarity-lines=15",
             "--notes=FIXME,XXX",
           ]
 
