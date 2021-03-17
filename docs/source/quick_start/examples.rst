@@ -7,6 +7,7 @@ We write an example for each
 Click following links for details.
 
 .. toctree::
+   :hidden:
    :maxdepth: 1
 
    ../examples/DogsVsCats
