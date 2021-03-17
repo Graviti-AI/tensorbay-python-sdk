@@ -14,15 +14,15 @@ and has a corresponding :ref:`subcatalog<basic_concepts:Catalog & Subcatalog>` c
 .. table:: supported label types
    :widths: auto
 
-   ===========================================  ==================================================  =============================================================
-   supported label types                          label classes                                       subcatalog classes
-   ===========================================  ==================================================  =============================================================
-   :ref:`supported_label_types:Classification`  :class:`~tensorbay.label.label.Classification`      :class:`~tensorbay.label.subcatalog.ClassificationSubcatalog`
-   :ref:`supported_label_types:Box2D`           :class:`~tensorbay.label.label.LabeledBox2D`        :class:`~tensorbay.label.subcatalog.Box2DSubcatalog`
-   :ref:`supported_label_types:Box3D`           :class:`~tensorbay.label.label.LabeledBox3D`        :class:`~tensorbay.label.subcatalog.Box3DSubcatalog`
-   :ref:`supported_label_types:Keypoints2D`     :class:`~tensorbay.label.label.LabeledKeypoints2D`  :class:`~tensorbay.label.subcatalog.Keypoints2DSubcatalog`
-   :ref:`supported_label_types:Sentence`        :class:`~tensorbay.label.label.LabeledSentence`     :class:`~tensorbay.label.subcatalog.SentenceSubcatalog`
-   ===========================================  ==================================================  =============================================================
+   ============================================   ==================================================   =============================================================
+   supported label types                           label classes                                       subcatalog classes
+   ============================================   ==================================================   =============================================================
+   :ref:`reference/label_format:Classification`   :class:`~tensorbay.label.label.Classification`       :class:`~tensorbay.label.subcatalog.ClassificationSubcatalog`
+   :ref:`reference/label_format:Box2D`            :class:`~tensorbay.label.label.LabeledBox2D`         :class:`~tensorbay.label.subcatalog.Box2DSubcatalog`
+   :ref:`reference/label_format:Box3D`            :class:`~tensorbay.label.label.LabeledBox3D`         :class:`~tensorbay.label.subcatalog.Box3DSubcatalog`
+   :ref:`reference/label_format:Keypoints2D`      :class:`~tensorbay.label.label.LabeledKeypoints2D`   :class:`~tensorbay.label.subcatalog.Keypoints2DSubcatalog`
+   :ref:`reference/label_format:Sentence`         :class:`~tensorbay.label.label.LabeledSentence`      :class:`~tensorbay.label.subcatalog.SentenceSubcatalog`
+   ============================================   ==================================================   =============================================================
 
 *************************
  Common Label Properties
@@ -34,7 +34,7 @@ Some are more general, and some are unique to a specific label type.
 We first introduce three common properties of a label,
 and the unique ones will be explained under the corresponding type of label.
 
-Here we take a :ref:`2D box label <supported_label_types:Box2D>` as an example:
+Here we take a :ref:`2D box label <reference/label_format:Box2D>` as an example:
 
 .. code:: python
 
@@ -118,7 +118,7 @@ CategoryInformation
 If the label of this type in the dataset has category,
 then the subcatalog should contain all the optional categories.
 
-Each :ref:`category<supported_label_types:Category>` of a label
+Each :ref:`category<reference/label_format:Category>` of a label
 appeared in the dataset should be within the categories of the subcatalog.
 
 You can add category information to the subcatalog.
@@ -132,7 +132,7 @@ You can add category information to the subcatalog.
     }
 
 We use :class:`~tensorbay.label.supports.CategoryInfo` to describe
-a :ref:`category<supported_label_types:Category>`.
+a :ref:`category<reference/label_format:Category>`.
 See details in :class:`~tensorbay.label.supports.CategoryInfo`.
 
 AttributesInformation
@@ -141,7 +141,7 @@ AttributesInformation
 If the label of this type in the dataset has attributes,
 then the subcatalog should contain all the rules for different attributes.
 
-Each :ref:`attribute<supported_label_types:Attributes>` of a label
+Each :ref:`attribute<reference/label_format:Attributes>` of a label
 appeared in the dataset should follow the rules set in the attributes of the subcatalog.
 
 You can add attribute information to the subcatalog.
@@ -161,7 +161,7 @@ You can add attribute information to the subcatalog.
     }
 
 We use :class:`~tensorbay.label.attributes.AttributeInfo` to describe the rules of an
-:ref:`attribute<supported_label_types:Attributes>`, which refers to the `Json schema`_ method.
+:ref:`attribute<reference/label_format:Attributes>`, which refers to the `Json schema`_ method.
 
 See details in :class:`~tensorbay.label.attributes.AttributeInfo`.
 
@@ -213,13 +213,13 @@ Classification.Category
 =======================
 
 The category of the entire data file.
-See :ref:`supported_label_types:Category` for details.
+See :ref:`reference/label_format:Category` for details.
 
 Classification.Attributes
 =========================
 
 The attributes of the entire data file.
-See :ref:`supported_label_types:Attributes` for details.
+See :ref:`reference/label_format:Attributes` for details.
 
 .. note::
 
@@ -233,8 +233,8 @@ Before adding the classification label to data,
 
 :class:`~tensorbay.label.subcatalog.ClassificationSubcatalog`
 has categories and attributes information,
-see :ref:`supported_label_types:CategoryInformation` and
-:ref:`supported_label_types:AttributesInformation` for details.
+see :ref:`reference/label_format:CategoryInformation` and
+:ref:`reference/label_format:AttributesInformation` for details.
 
 To add a :class:`~tensorbay.label.label.Classification` label to one data:
 
@@ -333,20 +333,20 @@ Box2D.Category
 ==============
 
 The category of the object inside the 2D bounding box.
-See :ref:`supported_label_types:Category` for details.
+See :ref:`reference/label_format:Category` for details.
 
 Box2D.Attributes
 ================
 
 Attributes are the additional information about this object, which are stored in key-value pairs.
-See :ref:`supported_label_types:Attributes` for details.
+See :ref:`reference/label_format:Attributes` for details.
 
 Box2D.Instance
 ==============
 
 Instance is the unique ID for the object inside of the 2D bounding box,
 which is mostly used for tracking tasks.
-See :ref:`supported_label_types:Instance` for details.
+See :ref:`reference/label_format:Instance` for details.
 
 Box2DSubcatalog
 ===============
@@ -356,9 +356,9 @@ Before adding the Box2D labels to data,
 
 :class:`~tensorbay.label.subcatalog.Box2DSubcatalog`
 has categories, attributes and tracking information,
-see :ref:`supported_label_types:CategoryInformation`,
-:ref:`supported_label_types:AttributesInformation` and
-:ref:`supported_label_types:TrackingInformation` for details.
+see :ref:`reference/label_format:CategoryInformation`,
+:ref:`reference/label_format:AttributesInformation` and
+:ref:`reference/label_format:TrackingInformation` for details.
 
 To add a :class:`~tensorbay.label.label.LabeledBox2D` label to one data:
 
@@ -493,20 +493,20 @@ Box3D.Category
 ==============
 
 The category of the object inside the 3D bounding box.
-See :ref:`supported_label_types:Category` for details.
+See :ref:`reference/label_format:Category` for details.
 
 Box3D.Attributes
 ================
 
 Attributes are the additional information about this object, which are stored in key-value pairs.
-See :ref:`supported_label_types:Attributes` for details.
+See :ref:`reference/label_format:Attributes` for details.
 
 Box3D.Instance
 ==============
 
 Instance is the unique id for the object inside of the 3D bounding box,
 which is mostly used for tracking tasks.
-See :ref:`supported_label_types:Instance` for details.
+See :ref:`reference/label_format:Instance` for details.
 
 Box3DSubcatalog
 ===============
@@ -516,9 +516,9 @@ Before adding the Box2D labels to data,
 
 :class:`~tensorbay.label.subcatalog.Box2DSubcatalog`
 has categories, attributes and tracking information,
-see :ref:`supported_label_types:CategoryInformation`,
-:ref:`supported_label_types:AttributesInformation` and
-:ref:`supported_label_types:TrackingInformation` for details.
+see :ref:`reference/label_format:CategoryInformation`,
+:ref:`reference/label_format:AttributesInformation` and
+:ref:`reference/label_format:TrackingInformation` for details.
 
 To add a :class:`~tensorbay.label.label.LabeledBox3D` label to one data:
 
@@ -625,20 +625,20 @@ Keypoints2D.Category
 ====================
 
 The category of the object inside the 3D bounding box.
-See :ref:`supported_label_types:Category` for details.
+See :ref:`reference/label_format:Category` for details.
 
 Keypoints2D.Attributes
 ======================
 
 Attributes are the additional information about this object, which are stored in key-value pairs.
-See :ref:`supported_label_types:Attributes` for details.
+See :ref:`reference/label_format:Attributes` for details.
 
 Keypoints2D.Instance
 ====================
 
 Instance is the unique ID for the object inside of the 3D bounding box,
 which is mostly used for tracking tasks.
-See :ref:`supported_label_types:Instance` for details.
+See :ref:`reference/label_format:Instance` for details.
 
 Keypoints2DSubcatalog
 =====================
@@ -646,9 +646,9 @@ Keypoints2DSubcatalog
 Before adding 2D keypoints labels to the dataset,
 :class:`~tensorbay.label.subcatalog.Keypoints2DSubcatalog` should be defined.
 
-Besides :ref:`supported_label_types:AttributesInformation`,
-:ref:`supported_label_types:CategoryInformation`,
-:ref:`supported_label_types:TrackingInformation` in
+Besides :ref:`reference/label_format:AttributesInformation`,
+:ref:`reference/label_format:CategoryInformation`,
+:ref:`reference/label_format:TrackingInformation` in
 :class:`~tensorbay.label.subcatalog.Keypoints2DSubcatalog`,
 it also has :attr:`~tensorbay.label.subcatalog.Keypoints2DSubcatalog.keypoints`
 to describe a set of keypoints corresponding to certain categories.
@@ -853,7 +853,7 @@ Sentence.Attributes
 ===================
 
 The attributes of the transcripted sentence.
-See :ref:`supported_label_types:AttributesInformation` for details.
+See :ref:`reference/label_format:AttributesInformation` for details.
 
 SentenceSubcatalog
 ==================
@@ -861,7 +861,7 @@ SentenceSubcatalog
 Before adding sentence labels to the dataset,
 :class:`~tensorbay.label.subcatalog.SentenceSubcatalog` should be defined.
 
-Besides :ref:`supported_label_types:AttributesInformation` in
+Besides :ref:`reference/label_format:AttributesInformation` in
 :class:`~tensorbay.label.subcatalog.SentenceSubcatalog`,
 it also has :attr:`~tensorbay.label.subcatalog.SentenceSubcatalog.is_sample`,
 :attr:`~tensorbay.label.subcatalog.SentenceSubcatalog.sample_rate`
