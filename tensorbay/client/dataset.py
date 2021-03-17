@@ -90,6 +90,19 @@ class DatasetClientBase:
         response = self._client.open_api_do("POST", "drafts", self.dataset_id, json=post_data)
         return response.json()["draftNumber"]  # type: ignore[no-any-return]
 
+    def _list_drafts(
+        self, *, start: int = 0, stop: int = sys.maxsize, page_size: int = 128
+    ) -> Iterator[Dict[str, str]]:
+        params: Dict[str, Any] = {}
+
+        for params["offset"], params["limit"] in paging_range(start, stop, page_size):
+            response = self._client.open_api_do(
+                "GET", "drafts", self.dataset_id, params=params
+            ).json()
+            yield from response["drafts"]
+            if response["recordSize"] + response["offset"] >= response["totalCount"]:
+                break
+
     def _create_segment(self, name: str) -> None:
         post_data: Dict[str, Any] = {"name": name}
         post_data.update(self._status.get_status_info())
@@ -148,6 +161,21 @@ class DatasetClientBase:
         """
         self._status.check_authority_for_commit()
         self._status.checkout(draft_number=self._create_draft(title))
+
+    def list_draft_names_and_numbers(
+        self, *, start: int = 0, stop: int = sys.maxsize
+    ) -> Iterator[Dict[str, str]]:
+        """List the dict containing name and number of drafts.
+
+        Arguments:
+            start: The index to start.
+            stop: The index to end.
+
+        Yields:
+            The dict containing name and number of drafts.
+
+        """
+        yield from self._list_drafts(start=start, stop=stop)
 
     def checkout(self, commit: Optional[str] = None, draft_number: Optional[int] = None) -> None:
         """Checkout to commit or draft.
