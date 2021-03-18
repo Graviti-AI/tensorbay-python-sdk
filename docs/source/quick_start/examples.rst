@@ -26,6 +26,8 @@
                                                                                           | dataset, which is an image dataset with :ref:`reference/label_format:Keypoints2D` label.
    :ref:`Dataset Management: THCHS-30 <examples/THCHS30:THCHS-30>`                        | This example describes how to manage `THCHS-30`_ dataset,
                                                                                           | which is an audio dataset with :ref:`reference/label_format:Sentence` label.
+   :ref:`Read "Dataset" Class: BSTLD <examples/read_dataset_class:Read "Dataset" Class>`  | This example describes how to read `BSTLD`_ dataset
+                                                                                          | when it has been organized by a :class:`~tensorbay.dataset.dataset.Dataset` class.
    =====================================================================================  ====================================================================================
 
 .. _Dogs vs. Cats: https://www.graviti.cn/open-datasets/DogsVsCats
@@ -46,3 +48,4 @@
    ../examples/NeolixOD
    ../examples/THCHS30
    ../examples/NewsGroups20
+   ../examples/read_dataset_class
