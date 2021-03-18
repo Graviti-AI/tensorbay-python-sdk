@@ -60,6 +60,9 @@ class UserSequence(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancesto
     def __getitem__(self, index: Union[int, slice]) -> Union[Sequence[_T], _T]:
         return self._data.__getitem__(index)
 
+    def __iter__(self) -> Iterator[_T]:
+        return self._data.__iter__()
+
     def index(self, value: _T, start: int = 0, stop: int = -1) -> int:
         """Return the first index of the value.
 
@@ -122,6 +125,9 @@ class UserMutableSequence(MutableSequence[_T], ReprMixin):  # pylint: disable=to
 
     def __delitem__(self, index: Union[int, slice]) -> None:
         self._data.__delitem__(index)
+
+    def __iter__(self) -> Iterator[_T]:
+        return self._data.__iter__()
 
     def __iadd__(self, value: Iterable[_T]) -> MutableSequence[_T]:
         return self._data.__iadd__(value)

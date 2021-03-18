@@ -41,16 +41,21 @@ class TestVector:
         assert (vector_1 == vector_2) == True
         assert (vector_1 == vector_3) == False
         assert (vector_1 == vector_4) == False
+        assert (vector_1 == (1, 2)) == False
 
     def test_add(self):
         vector_2d = Vector(1, 2)
         vector_3d = Vector(1, 2, 3)
-        with pytest.raises(ValueError):
+        with pytest.raises(TypeError):
             vector_2d + vector_3d
+        with pytest.raises(TypeError):
+            vector_2d + (1, 2, 3)
         with pytest.raises(TypeError):
             vector_2d + 1
         assert Vector(1, 1) + Vector(1, 1) == Vector(2, 2)
+        assert Vector(1, 1) + (1, 1) == Vector(2, 2)
         assert Vector(1, 1, 1) + Vector(1, 1, 1) == Vector(2, 2, 2)
+        assert Vector(1, 1, 1) + (1, 1, 1) == Vector(2, 2, 2)
 
     def test_radd(self):
         vector = Vector(1, 2)
