@@ -19,7 +19,7 @@ See `this page <https://www.graviti.cn/open-datasets/BSTLD>`_  for more details 
  Authorize a Client Object
 ***************************
 
-First of all, create a :ref:`features/tensorbay_client:GAS Client`.
+First of all, create a GAS client.
 
 .. literalinclude:: ../../../examples/bstld.py
    :language: python
