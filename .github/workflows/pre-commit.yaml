@@ -17,6 +17,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -44,8 +46,14 @@ jobs:
           path: ~/.cache/pre-commit
           key: ${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
 
-      - name: Run pre commit
+      - name: Run pre commit for all files
         run: |
           pre-commit run --all-files
           git show --format=%B --no-patch > commit-msg
           pre-commit run --commit-msg-filename commit-msg --hook-stage commit-msg gitlint
+
+      - name: Run pre-commit for commit files
+        if: always()
+        run: |
+          git reset --soft HEAD~1
+          pre-commit run
