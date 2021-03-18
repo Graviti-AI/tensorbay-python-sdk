@@ -47,15 +47,10 @@ The only input of the function should be a str indicating the path to the folder
 and the return value should be the loaded :class:`~tensorbay.dataset.dataset.Dataset`
 or :class:`~tensorbay.dataset.dataset.FusionDataset` instance.
 
-.. code:: python
-
-   from tensorbay.dataset import Dataset
-
-   def dataset_name(path: str):
-       dataset = Dataset("dataset_name")
-       # organize the files( and the labels) under the path to the dataset
-       ...
-       return dataset
+.. literalinclude:: ../../../examples/glossary.py
+      :language: python
+      :start-after: """dataloader"""
+      :end-before: """"""
 
 See more dataloader examples in :ref:`api/opendataset/opendataset_module:tensorbay.opendataset`.
 
