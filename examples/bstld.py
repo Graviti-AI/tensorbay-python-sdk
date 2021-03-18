@@ -9,7 +9,6 @@
 # pylint: disable=ungrouped-imports
 # pylint: disable=import-error
 # pylint: disable=pointless-string-statement
-# pylint: disable=reimported
 
 """This file includes the python code of BSTLD.rst and read_dataset_class.rst."""
 
@@ -28,10 +27,14 @@ gas.create_dataset("BSTLD")
 list(gas.list_dataset_names())
 """"""
 
-"""Upload Dataset"""
+""""Read Dataset Class / organize dataset"""
 from tensorbay.opendataset import BSTLD
 
 dataset = BSTLD("path/to/dataset/directory")
+""""""
+
+"""Upload Dataset"""
+# dataset is the one you initialized in "Organize Dataset" section
 dataset_client = gas.upload_dataset(dataset, jobs=8, skip_uploaded_files=False)
 dataset_client.commit("BSTLD")
 """"""
@@ -42,12 +45,6 @@ dataset_client = gas.get_dataset("BSTLD")
 
 """Read Dataset / list segment names"""
 list(dataset_client.list_segment_names())
-""""""
-
-""""Read Dataset Class / organize dataset"""
-from tensorbay.opendataset import BSTLD
-
-dataset = BSTLD("path/to/dataset/directory")
 """"""
 
 """Read Dataset Class / get a segment"""
