@@ -9,8 +9,9 @@
 # pylint: disable=ungrouped-imports
 # pylint: disable=import-error
 # pylint: disable=pointless-string-statement
+# pylint: disable=reimported
 
-"""This file includes the python code of BSTLD.rst."""
+"""This file includes the python code of BSTLD.rst and read_dataset_class.rst."""
 
 """Authorize a Client Object"""
 from tensorbay import GAS
@@ -41,6 +42,17 @@ dataset_client = gas.get_dataset("BSTLD")
 
 """Read Dataset / list segment names"""
 list(dataset_client.list_segment_names())
+""""""
+
+""""Read Dataset Class / organize dataset"""
+from tensorbay.opendataset import BSTLD
+
+dataset = BSTLD("path/to/dataset/directory")
+""""""
+
+"""Read Dataset Class / get a segment"""
+train_segment = dataset.get_segment_by_name("train")
+first_segment = dataset[0]
 """"""
 
 """Read Dataset / get segment"""

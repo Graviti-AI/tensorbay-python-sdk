@@ -34,10 +34,10 @@ The local directory structure for "BSTLD" should be like:
        train.yaml
        additional_train.yaml
 
-.. code:: python
-
-   from graviti.opendataset import BSTLD
-   dataset = BSTLD("path/to/dataset/directory")
+.. literalinclude:: ../../../examples/bstld.py
+   :language: python
+   :start-after: """"Read Dataset Class / organize dataset"""
+   :end-before: """"""
 
 .. warning::
 
@@ -50,24 +50,24 @@ The local directory structure for "BSTLD" should be like:
 TensorBay supplies two methods to fetch :ref:`reference/dataset_structure:Segment` from
 :ref:`reference/dataset_structure:Dataset`.
 
-.. code:: python
-
-   train_segment = dataset.get_segment_by_name("train")
-   first_segment = dataset[0]
+.. literalinclude:: ../../../examples/bstld.py
+   :language: python
+   :start-after: """Read Dataset Class / get a segment"""
+   :end-before: """"""
 
 The :ref:`reference/dataset_structure:Segment` you get now is the same as the one you :ref:`read from TensorBay <examples/BSTLD:Read Dataset>`.
 In the train :ref:`reference/dataset_structure:Segment`, there is a sequence of :ref:`reference/dataset_structure:Data`. You
 can get one by index.
 
-.. code:: python
-
-   data = train_segment[3]
+.. literalinclude:: ../../../examples/bstld.py
+   :language: python
+   :start-after: """Read Dataset / get data"""
+   :end-before: """"""
 
 In each :ref:`reference/dataset_structure:Data`, there is a sequence of :ref:`reference/label_format:Box2D` annotations.
 You can get one by index.
 
-.. code:: python
-
-   label_box2d = data.label.box2d[0]
-   category = label_box2d.category
-   attributes = label_box2d.attributes
+.. literalinclude:: ../../../examples/bstld.py
+   :language: python
+   :start-after: """Read Dataset / get label"""
+   :end-before: """"""
