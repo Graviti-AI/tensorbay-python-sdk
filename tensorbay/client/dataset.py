@@ -233,7 +233,7 @@ class DatasetClientBase:
         """
         yield from (segment["name"] for segment in self._list_segments(start=start, stop=stop))
 
-    def get_catalog(self) -> Catalog:
+    def get_catalog(self) -> Optional[Catalog]:
         """Get the catalog of the certain commit.
 
         Returns:
@@ -245,7 +245,8 @@ class DatasetClientBase:
         response = self._client.open_api_do(
             "GET", "labels/catalogs", self.dataset_id, params=params
         ).json()
-        return Catalog.loads(response["catalog"])
+        catalog = response["catalog"]
+        return Catalog.loads(catalog) if catalog else None
 
     def upload_catalog(self, catalog: Catalog) -> None:
         """Upload a catalog to the draft.
