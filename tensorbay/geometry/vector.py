@@ -14,7 +14,8 @@ coordinates of a 2D vector or a 3D vector.
 
 """
 
-from typing import Dict, Optional, Sequence, Tuple, Type, TypeVar, Union
+from itertools import zip_longest
+from typing import Dict, Iterable, Optional, Sequence, Tuple, Type, TypeVar, Union
 
 from ..utility import ReprType, UserSequence
 
@@ -89,7 +90,7 @@ class Vector(UserSequence[float]):
 
         return False
 
-    def __add__(self: _V, other: Sequence[float]) -> _V:
+    def __add__(self: _V, other: Iterable[float]) -> _V:
         """Calculate the sum of the vector and other vector.
 
         Arguments:
@@ -98,18 +99,13 @@ class Vector(UserSequence[float]):
         Returns:
             The sum vector of adding two vectors.
 
-        Raises:
-            ValueError: If the vector to be added has different dimension.
-
         """
-        if not isinstance(other, Sequence):  # pylint: disable=W1116
+        try:
+            result: _V = object.__new__(self.__class__)
+            result._data = tuple(i + j for i, j in zip_longest(self._data, other))
+            return result
+        except TypeError:
             return NotImplemented
-
-        if len(self._data) != len(other):
-            raise ValueError("Vectors to be added must have the same dimension")
-        result: _V = object.__new__(self.__class__)
-        result._data = tuple(i + j for i, j in zip(self._data, other))
-        return result
 
     def __radd__(self: _V, other: Sequence[float]) -> _V:
         """Calculate the sum of the vector and the other vector.
