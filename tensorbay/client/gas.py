@@ -228,8 +228,8 @@ class GAS:
     def upload_dataset(
         self,
         dataset: Dataset,
+        draft_number: Optional[int] = None,
         *,
-        draft_number: Optional[int],
         jobs: int = 1,
         skip_uploaded_files: bool = False,
     ) -> DatasetClient:
@@ -239,8 +239,8 @@ class GAS:
     def upload_dataset(
         self,
         dataset: FusionDataset,
+        draft_number: Optional[int] = None,
         *,
-        draft_number: Optional[int],
         jobs: int = 1,
         skip_uploaded_files: bool = False,
     ) -> FusionDatasetClient:
@@ -250,8 +250,8 @@ class GAS:
     def upload_dataset(
         self,
         dataset: Union[Dataset, FusionDataset],
+        draft_number: Optional[int] = None,
         *,
-        draft_number: Optional[int],
         jobs: int = 1,
         skip_uploaded_files: bool = False,
     ) -> DatasetClientType:
@@ -260,8 +260,8 @@ class GAS:
     def upload_dataset(
         self,
         dataset: Union[Dataset, FusionDataset],
+        draft_number: Optional[int] = None,
         *,
-        draft_number: Optional[int],
         jobs: int = 1,
         skip_uploaded_files: bool = False,
     ) -> DatasetClientType:
