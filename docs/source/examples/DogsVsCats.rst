@@ -13,12 +13,10 @@ See `this page <https://www.graviti.cn/open-datasets/DogsVsCats>`_  for more det
 
 First of all, create a GAS client.
 
-.. code:: python
-
-   from tensorbay import GAS
-
-   ACCESS_KEY = "Accesskey-*****"
-   gas = GAS(ACCESS_KEY)
+.. literalinclude:: ../../../examples/dogsvscats.py
+   :language: python
+   :start-after: """Authorize a Client Object"""
+   :end-before: """"""
 
 ****************
  Create Dataset
@@ -26,9 +24,10 @@ First of all, create a GAS client.
 
 Then, create a dataset client by passing the dataset name to the GAS client.
 
-.. code:: python
-
-   gas.create_dataset("Dogs vs. Cats")
+.. literalinclude:: ../../../examples/dogsvscats.py
+   :language: python
+   :start-after: """Create Dataset"""
+   :end-before: """"""
 
 ********************
  List Dataset Names
@@ -37,9 +36,10 @@ Then, create a dataset client by passing the dataset name to the GAS client.
 To check if you have created "Dogs vs. Cats" dataset, you can list all your available datasets.
 See :ref:`this page <features/dataset_management:Read Dataset>` for details.
 
-.. code:: python
-
-   list(gas.list_dataset_names())
+.. literalinclude:: ../../../examples/dogsvscats.py
+   :language: python
+   :start-after: """List Dataset Names"""
+   :end-before: """"""
 
 .. note::
 
@@ -103,11 +103,10 @@ After you finish the :ref:`reference/glossary:Dataloader` and organize the "Dogs
 :class:`~tensorbay.dataset.dataset.Dataset` object, you can upload it
 to TensorBay for sharing, reuse, etc.
 
-.. code:: python
-
-   # dataset is the one you initialized in "Organize Dataset" section
-   dataset_client = gas.upload_dataset(dataset, jobs=8, skip_uploaded_files=False)
-   dataset_client.commit("Dogs vs. Cats")
+.. literalinclude:: ../../../examples/dogsvscats.py
+   :language: python
+   :start-after: """Upload Dataset"""
+   :end-before: """"""
 
 Remember to execute the :ref:`features/version_control:Commit` step after uploading.
 If needed, you can re-upload and commit again.
@@ -125,33 +124,35 @@ Please see :ref:`this page <features/version_control:Version Control>` for more 
 
 Now you can read "Dogs vs. Cats" dataset from TensorBay.
 
-.. code:: python
-
-   dataset_client = gas.get_dataset("Dogs vs. Cats")
+.. literalinclude:: ../../../examples/dogsvscats.py
+   :language: python
+   :start-after: """Read Dataset / get dataset"""
+   :end-before: """"""
 
 In :ref:`reference/dataset_structure:Dataset` "Dogs vs. Cats", there are two
 :ref:`Segments <reference/dataset_structure:Segment>`: ``train`` and ``test``,
 you can get the segment names by list them all.
 
-.. code:: python
-
-   list(dataset_client.list_segment_names())
+.. literalinclude:: ../../../examples/dogsvscats.py
+   :language: python
+   :start-after: """Read Dataset / list segment names"""
+   :end-before: """"""
 
 You can get a segment by passing the required segment name.
 
-.. code:: python
-
-   from tensorbay.dataset import Segment
-
-   train_segment = Segment("train", dataset_client)
+.. literalinclude:: ../../../examples/dogsvscats.py
+   :language: python
+   :start-after: """Read Dataset / get segment"""
+   :end-before: """"""
 
 
 In the train :ref:`reference/dataset_structure:Segment`, there is a sequence of :ref:`reference/dataset_structure:Data`. You
 can get one by index.
 
-.. code:: python
-
-   data = train_segment[0]
+.. literalinclude:: ../../../examples/dogsvscats.py
+   :language: python
+   :start-after: """Read Dataset / get data"""
+   :end-before: """"""
 
 .. note::
 
@@ -163,9 +164,10 @@ In each :ref:`reference/dataset_structure:Data`,
 there is a sequence of :ref:`reference/label_format:Classification` annotations.
 You can get one by index.
 
-.. code:: python
-
-   category = data.label.classification.category
+.. literalinclude:: ../../../examples/dogsvscats.py
+   :language: python
+   :start-after: """Read Dataset / get label"""
+   :end-before: """"""
 
 There is only one label type in "Dogs vs. Cats" dataset, which is ``classification``. The information stored in :ref:`reference/label_format:Category` is
 one of the category names in "categories" list of :ref:`catalog.json <dogsvscats-catalog>`.
@@ -178,6 +180,7 @@ structure of Classification.
 
 To delete "Dogs vs. Cats", run the following code:
 
-.. code:: python
-
-   gas.delete_dataset("BSTLD")
+.. literalinclude:: ../../../examples/dogsvscats.py
+   :language: python
+   :start-after: """Delete Dataset"""
+   :end-before: """"""
