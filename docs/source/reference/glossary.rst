@@ -91,14 +91,29 @@ then we have the TBRN of this image:
    Default segment is defined as ``""`` (empty string).
 
 
-
 commit
 ======
 
-An operation to turn a dataset from draft status to committed status.
+Similar with Git, a commit is a version of a dataset,
+which contains the changes compared with the former commit.
+You can view a certain commit of a dataset based on the given commit ID.
 
-After commit, the committed version of the dataset can no longer be changed.
-But you can edit the draft version of the dataset based on this commit.
+A commit is readable, but is not writable.
+Thus, only read operations such as getting catalog, files and labels are allowed.
+To change a dataset, please create a new commit.
+See :ref:`glossary/reference:draft` for details.
 
-Commit is a basic operation in version control on Tensorbay.
-Learn more about version control in :ref:`features/version_control:Version Control`.
+On the other hand,
+"commit" also represents the action to save the changes inside a :ref:`glossary/reference:draft` into a commit.
+
+draft
+=====
+
+Similar with Git, a draft is a workspace in which changing the dataset is allowed.
+
+A draft is created based on a :ref:`glossary/reference:commit`,
+and the changes inside it will be made into a commit.
+
+There are scenarios when modifications of a dataset are required,
+such as correcting errors, enlarging dataset, adding more types of labels, etc.
+Under these circumstances, you can create a draft, edit the dataset and commit the draft.
