@@ -51,7 +51,7 @@ See :ref:`this page <features/dataset_management:Read Dataset>` for details.
 
 .. note::
 
-   Note that Method ``list_dataset_names()`` returns an iterator, use ``list()`` to transfer it to a "list".
+   Note that method ``list_dataset_names()`` returns an iterator, use ``list()`` to transfer it to a "list".
 
 ******************
  Organize Dataset
