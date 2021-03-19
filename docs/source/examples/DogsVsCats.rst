@@ -109,6 +109,16 @@ to TensorBay for sharing, reuse, etc.
    dataset_client = gas.upload_dataset(dataset, jobs=8, skip_uploaded_files=False)
    dataset_client.commit("Dogs vs. Cats")
 
+Remember to execute the :ref:`features/version_control:Commit` step after uploading.
+If needed, you can re-upload and commit again.
+Please see :ref:`this page <features/version_control:Version Control>` for more details about version control.
+
+.. note::
+
+   Commit operation can also be done on our GAS_ Platform.
+
+.. _gas: https://www.graviti.cn/tensorBay
+
 **************
  Read Dataset
 **************
