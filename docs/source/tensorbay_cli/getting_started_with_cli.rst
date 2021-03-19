@@ -59,15 +59,3 @@ To show configuration information:
 .. code:: console
 
    $ gas config
-
-You can also log in with specified accessKey to interact with TensorBay.
-
-.. code:: console
-
-   $ gas -k [accessKey] [command] [args]
-
-For example, to list all datasets with accessKey:
-
-.. code:: console
-
-   $ gas -k Accesskey-***** ls
