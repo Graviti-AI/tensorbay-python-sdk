@@ -119,7 +119,7 @@ repos:
         args:
           [
             "--good-names=i,j,k,x,y,z,w,fp",
-            "--disable=bad-continuation",
+            "--disable=bad-continuation,cyclic-import",
             "--generated-members=torch.*,cv2.*",
             "--min-similarity-lines=15",
             "--notes=FIXME,XXX",
