@@ -123,7 +123,7 @@ def cli(ctx: click.Context, access_key: str, url: str, profile_name: str, debug:
         profile_name: The environment to login.
         debug: Debug mode flag.
 
-    """
+    """  # noqa: D301,D415
     ctx.obj = {
         "access_key": access_key,
         "url": url,
@@ -144,7 +144,7 @@ def create(obj: Dict[str, str], name: str) -> None:
         obj: A dict including config information.
         name: The name of the dataset to be created, like "tb:KITTI".
 
-    """
+    """  # noqa: D301,D415
     info = TBRN(tbrn=name)
     if info.type != TBRNType.DATASET:
         click.echo(f'"{name}" is not a dataset', err=True)
@@ -187,7 +187,7 @@ def delete(obj: Dict[str, str], name: str, yes: bool) -> None:
         name: The name of the dataset to be deleted, like "tb:KITTI".
         yes: Confirm to delete the dataset completely.
 
-    """
+    """  # noqa: D301,D415
     info = TBRN(tbrn=name)
     if info.type != TBRNType.DATASET:
         click.echo(f'"{name}" is not a dataset', err=True)
@@ -234,7 +234,7 @@ def cp(  # pylint: disable=invalid-name, too-many-arguments
         jobs: Number of threads to upload data.
         skip_uploaded_files: Whether skip the uploaded files.
 
-    """
+    """  # noqa: D301,D415
     info = TBRN(tbrn=tbrn)
 
     if info.type == TBRNType.DATASET:
@@ -496,7 +496,7 @@ def ls(  # pylint: disable=invalid-name
         tbrn: Path to be listed, like "tb:KITTI:seg1". If empty, list names of all datasets.
         list_all_files: If true, list all files under the segment.
 
-    """
+    """  # noqa: D301,D415
     gas = _gas(**obj)
 
     if not tbrn:
@@ -598,7 +598,7 @@ def config(obj: Dict[str, str], access_key: str, url: str) -> None:
         access_key: The accessKey of gas to write into config file.
         url: The URL of gas to write into config file.
 
-    """
+    """  # noqa: D301,D415
     config_file = _config_filepath()
     config_parser = ConfigParser()
     config_parser.read(config_file)
