@@ -1,319 +1,109 @@
-###########################
- Audio with sentence Label
-###########################
+###########
+ THCHS-30
+###########
 
-:ref:`supported_label_types:Sentence` is one of the supported label types.
-It represents Sentence label of audio data.
+This topic describes how to manage the "THCHS-30" dataset.
 
-*************
- Preparation
-*************
+"THCHS-30" is a dataset with :ref:`reference/label_format:Sentence` label type. 
+See `this page <https://www.graviti.com/open-datasets/THCHS30>`_ for more details about this dataset.
 
-First of all, create a :ref:`features/tensorbay_client:GAS Client`.
+***************************
+ Authorize a Client Object
+***************************
 
-.. code:: python
-
-   >>> from graviti import GAS
-
-   >>> ACCESS_KEY = "Accesskey-*****"
-   >>> gas = GAS(ACCESS_KEY)
-
-*****************************
- Read Dataset from TensorBay
-*****************************
-
-As mentioned in :ref:`quick_start:Quick Start`, obtain_ and fork_ should be done before reading a
-dataset from TensorBay. Then, pass the correct dataset name to the GAS client, and you will get a
-:ref:`features/tensorbay_client:Dataset Client`.
-
-Here, we take `THCHS-30`_ as an example.
-
-.. _fork: https://docs.graviti.cn/guide/opendataset/fork
-
-.. _THCHS-30: https://www.graviti.cn/open-datasets/THCHS30
-
-.. _obtain: https://docs.graviti.cn/guide/opendataset/get
+First of all, create a GAS client.
 
 .. code:: python
 
-   >>> dataset_client = gas.get_dataset("THCHS-30")
+   from tensorbay import GAS
 
-If you are not sure about the dataset name, you can visit our `Opendataset Platform`_ to check all
-"forkable" open datasets.
+   ACCESS_KEY = "Accesskey-*****"
+   gas = GAS(ACCESS_KEY)
 
-.. _opendataset platform: https://www.graviti.cn/open-datasets
+****************
+ Create Dataset
+****************
 
-You can use the list method to print all your forked open datasets.
-
-.. code:: python
-
-   >>> list(gas.list_dataset_names())
-   ['Dogs vs. Cats', 'nuScenes', 'THCHS-30']
-
-In :ref:`basic_concepts:Dataset` ``THCHS-30``, there are three :ref:`Segments <basic_concepts:Segment>` :
-``"train"`` , ``"dev"`` and ``"test"``. The desired :ref:`basic_concepts:Segment` can be obtained by its unique name.
-Take :ref:`basic_concepts:Segment` ``"dev"`` as an example, it could be obtained by:
+Then, create a dataset client by passing the dataset name to the GAS client.
 
 .. code:: python
 
-   >>> from tensorbay.dataset import Segment
-   >>> dev_segment = Segment("dev", dataset_client)
+    gas.create_dataset("THCHS-30")
 
-The :ref:`basic_concepts:Segment` `"dev"` contains a sequence of :ref:`basic_concepts:Data`. 
-You can get one by index.
+********************
+List Dataset Names
+********************
+
+To check if you have created "THCHS-30" dataset, you can list all your available datasets.
+See :ref:`this page <features/dataset_management:Read Dataset>` for details.
 
 .. code:: python
 
-   >>> data = dev_segment[0]
-   >>> data
-   Data("tb:THCHS-30:dev://A11_101.wav")(
-    (fileuri): tb:THCHS-30:dev://A11_101.wav,
-    (labels): Labels(
-        (sentence): [
-            LabeledSentence(...)
-            ]
-        )
-    )
+    list(gas.list_dataset_names())
 
 .. note::
 
-   If the :ref:`basic_concepts:segment` or
-   :ref:`advanced_features/fusion_dataset/concepts:fusion segment` is created without
-   given name, then its name will be "".
+    Note that method ``list_dataset_names()`` returns an iterator, use ``list()`` to transfer it to a "list".
 
-In each :ref:`basic_concepts:Data`,
-there is a sequence of :ref:`supported_label_types:Sentence` annotations.
-You can get one by index.
+******************
+Organize Dataset
+******************
 
-.. code:: python
-
-   >>> label_audio = data.label.sentence[0]
-   >>> label_audio
-   LabeledSentence(
-       (sentence): [
-           Word(
-            (text): '七十',
-            (begin): 0,
-            (end): 0
-    )
-    ...
-    ],
-       (spell): [
-          Word(
-            (text): 'qi1',
-            (begin): 0,
-            (end): 0
-    )
-    ...
-    ],
-        (phone): [
-          Word(
-            (text): 'q',
-            (begin): 0,
-            (end): 0
-    )
-    ...
-    ],
-        (attributes): None
-   )
-
-.. code:: python
-    
-    >>> label_audio.sentence
-    [Word(
-        (text): '七十',
-        (begin): 0,
-        (end): 0
-    ),
-        ...
-        )
-    ]
-
-In ``sentence`` attribute of :ref:`supported_label_types:Sentence`,
-there is a list of :ref:`supported_label_types:Word`.
-In a Word instance, ``text`` means one phrase of a sentence, ``begin`` means the start time of text,
-``end`` means the end time of text.
-
-    >>> label_audio.spell
-    [Word(
-        (text): 'qi1',
-        (begin): 0,
-        (end): 0
-    )
-        ...
-        )
-    ]
-
-In ``spell`` attribute of :ref:`supported_label_types:Sentence`,
-there is a list of :ref:`supported_label_types:Word`.
-In a Word instance, ``text`` means the Chinese Phonetic Alphabet with tone or English spelling
-of a word.
-'qi1' is the Chinese Phonetic Alphabet with first tone of '七'.
-``begin`` means the start time of text, ``end`` means the end time of text.
-
-    >>> label_audio.phone
-    [Word(
-        (text): 'q',
-        (begin): 0,
-        (end): 0
-    )
-        ...
-        )
-    ]
-
-In ``phone`` attribute of :ref:`supported_label_types:Sentence`,
-there is a list of :ref:`supported_label_types:Word`.
-In a Word instance, ``text`` means the Chinese initials and finals or English phonemes of a word.
-'q' is the Chinese initial of '七', ``begin`` means the start time of text,
-``end`` means the end time of text.
-
-The ``THCHS-30`` dataset only has one label type which is ``sentence``.
-
-*************************
- Read Dataset from Local
-*************************
-
-If you want to read a dataset from local and there is an available :ref:`contribution:Dataloader`,
-just import the loader function and pass the local dataset directory to it. The directory
-structure for ``THCHS-30`` should be like:
-
-.. code:: console
-    
-    <path>
-        lm_word/
-            lexicon.txt
-        data/
-            A11_0.wav.trn
-            ...
-        dev/
-            A11_101.wav
-            ...
-        train/
-        test/
-
-.. code:: python
-
-    >>> from graviti.opendataset import THCHS30
-
-    >>> dataset = THCHS30("path/to/dataset/directory")
-    >>> dataset
-        Dataset("THCHS30") [
-            Segment("") [...]
-        ]
-
-.. note::
-
-   Note that ``THCHS30`` is not the name, but the :ref:`contribution:Identifier` of the dataset
-   "THCHS-30". See :ref:`definition of identifier <contribution:Identifier>` for more details.
-
-.. note::
-
-   Note that :ref:`basic_concepts:Dataset` and :ref:`features/tensorbay_client:Dataset Client`
-   are different concepts.
-
-.. warning::
-
-   TensorBay dataloader works well only with the original dataset directory structure.
-   Downloading datasets from either official website or `Graviti Opendatset Platform`_ is highly
-   recommended.
-
-.. _graviti opendatset platform: https://www.graviti.cn/open-datasets
-
-TensorBay supplies two methods to fetch :ref:`basic_concepts:Segment` from
-:ref:`basic_concepts:Dataset`.
-
-.. code:: python
-
-   >>> dev_segment = dataset.get_segment_by_name("dev")
-
-   >>> first_segment = dataset[0]
-
-The :ref:`basic_concepts:Segment` you get now is the same as the one you read from TensorBay in the
-:ref:`quick_start:Read Dataset from TensorBay` part.
-
-**************************
- Write Dataset Dataloader
-**************************
-
-If there is no :ref:`contribution:Dataloader` avaliable to your target dataset,
-welcome to write and contribute one.
-Now we take ``THCHS-30`` as an example to explain how to write a dataloader for datasets with
-:ref:`supported_label_types:Sentence` label.
+Now we describe how to organize the "THCHS-30" dataset by the :class:`~tensorbay.dataset.dataset.Dataset`
+object before uploading it to TensorBay. It takes the following steps to organize "THCHS-30".
 
 Write the Catalog
 =================
 
-Before writing the dataloader for dataset, typically, we need to write a
-:ref:`contribution:Catalog`. Catalog is a json file contains all label information of one dataset.
-See :ref:`this page <basic_concepts:Catalog & SubCatalog>` for more details. 
-However the catalog of ``THCHS-30`` is too large, so we need to load the subcatalog by raw file
+The first step is to write the :ref:`reference/dataset_structure:Catalog`.
+Typically, Catalog is a json file contains all label information of one dataset.
+See :ref:`this page <reference/dataset_structure:Catalog>` for more details.
+However the catalog of ``THCHS-30`` is too large, so we need to load the subcatalog by the raw file
 and map it to catalog, See :ref:`code block <THCHS30-dataloader>` below for more details.
 
 Write the Dataloader
 ====================
 
-The function of :ref:`contribution:Dataloader` is to read the dataset into a
-:ref:`basic_concepts:Dataset` object.
-The :ref:`code block <THCHS30-dataloader>` below displays the ``THCHS-30`` dataloader.
+The second step is to write the :ref:`reference/glossary:Dataloader`.
+The function of :ref:`reference/glossary:Dataloader` is to read the dataset into a
+:class:`~tensorbay.dataset.dataset.Dataset` object.
+The :ref:`code block <THCHS30-dataloader>` below displays the "THCHS-30" dataloader.
 
 .. literalinclude:: ../../../tensorbay/opendataset/THCHS30/loader.py
    :language: python
    :name: THCHS30-dataloader
    :linenos:
-   :emphasize-lines: 13-15,40
+   :emphasize-lines: 13-14, 45
 
-There are mainly two steps to write a :ref:`contribution:Dataloader`:
+Normally, after creating the :ref:`reference/dataset_structure:Dataset`,
+you need to load the :ref:`reference/dataset_structure:catalog`. However, 
+in this example, there is no ``catalog.json`` file, because the lexion of
+``THCHS-30`` is too large (See more details of lexion in :ref:`reference/label_format:Sentence`).
+Therefore, We load subcatalog from the raw file lexicon.txt and map it to have the catalog.(L45)
 
--  Create a :ref:`basic_concepts:Dataset` and its relevant :ref:`Segments <basic_concepts:Segment>`.
--  Add the :ref:`basic_concepts:Data` and corresponding labels
-   to the created :ref:`Segments <basic_concepts:Segment>`.
-
-Create Dataset and Segments
----------------------------
-
-Note that after creating the :ref:`basic_concepts:Dataset`,
-you need to load the :ref:`contribution:Catalog`.(L40)
-The catalog file ``catalog.json`` is in the same directory with dataloader file.
-
-In this example, there is no ``catalog.json`` file, because the lexion of ``THCHS-30`` is too
-large. The lexion is a list of dictionary lists. Therefore, We need to load subcatalog from the raw
-file and map it to have the catalog.(L57-63)
-
-Add Data and Labels
--------------------
-
-It takes four key substeps to add the data and the labels:
-
--  Creating :ref:`basic_concepts:Data` and adding content.
--  Creating :ref:`supported_label_types:Sentence` and adding annotations.
--  Appending the Sentence labels to the created Data.
--  Appending the Data to the created Segment.
-
-See :ref:`this page <supported_label_types:Sentence>` for more details for about Sentence annoation
-details.
+See :ref:`this page <reference/label_format:Sentence>` for more details
+about Sentence annotation details.
 
 .. note::
-   The :ref:`THCHS-30 dataloader <THCHS30-dataloader>` above uses relative import(L13-15).
-   However, when you write your own dataloader you should use regular import as shown below.
-   And when you want to contribute your own dataloader, remember to use relative import.
+    The :ref:`THCHS-30 dataloader <THCHS30-dataloader>` above uses relative import(L13-14).
+    However, when you write your own dataloader you should use regular import.
+    And when you want to contribute your own dataloader, remember to use relative import.
+
+****************
+Upload Dataset
+****************
+
+After you finish the :ref:`reference/glossary:Dataloader` and organize the "THCHS-30" into a
+:class:`~tensorbay.dataset.dataset.Dataset` object, you can upload it
+to TensorBay for sharing, reuse, etc.
 
 .. code:: python
 
-   >>> from graviti.dataset import Data, Dataset
-   >>> from graviti.label import LabeledSentence, SentenceSubcatalog, Word
+    from tensorbay.opendataset import THCHS30
 
-***********************************
- Upload Local Dataset to TensorBay
-***********************************
-
-Once you write your own :ref:`contribution:Dataloader` and read the local dataset into a
-:ref:`basic_concepts:Dataset` object, you can upload it to TensorBay and share with the community.
-
-.. code:: python
-
-   >>> dataset = gas.create("THCHS-30")
-   >>> dataset_client = gas.upload_dataset(dataset, jobs=8, skip_uploaded_files=False)
-   >>> dataset_client.commit("THCHS-30")
+    # dataset is the one you initialized in "Organize Dataset" section
+    dataset_client = gas.upload_dataset(dataset, jobs=8, skip_uploaded_files=False)
+    dataset_client.commit("THCHS-30")
 
 Remember to execute the :ref:`features/version_control:Commit` step after uploading.
 If needed, you can re-upload and commit again.
@@ -321,8 +111,72 @@ Please see :ref:`features/version_control:Version Control` for more details.
 
 .. note::
 
-   Commit operation can alse be done on our GAS_ Platform.
+    Commit operation can alse be done on our GAS_ Platform.
+ 
+ .. _gas: https://www.graviti.cn/tensorBay
 
-.. _gas: https://www.graviti.cn/tensorBay
+**************
+Read Dataset
+**************
 
-Please see :ref:`contribution:Contribution` for how to contribute your dataloader.
+Now you can read "THCHS-30" dataset from TensorBay.
+
+.. code:: python
+
+    dataset_client = gas.get_dataset("THCHS-30")
+
+In :ref:`reference/dataset_structure:Dataset` "THCHS-30", there are three
+:ref:`Segments <reference/dataset_structure:Segment>`:
+``dev``, ``train`` and ``test``,
+you can get the segment names by list them all.
+
+.. code:: python
+
+    list(dataset_client.list_segment_names())
+
+You can get a segment by passing the required segment name.
+
+.. code:: python
+
+    from tensorbay.dataset import Segment
+
+    dev_segment = Segment("dev", dataset_client)
+
+In the dev :ref:`reference/dataset_structure:Segment`,
+there is a sequence of :ref:`reference/dataset_structure:Data`.
+You can get one by index.
+
+.. code:: python
+
+    data = dev_segment[0]
+
+.. note::
+
+    If the :ref:`reference/dataset_structure:Segment` or
+    :ref:`advanced_features/fusion_dataset/fusion_dataset_structure:fusion segment`
+    is created without given name, then its name will be "".
+
+In each :ref:`reference/dataset_structure:Data`,
+there is a sequence of :ref:`reference/label_format:Sentence` annotations.
+You can get one by index.
+
+.. code:: python
+
+    labeled_sentence = data.label.sentence[0]
+    sentence = labeled_sentence.sentence
+    spell = labeled_sentence.spell
+    phone = labeled_sentence.phone
+
+There is only one label type in "THCHS-30" dataset, which is ``Sentence``. It contains
+``sentence``, ``spell`` and ``phone`` information. See :ref:`this page <reference/label_format:Sentence>` for 
+more details about the structure of Sentence.
+
+****************
+Delete Dataset
+****************
+
+To delete "THCHS-30", run the following code:
+
+.. code:: python
+
+    gas.delete_dataset("THCHS-30")
