@@ -60,14 +60,14 @@ To show configuration information:
 
    $ gas config
 
-You can also log in with specified accessKey and URL to interact with TensorBay.
+You can also log in with specified accessKey to interact with TensorBay.
 
 .. code:: console
 
-   $ gas -u [url] -k [accessKey] [command] [args]
+   $ gas -k [accessKey] [command] [args]
 
-For example, to list all datasets with accessKey and URL:
+For example, to list all datasets with accessKey:
 
 .. code:: console
 
-   $ gas -u https://gas.uat.graviti.cn/ -k Accesskey-***** ls
+   $ gas -k Accesskey-***** ls
