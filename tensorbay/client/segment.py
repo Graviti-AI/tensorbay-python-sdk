@@ -94,7 +94,7 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
         params.update(self._status.get_status_info())
 
         response = self._client.open_api_do("GET", "data/urls", self._dataset_id, params=params)
-        return response.json()["url"]  # type: ignore[no-any-return]
+        return response.json()["urls"][0]["url"]  # type: ignore[no-any-return]
 
     def _list_labels(
         self, *, start: int = 0, stop: int = sys.maxsize, page_size: int = 128
