@@ -177,20 +177,6 @@ class DatasetClientBase:
         """
         yield from self._list_drafts(start=start, stop=stop)
 
-    def close_draft(self, draft_number: int) -> None:
-        """Close the draft.
-
-        Arguments:
-            draft_number: The draft number.
-
-        Raises:
-            TypeError: When closing the draft which the dataset client is operating.
-
-        """
-        if draft_number == self._status.draft_number:
-            raise TypeError("Cannot close the draft which the dataset client is operating.")
-        self._client.open_api_do("DELETE", f"draft/{draft_number}", self.dataset_id)
-
     def checkout(self, commit: Optional[str] = None, draft_number: Optional[int] = None) -> None:
         """Checkout to commit or draft.
 
