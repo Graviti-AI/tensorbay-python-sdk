@@ -1,4 +1,4 @@
-#!/usr/bin/env python3  # pylint: disable=cyclic-import  #pylint issue: 3525
+#!/usr/bin/env python3
 #
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
