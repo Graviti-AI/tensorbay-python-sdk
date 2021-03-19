@@ -177,10 +177,12 @@ You can get one by index.
    :start-after: """Read Dataset / get label"""
    :end-before: """"""
 
-There is only one label type in "BSTLD" dataset, which is ``box2d``. The annotation "RedLeft" is
-stored in :ref:`reference/label_format:Category` of :ref:`reference/label_format:Box2D`.
-The annotation "{'occluded': True}" is stored in :ref:`reference/label_format:Attributes`
-of :ref:`reference/label_format:Box2D`.
+There is only one label type in "BSTLD" dataset, which is ``box2d``.
+The information stored in :ref:`reference/label_format:Category` is
+one of the category names in "categories" list of :ref:`catalog.json <BSTLD-catalog>`. The information stored
+in :ref:`reference/label_format:Attributes` is one of the attributes in "attributes" list of :ref:`catalog.json <BSTLD-catalog>`.
+See :ref:`this page <reference/label_format:Box2D>` for more details about the
+structure of Box2D.
 
 ****************
  Delete Dataset
