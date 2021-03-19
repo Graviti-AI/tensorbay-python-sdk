@@ -144,15 +144,20 @@ class DatasetClientBase:
         """
         return self._status
 
-    def create_draft(self, title: Optional[str] = None) -> None:
+    def create_draft(self, title: Optional[str] = None) -> int:
         """Create the draft.
 
         Arguments:
             title: The draft title.
 
+        Returns:
+            The draft number of the created draft
+
         """
         self._status.check_authority_for_commit()
-        self._status.checkout(draft_number=self._create_draft(title))
+        draft_number = self._create_draft(title)
+        self._status.checkout(draft_number=draft_number)
+        return draft_number
 
     def list_draft_titles_and_numbers(
         self, *, start: int = 0, stop: int = sys.maxsize
