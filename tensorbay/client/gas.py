@@ -41,10 +41,10 @@ class GAS:
     def __init__(self, access_key: str, url: str = "") -> None:
         self._client = Client(access_key, url)
 
-    def _get_dataset(self, name: str, commit_id: Optional[str] = None) -> DatasetClientType:
+    def _get_dataset(self, name: str) -> DatasetClientType:
         dataset_id, is_fusion = self._get_dataset_id_and_type(name)
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
-        return ReturnType(name, dataset_id, self, commit_id=commit_id)
+        return ReturnType(name, dataset_id, self)
 
     def _list_datasets(
         self,
@@ -157,32 +157,23 @@ class GAS:
         return ReturnType(name, response.json()["id"], self)
 
     @overload
-    def get_dataset(
-        self, name: str, is_fusion: Literal[False] = False, *, commit_id: Optional[str] = None
-    ) -> DatasetClient:
+    def get_dataset(self, name: str, is_fusion: Literal[False] = False) -> DatasetClient:
         ...
 
     @overload
-    def get_dataset(
-        self, name: str, is_fusion: Literal[True], *, commit_id: Optional[str] = None
-    ) -> FusionDatasetClient:
+    def get_dataset(self, name: str, is_fusion: Literal[True]) -> FusionDatasetClient:
         ...
 
     @overload
-    def get_dataset(
-        self, name: str, is_fusion: bool = False, *, commit_id: Optional[str] = None
-    ) -> DatasetClientType:
+    def get_dataset(self, name: str, is_fusion: bool = False) -> DatasetClientType:
         ...
 
-    def get_dataset(
-        self, name: str, is_fusion: bool = False, *, commit_id: Optional[str] = None
-    ) -> DatasetClientType:
+    def get_dataset(self, name: str, is_fusion: bool = False) -> DatasetClientType:
         """Get a TensorBay dataset with given name and commit ID.
 
         Arguments:
             name: The name of the requested dataset.
             is_fusion: Whether the dataset is a fusion dataset, True for fusion dataset.
-            commit_id: The dataset commit ID.
 
         Returns:
             The requested :class:`~tensorbay.client.dataset.DatasetClient` instance or
@@ -197,7 +188,7 @@ class GAS:
         if is_fusion != type_flag:
             raise GASDatasetTypeError(name, type_flag)
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
-        return ReturnType(name, dataset_id, self, commit_id=commit_id)
+        return ReturnType(name, dataset_id, self)
 
     def list_dataset_names(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[str]:
         """List names of all TensorBay datasets.

@@ -48,26 +48,18 @@ class DatasetClientBase:
         name: Dataset name.
         dataset_id: Dataset ID.
         gas_client: The initial client to interact between local and TensorBay.
-        commit_id: The commit ID (if the status is commit).
 
     """
 
     _client: Client
 
-    def __init__(
-        self,
-        name: str,
-        dataset_id: str,
-        gas_client: "GAS",
-        *,
-        commit_id: Optional[str] = None,
-    ) -> None:
+    def __init__(self, name: str, dataset_id: str, gas_client: "GAS") -> None:
         self._name = name
         self._dataset_id = dataset_id
         self._gas_client = gas_client
         self._client = gas_client._client  # pylint: disable=protected-access
 
-        self._status = CommitStatus(commit_id=commit_id)
+        self._status = CommitStatus()
 
     def _commit(self, message: str, tag: Optional[str] = None) -> str:
         post_data: Dict[str, Any] = {
