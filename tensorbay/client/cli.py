@@ -114,7 +114,6 @@ def _gas(access_key: str, url: str, profile_name: str) -> GAS:
 @click.option("-d", "--debug", is_flag=True, help="Debug mode.")
 @click.pass_context
 def cli(ctx: click.Context, access_key: str, url: str, profile_name: str, debug: bool) -> None:
-    # noqa: D415, D301
     """You can use 'gas' + COMMAND to operate on your dataset.\f
 
     Arguments:
@@ -139,7 +138,6 @@ def cli(ctx: click.Context, access_key: str, url: str, profile_name: str, debug:
 @click.argument("name", type=str)
 @click.pass_obj
 def create(obj: Dict[str, str], name: str) -> None:
-    # noqa: D415, D301
     """Create a dataset.\f
 
     Arguments:
@@ -160,7 +158,6 @@ def create(obj: Dict[str, str], name: str) -> None:
 # @click.argument("tag", type=str, required=False)
 # @click.pass_obj
 # def commit(obj: Dict[str, str], name: str, message: str, tag: str) -> None:
-#     # noqa: D415, D301
 #     """Commit a dataset.\f
 
 #     Arguments:
@@ -183,7 +180,6 @@ def create(obj: Dict[str, str], name: str) -> None:
 @click.option("-y", "--yes", is_flag=True, help="Confirm to delete the dataset completely.")
 @click.pass_obj
 def delete(obj: Dict[str, str], name: str, yes: bool) -> None:
-    # noqa: D415, D301
     """Delete a dataset.\f
 
     Arguments:
@@ -228,7 +224,6 @@ def cp(  # pylint: disable=invalid-name, too-many-arguments
     jobs: int,
     skip_uploaded_files: bool,
 ) -> None:
-    # noqa: D415, D301
     """Copy local data to a remote path.\f
 
     Arguments:
@@ -494,7 +489,6 @@ _LS_FUNCS = {
 def ls(  # pylint: disable=invalid-name
     obj: Dict[str, str], tbrn: str, list_all_files: bool
 ) -> None:
-    # noqa: D415, D301
     """List data under the path. If path is empty, list the names of all datasets.\f
 
     Arguments:
@@ -597,7 +591,6 @@ def _filter_data(
 @click.argument("url", type=str, default="")
 @click.pass_obj
 def config(obj: Dict[str, str], access_key: str, url: str) -> None:
-    # noqa: D415, D301
     """Configure the accessKey (and URL) of gas.\f
 
     Arguments:

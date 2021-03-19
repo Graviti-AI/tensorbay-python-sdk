@@ -47,7 +47,7 @@ repos:
             "--docstring-convention=google",
             "--ignore-decorators=overload",
             "--ignore=E203,W503,D105,D107,DAR203",
-            "--per-file-ignores=examples/*:E402,F811",
+            "--per-file-ignores=examples/*:E402,F811 tensorbay/client/cli.py:D301,D415",
           ]
 
   - repo: https://github.com/pre-commit/mirrors-mypy
