@@ -85,7 +85,7 @@ class DatasetClientBase:
         post_data: Dict[str, Any] = {}
 
         if title:
-            post_data["name"] = title
+            post_data["title"] = title
 
         response = self._client.open_api_do("POST", "drafts", self.dataset_id, json=post_data)
         return response.json()["draftNumber"]  # type: ignore[no-any-return]
@@ -162,17 +162,17 @@ class DatasetClientBase:
         self._status.check_authority_for_commit()
         self._status.checkout(draft_number=self._create_draft(title))
 
-    def list_draft_names_and_numbers(
+    def list_draft_titles_and_numbers(
         self, *, start: int = 0, stop: int = sys.maxsize
     ) -> Iterator[Dict[str, str]]:
-        """List the dict containing name and number of drafts.
+        """List the dict containing title and number of drafts.
 
         Arguments:
             start: The index to start.
             stop: The index to end.
 
         Yields:
-            The dict containing name and number of drafts.
+            The dict containing title and number of drafts.
 
         """
         yield from self._list_drafts(start=start, stop=stop)
