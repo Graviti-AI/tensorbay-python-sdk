@@ -21,12 +21,10 @@ See `this page <https://www.graviti.cn/open-datasets/LeedsSportsPose>`_  for mor
 
 First of all, create a GAS client.
 
-.. code:: python
-
-   from graviti import GAS
-
-   ACCESS_KEY = "Accesskey-*****"
-   gas = GAS(ACCESS_KEY)
+.. literalinclude:: ../../../examples/leedssportspose.py
+   :language: python
+   :start-after: """Authorize a Client Object"""
+   :end-before: """"""
 
 ****************
  Create Dataset
@@ -34,9 +32,10 @@ First of all, create a GAS client.
 
 Then, create a dataset client by passing the dataset name to the GAS client.
 
-.. code:: python
-
-   gas.create_dataset("LeedsSportsPose")
+.. literalinclude:: ../../../examples/leedssportspose.py
+   :language: python
+   :start-after: """Create Dataset"""
+   :end-before: """"""
 
 ********************
  List Dataset Names
@@ -45,9 +44,10 @@ Then, create a dataset client by passing the dataset name to the GAS client.
 To check if you have created "LeedsSportsPose" dataset, you can list all your available datasets.
 See :ref:`this page <features/dataset_management:Read Dataset>` for details.
 
-.. code:: python
-
-   list(gas.list_dataset_names())
+.. literalinclude:: ../../../examples/leedssportspose.py
+   :language: python
+   :start-after: """List Dataset Names"""
+   :end-before: """"""
 
 .. note::
 
@@ -109,10 +109,10 @@ After you finish the :ref:`reference/glossary:Dataloader` and organize the "Leed
 :class:`~tensorbay.dataset.dataset.Dataset` object, you can upload it
 to TensorBay for sharing, reuse, etc.
 
-.. code:: python
-
-   dataset_client = gas.upload_dataset(dataset, jobs=8, skip_uploaded_files=False)
-   dataset_client.commit("LeedsSportsPose")
+.. literalinclude:: ../../../examples/leedssportspose.py
+   :language: python
+   :start-after: """Upload Dataset"""
+   :end-before: """"""
 
 Remember to execute the :ref:`features/version_control:Commit` step after uploading.
 If needed, you can re-upload and commit again.
@@ -130,24 +130,26 @@ Please see :ref:`this page <features/version_control:Version Control>` for more 
 
 Now you can read "LeedsSportsPose" dataset from TensorBay.
 
-.. code:: python
-
-   dataset_client = gas.get_dataset("LeedsSportsPose")
+.. literalinclude:: ../../../examples/leedssportspose.py
+   :language: python
+   :start-after: """Read Dataset / get dataset"""
+   :end-before: """"""
 
 In :ref:`reference/dataset_structure:Dataset` "LeedsSportsPose", there is one default
 :ref:`Segments <reference/dataset_structure:Segment>` ``""`` (empty string). You can get it by passing the segment name.
 
-.. code:: python
-
-   from tensorbay.dataset import Segment
-   default_segment = Segment("", dataset_client)
+.. literalinclude:: ../../../examples/leedssportspose.py
+   :language: python
+   :start-after: """Read Dataset / get segment"""
+   :end-before: """"""
 
 In the train :ref:`reference/dataset_structure:Segment`, there is a sequence of :ref:`reference/dataset_structure:Data`. You
 can get one by index.
 
-.. code:: python
-
-   data = default_segment[0]
+.. literalinclude:: ../../../examples/leedssportspose.py
+   :language: python
+   :start-after: """Read Dataset / get data"""
+   :end-before: """"""
 
 .. note::
 
@@ -159,12 +161,10 @@ In each :ref:`reference/dataset_structure:Data`,
 there is a sequence of :ref:`reference/label_format:Keypoints2D` annotations.
 You can get one by index.
 
-.. code:: python
-
-   label_keypoints2d = data.label.keypoints2d[0]
-   x = data.label.keypoints2d[0][0].x
-   y = data.label.keypoints2d[0][0].y
-   v = data.label.keypoints2d[0][0].v
+.. literalinclude:: ../../../examples/leedssportspose.py
+   :language: python
+   :start-after: """Read Dataset / get label"""
+   :end-before: """"""
 
 There is only one label type in "LeedsSportsPose" dataset, which is ``keypoints2d``. The information stored in ``x`` (``y``) is
 the x (y) coordinate of one keypoint of one keypoints list. The information stored in ``v`` is
@@ -177,6 +177,7 @@ for more details about the structure of Keypoints2D.
 
 To delete "LeedsSportsPose", run the following code:
 
-.. code::
-
-   gas.delete_dataset("LeedsSportsPose")
+.. literalinclude:: ../../../examples/leedssportspose.py
+   :language: python
+   :start-after: """Delete Dataset"""
+   :end-before: """"""
