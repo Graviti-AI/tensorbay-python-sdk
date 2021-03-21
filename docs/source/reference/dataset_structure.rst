@@ -43,7 +43,7 @@ For example, there is only one subcatalog ("BOX3D") in the catalog of dataset `N
 
 .. _Neolix OD: https://www.graviti.cn/open-datasets/NeolixOD
 
-.. literalinclude:: ../../tensorbay/opendataset/NeolixOD/catalog.json
+.. literalinclude:: ../../../tensorbay/opendataset/NeolixOD/catalog.json
    :language: json
    :name: NeolixOD-catalog
 

@@ -22,10 +22,12 @@ See `this page <https://www.graviti.cn/open-datasets/NeolixOD>`_ for more detail
 
 First of all, create a GAS client.
 
-.. literalinclude:: ../../../examples/neolixod.py
-   :language: python
-   :start-after: """Authorize a Client Object"""
-   :end-before: """"""
+.. code:: python
+
+   from tensorbay import GAS
+
+   ACCESS_KEY = "Accesskey-*****"
+   gas = GAS(ACCESS_KEY)
 
 ****************
  Create Dataset
@@ -33,10 +35,9 @@ First of all, create a GAS client.
 
 Then, create a dataset client by passing the dataset name to the GAS client.
 
-.. literalinclude:: ../../../examples/neolixod.py
-   :language: python
-   :start-after: """Create Dataset"""
-   :end-before: """"""
+.. code:: python
+
+   gas.create_dataset("Neolix OD")
 
 ********************
  List Dataset Names
@@ -45,10 +46,9 @@ Then, create a dataset client by passing the dataset name to the GAS client.
 To check if you have created "Neolix OD" dataset, you can list all your available datasets.
 See :ref:`this page <features/dataset_management:Read Dataset>` for details.
 
-.. literalinclude:: ../../../examples/neolixod.py
-   :language: python
-   :start-after: """List Dataset Names"""
-   :end-before: """"""
+.. code:: python
+
+   list(gas.list_dataset_names())
 
 .. note::
 
@@ -112,12 +112,13 @@ After you finish the :ref:`reference/glossary:Dataloader` and organize the "Neol
 :class:`~tensorbay.dataset.dataset.Dataset` object, you can upload it
 to TensorBay for sharing, reuse, etc.
 
-.. literalinclude:: ../../../examples/neolixod.py
-   :language: python
-   :start-after: """Upload Dataset"""
-   :end-before: """"""
+.. code:: python
 
-Remember to execute the :ref:`features/version_control:Commit` step after uploading.
+   # dataset is the one you initialized in "Organize Dataset" section
+   dataset_client = gas.upload_dataset(dataset, jobs=8, skip_uploaded_files=False)
+   dataset_client.commit("Neolix OD")
+
+Remember to execute the commit step after uploading.
 If needed, you can re-upload and commit again.
 Please see :ref:`this page <features/version_control:Version Control>` for more details about version control.
 
@@ -133,28 +134,26 @@ Please see :ref:`this page <features/version_control:Version Control>` for more 
 
 Now you can read "Neolix OD" dataset from TensorBay.
 
-.. literalinclude:: ../../../examples/neolixod.py
-   :language: python
-   :start-after: """Read Dataset / get dataset"""
-   :end-before: """"""
+.. code:: python
+
+   dataset_client = gas.get_dataset("Neolix OD")
 
 In :ref:`reference/dataset_structure:Dataset` "Neolix OD", there is one default
 :ref:`Segment <reference/dataset_structure:Segment>`: ``""`` (empty string).
 You can get a segment by passing the required segment name.
 
-.. literalinclude:: ../../../examples/neolixod.py
-   :language: python
-   :start-after: """Read Dataset / get segment"""
-   :end-before: """"""
+.. code:: python
+
+   from tensorbay.dataset import Segment
+   default_segment = Segment("", dataset_client)
 
 In the default :ref:`reference/dataset_structure:Segment`,
 there is a sequence of :ref:`reference/dataset_structure:Data`.
 You can get one by index.
 
-.. literalinclude:: ../../../examples/neolixod.py
-   :language: python
-   :start-after: """Read Dataset / get data"""
-   :end-before: """"""
+.. code:: python
+
+   data = default_segment[0]
 
 .. note::
 
@@ -166,10 +165,11 @@ In each :ref:`reference/dataset_structure:Data`,
 there is a sequence of :ref:`reference/label_format:Classification` annotations.
 You can get one by index.
 
-.. literalinclude:: ../../../examples/neolixod.py
-   :language: python
-   :start-after: """Read Dataset / get label"""
-   :end-before: """"""
+.. code:: python
+
+   label_box3d = data.label.box3d[0]
+   category = label_box3d.category
+   attributes = label_box3d.attributes
 
 There is only one label type in "Neolix OD" dataset, which is ``box3d``.
 The information stored in :ref:`reference/label_format:Category` is
@@ -185,7 +185,6 @@ See :ref:`this page <reference/label_format:Box3D>` for more details about the s
 
 To delete "Neolix OD", run the following code:
 
-.. literalinclude:: ../../../examples/neolixod.py
-   :language: python
-   :start-after: """Delete Dataset"""
-   :end-before: """"""
+.. code:: python
+
+   gas.delete_dataset("Neolix OD")

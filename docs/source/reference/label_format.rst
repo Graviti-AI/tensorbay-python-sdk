@@ -5,11 +5,11 @@
 TensorBay supports multiple types of labels.
 
 Each :class:`~tensorbay.dataset.data.Data` object
-can have multiple types of :class:`label <tensorbay.dataset.data.Label>`.
+can have multiple types of :class:`label <~tensorbay.dataset.data.Label>`.
 
-And each type of :class:`label <tensorbay.dataset.data.Label>` is supported with a specific label
+And each type of :class:`label <~tensorbay.dataset.data.Label>` is supported with a specific label
 class,
-and has a corresponding :ref:`subcatalog<basic_concepts:Catalog & Subcatalog>` class.
+and has a corresponding :ref:`subcatalog <reference/dataset_structure:Catalog>` class.
 
 .. table:: supported label types
    :widths: auto

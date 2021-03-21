@@ -47,7 +47,7 @@ Authorize a Client Object
       :start-after: """Authorize a Client Object"""
       :end-before: """"""
 
-See :ref:`this page <tensorbay_cli/getting_start_with_CLI:Config>` for details
+See :ref:`this page <tensorbay_cli/getting_started_with_cli:Configuration>` for details
 about authenticating identity via CLI.
 
 Create a Dataset 

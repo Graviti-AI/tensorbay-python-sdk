@@ -108,7 +108,7 @@ to TensorBay for sharing, reuse, etc.
    :start-after: """Upload Dataset"""
    :end-before: """"""
 
-Remember to execute the :ref:`features/version_control:Commit` step after uploading.
+Remember to execute the commit step after uploading.
 If needed, you can re-upload and commit again.
 Please see :ref:`this page <features/version_control:Version Control>` for more details about version control.
 

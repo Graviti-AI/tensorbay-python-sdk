@@ -40,7 +40,7 @@ The corresponding class of fusion dataset is :class:`~tensorbay.dataset.dataset.
 ****************************************
 
 The catalog of the fusion dataset is the same as the catalog
-(:ref:`ref <basic_concepts:catalog & subcatalog>`) of the dataset.
+(:ref:`ref <reference/dataset_structure:catalog>`) of the dataset.
 
 ****************
  fusion segment
@@ -91,4 +91,4 @@ The corresponding class of frame is :class:`~tensorbay.dataset.frame.Frame`.
 
 Each data inside a frame corresponds to a sensor.
 And the data of the fusion dataset is the same as the data
-(:ref:`ref <basic_concepts:data>`) of the dataset.
+(:ref:`ref <reference/dataset_structure:data>`) of the dataset.
