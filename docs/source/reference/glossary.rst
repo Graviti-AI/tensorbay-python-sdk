@@ -13,8 +13,8 @@ visit the `developer page <https://gas.graviti.cn/access-key>`_ to create one.
 .. _graviti ai service(gas): https://www.graviti.cn/tensorBay
 
 For the usage of accesskey via Tensorbay SDK or CLI,
-please see :ref:`SDK authorization<quick_start/getting_started_with_tensorbay:Authorize a Client Object>`
-or :ref:`CLI configration<tensorbay_cli/getting_started_with_cli:config>`.
+please see :ref:`SDK authorization <quick_start/getting_started_with_tensorbay:Authorize a Client Object>`
+or :ref:`CLI configration <tensorbay_cli/getting_started_with_cli:Configuration>`.
 
 dataset
 =======
@@ -101,17 +101,17 @@ You can view a certain commit of a dataset based on the given commit ID.
 A commit is readable, but is not writable.
 Thus, only read operations such as getting catalog, files and labels are allowed.
 To change a dataset, please create a new commit.
-See :ref:`glossary/reference:draft` for details.
+See :ref:`reference/glossary:draft` for details.
 
 On the other hand,
-"commit" also represents the action to save the changes inside a :ref:`glossary/reference:draft` into a commit.
+"commit" also represents the action to save the changes inside a :ref:`reference/glossary:draft` into a commit.
 
 draft
 =====
 
 Similar with Git, a draft is a workspace in which changing the dataset is allowed.
 
-A draft is created based on a :ref:`glossary/reference:commit`,
+A draft is created based on a :ref:`reference/glossary:commit`,
 and the changes inside it will be made into a commit.
 
 There are scenarios when modifications of a dataset are required,
