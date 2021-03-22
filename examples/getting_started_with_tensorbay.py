@@ -38,7 +38,8 @@ segment = dataset.create_segment()
 segment.append(Data("0000001.jpg"))
 segment.append(Data("0000002.jpg"))
 
-gas.upload_dataset(dataset)
+dataset_client = gas.upload_dataset(dataset)
+dataset_client.commit("First commit.")
 """"""
 
 """Read Images from the Dataset"""
