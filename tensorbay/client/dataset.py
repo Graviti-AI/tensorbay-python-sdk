@@ -253,27 +253,6 @@ class DatasetClientBase:
 
         self._client.open_api_do("PUT", "labels/catalogs", self.dataset_id, json=put_data)
 
-    def update_information(
-        self, *, is_continuous: Optional[bool] = None, description: Optional[str] = None
-    ) -> None:
-        """Update information of draft with the given content.
-
-        Arguments:
-            is_continuous: Whether the TensorBay dataset is continuous.
-            description: Description of the TensorBay dataset.
-
-        """
-        self._status.check_authority_for_draft()
-
-        patch_data: Dict[str, Any] = self._status.get_status_info()
-
-        if is_continuous is not None:
-            patch_data["isContinuous"] = is_continuous
-        if description is not None:
-            patch_data["description"] = description
-
-        self._client.open_api_do("PATCH", "", self.dataset_id, json=patch_data)
-
     def delete_segment(self, name: str) -> None:
         """Delete a segment of the draft.
 
