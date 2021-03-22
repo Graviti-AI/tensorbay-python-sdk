@@ -52,6 +52,14 @@ class TestLabeledBox2D:
         assert labeledbox2d[2] == xmax
         assert labeledbox2d[3] == ymax
 
+    def test_eq(self):
+        box2d1 = LabeledBox2D(1, 1, 3, 3, category=_CATEGORY, attributes=_ATTRIBUTES)
+        box2d2 = LabeledBox2D(1, 1, 3, 3, category=_CATEGORY, attributes=_ATTRIBUTES)
+        box2d3 = LabeledBox2D(1, 1, 4, 4, category=_CATEGORY, attributes=_ATTRIBUTES)
+
+        assert box2d1 == box2d2
+        assert box2d1 != box2d3
+
     def test_from_xywh(self):
         x, y, width, height = 1, 2, 3, 4
         xmin, xmax, ymin, ymax = 1, 2, 4, 6
@@ -133,6 +141,18 @@ class TestLabeledBox3D:
         assert labeledbox3d.__rmul__(transform).instance == _INSTANCE
 
         assert labeledbox3d.__rmul__(1) == NotImplemented
+
+    def test_eq(self):
+        translation = [1, 2, 3]
+        rotation = Quaternion(1, 2, 3, 4)
+        transform = Transform3D(translation=translation, rotation=rotation)
+
+        box3d1 = LabeledBox3D(transform, size=[1, 2, 3], category=_CATEGORY, attributes=_ATTRIBUTES)
+        box3d2 = LabeledBox3D(transform, size=[1, 2, 3], category=_CATEGORY, attributes=_ATTRIBUTES)
+        box3d3 = LabeledBox3D(transform, size=[1, 2, 5], category=_CATEGORY, attributes=_ATTRIBUTES)
+
+        assert box3d1 == box3d2
+        assert box3d1 != box3d3
 
     def test_loads(self):
         labeledbox3d = LabeledBox3D.loads(_LABELEDBOX3D_DATA)

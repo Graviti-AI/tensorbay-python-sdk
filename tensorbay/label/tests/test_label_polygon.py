@@ -31,6 +31,14 @@ class TestLabeledPolygon2D:
         assert labeledpolygon2d.attributes == _ATTRIBUTES
         assert labeledpolygon2d.instance == _INSTANCE
 
+    def test_eq(self):
+        polygon1 = LabeledPolygon2D([[1, 1], [1, 2]], category=_CATEGORY, attributes=_ATTRIBUTES)
+        polygon2 = LabeledPolygon2D([[1, 1], [1, 2]], category=_CATEGORY, attributes=_ATTRIBUTES)
+        polygon3 = LabeledPolygon2D([[1, 1], [1, 3]], category=_CATEGORY, attributes=_ATTRIBUTES)
+
+        assert polygon1 == polygon2
+        assert polygon1 != polygon3
+
     def test_loads(self):
         labeledpolygon2d = LabeledPolygon2D.loads(_LABELEDPOLYGON2D_DATA)
 

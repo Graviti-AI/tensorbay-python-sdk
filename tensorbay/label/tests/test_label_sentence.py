@@ -29,6 +29,14 @@ class TestWord:
         assert word.begin == _BEGIN
         assert word.end == _END
 
+    def test_eq(self):
+        word1 = Word("Hello", 0, 1)
+        word2 = Word("Hello", 0, 1)
+        word3 = Word("Hello World", 0, 2)
+
+        assert word1 == word2
+        assert word1 != word3
+
     def test_loads(self):
         word = Word.loads(_WORD_DATA)
 
@@ -55,6 +63,14 @@ class TestLabeledSentence:
         assert labeledsentence.sentence == list(sentence)
         assert labeledsentence.spell == list(spell)
         assert labeledsentence.phone == list(phone)
+
+    def test_eq(self):
+        sentence1 = LabeledSentence([Word("Hello", 0, 1)])
+        sentence2 = LabeledSentence([Word("Hello", 0, 1)])
+        sentence3 = LabeledSentence([Word("Hello World", 0, 2)])
+
+        assert sentence1 == sentence2
+        assert sentence1 != sentence3
 
     def test_load_word(self):
         sentence = LabeledSentence._load_word(_LABELEDSENTENCE_DATA["sentence"])
