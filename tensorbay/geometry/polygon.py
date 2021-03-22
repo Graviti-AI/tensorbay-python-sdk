@@ -119,6 +119,14 @@ class Polygon2D(PointList2D[Vector2D]):
     :class:`Polygon` contains the coordinates of the vertexes of the polygon and provides
     :meth:`Polygon2D.area` to calculate the area of the polygon.
 
+    Examples:
+        >>> Polygon2D([[1, 2], [2, 3], [2, 2]])
+        Polygon2D [
+          Vector2D(1, 2),
+          Vector2D(2, 3),
+          Vector2D(2, 2)
+        ]
+
     """
 
     _P = TypeVar("_P", bound="Polygon2D")
@@ -131,18 +139,19 @@ class Polygon2D(PointList2D[Vector2D]):
 
         Arguments:
             contents: A list of dictionaries containing the coordinates
-                of the vertexes of the polygon::
-
-                    [
-                        {
-                            "x": ...
-                            "y": ...
-                        },
-                        ...
-                    ]
+                of the vertexes of the polygon.
 
         Returns:
             The loaded :class:`Polygon2D` object.
+
+        Examples:
+            >>> contents = [{"x": 1.0, "y": 1.0}, {"x": 2.0, "y": 2.0}, {"x": 2.0, "y": 3.0}]
+            >>> Polygon2D.loads(contents)
+            Polygon2D [
+              Vector2D(1.0, 1.0),
+              Vector2D(2.0, 2.0),
+              Vector2D(2.0, 3.0)
+            ]
 
         """
         return common_loads(cls, contents)
@@ -155,6 +164,11 @@ class Polygon2D(PointList2D[Vector2D]):
 
         Returns:
             The area of the polygon.
+
+        Examples:
+            >>> polygon = Polygon2D([[1, 2], [2, 2], [2, 3]])
+            >>> polygon.area()
+            0.5
 
         """
         area = 0.0
