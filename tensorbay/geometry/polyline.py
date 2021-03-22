@@ -28,6 +28,13 @@ class Polyline2D(PointList2D[Vector2D]):
     and provides a series of methods to operate on polyline, such as
     :meth:`Polyline2D.uniform_frechet_distance` and :meth:`Polyline2D.similarity`.
 
+    Examples:
+        >>> Polyline2D([[1, 2], [2, 3]])
+        Polyline2D [
+          Vector2D(1, 2),
+          Vector2D(2, 3)
+        ]
+
     """
 
     _P = TypeVar("_P", bound="Polyline2D")
@@ -155,6 +162,12 @@ class Polyline2D(PointList2D[Vector2D]):
         Returns:
             The computed distance between the two polylines.
 
+        Examples:
+            >>> polyline_1 = [[1, 1], [1, 2], [2, 2]]
+            >>> polyline_2 = [[4, 5], [2, 1], [3, 3]]
+            >>> Polyline2D.uniform_frechet_distance(polyline_1, polyline_2)
+            3.605551275463989
+
         """
         polyline_info1 = Polyline2D._get_polyline_info(polyline1)
         polyline_info2 = Polyline2D._get_polyline_info(polyline2)
@@ -200,6 +213,12 @@ class Polyline2D(PointList2D[Vector2D]):
             The similarity between the two polylines.
             The larger the value, the higher the similarity.
 
+        Examples:
+            >>> polyline_1 = [[1, 1], [1, 2], [2, 2]]
+            >>> polyline_2 = [[4, 5], [2, 1], [3, 3]]
+            >>> Polyline2D.similarity(polyline_1, polyline_2)
+            0.2788897449072022
+
         """
         min_distance = Polyline2D.uniform_frechet_distance(polyline1, polyline2)
         max_distance = -1.0
@@ -216,18 +235,15 @@ class Polyline2D(PointList2D[Vector2D]):
 
         Arguments:
             contents: A list of dict containing
-                the coordinates of the vertexes of the polyline::
-
-                    [
-                        {
-                            "x": ...
-                            "y": ...
-                        },
-                        ...
-                    ]
+                the coordinates of the vertexes of the polyline.
 
         Returns:
             The loaded :class:`Polyline2D` object.
+
+        Examples:
+            >>> polyline = Polyline2D([[1, 1], [1, 2], [2, 2]])
+            >>> polyline.dumps()
+            [{'x': 1, 'y': 1}, {'x': 1, 'y': 2}, {'x': 2, 'y': 2}]
 
         """
         return common_loads(cls, contents)
