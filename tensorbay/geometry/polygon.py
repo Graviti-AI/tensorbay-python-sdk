@@ -47,9 +47,10 @@ class PointList2D(UserMutableSequence[_T]):
             self._data.append(self._ElementType(*point))
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, self.__class__):
-            return self._data.__eq__(other._data)
-        return False
+        if not isinstance(other, self.__class__):
+            return False
+
+        return self._data.__eq__(other._data)
 
     def _loads(self: _P, contents: List[Dict[str, float]]) -> None:
         self._data = []

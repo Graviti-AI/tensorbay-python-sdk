@@ -61,9 +61,10 @@ class Box2D(UserSequence[float]):
         return Box2D._LENGTH
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, self.__class__):
-            return self._data.__eq__(other._data)
-        return False
+        if not isinstance(other, self.__class__):
+            return False
+
+        return self._data.__eq__(other._data)
 
     def __and__(self, other: "Box2D") -> "Box2D":
         """Calculate the intersect box of two boxes.
@@ -289,9 +290,10 @@ class Box3D(ReprMixin):
         self._size = Vector3D(*size)
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, self.__class__):
-            return self._size.__eq__(other._size) and self._transform.__eq__(other._transform)
-        return False
+        if not isinstance(other, self.__class__):
+            return False
+
+        return self._size.__eq__(other._size) and self._transform.__eq__(other._transform)
 
     def __rmul__(self: _B3, other: Transform3D) -> _B3:
         if isinstance(other, Transform3D):

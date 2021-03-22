@@ -71,10 +71,10 @@ class Transform3D(ReprMixin):
         self._rotation = Quaternion(rotation, **kwargs)
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, self.__class__):
-            return self._translation.__eq__(other.translation) and self._rotation == other.rotation
+        if not isinstance(other, self.__class__):
+            return False
 
-        return False
+        return self._translation.__eq__(other.translation) and self._rotation == other.rotation
 
     @overload
     def __mul__(self: _T, other: _T) -> _T:

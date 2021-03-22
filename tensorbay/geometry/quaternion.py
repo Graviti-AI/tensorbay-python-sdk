@@ -171,9 +171,10 @@ class Quaternion:
         return self._create(self._data.__neg__())
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, Quaternion):
-            return self._data.__eq__(other._data)  # type: ignore[no-any-return]
-        return False
+        if not isinstance(other, Quaternion):
+            return False
+
+        return self._data.__eq__(other._data)  # type: ignore[no-any-return]
 
     def __add__(self: _T, other: object) -> _T:
         if not isinstance(other, Quaternion):
