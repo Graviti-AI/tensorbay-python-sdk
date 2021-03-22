@@ -23,12 +23,12 @@ from typing import Dict, Iterator, List, Mapping, Optional, Sequence, Type, Type
 
 from sortedcontainers import SortedDict
 
-from ..utility import common_loads
+from ..utility import EqMixin, common_loads
 from .repr import ReprMixin
 from .user import UserMapping
 
 
-class NameMixin(ReprMixin):
+class NameMixin(ReprMixin, EqMixin):
     """A mixin class for instance which has immutable name and mutable description.
 
     Arguments:

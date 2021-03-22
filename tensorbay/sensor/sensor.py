@@ -289,7 +289,7 @@ class Camera(Sensor):
 
 
 @TypeRegister(SensorType.FISHEYE_CAMERA)
-class FisheyeCamera(Camera):
+class FisheyeCamera(Camera):  # pylint: disable=too-many-ancestors
     """FisheyeCamera defines the concept of fisheye camera.
 
     Fisheye camera is an ultra wide-angle lens that produces strong visual distortion intended

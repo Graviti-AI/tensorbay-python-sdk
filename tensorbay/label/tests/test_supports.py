@@ -35,10 +35,27 @@ _SUPPORTCATEGORIES_DATA = {
     ],
     "categoryDelimiter": ".",
 }
+_SUPPORTCATEGORIES_DATA_OTHER = {
+    "categories": [
+        {
+            "name": "Test1",
+            "description": "This is an exmaple of test",
+        },
+        {
+            "name": "Test2",
+            "description": "This is an exmaple of test",
+        },
+    ],
+    "categoryDelimiter": "-",
+}
+
 _SUPPORTATTRIBUTES_DATA = {
     "attributes": [
         {"name": "Test", "enum": [1, 2, 3, 4, 5], "type": "integer", "minimum": 1, "maximum": 5}
     ]
+}
+_SUPPORTATTRIBUTES_DATA_OTHER = {
+    "attributes": [{"name": "Test", "enum": ["1", "2", "3", "4", "5"], "type": "integer"}]
 }
 
 
@@ -47,6 +64,13 @@ class TestCategoryInfo:
         category_info = CategoryInfo.loads(_CATEGORYINFO_DATA)
         assert category_info.name == _CATEGORYINFO_DATA["name"]
         assert category_info.description == _CATEGORYINFO_DATA["description"]
+
+    def test_eq(self):
+        category_info1 = CategoryInfo(name="cat", description="This is a cat")
+        category_info2 = CategoryInfo(name="cat", description="This is a cat")
+        category_info3 = CategoryInfo(name="dog", description="This is a dog")
+        assert category_info1 == category_info2
+        assert category_info1 != category_info3
 
     def test_dumps(self):
         name = _CATEGORYINFO_DATA["name"]
@@ -89,6 +113,32 @@ class TestKeypointsInfo:
         assert keypoints_info.visible == visible
         assert keypoints_info.parent_categories == [parent_categories]
         assert keypoints_info.description == description
+
+    def test_eq(self):
+        keypoints_info1 = KeypointsInfo(
+            number=3,
+            names=["a", "b", "c"],
+            skeleton=[[1, 2], [2, 3]],
+            visible="binary",
+            parent_categories=["c1", "c2"],
+        )
+        keypoints_info2 = KeypointsInfo(
+            number=3,
+            names=["a", "b", "c"],
+            skeleton=[[1, 2], [2, 3]],
+            visible="binary",
+            parent_categories=["c1", "c2"],
+        )
+        keypoints_info3 = KeypointsInfo(
+            number=3,
+            names=["a", "b", "c"],
+            skeleton=[[2, 3], [1, 2]],
+            visible="binary",
+            parent_categories=["c2", "c1"],
+        )
+
+        assert keypoints_info1 == keypoints_info2
+        assert keypoints_info1 != keypoints_info3
 
     def test_loads(self):
         keypoints_info = KeypointsInfo.loads(_KEYPOINTSINFO_DATA)
@@ -139,6 +189,14 @@ class TestSupportIsTracking:
         assert SupportIsTracking().is_tracking == False
         assert SupportIsTracking(True).is_tracking == True
 
+    def test_eq(self):
+        support_is_tracking1 = SupportIsTracking()
+        support_is_tracking2 = SupportIsTracking()
+        support_is_tracking3 = SupportIsTracking(True)
+
+        assert support_is_tracking1 == support_is_tracking2
+        assert support_is_tracking1 != support_is_tracking3
+
     def test_loads(self):
         support_is_tracking = SupportIsTracking()
         support_is_tracking._loads(contents=_SUPPORTISTRACKING_DATA)
@@ -164,6 +222,19 @@ class TestSupportCategories:
         support_categorie_2 = support_categories.categories["Test2"]
         assert support_categorie_2.name == support_categories_data[1]["name"]
         assert support_categorie_2.description == support_categories_data[1]["description"]
+
+    def test_eq(self):
+        support_categories_1 = SupportCategories()
+        support_categories_1._loads(_SUPPORTCATEGORIES_DATA)
+
+        support_categories_2 = SupportCategories()
+        support_categories_2._loads(_SUPPORTCATEGORIES_DATA)
+
+        support_categories_3 = SupportCategories()
+        support_categories_3._loads(_SUPPORTCATEGORIES_DATA_OTHER)
+
+        assert support_categories_1 == support_categories_2
+        assert support_categories_1 != support_categories_3
 
     def test_add_category(self):
         support_categories = SupportCategories()
@@ -198,6 +269,19 @@ class TestSupportAttributes:
         assert support_attributes_test.enum == support_attributes_data["enum"]
         assert support_attributes_test.minimum == support_attributes_data["minimum"]
         assert support_attributes_test.maximum == support_attributes_data["maximum"]
+
+    def test_eq(self):
+        support_attributes_1 = SupportAttributes()
+        support_attributes_1._loads(contents=_SUPPORTATTRIBUTES_DATA)
+
+        support_attributes_2 = SupportAttributes()
+        support_attributes_2._loads(contents=_SUPPORTATTRIBUTES_DATA)
+
+        support_attributes_3 = SupportAttributes()
+        support_attributes_3._loads(contents=_SUPPORTATTRIBUTES_DATA_OTHER)
+
+        assert support_attributes_1 == support_attributes_2
+        assert support_attributes_1 != support_attributes_3
 
     def test_add_attribute(self):
         name = "Test"
