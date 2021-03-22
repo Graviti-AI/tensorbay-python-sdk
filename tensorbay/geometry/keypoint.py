@@ -33,13 +33,6 @@ class Keypoint2D(Vector2D):
         y: The y coordinate of the 2D keypoint.
         v: The visible status(optional) of the 2D keypoint.
 
-            .. code:: python
-
-                keypoint2d = Keypoint2D(x=1.0, y=2.0)
-                keypoint2d = Keypoint2D(x=1.0, y=2.0, v=0)
-                keypoint2d = Keypoint2D(x=1.0, y=2.0, v=1)
-                keypoint2d = Keypoint2D(x=1.0, y=2.0, v=2)
-
             Visible status can be "BINARY" or "TERNARY":
 
             +---------------+---------+-----------+-----------+
@@ -50,6 +43,16 @@ class Keypoint2D(Vector2D):
             | TERNARY       | visible | occluded  | invisible |
             +---------------+---------+-----------+-----------+
 
+    Examples:
+        *Initialization Method 1:* Init from coordinates of x, y.
+
+        >>> Keypoint2D(1.0, 2.0)
+        Keypoint2D(1.0, 2.0)
+
+        *Initialization Method 2:* Init from coordinates and visible status.
+
+        >>> Keypoint2D(1.0, 2.0, 0)
+        Keypoint2D(1.0, 2.0, 0)
 
     """
 
@@ -75,16 +78,15 @@ class Keypoint2D(Vector2D):
 
         Arguments:
             contents: A dict containing coordinates and visible status(optional)
-                of a 2D keypoint::
-
-                    {
-                        "x": ...
-                        "y": ...
-                        "v": ...
-                    }
+                of a 2D keypoint.
 
         Returns:
             The loaded :class:`Keypoint2D` object.
+
+        Examples:
+            >>> contents = {"x":1.0,"y":2.0,"v":1}
+            >>> Keypoint2D.loads(contents)
+            Keypoint2D(1.0, 2.0, 1)
 
         """
         return cls(**contents)
@@ -96,6 +98,11 @@ class Keypoint2D(Vector2D):
         Returns:
             Visible status of the 2D keypoint.
 
+        Examples:
+            >>> keypoint = Keypoint2D(3.0, 2.0, 1)
+            >>> keypoint.v
+            1
+
         """
         if len(self._data) != self._DIMENSION:
             return self._data[2]  # type: ignore[return-value]
@@ -106,6 +113,11 @@ class Keypoint2D(Vector2D):
 
         Returns:
             A dict containing coordinates and visible status(optional) of the 2D keypoint.
+
+        Examples:
+            >>> keypoint = Keypoint2D(1.0, 2.0, 1)
+            >>> keypoint.dumps()
+            {'x': 1.0, 'y': 2.0, 'v': 1}
 
         """
         contents = {"x": self._data[0], "y": self._data[1]}
@@ -120,6 +132,13 @@ class Keypoints2D(PointList2D[Keypoint2D]):
     :class:`Keypoints2D` contains a list of 2D keypoint and is based on
     :class:`~tensorbay.geometry.polygon.PointList2D`.
 
+    Examples:
+        >>> Keypoints2D([[1, 2], [2, 3]])
+        Keypoints2D [
+          Keypoint2D(1, 2),
+          Keypoint2D(2, 3)
+        ]
+
     """
 
     _P = TypeVar("_P", bound="Keypoints2D")
@@ -133,17 +152,16 @@ class Keypoints2D(PointList2D[Keypoint2D]):
         Arguments:
             contents: A list of dictionaries containing 2D keypoint::
 
-                [
-                    {
-                        "x": ...
-                        "y": ...
-                        "v": ...           --- optional
-                    },
-                    ...
-                ]
-
         Returns:
             The loaded :class:`Keypoints2D` object.
+
+        Examples:
+            >>> contents = [{"x": 1.0, "y": 1.0, "v": 1}, {"x": 2.0, "y": 2.0, "v": 2}]
+            >>> Keypoints2D.loads(contents)
+            Keypoints2D [
+              Keypoint2D(1.0, 1.0, 1),
+              Keypoint2D(2.0, 2.0, 2)
+            ]
 
         """
         return common_loads(cls, contents)
