@@ -27,7 +27,7 @@
 from enum import Enum, auto
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Union
 
-from ..utility import NameMixin, NameOrderedDict, ReprMixin, ReprType, common_loads
+from ..utility import EqMixin, NameMixin, NameOrderedDict, ReprMixin, ReprType, common_loads
 from .attributes import AttributeInfo, Items, _ArgType, _EnumElementType
 
 
@@ -88,7 +88,7 @@ class _VisibleType(Enum):
     BINARY = auto()
 
 
-class KeypointsInfo(ReprMixin):
+class KeypointsInfo(ReprMixin, EqMixin):
     """This class defines the structure of a set of keypoints.
 
     Arguments:
@@ -255,7 +255,7 @@ class KeypointsInfo(ReprMixin):
         return contents
 
 
-class Supports:  # pylint: disable=too-few-public-methods
+class Supports(EqMixin):  # pylint: disable=too-few-public-methods
     """The base class of different mixin classes for subcatalog."""
 
     def _loads(self: Any, contents: Dict[str, Any]) -> None:

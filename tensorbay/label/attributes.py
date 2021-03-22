@@ -17,7 +17,7 @@ It refers to the `Json schema`_ method to describe an attribute.
 from enum import Enum
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Union
 
-from ..utility import NameMixin, ReprMixin, common_loads
+from ..utility import EqMixin, NameMixin, ReprMixin, common_loads
 
 _AvailaleType = Union[list, bool, int, float, str, None]
 _SingleArgType = Union[str, None, Type[_AvailaleType]]
@@ -63,7 +63,7 @@ class _AttributeType(Enum):
             ) from error
 
 
-class Items(ReprMixin):
+class Items(ReprMixin, EqMixin):
     """The base class of :class:`AttributeInfo`, representing the items of an attribute.
 
     When the value type of an attribute is array,

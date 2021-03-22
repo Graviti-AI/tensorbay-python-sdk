@@ -3,9 +3,12 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Common_loads method.
+"""Common_loads method, EqMixin class.
 
-Common_loads is a common method for loading an object from a dict or a list of dict.
+:meth:`common_loads` is a common method for loading an object from a dict or a list of dict.
+
+:class:`EqMixin` is a mixin class to support __eq__() method,
+which compares all the instance variables.
 
 """
 
@@ -28,3 +31,17 @@ def common_loads(object_class: Type[_T], contents: Any) -> _T:
     obj: _T = object.__new__(object_class)
     obj._loads(contents)  # type: ignore[attr-defined]  # pylint: disable=protected-access
     return obj
+
+
+class EqMixin:  # pylint: disable=too-few-public-methods
+    """A mixin class to support __eq__() method.
+
+    The __eq__() method defined here compares all the instance variables.
+
+    """
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, self.__class__):
+            return False
+
+        return self.__dict__ == other.__dict__

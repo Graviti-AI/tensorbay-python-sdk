@@ -23,7 +23,7 @@ from .supports import SupportAttributes
 
 
 @SubcatalogTypeRegister(LabelType.SENTENCE)
-class SentenceSubcatalog(SubcatalogBase, SupportAttributes):
+class SentenceSubcatalog(SubcatalogBase, SupportAttributes):  # pylint: disable=too-many-ancestors
     """This class defines the subcatalog for audio transcripted sentence type of labels.
 
     Arguments:

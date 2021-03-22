@@ -59,6 +59,13 @@ class TestItems:
         assert item.minimum == _MINIMUM
         assert item.maximum == _MAXIMUM
 
+    def test_eq(self):
+        item_1 = Items(type_="integer", enum=_ENUM, minimum=1, maximum=5)
+        item_2 = Items(type_="integer", enum=_ENUM, minimum=1, maximum=5)
+        item_3 = Items(type_="number", enum=_ENUM, minimum=1, maximum=5)
+        assert item_1 == item_2
+        assert item_1 != item_3
+
     def test_convert_type(self):
         converted_type_1 = Items(enum=_ENUM)._convert_type("array")
         assert converted_type_1 == ("array", True)
@@ -111,6 +118,47 @@ class TestAttributeInfo:
         assert attributeinfo.maximum == _MAXIMUM
         assert attributeinfo.parent_categories == _PARENTCATEGORIES
         assert attributeinfo.description == _DESCRIPTION
+
+    def test_eq(self):
+        attributeinfo_v1 = AttributeInfo(
+            name="traffic_light_color",
+            type_=["array", "null"],
+            items=Items(
+                type_="integer",
+                enum=_ENUM,
+                minimum=_MINIMUM,
+                maximum=_MAXIMUM,
+            ),
+            parent_categories=["a", "b"],
+            description=_DESCRIPTION,
+        )
+        attributeinfo_v2 = AttributeInfo(
+            name="traffic_light_color",
+            type_=["array", "null"],
+            items=Items(
+                type_="integer",
+                enum=_ENUM,
+                minimum=_MINIMUM,
+                maximum=_MAXIMUM,
+            ),
+            parent_categories=["a", "b"],
+            description=_DESCRIPTION,
+        )
+        attributeinfo_v3 = AttributeInfo(
+            name="traffic_light_color",
+            type_=["array", "null"],
+            items=Items(
+                type_="integer",
+                enum=_ENUM,
+                minimum=_MINIMUM,
+                maximum=_MAXIMUM,
+            ),
+            parent_categories=["b", "a"],
+            description=_DESCRIPTION,
+        )
+
+        assert attributeinfo_v1 == attributeinfo_v2
+        assert attributeinfo_v1 != attributeinfo_v3
 
     def test_loads(self):
         attributeinfo = AttributeInfo.loads(_ATTRIBUTEINFO_DATA)
