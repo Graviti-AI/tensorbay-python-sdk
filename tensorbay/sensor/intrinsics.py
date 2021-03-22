@@ -53,6 +53,37 @@ class CameraMatrix(ReprMixin):
         TypeError: When only keyword arguments with incorrect keys are provided,
             or when no arguments are provided.
 
+    Examples:
+        >>> matrix = [[1, 3, 3],
+        ...           [0, 2, 4],
+        ...           [0, 0, 1]]
+
+        *Initialazation Method 1*: Init from 3x3 sequence array.
+
+        >>> camera_matrix = CameraMatrix(matrix)
+        >>> camera_matrix
+        CameraMatrix(
+            (fx): 1,
+            (fy): 2,
+            (cx): 3,
+            (cy): 4,
+            (skew): 3
+        )
+
+        *Initialazation Method 2*: Init from camera calibration parameters, skew is optional.
+
+        >>> camera_matrix = CameraMatrix(fx=1, fy=2, cx=3, cy=4, skew=3)
+        >>> camera_matrix
+        CameraMatrix(
+            (fx): 1,
+            (fy): 2,
+            (cx): 3,
+            (cy): 4,
+            (skew): 3
+        )
+
+
+
     """
 
     _T = TypeVar("_T", bound="CameraMatrix")
@@ -114,6 +145,24 @@ class CameraMatrix(ReprMixin):
         Returns:
             A :class:`CameraMatrix` instance contains the information from the contents dict.
 
+        Examples:
+            >>> contents = {
+            ...     "fx": 2,
+            ...     "fy": 6,
+            ...     "cx": 4,
+            ...     "cy": 7,
+            ...     "skew": 3
+            ... }
+            >>> camera_matrix = CameraMatrix.loads(contents)
+            >>> camera_matrix
+            CameraMatrix(
+                (fx): 2,
+                (fy): 6,
+                (cx): 4,
+                (cy): 7,
+                (skew): 3
+            )
+
         """
         return common_loads(cls, contents)
 
@@ -122,6 +171,10 @@ class CameraMatrix(ReprMixin):
 
         Returns:
             A dict containing the information of the camera matrix.
+
+        Examples:
+            >>> camera_matrix.dumps()
+            {'fx': 1, 'fy': 2, 'cx': 3, 'cy': 4, 'skew': 3}
 
         """
         return {
@@ -137,6 +190,13 @@ class CameraMatrix(ReprMixin):
 
         Returns:
             A 3x3 numpy array representing the camera matrix.
+
+        Examples:
+            >>> numpy_array = camera_matrix.as_matrix()
+            >>> numpy_array
+            array([[1., 3., 3.],
+                   [0., 4., 4.],
+                   [0., 0., 1.]])
 
         """
         return np.array(
@@ -159,6 +219,17 @@ class CameraMatrix(ReprMixin):
         Raises:
             TypeError: When the dimension of the input point is neither two nor three.
 
+        Examples:
+            Project a point in 2 dimensions
+
+            >>> camera_matrix.project([1, 2])
+            Vector2D(12, 19)
+
+            Project a point in 3 dimensions
+
+            >>> camera_matrix.project([1, 2, 4])
+            Vector2D(6.0, 10.0)
+
         """
         if len(point) == 3:
             x = point[0] / point[2]
@@ -167,7 +238,7 @@ class CameraMatrix(ReprMixin):
             x = point[0]
             y = point[1]
         else:
-            raise TypeError("The point to be projected must have 2 or 3 dimension")
+            raise TypeError("The point to be projected must have 2 or 3 dimensions")
 
         x = self.fx * x + self.skew * y + self.cx
         y = self.fy * y + self.cy
@@ -185,6 +256,16 @@ class DistortionCoefficients(ReprMixin):
 
     Raises:
         TypeError: When tangential and radial distortion is not provided to initialize class.
+
+    Examples:
+        >>> distortion_coefficients = DistortionCoefficients(p1=1, p2=2, k1=3, k2=4)
+        >>> distortion_coefficients
+        DistortionCoefficients(
+            (p1): 1,
+            (p2): 2,
+            (k1): 3,
+            (k2): 4
+        )
 
     """
 
@@ -292,6 +373,22 @@ class DistortionCoefficients(ReprMixin):
             A :class:`DistortionCoefficients` instance containing information from
             the contents dict.
 
+        Examples:
+            >>> contents = {
+            ...     "p1": 1,
+            ...     "p2": 2,
+            ...     "k1": 3,
+            ...     "k2": 4
+            ... }
+            >>> distortion_coefficients = DistortionCoefficients.loads(contents)
+            >>> distortion_coefficients
+            DistortionCoefficients(
+                (p1): 1,
+                (p2): 2,
+                (k1): 3,
+                (k2): 4
+            )
+
         """
         return common_loads(cls, contents)
 
@@ -300,6 +397,10 @@ class DistortionCoefficients(ReprMixin):
 
         Returns:
             A dict containing the information of distortion coefficients.
+
+        Examples:
+            >>> distortion_coefficients.dumps()
+            {'p1': 1, 'p2': 2, 'k1': 3, 'k2': 4}
 
         """
         contents = {}
@@ -323,6 +424,22 @@ class DistortionCoefficients(ReprMixin):
         Returns:
             Distorted 2d point.
 
+        Examples:
+            Distort a point with 2 dimensions
+
+            >>> distortion_coefficients.distort((1.0, 2.0))
+            Vector2D(134.0, 253.0)
+
+            Distort a point with 3 dimensions
+
+            >>> distortion_coefficients.distort((1.0, 2.0, 3.0))
+            Vector2D(3.3004115226337447, 4.934156378600823)
+
+            Distort a point with 2 dimensions, fisheye is True
+
+            >>> distortion_coefficients.distort((1.0, 2.0), is_fisheye=True)
+            Vector2D(6.158401093771876, 12.316802187543752)
+
         """
         # pylint: disable=invalid-name
         if len(point) == 3:
@@ -332,7 +449,7 @@ class DistortionCoefficients(ReprMixin):
             x = point[0]
             y = point[1]
         else:
-            raise TypeError("The point to be projected must have 2 or 3 dimension")
+            raise TypeError("The point to be projected must have 2 or 3 dimensions")
 
         x2 = x ** 2
         y2 = y ** 2
@@ -362,6 +479,70 @@ class CameraIntrinsics(ReprMixin):
         _camera_matrix: A 3x3 Sequence of the camera matrix.
         _distortion_coefficients: It is the deviation from rectilinear projection. It includes
             radial distortion and tangential distortion.
+
+    Examples:
+        >>> matrix = [[1, 3, 3],
+        ...           [0, 2, 4],
+        ...           [0, 0, 1]]
+
+        *Initialization Method 1*: Init from 3x3 sequence array.
+
+        >>> camera_intrinsics = CameraIntrinsics(matrix, p1=5, k1=6)
+        >>> camera_intrinsics
+        CameraIntrinsics(
+            (camera_matrix): CameraMatrix(
+                    (fx): 1,
+                    (fy): 2,
+                    (cx): 3,
+                    (cy): 4,
+                    (skew): 3
+                ),
+            (distortion_coefficients): DistortionCoefficients(
+                    (p1): 5,
+                    (k1): 6
+                )
+        )
+
+        *Initialization Method 2*: Init with *_init_distortion* is False.
+
+        >>> camera_intrinsics = CameraIntrinsics(matrix, _init_distortion=False)
+        >>> camera_intrinsics
+        CameraIntrinsics(
+            (camera_matrix): CameraMatrix(
+                (fx): 1,
+                (fy): 2,
+                (cx): 3,
+                (cy): 4,
+                (skew): 3
+            ),
+            (distortion_coefficients): None
+        )
+
+        *Initialization Method 3*: Init from camera calibration parameters, skew is optional.
+
+        >>> camera_intrinsics = CameraIntrinsics(
+        ...     fx=1,
+        ...     fy=2,
+        ...     cx=3,
+        ...     cy=4,
+        ...     p1=5,
+        ...     k1=6,
+        ...     skew=3
+        ... )
+        >>> camera_intrinsics
+        CameraIntrinsics(
+            (camera_matrix): CameraMatrix(
+                (fx): 1,
+                (fy): 2,
+                (cx): 3,
+                (cy): 4,
+                (skew): 3
+            ),
+            (distortion_coefficients): DistortionCoefficients(
+                (p1): 5,
+                (k1): 6
+            )
+        )
 
     """
 
@@ -417,6 +598,39 @@ class CameraIntrinsics(ReprMixin):
             A :class:`CameraIntrinsics` instance containing information from
             the contents dict.
 
+        Examples:
+            >>> contents = {
+            ...     "cameraMatrix": {
+            ...         "fx": 1,
+            ...         "fy": 2,
+            ...         "cx": 3,
+            ...         "cy": 4,
+            ...     },
+            ...     "distortionCoefficients": {
+            ...         "p1": 1,
+            ...         "p2": 2,
+            ...         "k1": 3,
+            ...         "k2": 4
+            ...     },
+            ... }
+            >>> camera_intrinsics = CameraIntrinsics.loads(contents)
+            >>> camera_intrinsics
+            CameraIntrinsics(
+                (camera_matrix): CameraMatrix(
+                    (fx): 1,
+                    (fy): 2,
+                    (cx): 3,
+                    (cy): 4,
+                    (skew): 0
+                ),
+                (distortion_coefficients): DistortionCoefficients(
+                    (p1): 1,
+                    (p2): 2,
+                    (k1): 3,
+                    (k2): 4
+                )
+            )
+
         """
         return common_loads(cls, contents)
 
@@ -426,6 +640,16 @@ class CameraIntrinsics(ReprMixin):
 
         Returns:
             :class:`CameraMatrix` class object containing fx, fy, cx, cy, skew(optional).
+
+        Examples:
+            >>> camera_intrinsics.camera_matrix
+            CameraMatrix(
+                (fx): 1,
+                (fy): 2,
+                (cx): 3,
+                (cy): 4,
+                (skew): 3
+            )
 
         """
         return self._camera_matrix
@@ -438,6 +662,13 @@ class CameraIntrinsics(ReprMixin):
             :class:`DistortionCoefficients` class object containing tangential and
             radial distortion coefficients.
 
+        Examples:
+            >>> camera_intrinsics.distortion_coefficients
+            DistortionCoefficients(
+                (p1): 5,
+                (k1): 6
+            )
+
         """
         return self._distortion_coefficients
 
@@ -446,6 +677,11 @@ class CameraIntrinsics(ReprMixin):
 
         Returns:
             A dict containing camera intrinsics.
+
+        Examples:
+            >>> camera_intrinsics.dumps()
+            {'cameraMatrix': {'fx': 1, 'fy': 2, 'cx': 3, 'cy': 4, 'skew': 3},
+            'distortionCoefficients': {'p1': 5, 'k1': 6}}
 
         """
         contents = {"cameraMatrix": self._camera_matrix.dumps()}
@@ -465,6 +701,25 @@ class CameraIntrinsics(ReprMixin):
             matrix: Camera matrix in 3x3 sequence.
             **kwargs: Contains fx, fy, cx, cy, skew(optional)
 
+        Examples:
+            >>> camera_intrinsics.set_camera_matrix(fx=11, fy=12, cx=13, cy=14, skew=15)
+            >>> camera_intrinsics
+            CameraIntrinsics(
+                (camera_matrix): CameraMatrix(
+                    (fx): 11,
+                    (fy): 12,
+                    (cx): 13,
+                    (cy): 14,
+                    (skew): 15
+                ),
+                (distortion_coefficients): DistortionCoefficients(
+                    (p1): 1,
+                    (p2): 2,
+                    (k1): 3,
+                    (k2): 4
+                )
+            )
+
         """
         self._camera_matrix = CameraMatrix(matrix=matrix, **kwargs)
 
@@ -473,6 +728,25 @@ class CameraIntrinsics(ReprMixin):
 
         Arguments:
             **kwargs: Contains p1, p2, ..., k1, k2, ...
+
+        Examples:
+            >>> camera_intrinsics.set_distortion_coefficients(p1=11, p2=12, k1=13, k2=14)
+            >>> camera_intrinsics
+            CameraIntrinsics(
+                (camera_matrix): CameraMatrix(
+                    (fx): 11,
+                    (fy): 12,
+                    (cx): 13,
+                    (cy): 14,
+                    (skew): 15
+                ),
+                (distortion_coefficients): DistortionCoefficients(
+                    (p1): 11,
+                    (p2): 12,
+                    (k1): 13,
+                    (k2): 14
+                )
+            )
 
         """
         self._distortion_coefficients = DistortionCoefficients(**kwargs)
@@ -488,6 +762,22 @@ class CameraIntrinsics(ReprMixin):
 
         Returns:
             The coordinates on the pixel plane where the point is projected to.
+
+        Examples:
+            Project a point with 2 dimensions.
+
+            >>> camera_intrinsics.project((1, 2))
+            Vector2D(137.0, 510.0)
+
+            Project a point with 3 dimensions.
+
+            >>> camera_intrinsics.project((1, 2, 3))
+            Vector2D(6.300411522633745, 13.868312757201647)
+
+            Project a point with 2 dimensions, fisheye is True
+
+            >>> camera_intrinsics.project((1, 2), is_fisheye=True)
+            Vector2D(9.158401093771875, 28.633604375087504)
 
         """
         if self._distortion_coefficients:
