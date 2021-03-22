@@ -86,15 +86,16 @@ class CameraMatrix(ReprMixin):
         raise TypeError(f"Require 'fx', 'fy', 'cx', 'cy' to initialize {self.__class__.__name__}")
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, self.__class__):
-            return (
-                self.fx == other.fx
-                and self.fy == other.fy
-                and self.cx == other.cx
-                and self.cy == other.cy
-                and self.skew == other.skew
-            )
-        return False
+        if not isinstance(other, self.__class__):
+            return False
+
+        return (
+            self.fx == other.fx
+            and self.fy == other.fy
+            and self.cx == other.cx
+            and self.cy == other.cy
+            and self.skew == other.skew
+        )
 
     def _loads(self, contents: Dict[str, float]) -> None:
         self.fx = contents["fx"]
@@ -203,14 +204,14 @@ class DistortionCoefficients(ReprMixin):
             )
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, self.__class__):
-            for key in self._DISTORTION_KEYS:
-                if tuple(self._list_distortions(key)) != tuple(other._list_distortions(key)):
-                    return False
+        if not isinstance(other, self.__class__):
+            return False
 
-            return True
+        for key in self._DISTORTION_KEYS:
+            if tuple(self._list_distortions(key)) != tuple(other._list_distortions(key)):
+                return False
 
-        return False
+        return True
 
     @staticmethod
     def _distortion_generator(
@@ -388,12 +389,13 @@ class CameraIntrinsics(ReprMixin):
         self._distortion_coefficients = None
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, self.__class__):
-            return (
-                self.camera_matrix == other.camera_matrix
-                and self.distortion_coefficients == other.distortion_coefficients
-            )
-        return False
+        if not isinstance(other, self.__class__):
+            return False
+
+        return (
+            self.camera_matrix == other.camera_matrix
+            and self.distortion_coefficients == other.distortion_coefficients
+        )
 
     def _loads(self, contents: Dict[str, Dict[str, float]]) -> None:
         self._camera_matrix = CameraMatrix.loads(contents["cameraMatrix"])

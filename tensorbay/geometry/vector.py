@@ -85,10 +85,10 @@ class Vector(UserSequence[float]):
         return result
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, self.__class__):
-            return self._data.__eq__(other._data)
+        if not isinstance(other, self.__class__):
+            return False
 
-        return False
+        return self._data.__eq__(other._data)
 
     def __add__(self: _V, other: Iterable[float]) -> _V:
         """Calculate the sum of the vector and other vector.
