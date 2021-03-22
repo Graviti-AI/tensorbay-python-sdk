@@ -31,6 +31,14 @@ class TestLabeledKeypoints2D:
         assert labeledkeypoints2d.attributes == _ATTRIBUTES
         assert labeledkeypoints2d.instance == _INSTANCE
 
+    def test_eq(self):
+        keypoints1 = LabeledKeypoints2D([[1, 1, 2]], category=_CATEGORY, attributes=_ATTRIBUTES)
+        keypoints2 = LabeledKeypoints2D([[1, 1, 2]], category=_CATEGORY, attributes=_ATTRIBUTES)
+        keypoints3 = LabeledKeypoints2D([[1, 2, 2]], category=_CATEGORY, attributes=_ATTRIBUTES)
+
+        assert keypoints1 == keypoints2
+        assert keypoints1 != keypoints3
+
     def test_loads(self):
         labeledkeypoints2d = LabeledKeypoints2D.loads(_LABELEDKEYPOINTS2D_DATA)
 

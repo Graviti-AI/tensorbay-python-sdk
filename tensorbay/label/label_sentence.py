@@ -17,7 +17,7 @@ which is often used for tasks such as automatic speech recognition.
 
 from typing import Any, Dict, Iterable, List, Optional, Type, TypeVar, Union
 
-from ..utility import ReprMixin, SubcatalogTypeRegister, TypeRegister, common_loads
+from ..utility import EqMixin, ReprMixin, SubcatalogTypeRegister, TypeRegister, common_loads
 from .basic import LabelType, SubcatalogBase, _LabelBase
 from .supports import SupportAttributes
 
@@ -107,7 +107,7 @@ class SentenceSubcatalog(SubcatalogBase, SupportAttributes):  # pylint: disable=
             self.lexicon = [lexemes]
 
 
-class Word(ReprMixin):
+class Word(ReprMixin, EqMixin):
     """This class defines the concept of word.
 
     :class:`Word` is a word within a phonetic transcription sentence,

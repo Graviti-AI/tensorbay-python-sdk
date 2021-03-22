@@ -29,6 +29,14 @@ class TestLabeledPolyline2D:
         assert labeledpolyline2d.attributes == _ATTRIBUTES
         assert labeledpolyline2d.instance == _INSTANCE
 
+    def test_eq(self):
+        polyline1 = LabeledPolyline2D([[1, 1], [1, 2]], category=_CATEGORY, attributes=_ATTRIBUTES)
+        polyline2 = LabeledPolyline2D([[1, 1], [1, 2]], category=_CATEGORY, attributes=_ATTRIBUTES)
+        polyline3 = LabeledPolyline2D([[1, 1], [2, 2]], category=_CATEGORY, attributes=_ATTRIBUTES)
+
+        assert polyline1 == polyline2
+        assert polyline1 != polyline3
+
     def test_loads(self):
         labeledpolygonline2d = LabeledPolyline2D.loads(_LABELEDPOLYLINE2D_DATA)
 

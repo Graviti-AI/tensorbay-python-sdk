@@ -37,7 +37,7 @@ Different label types correspond to different label classes classes.
 
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Type, TypeVar
 
-from ..utility import ReprMixin, ReprType, TypeEnum, TypeMixin, common_loads
+from ..utility import EqMixin, ReprMixin, ReprType, TypeEnum, TypeMixin, common_loads
 from .supports import Supports
 
 if TYPE_CHECKING:
@@ -143,7 +143,7 @@ class SubcatalogBase(TypeMixin[LabelType], ReprMixin):
         return contents
 
 
-class _LabelBase(TypeMixin[LabelType], ReprMixin):
+class _LabelBase(TypeMixin[LabelType], ReprMixin, EqMixin):
     """This class defines the basic concept of label.
 
     :class:`_LabelBase` is the most basic label level in the TensorBay dataset structure,
