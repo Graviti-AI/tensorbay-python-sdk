@@ -53,13 +53,17 @@ class DatasetClientBase:
 
     _client: Client
 
-    def __init__(self, name: str, dataset_id: str, gas_client: "GAS") -> None:
+    def __init__(
+        self, name: str, dataset_id: str, gas_client: "GAS", *, commit_id: Optional[str] = None
+    ) -> None:
         self._name = name
         self._dataset_id = dataset_id
         self._gas_client = gas_client
         self._client = gas_client._client  # pylint: disable=protected-access
 
         self._status = CommitStatus()
+        if commit_id:
+            self.checkout(commit=commit_id)
 
     def _commit(self, message: str, tag: Optional[str] = None) -> str:
         post_data: Dict[str, Any] = {

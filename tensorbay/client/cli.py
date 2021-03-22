@@ -368,7 +368,7 @@ def _echo_data(dataset_name: str, segment_name: str, data_iter: Iterable[str]) -
 
 
 def _ls_dataset(gas: GAS, info: TBRN, list_all_files: bool) -> None:
-    dataset = gas._get_dataset(info.dataset_name)  # pylint: disable=protected-access
+    dataset = gas._get_dataset_with_any_type(info.dataset_name)  # pylint: disable=protected-access
     segment_names = dataset.list_segment_names()
     if not list_all_files:
         for segment_name in segment_names:
@@ -381,7 +381,7 @@ def _ls_dataset(gas: GAS, info: TBRN, list_all_files: bool) -> None:
 
 
 def _ls_segment(gas: GAS, info: TBRN, list_all_files: bool) -> None:
-    dataset = gas._get_dataset(info.dataset_name)  # pylint: disable=protected-access
+    dataset = gas._get_dataset_with_any_type(info.dataset_name)  # pylint: disable=protected-access
     _echo_segment(
         info.dataset_name, info.segment_name, dataset.get_segment(info.segment_name), list_all_files
     )
