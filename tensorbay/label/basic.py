@@ -3,13 +3,16 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""LabelType, SubcatalogBase.
+"""LabelType, SubcatalogBase, Label.
 
 :class:`LabelType` is an enumeration type
-which includes all the supported label types within :class:`~tensorbay.dataset.data.Label`.
+which includes all the supported label types within :class:`Label`.
 
 :class:`Subcatalogbase` is the base class for different types of subcatalogs,
 which defines the basic concept of Subcatalog.
+
+A :class:`~.tensorbay.dataset.data.Data` instance contains one or several types of labels,
+all of which are stored in :attr:`~tensorbay.dataset.data.Data.label`.
 
 A subcatalog class extends :class:`SubcatalogBase` and needed :class:`Supports` mixin classes.
 
@@ -32,14 +35,22 @@ Different label types correspond to different label classes classes.
 
 """
 
-from typing import Any, Dict, Optional, Tuple, Type, TypeVar
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Type, TypeVar
 
 from ..utility import ReprMixin, ReprType, TypeEnum, TypeMixin, common_loads
 from .supports import Supports
 
+if TYPE_CHECKING:
+    from .label_box import LabeledBox2D, LabeledBox3D
+    from .label_classification import Classification
+    from .label_keypoints import LabeledKeypoints2D
+    from .label_polygon import LabeledPolygon2D
+    from .label_polyline import LabeledPolyline2D
+    from .label_sentence import LabeledSentence
+
 
 class LabelType(TypeEnum):
-    """This class defines all the supported types within :class:`~tensorbay.dataset.data.Label`."""
+    """This class defines all the supported types within :class:`Label`."""
 
     __subcatalog_registry__: Dict[TypeEnum, Type[Any]] = {}
 
@@ -192,4 +203,99 @@ class _LabelBase(TypeMixin[LabelType], ReprMixin):
             attribute_value = getattr(self, attribute_name, None)
             if attribute_value:
                 contents[attribute_name] = attribute_value
+        return contents
+
+
+class Label(ReprMixin):
+    """This class defines :attr:`~tensorbay.dataset.data.Data.label`.
+
+    It contains growing types of labels referring to different tasks.
+
+    """
+
+    _T = TypeVar("_T", bound="Label")
+
+    _repr_type = ReprType.INSTANCE
+    _repr_attrs = tuple(label_type.value for label_type in LabelType)
+    _repr_maxlevel = 2
+
+    classification: "Classification"
+    box2d: List["LabeledBox2D"]
+    box3d: List["LabeledBox3D"]
+    polygon2d: List["LabeledPolygon2D"]
+    polyline2d: List["LabeledPolyline2D"]
+    keypoints2d: List["LabeledKeypoints2D"]
+    sentence: List["LabeledSentence"]
+
+    def __bool__(self) -> bool:
+        for label_type in LabelType:
+            if hasattr(self, label_type.value):
+                return True
+        return False
+
+    def _loads(self, contents: Dict[str, Any]) -> None:
+        for key, labels in contents.items():
+            if key not in LabelType.__members__:
+                continue
+
+            label_type = LabelType[key]
+            if label_type == LabelType.CLASSIFICATION:
+                setattr(self, label_type.value, label_type.type.loads(labels))
+            else:
+                setattr(
+                    self,
+                    label_type.value,
+                    [label_type.type.loads(label) for label in labels],
+                )
+
+    @classmethod
+    def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
+        """Loads data from a dict containing the labels information.
+
+        Arguments:
+            contents: A dict containing the labels information, which looks like::
+
+                    {
+                        "CLASSIFICATION": {...},
+                        "BOX2D": {...},
+                        "BOX3D": {...},
+                        "POLYGON2D": {...},
+                        "POLYLINE2D": {...},
+                        "KEYPOINTS2D": {...},
+                        "SENTENCE": {...},
+                    }
+
+        Returns:
+            A :class:`Label` instance containing labels information from the given dict.
+
+        """
+        return common_loads(cls, contents)
+
+    def dumps(self) -> Dict[str, Any]:
+        """Dumps all labels into a dict.
+
+        Returns:
+            Dumped labels dict, which looks like::
+
+                {
+                    "CLASSIFICATION": {...},
+                    "BOX2D": {...},
+                    "BOX3D": {...},
+                    "POLYGON2D": {...},
+                    "POLYLINE2D": {...},
+                    "KEYPOINTS2D": {...},
+                    "SENTENCE": {...},
+                }
+
+        """
+        contents: Dict[str, Any] = {}
+        for label_type in LabelType:
+            labels = getattr(self, label_type.value, None)
+            if labels is None:
+                continue
+            if label_type == LabelType.CLASSIFICATION:
+                contents[label_type.name] = labels.dumps()
+            else:
+                contents[label_type.name] = [label.dumps() for label in labels]
+
         return contents
