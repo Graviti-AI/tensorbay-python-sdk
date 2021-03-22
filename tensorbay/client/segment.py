@@ -300,8 +300,6 @@ class SegmentClient(SegmentClientBase):
         post_data = permission["result"]
         post_data["key"] = permission["extra"]["objectPrefix"] + target_remote_path
 
-        del post_data["x:category"]
-        del post_data["x:id"]
         try:
             version_id, etag = self._post_multipart_formdata(
                 permission["extra"]["host"],
@@ -498,9 +496,6 @@ class FusionSegmentClient(SegmentClientBase):
             permission = self._get_upload_permission()
             post_data = permission["result"]
             post_data["key"] = permission["extra"]["objectPrefix"] + remote_path
-
-            del post_data["x:category"]
-            del post_data["x:id"]
 
             try:
                 version_id, etag = self._post_multipart_formdata(
