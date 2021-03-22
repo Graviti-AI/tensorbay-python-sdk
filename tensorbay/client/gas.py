@@ -14,7 +14,7 @@ AccessKey is required when operating with dataset.
 """
 
 import sys
-from typing import Any, Dict, Iterator, Optional, Tuple, Type, Union, overload
+from typing import Any, Dict, Iterator, Optional, Type, Union, overload
 
 from typing_extensions import Literal
 
@@ -41,10 +41,35 @@ class GAS:
     def __init__(self, access_key: str, url: str = "") -> None:
         self._client = Client(access_key, url)
 
-    def _get_dataset(self, name: str) -> DatasetClientType:
-        dataset_id, is_fusion = self._get_dataset_id_and_type(name)
+    def _get_dataset_with_any_type(self, name: str) -> DatasetClientType:
+        info = self._get_dataset(name)
+        dataset_id = info["id"]
+        is_fusion = info["type"]
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
         return ReturnType(name, dataset_id, self)
+
+    def _get_dataset(self, name: str) -> Dict[str, Any]:
+        """Get the information of the TensorBay dataset with the input name.
+
+        Arguments:
+            name: The name of the requested dataset.
+
+        Returns:
+            The dict of dataset information.
+
+        Raises:
+            GASDatasetError: When the required dataset does not exist.
+
+        """
+        if not name:
+            raise GASDatasetError(name)
+
+        try:
+            info = next(self._list_datasets(name))
+        except StopIteration as error:
+            raise GASDatasetError(name) from error
+
+        return info
 
     def _list_datasets(
         self,
@@ -67,32 +92,6 @@ class GAS:
             yield from response["datasets"]
             if response["recordSize"] + response["offset"] >= response["totalCount"]:
                 break
-
-    def _get_dataset_id_and_type(self, name: str) -> Tuple[str, bool]:
-        """Get the ID and the type of the TensorBay dataset with the input name.
-
-        Arguments:
-            name: The name of the requested dataset.
-
-        Returns:
-            The tuple of dataset ID and type, True for fusion dataset.
-
-        Raises:
-            GASDatasetError: When the required dataset does not exist.
-
-        """
-        if not name:
-            raise GASDatasetError(name)
-
-        try:
-            info = next(self._list_datasets(name))
-        except StopIteration as error:
-            raise GASDatasetError(name) from error
-
-        return (
-            info["id"],
-            bool(info["type"]),
-        )
 
     @overload
     def create_dataset(
@@ -184,11 +183,16 @@ class GAS:
             GASDatasetTypeError: When the requested dataset type is not the same as given.
 
         """
-        dataset_id, type_flag = self._get_dataset_id_and_type(name)
+        info = self._get_dataset(name)
+
+        dataset_id = info["id"]
+        type_flag = info["type"]
+        top_commit_id = info["topCommitId"]
+
         if is_fusion != type_flag:
             raise GASDatasetTypeError(name, type_flag)
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
-        return ReturnType(name, dataset_id, self)
+        return ReturnType(name, dataset_id, self, commit_id=top_commit_id)
 
     def list_dataset_names(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[str]:
         """List names of all TensorBay datasets.
@@ -211,7 +215,7 @@ class GAS:
             new_name: New name of the dataset, unique for a user.
 
         """
-        dataset_id, _ = self._get_dataset_id_and_type(name)
+        dataset_id = self._get_dataset(name)["id"]
         patch_data: Dict[str, str] = {"name": new_name}
         self._client.open_api_do("PATCH", "", dataset_id, json=patch_data)
 
@@ -304,5 +308,5 @@ class GAS:
             name: Name of the dataset, unique for a user.
 
         """
-        dataset_id, _ = self._get_dataset_id_and_type(name)
+        dataset_id = self._get_dataset(name)["id"]
         self._client.open_api_do("DELETE", "", dataset_id)
