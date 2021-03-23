@@ -14,7 +14,7 @@
    =====================================================================================  ====================================================================================
    Examples                                                                               Description
    =====================================================================================  ====================================================================================
-   :ref:`Dataset Management: Dogs vs. Cats <examples/DogsVsCats:Dogs vs. Cats>`           | This example describes how to manage `Dogs vs. Cats`_ dataset,
+   :ref:`Dataset Management: Dogs vs Cats <examples/DogsVsCats:Dogs vs Cats>`             | This example describes how to manage `Dogs vs Cats`_ dataset,
                                                                                           | which is an image dataset with :ref:`reference/label_format:Classification` label.
    :ref:`Dataset Management: 20 Newsgroups <examples/NewsGroups20:20 Newsgroups>`         | This example describes how to manage `20 Newsgroups`_
                                                                                           | dataset, which is a text dataset with :ref:`reference/label_format:Classification` label.
@@ -30,7 +30,7 @@
                                                                                           | when it has been organized by a :class:`~tensorbay.dataset.dataset.Dataset` class.
    =====================================================================================  ====================================================================================
 
-.. _Dogs vs. Cats: https://www.graviti.cn/open-datasets/DogsVsCats
+.. _Dogs vs Cats: https://www.graviti.cn/open-datasets/DogsVsCats
 .. _20 Newsgroups: https://www.graviti.cn/open-datasets/Newsgroups20
 .. _BSTLD: https://www.graviti.cn/open-datasets/BSTLD
 .. _Neolix OD: https://www.graviti.cn/open-datasets/NeolixOD
