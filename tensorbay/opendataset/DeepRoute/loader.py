@@ -54,7 +54,7 @@ def DeepRoute(path: str) -> Dataset:
         data = Data(point_cloud_path)
         data.label.box3d = []
 
-        with open(label_path) as fp:
+        with open(label_path, encoding="utf-8") as fp:
             annotations = json.load(fp)["objects"]
 
         for annotation in annotations:

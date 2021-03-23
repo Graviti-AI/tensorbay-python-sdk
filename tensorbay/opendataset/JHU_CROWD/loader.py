@@ -63,7 +63,7 @@ def JHU_CROWD(path: str) -> Dataset:
 
 def _load_box_labels(file_path: str) -> List[LabeledBox2D]:
     box_labels = []
-    with open(file_path) as fp:
+    with open(file_path, encoding="utf-8") as fp:
         for line in fp:
             center_x, center_y, width, height, occlusion, blur = map(int, line.strip().split())
             attributes = {"occlusion-level": _OCCLUSION_MAP[occlusion], "blur-level": bool(blur)}
@@ -80,7 +80,7 @@ def _load_box_labels(file_path: str) -> List[LabeledBox2D]:
 
 
 def _load_image_labels(file_path: str) -> Dict[str, Classification]:
-    with open(file_path) as fp:
+    with open(file_path, encoding="utf-8") as fp:
         image_labels = {}
         for line in fp:
             img_index, count, scene, weather, distractor = line.strip().split(",")

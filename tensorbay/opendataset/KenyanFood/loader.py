@@ -48,7 +48,7 @@ def KenyanFoodOrNonfood(path: str) -> Dataset:
 
     for segment_name, filename in SEGMENTS_FOOD_OR_NONFOOD.items():
         segment = dataset.create_segment(segment_name)
-        with open(os.path.join(root_path, filename)) as fp:
+        with open(os.path.join(root_path, filename), encoding="utf-8") as fp:
             for image_path in fp:
                 image_path = os.path.join(root_path, image_path)
                 data = Data(image_path.strip())

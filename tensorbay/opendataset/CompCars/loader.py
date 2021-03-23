@@ -76,7 +76,7 @@ def CompCars(path: str) -> Dataset:
 
     for mode, segment_split_file in _SEGMENT_SPLIT_FILES:
         segment = dataset.create_segment(mode)
-        with open(os.path.join(root_path, segment_split_file)) as fp:
+        with open(os.path.join(root_path, segment_split_file), encoding="utf-8") as fp:
             # one line of segment split file looks like:
             # "78/1/2014/3ac218c0c6c378.jpg\n"
             # 78 is make name id, 1 is model name id, 2014 is release year
@@ -106,7 +106,7 @@ def _get_model_to_attributes(
     model_names = classification_attributes["model_name"].enum
     car_types = classification_attributes["car_type"].enum
 
-    with open(path) as fp:
+    with open(path, encoding="utf-8") as fp:
         # attributes file looks like:
         # model_id maximum_speed displacement door_number seat_number type
         #     1         235          1.8          5           5        4
@@ -128,7 +128,7 @@ def _get_model_to_attributes(
 
 
 def _create_box_label(label_path: str, categories: Tuple[str, ...]) -> List[LabeledBox2D]:
-    with open(label_path) as fp:
+    with open(label_path, encoding="utf-8") as fp:
         viewpoint_id = int(fp.readline().strip())
         viewpoint_index = viewpoint_id if viewpoint_id == -1 else viewpoint_id - 1
 

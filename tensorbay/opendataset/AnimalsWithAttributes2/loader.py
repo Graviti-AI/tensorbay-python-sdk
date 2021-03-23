@@ -42,13 +42,13 @@ def AnimalsWithAttributes2(path: str) -> Dataset:
     dataset.load_catalog(os.path.join(os.path.dirname(__file__), "catalog.json"))
     segment = dataset.create_segment()
 
-    with open(os.path.join(root_path, "classes.txt")) as fp:
+    with open(os.path.join(root_path, "classes.txt"), encoding="utf-8") as fp:
         class_names = [line[:-1].split("\t", 1)[-1] for line in fp]
 
-    with open(os.path.join(root_path, "predicates.txt")) as fp:
+    with open(os.path.join(root_path, "predicates.txt"), encoding="utf-8") as fp:
         attribute_keys = [line[:-1].split("\t", 1)[-1] for line in fp]
 
-    with open(os.path.join(root_path, "predicate-matrix-binary.txt")) as fp:
+    with open(os.path.join(root_path, "predicate-matrix-binary.txt"), encoding="utf-8") as fp:
         attribute_values = [line[:-1].split(" ") for line in fp]
 
     attribute_mapping = {}

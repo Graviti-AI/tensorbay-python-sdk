@@ -105,7 +105,7 @@ def _load_data(path: str, attribute_map: _ATTRIBUTE_MAP_TYPE, segment_name: str)
 
     """
     is_test = segment_name == "test"
-    with open(path) as fp:
+    with open(path, encoding="utf-8") as fp:
         for image_path in fp:
             event, file_name = image_path.split("/")
             # translate directory name to category. like 0--Parade -> Parade
