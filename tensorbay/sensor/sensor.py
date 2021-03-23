@@ -42,6 +42,17 @@ class SensorType(TypeEnum):
 
     It includes 'LIDAR', 'RADAR', 'CAMERA' and 'FISHEYE_CAMERA'.
 
+    Examples:
+        >>> SensorType.CAMERA
+        <SensorType.CAMERA: 'CAMERA'>
+        >>> SensorType["CAMERA"]
+        <SensorType.CAMERA: 'CAMERA'>
+
+        >>> SensorType.CAMERA.name
+        'CAMERA'
+        >>> SensorType.CAMERA.value
+        'CAMERA'
+
     """
 
     LIDAR = "LIDAR"
@@ -114,6 +125,24 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
         Returns:
             A :class:`Sensor` instance containing the information from the contents dict.
 
+        Examples:
+            >>> contents = {
+            ...     "name": "Lidar1",
+            ...     "type": "LIDAR",
+            ...     "extrinsics": {
+            ...         "translation": {"x": 1.1, "y": 2.2, "z": 3.3},
+            ...         "rotation": {"w": 1.1, "x": 2.2, "y": 3.3, "z": 4.4},
+            ...     },
+            ... }
+            >>> sensor = Sensor.loads(contents)
+            >>> sensor
+            Lidar("Lidar1")(
+                (extrinsics): Transform3D(
+                    (translation): Vector3D(1.1, 2.2, 3.3),
+                    (rotation): Quaternion(1.1, 2.2, 3.3, 4.4)
+                )
+            )
+
         """
         sensor: "Sensor._Type" = common_loads(SensorType(contents["type"]).type, contents)
         return sensor
@@ -123,6 +152,17 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
 
         Returns:
             A dict containing the information of the sensor.
+
+        Examples:
+            >>> # sensor is the object initialized from self.loads() method.
+            >>> sensor.dumps()
+            {
+                'name': 'Lidar1',
+                'type': 'LIDAR',
+                'extrinsics': {'translation': {'x': 1.1, 'y': 2.2, 'z': 3.3},
+                'rotation': {'w': 1.1, 'x': 2.2, 'y': 3.3, 'z': 4.4}
+                }
+            }
 
         """
         contents: Dict[str, Any] = super()._dumps()
@@ -147,6 +187,16 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
             rotation: Rotation in a sequence of [w, x, y, z] or 3x3 rotation matrix
                 or numpy quaternion.
 
+        Examples:
+            >>> sensor.set_extrinsics(translation=translation, rotation=rotation)
+            >>> sensor
+            Lidar("Lidar1")(
+                (extrinsics): Transform3D(
+                    (translation): Vector3D(1, 2, 3),
+                    (rotation): Quaternion(1, 2, 3, 4)
+                )
+            )
+
         """
         self.extrinsics = Transform3D(transform, translation=translation, rotation=rotation)
 
@@ -158,7 +208,15 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
             y: The y coordinate of the translation.
             z: The z coordinate of the translation.
 
-                    sensor.set_translation(x=1, y=2, z=3)
+        Examples:
+            >>> sensor.set_translation(x=2, y=3, z=4)
+            >>> sensor
+            Lidar("Lidar1")(
+                (extrinsics): Transform3D(
+                    (translation): Vector3D(2, 3, 4),
+                    ...
+                )
+            )
 
         """
         if not hasattr(self, "extrinsics"):
@@ -170,6 +228,16 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
 
         Arguments:
             rotation: Rotation in a sequence of [w, x, y, z] or numpy quaternion.
+
+        Examples:
+            >>> sensor.set_rotation([2, 3, 4, 5])
+            >>> sensor
+            Lidar("Lidar1")(
+                (extrinsics): Transform3D(
+                    ...
+                    (rotation): Quaternion(2, 3, 4, 5)
+                )
+            )
 
         """
         if not hasattr(self, "extrinsics"):
@@ -184,6 +252,17 @@ class Lidar(Sensor):
     :class:`Lidar` is a kind of sensor for measuring distances by illuminating the target
     with laser light and measuring the reflection.
 
+    Examples:
+        >>> lidar = Lidar("Lidar1")
+        >>> lidar.set_extrinsics(translation=translation, rotation=rotation)
+        >>> lidar
+        Lidar("Lidar1")(
+            (extrinsics): Transform3D(
+                (translation): Vector3D(1, 2, 3),
+                (rotation): Quaternion(1, 2, 3, 4)
+            )
+        )
+
     """
 
 
@@ -193,6 +272,17 @@ class Radar(Sensor):
 
     :class:`Radar` is a detection system that uses radio waves to determine the range, angle,
     or velocity of objects.
+
+    Examples:
+        >>> radar = Radar("Radar1")
+        >>> radar.set_extrinsics(translation=translation, rotation=rotation)
+        >>> radar
+        Radar("Radar1")(
+            (extrinsics): Transform3D(
+                (translation): Vector3D(1, 2, 3),
+                (rotation): Quaternion(1, 2, 3, 4)
+            )
+        )
 
     """
 
@@ -207,6 +297,38 @@ class Camera(Sensor):
     Attributes:
         extrinsics: The translation and rotation of the camera.
         intrinsics: The camera matrix and distortion coefficients of the camera.
+
+    Examples:
+        >>> from tensorbay.geometry import Vector3D
+        >>> from numpy import quaternion
+        >>> camera = Camera('Camera1')
+        >>> translation = Vector3D(1, 2, 3)
+        >>> rotation = quaternion(1, 2, 3, 4)
+        >>> camera.set_extrinsics(translation=translation, rotation=rotation)
+        >>> camera.set_camera_matrix(fx=1.1, fy=1.1, cx=1.1, cy=1.1)
+        >>> camera.set_distortion_coefficients(p1=1.2, p2=1.2, k1=1.2, k2=1.2)
+        >>> camera
+        Camera("Camera1")(
+            (extrinsics): Transform3D(
+                (translation): Vector3D(1, 2, 3),
+                (rotation): quaternion(1, 2, 3, 4)
+            ),
+            (intrinsics): CameraIntrinsics(
+                (camera_matrix): CameraMatrix(
+                    (fx): 1.1,
+                    (fy): 1.1,
+                    (cx): 1.1,
+                    (cy): 1.1,
+                    (skew): 0
+                ),
+                (distortion_coefficients): DistortionCoefficients(
+                    (p1): 1.2,
+                    (p2): 1.2,
+                    (k1): 1.2,
+                    (k2): 1.2
+                )
+            )
+        )
 
     """
 
@@ -231,6 +353,42 @@ class Camera(Sensor):
         Returns:
             A :class:`Camera` instance containing information from contents dict.
 
+        Examples:
+            >>> contents = {
+            ...     "name": "Camera1",
+            ...     "type": "CAMERA",
+            ...     "extrinsics": {
+            ...           "translation": {"x": 1, "y": 2, "z": 3},
+            ...           "rotation": {"w": 1.0, "x": 2.0, "y": 3.0, "z": 4.0},
+            ...     },
+            ...     "intrinsics": {
+            ...         "cameraMatrix": {"fx": 1, "fy": 1, "cx": 1, "cy": 1, "skew": 0},
+            ...         "distortionCoefficients": {"p1": 1, "p2": 1, "k1": 1, "k2": 1},
+            ...     },
+            ... }
+            >>> Camera.loads(contents)
+            Camera("Camera1")(
+                    (extrinsics): Transform3D(
+                        (translation): Vector3D(1, 2, 3),
+                        (rotation): Quaternion(1, 2, 3, 4)
+                    ),
+                    (intrinsics): CameraIntrinsics(
+                        (camera_matrix): CameraMatrix(
+                            (fx): 1,
+                            (fy): 1,
+                            (cx): 1,
+                            (cy): 1,
+                            (skew): 0
+                        ),
+                        (distortion_coefficients): DistortionCoefficients(
+                            (p1): 1,
+                            (p2): 1,
+                            (k1): 1,
+                            (k2): 1
+                        )
+                    )
+                )
+
         """
         return common_loads(cls, contents)
 
@@ -239,6 +397,21 @@ class Camera(Sensor):
 
         Returns:
             A dict containing name, description, extrinsics and intrinsics.
+
+        Examples:
+            >>> camera.dumps()
+            {
+                'name': 'Camera1',
+                'type': 'CAMERA',
+                'extrinsics': {
+                    'translation': {'x': 1, 'y': 2, 'z': 3},
+                    'rotation': {'w': 1.0, 'x': 2.0, 'y': 3.0, 'z': 4.0}
+                },
+                'intrinsics': {
+                    'cameraMatrix': {'fx': 1, 'fy': 1, 'cx': 1, 'cy': 1, 'skew': 0},
+                    'distortionCoefficients': {'p1': 1, 'p2': 1, 'k1': 1, 'k2': 1}
+                }
+            }
 
         """
         contents = super().dumps()
@@ -257,6 +430,24 @@ class Camera(Sensor):
             matrix: A 3x3 Sequence of camera matrix.
             **kwargs: Other float values to set camera matrix.
 
+        Examples:
+            >>> camera.set_camera_matrix(fx=1.1, fy=2.2, cx=3.3, cy=4.4)
+            >>> camera
+            Camera("Camera1")(
+                ...
+                (intrinsics): CameraIntrinsics(
+                    (camera_matrix): CameraMatrix(
+                        (fx): 1.1,
+                        (fy): 2.2,
+                        (cx): 3.3,
+                        (cy): 4.4,
+                        (skew): 0
+                    ),
+                    ...
+                    )
+                )
+            )
+
         """
         if not hasattr(self, "intrinsics"):
             self.intrinsics = CameraIntrinsics(matrix, _init_distortion=False, **kwargs)
@@ -273,6 +464,22 @@ class Camera(Sensor):
         Raises:
             ValueError: When intrinsics is not set yet.
 
+        Examples:
+            >>> camera.set_distortion_coefficients(p1=1.1, p2=2.2, k1=3.3, k2=4.4)
+            >>> camera
+            Camera("Camera1")(
+                ...
+                (intrinsics): CameraIntrinsics(
+                    ...
+                    (distortion_coefficients): DistortionCoefficients(
+                        (p1): 1.1,
+                        (p2): 2.2,
+                        (k1): 3.3,
+                        (k2): 4.4
+                    )
+                )
+            )
+
         """
         if not hasattr(self, "intrinsics"):
             raise ValueError("Camera matrix of camera intrinsics must be set first.")
@@ -285,5 +492,16 @@ class FisheyeCamera(Camera):  # pylint: disable=too-many-ancestors
 
     Fisheye camera is an ultra wide-angle lens that produces strong visual distortion intended
     to create a wide panoramic or hemispherical image.
+
+    Examples:
+        >>> fisheye_camera = FisheyeCamera("FisheyeCamera1")
+        >>> fisheye_camera.set_extrinsics(translation=translation, rotation=rotation)
+        >>> fisheye_camera
+        FisheyeCamera("FisheyeCamera1")(
+            (extrinsics): Transform3D(
+                (translation): Vector3D(1, 2, 3),
+                (rotation): Quaternion(1, 2, 3, 4)
+            )
+        )
 
     """
