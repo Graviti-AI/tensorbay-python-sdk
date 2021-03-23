@@ -231,6 +231,7 @@ class Client:
 
         """
         kwargs.setdefault("headers", {})["X-Token"] = self.access_key
+        kwargs["headers"]["X-Source"] = "PYTHON-SDK"
 
         return self.do(method=method, url=self._url_make(section, dataset_id), **kwargs)
 
