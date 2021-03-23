@@ -187,12 +187,12 @@ class GAS:
 
         dataset_id = info["id"]
         type_flag = info["type"]
-        top_commit_id = info["topCommitId"]
+        commit_id = info["HEAD"]["commitId"]
 
         if is_fusion != type_flag:
             raise GASDatasetTypeError(name, type_flag)
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
-        return ReturnType(name, dataset_id, self, commit_id=top_commit_id)
+        return ReturnType(name, dataset_id, self, commit_id=commit_id)
 
     def list_dataset_names(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[str]:
         """List names of all TensorBay datasets.
