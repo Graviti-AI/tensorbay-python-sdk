@@ -26,7 +26,7 @@ import os
 import sys
 from configparser import ConfigParser
 from pathlib import Path, PurePosixPath
-from typing import Dict, Iterable, Iterator, List, Tuple, Union
+from typing import Dict, Iterable, Iterator, Tuple, Union
 
 import click
 
@@ -199,71 +199,6 @@ def delete(obj: Dict[str, str], name: str, yes: bool) -> None:
         )
 
     _gas(**obj).delete_dataset(info.dataset_name)
-
-
-@cli.command()
-@click.argument("local_paths", type=str, nargs=-1)
-@click.argument("tbrn", type=str, nargs=1)
-@click.option(
-    "-r", "--recursive", "is_recursive", is_flag=True, help="Copy directories recursively."
-)
-@click.option("-j", "--jobs", type=int, default=1, help="The number of threads.")
-@click.option(
-    "-s",
-    "--skip_uploaded_files",
-    "skip_uploaded_files",
-    is_flag=True,
-    help="Whether to skip the uploaded files.",
-)
-@click.pass_obj
-def cp(  # pylint: disable=invalid-name, too-many-arguments
-    obj: Dict[str, str],
-    local_paths: Iterable[str],
-    tbrn: str,
-    is_recursive: bool,
-    jobs: int,
-    skip_uploaded_files: bool,
-) -> None:
-    """Copy local data to a remote path.\f
-
-    Arguments:
-        obj: A dict contains config information.
-        local_paths: An iterable of local paths contains data to be uploaded.
-        tbrn: The path to save the uploaded data, like "tb:KITTI:seg1".
-        is_recursive: Whether copy directories recursively.
-        jobs: Number of threads to upload data.
-        skip_uploaded_files: Whether skip the uploaded files.
-
-    """  # noqa: D301,D415
-    info = TBRN(tbrn=tbrn)
-
-    if info.type == TBRNType.DATASET:
-        click.echo("Error: SEGMENT is required", err=True)
-        sys.exit(1)
-
-    if info.type in [TBRNType.SEGMENT, TBRNType.NORMAL_FILE]:
-        target_remote_path = info.remote_path if info.type == TBRNType.NORMAL_FILE else ""
-
-        dataset_client = _gas(**obj).get_dataset(info.dataset_name)
-        local_abspaths: List[str] = [os.path.abspath(local_path) for local_path in local_paths]
-        if (
-            len(local_abspaths) == 1
-            and not os.path.isdir(local_abspaths[0])
-            and target_remote_path
-            and not target_remote_path.endswith("/")
-        ):
-            segment_client = dataset_client.get_or_create_segment(info.segment_name)
-            segment_client.upload_file(local_abspaths[0], target_remote_path)
-            return
-
-        segment = _get_segment_object(
-            info.segment_name, local_abspaths, target_remote_path, is_recursive
-        )
-        dataset_client.upload_segment(segment, jobs=jobs, skip_uploaded_files=skip_uploaded_files)
-        return
-
-    click.echo(f'"{tbrn}" is an invalid path', err=True)
-    sys.exit(1)
 
 
 def _get_segment_object(

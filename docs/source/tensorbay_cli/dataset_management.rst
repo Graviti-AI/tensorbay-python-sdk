@@ -15,7 +15,6 @@ TensorBay CLI offers following sub-commands to manage your dataset.
    Sub-Commands Description
    ============ =========================================
    create        Create a dataset
-   cp            Upload data
    ls            List data, segments and datasets
    delete        Delete a dataset
    ============ =========================================
@@ -40,90 +39,6 @@ Take `BSTLD`_ for example:
 .. code:: console
 
    $ gas create tb:BSTLD
-
-****************
- Upload Dataset
-****************
-
-The basic structure of the sub-command to upload data:
-
-.. code:: console
-
-   $ gas cp [Options] [local_path1] [local_path2]... [tbrn]
-
-   Options:
-     -r, --recursive     Copy directories recursively.
-     -j, --jobs INTEGER  The number of threads.
-
-   tbrn:
-     tb:[dataset_name]:[segment_name]
-     tb:[dataset_name]:[segment_name]://[remote_path]
-
-
-``[segment_name]`` is required. If only upload one file and
-``[remote_path]`` doesn't end with ``"/"``, then the file will be uploaded and renamed as
-``[remote_path]``.
-
-You can upload your data in the following ways:
-
-| 1. Upload a single file.
-
-.. code:: console
-
-   $ gas cp image1.jpg tb:dataset:seg://object/
-
-
-The file will be saved as:
-
-.. code:: console
-
-   tb:dataset:seg://object/image1.jpg
-
-| 2. Upload multiple files.
-
-.. code:: console
-
-   $ gas cp image1.jpg image2.jpg tb:dataset:seg://object/
-
-The files will be saved as:
-
-.. code:: console
-
-   tb:dataset:seg://object/image1.jpg
-   tb:dataset:seg://object/image2.jpg
-   tb:dataset:seg://object/image3.jpg
-
-| 3. Upload files in folders.
-
-.. code:: console
-
-   $ gas cp -r image.jpg folder1/ tb:dataset:seg://object
-
-If the structure of the folder is like:
-
-.. code:: console
-   :name: folder-structure
-
-   folder1
-   ├── sub1
-   │   └── image1.jpg
-   └── image2.jpg
-
-The files will be saved as:
-
-.. code:: console
-
-   tb:dataset:seg://object/image.jpg
-   tb:dataset:seg://object/folder1/image2.jpg
-   tb:dataset:seg://object/folder1/sub1/image1.jpg
-
-| 4. Multi-thread upload.
-
-Upload a folder with 8 threads:
-
-.. code:: console
-
-   $ gas cp -r -j 8 folder/ tb:dataset:seg://object
 
 **************
  Read Dataset
