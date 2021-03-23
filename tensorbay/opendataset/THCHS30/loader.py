@@ -61,7 +61,7 @@ def _get_label(label_file: str) -> List[LabeledSentence]:
 
 def _get_subcatalog(lexion_path: str) -> SentenceSubcatalog:
     subcatalog = SentenceSubcatalog()
-    with open(lexion_path) as fp:
+    with open(lexion_path, encoding="utf-8") as fp:
         for line in islice(fp, 4, None):
             subcatalog.append_lexicon(line.strip().split())
     return subcatalog

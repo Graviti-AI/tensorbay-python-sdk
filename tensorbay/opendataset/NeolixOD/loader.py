@@ -48,7 +48,7 @@ def NeolixOD(path: str) -> Dataset:
         point_cloud_id = os.path.basename(point_cloud_path)[:6]
         label_path = os.path.join(root_path, "labels", f"{point_cloud_id}.txt")
 
-        with open(label_path) as fp:
+        with open(label_path, encoding="utf-8") as fp:
             for label_value_raw in fp:
                 label_value = label_value_raw.rstrip().split()
                 label = LabeledBox3D(

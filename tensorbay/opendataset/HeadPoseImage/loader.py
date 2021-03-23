@@ -74,7 +74,7 @@ def _load_attributes(image_name: str) -> Dict[str, int]:
 
 
 def _load_label_box(label_file_path: str) -> Tuple[float, float, float, float]:
-    with open(label_file_path) as fp:
+    with open(label_file_path, encoding="utf-8") as fp:
         center_x, center_y, width, height = map(int, islice(fp, 3, 7))
     return (
         center_x - width / 2,
