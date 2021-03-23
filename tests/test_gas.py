@@ -5,14 +5,13 @@
 
 """This file defines class TestGAS"""
 
-import uuid
-
 import pytest
 
 from tensorbay.client import GAS, GASDatasetError, GASResponseError
-from tensorbay.dataset.data import Data, Label
-from tensorbay.dataset.dataset import Dataset, Segment
-from tensorbay.label.catalog import Catalog
+from tensorbay.dataset import Data, Dataset, Segment
+from tensorbay.label import Catalog, Label
+
+from .utility import get_random_dataset_name
 
 CATALOG = {
     "BOX2D": {
@@ -274,7 +273,3 @@ class TestGAS:
         gas_client.delete_dataset(dataset_name_2)
         with pytest.raises(GASDatasetError):
             gas_client.get_dataset(dataset_name_2)
-
-
-def get_random_dataset_name():
-    return f"test{uuid.uuid4().hex}"

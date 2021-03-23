@@ -12,6 +12,7 @@ from .exceptions import (
     GASFrameError,
     GASPathError,
     GASResponseError,
+    GASSegmentError,
 )
 from .gas import GAS
 
@@ -23,4 +24,5 @@ __all__ = [
     "GASFrameError",
     "GASPathError",
     "GASResponseError",
+    "GASSegmentError",
 ]
