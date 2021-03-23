@@ -50,7 +50,19 @@ if TYPE_CHECKING:
 
 
 class LabelType(TypeEnum):
-    """This class defines all the supported types within :class:`Label`."""
+    """This class defines all the supported types within :class:`Label`.
+
+    Examples:
+        >>> LabelType.BOX3D
+        <LabelType.BOX3D: 'box3d'>
+        >>> LabelType["BOX3D"]
+        <LabelType.BOX3D: 'box3d'>
+        >>> LabelType.BOX3D.name
+        'BOX3D'
+        >>> LabelType.BOX3D.value
+        'box3d'
+
+    """
 
     __subcatalog_registry__: Dict[TypeEnum, Type[Any]] = {}
 
@@ -70,6 +82,11 @@ class LabelType(TypeEnum):
 
         Returns:
             The corresponding subcatalog type.
+
+        Examples:
+            >>> LabelType.BOX3D.subcatalog_type
+            <class 'tensorbay.label.label_box.Box3DSubcatalog'>
+
         """
         return self.__subcatalog_registry__[self]
 
@@ -213,6 +230,18 @@ class Label(ReprMixin, EqMixin):
 
     It contains growing types of labels referring to different tasks.
 
+    Examples:
+        >>> from tensorbay.label import Classification
+        >>> label = Label()
+        >>> label.classification = Classification("example_category", {"example_attribute1": "a"})
+        >>> label
+        Label(
+          (classification): Classification(
+            (category): 'example_category',
+            (attributes): {...}
+          )
+        )
+
     """
 
     _T = TypeVar("_T", bound="Label")
@@ -255,20 +284,25 @@ class Label(ReprMixin, EqMixin):
         """Loads data from a dict containing the labels information.
 
         Arguments:
-            contents: A dict containing the labels information, which looks like::
-
-                    {
-                        "CLASSIFICATION": {...},
-                        "BOX2D": {...},
-                        "BOX3D": {...},
-                        "POLYGON2D": {...},
-                        "POLYLINE2D": {...},
-                        "KEYPOINTS2D": {...},
-                        "SENTENCE": {...},
-                    }
+            contents: A dict containing the labels information.
 
         Returns:
             A :class:`Label` instance containing labels information from the given dict.
+
+        Examples:
+            >>> contents = {
+            ...     "CLASSIFICATION": {
+            ...         "category": "example_category",
+            ...         "attributes": {"example_attribute1": "a"}
+            ...     }
+            ... }
+            >>> Label.loads(contents)
+            Label(
+              (classification): Classification(
+                (category): 'example_category',
+                (attributes): {...}
+              )
+            )
 
         """
         return common_loads(cls, contents)
@@ -277,17 +311,14 @@ class Label(ReprMixin, EqMixin):
         """Dumps all labels into a dict.
 
         Returns:
-            Dumped labels dict, which looks like::
+            Dumped labels dict.
 
-                {
-                    "CLASSIFICATION": {...},
-                    "BOX2D": {...},
-                    "BOX3D": {...},
-                    "POLYGON2D": {...},
-                    "POLYLINE2D": {...},
-                    "KEYPOINTS2D": {...},
-                    "SENTENCE": {...},
-                }
+        Examples:
+            >>> from tensorbay.label import Classification
+            >>> label = Label()
+            >>> label.classification = Classification("category1", {"attribute1": "a"})
+            >>> label.dumps()
+            {'CLASSIFICATION': {'category': 'category1', 'attributes': {'attribute1': 'a'}}}
 
         """
         contents: Dict[str, Any] = {}
