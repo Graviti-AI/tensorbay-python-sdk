@@ -32,7 +32,7 @@ corresponding to different types of labels.
 from typing import Any, Dict, Type, TypeVar, Union
 
 from ..label import LabelType
-from ..utility import ReprMixin, ReprType, common_loads
+from ..utility import EqMixin, ReprMixin, ReprType, common_loads
 from .label_box import Box2DSubcatalog, Box3DSubcatalog
 from .label_classification import ClassificationSubcatalog
 from .label_keypoints import Keypoints2DSubcatalog
@@ -51,7 +51,7 @@ Subcatalogs = Union[
 ]
 
 
-class Catalog(ReprMixin):
+class Catalog(ReprMixin, EqMixin):
     """This class defines the concept of catalog.
 
     :class:`Catalog` is used to describe the types of labels

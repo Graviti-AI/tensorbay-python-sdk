@@ -74,7 +74,7 @@ class LabelType(TypeEnum):
         return self.__subcatalog_registry__[self]
 
 
-class SubcatalogBase(TypeMixin[LabelType], ReprMixin):
+class SubcatalogBase(TypeMixin[LabelType], ReprMixin, EqMixin):
     """This is the base class for different types of subcatalogs.
 
     It defines the basic concept of Subcatalog, which is the collection of the labels information.
