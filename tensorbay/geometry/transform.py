@@ -41,6 +41,41 @@ class Transform3D(ReprMixin):
     Raises:
         ValueError: If the shape of the input matrix is not correct.
 
+    Examples:
+        *Initialization Method 1:* Init from sequence.
+
+        >>> Transform3D([[1, 0, 0, 1], [0, 1, 0, 1], [0, 0, 1, 1]])
+        Transform3D(
+          (translation): Vector3D(1, 1, 1),
+          (rotation): quaternion(1, -0, -0, -0)
+        )
+
+        *Initialization Method 2:* Init from numpy array.
+
+        >>> import numpy as np
+        >>> Transform3D(np.array([[1, 0, 0, 1], [0, 1, 0, 1], [0, 0, 1, 1]]))
+        Transform3D(
+          (translation): Vector3D(1, 1, 1),
+          (rotation): quaternion(1, -0, -0, -0)
+        )
+
+        *Initialization Method 3:* Init from transform.
+
+        >>> transform = Transform3D([[1, 0, 0, 1], [0, 1, 0, 1], [0, 0, 1, 1]])
+        >>> Transform3D(transform)
+        Transform3D(
+          (translation): Vector3D(1, 1, 1),
+          (rotation): quaternion(1, -0, -0, -0)
+        )
+
+        *Initialization Method 4:* Init from translation and rotation.
+
+        >>> Transform3D(translation=[1, 1, 1], rotation=[1, 0, 0, 0])
+        Transform3D(
+          (translation): Vector3D(1, 1, 1),
+          (rotation): quaternion(1, 0, 0, 0)
+        )
+
     """
 
     _repr_type = ReprType.INSTANCE
@@ -143,24 +178,21 @@ class Transform3D(ReprMixin):
         """Load a :class:`Transform3D` from a dict containing rotation and translation.
 
         Arguments:
-            contents: A dict containing rotation and translation of a 3D transform::
-
-                {
-                    "translation": {
-                        "x": ...
-                        "y": ...
-                        "z": ...
-                    },
-                    "rotation": {
-                        "w": ...
-                        "x": ...
-                        "y": ...
-                        "z": ...
-                    }
-                }
+            contents: A dict containing rotation and translation of a 3D transform.
 
         Returns:
             The loaded :class:`Transform3D` object.
+
+        Example:
+            >>> contents = {
+            ...     "translation": {"x": 1.0, "y": 2.0, "z": 3.0},
+            ...     "rotation": {"w": 1.0, "x": 0.0, "y": 0.0, "z": 0.0},
+            ... }
+            >>> Transform3D.loads(contents)
+            Transform3D(
+              (translation): Vector3D(1.0, 2.0, 3.0),
+              (rotation): quaternion(1, 0, 0, 0)
+            )
 
         """
         return common_loads(cls, contents)
@@ -172,6 +204,11 @@ class Transform3D(ReprMixin):
         Returns:
             Translation in :class:`~tensorbay.geometry.vector.Vector3D`.
 
+        Examples:
+            >>> transform = Transform3D([[1, 0, 0, 1], [0, 1, 0, 1], [0, 0, 1, 1]])
+            >>> transform.translation
+            Vector3D(1, 1, 1)
+
         """
         return self._translation
 
@@ -182,6 +219,11 @@ class Transform3D(ReprMixin):
         Returns:
             Rotation in numpy quaternion.
 
+        Examples:
+            >>> transform = Transform3D([[1, 0, 0, 1], [0, 1, 0, 1], [0, 0, 1, 1]])
+            >>> transform.rotation
+            quaternion(1, -0, -0, -0)
+
         """
         return self._rotation
 
@@ -191,6 +233,14 @@ class Transform3D(ReprMixin):
         Returns:
             A dict containing rotation and translation information
                 of the :class:`Transform3D`.
+
+        Examples:
+            >>> transform = Transform3D([[1, 0, 0, 1], [0, 1, 0, 1], [0, 0, 1, 1]])
+            >>> transform.dumps()
+            {
+                'translation': {'x': 1, 'y': 1, 'z': 1},
+                'rotation': {'w': 1.0, 'x': -0.0, 'y': -0.0, 'z': -0.0},
+            }
 
         """
         return {
@@ -210,9 +260,15 @@ class Transform3D(ReprMixin):
             x: The x coordinate of the translation.
             y: The y coordinate of the translation.
             z: The z coordinate of the translation.
-                .. code:: python
 
-                    transform.set_translation(x=1, y=2, z=3)
+        Examples:
+            >>> transform = Transform3D(translation=[1, 1, 1], rotation=[1, 0, 0, 0])
+            >>> transform.set_translation(3, 4, 5)
+            >>> transform
+            Transform3D(
+              (translation): Vector3D(3, 4, 5),
+              (rotation): quaternion(1, 0, 0, 0)
+            )
 
         """
         self._translation = Vector3D(x, y, z)
@@ -222,6 +278,15 @@ class Transform3D(ReprMixin):
 
         Arguments:
             rotation: Rotation in a sequence of [w, x, y, z] or numpy quaternion.
+
+        Examples:
+            >>> transform = Transform3D(translation=[1, 1, 1], rotation=[1, 0, 0, 0])
+            >>> transform.set_rotation([0, 1, 0, 0])
+            >>> transform
+            Transform3D(
+              (translation): Vector3D(1, 1, 1),
+              (rotation): quaternion(0, 1, 0, 0)
+            )
 
         """
         if isinstance(rotation, quaternion):
@@ -235,6 +300,14 @@ class Transform3D(ReprMixin):
         Returns:
             A 4x4 numpy array represents the transform matrix.
 
+        Examples:
+            >>> transform = Transform3D(translation=[1, 2, 3], rotation=[0, 1, 0, 0])
+            >>> transform.as_matrix()
+            array([[ 1.,  0.,  0.,  1.],
+                   [ 0., -1.,  0.,  2.],
+                   [ 0.,  0., -1.,  3.],
+                   [ 0.,  0.,  0.,  1.]])
+
         """
         matrix: np.ndarray = np.eye(4)
         matrix[:3, 3] = self._translation
@@ -246,6 +319,14 @@ class Transform3D(ReprMixin):
 
         Returns:
             A :class:`Transform3D` object representing the inverse of this :class:`Transform3D`.
+
+        Examples:
+            >>> transform = Transform3D(translation=[1, 2, 3], rotation=[0, 1, 0, 0])
+            >>> transform.inverse()
+            Transform3D(
+              (translation): Vector3D(-1.0, 2.0, 3.0),
+              (rotation): quaternion(0, -1, -0, -0)
+            )
 
         """
         rotation = self._rotation.inverse()
