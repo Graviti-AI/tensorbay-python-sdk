@@ -95,7 +95,7 @@ class Items(ReprMixin):
 
     Raises:
         TypeError: When both enum and type_ are absent or
-        when type_ is array and items is absent.
+            when type_ is array and items is absent.
 
     """
 
