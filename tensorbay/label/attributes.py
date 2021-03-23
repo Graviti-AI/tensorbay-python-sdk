@@ -97,6 +97,15 @@ class Items(ReprMixin, EqMixin):
         TypeError: When both enum and type_ are absent or
             when type_ is array and items is absent.
 
+    Examples:
+        >>> Items(type_="integer", enum=[1, 2, 3, 4, 5], minimum=1, maximum=5)
+        Items(
+          (type): 'integer',
+          (enum): [...],
+          (minimum): 1,
+          (maximum): 5
+        )
+
     """
 
     _T = TypeVar("_T", bound="Items")
@@ -153,24 +162,30 @@ class Items(ReprMixin, EqMixin):
         """Load an Items from a dict containing the items information.
 
         Arguments:
-            contents: A dict containing the information of the items,
-                whose format should be like::
-
-                        {
-                            "type":
-                            "enum": [...]
-                            "minimum":
-                            "maximum":
-                            "items": {
-                                "enum": [...],
-                                "type":
-                                "minimum":
-                                "maximum":
-                            }
-                        }
+            contents: A dict containing the information of the items.
 
         Returns:
             The loaded :class:`Items` object.
+
+        Examples:
+            >>> contents = {
+            ...     "type": "array",
+            ...     "enum": [1, 2, 3, 4, 5],
+            ...     "minimum": 1,
+            ...     "maximum": 5,
+            ...     "items": {
+            ...         "enum": [None],
+            ...         "type": "null",
+            ...     },
+            ... }
+            >>> Items.loads(contents)
+            Items(
+              (type): 'array',
+              (enum): [...],
+              (minimum): 1,
+              (maximum): 5,
+              (items): Items(...)
+            )
 
         """
         return common_loads(cls, contents)
@@ -180,6 +195,11 @@ class Items(ReprMixin, EqMixin):
 
         Returns:
             A dict containing all the information of the items.
+
+        Examples:
+            >>> items = Items(type_="integer", enum=[1, 2, 3, 4, 5], minimum=1, maximum=5)
+            >>> items.dumps()
+            {'type': 'integer', 'enum': [1, 2, 3, 4, 5], 'minimum': 1, 'maximum': 5}
 
         """
         contents: Dict[str, Any] = {}
@@ -237,6 +257,42 @@ class AttributeInfo(NameMixin, Items):
 
     .. _Json schema: https://json-schema.org/
 
+    Examples:
+        >>> from tensorbay.label import Items
+        >>> items = Items(type_="integer", enum=[1, 2, 3, 4, 5], minimum=1, maximum=5)
+        >>> AttributeInfo(
+        ...     name="example",
+        ...     type_="array",
+        ...     enum=[1, 2, 3, 4, 5],
+        ...     items=items,
+        ...     minimum=1,
+        ...     maximum=5,
+        ...     parent_categories=["parent_category_of_example"],
+        ...     description="This is an example",
+        ... )
+        AttributeInfo("example")(
+          (name): 'example',
+          (parent_categories): [
+            'parent_category_of_example'
+          ],
+          (type): 'array',
+          (enum): [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          (minimum): 1,
+          (maximum): 5,
+          (items): Items(
+            (type): 'integer',
+            (enum): [...],
+            (minimum): 1,
+            (maximum): 5
+          )
+        )
+
     """
 
     _T = TypeVar("_T", bound="AttributeInfo")
@@ -279,27 +335,43 @@ class AttributeInfo(NameMixin, Items):
         """Load an AttributeInfo from a dict containing the attribute information.
 
         Arguments:
-            contents: A dict containing the information of the attribute,
-                whose format should be like::
-
-                        {
-                            "name":
-                            "type":
-                            "enum": [...]
-                            "minimum":
-                            "maximum":
-                            "items": {
-                                "enum": [...],
-                                "type":
-                                "minimum":
-                                "maximum":
-                            },
-                            "description":
-                            "parentCategories": [...]
-                        }
+            contents: A dict containing the information of the attribute.
 
         Returns:
             The loaded :class:`AttributeInfo` object.
+
+        Examples:
+            >>> contents = {
+                ...     "name": "example",
+                ...     "type": "array",
+                ...     "enum": [1, 2, 3, 4, 5],
+                ...     "items": {"enum": ["true", "false"], "type": "boolean"},
+                ...     "minimum": 1,
+                ...     "maximum": 5,
+                ...     "description": "This is an example",
+                ...     "parentCategories": ["parent_category_of_example"],
+                ... }
+            >>> AttributeInfo.loads(contents)
+            AttributeInfo("example")(
+              (name): 'example',
+              (parent_categories): [
+                'parent_category_of_example'
+              ],
+              (type): 'array',
+              (enum): [
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              (minimum): 1,
+              (maximum): 5,
+              (items): Items(
+                (type): 'boolean',
+                (enum): [...]
+              )
+            )
 
         """
         return common_loads(cls, contents)
@@ -309,6 +381,31 @@ class AttributeInfo(NameMixin, Items):
 
         Returns:
             A dict containing all the information of this attribute.
+
+        Examples:
+            >>> from tensorbay.label import Items
+            >>> items = Items(type_="integer", enum=[1, 2, 3, 4, 5], minimum=1, maximum=5)
+            >>> attributeinfo = AttributeInfo(
+            ...     name="example",
+            ...     type_="array",
+            ...     enum=[1, 2, 3, 4, 5],
+            ...     items=items,
+            ...     minimum=1,
+            ...     maximum=5,
+            ...     parent_categories=["parent_category_of_example"],
+            ...     description="This is an example",
+            ... )
+            >>> attributeinfo.dumps()
+            {
+                'name': 'example',
+                'description': 'This is an example',
+                'type': 'array',
+                'items': {'type': 'integer', 'enum': [1, 2, 3], 'minimum': 1, 'maximum': 5},
+                'enum': [1, 2, 3, 4, 5],
+                'minimum': 1,
+                'maximum': 5,
+                'parentCategories': ['parent_category_of_example'],
+            }
 
         """
         contents: Dict[str, Any] = NameMixin._dumps(self)
