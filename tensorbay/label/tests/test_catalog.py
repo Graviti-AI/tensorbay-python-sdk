@@ -69,6 +69,17 @@ class TestCatalog:
         catalog.box2d = Box2DSubcatalog()
         assert catalog.__bool__() == True
 
+    def test_eq(self):
+        catalog1 = Catalog()
+        catalog1.box2d = Box2DSubcatalog()
+        catalog2 = Catalog()
+        catalog2.box2d = Box2DSubcatalog()
+        catalog3 = Catalog()
+        catalog3.box3d = Box3DSubcatalog()
+
+        assert catalog1 == catalog2
+        assert catalog1 != catalog3
+
     def test_loads(self):
         catalog = Catalog.loads(_CATALOG_DATA)
         for key, value in _CATALOG_DICT.items():
