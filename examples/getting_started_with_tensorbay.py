@@ -51,7 +51,7 @@ segment = Segment("", dataset_client)
 
 for data in segment:
     with data.open() as fp:
-        image = Image(fp)
+        image = Image.open(fp)
         width, height = image.size
         image.show()
 """"""
