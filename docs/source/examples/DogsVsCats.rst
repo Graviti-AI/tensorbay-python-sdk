@@ -1,10 +1,10 @@
-###############
- Dogs vs. Cats
-###############
+##############
+ Dogs vs Cats
+##############
 
-This topic describes how to manage the "Dogs vs. Cats" dataset.
+This topic describes how to manage the "Dogs vs Cats" dataset.
 
-"Dogs vs. Cats" is a dataset with :ref:`reference/label_format:Classification` label type.
+"Dogs vs Cats" is a dataset with :ref:`reference/label_format:Classification` label type.
 See `this page <https://www.graviti.cn/open-datasets/DogsVsCats>`_  for more details about this dataset.
 
 ***************************
@@ -33,7 +33,7 @@ Then, create a dataset client by passing the dataset name to the GAS client.
  List Dataset Names
 ********************
 
-To check if you have created "Dogs vs. Cats" dataset, you can list all your available datasets.
+To check if you have created "Dogs vs Cats" dataset, you can list all your available datasets.
 See :ref:`this page <features/dataset_management:Read Dataset>` for details.
 
 .. literalinclude:: ../../../examples/dogsvscats.py
@@ -49,8 +49,8 @@ See :ref:`this page <features/dataset_management:Read Dataset>` for details.
  Organize Dataset
 ******************
 
-Now we describe how to organize the "Dogs vs. Cats" dataset by the :class:`~tensorbay.dataset.dataset.Dataset`
-object before uploading it to TensorBay. It takes the following steps to organize "Dogs vs. Cats".
+Now we describe how to organize the "Dogs vs Cats" dataset by the :class:`~tensorbay.dataset.dataset.Dataset`
+object before uploading it to TensorBay. It takes the following steps to organize "Dogs vs Cats".
 
 Write the Catalog
 =================
@@ -58,7 +58,7 @@ Write the Catalog
 The first step is to write the :ref:`reference/dataset_structure:Catalog`.
 Catalog is a json file contains all label information of one dataset.
 See :ref:`this page <reference/dataset_structure:Catalog>` for more details.
-The only annotation type for "Dogs vs. Cats" is :ref:`reference/label_format:Classification`, and there are 2
+The only annotation type for "Dogs vs Cats" is :ref:`reference/label_format:Classification`, and there are 2
 :ref:`reference/label_format:Category` types.
 
 .. literalinclude:: ../../../tensorbay/opendataset/DogsVsCats/catalog.json
@@ -72,7 +72,7 @@ Write the Dataloader
 The second step is to write the :ref:`reference/glossary:Dataloader`.
 The function of :ref:`reference/glossary:Dataloader` is to read the dataset into a
 :class:`~tensorbay.dataset.dataset.Dataset` object.
-The :ref:`code block <BSTLD-dataloader>` below displays the "Dogs vs. Cats" dataloader.
+The :ref:`code block <BSTLD-dataloader>` below displays the "Dogs vs Cats" dataloader.
 
 .. literalinclude:: ../../../tensorbay/opendataset/DogsVsCats/loader.py
    :language: python
@@ -99,7 +99,7 @@ See :ref:`this page <reference/label_format:Classification>` for more details fo
  Upload Dataset
 ****************
 
-After you finish the :ref:`reference/glossary:Dataloader` and organize the "Dogs vs. Cats" into a
+After you finish the :ref:`reference/glossary:Dataloader` and organize the "Dogs vs Cats" into a
 :class:`~tensorbay.dataset.dataset.Dataset` object, you can upload it
 to TensorBay for sharing, reuse, etc.
 
@@ -122,14 +122,14 @@ Please see :ref:`this page <features/version_control:Version Control>` for more 
  Read Dataset
 **************
 
-Now you can read "Dogs vs. Cats" dataset from TensorBay.
+Now you can read "Dogs vs Cats" dataset from TensorBay.
 
 .. literalinclude:: ../../../examples/dogsvscats.py
    :language: python
    :start-after: """Read Dataset / get dataset"""
    :end-before: """"""
 
-In :ref:`reference/dataset_structure:Dataset` "Dogs vs. Cats", there are two
+In :ref:`reference/dataset_structure:Dataset` "Dogs vs Cats", there are two
 :ref:`Segments <reference/dataset_structure:Segment>`: ``train`` and ``test``,
 you can get the segment names by list them all.
 
@@ -169,7 +169,7 @@ You can get one by index.
    :start-after: """Read Dataset / get label"""
    :end-before: """"""
 
-There is only one label type in "Dogs vs. Cats" dataset, which is ``classification``. The information stored in :ref:`reference/label_format:Category` is
+There is only one label type in "Dogs vs Cats" dataset, which is ``classification``. The information stored in :ref:`reference/label_format:Category` is
 one of the category names in "categories" list of :ref:`catalog.json <dogsvscats-catalog>`.
 See :ref:`this page <reference/label_format:Classification>` for more details about the
 structure of Classification.
@@ -178,7 +178,7 @@ structure of Classification.
  Delete Dataset
 ****************
 
-To delete "Dogs vs. Cats", run the following code:
+To delete "Dogs vs Cats", run the following code:
 
 .. literalinclude:: ../../../examples/dogsvscats.py
    :language: python

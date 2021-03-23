@@ -57,10 +57,10 @@ or :class:`~tensorbay.dataset.dataset.FusionDataset` instance.
   The name of the dataloader function is a unique indentification of the dataset.
   It is in upper camel case and is generally obtained by removing special characters from the dataset name.
 
-  Take `Dogs vs. Cats`_ dataset as an example,
+  Take `Dogs vs Cats`_ dataset as an example,
   the name of its dataloader function is :meth:`~tensorbay.opendataset.DogsVsCats.loader.DogsVsCats`.
 
-  .. _dogs vs. cats: https://www.graviti.cn/open-datasets/DogsVsCats
+  .. _dogs vs cats: https://www.graviti.cn/open-datasets/DogsVsCats
 
 See more dataloader examples in :ref:`api/opendataset/opendataset_module:tensorbay.opendataset`.
 

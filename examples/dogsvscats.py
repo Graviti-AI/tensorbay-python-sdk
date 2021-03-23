@@ -20,7 +20,7 @@ gas = GAS(ACCESS_KEY)
 """"""
 
 """Create Dataset"""
-gas.create_dataset("Dogs vs. Cats")
+gas.create_dataset("Dogs vs Cats")
 """"""
 
 """List Dataset Names"""
@@ -34,11 +34,11 @@ dataset = LeedsSportsPose("path/to/dataset/directory")
 """Upload Dataset"""
 # dataset is the one you initialized in "Organize Dataset" section
 dataset_client = gas.upload_dataset(dataset, jobs=8, skip_uploaded_files=False)
-dataset_client.commit("Dogs vs. Cats")
+dataset_client.commit("Dogs vs Cats")
 """"""
 
 """Read Dataset / get dataset"""
-dataset_client = gas.get_dataset("Dogs vs. Cats")
+dataset_client = gas.get_dataset("Dogs vs Cats")
 """"""
 
 """Read Dataset / list segment names"""
