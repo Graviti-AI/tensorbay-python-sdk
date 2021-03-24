@@ -13,7 +13,7 @@ See `this page <https://www.graviti.cn/open-datasets/DogsVsCats>`_  for more det
 
 First of all, create a GAS client.
 
-.. literalinclude:: ../../../examples/dogsvscats.py
+.. literalinclude:: ../../../examples/DogsVsCats.py
    :language: python
    :start-after: """Authorize a Client Object"""
    :end-before: """"""
@@ -24,7 +24,7 @@ First of all, create a GAS client.
 
 Then, create a dataset client by passing the dataset name to the GAS client.
 
-.. literalinclude:: ../../../examples/dogsvscats.py
+.. literalinclude:: ../../../examples/DogsVsCats.py
    :language: python
    :start-after: """Create Dataset"""
    :end-before: """"""
@@ -36,7 +36,7 @@ Then, create a dataset client by passing the dataset name to the GAS client.
 To check if you have created "Dogs vs Cats" dataset, you can list all your available datasets.
 See :ref:`this page <features/dataset_management:Read Dataset>` for details.
 
-.. literalinclude:: ../../../examples/dogsvscats.py
+.. literalinclude:: ../../../examples/DogsVsCats.py
    :language: python
    :start-after: """List Dataset Names"""
    :end-before: """"""
@@ -103,7 +103,7 @@ After you finish the :ref:`reference/glossary:Dataloader` and organize the "Dogs
 :class:`~tensorbay.dataset.dataset.Dataset` object, you can upload it
 to TensorBay for sharing, reuse, etc.
 
-.. literalinclude:: ../../../examples/dogsvscats.py
+.. literalinclude:: ../../../examples/DogsVsCats.py
    :language: python
    :start-after: """Upload Dataset"""
    :end-before: """"""
@@ -124,7 +124,7 @@ Please see :ref:`this page <features/version_control:Version Control>` for more 
 
 Now you can read "Dogs vs Cats" dataset from TensorBay.
 
-.. literalinclude:: ../../../examples/dogsvscats.py
+.. literalinclude:: ../../../examples/DogsVsCats.py
    :language: python
    :start-after: """Read Dataset / get dataset"""
    :end-before: """"""
@@ -133,14 +133,14 @@ In :ref:`reference/dataset_structure:Dataset` "Dogs vs Cats", there are two
 :ref:`Segments <reference/dataset_structure:Segment>`: ``train`` and ``test``,
 you can get the segment names by list them all.
 
-.. literalinclude:: ../../../examples/dogsvscats.py
+.. literalinclude:: ../../../examples/DogsVsCats.py
    :language: python
    :start-after: """Read Dataset / list segment names"""
    :end-before: """"""
 
 You can get a segment by passing the required segment name.
 
-.. literalinclude:: ../../../examples/dogsvscats.py
+.. literalinclude:: ../../../examples/DogsVsCats.py
    :language: python
    :start-after: """Read Dataset / get segment"""
    :end-before: """"""
@@ -149,7 +149,7 @@ You can get a segment by passing the required segment name.
 In the train :ref:`reference/dataset_structure:Segment`, there is a sequence of :ref:`reference/dataset_structure:Data`. You
 can get one by index.
 
-.. literalinclude:: ../../../examples/dogsvscats.py
+.. literalinclude:: ../../../examples/DogsVsCats.py
    :language: python
    :start-after: """Read Dataset / get data"""
    :end-before: """"""
@@ -164,7 +164,7 @@ In each :ref:`reference/dataset_structure:Data`,
 there is a sequence of :ref:`reference/label_format:Classification` annotations.
 You can get one by index.
 
-.. literalinclude:: ../../../examples/dogsvscats.py
+.. literalinclude:: ../../../examples/DogsVsCats.py
    :language: python
    :start-after: """Read Dataset / get label"""
    :end-before: """"""
@@ -180,7 +180,7 @@ structure of Classification.
 
 To delete "Dogs vs Cats", run the following code:
 
-.. literalinclude:: ../../../examples/dogsvscats.py
+.. literalinclude:: ../../../examples/DogsVsCats.py
    :language: python
    :start-after: """Delete Dataset"""
    :end-before: """"""

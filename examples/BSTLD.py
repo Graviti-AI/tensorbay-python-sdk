@@ -9,6 +9,7 @@
 # pylint: disable=ungrouped-imports
 # pylint: disable=import-error
 # pylint: disable=pointless-string-statement
+# pylint: disable=invalid-name
 
 """This file includes the python code of BSTLD.rst and read_dataset_class.rst."""
 

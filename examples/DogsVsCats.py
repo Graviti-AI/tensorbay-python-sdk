@@ -9,8 +9,9 @@
 # pylint: disable=ungrouped-imports
 # pylint: disable=import-error
 # pylint: disable=pointless-string-statement
+# pylint: disable=invalid-name
 
-"""This file includes the python code of THCHS.rst and read_dataset_class.rst."""
+"""This files includes the python code example in dogsvscats.rst."""
 
 """Authorize a Client Object"""
 from tensorbay import GAS
@@ -20,50 +21,50 @@ gas = GAS(ACCESS_KEY)
 """"""
 
 """Create Dataset"""
-gas.create_dataset("THCHS-30")
+gas.create_dataset("Dogs vs Cats")
 """"""
 
 """List Dataset Names"""
 list(gas.list_dataset_names())
 """"""
 
+from tensorbay.opendataset import DogsVsCats
 
-from tensorbay.opendataset import THCHS30
-
-dataset = THCHS30("path/to/dataset/directory")
-
+dataset = DogsVsCats("path/to/dataset/directory")
 
 """Upload Dataset"""
 # dataset is the one you initialized in "Organize Dataset" section
 dataset_client = gas.upload_dataset(dataset, jobs=8, skip_uploaded_files=False)
-dataset_client.commit("THCHS-30")
+dataset_client.commit("Dogs vs Cats")
 """"""
 
 """Read Dataset / get dataset"""
-dataset_client = gas.get_dataset("THCHS-30")
+dataset_client = gas.get_dataset("Dogs vs Cats")
 """"""
 
 """Read Dataset / list segment names"""
 list(dataset_client.list_segment_names())
 """"""
 
+"""Read Dataset Class / get a segment"""
+train_segment = dataset.get_segment_by_name("train")
+first_segment = dataset[0]
+""""""
+
 """Read Dataset / get segment"""
 from tensorbay.dataset import Segment
 
-dev_segment = Segment("dev", dataset_client)
+train_segment = Segment("train", dataset_client)
 """"""
 
 """Read Dataset / get data"""
-data = dev_segment[0]
+data = train_segment[0]
 """"""
 
 """Read Dataset / get label"""
-labeled_sentence = data.label.sentence[0]
-sentence = labeled_sentence.sentence
-spell = labeled_sentence.spell
-phone = labeled_sentence.phone
+category = data.label.classification.category
 """"""
 
 """Delete Dataset"""
-gas.delete_dataset("THCHS-30")
+gas.delete_dataset("Dogs vs Cats")
 """"""
