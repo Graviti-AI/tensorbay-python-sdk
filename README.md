@@ -53,7 +53,10 @@ segment = dataset.create_segment()
 segment.append(Data("0000001.jpg"))
 segment.append(Data("0000002.jpg"))
 
-gas.upload_dataset(dataset)
+dataset_client = gas.upload_dataset(dataset)
+
+# TensorBay provides dataset version control feature, commit the uploaded data before using it.
+dataset_client.commit("Initial commit")
 ```
 
 ### Read images from the Dataset
