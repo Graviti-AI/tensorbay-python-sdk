@@ -87,14 +87,6 @@ You can list data in the following ways:
 
    $ gas ls tb:BSTLD:train
 
-| 5. List all the files inside ``chimpanzee`` directory in the ``""`` (empty string) segment of `7 Categories AnimalPose`_.
-
-.. _7 Categories AnimalPose: https://www.graviti.cn/open-datasets/AnimalPose7
-
-.. code:: console
-
-   $ gas ls tb:7\ Categories\ AnimalPose:://chimpanzee
-
 ****************
  Delete Dataset
 ****************
