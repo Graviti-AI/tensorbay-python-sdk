@@ -48,8 +48,10 @@ It provides:
    :maxdepth: 1
    :caption: Advanced Features
 
+..
    advanced_features/fusion_dataset
 
+..
 .. toctree::
    :maxdepth: 1
    :caption: CLI
