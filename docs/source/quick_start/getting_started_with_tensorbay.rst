@@ -17,8 +17,6 @@ To verify the SDK and CLI version, run the following command:
 .. code:: console
 
    $ gas --version
-   0.0.1
-
 
 **************
  Registration
