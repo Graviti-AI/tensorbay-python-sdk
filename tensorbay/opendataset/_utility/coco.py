@@ -46,7 +46,7 @@ def coco(path: str) -> COCO:
             ======================  =============  ==========================
 
     """
-    with open(path, "r") as fp:
+    with open(path, "r", encoding="utf-8") as fp:
         info = json.load(fp)
 
     images = {image["id"]: image for image in info["images"]}

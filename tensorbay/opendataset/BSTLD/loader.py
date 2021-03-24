@@ -61,7 +61,7 @@ def BSTLD(path: str) -> Dataset:
         segment = dataset.create_segment(mode)
         label_file_path = os.path.join(root_path, label_file_name)
 
-        with open(label_file_path) as fp:
+        with open(label_file_path, encoding="utf-8") as fp:
             labels = yaml.load(fp, yaml.FullLoader)
 
         for label in labels:
