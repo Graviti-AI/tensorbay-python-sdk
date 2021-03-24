@@ -65,5 +65,5 @@ category = data.label.classification.category
 """"""
 
 """Delete Dataset"""
-gas.delete_dataset("BSTLD")
+gas.delete_dataset("Dogs vs Cats")
 """"""
