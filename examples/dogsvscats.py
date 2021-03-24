@@ -27,9 +27,9 @@ gas.create_dataset("Dogs vs Cats")
 list(gas.list_dataset_names())
 """"""
 
-from tensorbay.opendataset import LeedsSportsPose
+from tensorbay.opendataset import DogsVsCats
 
-dataset = LeedsSportsPose("path/to/dataset/directory")
+dataset = DogsVsCats("path/to/dataset/directory")
 
 """Upload Dataset"""
 # dataset is the one you initialized in "Organize Dataset" section

@@ -27,11 +27,9 @@ gas.create_dataset("LeedsSportsPose")
 list(gas.list_dataset_names())
 """"""
 
-""""Read Dataset Class / organize dataset"""
-from tensorbay.opendataset import BSTLD
+from tensorbay.opendataset import LeedsSportsPose
 
-dataset = BSTLD("path/to/dataset/directory")
-""""""
+dataset = LeedsSportsPose("path/to/dataset/directory")
 
 """Upload Dataset"""
 # dataset is the one you initialized in "Organize Dataset" section
