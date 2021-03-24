@@ -45,8 +45,9 @@ class GAS:
         info = self._get_dataset(name)
         dataset_id = info["id"]
         is_fusion = info["type"]
+        commit_id = info["HEAD"]["commitId"]
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
-        return ReturnType(name, dataset_id, self)
+        return ReturnType(name, dataset_id, self, commit_id=commit_id)
 
     def _get_dataset(self, name: str) -> Dict[str, Any]:
         """Get the information of the TensorBay dataset with the input name.
