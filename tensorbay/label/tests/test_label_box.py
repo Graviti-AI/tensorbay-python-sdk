@@ -140,14 +140,27 @@ class TestLabeledBox3D:
         translation = [1, 2, 3]
         rotation = quaternion(0, 1, 0, 0)
         transform = Transform3D(translation=translation, rotation=rotation)
+        quaternion_1 = quaternion(1, 2, 3, 4)
 
         labeledbox3d = LabeledBox3D(
             transform, category=_CATEGORY, attributes=_ATTRIBUTES, instance=_INSTANCE
         )
 
-        assert labeledbox3d.__rmul__(transform).category == _CATEGORY
-        assert labeledbox3d.__rmul__(transform).attributes == _ATTRIBUTES
-        assert labeledbox3d.__rmul__(transform).instance == _INSTANCE
+        assert labeledbox3d.__rmul__(transform) == LabeledBox3D(
+            translation=[2, 0, 0],
+            rotation=[-1, 0, 0, 0],
+            category=_CATEGORY,
+            attributes=_ATTRIBUTES,
+            instance=_INSTANCE,
+        )
+
+        assert labeledbox3d.__rmul__(quaternion_1) == LabeledBox3D(
+            translation=[1.7999999999999996, 2, 2.6],
+            rotation=[-2, 1, 4, -3],
+            category=_CATEGORY,
+            attributes=_ATTRIBUTES,
+            instance=_INSTANCE,
+        )
 
         assert labeledbox3d.__rmul__(1) == NotImplemented
 
