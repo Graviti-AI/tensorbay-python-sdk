@@ -47,7 +47,7 @@ for details about the latter usage.
 
 There are plenty of benefits of uploading local datasets to TensorBay.
 
-- Reuse: you can reuse your dataset without preprocessing again.
+- Reuse: you can reuse your datasets without preprocessing again.
 - Share: you can share them with your team or the community.
 - Preview: you can preview your datasets without coding.
 - Version control: you can upload different versions of one dataset and control them conveniently.
