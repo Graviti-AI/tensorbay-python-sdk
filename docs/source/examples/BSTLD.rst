@@ -21,7 +21,7 @@ See `this page <https://www.graviti.cn/open-datasets/BSTLD>`_  for more details 
 
 First of all, create a GAS client.
 
-.. literalinclude:: ../../../examples/bstld.py
+.. literalinclude:: ../../../examples/BSTLD.py
    :language: python
    :start-after: """Authorize a Client Object"""
    :end-before: """"""
@@ -32,7 +32,7 @@ First of all, create a GAS client.
 
 Then, create a dataset client by passing the dataset name to the GAS client.
 
-.. literalinclude:: ../../../examples/bstld.py
+.. literalinclude:: ../../../examples/BSTLD.py
    :language: python
    :start-after: """Create Dataset"""
    :end-before: """"""
@@ -44,7 +44,7 @@ Then, create a dataset client by passing the dataset name to the GAS client.
 To check if you have created "BSTLD" dataset, you can list all your available datasets.
 See :ref:`this page <features/dataset_management:Read Dataset>` for details.
 
-.. literalinclude:: ../../../examples/bstld.py
+.. literalinclude:: ../../../examples/BSTLD.py
    :language: python
    :start-after: """List Dataset Names"""
    :end-before: """"""
@@ -111,7 +111,7 @@ After you finish the :ref:`reference/glossary:Dataloader` and organize the "BSTL
 :class:`~tensorbay.dataset.dataset.Dataset` object, you can upload it
 to TensorBay for sharing, reuse, etc.
 
-.. literalinclude:: ../../../examples/bstld.py
+.. literalinclude:: ../../../examples/BSTLD.py
    :language: python
    :start-after: """Upload Dataset"""
    :end-before: """"""
@@ -132,7 +132,7 @@ Please see :ref:`this page <features/version_control:Version Control>` for more 
 
 Now you can read "BSTLD" dataset from TensorBay.
 
-.. literalinclude:: ../../../examples/bstld.py
+.. literalinclude:: ../../../examples/BSTLD.py
    :language: python
    :start-after: """Read Dataset / get dataset"""
    :end-before: """"""
@@ -141,14 +141,14 @@ In :ref:`reference/dataset_structure:Dataset` "BSTLD", there are three
 :ref:`Segments <reference/dataset_structure:Segment>`: ``train``, ``test`` and ``additional``,
 you can get the segment names by list them all.
 
-.. literalinclude:: ../../../examples/bstld.py
+.. literalinclude:: ../../../examples/BSTLD.py
    :language: python
    :start-after: """Read Dataset / list segment names"""
    :end-before: """"""
 
 You can get a segment by passing the required segment name.
 
-.. literalinclude:: ../../../examples/bstld.py
+.. literalinclude:: ../../../examples/BSTLD.py
    :language: python
    :start-after: """Read Dataset / get segment"""
    :end-before: """"""
@@ -157,7 +157,7 @@ You can get a segment by passing the required segment name.
 In the train :ref:`reference/dataset_structure:Segment`, there is a sequence of :ref:`reference/dataset_structure:Data`. You
 can get one by index.
 
-.. literalinclude:: ../../../examples/bstld.py
+.. literalinclude:: ../../../examples/BSTLD.py
    :language: python
    :start-after: """Read Dataset / get data"""
    :end-before: """"""
@@ -172,7 +172,7 @@ In each :ref:`reference/dataset_structure:Data`,
 there is a sequence of :ref:`reference/label_format:Box2D` annotations.
 You can get one by index.
 
-.. literalinclude:: ../../../examples/bstld.py
+.. literalinclude:: ../../../examples/BSTLD.py
    :language: python
    :start-after: """Read Dataset / get label"""
    :end-before: """"""
@@ -190,7 +190,7 @@ structure of Box2D.
 
 To delete "BSTLD", run the following code:
 
-.. literalinclude:: ../../../examples/bstld.py
+.. literalinclude:: ../../../examples/BSTLD.py
    :language: python
    :start-after: """Delete Dataset"""
    :end-before: """"""

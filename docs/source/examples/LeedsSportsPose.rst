@@ -21,7 +21,7 @@ See `this page <https://www.graviti.cn/open-datasets/LeedsSportsPose>`_  for mor
 
 First of all, create a GAS client.
 
-.. literalinclude:: ../../../examples/leedssportspose.py
+.. literalinclude:: ../../../examples/LeedsSportsPose.py
    :language: python
    :start-after: """Authorize a Client Object"""
    :end-before: """"""
@@ -32,7 +32,7 @@ First of all, create a GAS client.
 
 Then, create a dataset client by passing the dataset name to the GAS client.
 
-.. literalinclude:: ../../../examples/leedssportspose.py
+.. literalinclude:: ../../../examples/LeedsSportsPose.py
    :language: python
    :start-after: """Create Dataset"""
    :end-before: """"""
@@ -44,7 +44,7 @@ Then, create a dataset client by passing the dataset name to the GAS client.
 To check if you have created "LeedsSportsPose" dataset, you can list all your available datasets.
 See :ref:`this page <features/dataset_management:Read Dataset>` for details.
 
-.. literalinclude:: ../../../examples/leedssportspose.py
+.. literalinclude:: ../../../examples/LeedsSportsPose.py
    :language: python
    :start-after: """List Dataset Names"""
    :end-before: """"""
@@ -109,7 +109,7 @@ After you finish the :ref:`reference/glossary:Dataloader` and organize the "Leed
 :class:`~tensorbay.dataset.dataset.Dataset` object, you can upload it
 to TensorBay for sharing, reuse, etc.
 
-.. literalinclude:: ../../../examples/leedssportspose.py
+.. literalinclude:: ../../../examples/LeedsSportsPose.py
    :language: python
    :start-after: """Upload Dataset"""
    :end-before: """"""
@@ -130,7 +130,7 @@ Please see :ref:`this page <features/version_control:Version Control>` for more 
 
 Now you can read "LeedsSportsPose" dataset from TensorBay.
 
-.. literalinclude:: ../../../examples/leedssportspose.py
+.. literalinclude:: ../../../examples/LeedsSportsPose.py
    :language: python
    :start-after: """Read Dataset / get dataset"""
    :end-before: """"""
@@ -138,7 +138,7 @@ Now you can read "LeedsSportsPose" dataset from TensorBay.
 In :ref:`reference/dataset_structure:Dataset` "LeedsSportsPose", there is one default
 :ref:`Segments <reference/dataset_structure:Segment>` ``""`` (empty string). You can get it by passing the segment name.
 
-.. literalinclude:: ../../../examples/leedssportspose.py
+.. literalinclude:: ../../../examples/LeedsSportsPose.py
    :language: python
    :start-after: """Read Dataset / get segment"""
    :end-before: """"""
@@ -146,7 +146,7 @@ In :ref:`reference/dataset_structure:Dataset` "LeedsSportsPose", there is one de
 In the train :ref:`reference/dataset_structure:Segment`, there is a sequence of :ref:`reference/dataset_structure:Data`. You
 can get one by index.
 
-.. literalinclude:: ../../../examples/leedssportspose.py
+.. literalinclude:: ../../../examples/LeedsSportsPose.py
    :language: python
    :start-after: """Read Dataset / get data"""
    :end-before: """"""
@@ -161,7 +161,7 @@ In each :ref:`reference/dataset_structure:Data`,
 there is a sequence of :ref:`reference/label_format:Keypoints2D` annotations.
 You can get one by index.
 
-.. literalinclude:: ../../../examples/leedssportspose.py
+.. literalinclude:: ../../../examples/LeedsSportsPose.py
    :language: python
    :start-after: """Read Dataset / get label"""
    :end-before: """"""
@@ -177,7 +177,7 @@ for more details about the structure of Keypoints2D.
 
 To delete "LeedsSportsPose", run the following code:
 
-.. literalinclude:: ../../../examples/leedssportspose.py
+.. literalinclude:: ../../../examples/LeedsSportsPose.py
    :language: python
    :start-after: """Delete Dataset"""
    :end-before: """"""
