@@ -28,7 +28,7 @@ copyright = "2021, Graviti"  # pylint: disable=redefined-builtin
 author = "Graviti"
 
 # The full version, including alpha/beta/rc tags
-release = "0.3.10"
+# release = "0.3.10"
 
 # -- General configuration ---------------------------------------------------
 
