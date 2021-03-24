@@ -53,6 +53,46 @@ class Box2DSubcatalog(  # pylint: disable=too-many-ancestors
             and the :class:`~tensorbay.label.attribute.AttributeInfo` as values.
         is_tracking: Whether the Subcatalog contains tracking information.
 
+    Examples:
+        *Initialization Method 1:* Init from ``Box2DSubcatalog.loads()`` method.
+
+        >>> catalog = {
+        ...     "BOX2D": {
+        ...         "isTracking": True,
+        ...         "categoryDelimiter": ".",
+        ...         "categories": [{"name": "0"}, {"name": "1"}],
+        ...         "attributes": [{"name": "gender", "enum": ["male", "female"]}],
+        ...     }
+        ... }
+        >>> Box2DSubcatalog.loads(catalog["BOX2D"])
+        Box2DSubcatalog(
+          (is_tracking): True,
+          (category_delimiter): '.',
+          (categories): NameOrderedDict {...},
+          (attributes): NameOrderedDict {...}
+        )
+
+        *Initialization Method 2:* Init an empty Box2DSubcatalog and then add the attributes.
+
+        >>> from tensorbay.utility import NameOrderedDict
+        >>> from tensorbay.label import CategoryInfo, AttributeInfo
+        >>> categories = NameOrderedDict()
+        >>> categories.append(CategoryInfo("a"))
+        >>> attributes = NameOrderedDict()
+        >>> attributes.append(AttributeInfo("gender", enum=["female", "male"]))
+        >>> box2d_subcatalog = Box2DSubcatalog()
+        >>> box2d_subcatalog.is_tracking = True
+        >>> box2d_subcatalog.category_delimiter = "."
+        >>> box2d_subcatalog.categories = categories
+        >>> box2d_subcatalog.attributes = attributes
+        >>> box2d_subcatalog
+        Box2DSubcatalog(
+          (is_tracking): True,
+          (category_delimiter): '.',
+          (categories): NameOrderedDict {...},
+          (attributes): NameOrderedDict {...}
+        )
+
     """
 
     def __init__(self, is_tracking: bool = False) -> None:
@@ -79,6 +119,23 @@ class LabeledBox2D(Box2D, _LabelBase):  # pylint: disable=too-many-ancestors
         category: The category of the label.
         attributes: The attributes of the label.
         instance: The instance id of the label.
+
+    Examples:
+        >>> xmin, ymin, xmax, ymax = 1, 2, 4, 4
+        >>> LabeledBox2D(
+        ...     xmin,
+        ...     ymin,
+        ...     xmax,
+        ...     ymax,
+        ...     category="example",
+        ...     attributes={"attr": "a"},
+        ...     instance="12345",
+        ... )
+        LabeledBox2D(1, 2, 4, 4)(
+          (category): 'example',
+          (attributes): {...},
+          (instance): '12345'
+        )
 
     """
 
@@ -131,6 +188,23 @@ class LabeledBox2D(Box2D, _LabelBase):  # pylint: disable=too-many-ancestors
         Returns:
             The created :class:`LabeledBox2D` instance.
 
+        Examples:
+            >>> x, y, width, height = 1, 2, 3, 4
+            >>> LabeledBox2D.from_xywh(
+            ...     x,
+            ...     y,
+            ...     width,
+            ...     height,
+            ...     category="example",
+            ...     attributes={"key": "value"},
+            ...     instance="12345",
+            ... )
+            LabeledBox2D(1, 2, 4, 6)(
+              (category): 'example',
+              (attributes): {...},
+              (instance): '12345'
+            )
+
         """
         return cls(
             x, y, x + width, y + height, category=category, attributes=attributes, instance=instance
@@ -141,27 +215,24 @@ class LabeledBox2D(Box2D, _LabelBase):  # pylint: disable=too-many-ancestors
         """Loads a LabeledBox2D from a dict containing the information of the label.
 
         Arguments:
-            contents: A dict containing the information of the 2D bounding box label,
-                whose format should be like::
-
-                    {
-                        "box2d": {
-                            "xmin": <float>
-                            "ymin": <float>
-                            "xmax": <float>
-                            "ymax": <float>
-                        },
-                        "category": <str>
-                        "attributes": {
-                            <key>: <value>
-                            ...
-                            ...
-                        },
-                        "instance": <str>
-                    }
+            contents: A dict containing the information of the 2D bounding box label.
 
         Returns:
             The loaded :class:`LabeledBox2D` object.
+
+        Examples:
+            >>> contents = {
+            ...     "box2d": {"xmin": 1, "ymin": 2, "xmax": 5, "ymax": 8},
+            ...     "category": "example",
+            ...     "attributes": {"key": "value"},
+            ...     "instance": "12345",
+            ... }
+            >>> LabeledBox2D.loads(contents)
+            LabeledBox2D(1, 2, 5, 8)(
+              (category): 'example',
+              (attributes): {...},
+              (instance): '12345'
+            )
 
         """
         return common_loads(cls, contents)
@@ -170,24 +241,26 @@ class LabeledBox2D(Box2D, _LabelBase):  # pylint: disable=too-many-ancestors
         """Dumps the current 2D bounding box label into a dict.
 
         Returns:
-            A dict containing all the information of the 2D box label,
-            whose format is like::
+            A dict containing all the information of the 2D box label.
 
-                {
-                    "box2d": {
-                        "xmin": <float>
-                        "ymin": <float>
-                        "xmax": <float>
-                        "ymax": <float>
-                    },
-                    "category": <str>
-                    "attributes": {
-                        <key>: <value>
-                        ...
-                        ...
-                    },
-                    "instance": <str>
-                }
+        Examples:
+            >>> xmin, ymin, xmax, ymax = 1, 2, 4, 4
+            >>> labelbox2d = LabeledBox2D(
+            ...     xmin,
+            ...     ymin,
+            ...     xmax,
+            ...     ymax,
+            ...     category="example",
+            ...     attributes={"attr": "a"},
+            ...     instance="12345",
+            ... )
+            >>> labelbox2d.dumps()
+            {
+                'category': 'example',
+                'attributes': {'attr': 'a'},
+                'instance': '12345',
+                'box2d': {'xmin': 1, 'ymin': 2, 'xmax': 4, 'ymax': 4},
+            }
 
         """
         contents = _LabelBase.dumps(self)
@@ -217,6 +290,46 @@ class Box3DSubcatalog(  # pylint: disable=too-many-ancestors
             with the attribute names as keys
             and the :class:`~tensorbay.label.attribute.AttributeInfo` as values.
         is_tracking: Whether the Subcatalog contains tracking information.
+
+    Examples:
+        *Initialization Method 1:* Init from ``Box3DSubcatalog.loads()`` method.
+
+        >>> catalog = {
+        ...     "BOX3D": {
+        ...         "isTracking": True,
+        ...         "categoryDelimiter": ".",
+        ...         "categories": [{"name": "0"}, {"name": "1"}],
+        ...         "attributes": [{"name": "gender", "enum": ["male", "female"]}],
+        ...     }
+        ... }
+        >>> Box3DSubcatalog.loads(catalog["BOX3D"])
+        Box3DSubcatalog(
+          (is_tracking): True,
+          (category_delimiter): '.',
+          (categories): NameOrderedDict {...},
+          (attributes): NameOrderedDict {...}
+        )
+
+        *Initialization Method 2:* Init an empty Box3DSubcatalog and then add the attributes.
+
+        >>> from tensorbay.utility import NameOrderedDict
+        >>> from tensorbay.label import CategoryInfo, AttributeInfo
+        >>> categories = NameOrderedDict()
+        >>> categories.append(CategoryInfo("a"))
+        >>> attributes = NameOrderedDict()
+        >>> attributes.append(AttributeInfo("gender", enum=["female", "male"]))
+        >>> box3d_subcatalog = Box3DSubcatalog()
+        >>> box3d_subcatalog.is_tracking = True
+        >>> box3d_subcatalog.category_delimiter = "."
+        >>> box3d_subcatalog.categories = categories
+        >>> box3d_subcatalog.attributes = attributes
+        >>> box3d_subcatalog
+        Box3DSubcatalog(
+          (is_tracking): True,
+          (category_delimiter): '.',
+          (categories): NameOrderedDict {...},
+          (attributes): NameOrderedDict {...}
+        )
 
     """
 
@@ -250,6 +363,25 @@ class LabeledBox3D(Box3D, _LabelBase):
         instance: The instance id of the label.
         size: The size of the 3D bounding box.
         transform: The transform of the 3D bounding box.
+
+    Examples:
+        >>> from tensorbay.geometry import Transform3D
+        >>> transform = Transform3D(translation=(1, 2, 3), rotation=(0, 1, 0, 0))
+        >>> LabeledBox3D(
+        ...     transform,
+        ...     size=[1, 2, 3],
+        ...     category="example",
+        ...     attributes={"key": "value"},
+        ...     instance="12345",
+        ... )
+        LabeledBox3D(
+          (translation): Vector3D(1, 2, 3),
+          (rotation): quaternion(0, 1, 0, 0),
+          (size): Vector3D(1, 2, 3),
+          (category): 'example',
+          (attributes): {...},
+          (instance): '12345'
+        )
 
     """
 
@@ -299,39 +431,31 @@ class LabeledBox3D(Box3D, _LabelBase):
         """Loads a LabeledBox3D from a dict containing the information of the label.
 
         Arguments:
-            contents: A dict containing the information of the 3D bounding box label,
-                whose format should be like::
-
-                    {
-                        "box3d": {
-                            "translation": {
-                                "x": <float>
-                                "y": <float>
-                                "z": <float>
-                            },
-                            "rotation": {
-                                "w": <float>
-                                "x": <float>
-                                "y": <float>
-                                "z": <float>
-                            },
-                            "size": {
-                                "x": <float>
-                                "y": <float>
-                                "z": <float>
-                            }
-                        },
-                        "category": <str>
-                        "attributes": {
-                            <key>: <value>
-                            ...
-                            ...
-                        },
-                        "instance": <str>
-                    }
+            contents: A dict containing the information of the 3D bounding box label.
 
         Returns:
             The loaded :class:`LabeledBox3D` object.
+
+        Examples:
+            >>> contents = {
+            ...     "box3d": {
+            ...         "translation": {"x": 1, "y": 2, "z": 3},
+            ...         "rotation": {"w": 1, "x": 0, "y": 0, "z": 0},
+            ...         "size": {"x": 1, "y": 2, "z": 3},
+            ...     },
+            ...     "category": "test",
+            ...     "attributes": {"key": "value"},
+            ...     "instance": "12345",
+            ... }
+            >>> LabeledBox3D.loads(contents)
+            LabeledBox3D(
+              (translation): Vector3D(1, 2, 3),
+              (rotation): quaternion(1, 0, 0, 0),
+              (size): Vector3D(1, 2, 3),
+              (category): 'test',
+              (attributes): {...},
+              (instance): '12345'
+            )
 
         """
         return common_loads(cls, contents)
@@ -340,36 +464,29 @@ class LabeledBox3D(Box3D, _LabelBase):
         """Dumps the current 3D bounding box label into a dict.
 
         Returns:
-            A dict containing all the information of the 3D bounding box label,
-            whose format is like::
+            A dict containing all the information of the 3D bounding box label.
 
-                {
-                    "box3d": {
-                        "translation": {
-                            "x": <float>
-                            "y": <float>
-                            "z": <float>
-                        },
-                        "rotation": {
-                            "w": <float>
-                            "x": <float>
-                            "y": <float>
-                            "z": <float>
-                        },
-                        "size": {
-                            "x": <float>
-                            "y": <float>
-                            "z": <float>
-                        }
-                    },
-                    "category": <str>
-                    "attributes": {
-                        <key>: <value>
-                        ...
-                        ...
-                    },
-                    "instance": <str>
+        Examples:
+            >>> from tensorbay.geometry import Transform3D
+            >>> transform = Transform3D(translation=(1, 2, 3), rotation=(0, 1, 0, 0))
+            >>> labeledbox3d = LabeledBox3D(
+            ...     transform,
+            ...     size=[1, 2, 3],
+            ...     category="example",
+            ...     attributes={"key": "value"},
+            ...     instance="12345",
+            ... )
+            >>> labeledbox3d.dumps()
+            {
+                'category': 'example',
+                'attributes': {'key': 'value'},
+                'instance': '12345',
+                'box3d': {
+                    'translation': {'x': 1, 'y': 2, 'z': 3},
+                    'rotation': {'w': 0.0, 'x': 1.0, 'y': 0.0, 'z': 0.0},
+                    'size': {'x': 1, 'y': 2, 'z': 3},
                 },
+            }
 
         """
         contents = _LabelBase.dumps(self)
