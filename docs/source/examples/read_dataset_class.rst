@@ -34,7 +34,7 @@ The local directory structure for "BSTLD" should be like:
        train.yaml
        additional_train.yaml
 
-.. literalinclude:: ../../../examples/bstld.py
+.. literalinclude:: ../../../examples/BSTLD.py
    :language: python
    :start-after: """"Read Dataset Class / organize dataset"""
    :end-before: """"""
@@ -50,7 +50,7 @@ The local directory structure for "BSTLD" should be like:
 TensorBay supplies two methods to fetch :ref:`reference/dataset_structure:Segment` from
 :ref:`reference/dataset_structure:Dataset`.
 
-.. literalinclude:: ../../../examples/bstld.py
+.. literalinclude:: ../../../examples/BSTLD.py
    :language: python
    :start-after: """Read Dataset Class / get a segment"""
    :end-before: """"""
@@ -59,7 +59,7 @@ The :ref:`reference/dataset_structure:Segment` you get now is the same as the on
 In the train :ref:`reference/dataset_structure:Segment`, there is a sequence of :ref:`reference/dataset_structure:Data`. You
 can get one by index.
 
-.. literalinclude:: ../../../examples/bstld.py
+.. literalinclude:: ../../../examples/BSTLD.py
    :language: python
    :start-after: """Read Dataset / get data"""
    :end-before: """"""
@@ -67,7 +67,7 @@ can get one by index.
 In each :ref:`reference/dataset_structure:Data`, there is a sequence of :ref:`reference/label_format:Box2D` annotations.
 You can get one by index.
 
-.. literalinclude:: ../../../examples/bstld.py
+.. literalinclude:: ../../../examples/BSTLD.py
    :language: python
    :start-after: """Read Dataset / get label"""
    :end-before: """"""
