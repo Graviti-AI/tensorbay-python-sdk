@@ -66,8 +66,8 @@ def check_basic(dataset: Union[Dataset, FusionDataset]) -> Iterator[BasicError]:
     Yields:
         BasicError indicating that :class:`~tensorbay.dataset.dataset.Dataset`,
         :class:`~tensorbay.dataset.dataset.FusionDataset`,
-        :class:`~tensorbay.dataset.dataset.FusionDataset` or
-        :class:`~tensorbay.dataset.segment.Segment` is empty.
+        :class:`~tensorbay.dataset.segment.Segment` or
+        :class:`~tensorbay.dataset.segment.FusionSegment` is empty.
 
     """
     if not dataset:
