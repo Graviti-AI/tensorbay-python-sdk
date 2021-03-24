@@ -21,7 +21,7 @@
    :ref:`Dataset Management: BSTLD <examples/BSTLD:BSTLD>`                                | This example describes how to manage `BSTLD`_ dataset,
                                                                                           | which is an image dataset with :ref:`reference/label_format:Box2D` label.
    :ref:`Dataset Management: Neolix OD <examples/NeolixOD:Neolix OD>`                     | This example describes how to manage `Neolix OD`_ dataset,
-                                                                                          | which is an Point Cloud dataset with :ref:`reference/label_format:Box3D` label.
+                                                                                          | which is a Point Cloud dataset with :ref:`reference/label_format:Box3D` label.
    :ref:`Dataset Management: LeedsSportsPose <examples/LeedsSportsPose:LeedsSportsPose>`  | This example describes how to manage `LeedsSportsPose`_
                                                                                           | dataset, which is an image dataset with :ref:`reference/label_format:Keypoints2D` label.
    :ref:`Dataset Management: THCHS-30 <examples/THCHS30:THCHS-30>`                        | This example describes how to manage `THCHS-30`_ dataset,
