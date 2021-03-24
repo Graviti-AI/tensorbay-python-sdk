@@ -33,9 +33,8 @@ class BasicError(Error):  # pylint: disable=too-few-public-methods
 class EmptyDatasetError(BasicError):  # pylint: disable=too-few-public-methods
     """The health check function for empty dataset.
 
-    Arguments:
-        This error is raised to indicate that :class:`~tensorbay.dataset.dataset.Dataset`
-        or :class:`~tensorbay.dataset.dataset.FusionDataset` is empty.
+    This error is raised to indicate that :class:`~tensorbay.dataset.dataset.Dataset`
+    or :class:`~tensorbay.dataset.dataset.FusionDataset` is empty.
 
     """
 
@@ -46,9 +45,8 @@ class EmptyDatasetError(BasicError):  # pylint: disable=too-few-public-methods
 class EmptySegmentError(BasicError):  # pylint: disable=too-few-public-methods
     """The health check function for empty segment.
 
-    Arguments:
-        This error is raised to indicate that :class:`~tensorbay.dataset.segment.Segment`
-        or :class:`~tensorbay.dataset.dataset.FusionDataset` is empty.
+    This error is raised to indicate that :class:`~tensorbay.dataset.segment.Segment`
+    or :class:`~tensorbay.dataset.dataset.FusionDataset` is empty.
 
     """
 
