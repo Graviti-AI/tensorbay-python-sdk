@@ -109,7 +109,7 @@ def _get_data_part1(root_path: str, aniamls: Iterable[str]) -> Iterator[Data]:
                 )
             ):
 
-                with open(annotation_path) as fp:
+                with open(annotation_path, encoding="utf-8") as fp:
                     labels = xmltodict.parse(fp.read())
 
                 box2d = labels["annotation"]["visible_bounds"]
@@ -149,7 +149,7 @@ def _get_data_part2(root_path: str, aniamls: Iterable[str]) -> Iterator[Data]:
                 f"{os.path.splitext(os.path.basename(image_path))[0]}.xml",
             )
 
-            with open(annotation_path) as fp:
+            with open(annotation_path, encoding="utf-8") as fp:
                 labels = xmltodict.parse(fp.read())
 
             box2d = labels["annotation"]["visible_bounds"]
@@ -207,7 +207,7 @@ def AnimalPose7(path: str) -> Dataset:
     segment = dataset.create_segment()
 
     for animal in animals:
-        with open(os.path.join(root_path, "bndbox_anno", f"{animal}.json")) as fp:
+        with open(os.path.join(root_path, "bndbox_anno", f"{animal}.json"), encoding="utf-8") as fp:
             annotations = json.load(fp)
         for image_name, box2ds in annotations.items():
             image_path = os.path.join(root_path, "bndbox_image", animal, image_name)

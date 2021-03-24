@@ -39,7 +39,7 @@ def Elpv(path: str) -> Dataset:
 
     csv_path = os.path.join(root_path, "labels.csv")
 
-    with open(csv_path) as csv_file:
+    with open(csv_path, encoding="utf-8") as csv_file:
         for row in csv_file:
             image_name, attributes, category = row.strip().split()
             dirname, basename = image_name.split("/")

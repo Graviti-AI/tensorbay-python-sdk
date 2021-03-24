@@ -54,7 +54,7 @@ def THCHS30(path: str) -> Dataset:
 
 
 def _get_label(label_file: str) -> List[LabeledSentence]:
-    with open(label_file) as fp:
+    with open(label_file, encoding="utf-8") as fp:
         labels = ((Word(text=text) for text in texts.split()) for texts in fp)
         return [LabeledSentence(*labels)]
 
