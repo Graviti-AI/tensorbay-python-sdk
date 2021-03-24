@@ -297,7 +297,7 @@ class Box3D(ReprMixin):
         return self._size.__eq__(other._size) and self._transform.__eq__(other._transform)
 
     def __rmul__(self: _B3, other: Transform3D) -> _B3:
-        if isinstance(other, Transform3D):
+        if isinstance(other, (Transform3D, quaternion)):
             box: _B3 = object.__new__(self.__class__)
             box._transform = other * self._transform
             box._size = self._size

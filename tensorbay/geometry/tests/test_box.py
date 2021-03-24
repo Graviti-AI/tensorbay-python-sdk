@@ -109,9 +109,13 @@ class TestBox3D:
 
     def test_rmul(self):
         transform = Transform3D(translation=[1, 2, 3], rotation=quaternion(0, 1, 0, 0))
+        quaternion_1 = quaternion(1, 2, 3, 4)
         box3d = Box3D(transform)
         assert box3d.__rmul__(transform) == Box3D(
             translation=[2, 0, 0], rotation=quaternion(-1, 0, 0, 0)
+        )
+        assert box3d.__rmul__(quaternion_1) == Box3D(
+            translation=[1.7999999999999996, 2, 2.6], rotation=quaternion(-2, 1, 4, -3)
         )
         assert box3d.__rmul__(1) == NotImplemented
 

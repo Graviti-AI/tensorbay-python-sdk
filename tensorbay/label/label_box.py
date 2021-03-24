@@ -17,7 +17,12 @@ which is often used for object detection in 3D point cloud.
 
 """
 
+import warnings
 from typing import Any, Dict, Iterable, Optional, Type, TypeVar
+
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    from quaternion import quaternion
 
 from ..geometry import Box2D, Box3D, Transform3D
 from ..utility import ReprType, SubcatalogTypeRegister, TypeRegister, common_loads
@@ -273,7 +278,7 @@ class LabeledBox3D(Box3D, _LabelBase):
         _LabelBase.__init__(self, category, attributes, instance)
 
     def __rmul__(self: _T, other: Transform3D) -> _T:
-        if isinstance(other, Transform3D):
+        if isinstance(other, (Transform3D, quaternion)):
             labeled_box_3d = Box3D.__rmul__(self, other)
             if hasattr(self, "category"):
                 labeled_box_3d.category = self.category
