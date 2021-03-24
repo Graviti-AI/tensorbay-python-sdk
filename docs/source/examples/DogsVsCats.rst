@@ -91,7 +91,7 @@ will be "".
 See :ref:`this page <reference/label_format:Classification>` for more details for about Classification annotation details.
 
 .. note::
-   The :ref:`BSTLD dataloader <BSTLD-dataloader>` above uses relative import(L11-12).
+   The :ref:`Dogs vs Cats dataloader <dogsvscats-dataloader>` above uses relative import(L11-12).
    However, when you write your own dataloader you should use regular import.
    And when you want to contribute your own dataloader, remember to use relative import.
 
