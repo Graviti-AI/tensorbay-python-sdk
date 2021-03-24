@@ -237,7 +237,7 @@ class TestSegmentClient:
         path = tmp_path / "sub"
         path.mkdir()
 
-        local_path = path / f"hello0.txt"
+        local_path = path / "hello0.txt"
         local_path.write_text("CONTENT")
         data = Data(local_path=str(local_path))
         data.label = Label.loads(LABEL)
@@ -271,7 +271,7 @@ class TestSegmentClient:
         segment_client = dataset_client.get_or_create_segment("segment1")
         path = tmp_path / "sub"
         path.mkdir()
-        local_path = path / f"hello0.txt"
+        local_path = path / "hello0.txt"
         local_path.write_text("CONTENT")
         data = Data(local_path=str(local_path))
         segment_client.upload_file(data.path, data.target_remote_path)
@@ -298,7 +298,7 @@ class TestSegmentClient:
         segment_client = dataset_client.get_or_create_segment("segment1")
         path = tmp_path / "sub"
         path.mkdir()
-        local_path = path / f"hello0.txt"
+        local_path = path / "hello0.txt"
         local_path.write_text("CONTENT")
         data = Data(local_path=str(local_path))
         segment_client.upload_file(data.path, data.target_remote_path)
@@ -440,7 +440,7 @@ class TestSegmentClient:
         path.mkdir()
 
         frame = Frame()
-        local_path = path / f"hello{i}.txt"
+        local_path = path / "hello0.txt"
         local_path.write_text("CONTENT")
         data = Data(local_path=str(local_path))
         frame[LIDAR_DATA["name"]] = data
