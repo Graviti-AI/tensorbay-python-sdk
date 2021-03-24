@@ -17,12 +17,12 @@ from typing import Any, Dict, Iterable, List, Optional, Type, TypeVar, Union
 from ..geometry import Keypoints2D
 from ..utility import ReprType, SubcatalogTypeRegister, TypeRegister, common_loads
 from .basic import LabelType, SubcatalogBase, _LabelBase
-from .supports import KeypointsInfo, SupportAttributes, SupportCategories, SupportIsTracking
+from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin, KeypointsInfo
 
 
 @SubcatalogTypeRegister(LabelType.KEYPOINTS2D)
 class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
-    SubcatalogBase, SupportIsTracking, SupportCategories, SupportAttributes
+    SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin
 ):
     """This class defines the subcatalog for 2D keypoints type of labels.
 
@@ -46,7 +46,7 @@ class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
     """
 
     def __init__(self, is_tracking: bool = False) -> None:
-        SupportIsTracking.__init__(self, is_tracking)
+        IsTrackingMixin.__init__(self, is_tracking)
         self._keypoints: List[KeypointsInfo] = []
 
     def _loads(self, contents: Dict[str, Any]) -> None:

@@ -3,13 +3,13 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""CatagoryInfo, KeypointsInfo and different Supports classes.
+"""CatagoryInfo, KeypointsInfo and different SubcatalogMixin classes.
 
 :class:`CatagoryInfo` defines a category with the name and description of it.
 
 :class:`KeypointsInfo` defines the structure of a set of keypoints.
 
-:class:`Supports` is the base class of different mixin classes for subcatalog.
+:class:`SubcatalogMixin` is the base class of different mixin classes for subcatalog.
 
 .. table:: mixin classes for subcatalog
    :widths: auto
@@ -17,9 +17,9 @@
    ============================  ===============================================================
    mixin classes for subcatalog  explaination
    ============================  ===============================================================
-   :class:`SupportIsTracking`    a mixin class supporting tracking information of a subcatalog
-   :class:`SupportCategories`    a mixin class supporting category information of a subcatalog
-   :class:`SupportAttributes`    a mixin class supporting attribute information of a subcatalog
+   :class:`IsTrackingMixin`      a mixin class supporting tracking information of a subcatalog
+   :class:`CategoriesMixin`      a mixin class supporting category information of a subcatalog
+   :class:`AttributesMixin`      a mixin class supporting attribute information of a subcatalog
    ============================  ===============================================================
 
 """
@@ -255,7 +255,7 @@ class KeypointsInfo(ReprMixin, EqMixin):
         return contents
 
 
-class Supports(EqMixin):  # pylint: disable=too-few-public-methods
+class SubcatalogMixin(EqMixin):  # pylint: disable=too-few-public-methods
     """The base class of different mixin classes for subcatalog."""
 
     def _loads(self: Any, contents: Dict[str, Any]) -> None:
@@ -265,7 +265,7 @@ class Supports(EqMixin):  # pylint: disable=too-few-public-methods
         raise NotImplementedError
 
 
-class SupportIsTracking(Supports):  # pylint: disable=too-few-public-methods
+class IsTrackingMixin(SubcatalogMixin):  # pylint: disable=too-few-public-methods
     """A mixin class supporting tracking information of a subcatalog.
 
     Arguments:
@@ -286,7 +286,7 @@ class SupportIsTracking(Supports):  # pylint: disable=too-few-public-methods
         return {"isTracking": self.is_tracking} if self.is_tracking else {}
 
 
-class SupportCategories(Supports):  # pylint: disable=too-few-public-methods
+class CategoriesMixin(SubcatalogMixin):  # pylint: disable=too-few-public-methods
     """A mixin class supporting category information of a subcatalog.
 
     Attributes:
@@ -336,7 +336,7 @@ class SupportCategories(Supports):  # pylint: disable=too-few-public-methods
         self.categories.append(CategoryInfo(name, description))
 
 
-class SupportAttributes(Supports):  # pylint: disable=too-few-public-methods
+class AttributesMixin(SubcatalogMixin):  # pylint: disable=too-few-public-methods
     """A mixin class supporting attribute information of a subcatalog.
 
     Attributes:

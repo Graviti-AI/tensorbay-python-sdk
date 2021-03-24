@@ -19,11 +19,11 @@ from typing import Any, Dict, Iterable, List, Optional, Type, TypeVar, Union
 
 from ..utility import EqMixin, ReprMixin, SubcatalogTypeRegister, TypeRegister, common_loads
 from .basic import LabelType, SubcatalogBase, _LabelBase
-from .supports import SupportAttributes
+from .supports import AttributesMixin
 
 
 @SubcatalogTypeRegister(LabelType.SENTENCE)
-class SentenceSubcatalog(SubcatalogBase, SupportAttributes):  # pylint: disable=too-many-ancestors
+class SentenceSubcatalog(SubcatalogBase, AttributesMixin):  # pylint: disable=too-many-ancestors
     """This class defines the subcatalog for audio transcripted sentence type of labels.
 
     Arguments:

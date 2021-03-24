@@ -16,12 +16,12 @@ from typing import Any, Dict, Optional, Type, TypeVar
 
 from ..utility import SubcatalogTypeRegister, TypeRegister, common_loads
 from .basic import LabelType, SubcatalogBase, _LabelBase
-from .supports import SupportAttributes, SupportCategories
+from .supports import AttributesMixin, CategoriesMixin
 
 
 @SubcatalogTypeRegister(LabelType.CLASSIFICATION)
 class ClassificationSubcatalog(  # pylint: disable=too-many-ancestors
-    SubcatalogBase, SupportCategories, SupportAttributes
+    SubcatalogBase, CategoriesMixin, AttributesMixin
 ):
     """This class defines the subcatalog for classification type of labels.
 

@@ -8,7 +8,7 @@ from quaternion import quaternion
 
 from ...geometry import Transform3D, Vector3D
 from .. import Box2DSubcatalog, Box3DSubcatalog, LabeledBox2D, LabeledBox3D
-from ..supports import SupportAttributes, SupportCategories, SupportIsTracking
+from ..supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
 
 _CATEGORY = "test"
 _ATTRIBUTES = {"key": "value"}
@@ -194,9 +194,9 @@ class TestBox2dAndBox3dSubcatalog:
     def test_init_subclass(self, SUBCATALOG):
         subcatalog = SUBCATALOG()
         assert subcatalog._supports == (
-            SupportIsTracking,
-            SupportCategories,
-            SupportAttributes,
+            IsTrackingMixin,
+            CategoriesMixin,
+            AttributesMixin,
         )
 
     @pytest.mark.parametrize("SUBCATALOG", (Box2DSubcatalog, Box3DSubcatalog))
