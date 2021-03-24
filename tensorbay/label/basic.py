@@ -14,7 +14,7 @@ which defines the basic concept of Subcatalog.
 A :class:`~.tensorbay.dataset.data.Data` instance contains one or several types of labels,
 all of which are stored in :attr:`~tensorbay.dataset.data.Data.label`.
 
-A subcatalog class extends :class:`SubcatalogBase` and needed :class:`Supports` mixin classes.
+A subcatalog class extends :class:`SubcatalogBase` and needed :class:`SubcatalogMixin` classes.
 
 Different label types correspond to different label classes classes.
 
@@ -38,7 +38,7 @@ Different label types correspond to different label classes classes.
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Type, TypeVar
 
 from ..utility import EqMixin, ReprMixin, ReprType, TypeEnum, TypeMixin, common_loads
-from .supports import Supports
+from .supports import SubcatalogMixin
 
 if TYPE_CHECKING:
     from .label_box import LabeledBox2D, LabeledBox3D
@@ -101,12 +101,14 @@ class SubcatalogBase(TypeMixin[LabelType], ReprMixin, EqMixin):
         "lexicon",
     )
 
-    _supports: Tuple[Type[Supports], ...]
+    _supports: Tuple[Type[SubcatalogMixin], ...]
 
     description = ""
 
     def __init_subclass__(cls) -> None:
-        cls._supports = tuple(filter(lambda class_: issubclass(class_, Supports), cls.__bases__))
+        cls._supports = tuple(
+            filter(lambda class_: issubclass(class_, SubcatalogMixin), cls.__bases__)
+        )
 
     def _loads(self, contents: Dict[str, Any]) -> None:
         if "description" in contents:

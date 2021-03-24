@@ -4,7 +4,7 @@
 
 from ...geometry import Vector2D
 from .. import LabeledPolyline2D, Polyline2DSubcatalog
-from ..supports import SupportAttributes, SupportCategories, SupportIsTracking
+from ..supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
 
 _CATEGORY = "test"
 _ATTRIBUTES = {"key": "value"}
@@ -63,9 +63,9 @@ class TestKeypoints2DSubcatalog:
     def test_init_subclass(self):
         subcatalog = Polyline2DSubcatalog()
         assert subcatalog._supports == (
-            SupportIsTracking,
-            SupportCategories,
-            SupportAttributes,
+            IsTrackingMixin,
+            CategoriesMixin,
+            AttributesMixin,
         )
 
     def test_eq(self):

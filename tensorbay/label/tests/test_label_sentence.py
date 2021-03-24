@@ -6,7 +6,7 @@
 import pytest
 
 from .. import LabeledSentence, SentenceSubcatalog, Word
-from ..supports import SupportAttributes
+from ..supports import AttributesMixin
 
 _ATTRIBUTES = {"key": "value"}
 _ENUMS = ["male", "female"]
@@ -130,7 +130,7 @@ class TestLabeledSentence:
 class TestSentenceSubcatalog:
     def test_init_subclass(self):
         sentence_subcatalog = SentenceSubcatalog()
-        assert sentence_subcatalog._supports == (SupportAttributes,)
+        assert sentence_subcatalog._supports == (AttributesMixin,)
 
     def test_init(self):
         with pytest.raises(TypeError):

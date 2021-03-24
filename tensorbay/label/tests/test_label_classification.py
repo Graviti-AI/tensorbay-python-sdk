@@ -4,7 +4,7 @@
 #
 
 from .. import Classification, ClassificationSubcatalog
-from ..supports import SupportAttributes, SupportCategories
+from ..supports import AttributesMixin, CategoriesMixin
 
 _CATEGORY = "test"
 _ATTRIBUTES = {"key": "value"}
@@ -47,7 +47,7 @@ class TestClassification:
 class TestClassificationSubcatalog:
     def test_init_subclass(self):
         classification_subcatalog = ClassificationSubcatalog()
-        classification_subcatalog._supports = (SupportCategories, SupportAttributes)
+        classification_subcatalog._supports = (CategoriesMixin, AttributesMixin)
 
     def test_eq(self):
         content1 = {"category": "cat", "attributes": [{"name": "color", "enum": ["white", "red"]}]}

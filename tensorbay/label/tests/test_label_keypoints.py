@@ -7,7 +7,7 @@ import pytest
 
 from ...geometry import Keypoint2D
 from .. import Keypoints2DSubcatalog, LabeledKeypoints2D
-from ..supports import KeypointsInfo, SupportAttributes, SupportCategories, SupportIsTracking
+from ..supports import AttributesMixin, CategoriesMixin, IsTrackingMixin, KeypointsInfo
 
 _CATEGORY = "test"
 _ATTRIBUTES = {"key": "value"}
@@ -92,9 +92,9 @@ class TestKeypoints2DSubcatalog:
     def test_init_subclass(self):
         keypoints2d_subcatalog = Keypoints2DSubcatalog()
         assert keypoints2d_subcatalog._supports == (
-            SupportIsTracking,
-            SupportCategories,
-            SupportAttributes,
+            IsTrackingMixin,
+            CategoriesMixin,
+            AttributesMixin,
         )
 
     def test_eq(self):

@@ -22,12 +22,12 @@ from typing import Any, Dict, Iterable, Optional, Type, TypeVar
 from ..geometry import Box2D, Box3D, Transform3D
 from ..utility import ReprType, SubcatalogTypeRegister, TypeRegister, common_loads
 from .basic import LabelType, SubcatalogBase, _LabelBase
-from .supports import SupportAttributes, SupportCategories, SupportIsTracking
+from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
 
 
 @SubcatalogTypeRegister(LabelType.BOX2D)
 class Box2DSubcatalog(  # pylint: disable=too-many-ancestors
-    SubcatalogBase, SupportIsTracking, SupportCategories, SupportAttributes
+    SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin
 ):
     """This class defines the subcatalog for 2D box type of labels.
 
@@ -51,7 +51,7 @@ class Box2DSubcatalog(  # pylint: disable=too-many-ancestors
     """
 
     def __init__(self, is_tracking: bool = False) -> None:
-        SupportIsTracking.__init__(self, is_tracking)
+        IsTrackingMixin.__init__(self, is_tracking)
 
 
 @TypeRegister(LabelType.BOX2D)
@@ -192,7 +192,7 @@ class LabeledBox2D(Box2D, _LabelBase):  # pylint: disable=too-many-ancestors
 
 @SubcatalogTypeRegister(LabelType.BOX3D)
 class Box3DSubcatalog(  # pylint: disable=too-many-ancestors
-    SubcatalogBase, SupportIsTracking, SupportCategories, SupportAttributes
+    SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin
 ):
     """This class defines the subcatalog for 3D box type of labels.
 
@@ -216,7 +216,7 @@ class Box3DSubcatalog(  # pylint: disable=too-many-ancestors
     """
 
     def __init__(self, is_tracking: bool = False) -> None:
-        SupportIsTracking.__init__(self, is_tracking)
+        IsTrackingMixin.__init__(self, is_tracking)
 
 
 @TypeRegister(LabelType.BOX3D)
