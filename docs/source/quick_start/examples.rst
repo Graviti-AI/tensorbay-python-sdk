@@ -30,12 +30,12 @@
                                                                                           | when it has been organized by a :class:`~tensorbay.dataset.dataset.Dataset` class.
    =====================================================================================  ====================================================================================
 
-.. _Dogs vs Cats: https://www.graviti.cn/open-datasets/DogsVsCats
-.. _20 Newsgroups: https://www.graviti.cn/open-datasets/Newsgroups20
-.. _BSTLD: https://www.graviti.cn/open-datasets/BSTLD
-.. _Neolix OD: https://www.graviti.cn/open-datasets/NeolixOD
-.. _LeedsSportsPose: https://www.graviti.cn/open-datasets/LeedsSportsPose
-.. _THCHS-30: https://www.graviti.cn/open-datasets/THCHS30
+.. _Dogs vs Cats: https://gas.graviti.cn/dataset/data-decorators/DogsVsCats
+.. _20 Newsgroups: https://www.graviti.cn/open-datasets/data-decorators/Newsgroups20
+.. _BSTLD: https://www.graviti.cn/open-datasets/data-decorators/BSTLD
+.. _Neolix OD: https://www.graviti.cn/open-datasets/data-decorators/NeolixOD
+.. _LeedsSportsPose: https://www.graviti.cn/open-datasets/data-decorators/LeedsSportsPose
+.. _THCHS-30: https://www.graviti.cn/open-datasets/data-decorators/THCHS30
 
 
 .. toctree::
