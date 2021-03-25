@@ -163,7 +163,7 @@ You can get one by index.
    is created  without given name, then its name will be "".
 
 In each :ref:`reference/dataset_structure:Data`,
-there is a sequence of :ref:`reference/label_format:Classification` annotations.
+there is a sequence of :ref:`reference/label_format:Box3D` annotations.
 You can get one by index.
 
 .. literalinclude:: ../../../examples/NeolixOD.py
