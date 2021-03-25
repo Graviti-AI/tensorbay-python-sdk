@@ -46,7 +46,7 @@ Use the command below to configure the accessKey and URL(optional).
 AccessKey_ is used for identification when using TensorBay to operate on your dataset.
 The default url is "https://gas.graviti.cn/".
 
-.. _accesskey: https://gas.graviti.cn/access-key
+.. _accesskey: https://gas.graviti.cn/tensorbay/developer
 
 You can set the accessKey and URL into configuration:
 

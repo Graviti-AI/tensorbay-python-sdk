@@ -21,7 +21,7 @@ More information can be found on the [documentation site](https://tensorbay-pyth
 ## Usage
 
 An **AccessKey** is needed to communicate with TensorBay.
-Please visit [this page](https://gas.graviti.cn/access-key) to get an **AccessKey** first.
+Please visit [this page](https://gas.graviti.cn/tensorbay/developer) to get an **AccessKey** first.
 
 ### Authorize a client object
 
