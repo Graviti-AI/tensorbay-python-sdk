@@ -45,6 +45,19 @@ class TestLabel:
         label.classification = Classification()
         assert bool(label) == True
 
+    def test_eq(self):
+        label1 = Label()
+        label1.classification = Classification("cat", {"color": "white"})
+
+        label2 = Label()
+        label2.classification = Classification("cat", {"color": "white"})
+
+        label3 = Label()
+        label3.classification = Classification("cat", {"color": "black"})
+
+        assert label1 == label2
+        assert label1 != label3
+
     def test_loads(self):
         label = Label.loads(_FAILED_DATA)
         assert hasattr(label, "box2d") == False

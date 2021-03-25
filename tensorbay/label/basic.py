@@ -208,7 +208,7 @@ class _LabelBase(TypeMixin[LabelType], ReprMixin, EqMixin):
         return contents
 
 
-class Label(ReprMixin):
+class Label(ReprMixin, EqMixin):
     """This class defines :attr:`~tensorbay.dataset.data.Data.label`.
 
     It contains growing types of labels referring to different tasks.
