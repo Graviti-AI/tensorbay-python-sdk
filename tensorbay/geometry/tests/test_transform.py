@@ -51,7 +51,8 @@ class TestTransform3D:
         assert (transform_1 == transform_3) == False
 
     def test_mul(self):
-        sequence = [1, 1, 1]
+        sequence_1 = [1, 1, 1]
+        sequence_2 = [[1, 2, 3], [4, 5, 6]]
         quaternion_1 = quaternion(0, 1, 0, 0)
         transform_1 = Transform3D(translation=[1, 2, 3], rotation=[0, 1, 0, 0])
         transform_2 = Transform3D(translation=[2, 0, 0], rotation=[-1, 0, 0, 0])
@@ -61,7 +62,9 @@ class TestTransform3D:
             transform_1 * 1
         assert transform_1 * transform_1 == transform_2
         assert transform_1 * quaternion_1 == transform_3
-        assert transform_1 * sequence == Vector3D(2.0, 1.0, 2.0)
+        assert transform_1 * sequence_1 == Vector3D(2.0, 1.0, 2.0)
+        with pytest.raises(TypeError):
+            transform_1 * sequence_2
 
     def test_rmul(self):
         quaternion_1 = quaternion(0, 1, 0, 0)
