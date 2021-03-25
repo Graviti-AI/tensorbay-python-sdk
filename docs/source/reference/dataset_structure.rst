@@ -41,7 +41,7 @@ under one catalog, each of which only stores label meta information of one label
 
 For example, there is only one subcatalog ("BOX3D") in the catalog of dataset `Neolix OD`_.
 
-.. _Neolix OD: https://www.graviti.cn/open-datasets/NeolixOD
+.. _Neolix OD: https://www.graviti.cn/open-datasets/data-decorators/NeolixOD
 
 .. literalinclude:: ../../../tensorbay/opendataset/NeolixOD/catalog.json
    :language: json

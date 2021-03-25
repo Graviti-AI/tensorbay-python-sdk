@@ -4,7 +4,7 @@
 
 This topic describes how to read the :class:`~tensorbay.dataset.dataset.Dataset` class after you have
 :ref:`organized the "BSTLD" dataset <examples/BSTLD:Organize Dataset>`.
-See `this page <https://www.graviti.cn/open-datasets/BSTLD>`_  for more details about this dataset.
+See `this page <https://www.graviti.cn/open-datasets/data-decorators/BSTLD>`_  for more details about this dataset.
 
 As mentioned in :ref:`features/dataset_management:Dataset Management`, you need to write a
 :ref:`reference/glossary:Dataloader` to get a :class:`~tensorbay.dataset.dataset.Dataset`.
