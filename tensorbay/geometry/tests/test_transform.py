@@ -53,6 +53,7 @@ class TestTransform3D:
     def test_mul(self):
         sequence_1 = [1, 1, 1]
         sequence_2 = [[1, 2, 3], [4, 5, 6]]
+        sequence_3 = ["a", "b", "c"]
         quaternion_1 = quaternion(0, 1, 0, 0)
         transform_1 = Transform3D(translation=[1, 2, 3], rotation=[0, 1, 0, 0])
         transform_2 = Transform3D(translation=[2, 0, 0], rotation=[-1, 0, 0, 0])
@@ -65,15 +66,18 @@ class TestTransform3D:
         assert transform_1 * sequence_1 == Vector3D(2.0, 1.0, 2.0)
         with pytest.raises(TypeError):
             transform_1 * sequence_2
+        assert transform_1.__mul__(sequence_3) == NotImplemented
 
     def test_rmul(self):
         quaternion_1 = quaternion(0, 1, 0, 0)
         transform_1 = Transform3D(translation=[1, 2, 3], rotation=[0, 1, 0, 0])
         transform_2 = Transform3D(translation=[1, -2, -3], rotation=[-1, 0, 0, 0])
+        transform_3 = Transform3D(translation=["a", "b", "c"], rotation=[-1, 0, 0, 0])
 
         with pytest.raises(TypeError):
             1 * transform_1
         assert quaternion_1 * transform_1 == transform_2
+        assert transform_3.__rmul__(quaternion_1) == NotImplemented
 
     def test_create(self):
         transform = Transform3D(translation=[1, 2, 3], rotation=[0, 1, 0, 0])

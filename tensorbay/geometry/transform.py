@@ -93,25 +93,31 @@ class Transform3D(ReprMixin):
         ...
 
     def __mul__(self: _T, other: Union[_T, Sequence[float]]) -> Union[_T, Vector3D]:
-        if isinstance(other, Sequence):  # pylint: disable=W1116
-            return self._translation.__radd__(rotate_vectors(self._rotation, other))
+        try:
+            if isinstance(other, Sequence):  # pylint: disable=W1116
+                return self._translation.__radd__(rotate_vectors(self._rotation, other))
 
-        # mypy does not recognize quaternion type, and will infer it as Any.
-        # This typing problem to be resolved.
-        if isinstance(other, quaternion):
-            return self._create(self._translation, self._rotation * other)
+            # mypy does not recognize quaternion type, and will infer it as Any.
+            # This typing problem to be resolved.
+            if isinstance(other, quaternion):
+                return self._create(self._translation, self._rotation * other)
 
-        if isinstance(other, Transform3D):
-            return self._create(self * other.translation, self._rotation * other.rotation)
+            if isinstance(other, Transform3D):
+                return self._create(self * other.translation, self._rotation * other.rotation)
+        except ValueError:
+            pass
 
-        return NotImplemented  # type: ignore[unreachable]
+        return NotImplemented
 
     def __rmul__(self: _T, other: quaternion) -> _T:
-        if isinstance(other, quaternion):
-            return self._create(
-                Vector3D(*rotate_vectors(other, self._translation)),
-                other * self._rotation,
-            )
+        try:
+            if isinstance(other, quaternion):
+                return self._create(
+                    Vector3D(*rotate_vectors(other, self._translation)),
+                    other * self._rotation,
+                )
+        except ValueError:
+            pass
 
         return NotImplemented
 
