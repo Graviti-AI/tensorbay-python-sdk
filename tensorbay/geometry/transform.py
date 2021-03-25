@@ -94,8 +94,7 @@ class Transform3D(ReprMixin):
 
     def __mul__(self: _T, other: Union[_T, Sequence[float]]) -> Union[_T, Vector3D]:
         if isinstance(other, Sequence):  # pylint: disable=W1116
-            result: Vector3D = self._translation + rotate_vectors(self._rotation, other)
-            return result
+            return self._translation.__radd__(rotate_vectors(self._rotation, other))
 
         # mypy does not recognize quaternion type, and will infer it as Any.
         # This typing problem to be resolved.
