@@ -5,7 +5,7 @@
 This topic describes how to manage the "LeedsSportsPose" dataset.
 
 "LeedsSportsPose" is a dataset with :ref:`reference/label_format:Keypoints2D` label type (:numref:`Fig. %s <example-leedssportspose>`).
-See `this page <https://www.graviti.cn/open-datasets/LeedsSportsPose>`_  for more details about this dataset.
+See `this page <https://www.graviti.cn/open-datasets/data-decorators/LeedsSportsPose>`_  for more details about this dataset.
 
 .. _example-leedssportspose:
 

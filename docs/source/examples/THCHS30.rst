@@ -5,7 +5,7 @@
 This topic describes how to manage the "THCHS-30" dataset.
 
 "THCHS-30" is a dataset with :ref:`reference/label_format:Sentence` label type. 
-See `this page <https://www.graviti.com/open-datasets/THCHS30>`_ for more details about this dataset.
+See `this page <https://www.graviti.com/open-datasets/data-decorators/THCHS30>`_ for more details about this dataset.
 
 ***************************
  Authorize a Client Object
