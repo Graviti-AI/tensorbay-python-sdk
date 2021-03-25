@@ -66,8 +66,7 @@ There are two types of datasets you can read from TensorBay:
 
 .. note::
 
-   Two steps, obtain_ and fork_, should be done
-   before reading datasets uploaded by the community.
+   Before reading a dataset uploaded by the community, you need to fork_ it first.
 
 .. note::
 
@@ -77,6 +76,5 @@ There are two types of datasets you can read from TensorBay:
 :ref:`This part <examples/bstld:Read Dataset>` is an example for reading a dataset.
 
 .. _fork: https://docs.graviti.cn/guide/opendataset/fork
-.. _obtain: https://docs.graviti.cn/guide/opendataset/get
 .. _open datasets: https://www.graviti.cn/open-datasets
 .. _Graviti AI Service(GAS): https://www.graviti.cn/tensorBay

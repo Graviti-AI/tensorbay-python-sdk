@@ -8,7 +8,7 @@ accesskey
 An accesskey is an access credential for identification when using TensorBay to operate on your dataset.
 
 To obtain an accesskey, you need to log in to `Graviti AI Service(GAS)`_ and
-visit the `developer page <https://gas.graviti.cn/access-key>`_ to create one.
+visit the `developer page <https://gas.graviti.cn/tensorbay/developer>`_ to create one.
 
 .. _graviti ai service(gas): https://www.graviti.cn/tensorBay
 
