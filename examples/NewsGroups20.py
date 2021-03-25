@@ -21,7 +21,7 @@ gas = GAS(ACCESS_KEY)
 """"""
 
 """Create Dataset"""
-gas.create_dataset("BSTLD")
+gas.create_dataset("20 Newsgroups")
 """"""
 
 """List Dataset Names"""
@@ -37,11 +37,11 @@ dataset = Newsgroups20("path/to/dataset/directory")
 """Upload Dataset"""
 # dataset is the one you initialized in "Organize Dataset" section
 dataset_client = gas.upload_dataset(dataset, jobs=8, skip_uploaded_files=False)
-dataset_client.commit("20 Newsgroup")
+dataset_client.commit("20 Newsgroups")
 """"""
 
 """Read Dataset / get dataset"""
-dataset_client = gas.get_dataset("20 Newsgroup")
+dataset_client = gas.get_dataset("20 Newsgroups")
 """"""
 
 """Read Dataset / list segment names"""
@@ -63,5 +63,5 @@ category = data.label.classification.category
 """"""
 
 """Delete Dataset"""
-gas.delete_dataset("20 Newsgroup")
+gas.delete_dataset("20 Newsgroups")
 """"""
