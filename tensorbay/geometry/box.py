@@ -82,11 +82,14 @@ class Box2D(UserSequence[float]):
             The intersect box of the two boxes.
 
         """
-        xmin = max(self._data[0], other._data[0])
-        ymin = max(self._data[1], other._data[1])
-        xmax = min(self._data[2], other._data[2])
-        ymax = min(self._data[3], other._data[3])
-        return Box2D(xmin, ymin, xmax, ymax)
+        try:
+            xmin = max(self._data[0], other._data[0])
+            ymin = max(self._data[1], other._data[1])
+            xmax = min(self._data[2], other._data[2])
+            ymax = min(self._data[3], other._data[3])
+            return Box2D(xmin, ymin, xmax, ymax)
+        except (TypeError, IndexError, AttributeError):
+            return NotImplemented
 
     def _loads(self, contents: Dict[str, float]) -> None:
         self._data = (contents["xmin"], contents["ymin"], contents["xmax"], contents["ymax"])

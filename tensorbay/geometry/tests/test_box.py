@@ -6,6 +6,7 @@
 import pytest
 from quaternion import quaternion
 
+from ...utility import UserSequence
 from .. import Box2D, Box3D, Transform3D, Vector2D, Vector3D
 
 _DATA_2D = {"xmin": 1.0, "ymin": 2.0, "xmax": 3.0, "ymax": 4.0}
@@ -56,7 +57,13 @@ class TestBox2D:
     def test_and(self):
         box2d_1 = Box2D(1, 2, 3, 4)
         box2d_2 = Box2D(2, 3, 4, 5)
+        vector2d = Vector2D(1, 2)
+        user_sequence = UserSequence()
+        user_sequence._data = ["a", "b", "c", "d"]
         assert (box2d_1 & box2d_2) == Box2D(2, 3, 3, 4)
+        assert box2d_1.__and__([1, 2, 3]) == NotImplemented
+        assert box2d_1.__and__(vector2d) == NotImplemented
+        assert box2d_1.__and__(user_sequence) == NotImplemented
 
     def test_repr_head(self):
         box2d = Box2D(1, 2, 3, 4)
