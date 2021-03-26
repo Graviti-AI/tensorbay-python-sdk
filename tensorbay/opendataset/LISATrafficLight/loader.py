@@ -14,7 +14,7 @@ from ...dataset import Data, Dataset, Segment
 from ...label import Classification, LabeledBox2D
 from .._utility import glob
 
-DATASET_NAME = "LISATrafficLight"
+DATASET_NAME = "LISA Traffic Light"
 
 SUPERCATEGORY_INDEX = {
     "frameAnnotationsBOX.csv": "BOX",

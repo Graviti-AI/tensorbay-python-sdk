@@ -12,8 +12,8 @@ from ...dataset import Data, Dataset
 from ...label import Classification
 from .._utility import glob
 
-DATASET_NAME_FOOD_TYPE = "KenyanFoodType"
-DATASET_NAME_FOOD_OR_NONFOOD = "KenyanFoodOrNonfood"
+DATASET_NAME_FOOD_TYPE = "Kenyan Food Type"
+DATASET_NAME_FOOD_OR_NONFOOD = "Kenyan Food or Nonfood"
 SEGMENTS_FOOD_TYPE = ["test", "train", "val"]
 SEGMENTS_FOOD_OR_NONFOOD = {"test": "test.txt", "train": "train.txt"}
 
