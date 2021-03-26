@@ -1,0 +1,68 @@
+{
+    "BOX3D": {
+        "categories": [
+            { "name": "Animal" },
+            { "name": "Bicycle" },
+            { "name": "Bus" },
+            { "name": "Car" },
+            { "name": "Garbage_Container_on_Wheels" },
+            { "name": "Pedestrian" },
+            { "name": "Pedestrian_With_Object" },
+            { "name": "Traffic_Guidance_Objects" },
+            { "name": "Truck" },
+            { "name": "Horse and Buggy" }
+        ],
+        "attributes": [
+            {
+                "name": "stationary",
+                "type": "boolean"
+            },
+            {
+                "name": "camera_used",
+                "enum": [0, 1, 2, 3, 4, 5, 6, 7, null]
+            },
+            {
+                "name": "state",
+                "enum": ["Moving", "Parked", "Stopped"],
+                "parentCategories": ["Car", "Truck", "Bus", "Bicycle", "Horse_and_Buggy"]
+            },
+            {
+                "name": "truck_type",
+                "enum": [
+                    "Construction_Truck",
+                    "Emergency_Truck",
+                    "Garbage_Truck",
+                    "Pickup_Truck",
+                    "Semi_Truck",
+                    "Snowplow_Truck"
+                ],
+                "parentCategories": ["Truck"]
+            },
+            {
+                "name": "bus_type",
+                "enum": ["Coach_Bus", "Transit_Bus", "Standard_School_Bus", "Van_School_Bus"],
+                "parentCategories": ["Bus"]
+            },
+            {
+                "name": "age",
+                "enum": ["Adult", "Child"],
+                "parentCategories": ["Pedestrian", "Pedestrian_With_Object"]
+            },
+            {
+                "name": "traffic_guidance_type",
+                "enum": ["Permanent", "Moveable"],
+                "parentCategories": ["Traffic_Guidance_Objects"]
+            },
+            {
+                "name": "rider_state",
+                "enum": ["With_Rider", "Without_Rider"],
+                "parentCategories": ["Bicycle"]
+            },
+            {
+                "name": "points_count",
+                "type": "integer",
+                "minimum": 0
+            }
+        ]
+    }
+}
