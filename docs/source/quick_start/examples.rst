@@ -47,5 +47,5 @@
    ../examples/LeedsSportsPose
    ../examples/NeolixOD
    ../examples/THCHS30
-   ../examples/NewsGroups20
+   ../examples/Newsgroups20
    ../examples/read_dataset_class
