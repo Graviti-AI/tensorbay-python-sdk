@@ -2,8 +2,7 @@
  Examples
 ##########
 
-| We write examples for labels in :ref:`reference/label_format:Label Format`.
-| :numref:`Table. %s <examples_table>` lists the examples, including their data types and label types.
+In this topic, we write a series of examples to help developers to use TensorBay(:numref:`Table. %s <examples_table>`).
 
 .. _examples_table:
 
