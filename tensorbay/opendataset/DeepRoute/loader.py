@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of the DeepRoute dataset."""
+"""Dataloader of the DeepRoute Open Dataset."""
 
 import json
 import os
@@ -15,11 +15,11 @@ from ...dataset import Data, Dataset
 from ...label import LabeledBox3D
 from .._utility import glob
 
-DATASET_NAME = "DeepRoute"
+DATASET_NAME = "DeepRoute Open Dataset"
 
 
 def DeepRoute(path: str) -> Dataset:
-    """Dataloader of the DeepRoute dataset.
+    """Dataloader of the DeepRoute Open Dataset.
 
     Arguments:
         path: The root directory of the dataset.

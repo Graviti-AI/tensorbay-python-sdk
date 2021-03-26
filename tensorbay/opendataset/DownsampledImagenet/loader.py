@@ -4,19 +4,19 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of the DownsampledImagenet dataset."""
+"""Dataloader of the Downsampled Imagenet dataset."""
 
 import os
 
 from ...dataset import Data, Dataset, Segment
 from .._utility import glob
 
-DATASET_NAME = "DownsampledImagenet"
+DATASET_NAME = "Downsampled Imagenet"
 SEGMENT_NAMES = ["train_32x32", "train_64x64", "valid_32x32", "valid_64x64"]
 
 
 def DownsampledImagenet(path: str) -> Dataset:
-    """Dataloader of the DownsampledImagenet dataset.
+    """Dataloader of the Downsampled Imagenet dataset.
 
     Arguments:
         path: The root directory of the dataset.

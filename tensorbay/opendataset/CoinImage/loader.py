@@ -14,7 +14,7 @@ from ...dataset import Data, Dataset
 from ...label import Classification
 from .._utility import glob
 
-DATASET_NAME = "CoinImage"
+DATASET_NAME = "Coin Image"
 
 
 def CoinImage(path: str) -> Dataset:

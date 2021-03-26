@@ -4,18 +4,18 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of the Elpv dataset."""
+"""Dataloader of the elpv dataset."""
 
 import os
 
 from ...dataset import Data, Dataset
 from ...label import Classification
 
-DATASET_NAME = "Elpv"
+DATASET_NAME = "elpv"
 
 
 def Elpv(path: str) -> Dataset:
-    """Dataloader of the Elpv dataset.
+    """Dataloader of the elpv dataset.
 
     Arguments:
         path: The root directory of the dataset.

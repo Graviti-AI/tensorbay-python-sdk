@@ -14,7 +14,7 @@ from ...dataset import Data, Dataset
 from ...label import LabeledBox3D
 from .._utility import glob
 
-DATASET_NAME = "NeolixOD"
+DATASET_NAME = "Neolix OD"
 
 
 def NeolixOD(path: str) -> Dataset:
