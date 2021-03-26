@@ -164,6 +164,21 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
             version = _SERVER_VERSION_MATCH[response_headers["Server"]]
             return response_headers[version], response_headers["ETag"].strip('"')
 
+    def _put_binary_file_to_azure(
+        self,
+        url: str,
+        local_path: str,
+        data: Dict[str, Any],
+    ) -> Tuple[str, str]:
+        with open(local_path, "rb") as fp:
+            file_type = filetype.guess_mime(local_path)
+            request_headers = {
+                "x-ms-blob-content-type": file_type,
+                "x-ms-blob-type": data["x-ms-blob-type"],
+            }
+            response_headers = self._client.do("PUT", url, data=fp, headers=request_headers).headers
+            return response_headers["x-ms-version-id"], response_headers["ETag"].strip('"')
+
     def _synchronize_upload_info(
         self, key: str, version_id: str, etag: str, frame_info: Optional[Dict[str, Any]] = None
     ) -> None:
@@ -301,12 +316,21 @@ class SegmentClient(SegmentClientBase):
         post_data["key"] = permission["extra"]["objectPrefix"] + target_remote_path
 
         try:
-            version_id, etag = self._post_multipart_formdata(
-                permission["extra"]["host"],
-                local_path,
-                target_remote_path,
-                post_data,
-            )
+            backend_type = permission["extra"]["backendType"]
+            if backend_type == "azure":
+                url = (
+                    f'{permission["extra"]["host"]}{permission["extra"]["objectPrefix"]}'
+                    f'{target_remote_path}?{permission["result"]["token"]}'
+                )
+
+                version_id, etag = self._put_binary_file_to_azure(url, local_path, post_data)
+            else:
+                version_id, etag = self._post_multipart_formdata(
+                    permission["extra"]["host"],
+                    local_path,
+                    target_remote_path,
+                    post_data,
+                )
 
             self._synchronize_upload_info(post_data["key"], version_id, etag)
 
@@ -488,22 +512,31 @@ class FusionSegmentClient(SegmentClientBase):
             if not isinstance(data, Data):
                 continue
 
-            remote_path = data.target_remote_path
+            target_remote_path = data.target_remote_path
 
-            if "\\" in remote_path:
-                raise GASPathError(remote_path)
+            if "\\" in target_remote_path:
+                raise GASPathError(target_remote_path)
 
             permission = self._get_upload_permission()
             post_data = permission["result"]
-            post_data["key"] = permission["extra"]["objectPrefix"] + remote_path
+            post_data["key"] = permission["extra"]["objectPrefix"] + target_remote_path
 
             try:
-                version_id, etag = self._post_multipart_formdata(
-                    permission["extra"]["host"],
-                    data.path,
-                    remote_path,
-                    post_data,
-                )
+                backend_type = permission["extra"]["backendType"]
+                if backend_type == "azure":
+                    url = (
+                        f'{permission["extra"]["host"]}{permission["extra"]["objectPrefix"]}'
+                        f'{target_remote_path}?{permission["result"]["token"]}'
+                    )
+
+                    version_id, etag = self._put_binary_file_to_azure(url, data.path, post_data)
+                else:
+                    version_id, etag = self._post_multipart_formdata(
+                        permission["extra"]["host"],
+                        data.path,
+                        target_remote_path,
+                        post_data,
+                    )
 
                 frame_info: Dict[str, Any] = {
                     "segmentName": self._name,
