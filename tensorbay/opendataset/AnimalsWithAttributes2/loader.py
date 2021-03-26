@@ -12,7 +12,7 @@ from ...dataset import Data, Dataset
 from ...label import Classification
 from .._utility import glob
 
-DATASET_NAME = "AnimalsWithAttributes2"
+DATASET_NAME = "Animals with attributes 2"
 
 
 def AnimalsWithAttributes2(path: str) -> Dataset:

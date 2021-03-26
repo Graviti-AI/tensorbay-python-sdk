@@ -13,7 +13,7 @@ from ...geometry import Keypoint2D
 from ...label import LabeledKeypoints2D
 from .._utility import glob
 
-DATASET_NAME = "LeedsSportsPose"
+DATASET_NAME = "Leeds Sports Pose"
 
 
 def LeedsSportsPose(path: str) -> Dataset:

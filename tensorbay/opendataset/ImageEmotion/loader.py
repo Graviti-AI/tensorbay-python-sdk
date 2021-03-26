@@ -13,8 +13,8 @@ from ...dataset import Data, Dataset
 from ...label import Classification
 from .._utility import glob
 
-DATASET_NAME_ABSTRACT = "ImageEmotionAbstract"
-DATASET_NAME_ARTPHOTO = "ImageEmotionArtphoto"
+DATASET_NAME_ABSTRACT = "ImageEmotion-abstract"
+DATASET_NAME_ARTPHOTO = "ImageEmotion-artphoto"
 
 
 def ImageEmotionAbstract(path: str) -> Dataset:
