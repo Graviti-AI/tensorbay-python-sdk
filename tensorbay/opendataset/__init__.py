@@ -8,6 +8,7 @@
 from .AnimalPose import AnimalPose5, AnimalPose7
 from .AnimalsWithAttributes2 import AnimalsWithAttributes2
 from .BSTLD import BSTLD
+from .CADC import CADC
 from .CarConnection import CarConnection
 from .CoinImage import CoinImage
 from .CompCars import CompCars
@@ -40,6 +41,7 @@ __all__ = [
     "AnimalPose7",
     "AnimalsWithAttributes2",
     "BSTLD",
+    "CADC",
     "CarConnection",
     "CoinImage",
     "CompCars",
