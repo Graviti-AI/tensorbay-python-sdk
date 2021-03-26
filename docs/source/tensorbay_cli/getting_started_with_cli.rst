@@ -37,22 +37,21 @@ The following is the general format for TBRN:
  Configuration
 ***************
 
-Use the command below to configure the accessKey and URL(optional).
+Use the command below to configure the accessKey.
 
 .. code:: console
 
-   $ gas config [accessKey] [url]
+   $ gas config [accessKey]
 
 AccessKey_ is used for identification when using TensorBay to operate on your dataset.
-The default url is "https://gas.graviti.cn/".
 
 .. _accesskey: https://gas.graviti.cn/tensorbay/developer
 
-You can set the accessKey and URL into configuration:
+You can set the accessKey into configuration:
 
 .. code:: console
 
-   $ gas config Accesskey-***** https://gas.graviti.cn/
+   $ gas config Accesskey-*****
 
 To show configuration information:
 
