@@ -4,7 +4,7 @@ tensorbay.utility
 .. toctree::
    :maxdepth: 4
 
-   loads
+   common
    name
    repr
    tbrn

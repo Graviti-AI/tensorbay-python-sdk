@@ -51,7 +51,6 @@ It provides:
 ..
    advanced_features/fusion_dataset
 
-..
 .. toctree::
    :maxdepth: 1
    :caption: CLI
@@ -71,7 +70,6 @@ It provides:
 ..
    reference/release_note
 
-..
 .. toctree::
    :maxdepth: 1
    :caption: Community
