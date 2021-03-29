@@ -37,6 +37,46 @@ class ClassificationSubcatalog(  # pylint: disable=too-many-ancestors
             with the attribute names as keys
             and the :class:`~tensorbay.label.attribute.AttributeInfo` as values.
 
+    Examples:
+        *Initialization Method 1:* Init from ``ClassificationSubcatalog.loads()`` method.
+
+        >>> catalog = {
+        ...     "CLASSIFICATION": {
+        ...         "categoryDelimiter": ".",
+        ...         "categories": [
+        ...             {"name": "a"},
+        ...             {"name": "b"},
+        ...         ],
+        ...          "attributes": [{"name": "gender", "enum": ["male", "female"]}],
+        ...     }
+        ... }
+        >>> ClassificationSubcatalog.loads(catalog["CLASSIFICATION"])
+        ClassificationSubcatalog(
+          (category_delimiter): '.',
+          (categories): NameOrderedDict {...},
+          (attributes): NameOrderedDict {...}
+        )
+
+        *Initialization Method 2:* Init an empty ClassificationSubcatalog
+        and then add the attributes.
+
+        >>> from tensorbay.utility import NameOrderedDict
+        >>> from tensorbay.label import CategoryInfo, AttributeInfo, KeypointsInfo
+        >>> categories = NameOrderedDict()
+        >>> categories.append(CategoryInfo("a"))
+        >>> attributes = NameOrderedDict()
+        >>> attributes.append(AttributeInfo("gender", enum=["female", "male"]))
+        >>> classification_subcatalog = ClassificationSubcatalog()
+        >>> classification_subcatalog.category_delimiter = "."
+        >>> classification_subcatalog.categories = categories
+        >>> classification_subcatalog.attributes = attributes
+        >>> classification_subcatalog
+        ClassificationSubcatalog(
+          (category_delimiter): '.',
+          (categories): NameOrderedDict {...},
+          (attributes): NameOrderedDict {...}
+        )
+
     """
 
 
@@ -54,6 +94,13 @@ class Classification(_LabelBase):
     Attributes:
         category: The category of the label.
         attributes: The attributes of the label.
+
+    Examples:
+        >>> Classification(category="example", attributes={"attr": "a"})
+        Classification(
+          (category): 'example',
+          (attributes): {...}
+        )
 
     """
 
@@ -75,20 +122,18 @@ class Classification(_LabelBase):
         """Loads a Classification label from a dict containing the label information.
 
         Arguments:
-            contents: A dict containing the information of the classification label,
-                whose format should be like::
-
-                    {
-                        "category": <str>
-                        "attributes": {
-                            <key>: <value>
-                            ...
-                            ...
-                        }
-                    }
+            contents: A dict containing the information of the classification label.
 
         Returns:
             The loaded :class:`Classification` object.
+
+        Examples:
+            >>> contents = {"category": "example", "attributes": {"key": "value"}}
+            >>> Classification.loads(contents)
+            Classification(
+              (category): 'example',
+              (attributes): {...}
+            )
 
         """
         return common_loads(cls, contents)
