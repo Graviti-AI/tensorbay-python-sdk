@@ -178,6 +178,23 @@ class DatasetClientBase:
         """
         yield from self._list_drafts(start=start, stop=stop)
 
+    def create_tag(self, tag: str, commit: Optional[str] = None) -> None:
+        """Create the tag for a commit.
+
+        Arguments:
+            tag: A tag for current commit.
+            commit: Can be commit id, branch or tag.
+                If the commit is not given, create the tag for the current commit.
+
+        """
+        if not commit:
+            self._status.check_authority_for_commit()
+            commit = self._status.commit_id
+
+        post_data: Dict[str, Any] = {"commit": commit, "tag": tag}
+
+        self._client.open_api_do("POST", "tags", self.dataset_id, json=post_data)
+
     def checkout(self, commit: Optional[str] = None, draft_number: Optional[int] = None) -> None:
         """Checkout to commit or draft.
 
