@@ -19,6 +19,7 @@ pylint==2.7.2
 
 # test
 pytest==6.2.2
+pytest-cov
 
 # optional dependences
 scipy
