@@ -43,6 +43,59 @@ class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
             and the :class:`~tensorbay.label.attribute.AttributeInfo` as values.
         is_tracking: Whether the Subcatalog contains tracking information.
 
+    Examples:
+        *Initialization Method 1:* Init from ``Keypoints2DSubcatalog.loads()`` method.
+
+        >>> catalog = {
+        ...     "KEYPOINTS2D": {
+        ...         "isTracking": True,
+        ...         "categories": [{"name": "0"}, {"name": "1"}],
+        ...         "attributes": [{"name": "gender", "enum": ["male", "female"]}],
+        ...         "keypoints": [
+        ...             {
+        ...                 "number": 2,
+        ...                  "names": ["L_shoulder", "R_Shoulder"],
+        ...                  "skeleton": [(0, 1)],
+        ...             }
+        ...         ],
+        ...     }
+        ... }
+        >>> Keypoints2DSubcatalog.loads(catalog["KEYPOINTS2D"])
+        Keypoints2DSubcatalog(
+          (is_tracking): True,
+          (keypoints): [...],
+          (categories): NameOrderedDict {...},
+          (attributes): NameOrderedDict {...}
+        )
+
+        *Initialization Method 2:* Init an empty Keypoints2DSubcatalog and then add the attributes.
+
+        >>> from tensorbay.label import CategoryInfo, AttributeInfo, KeypointsInfo
+        >>> from tensorbay.utility import NameOrderedDict
+        >>> categories = NameOrderedDict()
+        >>> categories.append(CategoryInfo("a"))
+        >>> attributes = NameOrderedDict()
+        >>> attributes.append(AttributeInfo("gender", enum=["female", "male"]))
+        >>> keypoints2d_subcatalog = Keypoints2DSubcatalog()
+        >>> keypoints2d_subcatalog.is_tracking = True
+        >>> keypoints2d_subcatalog.categories = categories
+        >>> keypoints2d_subcatalog.attributes = attributes
+        >>> keypoints2d_subcatalog.add_keypoints(
+        ...     2,
+        ...     names=["L_shoulder", "R_Shoulder"],
+        ...     skeleton=[(0,1)],
+        ...     visible="BINARY",
+        ...     parent_categories="shoulder",
+        ...     description="12345",
+        ... )
+        >>> keypoints2d_subcatalog
+        Keypoints2DSubcatalog(
+          (is_tracking): True,
+          (keypoints): [...],
+          (categories): NameOrderedDict {...},
+          (attributes): NameOrderedDict {...}
+        )
+
     """
 
     def __init__(self, is_tracking: bool = False) -> None:
@@ -61,6 +114,14 @@ class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
 
         Returns:
             A list of :class:`~tensorbay.label.supports.KeypointsInfo`.
+
+        Examples:
+            >>> keypoints2d_subcatalog = Keypoints2DSubcatalog()
+            >>> keypoints2d_subcatalog.add_keypoints(2)
+            >>> keypoints2d_subcatalog.keypoints
+            [KeypointsInfo(
+              (number): 2
+            )]
 
         """
         return self._keypoints
@@ -88,6 +149,25 @@ class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
             parent_categories: The parent categories of the keypoints.
             description: The description of keypoints.
 
+        Examples:
+            >>> keypoints2d_subcatalog = Keypoints2DSubcatalog()
+            >>> keypoints2d_subcatalog.add_keypoints(
+            ...     2,
+            ...     names=["L_shoulder", "R_Shoulder"],
+            ...     skeleton=[(0,1)],
+            ...     visible="BINARY",
+            ...     parent_categories="shoulder",
+            ...     description="12345",
+            ... )
+            >>> keypoints2d_subcatalog.keypoints
+            [KeypointsInfo(
+              (number): 2,
+              (names): [...],
+              (skeleton): [...],
+              (visible): 'BINARY',
+              (parent_categories): [...]
+            )]
+
         """
         self._keypoints.append(
             KeypointsInfo(
@@ -105,6 +185,22 @@ class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
 
         Returns:
             A dict containing all the information of this Keypoints2DSubcatalog.
+
+        Examples:
+            >>> # keypoints2d_subcatalog is the instance initialized above.
+            >>> keypoints2d_subcatalog.dumps()
+            {
+                'isTracking': True,
+                'categories': [{'name': 'a'}],
+                'attributes': [{'name': 'gender', 'enum': ['female', 'male']}],
+                'keypoints': [
+                    {
+                        'number': 2,
+                        'names': ['L_shoulder', 'R_Shoulder'],
+                        'skeleton': [(0, 1)],
+                    }
+                ]
+            }
 
         """
         contents: Dict[str, Any] = super().dumps()
@@ -130,6 +226,22 @@ class LabeledKeypoints2D(Keypoints2D, _LabelBase):  # pylint: disable=too-many-a
         category: The category of the label.
         attributes: The attributes of the label.
         instance: The instance id of the label.
+
+    Examples:
+        >>> LabeledKeypoints2D(
+        ...     [(1, 2), (2, 3)],
+        ...     category="example",
+        ...     attributes={"key": "value"},
+        ...     instance="123",
+        ... )
+        LabeledKeypoints2D [
+          Keypoint2D(1, 2),
+          Keypoint2D(2, 3)
+        ](
+          (category): 'example',
+          (attributes): {...},
+          (instance): '123'
+        )
 
     """
 
@@ -158,29 +270,30 @@ class LabeledKeypoints2D(Keypoints2D, _LabelBase):  # pylint: disable=too-many-a
         """Loads a LabeledKeypoints2D from a dict containing the information of the label.
 
         Arguments:
-            contents: A dict containing the information of the 2D keypoints label,
-                whose format should be like::
-
-                    {
-                        "keypoints2d": [
-                            { "x": <float>
-                              "y": <float>
-                              "v": <int>
-                            },
-                            ...
-                            ...
-                        ],
-                        "category": <str>
-                        "attributes": {
-                            <key>: <value>
-                            ...
-                            ...
-                        },
-                        "instance": <str>
-                    }
+            contents: A dict containing the information of the 2D keypoints label.
 
         Returns:
             The loaded :class:`LabeledKeypoints2D` object.
+
+        Examples:
+            >>> contents = {
+            ...     "keypoints2d": [
+            ...         {"x": 1, "y": 1, "v": 2},
+            ...         {"x": 2, "y": 2, "v": 2},
+            ...     ],
+            ...     "category": "example",
+            ...     "attributes": {"key": "value"},
+            ...     "instance": "12345",
+            ... }
+            >>> LabeledKeypoints2D.loads(contents)
+            LabeledKeypoints2D [
+              Keypoint2D(1, 1, 2),
+              Keypoint2D(2, 2, 2)
+            ](
+              (category): 'example',
+              (attributes): {...},
+              (instance): '12345'
+            )
 
         """
         return common_loads(cls, contents)
@@ -189,26 +302,22 @@ class LabeledKeypoints2D(Keypoints2D, _LabelBase):  # pylint: disable=too-many-a
         """Dumps the current 2D keypoints label into a dict.
 
         Returns:
-            A dict containing all the information of the 2D keypoints label,
-            whose format is like::
+            A dict containing all the information of the 2D keypoints label.
 
-                {
-                    "keypoints2d": [
-                        { "x": <float>
-                          "y": <float>
-                          "v": <int>
-                        },
-                        ...
-                        ...
-                    ],
-                    "category": <str>
-                    "attributes": {
-                        <key>: <value>
-                        ...
-                        ...
-                    },
-                    "instance": <str>
-                }
+        Examples:
+            >>> labeledkeypoints2d = LabeledKeypoints2D(
+            ...     [(1, 1, 2), (2, 2, 2)],
+            ...     category="example",
+            ...     attributes={"key": "value"},
+            ...     instance="123",
+            ... )
+            >>> labeledkeypoints2d.dumps()
+            {
+                'category': 'example',
+                'attributes': {'key': 'value'},
+                'instance': '123',
+                'keypoints2d': [{'x': 1, 'y': 1, 'v': 2}, {'x': 2, 'y': 2, 'v': 2}],
+            }
 
         """
         contents = _LabelBase.dumps(self)
