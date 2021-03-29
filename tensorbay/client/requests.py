@@ -29,36 +29,24 @@ from .log import RequestLogging, ResponseLogging
 logger = logging.getLogger(__name__)
 
 
-# def logging_hook(
-#     response: Response, *args: Any, **kwargs: Any  # pylint: disable=unused-argument
-# ) -> None:
-#     """log the response"""
-#     data = dump.dump_all(response)
-#     logging.debug(data.decode("utf-8"))
-
-
 class Config:  # pylint: disable=too-few-public-methods
-    """This is a base class defining the concept of Post Config.
+    """This is a base class defining the concept of Request Config."""
 
-    Arguments:
-        max_retries: Maximum retry times of the post request.
-        timeout: Timeout value of the post request in seconds.
-        is_intern: Whether the post request is from intern.
+    def __init__(self) -> None:
 
-    """
+        self.max_retries = 3
+        self.allowed_retry_methods = ["HEAD", "OPTIONS", "POST", "PUT"]
+        self.allowed_retry_status = [429, 500, 502, 503, 504]
 
-    def __init__(self, max_retries: int = 3, timeout: int = 15, is_intern: bool = False) -> None:
-
-        self.max_retries = max_retries
-        self.timeout = timeout
-        self._is_intern = is_intern
+        self.timeout = 15
+        self._is_intern = False
 
     @property
     def is_intern(self) -> bool:
-        """Get whether the post request is from intern.
+        """Get whether the request is from intern.
 
         Returns:
-            Whether the post request is from intern.
+            Whether the request is from intern.
 
         """
         return self._is_intern
@@ -119,8 +107,8 @@ class UserSession(Session):  # pylint: disable=too-few-public-methods
 
         retry_strategy = Retry(
             total=default_config.max_retries,
-            status_forcelist=[429, 500, 502, 503, 504],
-            method_whitelist=["HEAD", "OPTIONS", "POST", "PUT"],
+            status_forcelist=default_config.allowed_retry_status,
+            method_whitelist=default_config.allowed_retry_methods,
             raise_on_status=False,
         )
 
