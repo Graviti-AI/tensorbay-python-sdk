@@ -182,8 +182,9 @@ class DatasetClientBase:
         """Create the tag for a commit.
 
         Arguments:
-            tag: A tag for current commit.
-            commit: Can be commit id, branch or tag.
+            tag: The tag to be created for the specific commit.
+            commit: The information to locate the specific commit, which can be the commit id,
+                the branch, or the tag.
                 If the commit is not given, create the tag for the current commit.
 
         """
@@ -199,7 +200,8 @@ class DatasetClientBase:
         """Checkout to commit or draft.
 
         Arguments:
-            commit: The commit ID.
+            commit: The information to locate the specific commit, which can be the commit id,
+                the branch, or the tag.
             draft_number: The draft number.
 
         Raises:
