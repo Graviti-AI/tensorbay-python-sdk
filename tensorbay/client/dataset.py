@@ -328,6 +328,17 @@ class DatasetClientBase:
 
         self._client.open_api_do("PUT", "labels/catalogs", self.dataset_id, json=put_data)
 
+    def delete_tag(self, tag: str) -> None:
+        """Delete a tag.
+
+        Arguments:
+            tag: The tag to be deleted for the specific commit.
+
+        """
+        delete_data: Dict[str, Any] = {"tag": tag}
+
+        self._client.open_api_do("DELETE", "tags", self.dataset_id, json=delete_data)
+
     def delete_segment(self, name: str) -> None:
         """Delete a segment of the draft.
 
