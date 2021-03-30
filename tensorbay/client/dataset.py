@@ -423,18 +423,38 @@ class DatasetClient(DatasetClientBase):
     """
 
     def get_or_create_segment(self, name: str = "") -> SegmentClient:
-        """Create a segment with the given name to the draft.
+        """Get or create a segment with the given name.
 
         Arguments:
             name: Segment name, can not be "_default".
 
         Returns:
-            Created :class:`~tensorbay.client.segment.SegmentClient` with given name.
+            The created :class:`~tensorbay.client.segment.SegmentClient` with given name.
 
         """
         self._status.check_authority_for_draft()
         if name not in self.list_segment_names():
             self._create_segment(name)
+        return SegmentClient(name, self)
+
+    def create_segment(self, name: str = "") -> SegmentClient:
+        """Create a segment with the given name.
+
+        Arguments:
+            name: Segment name, can not be "_default".
+
+        Returns:
+            The created :class:`~tensorbay.client.segment.SegmentClient` with given name.
+
+        Raises:
+            TypeError: When the segment exists.
+
+        """
+        self._status.check_authority_for_draft()
+        if name not in self.list_segment_names():
+            self._create_segment(name)
+        else:
+            raise TypeError(f"The segment: {name} exists")
         return SegmentClient(name, self)
 
     def get_segment(self, name: str = "") -> SegmentClient:
@@ -513,19 +533,38 @@ class FusionDatasetClient(DatasetClientBase):
     """
 
     def get_or_create_segment(self, name: str = "") -> FusionSegmentClient:
-        """Create a fusion segment with the given name to the draft.
+        """Get or create a fusion segment with the given name.
 
         Arguments:
             name: Segment name, can not be "_default".
 
         Returns:
-            Created :class:`~tensorbay.client.segment.FusionSegmentClient` with given name.
+            The created :class:`~tensorbay.client.segment.FusionSegmentClient` with given name.
 
         """
         self._status.check_authority_for_draft()
-
         if name not in self.list_segment_names():
             self._create_segment(name)
+        return FusionSegmentClient(name, self)
+
+    def create_segment(self, name: str = "") -> FusionSegmentClient:
+        """Create a fusion segment with the given name.
+
+        Arguments:
+            name: Segment name, can not be "_default".
+
+        Returns:
+            The created :class:`~tensorbay.client.segment.FusionSegmentClient` with given name.
+
+        Raises:
+            TypeError: When the segment exists.
+
+        """
+        self._status.check_authority_for_draft()
+        if name not in self.list_segment_names():
+            self._create_segment(name)
+        else:
+            raise TypeError(f"The segment: {name} exists")
         return FusionSegmentClient(name, self)
 
     def get_segment(self, name: str = "") -> FusionSegmentClient:
