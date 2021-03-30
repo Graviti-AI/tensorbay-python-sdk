@@ -135,6 +135,24 @@ class TestDatasetClient:
         dataset_client = gas_client.create_dataset(dataset_name)
 
         with pytest.raises(TypeError):
+            dataset_client.create_segment("segment")
+        dataset_client.create_draft("draft-1")
+        segment_client = dataset_client.create_segment("segment")
+        # Cannot create duplicated segment
+        with pytest.raises(TypeError):
+            dataset_client.create_segment("segment")
+        assert segment_client.status.is_draft
+        assert segment_client.name == "segment"
+        dataset_client.get_segment("segment")
+
+        gas_client.delete_dataset(dataset_name)
+
+    def test_get_or_create_segment(self, accesskey, url):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_random_dataset_name()
+        dataset_client = gas_client.create_dataset(dataset_name)
+
+        with pytest.raises(TypeError):
             dataset_client.get_or_create_segment("segment")
         dataset_client.create_draft("draft-1")
         segment_client = dataset_client.get_or_create_segment("segment")
@@ -144,7 +162,7 @@ class TestDatasetClient:
 
         gas_client.delete_dataset(dataset_name)
 
-    def test_create_fusion_segment(self, accesskey, url):
+    def test_get_or_create_fusion_segment(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_random_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name, is_fusion=True)
