@@ -119,6 +119,26 @@ class DatasetClientBase:
             if response["recordSize"] + response["offset"] >= response["totalCount"]:
                 break
 
+    def _list_branches(
+        self,
+        branch: Optional[str] = None,
+        *,
+        start: int = 0,
+        stop: int = sys.maxsize,
+        page_size: int = 128,
+    ) -> Iterator[Dict[str, str]]:
+        params: Dict[str, Any] = {}
+        if branch:
+            params["branch"] = branch
+
+        for params["offset"], params["limit"] in paging_range(start, stop, page_size):
+            response = self._client.open_api_do(
+                "GET", "branches", self.dataset_id, params=params
+            ).json()
+            yield from response["branches"]
+            if response["recordSize"] + response["offset"] >= response["totalCount"]:
+                break
+
     def _create_segment(self, name: str) -> None:
         post_data: Dict[str, Any] = {"name": name}
         post_data.update(self._status.get_status_info())
@@ -251,6 +271,42 @@ class DatasetClientBase:
 
         """
         yield from self._list_tags(start=start, stop=stop)
+
+    def get_branch(self, branch: str) -> Dict[str, Any]:
+        """Get the information of the certain branch.
+
+        Arguments:
+            branch: The required branch.
+
+        Returns:
+            The dict containing the information of the certain branch.
+
+        Raises:
+            TypeError: When the required branch does not exist or the given branch is illegal.
+
+        """
+        if not branch:
+            raise TypeError("The given branch is illegal")
+
+        try:
+            info = next(self._list_branches(branch))
+        except StopIteration as error:
+            raise TypeError(f"The branch: {branch} does not exist.") from error
+
+        return info
+
+    def list_branches(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[Dict[str, Any]]:
+        """List the information of branches.
+
+        Arguments:
+            start: The index to start.
+            stop: The index to end.
+
+        Yields:
+            The dict containing the information of branches.
+
+        """
+        yield from self._list_branches(start=start, stop=stop)
 
     def checkout(self, commit: Optional[str] = None, draft_number: Optional[int] = None) -> None:
         """Checkout to commit or draft.
