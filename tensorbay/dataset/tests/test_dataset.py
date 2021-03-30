@@ -13,6 +13,7 @@ from ..dataset import DatasetBase, Notes
 
 _NOTES_DATA = {
     "isContinuous": True,
+    "binPointCloudFields": ["X", "Y", "Z", "Intensity", "Ring"],
 }
 
 
@@ -23,13 +24,19 @@ class TestNotes:
 
         notes = Notes()
         assert notes.is_continuous == False
+        with pytest.raises(AttributeError):
+            notes.bin_point_cloud_fields
+
+        notes = Notes(True, _NOTES_DATA["binPointCloudFields"])
+        assert notes.is_continuous == True
+        assert notes.bin_point_cloud_fields == _NOTES_DATA["binPointCloudFields"]
 
     def test_loads(self):
         notes = Notes.loads(_NOTES_DATA)
         assert notes.is_continuous == _NOTES_DATA["isContinuous"]
 
     def test_dumps(self):
-        notes = Notes(True)
+        notes = Notes(True, ["X", "Y", "Z", "Intensity", "Ring"])
         assert notes.dumps() == _NOTES_DATA
 
 

@@ -23,7 +23,7 @@ Please refer to :class:`~tensorbay.dataset.dataset.FusionDataset` for more infor
 """
 
 import sys
-from typing import TYPE_CHECKING, Any, Dict, Generator, Iterator, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Iterator, Optional, Tuple
 
 from ..dataset import Data, Frame, FusionSegment, Notes, Segment
 from ..label import Catalog
@@ -456,16 +456,26 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         self._status.check_authority_for_draft()
         self._status.checkout(commit_id=self._commit(message, tag))
 
-    def update_notes(self, *, is_continuous: bool) -> None:
+    def update_notes(
+        self,
+        *,
+        is_continuous: Optional[bool] = None,
+        bin_point_cloud_fields: Optional[Iterable[str]] = None,
+    ) -> None:
         """Update the notes.
 
         Arguments:
             is_continuous: Whether the data is continuous.
+            bin_point_cloud_fields: The field names of the bin point cloud files in the dataset.
 
         """
         self._status.check_authority_for_draft()
 
-        patch_data: Dict[str, Any] = {"isContinuous": is_continuous}
+        patch_data: Dict[str, Any] = {}
+        if is_continuous is not None:
+            patch_data["isContinuous"] = is_continuous
+        if bin_point_cloud_fields:
+            patch_data["binPointCloudFields"] = list(bin_point_cloud_fields)
         patch_data.update(self._status.get_status_info())
 
         self._client.open_api_do("PATCH", "notes", self.dataset_id, json=patch_data)
