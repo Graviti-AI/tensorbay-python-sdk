@@ -6,7 +6,7 @@
 """Dataset related classes."""
 
 from .data import Data, RemoteData
-from .dataset import Dataset, FusionDataset
+from .dataset import Dataset, FusionDataset, Notes
 from .frame import Frame
 from .segment import FusionSegment, Segment
 
@@ -16,6 +16,7 @@ __all__ = [
     "Frame",
     "FusionDataset",
     "FusionSegment",
+    "Notes",
     "RemoteData",
     "Segment",
 ]

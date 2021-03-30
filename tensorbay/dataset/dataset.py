@@ -3,7 +3,9 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""DatasetBase, Dataset and FusionDataset.
+"""Notes, DatasetBase, Dataset and FusionDataset.
+
+:class:`Notes` contains the basic information of a :class:`DatasetBase`.
 
 :class:`DatasetBase` defines the basic concept of a dataset,
 which is the top-level structure to handle your data files, labels and other additional information.
@@ -21,13 +23,62 @@ It consists of a list of :class:`~tensorbay.dataset.segment.FusionSegment`.
 """
 
 import json
-from typing import Sequence, TypeVar, Union, overload
+from typing import Any, Dict, Sequence, Type, TypeVar, Union, overload
 
 from ..label import Catalog
-from ..utility import NameMixin, NameSortedList, ReprType
+from ..utility import EqMixin, NameMixin, NameSortedList, ReprMixin, ReprType, common_loads
 from .segment import FusionSegment, Segment
 
 _T = TypeVar("_T", FusionSegment, Segment)
+
+
+class Notes(ReprMixin, EqMixin):
+    """This is a class stores the basic information of :class:`DatasetBase`.
+
+    Arguments:
+        is_continuous: Whether the data inside the dataset is time-continuous.
+
+    """
+
+    _T = TypeVar("_T", bound="Notes")
+
+    _repr_attrs = ("is_continuous",)
+
+    def __init__(self, is_continuous: bool = False) -> None:
+        self.is_continuous = is_continuous
+
+    def _loads(self, contents: Dict[str, Any]) -> None:
+        self.is_continuous = contents["isContinuous"]
+
+    @classmethod
+    def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
+        """Loads a :class:`Notes` instance from the given contents.
+
+        Arguments:
+            contents: The given dict containing the dataset notes::
+
+                    {
+                        "isContinuous": <boolean>
+                    }
+
+        Returns:
+            The loaded :class:`Notes` instance.
+
+        """
+        return common_loads(cls, contents)
+
+    def dumps(self) -> Dict[str, Any]:
+        """Dumps the notes into a dict.
+
+        Returns:
+            A dict containing all the information of the Notes::
+
+                {
+                    "isContinuous": <boolean>
+                }
+
+        """
+        return {"isContinuous": self.is_continuous}
 
 
 class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestors
@@ -41,17 +92,16 @@ class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestor
 
     Arguments:
         name: The name of the dataset.
-        is_continuous: Whether the data inside the dataset is time-continuous.
 
     """
 
     _repr_type = ReprType.SEQUENCE
 
-    def __init__(self, name: str, is_continuous: bool = False) -> None:
+    def __init__(self, name: str) -> None:
         super().__init__(name)
         self._segments: NameSortedList[_T] = NameSortedList()
         self._catalog: Catalog = Catalog()
-        self._is_continuous = is_continuous
+        self._notes = Notes()
 
     def __len__(self) -> int:
         return self._segments.__len__()
@@ -68,16 +118,6 @@ class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestor
         return self._segments.__getitem__(index)
 
     @property
-    def is_continuous(self) -> bool:
-        """Return whether the data in dataset is time-continuous or not.
-
-        Returns:
-            `True` if the data is time-continuous, otherwise `False`.
-
-        """
-        return self._is_continuous
-
-    @property
     def catalog(self) -> Catalog:
         """Return the catalog of the dataset.
 
@@ -86,6 +126,16 @@ class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestor
 
         """
         return self._catalog
+
+    @property
+    def notes(self) -> Notes:
+        """Return the notes of the dataset.
+
+        Returns:
+            The class:`Notes` of the dataset.
+
+        """
+        return self._notes
 
     def load_catalog(self, filepath: str) -> None:
         """Load catalog from a json file.

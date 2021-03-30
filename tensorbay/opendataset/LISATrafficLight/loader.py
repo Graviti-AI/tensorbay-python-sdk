@@ -70,7 +70,8 @@ def LISATrafficLight(path: str) -> Dataset:
     root_path = os.path.abspath(os.path.expanduser(path))
     annotation_path = os.path.join(root_path, "Annotations", "Annotations")
 
-    dataset = Dataset(DATASET_NAME, is_continuous=True)
+    dataset = Dataset(DATASET_NAME)
+    dataset.notes.is_continuous = True
     dataset.load_catalog(os.path.join(os.path.dirname(__file__), "catalog.json"))
 
     csv_paths = glob(os.path.join(annotation_path, "**", "*.csv"), recursive=True)

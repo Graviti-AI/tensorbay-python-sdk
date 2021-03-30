@@ -6,8 +6,31 @@
 import json
 import os
 
+import pytest
+
 from .. import Dataset, FusionDataset, FusionSegment, Segment
-from ..dataset import DatasetBase
+from ..dataset import DatasetBase, Notes
+
+_NOTES_DATA = {
+    "isContinuous": True,
+}
+
+
+class TestNotes:
+    def test_init(self):
+        notes = Notes(True)
+        assert notes.is_continuous == True
+
+        notes = Notes()
+        assert notes.is_continuous == False
+
+    def test_loads(self):
+        notes = Notes.loads(_NOTES_DATA)
+        assert notes.is_continuous == _NOTES_DATA["isContinuous"]
+
+    def test_dumps(self):
+        notes = Notes(True)
+        assert notes.dumps() == _NOTES_DATA
 
 
 class TestDatasetBase:
@@ -21,13 +44,6 @@ class TestDatasetBase:
         segment = Segment("train")
         dataset.add_segment(segment)
         assert dataset[0] is segment
-
-    def test_is_continues(self):
-        dataset = DatasetBase("test_name")
-        assert dataset.is_continuous == False
-
-        dataset = DatasetBase("test_name", True)
-        assert dataset.is_continuous == True
 
     def test_load_catalog(self):
         catalog_path = os.path.join(

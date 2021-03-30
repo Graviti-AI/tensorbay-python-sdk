@@ -43,7 +43,8 @@ def NightOwls(path: str) -> Dataset:
     """
     root_path = os.path.abspath(os.path.expanduser(path))
 
-    dataset = Dataset(DATASET_NAME, is_continuous=True)
+    dataset = Dataset(DATASET_NAME)
+    dataset.notes.is_continuous = True
     dataset.load_catalog(os.path.join(os.path.dirname(__file__), "catalog.json"))
 
     for mode, (labels_filename, labels_handler) in _LABELS_HANDEL_METHODS.items():
