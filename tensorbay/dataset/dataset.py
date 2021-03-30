@@ -23,7 +23,7 @@ It consists of a list of :class:`~tensorbay.dataset.segment.FusionSegment`.
 """
 
 import json
-from typing import Any, Dict, Sequence, Type, TypeVar, Union, overload
+from typing import Any, Dict, Iterable, Optional, Sequence, Type, TypeVar, Union, overload
 
 from ..label import Catalog
 from ..utility import EqMixin, NameMixin, NameSortedList, ReprMixin, ReprType, common_loads
@@ -37,18 +37,25 @@ class Notes(ReprMixin, EqMixin):
 
     Arguments:
         is_continuous: Whether the data inside the dataset is time-continuous.
+        bin_point_cloud_fields: The field names of the bin point cloud files in the dataset.
 
     """
 
     _T = TypeVar("_T", bound="Notes")
 
-    _repr_attrs = ("is_continuous",)
+    _repr_attrs = ("is_continuous", "bin_point_cloud_fields")
 
-    def __init__(self, is_continuous: bool = False) -> None:
+    def __init__(
+        self, is_continuous: bool = False, bin_point_cloud_fields: Optional[Iterable[str]] = None
+    ) -> None:
         self.is_continuous = is_continuous
+        if bin_point_cloud_fields:
+            self.bin_point_cloud_fields = list(bin_point_cloud_fields)
 
     def _loads(self, contents: Dict[str, Any]) -> None:
         self.is_continuous = contents["isContinuous"]
+        if "binPointCloudFields" in contents:
+            self.bin_point_cloud_fields = contents["binPointCloudFields"]
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -58,7 +65,11 @@ class Notes(ReprMixin, EqMixin):
             contents: The given dict containing the dataset notes::
 
                     {
-                        "isContinuous": <boolean>
+                        "isContinuous":            <boolean>
+                        "binPointCloudFields": [
+                                <field_name>,      <str>
+                                ...
+                        ]
                     }
 
         Returns:
@@ -74,11 +85,18 @@ class Notes(ReprMixin, EqMixin):
             A dict containing all the information of the Notes::
 
                 {
-                    "isContinuous": <boolean>
+                    "isContinuous":           <boolean>
+                    "binPointCloudFields": [
+                        <field_name>,         <str>
+                        ...
+                    ]
                 }
 
         """
-        return {"isContinuous": self.is_continuous}
+        contents: Dict[str, Any] = {"isContinuous": self.is_continuous}
+        if hasattr(self, "bin_point_cloud_fields"):
+            contents["binPointCloudFields"] = self.bin_point_cloud_fields
+        return contents
 
 
 class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestors

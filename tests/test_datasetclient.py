@@ -424,6 +424,13 @@ class TestDatasetClient:
         notes_2 = dataset_client.get_notes()
         assert notes_2.is_continuous is True
 
+        dataset_client.update_notes(
+            is_continuous=False, bin_point_cloud_fields=["X", "Y", "Z", "Intensity", "Ring"]
+        )
+        notes_2 = dataset_client.get_notes()
+        assert notes_2.is_continuous is False
+        assert notes_2.bin_point_cloud_fields == ["X", "Y", "Z", "Intensity", "Ring"]
+
         gas_client.delete_dataset(dataset_name)
 
     def test_create_segment(self, accesskey, url):
