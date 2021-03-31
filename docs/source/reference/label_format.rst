@@ -487,10 +487,10 @@ See :ref:`reference/label_format:Instance` for details.
 Box3DSubcatalog
 ===============
 
-Before adding the Box2D labels to data,
-:class:`~tensorbay.label.label_box.Box2DSubcatalog` should be defined.
+Before adding the Box3D labels to data,
+:class:`~tensorbay.label.label_box.Box3DSubcatalog` should be defined.
 
-:class:`~tensorbay.label.label_box.Box2DSubcatalog`
+:class:`~tensorbay.label.label_box.Box3DSubcatalog`
 has categories, attributes and tracking information,
 see :ref:`reference/label_format:CategoryInformation`,
 :ref:`reference/label_format:AttributesInformation` and
@@ -592,7 +592,7 @@ And you can access the keypoints by index.
 Keypoints2D.Category
 ====================
 
-The category of the object inside the 3D bounding box.
+The category of the object inside the 2D keypoints.
 See :ref:`reference/label_format:Category` for details.
 
 Keypoints2D.Attributes
@@ -604,7 +604,7 @@ See :ref:`reference/label_format:Attributes` for details.
 Keypoints2D.Instance
 ====================
 
-Instance is the unique ID for the object inside of the 3D bounding box,
+Instance is the unique ID for the object inside of the 2D keypoints,
 which is mostly used for tracking tasks.
 See :ref:`reference/label_format:Instance` for details.
 
