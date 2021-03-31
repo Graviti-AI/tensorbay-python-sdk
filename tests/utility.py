@@ -6,7 +6,9 @@
 """Utility method for integration test."""
 
 import uuid
-from typing import Any, Dict, Iterator
+from typing import Iterator
+
+from tensorbay.client.struct import Draft
 
 
 def get_random_dataset_name() -> str:
@@ -19,7 +21,7 @@ def get_random_dataset_name() -> str:
     return f"test{uuid.uuid4().hex}"
 
 
-def get_draft_number_by_title(drafts: Iterator[Dict[str, Any]], title: str) -> int:
+def get_draft_number_by_title(drafts: Iterator[Draft], title: str) -> int:
     """Get the draft number with the given draft title.
 
     Arguments:
@@ -34,7 +36,7 @@ def get_draft_number_by_title(drafts: Iterator[Dict[str, Any]], title: str) -> i
 
     """
     for draft in drafts:
-        if title == draft["title"]:
-            return draft["number"]  # type: ignore[no-any-return]
+        if title == draft.title:
+            return draft.number
 
     raise TypeError("Cannot find the draft with the given name.")

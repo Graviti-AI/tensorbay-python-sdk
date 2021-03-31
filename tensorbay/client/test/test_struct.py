@@ -4,7 +4,7 @@
 #
 
 
-from ..struct import Commit, User, _NamedCommit
+from ..struct import Commit, Draft, User, _NamedCommit
 
 _DATE = 1617183289
 _USER_NAME = "user_name@graviti.cn"
@@ -23,6 +23,10 @@ _COMMIT_DATA = {
 _COMMIT_NAME = "commit name"
 _NAMED_COMMIT_DATA = {"name": _COMMIT_NAME}
 _NAMED_COMMIT_DATA.update(_COMMIT_DATA)
+
+_DRAFT_NUMBER = 1
+_DRAFT_TITLE = "draft title"
+_DRAFT_DATA = {"number": _DRAFT_NUMBER, "title": _DRAFT_TITLE}
 
 
 class TestUser:
@@ -85,3 +89,19 @@ class Test_NamedCommit:
         user = User.loads(_USER_DATA)
         named_commit = _NamedCommit(_COMMIT_NAME, _COMMIT_ID, _PARENT_COMMIT_ID, _MESSAGE, user)
         assert named_commit.dumps() == _NAMED_COMMIT_DATA
+
+
+class TestDraft:
+    def test_init(self):
+        draft = Draft(_DRAFT_NUMBER, _DRAFT_TITLE)
+        assert draft.number == _DRAFT_NUMBER
+        assert draft.title == _DRAFT_TITLE
+
+    def test_loads(self):
+        draft = Draft.loads(_DRAFT_DATA)
+        assert draft.number == _DRAFT_DATA["number"]
+        assert draft.title == _DRAFT_DATA["title"]
+
+    def test_dumps(self):
+        draft = Draft(_DRAFT_NUMBER, _DRAFT_TITLE)
+        assert draft.dumps() == _DRAFT_DATA

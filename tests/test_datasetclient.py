@@ -8,6 +8,7 @@
 import pytest
 
 from tensorbay.client import GAS, GASResponseError, GASSegmentError
+from tensorbay.client.struct import Draft
 from tensorbay.dataset import Data, Frame, FusionSegment, Segment
 from tensorbay.label import Catalog, Label
 from tensorbay.sensor import Sensor
@@ -80,9 +81,7 @@ class TestDatasetClient:
         assert dataset_client.status.commit_id is None
         with pytest.raises(TypeError):
             dataset_client.create_draft("draft-2")
-        draft_number = get_draft_number_by_title(
-            dataset_client.list_draft_titles_and_numbers(), "draft-1"
-        )
+        draft_number = get_draft_number_by_title(dataset_client.list_drafts(), "draft-1")
         assert draft_number_1 == draft_number
 
         gas_client.delete_dataset(dataset_name)
@@ -97,13 +96,14 @@ class TestDatasetClient:
 
         # After committing, the draft will be deleted
         with pytest.raises(TypeError):
-            get_draft_number_by_title(dataset_client.list_draft_titles_and_numbers(), "draft-1")
-        draft_number = get_draft_number_by_title(
-            dataset_client.list_draft_titles_and_numbers(), "draft-2"
-        )
-        assert draft_number_2 == draft_number
+            get_draft_number_by_title(dataset_client.list_drafts(), "draft-1")
+
+        drafts = list(dataset_client.list_drafts())
+        assert len(drafts) == 1
+        assert drafts[0] == Draft(draft_number_2, "draft-2")
+
         with pytest.raises(TypeError):
-            get_draft_number_by_title(dataset_client.list_draft_titles_and_numbers(), "draft-3")
+            get_draft_number_by_title(dataset_client.list_drafts(), "draft-3")
 
         gas_client.delete_dataset(dataset_name)
 
@@ -125,7 +125,7 @@ class TestDatasetClient:
         assert dataset_client.status.commit_id is not None
         # After committing, the draft will be deleted
         with pytest.raises(TypeError):
-            get_draft_number_by_title(dataset_client.list_draft_titles_and_numbers(), "draft-3")
+            get_draft_number_by_title(dataset_client.list_drafts(), "draft-3")
 
         gas_client.delete_dataset(dataset_name)
 

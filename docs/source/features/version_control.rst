@@ -76,8 +76,8 @@ through `the web page <https://gas.graviti.cn/>`_.
    dataset_client.commit("second_commit")
 
    dataset_client.create_draft("draft-3")
-   # list draft numbers.
-   drafts = list(dataset_client.list_draft_titles_and_numbers())
+   # list drafts.
+   drafts = list(dataset_client.list_drafts())
 
    # checkout to the draft.
    dataset_client.checkout(draft_number=draft_number)
