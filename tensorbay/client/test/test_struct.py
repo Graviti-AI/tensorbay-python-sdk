@@ -4,7 +4,7 @@
 #
 
 
-from ..struct import Commit, User
+from ..struct import Commit, User, _NamedCommit
 
 _DATE = 1617183289
 _USER_NAME = "user_name@graviti.cn"
@@ -19,6 +19,10 @@ _COMMIT_DATA = {
     "message": _MESSAGE,
     "committer": _USER_DATA,
 }
+
+_COMMIT_NAME = "commit name"
+_NAMED_COMMIT_DATA = {"name": _COMMIT_NAME}
+_NAMED_COMMIT_DATA.update(_COMMIT_DATA)
 
 
 class TestUser:
@@ -57,3 +61,27 @@ class TestCommit:
         user = User.loads(_USER_DATA)
         commit = Commit(_COMMIT_ID, _PARENT_COMMIT_ID, _MESSAGE, user)
         assert commit.dumps() == _COMMIT_DATA
+
+
+class Test_NamedCommit:
+    def test_init(self):
+        user = User.loads(_USER_DATA)
+        named_commit = _NamedCommit(_COMMIT_NAME, _COMMIT_ID, _PARENT_COMMIT_ID, _MESSAGE, user)
+        assert named_commit.name == _COMMIT_NAME
+        assert named_commit.commit_id == _COMMIT_ID
+        assert named_commit.message == _MESSAGE
+        assert named_commit.committer == user
+        assert named_commit.parent_commit_id == _PARENT_COMMIT_ID
+
+    def test_loads(self):
+        named_commit = _NamedCommit.loads(_NAMED_COMMIT_DATA)
+        assert named_commit.name == _NAMED_COMMIT_DATA["name"]
+        assert named_commit.commit_id == _NAMED_COMMIT_DATA["commitId"]
+        assert named_commit.message == _NAMED_COMMIT_DATA["message"]
+        assert named_commit.committer == User.loads(_NAMED_COMMIT_DATA["committer"])
+        assert named_commit.parent_commit_id == _NAMED_COMMIT_DATA["parentCommitId"]
+
+    def test_dumps(self):
+        user = User.loads(_USER_DATA)
+        named_commit = _NamedCommit(_COMMIT_NAME, _COMMIT_ID, _PARENT_COMMIT_ID, _MESSAGE, user)
+        assert named_commit.dumps() == _NAMED_COMMIT_DATA

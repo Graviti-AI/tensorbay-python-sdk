@@ -31,6 +31,7 @@ from .commit_status import CommitStatus
 from .exceptions import GASSegmentError
 from .requests import Client, multithread_upload, paging_range
 from .segment import FusionSegmentClient, SegmentClient
+from .struct import Branch, Tag
 
 if TYPE_CHECKING:
     from .gas import GAS
@@ -106,7 +107,7 @@ class DatasetClientBase:
         start: int = 0,
         stop: int = sys.maxsize,
         page_size: int = 128,
-    ) -> Iterator[Dict[str, str]]:
+    ) -> Iterator[Tag]:
         params: Dict[str, Any] = {}
         if tag:
             params["tag"] = tag
@@ -115,7 +116,8 @@ class DatasetClientBase:
             response = self._client.open_api_do(
                 "GET", "tags", self.dataset_id, params=params
             ).json()
-            yield from response["tags"]
+            for tag_info in response["tags"]:
+                yield Tag.loads(tag_info)
             if response["recordSize"] + response["offset"] >= response["totalCount"]:
                 break
 
@@ -126,7 +128,7 @@ class DatasetClientBase:
         start: int = 0,
         stop: int = sys.maxsize,
         page_size: int = 128,
-    ) -> Iterator[Dict[str, str]]:
+    ) -> Iterator[Branch]:
         params: Dict[str, Any] = {}
         if branch:
             params["branch"] = branch
@@ -135,7 +137,8 @@ class DatasetClientBase:
             response = self._client.open_api_do(
                 "GET", "branches", self.dataset_id, params=params
             ).json()
-            yield from response["branches"]
+            for branch_info in response["branches"]:
+                yield Branch.loads(branch_info)
             if response["recordSize"] + response["offset"] >= response["totalCount"]:
                 break
 
@@ -236,14 +239,14 @@ class DatasetClientBase:
 
         self._client.open_api_do("POST", "tags", self.dataset_id, json=post_data)
 
-    def get_tag(self, name: str) -> Dict[str, Any]:
-        """Get the information of the certain tag.
+    def get_tag(self, name: str) -> Tag:
+        """Get the certain tag with the given name.
 
         Arguments:
             name: The required tag name.
 
         Returns:
-            The dict containing the information of the certain tag.
+            The :class:`.Tag` instance with the given name.
 
         Raises:
             TypeError: When the required tag does not exist or the given tag is illegal.
@@ -253,13 +256,13 @@ class DatasetClientBase:
             raise TypeError("The given tag name is illegal")
 
         try:
-            info = next(self._list_tags(name))
+            tag = next(self._list_tags(name))
         except StopIteration as error:
             raise TypeError(f"The tag: {name} does not exist.") from error
 
-        return info
+        return tag
 
-    def list_tags(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[Dict[str, Any]]:
+    def list_tags(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[Tag]:
         """List the information of tags.
 
         Arguments:
@@ -267,19 +270,19 @@ class DatasetClientBase:
             stop: The index to end.
 
         Yields:
-            The dict containing the information of tags.
+            The :class:`tags<.Tag>`.
 
         """
         yield from self._list_tags(start=start, stop=stop)
 
-    def get_branch(self, name: str) -> Dict[str, Any]:
-        """Get the information of the certain branch.
+    def get_branch(self, name: str) -> Branch:
+        """Get the branch with the given name.
 
         Arguments:
             name: The required branch name.
 
         Returns:
-            The dict containing the information of the certain branch.
+            The :class:`.Branch` instance with the given name.
 
         Raises:
             TypeError: When the required branch does not exist or the given branch is illegal.
@@ -289,13 +292,13 @@ class DatasetClientBase:
             raise TypeError("The given branch name is illegal")
 
         try:
-            info = next(self._list_branches(name))
+            branch = next(self._list_branches(name))
         except StopIteration as error:
             raise TypeError(f"The branch: {name} does not exist.") from error
 
-        return info
+        return branch
 
-    def list_branches(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[Dict[str, Any]]:
+    def list_branches(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[Branch]:
         """List the information of branches.
 
         Arguments:
@@ -303,7 +306,7 @@ class DatasetClientBase:
             stop: The index to end.
 
         Yields:
-            The dict containing the information of branches.
+            The :class:`branches<.Branch>`.
 
         """
         yield from self._list_branches(start=start, stop=stop)
