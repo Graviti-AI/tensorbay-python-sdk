@@ -38,7 +38,7 @@ class Config:  # pylint: disable=too-few-public-methods
         self.allowed_retry_methods = ["HEAD", "OPTIONS", "POST", "PUT"]
         self.allowed_retry_status = [429, 500, 502, 503, 504]
 
-        self.timeout = 15
+        self.timeout = 30
         self._is_intern = False
 
     @property
