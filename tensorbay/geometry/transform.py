@@ -232,7 +232,7 @@ class Transform3D(ReprMixin):
 
         Returns:
             A dict containing rotation and translation information
-                of the :class:`Transform3D`.
+            of the :class:`Transform3D`.
 
         Examples:
             >>> transform = Transform3D([[1, 0, 0, 1], [0, 1, 0, 1], [0, 0, 1, 1]])
