@@ -3,7 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""User, Commit, Tag and Branch classes.
+"""User, Commit, Tag, Branch and Draft classes.
 
 :class:`User` defines the basic concept of a user with an action.
 
@@ -12,6 +12,8 @@
 :class:`Tag` defines the structure of a commit tag.
 
 :class:`Branch` defines the structure of a branch.
+
+:class:`Draft` defines the structure of a draft.
 
 """
 
@@ -264,3 +266,60 @@ class Branch(_NamedCommit):
         committer: The commit user.
 
     """
+
+
+class Draft(ReprMixin, EqMixin):
+    """This class defines the basic structure of a draft.
+
+    Arguments:
+        number: The number of the draft.
+        title: The title of the draft.
+
+    """
+
+    _T = TypeVar("_T", bound="Draft")
+
+    _repr_attrs = ("title",)
+
+    def __init__(self, number: int, title: str) -> None:
+        self.number = number
+        self.title = title
+
+    def _repr_head(self) -> str:
+        return f"{self.__class__.__name__}({self.number})"
+
+    def _loads(self, contents: Dict[str, Any]) -> None:
+        self.number = contents["number"]
+        self.title = contents["title"]
+
+    @classmethod
+    def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
+        """Loads a :class:`Draft` instance from the given contents.
+
+        Arguments:
+            contents: A dict containing all the information of the draft::
+
+                    {
+                        "number": <int>
+                        "title": <str>
+                    }
+
+        Returns:
+            A :class:`Draft` instance containing all the information in the given contents.
+
+        """
+        return common_loads(cls, contents)
+
+    def dumps(self) -> Dict[str, Any]:
+        """Dumps all the information of the draft into a dict.
+
+        Returns:
+            A dict containing all the information of the draft::
+
+                {
+                    "number": <int>
+                    "title": <str>
+                }
+
+        """
+        return {"number": self.number, "title": self.title}

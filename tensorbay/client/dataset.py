@@ -31,7 +31,7 @@ from .commit_status import CommitStatus
 from .exceptions import GASSegmentError
 from .requests import Client, multithread_upload, paging_range
 from .segment import FusionSegmentClient, SegmentClient
-from .struct import Branch, Tag
+from .struct import Branch, Draft, Tag
 
 if TYPE_CHECKING:
     from .gas import GAS
@@ -89,14 +89,15 @@ class DatasetClientBase:
 
     def _list_drafts(
         self, *, start: int = 0, stop: int = sys.maxsize, page_size: int = 128
-    ) -> Iterator[Dict[str, str]]:
+    ) -> Iterator[Draft]:
         params: Dict[str, Any] = {}
 
         for params["offset"], params["limit"] in paging_range(start, stop, page_size):
             response = self._client.open_api_do(
                 "GET", "drafts", self.dataset_id, params=params
             ).json()
-            yield from response["drafts"]
+            for draft_info in response["drafts"]:
+                yield Draft.loads(draft_info)
             if response["recordSize"] + response["offset"] >= response["totalCount"]:
                 break
 
@@ -198,7 +199,7 @@ class DatasetClientBase:
             title: The draft title.
 
         Returns:
-            The draft number of the created draft
+            The draft number of the created draft.
 
         """
         self._status.check_authority_for_commit()
@@ -208,7 +209,7 @@ class DatasetClientBase:
 
     def list_draft_titles_and_numbers(
         self, *, start: int = 0, stop: int = sys.maxsize
-    ) -> Iterator[Dict[str, str]]:
+    ) -> Iterator[Dict[str, Any]]:
         """List the dict containing title and number of drafts.
 
         Arguments:
@@ -217,6 +218,20 @@ class DatasetClientBase:
 
         Yields:
             The dict containing title and number of drafts.
+
+        """
+        for draft in self._list_drafts(start=start, stop=stop):
+            yield draft.dumps()
+
+    def list_drafts(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[Draft]:
+        """List all the drafts.
+
+        Arguments:
+            start: The index to start.
+            stop: The index to end.
+
+        Yields:
+            The :class:`drafts<.Draft>`.
 
         """
         yield from self._list_drafts(start=start, stop=stop)
