@@ -44,6 +44,32 @@ class SentenceSubcatalog(SubcatalogBase, AttributesMixin):  # pylint: disable=to
     Raises:
         TypeError: When sample_rate is None and is_sample is True.
 
+    Examples:
+        *Initialization Method 1:* Init from ``SentenceSubcatalog.__init__()``.
+
+        >>> SentenceSubcatalog(True, 16000, [["mean", "m", "iy", "n"]])
+        SentenceSubcatalog(
+          (is_sample): True,
+          (sample_rate): 16000,
+          (lexicon): [...]
+        )
+
+        *Initialization Method 2:* Init from ``SentenceSubcatalog.loads()`` method.
+
+        >>> contents = {
+        ...     "isSample": True,
+        ...     "sampleRate": 16000,
+        ...     "lexicon": ["mean", "m", "iy", "n"],
+        ...     "attributes": [{"name": "gender", "enum": ["male", "female"]}],
+        ... }
+        >>> SentenceSubcatalog.loads(contents)
+        SentenceSubcatalog(
+          (is_sample): True,
+          (sample_rate): 16000,
+          (attributes): NameOrderedDict {...},
+          (lexicon): [...]
+        )
+
     """
 
     def __init__(
@@ -82,6 +108,11 @@ class SentenceSubcatalog(SubcatalogBase, AttributesMixin):  # pylint: disable=to
         Returns:
             A dict containing all information of this SentenceSubcatalog.
 
+        Examples:
+            >>> sentence_subcatalog = SentenceSubcatalog(True, 16000, [["mean", "m", "iy", "n"]])
+            >>> sentence_subcatalog.dumps()
+            {'isSample': True, 'sampleRate': 16000, 'lexicon': [['mean', 'm', 'iy', 'n']]}
+
         """
         contents = super().dumps()
 
@@ -99,6 +130,12 @@ class SentenceSubcatalog(SubcatalogBase, AttributesMixin):  # pylint: disable=to
 
         Arguments:
             lexemes: A list consists of text and phone.
+
+        Examples:
+            >>> sentence_subcatalog = SentenceSubcatalog(True, 16000, [["mean", "m", "iy", "n"]])
+            >>> sentence_subcatalog.append_lexicon(["example"])
+            >>> sentence_subcatalog.lexicon
+            [['mean', 'm', 'iy', 'n'], ['example']]
 
         """
         if hasattr(self, "lexicon"):
@@ -122,6 +159,14 @@ class Word(ReprMixin, EqMixin):
         text: The content of the word.
         begin: The begin time of the word in the audio.
         end: The end time of the word in the audio.
+
+    Examples:
+        >>> Word(text="example", begin=1, end=2)
+        Word(
+          (text): 'example',
+          (begin): 1,
+          (end): 2
+        )
 
     """
 
@@ -155,17 +200,19 @@ class Word(ReprMixin, EqMixin):
         """Loads a Word from a dict containing the information of the word.
 
         Arguments:
-            contents: A dict containing the information of the word,
-                whose format should be like::
-
-                    {
-                        "text": str ,
-                        "begin": float,
-                        "end": float,
-                    }
+            contents: A dict containing the information of the word
 
         Returns:
             The loaded :class:`Word` object.
+
+        Examples:
+            >>> contents = {"text": "Hello, World", "begin": 1, "end": 2}
+            >>> Word.loads(contents)
+            Word(
+              (text): 'Hello, World',
+              (begin): 1,
+              (end): 2
+            )
 
         """
         return common_loads(cls, contents)
@@ -174,14 +221,12 @@ class Word(ReprMixin, EqMixin):
         """Dumps the current word into a dict.
 
         Returns:
-            A dict containing all the information of the word,
-            whose format is like::
+            A dict containing all the information of the word
 
-                {
-                    "text": str ,
-                    "begin": float,
-                    "end": float,
-                }
+        Examples:
+            >>> word = Word(text="example", begin=1, end=2)
+            >>> word.dumps()
+            {'text': 'example', 'begin': 1, 'end': 2}
 
         """
         contents: Dict[str, Union[str, float]] = {"text": self.text}
@@ -210,6 +255,43 @@ class LabeledSentence(_LabelBase):
         spell: The spell within the sentence, only exists in Chinese language.
         phone: The phone of the sentence label.
         attributes: The attributes of the label.
+
+    Examples:
+        >>> sentence = [Word(text="qi1shi2", begin=1, end=2)]
+        >>> spell = [Word(text="qi1", begin=1, end=2)]
+        >>> phone = [Word(text="q", begin=1, end=2)]
+        >>> LabeledSentence(
+        ...     sentence,
+        ...     spell,
+        ...     phone,
+        ...     attributes={"key": "value"},
+        ... )
+        LabeledSentence(
+          (sentence): [
+            Word(
+              (text): 'qi1shi2',
+              (begin): 1,
+              (end): 2
+            )
+          ],
+          (spell): [
+            Word(
+              (text): 'qi1',
+              (begin): 1,
+              (end): 2
+            )
+          ],
+          (phone): [
+            Word(
+              (text): 'q',
+              (begin): 1,
+              (end): 2
+            )
+          ],
+          (attributes): {
+            'key': 'value'
+          }
+        )
 
     """
 
@@ -257,46 +339,45 @@ class LabeledSentence(_LabelBase):
         """Loads a LabeledSentence from a dict containing the information of the label.
 
         Arguments:
-            contents: A dict containing the information of the sentence label,
-                whose format should be like::
-
-                    {
-                        "sentence": [
-                            {
-                                "text":  <str>
-                                "begin": <float>
-                                "end":   <float>
-                            }
-                            ...
-                            ...
-                        ],
-                        "spell": [
-                            {
-                                "text":  <str>
-                                "begin": <float>
-                                "end":   <float>
-                            }
-                            ...
-                            ...
-                        ],
-                        "phone": [
-                            {
-                                "text":  <str>
-                                "begin": <float>
-                                "end":   <float>
-                            }
-                            ...
-                            ...
-                        ],
-                        "attributes": {
-                            <key>: <value>,
-                            ...
-                            ...
-                        }
-                    }
+            contents: A dict containing the information of the sentence label.
 
         Returns:
             The loaded :class:`LabeledSentence` object.
+
+        Examples:
+            >>> contents = {
+            ...     "sentence": [{"text": "qi1shi2", "begin": 1, "end": 2}],
+            ...     "spell": [{"text": "qi1", "begin": 1, "end": 2}],
+            ...     "phone": [{"text": "q", "begin": 1, "end": 2}],
+            ...     "attributes": {"key": "value"},
+            ... }
+            >>> LabeledSentence.loads(contents)
+            LabeledSentence(
+              (sentence): [
+                Word(
+                  (text): 'qi1shi2',
+                  (begin): 1,
+                  (end): 2
+                )
+              ],
+              (spell): [
+                Word(
+                  (text): 'qi1',
+                  (begin): 1,
+                  (end): 2
+                )
+              ],
+              (phone): [
+                Word(
+                  (text): 'q',
+                  (begin): 1,
+                  (end): 2
+                )
+              ],
+              (attributes): {
+                'key': 'value'
+              }
+            )
 
         """
         return common_loads(cls, contents)
@@ -305,43 +386,25 @@ class LabeledSentence(_LabelBase):
         """Dumps the current label into a dict.
 
         Returns:
-            A dict containing all the information of the sentence label,
-            whose format is like::
+            A dict containing all the information of the sentence label.
 
-                {
-                    "sentence": [
-                        {
-                            "text":  <str>
-                            "begin": <float>
-                            "end":   <float>
-                        }
-                        ...
-                        ...
-                    ],
-                    "spell": [
-                        {
-                            "text":  <str>
-                            "begin": <float>
-                            "end":   <float>
-                        }
-                        ...
-                        ...
-                    ],
-                    "phone": [
-                        {
-                            "text":  <str>
-                            "begin": <float>
-                            "end":   <float>
-                        }
-                        ...
-                        ...
-                    ],
-                    "attributes": {
-                        <key>: <value>,
-                        ...
-                        ...
-                    }
-                }
+        Examples:
+            >>> sentence = [Word(text="qi1shi2", begin=1, end=2)]
+            >>> spell = [Word(text="qi1", begin=1, end=2)]
+            >>> phone = [Word(text="q", begin=1, end=2)]
+            >>> labeledsentence = LabeledSentence(
+            ...     sentence,
+            ...     spell,
+            ...     phone,
+            ...     attributes={"key": "value"},
+            ... )
+            >>> labeledsentence.dumps()
+            {
+                'attributes': {'key': 'value'},
+                'sentence': [{'text': 'qi1shi2', 'begin': 1, 'end': 2}],
+                'spell': [{'text': 'qi1', 'begin': 1, 'end': 2}],
+                'phone': [{'text': 'q', 'begin': 1, 'end': 2}]
+            }
 
         """
         contents = _LabelBase.dumps(self)
