@@ -218,11 +218,11 @@ class DatasetClientBase:
         """
         yield from self._list_drafts(start=start, stop=stop)
 
-    def create_tag(self, tag: str, commit: Optional[str] = None) -> None:
+    def create_tag(self, name: str, commit: Optional[str] = None) -> None:
         """Create the tag for a commit.
 
         Arguments:
-            tag: The tag to be created for the specific commit.
+            name: The tag name to be created for the specific commit.
             commit: The information to locate the specific commit, which can be the commit id,
                 the branch, or the tag.
                 If the commit is not given, create the tag for the current commit.
@@ -232,15 +232,15 @@ class DatasetClientBase:
             self._status.check_authority_for_commit()
             commit = self._status.commit_id
 
-        post_data: Dict[str, Any] = {"commit": commit, "tag": tag}
+        post_data: Dict[str, Any] = {"commit": commit, "name": name}
 
         self._client.open_api_do("POST", "tags", self.dataset_id, json=post_data)
 
-    def get_tag(self, tag: str) -> Dict[str, Any]:
+    def get_tag(self, name: str) -> Dict[str, Any]:
         """Get the information of the certain tag.
 
         Arguments:
-            tag: The required tag.
+            name: The required tag name.
 
         Returns:
             The dict containing the information of the certain tag.
@@ -249,13 +249,13 @@ class DatasetClientBase:
             TypeError: When the required tag does not exist or the given tag is illegal.
 
         """
-        if not tag:
-            raise TypeError("The given tag is illegal")
+        if not name:
+            raise TypeError("The given tag name is illegal")
 
         try:
-            info = next(self._list_tags(tag))
+            info = next(self._list_tags(name))
         except StopIteration as error:
-            raise TypeError(f"The tag: {tag} does not exist.") from error
+            raise TypeError(f"The tag: {name} does not exist.") from error
 
         return info
 
@@ -272,11 +272,11 @@ class DatasetClientBase:
         """
         yield from self._list_tags(start=start, stop=stop)
 
-    def get_branch(self, branch: str) -> Dict[str, Any]:
+    def get_branch(self, name: str) -> Dict[str, Any]:
         """Get the information of the certain branch.
 
         Arguments:
-            branch: The required branch.
+            name: The required branch name.
 
         Returns:
             The dict containing the information of the certain branch.
@@ -285,13 +285,13 @@ class DatasetClientBase:
             TypeError: When the required branch does not exist or the given branch is illegal.
 
         """
-        if not branch:
-            raise TypeError("The given branch is illegal")
+        if not name:
+            raise TypeError("The given branch name is illegal")
 
         try:
-            info = next(self._list_branches(branch))
+            info = next(self._list_branches(name))
         except StopIteration as error:
-            raise TypeError(f"The branch: {branch} does not exist.") from error
+            raise TypeError(f"The branch: {name} does not exist.") from error
 
         return info
 
@@ -384,14 +384,14 @@ class DatasetClientBase:
 
         self._client.open_api_do("PUT", "labels/catalogs", self.dataset_id, json=put_data)
 
-    def delete_tag(self, tag: str) -> None:
+    def delete_tag(self, name: str) -> None:
         """Delete a tag.
 
         Arguments:
-            tag: The tag to be deleted for the specific commit.
+            name: The tag name to be deleted for the specific commit.
 
         """
-        delete_data: Dict[str, Any] = {"tag": tag}
+        delete_data: Dict[str, Any] = {"name": name}
 
         self._client.open_api_do("DELETE", "tags", self.dataset_id, json=delete_data)
 
