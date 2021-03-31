@@ -36,8 +36,6 @@ and the unique ones will be explained under the corresponding type of label.
 
 Here we take a :ref:`2D box label <reference/label_format:Box2D>` as an example:
 
-.. code:: python
-
     >>> from tensorbay.label import LabeledBox2D
     >>> label = LabeledBox2D(
     ... 10, 20, 30, 40,
@@ -45,13 +43,17 @@ Here we take a :ref:`2D box label <reference/label_format:Box2D>` as an example:
     ... attributes={"attribute_name": "attribute_value"},
     ... instance="instance_ID"
     ... )
+    >>> label
+    LabeledBox2D(10, 20, 30, 40)(
+      (category): 'category',
+      (attributes): {...},
+      (instance): 'instance_ID'
+    )
 
 Category
 ========
 
 Category is a string indicating the class of the labeled object.
-
-.. code:: python
 
     >>> label.category
     'data_category'
@@ -64,8 +66,6 @@ and there is no limit on the number of attributes.
 
 The attribute names and values are stored in key-value pairs.
 
-.. code:: python
-
    >>> label.attributes
    {'attribute_name': 'attribute_value'}
 
@@ -75,8 +75,6 @@ Instance
 
 Instance is the unique id for the object inside of the label,
 which is mostly used for tracking tasks.
-
-.. code:: python
 
    >>> label.instance
    "instance_ID"
@@ -94,10 +92,12 @@ Different label types have different subcatalog classes.
 Here we take :class:`~tensorbay.label.label_box.Box2DSubcatalog` as an example
 to describe some common features of subcatalog.
 
-.. code:: python
-
    >>> from tensorbay.label import Box2DSubcatalog
    >>> box2d_subcatalog = Box2DSubcatalog(is_tracking=True)
+   >>> box2d_subcatalog
+   Box2DSubcatalog(
+      (is_tracking): True
+   )
 
 TrackingInformation
 ===================
@@ -107,8 +107,6 @@ then the subcatalog should set a flag to show its support for tracking informati
 
 You can pass ``True`` to the ``is_tracking`` parameter while creating the subcatalog,
 or you can set the ``is_tracking`` attr after initialization.
-
-.. code:: python
 
    >>> box2d_subcatalog.is_tracking = True
 
@@ -122,8 +120,6 @@ Each :ref:`category<reference/label_format:Category>` of a label
 appeared in the dataset should be within the categories of the subcatalog.
 
 You can add category information to the subcatalog.
-
-.. code:: python
 
     >>> box2d_subcatalog.add_category(name="cat", description="The Flerken")
     >>> box2d_subcatalog.categories
@@ -146,8 +142,6 @@ appeared in the dataset should follow the rules set in the attributes of the sub
 
 You can add attribute information to the subcatalog.
 
-.. code:: python
-
     >>> box2d_subcatalog.add_attribute(
     ... name="attribute_name",
     ... type_="number",
@@ -155,7 +149,7 @@ You can add attribute information to the subcatalog.
     ... minimum=0,
     ... description="attribute description"
     ... )
-    >>> box2d_subcatalog.categories
+    >>> box2d_subcatalog.attributes
     NameOrderedDict {
       'attribute_name': AttributeInfo("attribute_name")(...)
     }
@@ -194,8 +188,6 @@ The structure of one classification label is like::
 
 
 To create a :class:`~tensorbay.label.label_classification.Classification` label:
-
-.. code:: python
 
     >>> from tensorbay.label import Classification
     >>> classification_label = Classification(
@@ -238,8 +230,6 @@ see :ref:`reference/label_format:CategoryInformation` and
 
 To add a :class:`~tensorbay.label.label_classification.Classification` label to one data:
 
-.. code:: python
-
     >>> from tensorbay.dataset import Data
     >>> data = Data("local_path")
     >>> data.label.classification = classification_label
@@ -277,8 +267,6 @@ The structure of one Box2D label is like::
 
 To create a :class:`~tensorbay.label.label_box.LabeledBox2D` label:
 
-.. code:: python
-
     >>> from tensorbay.label import LabeledBox2D
     >>> box2d_label = LabeledBox2D(
     ... xmin, ymin, xmax, ymax,
@@ -303,16 +291,12 @@ information,
 you can use the coordinates of the top-left and bottom-right vertexes of the 2D bounding box,
 or you can use the coordinate of the top-left vertex, the height and the width of the bounding box.
 
-.. code:: python
-
     >>> LabeledBox2D(10, 20, 30, 40)
     LabeledBox2D(10, 20, 30, 40)()
     >>> LabeledBox2D(x=10, y=20, width=20, height=20)
     LabeledBox2D(10, 20, 30, 40)()
 
 It contains the basic geometry information of the 2D bounding box.
-
-.. code:: python
 
     >>> box2d_label.xmin
     10
@@ -361,8 +345,6 @@ see :ref:`reference/label_format:CategoryInformation`,
 :ref:`reference/label_format:TrackingInformation` for details.
 
 To add a :class:`~tensorbay.label.label_box.LabeledBox2D` label to one data:
-
-.. code:: python
 
     >>> from tensorbay.dataset import Data
     >>> data = Data("local_path")
@@ -417,8 +399,6 @@ The structure of one Box3D label is like::
 
 To create a :class:`~tensorbay.label.label_box.LabeledBox3D` label:
 
-.. code:: python
-
     >>> from tensorbay.label import LabeledBox3D
     >>> box3d_label = LabeledBox3D(
     ... translation=[0, 0, 0],
@@ -449,8 +429,6 @@ information,
 you can use the transform matrix and the size of the 3D bounding box,
 or you can use translation and rotation to represent the transform of the 3D bounding box.
 
-.. code:: python
-
     >>> LabeledBox3D(
     ... [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0]],
     ... size=[10, 20, 30],
@@ -472,8 +450,6 @@ or you can use translation and rotation to represent the transform of the 3D bou
     )
 
 It contains the basic geometry information of the 3D bounding box.
-
-.. code:: python
 
     >>> box3d_label.transform
     Transform3D(
@@ -522,8 +498,6 @@ see :ref:`reference/label_format:CategoryInformation`,
 
 To add a :class:`~tensorbay.label.label_box.LabeledBox3D` label to one data:
 
-.. code:: python
-
     >>> from tensorbay.dataset import Data
     >>> data = Data("local_path")
     >>> data.label.box3d = []
@@ -567,8 +541,6 @@ The structure of one Keypoints2D label is like::
 
 To create a :class:`~tensorbay.label.label_keypoints.LabeledKeypoints2D` label:
 
-.. code:: python
-
     >>> from tensorbay.label import LabeledKeypoints2D
     >>> keypoints2d_label = LabeledKeypoints2D(
     ... [[10, 20], [15, 25], [20, 30]],
@@ -598,8 +570,6 @@ information,
 you need the coordinates of the set of 2D keypoints.
 You can also add the visible status of each 2D keypoint.
 
-.. code:: python
-
     >>> LabeledKeypoints2D([[10, 20], [15, 25], [20, 30]])
     LabeledKeypoints2D [
       Keypoint2D(10, 20),
@@ -615,8 +585,6 @@ You can also add the visible status of each 2D keypoint.
 
 It contains the basic geometry information of the 2D keypoints.
 And you can access the keypoints by index.
-
-.. code:: python
 
     >>> keypoints2d_label[0]
     Keypoint2D(10, 20)
@@ -652,8 +620,6 @@ Besides :ref:`reference/label_format:AttributesInformation`,
 :class:`~tensorbay.label.label_keypoints.Keypoints2DSubcatalog`,
 it also has :attr:`~tensorbay.label.label_keypoints.Keypoints2DSubcatalog.keypoints`
 to describe a set of keypoints corresponding to certain categories.
-
-.. code:: python
 
    >>> from tensorbay.label import Keypoints2DSubcatalog
    >>> keypoints2d_subcatalog = Keypoints2DSubcatalog()
@@ -698,8 +664,6 @@ Mostly, ``parent_categories`` is not given,
 which means the keypoints rule applies to all the categories of the entire dataset.
 
 To add a :class:`~tensorbay.label.label_keypoints.LabeledKeypoints2D` label to one data:
-
-.. code:: python
 
     >>> from tensorbay.dataset import Data
     >>> data = Data("local_path")
@@ -762,8 +726,6 @@ The structure of one sentence label is like::
 
 
 To create a :class:`~tensorbay.label.label_sentence.LabeledSentence` label:
-
-.. code:: python
 
     >>> from tensorbay.label import LabeledSentence
     >>> from tensorbay.label import Word
@@ -834,8 +796,6 @@ Word
 :class:`~tensorbay.label.label_sentence.Word` is the basic component of a phonetic transcription sentence,
 containing the content of the word, the start and the end time in the audio.
 
-.. code:: python
-
     >>> from tensorbay.label import Word
     >>> Word("text", 1.1, 1.6)
     Word(
@@ -868,8 +828,6 @@ it also has :attr:`~tensorbay.label.label_sentence.SetenceSubcatalog.is_sample`,
 and :attr:`~tensorbay.label.label_sentence.SetenceSubcatalog.lexicon`.
 to describe the transcripted sentences of the audio.
 
-.. code:: python
-
    >>> from tensorbay.label import SentenceSubcatalog
    >>> sentence_subcatalog = SentenceSubcatalog(
    ... is_sample=True,
@@ -896,8 +854,6 @@ Besides giving the parameters while initialing
 :class:`~tensorbay.label.label_sentence.SetenceSubcatalog`,
 you can set them after intialization.
 
-.. code:: python
-
    >>> from tensorbay.label import SentenceSubcatalog
    >>> sentence_subcatalog = SentenceSubcatalog()
    >>> sentence_subcatalog.is_sample = True
@@ -911,8 +867,6 @@ you can set them after intialization.
    )
 
 To add a :class:`~tensorbay.label.label_sentence.LabeledSentence` label to one data:
-
-.. code:: python
 
     >>> from tensorbay.dataset import Data
     >>> data = Data("local_path")
