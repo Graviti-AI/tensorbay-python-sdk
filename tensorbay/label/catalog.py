@@ -63,6 +63,22 @@ class Catalog(ReprMixin, EqMixin):
     Each of the :class:`~tensorbay.label.basic.SubcatalogBase`
     contains the features, fields and the specific definitions of the labels.
 
+    Examples:
+        >>> from tensorbay.utility import NameOrderedDict
+        >>> from tensorbay.label import ClassificationSubcatalog, CategoryInfo
+        >>> classification_subcatalog = ClassificationSubcatalog()
+        >>> categories = NameOrderedDict()
+        >>> categories.append(CategoryInfo("example"))
+        >>> classification_subcatalog.categories = categories
+        >>> catalog = Catalog()
+        >>> catalog.classification = classification_subcatalog
+        >>> catalog
+        Catalog(
+          (classification): ClassificationSubcatalog(
+            (categories): NameOrderedDict {...}
+          )
+        )
+
     """
 
     _T = TypeVar("_T", bound="Catalog")
@@ -100,6 +116,34 @@ class Catalog(ReprMixin, EqMixin):
         Returns:
             The loaded :class:`Catalog` object.
 
+        Examples:
+            >>> contents = {
+            ...     "CLASSIFICATION": {
+            ...         "categories": [
+            ...             {
+            ...                 "name": "example",
+            ...             }
+            ...         ]
+            ...     },
+            ...     "KEYPOINTS2D": {
+            ...         "keypoints": [
+            ...             {
+            ...                 "number": 5,
+            ...             }
+            ...         ]
+            ...     },
+            ... }
+            >>> Catalog.loads(contents)
+            Catalog(
+              (classification): ClassificationSubcatalog(
+                (categories): NameOrderedDict {...}
+              ),
+              (keypoints2d): Keypoints2DSubcatalog(
+                (is_tracking): False,
+                (keypoints): [...]
+              )
+            )
+
         """
         return common_loads(cls, contents)
 
@@ -108,6 +152,11 @@ class Catalog(ReprMixin, EqMixin):
 
         Returns:
             A dict containing all the subcatalog information with their label types as keys.
+
+        Examples:
+            >>> # catalog is the instance initialized above.
+            >>> catalog.dumps()
+            {'CLASSIFICATION': {'categories': [{'name': 'example'}]}}
 
         """
         contents: Dict[str, Any] = {}
