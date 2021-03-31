@@ -1,6 +1,6 @@
-#################
- LeedsSportsPose
-#################
+###################
+ Leeds Sports Pose
+###################
 
 This topic describes how to manage the "Leeds Sports Pose" dataset.
 
