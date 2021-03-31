@@ -43,6 +43,42 @@ class Polygon2DSubcatalog(  # pylint: disable=too-many-ancestors
             and the :class:`~tensorbay.label.attribute.AttributeInfo` as values.
         is_tracking: Whether the Subcatalog contains tracking information.
 
+    Examples:
+        *Initialization Method 1:* Init from ``Polygon2DSubcatalog.loads()`` method.
+
+        >>> catalog = {
+        ...     "POLYGON2D": {
+        ...         "isTracking": True,
+        ...         "categories": [{"name": "0"}, {"name": "1"}],
+        ...         "attributes": [{"name": "gender", "enum": ["male", "female"]}],
+        ...     }
+        ... }
+        >>> Polygon2DSubcatalog.loads(catalog["POLYGON2D"])
+        Polygon2DSubcatalog(
+          (is_tracking): True,
+          (categories): NameOrderedDict {...},
+          (attributes): NameOrderedDict {...}
+        )
+
+        *Initialization Method 2:* Init an empty Polygon2DSubcatalog and then add the attributes.
+
+        >>> from tensorbay.utility import NameOrderedDict
+        >>> from tensorbay.label import CategoryInfo, AttributeInfo
+        >>> categories = NameOrderedDict()
+        >>> categories.append(CategoryInfo("a"))
+        >>> attributes = NameOrderedDict()
+        >>> attributes.append(AttributeInfo("gender", enum=["female", "male"]))
+        >>> polygon2d_subcatalog = Polygon2DSubcatalog()
+        >>> polygon2d_subcatalog.is_tracking = True
+        >>> polygon2d_subcatalog.categories = categories
+        >>> polygon2d_subcatalog.attributes = attributes
+        >>> polygon2d_subcatalog
+        Polygon2DSubcatalog(
+          (is_tracking): True,
+          (categories): NameOrderedDict {...},
+          (attributes): NameOrderedDict {...}
+        )
+
     """
 
     def __init__(self, is_tracking: bool = False) -> None:
@@ -66,6 +102,23 @@ class LabeledPolygon2D(Polygon2D, _LabelBase):  # pylint: disable=too-many-ances
         category: The category of the label.
         attributes: The attributes of the label.
         instance: The instance id of the label.
+
+    Examples:
+        >>> LabeledPolygon2D(
+        ...     [(1, 2), (2, 3), (1, 3)],
+        ...     category = "example",
+        ...     attributes = {"key": "value"},
+        ...     instance = "123",
+        ... )
+        LabeledPolygon2D [
+          Vector2D(1, 2),
+          Vector2D(2, 3),
+          Vector2D(1, 3)
+        ](
+          (category): 'example',
+          (attributes): {...},
+          (instance): '123'
+        )
 
     """
 
@@ -94,28 +147,32 @@ class LabeledPolygon2D(Polygon2D, _LabelBase):  # pylint: disable=too-many-ances
         """Loads a LabeledPolygon2D from a dict containing the information of the label.
 
         Arguments:
-            contents: A dict containing the information of the 2D polygon label,
-                whose format should be like::
-
-                    {
-                        "polygon": [
-                            { "x": <int>
-                              "y": <int>
-                            },
-                            ...
-                            ...
-                        ],
-                        "category": <str>
-                        "attributes": {
-                            <key>: <value>
-                            ...
-                            ...
-                        },
-                        "instance": <str>
-                    }
+            contents: A dict containing the information of the 2D polygon label.
 
         Returns:
             The loaded :class:`LabeledPolygon2D` object.
+
+        Examples:
+            >>> contents = {
+            ...     "polygon2d": [
+            ...         {"x": 1, "y": 2},
+            ...         {"x": 2, "y": 3},
+            ...         {"x": 1, "y": 3},
+            ...     ],
+            ...     "category": "example",
+            ...     "attributes": {"key": "value"},
+            ...     "instance": "12345",
+            ... }
+            >>> LabeledPolygon2D.loads(contents)
+            LabeledPolygon2D [
+              Vector2D(1, 2),
+              Vector2D(2, 3),
+              Vector2D(1, 3)
+            ](
+              (category): 'example',
+              (attributes): {...},
+              (instance): '12345'
+            )
 
         """
         return common_loads(cls, contents)
@@ -124,25 +181,22 @@ class LabeledPolygon2D(Polygon2D, _LabelBase):  # pylint: disable=too-many-ances
         """Dumps the current 2D polygon label into a dict.
 
         Returns:
-            A dict containing all the information of the 2D polygon label,
-            whose format is like::
+            A dict containing all the information of the 2D polygon label.
 
-                {
-                    "polygon": [
-                        { "x": <int>
-                          "y": <int>
-                        },
-                        ...
-                        ...
-                    ],
-                    "category": <str>
-                    "attributes": {
-                        <key>: <value>
-                        ...
-                        ...
-                    },
-                    "instance": <str>
-                }
+        Examples:
+            >>> labeledpolygon2d = LabeledPolygon2D(
+            ...     [(1, 2), (2, 3), (1, 3)],
+            ...     category = "example",
+            ...     attributes = {"key": "value"},
+            ...     instance = "123",
+            ... )
+            >>> labeledpolygon2d.dumps()
+            {
+                'category': 'example',
+                'attributes': {'key': 'value'},
+                'instance': '123',
+                'polygon2d': [{'x': 1, 'y': 2}, {'x': 2, 'y': 3}, {'x': 1, 'y': 3}],
+            }
 
         """
         contents = _LabelBase.dumps(self)
