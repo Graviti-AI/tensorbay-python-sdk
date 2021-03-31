@@ -43,6 +43,42 @@ class Polyline2DSubcatalog(  # pylint: disable=too-many-ancestors
             and the :class:`~tensorbay.label.attribute.AttributeInfo` as values.
         is_tracking: Whether the Subcatalog contains tracking information.
 
+    Examples:
+        *Initialization Method 1:* Init from ``Polyline2DSubcatalog.loads()`` method.
+
+        >>> catalog = {
+        ...     "POLYLINE2D": {
+        ...         "isTracking": True,
+        ...         "categories": [{"name": "0"}, {"name": "1"}],
+        ...         "attributes": [{"name": "gender", "enum": ["male", "female"]}],
+        ...     }
+        ... }
+        >>> Polyline2DSubcatalog.loads(catalog["POLYLINE2D"])
+        Polyline2DSubcatalog(
+          (is_tracking): True,
+          (categories): NameOrderedDict {...},
+          (attributes): NameOrderedDict {...}
+        )
+
+        *Initialization Method 2:* Init an empty Polyline2DSubcatalog and then add the attributes.
+
+        >>> from tensorbay.label import CategoryInfo, AttributeInfo
+        >>> from tensorbay.utility import NameOrderedDict
+        >>> categories = NameOrderedDict()
+        >>> categories.append(CategoryInfo("a"))
+        >>> attributes = NameOrderedDict()
+        >>> attributes.append(AttributeInfo("gender", enum=["female", "male"]))
+        >>> polyline2d_subcatalog = Polyline2DSubcatalog()
+        >>> polyline2d_subcatalog.is_tracking = True
+        >>> polyline2d_subcatalog.categories = categories
+        >>> polyline2d_subcatalog.attributes = attributes
+        >>> polyline2d_subcatalog
+        Polyline2DSubcatalog(
+          (is_tracking): True,
+          (categories): NameOrderedDict {...},
+          (attributes): NameOrderedDict {...}
+        )
+
     """
 
     def __init__(self, is_tracking: bool = False) -> None:
@@ -66,6 +102,23 @@ class LabeledPolyline2D(Polyline2D, _LabelBase):  # pylint: disable=too-many-anc
         category: The category of the label.
         attributes: The attributes of the label.
         instance: The instance id of the label.
+
+    Examples:
+        >>> LabeledPolyline2D(
+        ...     [(1, 2), (2, 4), (2, 1)],
+        ...     category="example",
+        ...     attributes={"key": "value"},
+        ...     instance="123",
+        ... )
+        LabeledPolyline2D [
+          Vector2D(1, 2),
+          Vector2D(2, 4),
+          Vector2D(2, 1)
+        ](
+          (category): 'example',
+          (attributes): {...},
+          (instance): '123'
+        )
 
     """
 
@@ -94,28 +147,28 @@ class LabeledPolyline2D(Polyline2D, _LabelBase):  # pylint: disable=too-many-anc
         """Loads a LabeledPolyline2D from a dict containing the information of the label.
 
         Arguments:
-            contents: A dict containing the information of the 2D polyline label,
-                whose format should be like::
-
-                    {
-                        "polyline": [
-                            { "x": <int>
-                              "y": <int>
-                            },
-                            ...
-                            ...
-                        ],
-                        "category": <str>
-                        "attributes": {
-                            <key>: <value>
-                            ...
-                            ...
-                        },
-                        "instance": <str>
-                    }
+            contents: A dict containing the information of the 2D polyline label.
 
         Returns:
             The loaded :class:`LabeledPolyline2D` object.
+
+        Examples:
+            >>> contents = {
+            ...     "polyline2d": [{'x': 1, 'y': 2}, {'x': 2, 'y': 4}, {'x': 2, 'y': 1}],
+            ...     "category": "example",
+            ...     "attributes": {"key": "value"},
+            ...     "instance": "12345",
+            ... }
+            >>> LabeledPolyline2D.loads(contents)
+            LabeledPolyline2D [
+              Vector2D(1, 2),
+              Vector2D(2, 4),
+              Vector2D(2, 1)
+            ](
+              (category): 'example',
+              (attributes): {...},
+              (instance): '12345'
+            )
 
         """
         return common_loads(cls, contents)
@@ -124,25 +177,22 @@ class LabeledPolyline2D(Polyline2D, _LabelBase):  # pylint: disable=too-many-anc
         """Dumps the current 2D polyline label into a dict.
 
         Returns:
-            A dict containing all the information of the 2D polyline label,
-            whose format is like::
+            A dict containing all the information of the 2D polyline label.
 
-                {
-                    "polyline": [
-                        { "x": <int>
-                          "y": <int>
-                        },
-                        ...
-                        ...
-                    ],
-                    "category": <str>
-                    "attributes": {
-                        <key>: <value>
-                        ...
-                        ...
-                    },
-                    "instance": <str>
-                }
+        Examples:
+            >>> labeledpolyline2d = LabeledPolyline2D(
+            ...     [(1, 2), (2, 4), (2, 1)],
+            ...     category="example",
+            ...     attributes={"key": "value"},
+            ...     instance="123",
+            ... )
+            >>> labeledpolyline2d.dumps()
+            {
+                'category': 'example',
+                'attributes': {'key': 'value'},
+                'instance': '123',
+                'polyline2d': [{'x': 1, 'y': 2}, {'x': 2, 'y': 4}, {'x': 2, 'y': 1}],
+            }
 
         """
         contents = _LabelBase.dumps(self)
