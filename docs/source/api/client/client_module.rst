@@ -11,3 +11,4 @@ tensorbay.client
    log
    requests
    segment
+   struct
