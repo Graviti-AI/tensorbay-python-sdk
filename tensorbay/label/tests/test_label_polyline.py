@@ -59,7 +59,7 @@ class TestLabeledPolyline2D:
         assert labeledpolygonline2d.dumps() == _LABELEDPOLYLINE2D_DATA
 
 
-class TestKeypoints2DSubcatalog:
+class TestPolyline2DSubcatalog:
     def test_init_subclass(self):
         subcatalog = Polyline2DSubcatalog()
         assert subcatalog._supports == (

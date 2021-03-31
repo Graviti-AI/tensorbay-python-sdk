@@ -62,7 +62,7 @@ class TestLabeledPolygon2D:
         assert labeledpolygon2d.dumps() == _LABELEDPOLYGON2D_DATA
 
 
-class TestKeypoints2DSubcatalog:
+class TestPolygon2DSubcatalog:
     def test_init_subclass(self):
         subcatalog = Polygon2DSubcatalog()
         assert subcatalog._supports == (
