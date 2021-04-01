@@ -103,15 +103,15 @@ class DatasetClientBase:
 
     def _list_tags(
         self,
-        tag: Optional[str] = None,
+        name: Optional[str] = None,
         *,
         start: int = 0,
         stop: int = sys.maxsize,
         page_size: int = 128,
     ) -> Iterator[Tag]:
         params: Dict[str, Any] = {}
-        if tag:
-            params["tag"] = tag
+        if name:
+            params["name"] = name
 
         for params["offset"], params["limit"] in paging_range(start, stop, page_size):
             response = self._client.open_api_do(
@@ -124,15 +124,15 @@ class DatasetClientBase:
 
     def _list_branches(
         self,
-        branch: Optional[str] = None,
+        name: Optional[str] = None,
         *,
         start: int = 0,
         stop: int = sys.maxsize,
         page_size: int = 128,
     ) -> Iterator[Branch]:
         params: Dict[str, Any] = {}
-        if branch:
-            params["branch"] = branch
+        if name:
+            params["name"] = name
 
         for params["offset"], params["limit"] in paging_range(start, stop, page_size):
             response = self._client.open_api_do(
