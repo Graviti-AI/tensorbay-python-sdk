@@ -31,11 +31,15 @@ _LABELEDBOX3D_DATA = {
     "attributes": {"key": "value"},
     "instance": "12345",
 }
-_SUBCATALOG_CONTENT = {
-    "isTracking": True,
-    "categories": [{"name": "0"}, {"name": "1"}],
-    "attributes": [{"name": "gender", "enum": ["male", "female"]}],
-}
+
+
+@pytest.fixture
+def subcatalog_content(is_tracking_data, categories_catalog_data, attributes_catalog_data):
+    return {
+        "isTracking": is_tracking_data,
+        "categories": categories_catalog_data,
+        "attributes": attributes_catalog_data,
+    }
 
 
 class TestLabeledBox2D:
@@ -232,17 +236,21 @@ class TestBox2dAndBox3dSubcatalog:
         assert subcatalog1 != subcatalog3
 
     @pytest.mark.parametrize("SUBCATALOG", (Box2DSubcatalog, Box3DSubcatalog))
-    def test_loads(self, SUBCATALOG, categories, attributes):
-        subcatalog = SUBCATALOG.loads(_SUBCATALOG_CONTENT)
+    def test_loads(self, SUBCATALOG, categories, attributes, subcatalog_content):
+        subcatalog = SUBCATALOG.loads(subcatalog_content)
 
-        assert subcatalog.is_tracking == _SUBCATALOG_CONTENT["isTracking"]
+        assert subcatalog.is_tracking == subcatalog_content["isTracking"]
         assert subcatalog.categories == categories
         assert subcatalog.attributes == attributes
 
     @pytest.mark.parametrize("SUBCATALOG", (Box2DSubcatalog, Box3DSubcatalog))
-    def test_dumps(self, SUBCATALOG, categories, attributes):
+    def test_dumps(self, SUBCATALOG, categories, attributes, subcatalog_content):
         subcatalog = SUBCATALOG()
-        subcatalog.is_tracking = _SUBCATALOG_CONTENT["isTracking"]
+        subcatalog.is_tracking = subcatalog_content["isTracking"]
         subcatalog.categories = categories
         subcatalog.attributes = attributes
-        assert subcatalog.dumps() == _SUBCATALOG_CONTENT
+
+        # isTracking will not dumps out when isTracking is false
+        if not subcatalog_content["isTracking"]:
+            del subcatalog_content["isTracking"]
+        assert subcatalog.dumps() == subcatalog_content

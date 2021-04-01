@@ -3,6 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # type: ignore
+# pylint: disable=redefined-outer-name
 
 """Pytest fixture config."""
 
@@ -12,39 +13,67 @@ from ...utility import NameOrderedDict
 from ..attributes import AttributeInfo
 from ..supports import CategoryInfo
 
-_DATA_CATEGORIES = {"categories": [{"name": "0"}, {"name": "1"}]}
-_ENUMS = ["male", "female"]
-_DATA_ATTRIBUTES = {"attributes": [{"name": "gender", "enum": _ENUMS}]}
-_DATA_NAMES = [
-    "L_shoulder",
-    "L_Elbow",
-    "L_wrist",
-    "R_Shoulder",
-    "R_Elbow",
-]
-_DATA_SKELETON = [(0, 1), (1, 2), (3, 4), (4, 5)]
+
+@pytest.fixture
+def attributes_catalog_data():
+    """Argument for attributes in catalog.
+
+    Returns:
+        A list containing attributes info
+    """
+    return [{"name": "gender", "enum": ["male", "female"]}]
 
 
 @pytest.fixture
-def categories():
+def categories_catalog_data():
+    """Argument for categories in catalog.
+
+    Returns:
+        A list containing categories info
+    """
+    return [{"name": "0"}, {"name": "1"}]
+
+
+@pytest.fixture(params=[True, False])
+def is_tracking_data(request):
+    """Argument for is_tracking.
+
+    Arguments:
+        request: A request for a fixture from a fixture function.
+
+    Returns:
+        True or False
+    """
+    return request.param
+
+
+@pytest.fixture
+def categories(categories_catalog_data):
     """Load CategoryInfo into a NameOrderedDict.
+
+    Arguments:
+        categories_catalog_data: A list containing categories info.
 
     Returns:
         A NameOrderedDict containing multiple CategoryInfo
     """
     category_dict = NameOrderedDict()
-    for category in _DATA_CATEGORIES["categories"]:
-        category_dict.append(CategoryInfo(category["name"]))
+    for category in categories_catalog_data:
+        category_dict.append(CategoryInfo.loads(category))
     return category_dict
 
 
 @pytest.fixture
-def attributes():
+def attributes(attributes_catalog_data):
     """Load AttributeInfo into a NameOrderedDict.
+
+    Arguments:
+        attributes_catalog_data: A list containing attributes info.
 
     Returns:
         A NameOrderedDict containing multiple AttributeInfo
     """
     attribute_dict = NameOrderedDict()
-    attribute_dict.append(AttributeInfo("gender", enum=_ENUMS))
+    for attribute in attributes_catalog_data:
+        attribute_dict.append(AttributeInfo.loads(attribute))
     return attribute_dict
