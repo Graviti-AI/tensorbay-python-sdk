@@ -42,6 +42,10 @@ class CategoryInfo(NameMixin):
         name: The name of the category.
         description: The description of the category.
 
+    Examples:
+        >>> CategoryInfo(name="example", description="This is an example")
+        CategoryInfo("example")
+
     """
 
     _T = TypeVar("_T", bound="CategoryInfo")
@@ -51,16 +55,15 @@ class CategoryInfo(NameMixin):
         """Loads a CategoryInfo from a dict containing the category.
 
         Arguments:
-            contents: A dict containing the information of the category,
-                whose format should be like::
-
-                    {
-                        "name": <str>
-                        "description": <str>
-                    }
+            contents: A dict containing the information of the category.
 
         Returns:
             The loaded :class:`CategoryInfo` object.
+
+        Examples:
+            >>> contents = {"name": "example", "description": "This is an exmaple"}
+            >>> CategoryInfo.loads(contents)
+            CategoryInfo("example")
 
         """
         return common_loads(cls, contents)
@@ -69,13 +72,12 @@ class CategoryInfo(NameMixin):
         """Dumps the CatagoryInfo into a dict.
 
         Returns:
-            A dict containing the information in the CategoryInfo,
-            whose format is like::
+            A dict containing the information in the CategoryInfo.
 
-                {
-                    "name": <str>
-                    "description": <str>
-                }
+        Examples:
+            >>> categoryinfo = CategoryInfo(name="example", description="This is an example")
+            >>> categoryinfo.dumps()
+            {'name': 'example', 'description': 'This is an example'}
 
         """
         return super()._dumps()
@@ -111,6 +113,23 @@ class KeypointsInfo(ReprMixin, EqMixin):
             :attr:`Keypoint2D.v<tensorbay.geometry.keypoint.Keypoint2D.v>`.
         parent_categories: The parent categories of the keypoints.
         description: The description of the keypoints.
+
+    Examples:
+        >>> KeypointsInfo(
+        ...     2,
+        ...     names=["L_Shoulder", "R_Shoulder"],
+        ...     skeleton=[(0, 1)],
+        ...     visible="BINARY",
+        ...     parent_categories="people",
+        ...     description="example",
+        ... )
+        KeypointsInfo(
+          (number): 2,
+          (names): [...],
+          (skeleton): [...],
+          (visible): 'BINARY',
+          (parent_categories): [...]
+        )
 
     """
 
@@ -184,23 +203,28 @@ class KeypointsInfo(ReprMixin, EqMixin):
         """Loads a KeypointsInfo from a dict containing the information of the keypoints.
 
         Arguments:
-            contents: A dict containing all the information of the set of keypoints,
-                whose format should be like::
-
-                    {
-                        "number":
-                        "names": [...],
-                        "skeleton": [
-                            [<index>, <index>],
-                            ...
-                        ],
-                        "visible": "TERNARY" or "BINARY"
-                        "parentCategories": [...],
-                        "description":
-                    }
+            contents: A dict containing all the information of the set of keypoints.
 
         Returns:
             The loaded :class:`KeypointsInfo` object.
+
+        Examples:
+            >>> contents = {
+            ...     "number": 2,
+            ...     "names": ["L", "R"],
+            ...     "skeleton": [(0,1)],
+            ...     "visible": "TERNARY",
+            ...     "parentCategories": ["example"],
+            ...     "description": "example",
+            ... }
+            >>> KeypointsInfo.loads(contents)
+            KeypointsInfo(
+              (number): 2,
+              (names): [...],
+              (skeleton): [...],
+              (visible): 'TERNARY',
+              (parent_categories): [...]
+            )
 
         """
         return common_loads(cls, contents)
@@ -212,6 +236,11 @@ class KeypointsInfo(ReprMixin, EqMixin):
         Returns:
             The number of the keypoints.
 
+        Examples:
+            >>> keypointsinfo = KeypointsInfo(5)
+            >>> keypointsinfo.number
+            5
+
         """
         return self._number
 
@@ -219,20 +248,26 @@ class KeypointsInfo(ReprMixin, EqMixin):
         """Dumps all the keypoint information into a dict.
 
         Returns:
-            A dict containing all the information of the keypoint,
-            whose format is like::
+            A dict containing all the information of the keypoint.
 
-                {
-                    "number":
-                    "names": [...],
-                    "skeleton": [
-                        [<index>, <index>],
-                        ...
-                    ],
-                    "visible": "TERNARY" or "BINARY"
-                    "parentCategories": [...],
-                    "description":
-                }
+        Examples:
+            >>> keypointsinfo = KeypointsInfo(
+            ...     2,
+            ...     names=["L_Shoulder", "R_Shoulder"],
+            ...     skeleton=[(0, 1)],
+            ...     visible="BINARY",
+            ...     parent_categories="people",
+            ...     description="example",
+            ... )
+            >>> keypointsinfo.dumps()
+            {
+                'number': 2,
+                'names': ['L_Shoulder', 'R_Shoulder'],
+                'skeleton': [(0, 1)],
+                'visible': 'BINARY',
+                'parentCategories': ['people'],
+                'description': 'example',
+            }
 
         """
         contents: Dict[str, Any] = {"number": self._number}
