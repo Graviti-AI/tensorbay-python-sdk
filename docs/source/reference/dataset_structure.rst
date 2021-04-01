@@ -7,6 +7,7 @@ In this topic, we explain the related concepts.
 The TensorBay dataset format looks like::
 
    dataset
+   ├── notes
    ├── catalog
    │   ├── subcatalog
    │   ├── subcatalog
@@ -29,6 +30,15 @@ Dataset is the topmost concept in TensorBay dataset format.
 Each dataset includes a catalog and a certain number of segments.
 
 The corresponding class of dataset is :class:`~tensorbay.dataset.dataset.Dataset`.
+
+*******
+ notes
+*******
+
+Notes contains the basic information of a dataset, such as the time continuity of the data inside the
+dataset.
+
+The corresponding class of notes is :class:`~tensorbay.dataset.dataset.Notes`
 
 *********
  catalog 
