@@ -16,3 +16,4 @@ for the comparison between the fusion dataset and the dataset.
    :maxdepth: 1
 
    fusion_dataset/fusion_dataset_structure
+   fusion_dataset/CADC
