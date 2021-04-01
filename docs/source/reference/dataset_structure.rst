@@ -49,13 +49,31 @@ It collects all the labels corresponding to a dataset.
 There could be one or several subcatalogs (:ref:`reference/label_format:Label Format`)
 under one catalog, each of which only stores label meta information of one label type.
 
-For example, there is only one subcatalog ("BOX3D") in the catalog of dataset `Neolix OD`_.
+Here are some examples of catalogs with different label types(:numref:`Table. %s <catalogs_table>`).
 
-.. _Neolix OD: https://www.graviti.cn/open-datasets/data-decorators/NeolixOD
+.. _catalogs_table:
 
-.. literalinclude:: ../../../tensorbay/opendataset/NeolixOD/catalog.json
-   :language: json
-   :name: NeolixOD-catalog
+.. table:: Catalogs
+   :align: center
+   :widths: auto
+
+   =============================  =============================================  =============================
+    Catalogs                       Label Types                                    Datasets
+   =============================  =============================================  =============================
+   `elpv Catalog`_                :ref:`reference/label_format:Classification`   `elpv Dataset`_
+   `NightOwls Catalog`_           :ref:`reference/label_format:Box2D`            `NightOwls Dataset`_
+   `Neolix OD Catalog`_           :ref:`reference/label_format:Box3D`            `Neolix OD Dataset`_
+   `Leeds Sports Pose Catalog`_   :ref:`reference/label_format:Keypoints2D`      `Leeds Sports Pose Dataset`_
+   =============================  =============================================  =============================
+
+.. _elpv Catalog: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/Elpv/catalog.json
+.. _elpv Dataset: https://gas.graviti.cn/dataset/data-decorators/Elpv
+.. _NightOwls Catalog: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/NightOwls/catalog.json
+.. _NightOwls Dataset: https://gas.graviti.cn/dataset/hello-dataset/NightOwls
+.. _Neolix OD Catalog: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/NeolixOD/catalog.json
+.. _Neolix OD Dataset: https://gas.graviti.cn/dataset/beac94cf/NeolixOD
+.. _Leeds Sports Pose Catalog: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/LeedsSportsPose/catalog.json
+.. _Leeds Sports Pose Dataset: https://gas.graviti.cn/dataset/data-decorators/LeedsSportsPose
 
 Note that catalog is not needed if there is no label information in a dataset.
 
