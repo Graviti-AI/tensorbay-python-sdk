@@ -96,33 +96,30 @@ class TestBox3D:
         translation = Vector3D(1, 2, 3)
         rotation = quaternion(0, 1, 0, 0)
         size = Vector3D(1, 2, 3)
-        transform = Transform3D(translation=translation, rotation=rotation)
 
-        box3d = Box3D(transform)
-        assert box3d.translation == translation
-        assert box3d.rotation == rotation
-
-        box3d = Box3D(translation=translation, rotation=rotation, size=size)
+        box3d = Box3D(size, translation, rotation)
         assert box3d.translation == translation
         assert box3d.rotation == rotation
         assert box3d.size == size
 
     def test_eq(self):
-        box3d_1 = Box3D()
-        box3d_2 = Box3D()
-        box3d_3 = Box3D(translation=[1, 2, 3])
+        box3d_1 = Box3D((1, 1, 1))
+        box3d_2 = Box3D((1, 1, 1))
+        box3d_3 = Box3D(size=(1, 1, 1), translation=[1, 2, 3])
         assert (box3d_1 == box3d_2) == True
         assert (box3d_1 == box3d_3) == False
 
     def test_rmul(self):
-        transform = Transform3D(translation=[1, 2, 3], rotation=quaternion(0, 1, 0, 0))
+        transform = Transform3D([1, 2, 3], quaternion(0, 1, 0, 0))
         quaternion_1 = quaternion(1, 2, 3, 4)
-        box3d = Box3D(transform)
+        box3d = Box3D(size=(1, 1, 1), translation=[1, 2, 3], rotation=quaternion(0, 1, 0, 0))
         assert box3d.__rmul__(transform) == Box3D(
-            translation=[2, 0, 0], rotation=quaternion(-1, 0, 0, 0)
+            size=(1, 1, 1), translation=[2, 0, 0], rotation=quaternion(-1, 0, 0, 0)
         )
         assert box3d.__rmul__(quaternion_1) == Box3D(
-            translation=[1.7999999999999996, 2, 2.6], rotation=quaternion(-2, 1, 4, -3)
+            size=(1, 1, 1),
+            translation=[1.7999999999999996, 2, 2.6],
+            rotation=quaternion(-2, 1, 4, -3),
         )
         assert box3d.__rmul__(1) == NotImplemented
 
@@ -137,11 +134,7 @@ class TestBox3D:
 
     def test_dumps(self):
 
-        box3d = Box3D(
-            translation=Vector3D(1, 2, 3),
-            rotation=quaternion(0, 1, 0, 0),
-            size=Vector3D(1, 2, 3),
-        )
+        box3d = Box3D(Vector3D(1, 2, 3), Vector3D(1, 2, 3), quaternion(0, 1, 0, 0))
         assert box3d.dumps() == _DATA_3D
 
     def test_iou(self):

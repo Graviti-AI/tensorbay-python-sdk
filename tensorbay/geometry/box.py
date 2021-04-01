@@ -17,9 +17,9 @@ It provides :meth:`Box3D.iou` to calculate the intersection over union of two 3D
 
 import math
 import warnings
-from typing import Dict, Iterable, Tuple, Type, TypeVar
+from typing import Dict, Iterable, Optional, Tuple, Type, TypeVar
 
-from ..utility import ReprMixin, ReprType, UserSequence, common_loads
+from ..utility import MatrixType, ReprMixin, ReprType, UserSequence, common_loads
 from .transform import Transform3D
 from .vector import Vector2D, Vector3D
 
@@ -332,48 +332,46 @@ class Box3D(ReprMixin):
     It provides :meth:`Box3D.iou` to calculate the intersection over union of two 3D boxes.
 
     Arguments:
-        transform: A :class:`~tensorbay.geometry.transform.Transform3D` object
-            or a 4x4 or 3x4 transform matrix.
         translation: Translation in a sequence of [x, y, z].
-        rotation: Rotation in a sequence of [w, x, y, z] or a 3x3 rotation matrix
-            or a numpy quaternion object.
+        rotation: Rotation in a sequence of [w, x, y, z] or numpy quaternion.
         size: Size in a sequence of [x, y, z].
+        transform_matrix: A 4x4 or 3x4 transform matrix.
 
     Examples:
-        *Initialization Method 1:* Init from translation, rotation and size.
+        *Initialization Method 1:* Init from size, translation and rotation.
 
-        >>> Box3D(translation=[1, 2, 3], rotation=[0, 1, 0, 0], size=[1, 2, 3])
+        >>> Box3D([1, 2, 3], [0, 1, 0, 0], [1, 2, 3])
         Box3D(
+          (size): Vector3D(1, 2, 3)
           (translation): Vector3D(1, 2, 3),
           (rotation): quaternion(0, 1, 0, 0),
-          (size): Vector3D(1, 2, 3)
         )
 
-        *Initialization Method 2:* Init from transform and size.
+        *Initialization Method 2:* Init from size and transform matrix.
 
         >>> from tensorbay.geometry import Transform3D
-        >>> transform = Transform3D(translation=[1, 2, 3], rotation=[0, 1, 0, 0])
-        >>> Box3D(transform, size=[1, 2, 3])
+        >>> matrix = [[1, 0, 0, 1], [0, 1, 0, 2], [0, 0, 1, 3]]
+        >>> Box3D(size=[1, 2, 3], transform_matrix=matrix)
         Box3D(
-          (translation): Vector3D(1, 2, 3),
-          (rotation): quaternion(0, 1, 0, 0),
           (size): Vector3D(1, 2, 3)
+          (translation): Vector3D(1, 2, 3),
+          (rotation): quaternion(1, -0, -0, -0),
         )
 
     """
 
     _repr_type = ReprType.INSTANCE
-    _repr_attrs: Tuple[str, ...] = ("translation", "rotation", "size")
+    _repr_attrs: Tuple[str, ...] = ("size", "translation", "rotation")
 
     def __init__(
         self,
-        transform: Transform3D.TransformType = None,
-        *,
+        size: Iterable[float],
         translation: Iterable[float] = (0, 0, 0),
         rotation: Transform3D.RotationType = (1, 0, 0, 0),
-        size: Iterable[float] = (0, 0, 0),
+        *,
+        transform_matrix: Optional[MatrixType] = None,
     ) -> None:
-        self._transform = Transform3D(transform, translation=translation, rotation=rotation)
+        self._transform = Transform3D(translation, rotation, matrix=transform_matrix)
         self._size = Vector3D(*size)
 
     def __eq__(self, other: object) -> bool:
@@ -437,9 +435,9 @@ class Box3D(ReprMixin):
             ... }
             >>> Box3D.loads(contents)
             Box3D(
+              (size): Vector3D(1.0, 2.0, 3.0)
               (translation): Vector3D(1.0, 2.0, 3.0),
               (rotation): quaternion(0, 1, 0, 0),
-              (size): Vector3D(1.0, 2.0, 3.0)
             )
 
         """
@@ -484,7 +482,7 @@ class Box3D(ReprMixin):
             The translation of the 3D box.
 
         Examples:
-            >>> box3d = Box3D(translation=(1, 2, 3))
+            >>> box3d = Box3D(size=(1, 1, 1), translation=(1, 2, 3))
             >>> box3d.translation
             Vector3D(1, 2, 3)
 
@@ -499,7 +497,7 @@ class Box3D(ReprMixin):
             The rotation of the 3D box.
 
         Examples:
-            >>> box3d = Box3D(rotation=(0, 1, 0, 0))
+            >>> box3d = Box3D(size=(1, 1, 1), rotation=(0, 1, 0, 0))
             >>> box3d.rotation
             quaternion(0, 1, 0, 0)
 
@@ -514,9 +512,7 @@ class Box3D(ReprMixin):
             The transform of the 3D box.
 
         Examples:
-            >>> from tensorbay.geometry import Transform3D
-            >>> transform = Transform3D(translation=(1, 2, 3), rotation = (1, 0, 0, 0))
-            >>> box3d = Box3D(transform)
+            >>> box3d = Box3D(size=(1, 1, 1), translation=(1, 2, 3), rotation=(1, 0, 0, 0))
             >>> box3d.transform
             Transform3D(
               (translation): Vector3D(1, 2, 3),
@@ -562,7 +558,7 @@ class Box3D(ReprMixin):
             A dict containing translation, rotation and size information.
 
         Examples:
-            >>> box3d = Box3D(translation=(1, 2, 3), rotation=(0, 1, 0, 0), size=(1, 2, 3))
+            >>> box3d = Box3D(size=(1, 2, 3), translation=(1, 2, 3), rotation=(0, 1, 0, 0))
             >>> box3d.dumps()
             {
                 "translation": {"x": 1, "y": 2, "z": 3},

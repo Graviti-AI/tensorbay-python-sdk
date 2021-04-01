@@ -64,10 +64,10 @@ def DeepRoute(path: str) -> Dataset:
             position = annotation["position"]
 
             label = LabeledBox3D(
-                category=annotation["type"],
                 size=(bounding_box["length"], bounding_box["width"], bounding_box["height"]),
                 translation=(position["x"], position["y"], position["z"]),
                 rotation=from_rotation_vector((0, 0, annotation["heading"])),
+                category=annotation["type"],
             )
             data.label.box3d.append(label)
 

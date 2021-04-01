@@ -27,16 +27,21 @@ class TestCameraMatrix:
             CameraMatrix()
         with pytest.raises(TypeError):
             CameraMatrix(fx=1, fy=2)
-        with pytest.raises(TypeError):
-            CameraMatrix(1, 2, 3, 4)
 
-        camera_matrix_1 = CameraMatrix(_3x3_MATRIX)
+        camera_matrix_1 = CameraMatrix(matrix=_3x3_MATRIX)
 
         assert camera_matrix_1.fx == 1
         assert camera_matrix_1.fy == 4
         assert camera_matrix_1.cx == 3
         assert camera_matrix_1.cy == 5
         assert camera_matrix_1.skew == 2
+
+        camera_matrix_1 = CameraMatrix(1, 2, 3, 4)
+        assert camera_matrix_1.fx == 1
+        assert camera_matrix_1.fy == 2
+        assert camera_matrix_1.cx == 3
+        assert camera_matrix_1.cy == 4
+        assert camera_matrix_1.skew == 0
 
     def test_loads(self):
         cameramatrix = CameraMatrix.loads(_CAMERA_MATRIX_DATA)
@@ -52,7 +57,7 @@ class TestCameraMatrix:
 
         camera_matrix_1 = CameraMatrix(fx=fx, fy=fy, cx=cx, cy=cy, skew=skew)
         camera_matrix_2 = CameraMatrix(fx=fx, fy=fy, cx=cx, cy=cy, skew=skew)
-        camera_matrix_3 = CameraMatrix([[0, 0, 0], [0, 0, 0], [0, 0, 0]])
+        camera_matrix_3 = CameraMatrix(matrix=[[0, 0, 0], [0, 0, 0], [0, 0, 0]])
 
         assert (camera_matrix_1 == camera_matrix_2) == True
         assert (camera_matrix_1 == camera_matrix_3) == False
@@ -64,11 +69,11 @@ class TestCameraMatrix:
         assert camera_matrix.dumps() == _CAMERA_MATRIX_DATA
 
     def test_as_matrix(self):
-        camera_matrix = CameraMatrix(_3x3_MATRIX).as_matrix()
+        camera_matrix = CameraMatrix(matrix=_3x3_MATRIX).as_matrix()
         assert np.all(np.array(camera_matrix) == _3x3_NUMPY)
 
     def test_project(self):
-        camera_matrix = CameraMatrix(_3x3_MATRIX)
+        camera_matrix = CameraMatrix(matrix=_3x3_MATRIX)
 
         with pytest.raises(TypeError):
             camera_matrix.project([])
@@ -206,7 +211,9 @@ class TestCameraIntrinsics:
         assert camera_intrinsics_1.distortion_coefficients.p1 == 5
         assert camera_intrinsics_1.distortion_coefficients.k1 == 6
 
-        camera_intrinsics_2 = CameraIntrinsics([[2, 3, 4], [0, 5, 6], [0, 0, 1]], p1=7, k1=8)
+        camera_intrinsics_2 = CameraIntrinsics(
+            camera_matrix=[[2, 3, 4], [0, 5, 6], [0, 0, 1]], p1=7, k1=8
+        )
 
         assert camera_intrinsics_2.camera_matrix.fx == 2
         assert camera_intrinsics_2.camera_matrix.fy == 5
@@ -216,18 +223,6 @@ class TestCameraIntrinsics:
 
         assert camera_intrinsics_2.distortion_coefficients.p1 == 7
         assert camera_intrinsics_2.distortion_coefficients.k1 == 8
-
-        camera_intrinsics_3 = CameraIntrinsics(
-            fx=1, fy=2, cx=3, cy=4, p1=5, k1=6, _init_distortion=False
-        )
-
-        assert camera_intrinsics_3.camera_matrix.fx == 1
-        assert camera_intrinsics_3.camera_matrix.fy == 2
-        assert camera_intrinsics_3.camera_matrix.cx == 3
-        assert camera_intrinsics_3.camera_matrix.cy == 4
-        assert camera_intrinsics_3.camera_matrix.skew == 0
-
-        assert camera_intrinsics_3.distortion_coefficients == None
 
     def test_loads(self):
         camera_intrinsics = CameraIntrinsics.loads(_CAMERAINTRINSICS_DATA)
@@ -251,7 +246,9 @@ class TestCameraIntrinsics:
     def test_eq(self):
         camera_intrinsics_1 = CameraIntrinsics(fx=1, fy=2, cx=3, cy=4, skew=0, p1=1, k1=2)
         camera_intrinsics_2 = CameraIntrinsics(fx=1, fy=2, cx=3, cy=4, skew=0, p1=1, k1=2)
-        camera_intrinsics_3 = CameraIntrinsics([[0, 0, 0], [0, 0, 0], [0, 0, 0]], p1=0, k1=0)
+        camera_intrinsics_3 = CameraIntrinsics(
+            camera_matrix=[[0, 0, 0], [0, 0, 0], [0, 0, 0]], p1=0, k1=0
+        )
 
         assert (camera_intrinsics_1 == camera_intrinsics_2) == True
         assert (camera_intrinsics_1 == camera_intrinsics_3) == False
@@ -261,11 +258,11 @@ class TestCameraIntrinsics:
         assert camera_intrinsics.dumps() == _CAMERAINTRINSICS_DATA
 
     def test_camera_matrix(self):
-        camera_intrinsics = CameraIntrinsics(_3x3_MATRIX, p1=1, p2=2, k1=1, k2=2)
-        assert camera_intrinsics.camera_matrix == CameraMatrix(_3x3_MATRIX)
+        camera_intrinsics = CameraIntrinsics(camera_matrix=_3x3_MATRIX, p1=1, p2=2, k1=1, k2=2)
+        assert camera_intrinsics.camera_matrix == CameraMatrix(matrix=_3x3_MATRIX)
 
     def test_distortion_coefficients(self):
-        camera_intrinsics = CameraIntrinsics(_3x3_MATRIX, p1=1, p2=2, k1=1, k2=2)
+        camera_intrinsics = CameraIntrinsics(camera_matrix=_3x3_MATRIX, p1=1, p2=2, k1=1, k2=2)
         distortion_coefficients = camera_intrinsics.distortion_coefficients
 
         assert distortion_coefficients == DistortionCoefficients(p1=1, p2=2, k1=1, k2=2)
@@ -285,7 +282,9 @@ class TestCameraIntrinsics:
         )
 
     def test_project(self):
-        camera_intrinsics = CameraIntrinsics([[1, 0, 0], [0, 1, 0], [0, 0, 1]], p1=1, p2=1, k1=1)
+        camera_intrinsics = CameraIntrinsics(
+            camera_matrix=[[1, 0, 0], [0, 1, 0], [0, 0, 1]], p1=1, p2=1, k1=1
+        )
 
         point_1_fisheye_true = camera_intrinsics.project((1, 2), is_fisheye=True)
         point_2_fisheye_true = camera_intrinsics.project((1, 2, 3), is_fisheye=True)

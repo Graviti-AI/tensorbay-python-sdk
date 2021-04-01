@@ -25,7 +25,7 @@ with warnings.catch_warnings():
     from quaternion import quaternion
 
 from ..geometry import Box2D, Box3D, Transform3D
-from ..utility import ReprType, SubcatalogTypeRegister, TypeRegister, common_loads
+from ..utility import MatrixType, ReprType, SubcatalogTypeRegister, TypeRegister, common_loads
 from .basic import LabelType, SubcatalogBase, _LabelBase
 from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
 
@@ -345,14 +345,11 @@ class LabeledBox3D(Box3D, _LabelBase):
     which is often used for object detection in 3D point cloud.
 
     Arguments:
-        transform: The transform of the 3D bounding box label in
-            a :class:`~tensorbay.geometry.transform.Transform3D` object
-            or a 4x4 or 3x4 transformation matrix.
+        size: Size of the 3D bounding box label in a sequence of [x, y, z].
         translation: Translation of the 3D bounding box label in a sequence of [x, y, z].
         rotation: Rotation of the 3D bounding box label in a sequence of [w, x, y, z]
-            or a 3x3 rotation matrix
             or a numpy quaternion object.
-        size: Size of the 3D bounding box label in a sequence of [x, y, z].
+        transform_matrix: A 4x4 or 3x4 transformation matrix.
         category: Category of the 3D bounding box label.
         attributes: Attributs of the 3D bounding box label.
         instance: The instance id of the 3D bounding box label.
@@ -365,19 +362,18 @@ class LabeledBox3D(Box3D, _LabelBase):
         transform: The transform of the 3D bounding box.
 
     Examples:
-        >>> from tensorbay.geometry import Transform3D
-        >>> transform = Transform3D(translation=(1, 2, 3), rotation=(0, 1, 0, 0))
         >>> LabeledBox3D(
-        ...     transform,
         ...     size=[1, 2, 3],
+        ...     translation=(1, 2, 3),
+        ...     rotation=(0, 1, 0, 0),
         ...     category="example",
         ...     attributes={"key": "value"},
         ...     instance="12345",
         ... )
         LabeledBox3D(
+          (size): Vector3D(1, 2, 3),
           (translation): Vector3D(1, 2, 3),
           (rotation): quaternion(0, 1, 0, 0),
-          (size): Vector3D(1, 2, 3),
           (category): 'example',
           (attributes): {...},
           (instance): '12345'
@@ -391,22 +387,16 @@ class LabeledBox3D(Box3D, _LabelBase):
 
     def __init__(
         self,
-        transform: Transform3D.TransformType = None,
-        *,
+        size: Iterable[float],
         translation: Iterable[float] = (0, 0, 0),
         rotation: Transform3D.RotationType = (1, 0, 0, 0),
-        size: Iterable[float] = (0, 0, 0),
+        *,
+        transform_matrix: Optional[MatrixType] = None,
         category: Optional[str] = None,
         attributes: Optional[Dict[str, Any]] = None,
         instance: Optional[str] = None,
     ):
-        Box3D.__init__(
-            self,
-            transform,
-            translation=translation,
-            rotation=rotation,
-            size=size,
-        )
+        Box3D.__init__(self, size, translation, rotation, transform_matrix=transform_matrix)
         _LabelBase.__init__(self, category, attributes, instance)
 
     def __rmul__(self: _T, other: Transform3D) -> _T:
@@ -439,9 +429,9 @@ class LabeledBox3D(Box3D, _LabelBase):
         Examples:
             >>> contents = {
             ...     "box3d": {
+            ...         "size": {"x": 1, "y": 2, "z": 3},
             ...         "translation": {"x": 1, "y": 2, "z": 3},
             ...         "rotation": {"w": 1, "x": 0, "y": 0, "z": 0},
-            ...         "size": {"x": 1, "y": 2, "z": 3},
             ...     },
             ...     "category": "test",
             ...     "attributes": {"key": "value"},
@@ -449,9 +439,9 @@ class LabeledBox3D(Box3D, _LabelBase):
             ... }
             >>> LabeledBox3D.loads(contents)
             LabeledBox3D(
+              (size): Vector3D(1, 2, 3),
               (translation): Vector3D(1, 2, 3),
               (rotation): quaternion(1, 0, 0, 0),
-              (size): Vector3D(1, 2, 3),
               (category): 'test',
               (attributes): {...},
               (instance): '12345'
@@ -467,11 +457,10 @@ class LabeledBox3D(Box3D, _LabelBase):
             A dict containing all the information of the 3D bounding box label.
 
         Examples:
-            >>> from tensorbay.geometry import Transform3D
-            >>> transform = Transform3D(translation=(1, 2, 3), rotation=(0, 1, 0, 0))
             >>> labeledbox3d = LabeledBox3D(
-            ...     transform,
             ...     size=[1, 2, 3],
+            ...     translation=(1, 2, 3),
+            ...     rotation=(0, 1, 0, 0),
             ...     category="example",
             ...     attributes={"key": "value"},
             ...     instance="12345",
