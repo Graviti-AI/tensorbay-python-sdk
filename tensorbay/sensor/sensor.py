@@ -3,7 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""SensorType, Sensor, Lidar, Radar, Camera and FisheyeCamera.
+"""SensorType, Sensor, Lidar, Radar, Camera, FisheyeCamera and Sensors.
 
 :class:`SensorType` is an enumeration type. It includes 'LIDAR', 'RADAR', 'CAMERA' and
 'FISHEYE_CAMERA'.
@@ -26,12 +26,24 @@ rotation, cameraMatrix and distortionCoefficients.
 :class:`FisheyeCamera` defines the concept of fisheye camera. It is an ultra wide-angle lens that
 produces strong visual distortion intended to create a wide panoramic or hemispherical image.
 
+:class:`Sensors` represent all the sensors in a :class:`~tensorbay.dataset.segment.FusionSegment`.
+
 """
 
-from typing import Any, Dict, Iterable, Optional, Sequence, Tuple, Type, TypeVar, Union
+from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Type, TypeVar, Union
+
+from sortedcontainers import SortedDict
 
 from ..geometry import Transform3D
-from ..utility import NameMixin, ReprType, TypeEnum, TypeMixin, TypeRegister, common_loads
+from ..utility import (
+    NameMixin,
+    NameSortedDict,
+    ReprType,
+    TypeEnum,
+    TypeMixin,
+    TypeRegister,
+    common_loads,
+)
 from .intrinsics import CameraIntrinsics
 
 _T = TypeVar("_T", bound="Sensor")
@@ -505,3 +517,113 @@ class FisheyeCamera(Camera):  # pylint: disable=too-many-ancestors
         )
 
     """
+
+
+class Sensors(NameSortedDict[Sensor._Type]):  # pylint: disable=protected-access
+    """This class represents all sensors in a :class:`~tensorbay.dataset.segment.FusionSegment`."""
+
+    _T = TypeVar("_T", bound="Sensors")
+
+    def _loads(self, contents: List[Dict[str, Any]]) -> None:
+        self._data = SortedDict()
+        for sensor_info in contents:
+            self.add(Sensor.loads(sensor_info))
+
+    @classmethod
+    def loads(cls: Type[_T], contents: List[Dict[str, Any]]) -> _T:
+        """Loads a :class:`Sensors` instance from the given contents.
+
+        Arguments:
+            contents: A list of dict containing the sensors information in a fusion segment,
+                whose format should be like::
+
+                    [
+                        {
+                            "name": <str>
+                            "type": <str>
+                            "extrinsics": {
+                                "translation": {
+                                    "x": <float>
+                                    "y": <float>
+                                    "z": <float>
+                                },
+                                "rotation": {
+                                    "w": <float>
+                                    "x": <float>
+                                    "y": <float>
+                                    "z": <float>
+                                },
+                            },
+                            "intrinsics": {           --- only for cameras
+                                "cameraMatrix": {
+                                    "fx": <float>
+                                    "fy": <float>
+                                    "cx": <float>
+                                    "cy": <float>
+                                    "skew": <float>
+                                }
+                                "distortionCoefficients": {
+                                    "k1": <float>
+                                    "k2": <float>
+                                    "p1": <float>
+                                    "p2": <float>
+                                    ...
+                                }
+                            },
+                            "desctiption": <str>
+                        },
+                        ...
+                    ]
+
+        Returns:
+            The loaded :class:`Sensors` instance.
+
+        """
+        return common_loads(cls, contents)
+
+    def dumps(self) -> List[Dict[str, Any]]:
+        """Return the information of all the sensors.
+
+        Returns:
+            A list of dict containing the information of all sensors::
+
+                [
+                    {
+                        "name": <str>
+                        "type": <str>
+                        "extrinsics": {
+                            "translation": {
+                                "x": <float>
+                                "y": <float>
+                                "z": <float>
+                            },
+                            "rotation": {
+                                "w": <float>
+                                "x": <float>
+                                "y": <float>
+                                "z": <float>
+                            },
+                        },
+                        "intrinsics": {           --- only for cameras
+                            "cameraMatrix": {
+                                "fx": <float>
+                                "fy": <float>
+                                "cx": <float>
+                                "cy": <float>
+                                "skew": <float>
+                            }
+                            "distortionCoefficients": {
+                                "k1": <float>
+                                "k2": <float>
+                                "p1": <float>
+                                "p2": <float>
+                                ...
+                            }
+                        },
+                        "desctiption": <str>
+                    },
+                    ...
+                ]
+
+        """
+        return [sensor.dumps() for sensor in self._data.values()]

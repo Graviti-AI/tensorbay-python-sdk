@@ -36,7 +36,7 @@ import ulid
 from requests_toolbelt import MultipartEncoder
 
 from ..dataset import Data, Frame, RemoteData
-from ..sensor.sensor import Sensor
+from ..sensor.sensor import Sensor, Sensors
 from .commit_status import CommitStatus
 from .exceptions import GASException, GASPathError
 from .requests import default_config, paging_range
@@ -434,11 +434,11 @@ class FusionSegmentClient(SegmentClientBase):
             if response["recordSize"] + response["offset"] >= response["totalCount"]:
                 break
 
-    def list_sensors(self) -> Iterator["Sensor._Type"]:
-        """List required sensor object in a segment client.
+    def get_sensors(self) -> Sensors:
+        """Return the sensors in a fusion segment client.
 
-        Yields:
-            Required sensor objects.
+        Returns:
+            The :class:`sensors<~tensorbay.sensor.sensor.Sensors>` in the fusion segment client.
 
         """
         params: Dict[str, Any] = {"segmentName": self._name}
@@ -448,8 +448,7 @@ class FusionSegmentClient(SegmentClientBase):
             "GET", "sensors", self._dataset_id, params=params
         ).json()
 
-        for sensor_info in response["sensors"]:
-            yield Sensor.loads(sensor_info)
+        return Sensors.loads(response["sensors"])
 
     def upload_sensor(self, sensor: Sensor) -> None:
         """Upload sensor to the draft.

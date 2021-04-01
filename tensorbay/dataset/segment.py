@@ -12,14 +12,14 @@ and consists of a series of :class:`~tensorbay.dataset.data.Data` without sensor
 Fusion segment is a concept in :class:`~tensorbay.dataset.dataset.FusionDataset`.
 It is the structure that composes :class:`~tensorbay.dataset.dataset.FusionDataset`,
 and consists of a list of :class:`~tensorbay.dataset.frame.Frame`
-along with multiple :class:`~tensorbay.sensor.sensor.Sensor`.
+along with multiple :class:`~tensorbay.sensor.sensor.Sensors`.
 
 """
 
 from typing import TYPE_CHECKING, Any, Callable, List, Optional, TypeVar
 
-from ..sensor import Sensor
-from ..utility import NameMixin, NameSortedDict, ReprType, UserMutableSequence
+from ..sensor import Sensors
+from ..utility import NameMixin, ReprType, UserMutableSequence
 from .data import DataBase
 from .frame import Frame
 
@@ -96,7 +96,7 @@ class FusionSegment(NameMixin, UserMutableSequence[Frame]):
     It is the structure that composes :class:`~tensorbay.dataset.dataset.FusionDataset`,
     and consists of a list of :class:`~tensorbay.dataset.frame.Frame`.
 
-    Besides, a fusion segment contains multiple :class:`~tensorbay.sensor.sensor.Sensor`
+    Besides, a fusion segment contains multiple :class:`~tensorbay.sensor.sensor.Sensors`
     correspoinding to the :class:`~tensorbay.dataset.data.Data`
     under each :class:`~tensorbay.dataset.frame.Frame`.
 
@@ -130,13 +130,12 @@ class FusionSegment(NameMixin, UserMutableSequence[Frame]):
 
     def __init__(self, name: str = "", client: Optional["FusionDatasetClient"] = None) -> None:
         super().__init__(name)
-        self.sensors: NameSortedDict[Sensor] = NameSortedDict()
+        self.sensors = Sensors()
 
         self._data: List[Frame]
         if client:
             self._client = client.get_segment(name)
             self._data = list(self._client.list_frames())
-            for sensor in self._client.list_sensors():
-                self.sensors.add(sensor)
+            self.sensors = self._client.get_sensors()
         else:
             self._data = []
