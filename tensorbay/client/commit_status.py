@@ -89,13 +89,13 @@ class CommitStatus:
         if self._draft_number is None or self._commit_id is not None:
             raise TypeError("The status is not draft")
 
-    def checkout(self, commit: Optional[str] = None, draft_number: Optional[int] = None) -> None:
+    def checkout(self, commit_id: Optional[str] = None, draft_number: Optional[int] = None) -> None:
         """Checkout to commit or draft.
 
         Arguments:
-            commit: The commit ID.
+            commit_id: The commit ID.
             draft_number: The draft number.
 
         """
         self._draft_number = draft_number
-        self._commit_id = commit
+        self._commit_id = commit_id

@@ -31,13 +31,13 @@ from .commit_status import CommitStatus
 from .exceptions import GASSegmentError
 from .requests import Client, multithread_upload, paging_range
 from .segment import FusionSegmentClient, SegmentClient
-from .struct import Branch, Draft, Tag
+from .struct import Branch, Commit, Draft, Tag
 
 if TYPE_CHECKING:
     from .gas import GAS
 
 
-class DatasetClientBase:
+class DatasetClientBase:  # pylint: disable=too-many-public-methods
     """This class defines the basic concept of the dataset client.
 
     A :class:`DatasetClientBase` contains the information needed for
@@ -64,7 +64,7 @@ class DatasetClientBase:
 
         self._status = CommitStatus()
         if commit_id:
-            self.checkout(commit=commit_id)
+            self.checkout(commit_key=commit_id)
 
     def _commit(self, message: str, tag: Optional[str] = None) -> str:
         post_data: Dict[str, Any] = {
@@ -98,6 +98,27 @@ class DatasetClientBase:
             ).json()
             for draft_info in response["drafts"]:
                 yield Draft.loads(draft_info)
+            if response["recordSize"] + response["offset"] >= response["totalCount"]:
+                break
+
+    def _list_commits(
+        self,
+        commit_key: Optional[str] = None,
+        *,
+        start: int = 0,
+        stop: int = sys.maxsize,
+        page_size: int = 128,
+    ) -> Iterator[Commit]:
+        params: Dict[str, Any] = {}
+        if commit_key:
+            params["commit"] = commit_key
+
+        for params["offset"], params["limit"] in paging_range(start, stop, page_size):
+            response = self._client.open_api_do(
+                "GET", "commits", self.dataset_id, params=params
+            ).json()
+            for commit_info in response["commits"]:
+                yield Commit.loads(commit_info)
             if response["recordSize"] + response["offset"] >= response["totalCount"]:
                 break
 
@@ -236,6 +257,56 @@ class DatasetClientBase:
         """
         yield from self._list_drafts(start=start, stop=stop)
 
+    def get_commit(self, commit_key: Optional[str] = None) -> Commit:
+        """Get the certain commit with the given commit key.
+
+        Arguments:
+            commit_key: The information to locate the specific commit, which can be the commit id,
+                the branch, or the tag.
+                If is not given, get the current commit.
+
+        Returns:
+            The :class:`.Commit` instance with the given commit key.
+
+        Raises:
+            TypeError: When the required commit does not exist or the given commit key is illegal.
+
+        """
+        if commit_key is None:
+            self._status.check_authority_for_commit()
+            commit_key = self._status.commit_id
+
+        if not commit_key:
+            raise TypeError("The given commit key is illegal")
+
+        try:
+            commit = next(self._list_commits(commit_key))
+        except StopIteration as error:
+            raise TypeError(f"The commit: {commit_key} does not exist.") from error
+
+        return commit
+
+    def list_commits(
+        self, commit_key: Optional[str] = None, *, start: int = 0, stop: int = sys.maxsize
+    ) -> Iterator[Commit]:
+        """List the commits.
+
+        Arguments:
+            commit_key: The information to locate the specific commit, which can be the commit id,
+                the branch, or the tag.
+                If is given, list the commits before the given commit.
+                If is not given, list the commits before the current commit.
+            start: The index to start.
+            stop: The index to end.
+
+        Yields:
+            The :class:`tags<.Commit>`.
+
+        """
+        if not commit_key:
+            commit_key = self._status.commit_id
+        yield from self._list_commits(commit_key, start=start, stop=stop)
+
     def create_tag(self, name: str, commit: Optional[str] = None) -> None:
         """Create the tag for a commit.
 
@@ -326,24 +397,31 @@ class DatasetClientBase:
         """
         yield from self._list_branches(start=start, stop=stop)
 
-    def checkout(self, commit: Optional[str] = None, draft_number: Optional[int] = None) -> None:
+    def checkout(
+        self, commit_key: Optional[str] = None, draft_number: Optional[int] = None
+    ) -> None:
         """Checkout to commit or draft.
 
         Arguments:
-            commit: The information to locate the specific commit, which can be the commit id,
+            commit_key: The information to locate the specific commit, which can be the commit id,
                 the branch, or the tag.
             draft_number: The draft number.
 
         Raises:
-            TypeError: When both commit ID and draft number are provided or neither.
+            TypeError: When both commit and draft number are provided or neither.
 
         """
-        if commit is None and draft_number is None:
-            raise TypeError("Neither commit ID nor draft number is given, please give one ID")
-        if commit is not None and draft_number is not None:
-            raise TypeError("Both commit ID and draft number are given, please only give one ID")
+        if commit_key is None and draft_number is None:
+            raise TypeError("Neither commit key nor draft number is given, please give one ID")
+        if commit_key is not None and draft_number is not None:
+            raise TypeError("Both commit key and draft number are given, please only give one ID")
 
-        self._status.checkout(commit=commit, draft_number=draft_number)
+        if commit_key:
+            try:
+                commit_id = self.get_commit(commit_key).commit_id
+                self._status.checkout(commit_id=commit_id)
+            except TypeError as error:
+                raise error
 
     def commit(self, message: str, *, tag: Optional[str] = None) -> None:
         """Commit the draft.
@@ -354,7 +432,7 @@ class DatasetClientBase:
 
         """
         self._status.check_authority_for_draft()
-        self._status.checkout(commit=self._commit(message, tag))
+        self._status.checkout(commit_id=self._commit(message, tag))
 
     def list_segment_names(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[str]:
         """List all segment names in a certain commit.
