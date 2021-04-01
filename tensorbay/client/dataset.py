@@ -228,6 +228,33 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         self._status.checkout(draft_number=draft_number)
         return draft_number
 
+    def get_draft(self, draft_number: Optional[int] = None) -> Draft:
+        """Get the certain draft with the given draft number.
+
+        Arguments:
+            draft_number: The required draft number.
+                If is not given, get the current draft.
+
+        Returns:
+            The :class:`.Draft` instance with the given number.
+
+        Raises:
+            TypeError: When the required draft does not exist or the given draft number is illegal.
+
+        """
+        if draft_number is None:
+            self._status.check_authority_for_draft()
+            draft_number = self._status.draft_number
+
+        if not draft_number:
+            raise TypeError("The given draft number is illegal")
+
+        for draft in self._list_drafts():
+            if draft_number == draft.number:
+                return draft
+
+        raise TypeError(f"The draft: {draft_number} does not exist.")
+
     def list_draft_titles_and_numbers(
         self, *, start: int = 0, stop: int = sys.maxsize
     ) -> Iterator[Dict[str, Any]]:
@@ -412,16 +439,17 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
 
         """
         if commit_key is None and draft_number is None:
-            raise TypeError("Neither commit key nor draft number is given, please give one ID")
+            raise TypeError("Neither commit key nor draft number is given, please give one")
         if commit_key is not None and draft_number is not None:
-            raise TypeError("Both commit key and draft number are given, please only give one ID")
+            raise TypeError("Both commit key and draft number are given, please only give one")
 
         if commit_key:
-            try:
-                commit_id = self.get_commit(commit_key).commit_id
-                self._status.checkout(commit_id=commit_id)
-            except TypeError as error:
-                raise error
+            commit_id = self.get_commit(commit_key).commit_id
+            self._status.checkout(commit_id=commit_id)
+
+        if draft_number:
+            draft_number = self.get_draft(draft_number).number
+            self._status.checkout(draft_number=draft_number)
 
     def commit(self, message: str, *, tag: Optional[str] = None) -> None:
         """Commit the draft.
