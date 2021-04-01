@@ -18,6 +18,7 @@ from .. import (
     Lidar,
     Radar,
     Sensor,
+    Sensors,
     SensorType,
 )
 
@@ -60,6 +61,13 @@ _FISHEYE_CAMERA_DATA = {
         "rotation": {"w": 1.0, "x": 2.0, "y": 3.0, "z": 4.0},
     },
 }
+
+_SENSORS_DATA = [
+    _CAMERA_DATA,
+    _FISHEYE_CAMERA_DATA,
+    _LIDAR_DATA,
+    _RADAR_DATA,
+]
 
 
 class TestSenorType:
@@ -194,7 +202,7 @@ class TestCamera:
         assert contents == _CAMERA_DATA
 
 
-class FisheyeCamera:
+class TestFisheyeCamera:
     def test_init(self):
         fisheye_camera = FisheyeCamera("FisheyeCamera1")
         assert fisheye_camera.name == "FisheyeCamera1"
@@ -225,3 +233,21 @@ class FisheyeCamera:
         fisheye_camera.set_extrinsics(translation=_TRANSLATION, rotation=_ROTATION)
         contents = fisheye_camera.dumps()
         assert contents == _FISHEYE_CAMERA_DATA
+
+
+class TestSensors:
+    def test_loads(self):
+        sensors = Sensors.loads(_SENSORS_DATA)
+        assert sensors[_LIDAR_DATA["name"]] == Lidar.loads(_LIDAR_DATA)
+        assert sensors[_RADAR_DATA["name"]] == Radar.loads(_RADAR_DATA)
+        assert sensors[_CAMERA_DATA["name"]] == Camera.loads(_CAMERA_DATA)
+        assert sensors[_FISHEYE_CAMERA_DATA["name"]] == FisheyeCamera.loads(_FISHEYE_CAMERA_DATA)
+
+    def test_dumps(self):
+        sensors = Sensors()
+        sensors.add(Lidar.loads(_LIDAR_DATA))
+        sensors.add(Radar.loads(_RADAR_DATA))
+        sensors.add(Camera.loads(_CAMERA_DATA))
+        sensors.add(FisheyeCamera.loads(_FISHEYE_CAMERA_DATA))
+
+        assert sensors.dumps() == _SENSORS_DATA

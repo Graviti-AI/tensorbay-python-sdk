@@ -13,7 +13,7 @@ from tensorbay.client.gas import GAS
 from tensorbay.dataset.data import Data, Label
 from tensorbay.dataset.frame import Frame
 from tensorbay.label.catalog import Catalog
-from tensorbay.sensor.sensor import Sensor
+from tensorbay.sensor.sensor import Sensor, Sensors
 
 from .utility import get_random_dataset_name
 
@@ -393,12 +393,11 @@ class TestSegmentClient:
 
         segment_client.upload_sensor(Sensor.loads(LIDAR_DATA))
 
-        sensors = list(segment_client.list_sensors())
-        assert sensors
-        # todo: match the input and output sensors
+        sensors = segment_client.get_sensors()
+        assert sensors == Sensors.loads([LIDAR_DATA])
 
         segment_client.delete_sensor(LIDAR_DATA["name"])
-        sensors = list(segment_client.list_sensors())
+        sensors = segment_client.get_sensors()
         assert len(sensors) == 0
 
         gas_client.delete_dataset(dataset_name)

@@ -6,7 +6,7 @@
 """Sensor related classes."""
 
 from .intrinsics import CameraIntrinsics, CameraMatrix, DistortionCoefficients
-from .sensor import Camera, FisheyeCamera, Lidar, Radar, Sensor, SensorType
+from .sensor import Camera, FisheyeCamera, Lidar, Radar, Sensor, Sensors, SensorType
 
 __all__ = [
     "Camera",
@@ -17,5 +17,6 @@ __all__ = [
     "Lidar",
     "Radar",
     "Sensor",
+    "Sensors",
     "SensorType",
 ]
