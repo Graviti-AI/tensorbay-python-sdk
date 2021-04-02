@@ -267,6 +267,112 @@ class TestDatasetClient:
 
         gas_client.delete_dataset(dataset_name)
 
+    def test_get_commit(self, accesskey, url):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_random_dataset_name()
+        dataset_client = gas_client.create_dataset(dataset_name)
+        dataset_client.create_draft("draft-1")
+        dataset_client.commit("commit-1", tag="V1")
+        commit_1_id = dataset_client.status.commit_id
+        dataset_client.create_draft("draft-2")
+        dataset_client.commit("commit-2")
+        commit_2_id = dataset_client.status.commit_id
+
+        commit = dataset_client.get_commit(commit_1_id)
+        assert commit.commit_id == commit_1_id
+        assert commit.parent_commit_id is None
+        assert commit.message == "commit-1"
+        assert commit.committer.name
+        assert commit.committer.date
+
+        commit = dataset_client.get_commit(commit_2_id)
+        assert commit.commit_id == commit_2_id
+        assert commit.parent_commit_id == commit_1_id
+        assert commit.message == "commit-2"
+        assert commit.committer.name
+        assert commit.committer.date
+
+        # If not giving commit, get the current commit
+        commit = dataset_client.get_commit()
+        assert commit.commit_id == commit_2_id
+        assert commit.parent_commit_id == commit_1_id
+        assert commit.message == "commit-2"
+        assert commit.committer.name
+        assert commit.committer.date
+
+        # Can not create the tag without giving commit in the draft
+        dataset_client.create_draft("draft-3")
+        with pytest.raises(TypeError):
+            dataset_client.get_commit()
+
+        gas_client.delete_dataset(dataset_name)
+
+    def test_get_commit_by_ref(self, accesskey, url):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_random_dataset_name()
+        dataset_client = gas_client.create_dataset(dataset_name)
+        dataset_client.create_draft("draft-1")
+        dataset_client.commit("commit-1", tag="V1")
+        commit_1_id = dataset_client.status.commit_id
+        dataset_client.create_draft("draft-2")
+        dataset_client.commit("commit-2")
+        commit_2_id = dataset_client.status.commit_id
+
+        commit = dataset_client.get_commit("V1")
+        assert commit.commit_id == commit_1_id
+        assert commit.parent_commit_id is None
+        assert commit.message == "commit-1"
+        assert commit.committer.name
+        assert commit.committer.date
+
+        commit = dataset_client.get_commit("main")
+        assert commit.commit_id == commit_2_id
+        assert commit.parent_commit_id == commit_1_id
+        assert commit.message == "commit-2"
+        assert commit.committer.name
+        assert commit.committer.date
+
+        with pytest.raises(TypeError):
+            dataset_client.get_commit("V2")
+
+        with pytest.raises(TypeError):
+            dataset_client.get_commit("main1")
+
+        gas_client.delete_dataset(dataset_name)
+
+    def test_list_commits(self, accesskey, url):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_random_dataset_name()
+        dataset_client = gas_client.create_dataset(dataset_name)
+        dataset_client.create_draft("draft-1")
+        dataset_client.commit("commit-1", tag="V1")
+        commit_1_id = dataset_client.status.commit_id
+        dataset_client.create_draft("draft-2")
+        dataset_client.commit("commit-2")
+        commit_2_id = dataset_client.status.commit_id
+        dataset_client.create_draft("draft-3")
+        dataset_client.commit("commit-3")
+        commit_3_id = dataset_client.status.commit_id
+
+        commits = list(dataset_client.list_commits())
+        assert len(commits) == 3
+        assert commits[0].commit_id == commit_3_id
+        assert commits[1].commit_id == commit_2_id
+
+        commits = list(dataset_client.list_commits(commit_2_id))
+        assert len(commits) == 2
+        assert commits[0].commit_id == commit_2_id
+        assert commits[1].commit_id == commit_1_id
+
+        commits = list(dataset_client.list_commits("V1"))
+        assert len(commits) == 1
+        assert commits[0].commit_id == commit_1_id
+
+        commits = list(dataset_client.list_commits("main"))
+        assert len(commits) == 3
+
+        gas_client.delete_dataset(dataset_name)
+
     def test_create_segment(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_random_dataset_name()
