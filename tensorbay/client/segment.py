@@ -32,8 +32,8 @@ from itertools import islice
 from typing import TYPE_CHECKING, Any, Dict, Iterable, Iterator, Optional, Tuple, Union
 
 import filetype
-import ulid
 from requests_toolbelt import MultipartEncoder
+from ulid import from_timestamp
 
 from ..dataset import Data, Frame, RemoteData
 from ..sensor.sensor import Sensor, Sensors
@@ -502,10 +502,10 @@ class FusionSegmentClient(SegmentClientBase):
                     "Lack frame id, please add frame id in frame or "
                     "give timestamp to the function!"
                 ) from error
-        elif hasattr(frame, "frame_id"):
-            raise TypeError("Frame id conflicts, please do not give timestamp to the function!.")
+        elif not hasattr(frame, "frame_id"):
+            frame_id = from_timestamp(timestamp)
         else:
-            frame_id = str(ulid.from_timestamp(timestamp))
+            raise TypeError("Frame id conflicts, please do not give timestamp to the function!.")
 
         for sensor_name, data in frame.items():
             if not isinstance(data, Data):
@@ -540,7 +540,7 @@ class FusionSegmentClient(SegmentClientBase):
                 frame_info: Dict[str, Any] = {
                     "segmentName": self._name,
                     "sensorName": sensor_name,
-                    "frameId": frame_id,
+                    "frameId": frame_id.str,
                 }
                 if hasattr(data, "timestamp"):
                     frame_info["timestamp"] = data.timestamp
