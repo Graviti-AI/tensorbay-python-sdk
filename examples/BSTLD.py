@@ -28,7 +28,7 @@ gas.create_dataset("BSTLD")
 list(gas.list_dataset_names())
 """"""
 
-""""Read Dataset Class / organize dataset"""
+"""Read Dataset Class / organize dataset"""
 from tensorbay.opendataset import BSTLD
 
 dataset = BSTLD("path/to/dataset/directory")

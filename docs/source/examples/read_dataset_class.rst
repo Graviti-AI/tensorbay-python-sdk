@@ -36,7 +36,7 @@ The local directory structure for "BSTLD" should be like:
 
 .. literalinclude:: ../../../examples/BSTLD.py
    :language: python
-   :start-after: """"Read Dataset Class / organize dataset"""
+   :start-after: """Read Dataset Class / organize dataset"""
    :end-before: """"""
 
 .. warning::
