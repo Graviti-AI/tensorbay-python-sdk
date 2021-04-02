@@ -540,7 +540,7 @@ class FusionSegmentClient(SegmentClientBase):
                 frame_info: Dict[str, Any] = {
                     "segmentName": self._name,
                     "sensorName": sensor_name,
-                    "frameId": frame_id.str,
+                    "frameId": str(frame_id),
                 }
                 if hasattr(data, "timestamp"):
                     frame_info["timestamp"] = data.timestamp
