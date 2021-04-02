@@ -40,6 +40,7 @@ class Config:  # pylint: disable=too-few-public-methods
 
         self.timeout = 30
         self._is_intern = False
+        self._x_source = "PYTHON-SDK"
 
     @property
     def is_intern(self) -> bool:
@@ -222,7 +223,7 @@ class Client:
 
         """
         kwargs.setdefault("headers", {})["X-Token"] = self.access_key
-        kwargs["headers"]["X-Source"] = "PYTHON-SDK"
+        kwargs["headers"]["X-Source"] = default_config._x_source  # pylint: disable=protected-access
 
         return self.do(method=method, url=self._url_make(section, dataset_id), **kwargs)
 

@@ -34,6 +34,7 @@ from .. import __version__
 from ..dataset import Data, Segment
 from ..utility import TBRN, TBRNType
 from .gas import GAS
+from .requests import default_config
 from .segment import FusionSegmentClient, SegmentClient
 
 
@@ -129,6 +130,7 @@ def cli(ctx: click.Context, access_key: str, url: str, profile_name: str, debug:
         "url": url,
         "profile_name": profile_name,
     }
+    default_config._x_source = "PYTHON-CLI"  # pylint: disable=protected-access
 
     if debug:
         logging.basicConfig(level=logging.DEBUG)
