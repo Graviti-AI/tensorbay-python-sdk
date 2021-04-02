@@ -30,11 +30,11 @@ In this topic, we write a series of examples to help developers to use TensorBay
    =========================================================================================  ====================================================================================
 
 .. _Dogs vs Cats: https://gas.graviti.cn/dataset/data-decorators/DogsVsCats
-.. _20 Newsgroups: https://www.graviti.cn/open-datasets/data-decorators/Newsgroups20
-.. _BSTLD: https://www.graviti.cn/open-datasets/data-decorators/BSTLD
-.. _Neolix OD: https://www.graviti.cn/open-datasets/data-decorators/NeolixOD
-.. _Leeds Sports Pose: https://www.graviti.cn/open-datasets/data-decorators/LeedsSportsPose
-.. _THCHS-30: https://www.graviti.cn/open-datasets/data-decorators/THCHS30
+.. _20 Newsgroups: https://gas.graviti.cn/dataset/data-decorators/Newsgroups20
+.. _BSTLD: https://gas.graviti.cn/dataset/data-decorators/BSTLD
+.. _Neolix OD: https://gas.graviti.cn/dataset/beac94cf/NeolixOD
+.. _Leeds Sports Pose: https://gas.graviti.cn/dataset/data-decorators/LeedsSportsPose
+.. _THCHS-30: https://gas.graviti.cn/dataset/data-decorators/THCHS30
 
 
 .. toctree::

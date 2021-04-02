@@ -5,7 +5,7 @@
 This topic describes how to manage the "BSTLD" dataset.
 
 "BSTLD" is a dataset with :ref:`reference/label_format:Box2D` label type (:numref:`Fig. %s <example-bstld>`).
-See `this page <https://www.graviti.cn/open-datasets/data-decorators/BSTLD>`_  for more details about this dataset.
+See `this page <https://gas.graviti.cn/dataset/data-decorators/BSTLD>`_  for more details about this dataset.
 
 .. _example-bstld:
 

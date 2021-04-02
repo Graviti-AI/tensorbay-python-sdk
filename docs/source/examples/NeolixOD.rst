@@ -6,7 +6,7 @@ This topic describes how to manage the "Neolix OD" dataset.
 
 "Neolix OD" is a dataset with :ref:`reference/label_format:Box3D` label type
 (:numref:`Fig. %s <example-neolixod>`).
-See `this page <https://www.graviti.cn/open-datasets/data-decorators/NeolixOD>`_ for more details about this dataset.
+See `this page <https://gas.graviti.cn/dataset/beac94cf/NeolixOD>`_ for more details about this dataset.
 
 .. _example-neolixod:
 

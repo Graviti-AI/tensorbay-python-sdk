@@ -5,7 +5,7 @@
 This topic describes how to manage the "20 Newsgroups" dataset.
 
 "20 Newsgroups" is a dataset with :ref:`reference/label_format:Classification` label type.
-See `this page <https://www.graviti.cn/open-datasets/data-decorators/Newsgroups20>`_ for more details about this dataset.
+See `this page <https://gas.graviti.cn/dataset/data-decorators/Newsgroups20>`_ for more details about this dataset.
 
 ***************************
  Authorize a Client Object
