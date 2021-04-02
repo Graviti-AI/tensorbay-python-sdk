@@ -501,7 +501,7 @@ class TestSegmentClient:
 
         # Set frame id in frame
         for i in range(5, 10):
-            frame = Frame(frame_id=str(ulid.from_timestamp(i)))
+            frame = Frame(frame_id=ulid.from_timestamp(i))
             local_path = path / f"goodbye{i}.txt"
             local_path.write_text("CONTENT")
             data = Data(local_path=str(local_path))
@@ -510,7 +510,7 @@ class TestSegmentClient:
 
         # Both setting frame id in frame and set timestamp(order) when uploading are not allowed
         i = 10
-        frame = Frame(frame_id=str(ulid.from_timestamp(i)))
+        frame = Frame(frame_id=ulid.from_timestamp(i))
         local_path = path / f"goodbye{i}.txt"
         local_path.write_text("CONTENT")
         data = Data(local_path=str(local_path))

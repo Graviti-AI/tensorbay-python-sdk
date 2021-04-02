@@ -13,10 +13,16 @@ from different sensors.
 
 """
 
+import logging
 from typing import Any, Dict, Optional, Type, TypeVar
+from uuid import UUID
+
+from ulid import ULID, from_str, from_uuid
 
 from ..utility import UserMutableMapping, common_loads
 from .data import DataBase
+
+logger = logging.getLogger(__name__)
 
 
 class Frame(UserMutableMapping[str, "DataBase._Type"]):
@@ -41,8 +47,9 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
     """
 
     _T = TypeVar("_T", bound="Frame")
+    _logger_flag = True
 
-    def __init__(self, frame_id: Optional[str] = None) -> None:
+    def __init__(self, frame_id: Optional[ULID] = None) -> None:
         self._data: Dict[str, DataBase._Type] = {}
         # self._pose: Optional[Transform3D] = None
         if frame_id:
@@ -57,7 +64,19 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
     def _loads(self, contents: Dict[str, Any]) -> None:
         self._data = {}
         if "frameId" in contents:
-            self.frame_id = contents["frameId"]
+            try:
+                self.frame_id = from_str(contents["frameId"])
+            except ValueError:
+                # Legacy fusion dataset use uuid as frame ID
+                # Keep this code here to make SDK compatible with uuid
+                self.frame_id = from_uuid(UUID(contents["frameId"]))
+                if self.__class__._logger_flag:  # pylint: disable=protected-access
+                    self.__class__._logger_flag = False  # pylint: disable=protected-access
+                    logger.warning(
+                        "WARNING: This is a legacy fusion dataset which use uuid as frame ID, "
+                        "it should be updated to ulid."
+                    )
+
         for data_contents in contents["frame"]:
             self._data[data_contents["sensorName"]] = DataBase.loads(data_contents)
 
@@ -113,7 +132,7 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
         # if self._pose:
         #     contents["pose"] = self._pose.dumps()
         if hasattr(self, "frame_id"):
-            contents["frameId"] = self.frame_id
+            contents["frameId"] = self.frame_id.str
 
         frame = []
         for sensor_name, data in self._data.items():
