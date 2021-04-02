@@ -55,9 +55,8 @@ object before uploading it to TensorBay. It takes the following steps to organiz
 Write the Catalog
 =================
 
-The first step is to write the :ref:`reference/dataset_structure:Catalog`.
+The first step is to write the catalog(:ref:`ref <reference/dataset_structure:Catalog>`).
 Catalog is a json file contains all label information of one dataset.
-See :ref:`this page <reference/dataset_structure:Catalog>` for more details.
 The only annotation type for "Dogs vs Cats" is :ref:`reference/label_format:Classification`, and there are 2
 :ref:`reference/label_format:Category` types.
 
@@ -65,6 +64,10 @@ The only annotation type for "Dogs vs Cats" is :ref:`reference/label_format:Clas
    :language: json
    :name: dogsvscats-catalog
    :linenos:
+
+.. important::
+
+   See :ref:`this part <reference/dataset_structure:Catalog>` for more examples of catalogs with different label types.
 
 Write the Dataloader
 ====================
@@ -94,6 +97,10 @@ See :ref:`this page <reference/label_format:Classification>` for more details fo
    The :ref:`Dogs vs Cats dataloader <dogsvscats-dataloader>` above uses relative import(L11-12).
    However, when you write your own dataloader you should use regular import.
    And when you want to contribute your own dataloader, remember to use relative import.
+
+.. important::
+
+   See :ref:`this part <reference/glossary:Dataloader>` for more examples of dataloaders with different label types.
 
 ****************
  Upload Dataset
