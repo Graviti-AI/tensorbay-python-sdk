@@ -34,7 +34,7 @@ The basic structure of the sub-command to create a dataset with given name:
 
 Take `BSTLD`_ for example:
 
-.. _BSTLD: https://www.graviti.cn/open-datasets/data-decorators/BSTLD
+.. _BSTLD: https://gas.graviti.cn/dataset/data-decorators/BSTLD
 
 .. code:: console
 

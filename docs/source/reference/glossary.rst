@@ -65,7 +65,7 @@ and the return value should be the loaded :class:`~tensorbay.dataset.dataset.Dat
   Take `Dogs vs Cats`_ dataset as an example,
   the name of its dataloader function is :meth:`~tensorbay.opendataset.DogsVsCats.loader.DogsVsCats`.
 
-  .. _dogs vs cats: https://www.graviti.cn/open-datasets/data-decorators/DogsVsCats
+  .. _dogs vs cats: https://gas.graviti.cn/dataset/data-decorators/DogsVsCats
 
 See more dataloader examples in :ref:`api/opendataset/opendataset_module:tensorbay.opendataset`.
 
