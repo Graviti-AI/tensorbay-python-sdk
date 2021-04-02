@@ -5,7 +5,7 @@
 
 """Utility classes."""
 
-from .common import EqMixin, common_loads
+from .common import EqMixin, MatrixType, common_loads
 from .name import NameMixin, NameOrderedDict, NameSortedDict, NameSortedList
 from .repr import ReprMixin, ReprType, repr_config
 from .tbrn import TBRN, TBRNType
@@ -14,6 +14,7 @@ from .user import UserMapping, UserMutableMapping, UserMutableSequence, UserSequ
 
 __all__ = [
     "EqMixin",
+    "MatrixType",
     "NameMixin",
     "NameOrderedDict",
     "NameSortedDict",

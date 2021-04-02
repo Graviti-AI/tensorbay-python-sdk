@@ -85,7 +85,7 @@ class TestSensor:
     def test_loads(self):
         camera_1 = Sensor.loads(_CAMERA_DATA)
 
-        assert camera_1.extrinsics == Transform3D(translation=_TRANSLATION, rotation=_ROTATION)
+        assert camera_1.extrinsics == Transform3D(_TRANSLATION, _ROTATION)
         assert camera_1.intrinsics == CameraIntrinsics(
             fx=1, fy=1, cx=1, cy=1, skew=0, p1=1, p2=1, k1=1, k2=1
         )
@@ -102,8 +102,8 @@ class TestLidar:
         assert lidar_1.extrinsics == Transform3D()
 
         lidar_2 = Lidar("test")
-        lidar_2.set_extrinsics(translation=_TRANSLATION, rotation=_ROTATION)
-        assert lidar_2.extrinsics == Transform3D(translation=_TRANSLATION, rotation=_ROTATION)
+        lidar_2.set_extrinsics(_TRANSLATION, _ROTATION)
+        assert lidar_2.extrinsics == Transform3D(_TRANSLATION, _ROTATION)
 
     def test_set_translation(self):
         lidar = Lidar("test")
@@ -117,7 +117,7 @@ class TestLidar:
 
     def test_dumps(self):
         lidar = Lidar("Lidar1")
-        lidar.set_extrinsics(translation=_TRANSLATION, rotation=_ROTATION)
+        lidar.set_extrinsics(_TRANSLATION, _ROTATION)
         contents = lidar.dumps()
         assert contents == _LIDAR_DATA
 
@@ -133,8 +133,8 @@ class TestRadar:
         assert radar_1.extrinsics == Transform3D()
 
         radar_2 = Radar("test")
-        radar_2.set_extrinsics(translation=_TRANSLATION, rotation=_ROTATION)
-        assert radar_2.extrinsics == Transform3D(translation=_TRANSLATION, rotation=_ROTATION)
+        radar_2.set_extrinsics(_TRANSLATION, _ROTATION)
+        assert radar_2.extrinsics == Transform3D(_TRANSLATION, _ROTATION)
 
     def test_set_translation(self):
         radar = Radar("test")
@@ -148,7 +148,7 @@ class TestRadar:
 
     def test_dumps(self):
         radar = Radar("Radar1")
-        radar.set_extrinsics(translation=_TRANSLATION, rotation=_ROTATION)
+        radar.set_extrinsics(_TRANSLATION, _ROTATION)
         contents = radar.dumps()
         assert contents == _RADAR_DATA
 
@@ -164,8 +164,8 @@ class TestCamera:
         assert camera_1.extrinsics == Transform3D()
 
         camera_2 = Camera("test")
-        camera_2.set_extrinsics(translation=_TRANSLATION, rotation=_ROTATION)
-        assert camera_2.extrinsics == Transform3D(translation=_TRANSLATION, rotation=_ROTATION)
+        camera_2.set_extrinsics(_TRANSLATION, _ROTATION)
+        assert camera_2.extrinsics == Transform3D(_TRANSLATION, _ROTATION)
 
     def test_set_translation(self):
         camera = Camera("test")
@@ -195,7 +195,7 @@ class TestCamera:
 
     def test_dumps(self):
         camera = Camera("Camera1")
-        camera.set_extrinsics(translation=_TRANSLATION, rotation=_ROTATION)
+        camera.set_extrinsics(_TRANSLATION, _ROTATION)
         camera.set_camera_matrix(fx=1, fy=1, cx=1, cy=1)
         camera.set_distortion_coefficients(p1=1, p2=1, k1=1, k2=1)
         contents = camera.dumps()
@@ -213,10 +213,8 @@ class TestFisheyeCamera:
         assert fisheye_camera_1.extrinsics == Transform3D()
 
         fisheye_camera_2 = FisheyeCamera("test")
-        fisheye_camera_2.set_extrinsics(translation=_TRANSLATION, rotation=_ROTATION)
-        assert fisheye_camera_2.extrinsics == Transform3D(
-            translation=_TRANSLATION, rotation=_ROTATION
-        )
+        fisheye_camera_2.set_extrinsics(_TRANSLATION, _ROTATION)
+        assert fisheye_camera_2.extrinsics == Transform3D(_TRANSLATION, _ROTATION)
 
     def test_set_translation(self):
         fisheye_camera = FisheyeCamera("test")
@@ -230,7 +228,7 @@ class TestFisheyeCamera:
 
     def test_dumps(self):
         fisheye_camera = FisheyeCamera("FisheyeCamera1")
-        fisheye_camera.set_extrinsics(translation=_TRANSLATION, rotation=_ROTATION)
+        fisheye_camera.set_extrinsics(_TRANSLATION, _ROTATION)
         contents = fisheye_camera.dumps()
         assert contents == _FISHEYE_CAMERA_DATA
 

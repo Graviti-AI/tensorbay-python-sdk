@@ -19,34 +19,30 @@ class TestTransform3D:
     def test_init(self):
         sequence = [[1, 0, 0, 1], [0, 1, 0, 1]]
         with pytest.raises(ValueError):
-            Transform3D(sequence)
+            Transform3D(matrix=sequence)
 
-        transform = Transform3D(None)
+        transform = Transform3D()
         assert transform.translation == Vector3D(0.0, 0.0, 0.0)
         assert transform.rotation == quaternion(1.0, 0.0, 0.0, 0.0)
 
         sequence = [[1, 0, 0, 1], [0, 1, 0, 1], [0, 0, 1, 1]]
-        transform = Transform3D(sequence)
+        transform = Transform3D(matrix=sequence)
         assert transform.translation == Vector3D(1, 1, 1)
         assert transform.rotation == quaternion(1.0, -0.0, -0.0, -0.0)
 
         numpy = np.array(sequence)
-        transform = Transform3D(numpy)
+        transform = Transform3D(matrix=numpy)
         assert transform.translation == Vector3D(1, 1, 1)
         assert transform.rotation == quaternion(1.0, -0.0, -0.0, -0.0)
 
-        transform_1 = Transform3D(transform)
-        assert transform_1.translation == Vector3D(1, 1, 1)
-        assert transform_1.rotation == quaternion(1.0, -0.0, -0.0, -0.0)
-
-        transform = Transform3D(translation=[1, 2, 3], rotation=[1, 0, 0, 0])
+        transform = Transform3D([1, 2, 3], [1, 0, 0, 0])
         assert transform.translation == Vector3D(1, 2, 3)
         assert transform.rotation == quaternion(1.0, 0.0, 0.0, 0.0)
 
     def test_eq(self):
-        transform_1 = Transform3D(translation=[1, 2, 3], rotation=[1, 0, 0, 0])
-        transform_2 = Transform3D(translation=[1, 2, 3], rotation=[1, 0, 0, 0])
-        transform_3 = Transform3D(translation=[1, 1, 1], rotation=[1, 0, 0, 0])
+        transform_1 = Transform3D([1, 2, 3], [1, 0, 0, 0])
+        transform_2 = Transform3D([1, 2, 3], [1, 0, 0, 0])
+        transform_3 = Transform3D([1, 1, 1], [1, 0, 0, 0])
         assert (transform_1 == transform_2) == True
         assert (transform_1 == transform_3) == False
 
@@ -55,9 +51,9 @@ class TestTransform3D:
         sequence_2 = [[1, 2, 3], [4, 5, 6]]
         sequence_3 = ["a", "b", "c"]
         quaternion_1 = quaternion(0, 1, 0, 0)
-        transform_1 = Transform3D(translation=[1, 2, 3], rotation=[0, 1, 0, 0])
-        transform_2 = Transform3D(translation=[2, 0, 0], rotation=[-1, 0, 0, 0])
-        transform_3 = Transform3D(translation=[1, 2, 3], rotation=[-1, 0, 0, 0])
+        transform_1 = Transform3D([1, 2, 3], [0, 1, 0, 0])
+        transform_2 = Transform3D([2, 0, 0], [-1, 0, 0, 0])
+        transform_3 = Transform3D([1, 2, 3], [-1, 0, 0, 0])
 
         with pytest.raises(TypeError):
             transform_1 * 1
@@ -70,9 +66,9 @@ class TestTransform3D:
 
     def test_rmul(self):
         quaternion_1 = quaternion(0, 1, 0, 0)
-        transform_1 = Transform3D(translation=[1, 2, 3], rotation=[0, 1, 0, 0])
-        transform_2 = Transform3D(translation=[1, -2, -3], rotation=[-1, 0, 0, 0])
-        transform_3 = Transform3D(translation=["a", "b", "c"], rotation=[-1, 0, 0, 0])
+        transform_1 = Transform3D([1, 2, 3], [0, 1, 0, 0])
+        transform_2 = Transform3D([1, -2, -3], [-1, 0, 0, 0])
+        transform_3 = Transform3D(["a", "b", "c"], [-1, 0, 0, 0])
 
         with pytest.raises(TypeError):
             1 * transform_1
@@ -80,7 +76,7 @@ class TestTransform3D:
         assert transform_3.__rmul__(quaternion_1) == NotImplemented
 
     def test_create(self):
-        transform = Transform3D(translation=[1, 2, 3], rotation=[0, 1, 0, 0])
+        transform = Transform3D([1, 2, 3], [0, 1, 0, 0])
         assert Transform3D._create(Vector3D(1, 2, 3), quaternion(0, 1, 0, 0)) == transform
 
     def test_loads(self):
@@ -89,7 +85,7 @@ class TestTransform3D:
         assert transform.rotation == quaternion(1.0, 0.0, 0.0, 0.0)
 
     def test_dumps(self):
-        transform = Transform3D(translation=[1, 2, 3], rotation=[1, 0, 0, 0])
+        transform = Transform3D([1, 2, 3], [1, 0, 0, 0])
         assert transform.dumps() == _DATA_TRANSFORM
 
     def test_set_translation(self):
@@ -112,10 +108,10 @@ class TestTransform3D:
 
     def test_as_matrix(self):
         matrix = np.array([[1, 0, 0, 1], [0, -1, 0, 2], [0, 0, -1, 3], [0, 0, 0, 1]])
-        transform = Transform3D(translation=[1, 2, 3], rotation=[0, 1, 0, 0])
+        transform = Transform3D([1, 2, 3], [0, 1, 0, 0])
         np.testing.assert_array_equal(transform.as_matrix(), matrix)
 
     def test_inverse(self):
-        transform_1 = Transform3D(translation=[1, 2, 3], rotation=[0, 1, 0, 0])
-        transform_2 = Transform3D(translation=[-1, 2, 3], rotation=[0, -1, 0, 0])
+        transform_1 = Transform3D([1, 2, 3], [0, 1, 0, 0])
+        transform_2 = Transform3D([-1, 2, 3], [0, -1, 0, 0])
         assert transform_1.inverse() == transform_2

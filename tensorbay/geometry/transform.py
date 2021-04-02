@@ -14,11 +14,11 @@ and :attr:`Transform3D.rotation` is stored as `numpy quaternion`_.
 """
 
 import warnings
-from typing import Dict, Iterable, Sequence, Type, TypeVar, Union, overload
+from typing import Dict, Iterable, Optional, Sequence, Type, TypeVar, Union, overload
 
 import numpy as np
 
-from ..utility import ReprMixin, ReprType, common_loads
+from ..utility import MatrixType, ReprMixin, ReprType, common_loads
 from .vector import Vector3D
 
 with warnings.catch_warnings():
@@ -34,46 +34,37 @@ class Transform3D(ReprMixin):
     :class:`Transform3D` contains rotation and translation of the 3D transform.
 
     Arguments:
-        transform: A :class:`Transform3D` or a 4x4 or 3x4 transform matrix.
         translation: Translation in a sequence of [x, y, z].
         rotation: Rotation in a sequence of [w, x, y, z] or numpy quaternion.
+        matrix: A 4x4 or 3x4 transform matrix.
 
     Raises:
         ValueError: If the shape of the input matrix is not correct.
 
     Examples:
-        *Initialization Method 1:* Init from sequence.
+        *Initialization Method 1:* Init from translation and rotation.
 
-        >>> Transform3D([[1, 0, 0, 1], [0, 1, 0, 1], [0, 0, 1, 1]])
-        Transform3D(
-          (translation): Vector3D(1, 1, 1),
-          (rotation): quaternion(1, -0, -0, -0)
-        )
-
-        *Initialization Method 2:* Init from numpy array.
-
-        >>> import numpy as np
-        >>> Transform3D(np.array([[1, 0, 0, 1], [0, 1, 0, 1], [0, 0, 1, 1]]))
-        Transform3D(
-          (translation): Vector3D(1, 1, 1),
-          (rotation): quaternion(1, -0, -0, -0)
-        )
-
-        *Initialization Method 3:* Init from transform.
-
-        >>> transform = Transform3D([[1, 0, 0, 1], [0, 1, 0, 1], [0, 0, 1, 1]])
-        >>> Transform3D(transform)
-        Transform3D(
-          (translation): Vector3D(1, 1, 1),
-          (rotation): quaternion(1, -0, -0, -0)
-        )
-
-        *Initialization Method 4:* Init from translation and rotation.
-
-        >>> Transform3D(translation=[1, 1, 1], rotation=[1, 0, 0, 0])
+        >>> Transform3D([1, 1, 1], [1, 0, 0, 0])
         Transform3D(
           (translation): Vector3D(1, 1, 1),
           (rotation): quaternion(1, 0, 0, 0)
+        )
+
+        *Initialization Method 2:* Init from transform matrix in sequence.
+
+        >>> Transform3D(matrix=[[1, 0, 0, 1], [0, 1, 0, 1], [0, 0, 1, 1]])
+        Transform3D(
+          (translation): Vector3D(1, 1, 1),
+          (rotation): quaternion(1, -0, -0, -0)
+        )
+
+        *Initialization Method 3:* Init from transform matrix in numpy array.
+
+        >>> import numpy as np
+        >>> Transform3D(matrix=np.array([[1, 0, 0, 1], [0, 1, 0, 1], [0, 0, 1, 1]]))
+        Transform3D(
+          (translation): Vector3D(1, 1, 1),
+          (rotation): quaternion(1, -0, -0, -0)
         )
 
     """
@@ -81,31 +72,24 @@ class Transform3D(ReprMixin):
     _repr_type = ReprType.INSTANCE
     _repr_attrs = ("translation", "rotation")
 
-    MatrixType = Union[None, Sequence[Sequence[float]], np.ndarray]
-    TransformType = Union[None, "Transform3D", Sequence[Sequence[float]], np.ndarray]
     RotationType = Union[Iterable[float], quaternion]
 
     def __init__(
         self,
-        transform: TransformType = None,
-        *,
         translation: Iterable[float] = (0, 0, 0),
         rotation: RotationType = (1, 0, 0, 0),
+        *,
+        matrix: Optional[MatrixType] = None,
     ) -> None:
-        if transform is not None:
-            if isinstance(transform, Transform3D):
-                self._translation = transform.translation
-                self._rotation = transform.rotation
+        if matrix is not None:
+            try:
+                self._translation = Vector3D(matrix[0][3], matrix[1][3], matrix[2][3])
+                self._rotation = from_rotation_matrix(matrix)
                 return
-
-            if isinstance(transform, Sequence):  # pylint: disable=W1116
-                transform = np.array(transform)
-            if transform.shape != (3, 4) and transform.shape != (4, 4):
-                raise ValueError("The shape of input transform matrix must be 3x4 or 4x4.")
-
-            self._translation = Vector3D(transform[0, 3], transform[1, 3], transform[2, 3])
-            self._rotation = from_rotation_matrix(transform)
-            return
+            except (IndexError, TypeError) as error:
+                raise ValueError(
+                    "The shape of input transform matrix must be 3x4 or 4x4."
+                ) from error
 
         self._translation = Vector3D(*translation)
         if isinstance(rotation, quaternion):
@@ -262,7 +246,7 @@ class Transform3D(ReprMixin):
             z: The z coordinate of the translation.
 
         Examples:
-            >>> transform = Transform3D(translation=[1, 1, 1], rotation=[1, 0, 0, 0])
+            >>> transform = Transform3D([1, 1, 1], [1, 0, 0, 0])
             >>> transform.set_translation(3, 4, 5)
             >>> transform
             Transform3D(
@@ -280,7 +264,7 @@ class Transform3D(ReprMixin):
             rotation: Rotation in a sequence of [w, x, y, z] or numpy quaternion.
 
         Examples:
-            >>> transform = Transform3D(translation=[1, 1, 1], rotation=[1, 0, 0, 0])
+            >>> transform = Transform3D([1, 1, 1], [1, 0, 0, 0])
             >>> transform.set_rotation([0, 1, 0, 0])
             >>> transform
             Transform3D(
@@ -301,7 +285,7 @@ class Transform3D(ReprMixin):
             A 4x4 numpy array represents the transform matrix.
 
         Examples:
-            >>> transform = Transform3D(translation=[1, 2, 3], rotation=[0, 1, 0, 0])
+            >>> transform = Transform3D([1, 2, 3], [0, 1, 0, 0])
             >>> transform.as_matrix()
             array([[ 1.,  0.,  0.,  1.],
                    [ 0., -1.,  0.,  2.],
@@ -321,7 +305,7 @@ class Transform3D(ReprMixin):
             A :class:`Transform3D` object representing the inverse of this :class:`Transform3D`.
 
         Examples:
-            >>> transform = Transform3D(translation=[1, 2, 3], rotation=[0, 1, 0, 0])
+            >>> transform = Transform3D([1, 2, 3], [0, 1, 0, 0])
             >>> transform.inverse()
             Transform3D(
               (translation): Vector3D(-1.0, 2.0, 3.0),

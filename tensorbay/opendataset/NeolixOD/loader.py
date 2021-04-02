@@ -54,12 +54,6 @@ def NeolixOD(path: str) -> Dataset:
             for label_value_raw in fp:
                 label_value = label_value_raw.rstrip().split()
                 label = LabeledBox3D(
-                    category=label_value[0],
-                    attributes={
-                        "Occlusion": int(label_value[1]),
-                        "Truncation": bool(int(label_value[2])),
-                        "Alpha": float(label_value[3]),
-                    },
                     size=[float(label_value[10]), float(label_value[9]), float(label_value[8])],
                     translation=[
                         float(label_value[11]),
@@ -67,6 +61,12 @@ def NeolixOD(path: str) -> Dataset:
                         float(label_value[13]) + 0.5 * float(label_value[8]),
                     ],
                     rotation=from_rotation_vector((0, 0, float(label_value[14]))),
+                    category=label_value[0],
+                    attributes={
+                        "Occlusion": int(label_value[1]),
+                        "Truncation": bool(int(label_value[2])),
+                        "Alpha": float(label_value[3]),
+                    },
                 )
                 data.label.box3d.append(label)
 

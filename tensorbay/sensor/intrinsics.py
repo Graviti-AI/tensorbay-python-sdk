@@ -27,7 +27,7 @@ from typing import Dict, Iterator, Optional, Sequence, Tuple, Type, TypeVar
 import numpy as np
 
 from ..geometry import Vector2D
-from ..utility import ReprMixin, ReprType, common_loads
+from ..utility import MatrixType, ReprMixin, ReprType, common_loads
 
 
 class CameraMatrix(ReprMixin):
@@ -37,8 +37,14 @@ class CameraMatrix(ReprMixin):
     to 2D points in an image.
 
     Arguments:
+        fx: The x axis focal length expressed in pixels.
+        fy: The y axis focal length expressed in pixels.
+        cx: The x coordinate of the so called principal point that should be in the center of
+            the image.
+        cy: The y coordinate of the so called principal point that should be in the center of
+            the image.
+        skew: It causes shear distortion in the projected image.
         matrix: A 3x3 Sequence of camera matrix.
-        **kwargs: Float values with keys: "fx", "fy", "cx", "cy" and "skew"(optional).
 
     Attributes:
         fx: The x axis focal length expressed in pixels.
@@ -60,7 +66,7 @@ class CameraMatrix(ReprMixin):
 
         *Initialazation Method 1*: Init from 3x3 sequence array.
 
-        >>> camera_matrix = CameraMatrix(matrix)
+        >>> camera_matrix = CameraMatrix(matrix=matrix)
         >>> camera_matrix
         CameraMatrix(
             (fx): 1,
@@ -91,30 +97,36 @@ class CameraMatrix(ReprMixin):
     _repr_type = ReprType.INSTANCE
     _repr_attrs = ("fx", "fy", "cx", "cy", "skew")
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments
         self,
-        matrix: Optional[Sequence[Sequence[float]]] = None,
-        **kwargs: float,
+        fx: Optional[float] = None,
+        fy: Optional[float] = None,
+        cx: Optional[float] = None,
+        cy: Optional[float] = None,
+        skew: float = 0,
+        *,
+        matrix: Optional[MatrixType] = None,
     ) -> None:
-        if kwargs:
-            try:
-                self._loads(kwargs)
-                return
-            except KeyError as error:
-                if matrix is None:
-                    raise TypeError(
-                        f"Missing key {error} in kwargs to initialize {self.__class__.__name__}"
-                    ) from error
-
         if matrix is not None:
-            self.fx = matrix[0][0]  # pylint: disable=invalid-name
-            self.fy = matrix[1][1]  # pylint: disable=invalid-name
-            self.cx = matrix[0][2]  # pylint: disable=invalid-name
-            self.cy = matrix[1][2]  # pylint: disable=invalid-name
-            self.skew = matrix[0][1]
+            # pylint: disable=invalid-name
+            self.fx: float = matrix[0][0]
+            self.fy: float = matrix[1][1]
+            self.cx: float = matrix[0][2]
+            self.cy: float = matrix[1][2]
+            self.skew: float = matrix[0][1]
             return
 
-        raise TypeError(f"Require 'fx', 'fy', 'cx', 'cy' to initialize {self.__class__.__name__}")
+        if not (fx is None or fy is None or cx is None or cy is None):
+            self.fx = fx
+            self.fy = fy
+            self.cx = cx
+            self.cy = cy
+            self.skew = skew
+            return
+
+        raise TypeError(
+            f"Require 'fx', 'fy', 'cx', 'cy' or 3x3 matrix to initialize {self.__class__.__name__}"
+        )
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, self.__class__):
@@ -470,10 +482,15 @@ class CameraIntrinsics(ReprMixin):
     They describe the mapping of the scene in front of the camera to the pixels in the final image.
 
     Arguments:
+        fx: The x axis focal length expressed in pixels.
+        fy: The y axis focal length expressed in pixels.
+        cx: The x coordinate of the so called principal point that should be in the center of
+            the image.
+        cy: The y coordinate of the so called principal point that should be in the center of
+            the image.
+        skew: It causes shear distortion in the projected image.
         camera_matrix: A 3x3 Sequence of the camera matrix.
-        _init_distortion: Whether init distortion, default is True.
-        **kwargs: Float values to initialize :class:`CameraMatrix` and
-            :class:`DistortionCoefficients`.
+        **kwargs: Float values to initialize :class:`DistortionCoefficients`.
 
     Attributes:
         _camera_matrix: A 3x3 Sequence of the camera matrix.
@@ -487,7 +504,7 @@ class CameraIntrinsics(ReprMixin):
 
         *Initialization Method 1*: Init from 3x3 sequence array.
 
-        >>> camera_intrinsics = CameraIntrinsics(matrix, p1=5, k1=6)
+        >>> camera_intrinsics = CameraIntrinsics(camera_matrix=matrix, p1=5, k1=6)
         >>> camera_intrinsics
         CameraIntrinsics(
             (camera_matrix): CameraMatrix(
@@ -503,22 +520,7 @@ class CameraIntrinsics(ReprMixin):
                 )
         )
 
-        *Initialization Method 2*: Init with *_init_distortion* is False.
-
-        >>> camera_intrinsics = CameraIntrinsics(matrix, _init_distortion=False)
-        >>> camera_intrinsics
-        CameraIntrinsics(
-            (camera_matrix): CameraMatrix(
-                (fx): 1,
-                (fy): 2,
-                (cx): 3,
-                (cy): 4,
-                (skew): 3
-            ),
-            (distortion_coefficients): None
-        )
-
-        *Initialization Method 3*: Init from camera calibration parameters, skew is optional.
+        *Initialization Method 2*: Init from camera calibration parameters, skew is optional.
 
         >>> camera_intrinsics = CameraIntrinsics(
         ...     fx=1,
@@ -552,22 +554,19 @@ class CameraIntrinsics(ReprMixin):
     _repr_attrs = ("camera_matrix", "distortion_coefficients")
     _repr_maxlevel = 2
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments
         self,
-        camera_matrix: Optional[Sequence[Sequence[float]]] = None,
+        fx: Optional[float] = None,
+        fy: Optional[float] = None,
+        cx: Optional[float] = None,
+        cy: Optional[float] = None,
+        skew: float = 0,
         *,
-        _init_distortion: bool = True,
+        camera_matrix: Optional[MatrixType] = None,
         **kwargs: float,
     ) -> None:
-        self._camera_matrix = CameraMatrix(camera_matrix, **kwargs)
-        self._distortion_coefficients: Optional[DistortionCoefficients]
-        if kwargs and _init_distortion:
-            try:
-                self._distortion_coefficients = DistortionCoefficients.loads(kwargs)
-                return
-            except TypeError:
-                pass
-        self._distortion_coefficients = None
+        self._camera_matrix = CameraMatrix(fx, fy, cx, cy, skew, matrix=camera_matrix)
+        self._distortion_coefficients = DistortionCoefficients.loads(kwargs) if kwargs else None
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, self.__class__):
@@ -690,16 +689,27 @@ class CameraIntrinsics(ReprMixin):
 
         return contents
 
-    def set_camera_matrix(
+    def set_camera_matrix(  # pylint: disable=[too-many-arguments, invalid-name]
         self,
-        matrix: Optional[Sequence[Sequence[float]]] = None,
-        **kwargs: float,
+        fx: Optional[float] = None,
+        fy: Optional[float] = None,
+        cx: Optional[float] = None,
+        cy: Optional[float] = None,
+        skew: float = 0,
+        *,
+        matrix: Optional[MatrixType] = None,
     ) -> None:
         """Set camera matrix of the camera intrinsics.
 
         Arguments:
+            fx: The x axis focal length expressed in pixels.
+            fy: The y axis focal length expressed in pixels.
+            cx: The x coordinate of the so called principal point that should be in the center of
+                the image.
+            cy: The y coordinate of the so called principal point that should be in the center of
+                the image.
+            skew: It causes shear distortion in the projected image.
             matrix: Camera matrix in 3x3 sequence.
-            **kwargs: Contains fx, fy, cx, cy, skew(optional)
 
         Examples:
             >>> camera_intrinsics.set_camera_matrix(fx=11, fy=12, cx=13, cy=14, skew=15)
@@ -721,7 +731,7 @@ class CameraIntrinsics(ReprMixin):
             )
 
         """
-        self._camera_matrix = CameraMatrix(matrix=matrix, **kwargs)
+        self._camera_matrix = CameraMatrix(fx, fy, cx, cy, skew, matrix=matrix)
 
     def set_distortion_coefficients(self, **kwargs: float) -> None:
         """Set distortion coefficients of the camera intrinsics.

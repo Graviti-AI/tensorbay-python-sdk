@@ -127,10 +127,14 @@ class TestLabeledBox3D:
         translation = Vector3D(1, 2, 3)
         rotation = quaternion(1, 2, 3, 4)
         size = Vector3D(1, 2, 3)
-        transform = Transform3D(translation=translation, rotation=rotation)
 
         labeledbox3d = LabeledBox3D(
-            transform, size=size, category=_CATEGORY, attributes=_ATTRIBUTES, instance=_INSTANCE
+            size=size,
+            translation=translation,
+            rotation=rotation,
+            category=_CATEGORY,
+            attributes=_ATTRIBUTES,
+            instance=_INSTANCE,
         )
 
         assert labeledbox3d.translation == translation
@@ -141,16 +145,23 @@ class TestLabeledBox3D:
         assert labeledbox3d.instance == _INSTANCE
 
     def test_rmul(self):
+        size = [1, 2, 3]
         translation = [1, 2, 3]
         rotation = quaternion(0, 1, 0, 0)
-        transform = Transform3D(translation=translation, rotation=rotation)
+        transform = Transform3D(translation, rotation)
         quaternion_1 = quaternion(1, 2, 3, 4)
 
         labeledbox3d = LabeledBox3D(
-            transform, category=_CATEGORY, attributes=_ATTRIBUTES, instance=_INSTANCE
+            size=size,
+            translation=translation,
+            rotation=rotation,
+            category=_CATEGORY,
+            attributes=_ATTRIBUTES,
+            instance=_INSTANCE,
         )
 
         assert labeledbox3d.__rmul__(transform) == LabeledBox3D(
+            size=size,
             translation=[2, 0, 0],
             rotation=[-1, 0, 0, 0],
             category=_CATEGORY,
@@ -159,6 +170,7 @@ class TestLabeledBox3D:
         )
 
         assert labeledbox3d.__rmul__(quaternion_1) == LabeledBox3D(
+            size=size,
             translation=[1.7999999999999996, 2, 2.6],
             rotation=[-2, 1, 4, -3],
             category=_CATEGORY,
@@ -171,11 +183,28 @@ class TestLabeledBox3D:
     def test_eq(self):
         translation = [1, 2, 3]
         rotation = quaternion(1, 2, 3, 4)
-        transform = Transform3D(translation=translation, rotation=rotation)
 
-        box3d1 = LabeledBox3D(transform, size=[1, 2, 3], category=_CATEGORY, attributes=_ATTRIBUTES)
-        box3d2 = LabeledBox3D(transform, size=[1, 2, 3], category=_CATEGORY, attributes=_ATTRIBUTES)
-        box3d3 = LabeledBox3D(transform, size=[1, 2, 5], category=_CATEGORY, attributes=_ATTRIBUTES)
+        box3d1 = LabeledBox3D(
+            size=[1, 2, 3],
+            translation=translation,
+            rotation=rotation,
+            category=_CATEGORY,
+            attributes=_ATTRIBUTES,
+        )
+        box3d2 = LabeledBox3D(
+            size=[1, 2, 3],
+            translation=translation,
+            rotation=rotation,
+            category=_CATEGORY,
+            attributes=_ATTRIBUTES,
+        )
+        box3d3 = LabeledBox3D(
+            size=[1, 2, 5],
+            translation=translation,
+            rotation=rotation,
+            category=_CATEGORY,
+            attributes=_ATTRIBUTES,
+        )
 
         assert box3d1 == box3d2
         assert box3d1 != box3d3
@@ -195,10 +224,14 @@ class TestLabeledBox3D:
         translation = [1, 2, 3]
         rotation = quaternion(1, 2, 3, 4)
         size = [1, 2, 3]
-        transform = Transform3D(translation=translation, rotation=rotation)
 
         labeledbox3d = LabeledBox3D(
-            transform, size=size, category=_CATEGORY, attributes=_ATTRIBUTES, instance=_INSTANCE
+            size=size,
+            translation=translation,
+            rotation=rotation,
+            category=_CATEGORY,
+            attributes=_ATTRIBUTES,
+            instance=_INSTANCE,
         )
 
         assert labeledbox3d.dumps() == _LABELEDBOX3D_DATA

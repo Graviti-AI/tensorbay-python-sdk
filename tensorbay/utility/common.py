@@ -12,9 +12,12 @@ which compares all the instance variables.
 
 """
 
-from typing import Any, Type, TypeVar
+from typing import Any, Sequence, Type, TypeVar, Union
+
+import numpy as np
 
 _T = TypeVar("_T")
+MatrixType = Union[Sequence[Sequence[float]], np.ndarray]
 
 
 def common_loads(object_class: Type[_T], contents: Any) -> _T:

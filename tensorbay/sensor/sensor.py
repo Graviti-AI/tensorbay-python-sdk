@@ -30,12 +30,13 @@ produces strong visual distortion intended to create a wide panoramic or hemisph
 
 """
 
-from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Type, TypeVar, Union
+from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Union
 
 from sortedcontainers import SortedDict
 
 from ..geometry import Transform3D
 from ..utility import (
+    MatrixType,
     NameMixin,
     NameSortedDict,
     ReprType,
@@ -186,18 +187,17 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
 
     def set_extrinsics(
         self,
-        transform: Transform3D.TransformType = None,
-        *,
         translation: Iterable[float] = (0, 0, 0),
         rotation: Transform3D.RotationType = (1, 0, 0, 0),
+        *,
+        matrix: Optional[MatrixType] = None,
     ) -> None:
         """Set the extrinsics of the sensor.
 
         Arguments:
-            transform: A ``Transform3D`` object representing the extrinsics.
             translation: Translation parameters.
-            rotation: Rotation in a sequence of [w, x, y, z] or 3x3 rotation matrix
-                or numpy quaternion.
+            rotation: Rotation in a sequence of [w, x, y, z] or numpy quaternion.
+            matrix: A 3x4 or 4x4 transform matrix.
 
         Examples:
             >>> sensor.set_extrinsics(translation=translation, rotation=rotation)
@@ -210,7 +210,7 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
             )
 
         """
-        self.extrinsics = Transform3D(transform, translation=translation, rotation=rotation)
+        self.extrinsics = Transform3D(translation, rotation, matrix=matrix)
 
     def set_translation(self, x: float, y: float, z: float) -> None:
         """Set the translation of the sensor.
@@ -431,16 +431,27 @@ class Camera(Sensor):
             contents["intrinsics"] = self.intrinsics.dumps()
         return contents
 
-    def set_camera_matrix(
+    def set_camera_matrix(  # pylint: disable=[too-many-arguments, invalid-name]
         self,
-        matrix: Optional[Sequence[Sequence[float]]] = None,
-        **kwargs: float,
+        fx: Optional[float] = None,
+        fy: Optional[float] = None,
+        cx: Optional[float] = None,
+        cy: Optional[float] = None,
+        skew: float = 0,
+        *,
+        matrix: Optional[MatrixType] = None,
     ) -> None:
         """Set camera matrix.
 
         Arguments:
-            matrix: A 3x3 Sequence of camera matrix.
-            **kwargs: Other float values to set camera matrix.
+            fx: The x axis focal length expressed in pixels.
+            fy: The y axis focal length expressed in pixels.
+            cx: The x coordinate of the so called principal point that should be in the center of
+                the image.
+            cy: The y coordinate of the so called principal point that should be in the center of
+                the image.
+            skew: It causes shear distortion in the projected image.
+            matrix: Camera matrix in 3x3 sequence.
 
         Examples:
             >>> camera.set_camera_matrix(fx=1.1, fy=2.2, cx=3.3, cy=4.4)
@@ -462,10 +473,10 @@ class Camera(Sensor):
 
         """
         if not hasattr(self, "intrinsics"):
-            self.intrinsics = CameraIntrinsics(matrix, _init_distortion=False, **kwargs)
+            self.intrinsics = CameraIntrinsics(fx, fy, cx, cy, skew, camera_matrix=matrix)
             return
 
-        self.intrinsics.set_camera_matrix(matrix, **kwargs)
+        self.intrinsics.set_camera_matrix(fx, fy, cx, cy, skew, matrix=matrix)
 
     def set_distortion_coefficients(self, **kwargs: float) -> None:
         """Set distortion coefficients.

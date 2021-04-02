@@ -121,21 +121,19 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
 
     # def set_pose(
     #     self,
-    #     transform: Transform3D.TransformType = None,
-    #     *,
     #     translation: Optional[Iterable[float]] = (0, 0, 0),
     #     rotation: Transform3D.RotationType = (1, 0, 0, 0),
+    #     *,
+    #     matrix: Optional[MatrixType] = None,
     # ) -> None:
     #     """Set the pose of the current frame.
 
     #     Arguments:
-    #         transform: The transform representing the frame pose in
-    #             a :class:`~tensorbay.geometry.transform.Transform3D` object
-    #             or a 4x4 or 3x4 transformation matrix.
     #         translation: Translation of the frame pose in a sequence of [x, y, z].
     #         rotation: Rotation of the frame pose in a sequence of [w, x, y, z]
-    #             or a 3x3 rotation matrix
     #             or a numpy quaternion object.
+    #         matrix: The transform representing the frame pose in
+    #             a 4x4 or 3x4 transform matrix.
 
     #     """
-    #     self._pose = Transform3D(transform, translation=translation, rotation=rotation)
+    #     self._pose = Transform3D(translation, rotation, matrix=matrix)

@@ -401,18 +401,18 @@ To create a :class:`~tensorbay.label.label_box.LabeledBox3D` label:
 
     >>> from tensorbay.label import LabeledBox3D
     >>> box3d_label = LabeledBox3D(
+    ... size=[10, 20, 30],
     ... translation=[0, 0, 0],
     ... rotation=[1, 0, 0, 0],
-    ... size=[10, 20, 30],
     ... category="category",
     ... attributes={"attribute_name": "attribute_value"},
     ... instance="instance_ID"
     ... )
     >>> box3d_label
     LabeledBox3D(
+      (size): Vector3D(10, 20, 30),
       (translation): Vector3D(0, 0, 0),
       (rotation): quaternion(1.0, 0.0, 0.0, 0.0),
-      (size): Vector3D(10, 20, 30),
       (category): 'category',
       (attributes): {...},
       (instance): 'instance_ID'
@@ -430,23 +430,23 @@ you can use the transform matrix and the size of the 3D bounding box,
 or you can use translation and rotation to represent the transform of the 3D bounding box.
 
     >>> LabeledBox3D(
-    ... [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0]],
     ... size=[10, 20, 30],
+    ... transform_matrix=[[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0]],
     ... )
     LabeledBox3D(
+      (size): Vector3D(10, 20, 30)
       (translation): Vector3D(0, 0, 0),
       (rotation): quaternion(1.0, -0.0, -0.0, -0.0),
-      (size): Vector3D(10, 20, 30)
     )
     >>> LabeledBox3D(
+    ... size=[10, 20, 30],
     ... translation=[0, 0, 0],
     ... rotation=[1, 0, 0, 0],
-    ... size=[10, 20, 30],
     ... )
     LabeledBox3D(
+      (size): Vector3D(10, 20, 30)
       (translation): Vector3D(0, 0, 0),
       (rotation): quaternion(1.0, 0.0, 0.0, 0.0),
-      (size): Vector3D(10, 20, 30)
     )
 
 It contains the basic geometry information of the 3D bounding box.
