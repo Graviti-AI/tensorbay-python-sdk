@@ -176,6 +176,9 @@ class Client:
         else:
             raise TypeError("Wrong accesskey format!")
 
+        if not url.startswith("https://"):
+            raise TypeError("Invalid url, only support url starts with 'https://'")
+
         self.gateway_url = urljoin(url, "gateway/")
         self.access_key = access_key
 
