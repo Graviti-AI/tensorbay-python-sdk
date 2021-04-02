@@ -52,10 +52,31 @@ and the return value should be the loaded :class:`~tensorbay.dataset.dataset.Dat
 ..
   or :class:`~tensorbay.dataset.dataset.FusionDataset` instance.
 
-.. literalinclude:: ../../../examples/glossary.py
-      :language: python
-      :start-after: """dataloader"""
-      :end-before: """"""
+Here are some examples of dataloaders with different label types(:numref:`Table. %s <dataloaders_table>`).
+
+.. _dataloaders_table:
+
+.. table:: Dataloaders
+   :align: center
+   :widths: auto
+
+   ===============================  =============================================  =============================
+    Dataloaders                      Label Types                                    Datasets
+   ===============================  =============================================  =============================
+   `Dogs vs Cats Dataloader`_       :ref:`reference/label_format:Classification`   `Dogs vs Cats Dataset`_
+   `BSTLD Dataloader`_              :ref:`reference/label_format:Box2D`            `BSTLD Dataset`_
+   `Neolix OD Dataloader`_          :ref:`reference/label_format:Box3D`            `Neolix OD Dataset`_
+   `Leeds Sports Pose Daraloader`_  :ref:`reference/label_format:Keypoints2D`      `Leeds Sports Pose Dataset`_
+   ===============================  =============================================  =============================
+
+.. _Dogs vs Cats Dataloader: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/DogsVsCats/loader.py
+.. _Dogs vs Cats Dataset: https://gas.graviti.cn/dataset/data-decorators/DogsVsCats
+.. _BSTLD Dataloader: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/BSTLD/loader.py
+.. _BSTLD Dataset: https://gas.graviti.cn/dataset/data-decorators/BSTLD
+.. _Neolix OD Dataloader: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/NeolixOD/loader.py
+.. _Neolix OD Dataset: https://gas.graviti.cn/dataset/beac94cf/NeolixOD
+.. _Leeds Sports Pose Daraloader: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/LeedsSportsPose/loader.py
+.. _Leeds Sports Pose Dataset: https://gas.graviti.cn/dataset/data-decorators/LeedsSportsPose
 
 .. note::
 
