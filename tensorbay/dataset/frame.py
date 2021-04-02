@@ -48,6 +48,12 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
         if frame_id:
             self.frame_id = frame_id
 
+    def _repr_head(self) -> str:
+        if hasattr(self, "frame_id"):
+            return f'{self.__class__.__name__}("{self.frame_id}")'
+
+        return self.__class__.__name__
+
     def _loads(self, contents: Dict[str, Any]) -> None:
         self._data = {}
         if "frameId" in contents:
