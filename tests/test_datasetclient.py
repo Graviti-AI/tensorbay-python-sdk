@@ -373,6 +373,42 @@ class TestDatasetClient:
 
         gas_client.delete_dataset(dataset_name)
 
+    def test_checkout(self, accesskey, url):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_random_dataset_name()
+        dataset_client = gas_client.create_dataset(dataset_name)
+        dataset_client.create_draft("draft-1")
+        dataset_client.commit("commit-1", tag="V1")
+        commit_1_id = dataset_client.status.commit_id
+        dataset_client.create_draft("draft-2")
+        dataset_client.commit("commit-2")
+        commit_2_id = dataset_client.status.commit_id
+        # Neither commit key nor draft number is given
+        with pytest.raises(TypeError):
+            dataset_client.checkout()
+        # Both commit key and draft number are given
+        with pytest.raises(TypeError):
+            dataset_client.checkout(commit_key=commit_1_id, draft_number=3)
+        dataset_client.checkout(commit_key=commit_1_id)
+        assert dataset_client._status.commit_id == commit_1_id
+        # The commit does not exist.
+        with pytest.raises(TypeError):
+            dataset_client.checkout(commit_key="123")
+        assert dataset_client._status.commit_id == commit_1_id
+        dataset_client.checkout(commit_key="V1")
+        assert dataset_client._status.commit_id == commit_1_id
+        dataset_client.checkout(commit_key="main")
+        assert dataset_client._status.commit_id == commit_2_id
+
+        dataset_client.create_draft("draft-3")
+        # The draft does not exist.
+        with pytest.raises(TypeError):
+            dataset_client.checkout(draft_number=2)
+        dataset_client.checkout(draft_number=3)
+        assert dataset_client._status.draft_number == 3
+
+        gas_client.delete_dataset(dataset_name)
+
     def test_create_segment(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_random_dataset_name()
