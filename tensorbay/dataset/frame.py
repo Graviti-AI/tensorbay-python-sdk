@@ -132,7 +132,7 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
         # if self._pose:
         #     contents["pose"] = self._pose.dumps()
         if hasattr(self, "frame_id"):
-            contents["frameId"] = self.frame_id.str
+            contents["frameId"] = str(self.frame_id)
 
         frame = []
         for sensor_name, data in self._data.items():
