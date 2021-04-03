@@ -13,7 +13,7 @@ such as the coordinates and visible status(optional).
 
 """
 
-from typing import Dict, List, Optional, Sequence, Type, TypeVar
+from typing import Dict, Iterable, List, Optional, Type, TypeVar
 
 from ..utility import common_loads
 from .polygon import PointList2D
@@ -66,7 +66,7 @@ class Keypoint2D(Vector2D):
         result._data = tuple(-coordinate for coordinate in self._data[: self._DIMENSION])
         return result
 
-    def __add__(self, other: Sequence[float]) -> Vector2D:  # type: ignore[override]
+    def __add__(self, other: Iterable[float]) -> Vector2D:  # type: ignore[override]
         # Result of adding Keypoint2D with another sequence should be a Vector2D.
         # Add function of Vector2D should also add support for adding with a Keypoint2D.
         # Will be implemented in the future.

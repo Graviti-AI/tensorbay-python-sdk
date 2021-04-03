@@ -55,13 +55,14 @@ class TestTransform3D:
         transform_2 = Transform3D([2, 0, 0], [-1, 0, 0, 0])
         transform_3 = Transform3D([1, 2, 3], [-1, 0, 0, 0])
 
-        with pytest.raises(TypeError):
-            transform_1 * 1
         assert transform_1 * transform_1 == transform_2
         assert transform_1 * quaternion_1 == transform_3
         assert transform_1 * sequence_1 == Vector3D(2.0, 1.0, 2.0)
-        with pytest.raises(TypeError):
-            transform_1 * sequence_2
+        assert transform_1 * np.array(sequence_1) == Vector3D(2.0, 1.0, 2.0)
+
+        assert transform_1.__mul__(1) == NotImplemented
+        assert transform_1.__mul__(sequence_2) == NotImplemented
+        assert transform_1.__mul__(np.array(sequence_2)) == NotImplemented
         assert transform_1.__mul__(sequence_3) == NotImplemented
 
     def test_rmul(self):
@@ -78,6 +79,21 @@ class TestTransform3D:
     def test_create(self):
         transform = Transform3D([1, 2, 3], [0, 1, 0, 0])
         assert Transform3D._create(Vector3D(1, 2, 3), quaternion(0, 1, 0, 0)) == transform
+
+    def test_mul_vector(self):
+        sequence_1 = [1, 1, 1]
+        quaternion_1 = quaternion(0, 1, 0, 0)
+        transform_1 = Transform3D([1, 2, 3], [0, 1, 0, 0])
+
+        with pytest.raises(ValueError):
+            transform_1._mul_vector(1)
+        with pytest.raises(TypeError):
+            transform_1._mul_vector(transform_1)
+        with pytest.raises(ValueError):
+            transform_1._mul_vector(quaternion_1)
+
+        assert transform_1._mul_vector(sequence_1) == Vector3D(2.0, 1.0, 2.0)
+        assert transform_1._mul_vector(np.array(sequence_1)) == Vector3D(2.0, 1.0, 2.0)
 
     def test_loads(self):
         transform = Transform3D.loads(_DATA_TRANSFORM)
