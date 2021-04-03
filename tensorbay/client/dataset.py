@@ -27,6 +27,7 @@ from typing import TYPE_CHECKING, Any, Dict, Iterator, Optional, Tuple
 
 from ..dataset import Data, Frame, FusionSegment, Segment
 from ..label import Catalog
+from ..utility import Deprecated
 from .commit_status import CommitStatus
 from .exceptions import GASSegmentError
 from .requests import Client, multithread_upload, paging_range
@@ -255,6 +256,7 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
 
         raise TypeError(f"The draft: {draft_number} does not exist.")
 
+    @Deprecated(since="1.2.0", removed_in="1.5.0", substitute="DatasetClientBase.list_draft")
     def list_draft_titles_and_numbers(
         self, *, start: int = 0, stop: int = sys.maxsize
     ) -> Iterator[Dict[str, Any]]:
