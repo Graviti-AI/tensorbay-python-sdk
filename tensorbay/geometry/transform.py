@@ -14,7 +14,7 @@ and :attr:`Transform3D.rotation` is stored as `numpy quaternion`_.
 """
 
 import warnings
-from typing import Dict, Iterable, Optional, Sequence, Type, TypeVar, Union, overload
+from typing import Dict, Iterable, Optional, Type, TypeVar, Union, overload
 
 import numpy as np
 
@@ -108,22 +108,24 @@ class Transform3D(ReprMixin):
         ...
 
     @overload
-    def __mul__(self: _T, other: Sequence[float]) -> Vector3D:
+    def __mul__(self: _T, other: Iterable[float]) -> Vector3D:
         ...
 
-    def __mul__(self: _T, other: Union[_T, Sequence[float]]) -> Union[_T, Vector3D]:
+    def __mul__(self: _T, other: Union[_T, Iterable[float]]) -> Union[_T, Vector3D]:
         try:
-            if isinstance(other, Sequence):  # pylint: disable=W1116
-                return self._translation.__radd__(rotate_vectors(self._rotation, other))
+            if isinstance(other, Transform3D):
+                return self._create(
+                    self._mul_vector(other.translation), self._rotation * other.rotation
+                )
 
             # mypy does not recognize quaternion type, and will infer it as Any.
             # This typing problem to be resolved.
             if isinstance(other, quaternion):
                 return self._create(self._translation, self._rotation * other)
 
-            if isinstance(other, Transform3D):
-                return self._create(self * other.translation, self._rotation * other.rotation)
-        except ValueError:
+            return self._mul_vector(other)  # type: ignore[arg-type]
+
+        except (TypeError, ValueError):
             pass
 
         return NotImplemented
@@ -146,6 +148,11 @@ class Transform3D(ReprMixin):
         transform._translation = translation  # pylint: disable=protected-access
         transform._rotation = rotation  # pylint: disable=protected-access
         return transform
+
+    def _mul_vector(self, other: Iterable[float]) -> Vector3D:
+        # Multiplication with point list is not supported currently.
+        # __radd__ is used to ensure the shape of the input object.
+        return self._translation.__radd__(rotate_vectors(self._rotation, other))
 
     def _loads(self, contents: Dict[str, Dict[str, float]]) -> None:
         self._translation = Vector3D.loads(contents["translation"])
