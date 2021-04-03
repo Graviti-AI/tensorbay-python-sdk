@@ -5,4 +5,4 @@ ignore=body-is-missing
 line-length=72
 
 [title-match-regex]
-regex=^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert|release)(\(\w+\))?!?: [a-z]
+regex=^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert|release)(\(\w+\))?!?: [a-z][\x20-\x7e]+$
