@@ -9,8 +9,8 @@ such as `nuScenes`_ and `KITTI-tracking`_.
 See :ref:`this page <reference/dataset_structure:dataset>`
 for the comparison between the fusion dataset and the dataset.
 
-.. _nuScenes: https://www.graviti.cn/open-datasets/nuScenes
-.. _KITTI-tracking: https://www.graviti.cn/open-datasets/KITTItracking
+.. _nuScenes: https://gas.graviti.cn/dataset/graviti-open-dataset/nuScenes
+.. _KITTI-tracking: https://gas.graviti.cn/dataset/data-decorators/KITTITracking
 
 .. toctree::
    :maxdepth: 1
