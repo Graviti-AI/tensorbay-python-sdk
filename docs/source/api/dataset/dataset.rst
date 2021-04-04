@@ -4,5 +4,5 @@ tensorbay.dataset.dataset
 .. automodule:: tensorbay.dataset.dataset
    :members:
    :show-inheritance:
-   :exclude-members: FusionDataset
+   :exclude-members:
    
