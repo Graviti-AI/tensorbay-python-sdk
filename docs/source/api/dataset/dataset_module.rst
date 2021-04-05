@@ -7,5 +7,4 @@ tensorbay.dataset
    data
    dataset
    segment
-..
    frame

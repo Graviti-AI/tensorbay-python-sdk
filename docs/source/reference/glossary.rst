@@ -26,31 +26,27 @@ The corresponding class of dataset is :class:`~tensorbay.dataset.dataset.Dataset
 
 See :ref:`reference/dataset_structure:Dataset Structure` for more details.
 
-..
-  fusion dataset
-  ==============
 
-  A uniform dataset format defined by Tensorbay,
-  which contains data collected from multiple sensors.
+fusion dataset
+==============
 
-  The corresponding class of fusion dataset is :class:`~tensorbay.dataset.dataset.FusionDataset`.
+A uniform dataset format defined by Tensorbay,
+which contains data collected from multiple sensors.
 
-  See :ref:`advanced_features/fusion_dataset/fusion_dataset_structure:Fusion Dataset Structure` for more details.
+The corresponding class of fusion dataset is :class:`~tensorbay.dataset.dataset.FusionDataset`.
+
+See :ref:`advanced_features/fusion_dataset/fusion_dataset_structure:Fusion Dataset Structure` for more details.
 
 dataloader
 ==========
 
 A function that can organize files within a formatted folder
 into a :class:`~tensorbay.dataset.dataset.Dataset` instance
-
-..
-  or a :class:`~tensorbay.dataset.dataset.FusionDataset` instance.
+or a :class:`~tensorbay.dataset.dataset.FusionDataset` instance.
 
 The only input of the function should be a str indicating the path to the folder containing the dataset,
 and the return value should be the loaded :class:`~tensorbay.dataset.dataset.Dataset`
-
-..
-  or :class:`~tensorbay.dataset.dataset.FusionDataset` instance.
+or :class:`~tensorbay.dataset.dataset.FusionDataset` instance.
 
 Here are some dataloader examples of datasets with different label types and continuity(:numref:`Table. %s <dataloaders_table>`).
 
