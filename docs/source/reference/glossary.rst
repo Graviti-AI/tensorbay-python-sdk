@@ -52,7 +52,7 @@ and the return value should be the loaded :class:`~tensorbay.dataset.dataset.Dat
 ..
   or :class:`~tensorbay.dataset.dataset.FusionDataset` instance.
 
-Here are some examples of dataloaders with different label types(:numref:`Table. %s <dataloaders_table>`).
+Here are some dataloader examples of datasets with different label types and continuity(:numref:`Table. %s <dataloaders_table>`).
 
 .. _dataloaders_table:
 
@@ -60,23 +60,31 @@ Here are some examples of dataloaders with different label types(:numref:`Table.
    :align: center
    :widths: auto
 
-   ===============================  =============================================  =============================
-    Dataloaders                      Label Types                                    Datasets
-   ===============================  =============================================  =============================
-   `Dogs vs Cats Dataloader`_       :ref:`reference/label_format:Classification`   `Dogs vs Cats Dataset`_
-   `BSTLD Dataloader`_              :ref:`reference/label_format:Box2D`            `BSTLD Dataset`_
-   `Neolix OD Dataloader`_          :ref:`reference/label_format:Box3D`            `Neolix OD Dataset`_
-   `Leeds Sports Pose Daraloader`_  :ref:`reference/label_format:Keypoints2D`      `Leeds Sports Pose Dataset`_
-   ===============================  =============================================  =============================
+   ================================  =============================================================================
+    Dataloaders                       Description
+   ================================  =============================================================================
+   `LISA Traffic Light Dataloader`_  | This example is the dataloader of `LISA Traffic Light Dataset`_,
+                                     | which is a continuous dataset with :ref:`reference/label_format:Box2D` label.
+   `Dogs vs Cats Dataloader`_        | This example is the dataloader of `Dogs vs Cats Dataset`_,
+                                     | which is a dataset with :ref:`reference/label_format:Classification` label.
+   `BSTLD Dataloader`_               | This example is the dataloader of `BSTLD Dataset`_,
+                                     | which is a dataset with :ref:`reference/label_format:Box2D` label.
+   `Neolix OD Dataloader`_           | This example is the dataloader of `Neolix OD Dataset`_,
+                                     | which is a dataset with :ref:`reference/label_format:Box3D` label.
+   `Leeds Sports Pose Daraloader`_   | This example is the dataloader of `Leeds Sports Pose Dataset`_,
+                                     | which is a dataset with :ref:`reference/label_format:Keypoints2D` label.
+   ================================  =============================================================================
 
 .. _Dogs vs Cats Dataloader: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/DogsVsCats/loader.py
 .. _Dogs vs Cats Dataset: https://gas.graviti.cn/dataset/data-decorators/DogsVsCats
 .. _BSTLD Dataloader: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/BSTLD/loader.py
 .. _BSTLD Dataset: https://gas.graviti.cn/dataset/data-decorators/BSTLD
 .. _Neolix OD Dataloader: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/NeolixOD/loader.py
-.. _Neolix OD Dataset: https://gas.graviti.cn/dataset/beac94cf/NeolixOD
+.. _Neolix OD Dataset: https://gas.graviti.cn/dataset/graviti-open-dataset/NeolixOD
 .. _Leeds Sports Pose Daraloader: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/LeedsSportsPose/loader.py
 .. _Leeds Sports Pose Dataset: https://gas.graviti.cn/dataset/data-decorators/LeedsSportsPose
+.. _LISA Traffic Light Dataloader: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/LISATrafficLight/loader.py
+.. _LISA Traffic Light Dataset: https://gas.graviti.cn/dataset/hello-dataset/LISATrafficLight
 
 .. note::
 
