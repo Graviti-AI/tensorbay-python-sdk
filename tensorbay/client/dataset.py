@@ -76,7 +76,7 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         if tag:
             post_data["tag"] = tag
 
-        response = self._client.open_api_do("POST", "", self.dataset_id, json=post_data)
+        response = self._client.open_api_do("POST", "commits", self.dataset_id, json=post_data)
         return response.json()["commitId"]  # type: ignore[no-any-return]
 
     def _create_draft(self, title: Optional[str] = None) -> int:
