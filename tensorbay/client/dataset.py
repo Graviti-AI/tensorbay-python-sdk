@@ -464,6 +464,20 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         self._status.check_authority_for_draft()
         self._status.checkout(commit_id=self._commit(message, tag))
 
+    def update_notes(self, *, is_continuous: bool) -> None:
+        """Update the notes.
+
+        Arguments:
+            is_continuous: Whether the data is continuous.
+
+        """
+        self._status.check_authority_for_draft()
+
+        patch_data: Dict[str, Any] = {"isContinuous": is_continuous}
+        patch_data.update(self._status.get_status_info())
+
+        self._client.open_api_do("PATCH", "notes", self.dataset_id, json=patch_data)
+
     def list_segment_names(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[str]:
         """List all segment names in a certain commit.
 
