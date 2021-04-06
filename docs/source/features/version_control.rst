@@ -20,3 +20,5 @@ between different versions of a dataset.
    :maxdepth: 1
 
    ../version_control/draft_and_commit
+   ../version_control/tag
+
