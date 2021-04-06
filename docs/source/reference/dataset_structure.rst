@@ -49,7 +49,7 @@ It collects all the labels corresponding to a dataset.
 There could be one or several subcatalogs (:ref:`reference/label_format:Label Format`)
 under one catalog, each of which only stores label meta information of one label type.
 
-Here are some examples of catalogs with different label types(:numref:`Table. %s <catalogs_table>`).
+Here are some catalog examples of datasets with different label types and a dataset with tracking annotations(:numref:`Table. %s <catalogs_table>`).
 
 .. _catalogs_table:
 
@@ -57,23 +57,31 @@ Here are some examples of catalogs with different label types(:numref:`Table. %s
    :align: center
    :widths: auto
 
-   =============================  =============================================  =============================
-    Catalogs                       Label Types                                    Datasets
-   =============================  =============================================  =============================
-   `elpv Catalog`_                :ref:`reference/label_format:Classification`   `elpv Dataset`_
-   `NightOwls Catalog`_           :ref:`reference/label_format:Box2D`            `NightOwls Dataset`_
-   `Neolix OD Catalog`_           :ref:`reference/label_format:Box3D`            `Neolix OD Dataset`_
-   `Leeds Sports Pose Catalog`_   :ref:`reference/label_format:Keypoints2D`      `Leeds Sports Pose Dataset`_
-   =============================  =============================================  =============================
+   =============================  =============================================================================
+    Catalogs                       Description
+   =============================  =============================================================================
+   `elpv Catalog`_                | This example is the catalog of `elpv Dataset`_,
+                                  | which is a dataset with :ref:`reference/label_format:Classification` label.
+   `BSTLD Catalog`_               | This example is the catalog of `BSTLD Dataset`_,
+                                  | which is a dataset with :ref:`reference/label_format:Box2D` label.
+   `Neolix OD Catalog`_           | This example is the catalog of `Neolix OD Dataset`_,
+                                  | which is a dataset with :ref:`reference/label_format:Box3D` label.
+   `Leeds Sports Pose Catalog`_   | This example is the catalog of `Leeds Sports Pose Dataset`_,
+                                  | which is a dataset with :ref:`reference/label_format:Keypoints2D` label.
+   `NightOwls Catalog`_           | This example is the catalog of `NightOwls Dataset`_,
+                                  | which is a dataset with tracking :ref:`reference/label_format:Box2D` label.
+   =============================  =============================================================================
 
 .. _elpv Catalog: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/Elpv/catalog.json
 .. _elpv Dataset: https://gas.graviti.cn/dataset/data-decorators/Elpv
-.. _NightOwls Catalog: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/NightOwls/catalog.json
-.. _NightOwls Dataset: https://gas.graviti.cn/dataset/hello-dataset/NightOwls
+.. _BSTLD Catalog: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/BSTLD/catalog.json
+.. _BSTLD Dataset: https://gas.graviti.cn/dataset/data-decorators/BSTLD
 .. _Neolix OD Catalog: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/NeolixOD/catalog.json
-.. _Neolix OD Dataset: https://gas.graviti.cn/dataset/beac94cf/NeolixOD
+.. _Neolix OD Dataset: https://gas.graviti.cn/dataset/graviti-open-dataset/NeolixOD
 .. _Leeds Sports Pose Catalog: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/LeedsSportsPose/catalog.json
 .. _Leeds Sports Pose Dataset: https://gas.graviti.cn/dataset/data-decorators/LeedsSportsPose
+.. _NightOwls Catalog: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/NightOwls/catalog.json
+.. _NightOwls Dataset: https://gas.graviti.cn/dataset/hello-dataset/NightOwls
 
 Note that catalog is not needed if there is no label information in a dataset.
 
