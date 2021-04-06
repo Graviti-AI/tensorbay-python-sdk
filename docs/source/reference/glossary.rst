@@ -19,19 +19,23 @@ or :ref:`CLI configration <tensorbay_cli/getting_started_with_cli:Configuration>
 dataset
 =======
 
-A uniform dataset format defined by Tensorbay,
+A uniform dataset format defined by TensorBay,
 which only contains one type of data collected from one sensor or without sensor information.
+According to the time continuity of data inside the dataset, a dataset can be a discontinuous dataset or a continuous dataset.
+:ref:`Notes <reference/dataset_structure:notes>` can be used to specify whether a dataset is continuous.
 
 The corresponding class of dataset is :class:`~tensorbay.dataset.dataset.Dataset`.
 
 See :ref:`reference/dataset_structure:Dataset Structure` for more details.
-
 
 fusion dataset
 ==============
 
 A uniform dataset format defined by Tensorbay,
 which contains data collected from multiple sensors.
+
+According to the time continuity of data inside the dataset, a fusion dataset can be a discontinuous fusion dataset or a continuous fusion dataset.
+:ref:`Notes <reference/dataset_structure:notes>` can be used to specify whether a fusion dataset is continuous.
 
 The corresponding class of fusion dataset is :class:`~tensorbay.dataset.dataset.FusionDataset`.
 
