@@ -488,7 +488,7 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         params: Dict[str, Any] = self._status.get_status_info()
 
         return Notes.loads(
-            self._client.open_api_do("GET", "notes", self.dataset_id, param=params).json()
+            self._client.open_api_do("GET", "notes", self.dataset_id, params=params).json()
         )
 
     def list_segment_names(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[str]:
