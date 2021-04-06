@@ -29,41 +29,18 @@ _CATALOG_DICT = {
     "sentence": SentenceSubcatalog,
 }
 
-_CATALOG_DATA = {
-    "BOX2D": {},
-    "BOX3D": {},
-    "POLYGON2D": {},
-    "POLYLINE2D": {},
-    "SENTENCE": {},
-    "CLASSIFICATION": {
-        "categories": [
-            {
-                "name": "Test",
-            }
-        ]
-    },
-    "KEYPOINTS2D": {
-        "keypoints": [
-            {
-                "number": 5,
-            }
-        ]
-    },
-}
-
 
 @pytest.fixture
-def categories():
-    categories = NameOrderedDict()
-    categories.append(CategoryInfo("Test"))
-    return categories
-
-
-@pytest.fixture
-def keypoints():
-    return KeypointsInfo(
-        5,
-    )
+def catalog_content(categories_catalog_data, keypoints_info_data):
+    return {
+        "BOX2D": {},
+        "BOX3D": {},
+        "POLYGON2D": {},
+        "POLYLINE2D": {},
+        "SENTENCE": {},
+        "CLASSIFICATION": {"categories": categories_catalog_data},
+        "KEYPOINTS2D": {"keypoints": [keypoints_info_data]},
+    }
 
 
 class TestCatalog:
@@ -85,12 +62,12 @@ class TestCatalog:
         assert catalog1 == catalog2
         assert catalog1 != catalog3
 
-    def test_loads(self):
-        catalog = Catalog.loads(_CATALOG_DATA)
+    def test_loads(self, catalog_content):
+        catalog = Catalog.loads(catalog_content)
         for key, value in _CATALOG_DICT.items():
             assert isinstance(getattr(catalog, key), value)
 
-    def test_dumps(self, categories, keypoints):
+    def test_dumps(self, categories, keypoints, catalog_content):
         catalog = Catalog()
         catalog.box2d = Box2DSubcatalog()
         catalog.box3d = Box3DSubcatalog()
@@ -106,4 +83,4 @@ class TestCatalog:
         keypoints2dsubcatalog._keypoints = [keypoints]
         catalog.keypoints2d = keypoints2dsubcatalog
 
-        assert catalog.dumps() == _CATALOG_DATA
+        assert catalog.dumps() == catalog_content

@@ -3,6 +3,8 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
+import pytest
+
 from ...geometry import Polygon2D, Vector2D
 from .. import LabeledPolygon2D, Polygon2DSubcatalog
 from ..supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
@@ -20,11 +22,15 @@ _LABELEDPOLYGON2D_DATA = {
     "attributes": {"key": "value"},
     "instance": "12345",
 }
-_POLYGON_SUBCATALOG = {
-    "isTracking": True,
-    "categories": [{"name": "0"}, {"name": "1"}],
-    "attributes": [{"name": "gender", "enum": ["male", "female"]}],
-}
+
+
+@pytest.fixture
+def subcatalog_polygon(is_tracking_data, categories_catalog_data, attributes_catalog_data):
+    return {
+        "isTracking": is_tracking_data,
+        "categories": categories_catalog_data,
+        "attributes": attributes_catalog_data,
+    }
 
 
 class TestLabeledPolygon2D:
@@ -89,16 +95,21 @@ class TestPolygon2DSubcatalog:
         assert polygon2d_subcatalog1 == polygon2d_subcatalog2
         assert polygon2d_subcatalog1 != polygon2d_subcatalog3
 
-    def test_loads(self, categories, attributes):
-        subcatalog = Polygon2DSubcatalog.loads(_POLYGON_SUBCATALOG)
+    def test_loads(self, categories, attributes, subcatalog_polygon):
+        subcatalog = Polygon2DSubcatalog.loads(subcatalog_polygon)
 
-        assert subcatalog.is_tracking == _POLYGON_SUBCATALOG["isTracking"]
+        assert subcatalog.is_tracking == subcatalog_polygon["isTracking"]
         assert subcatalog.categories == categories
         assert subcatalog.attributes == attributes
 
-    def test_dumps(self, categories, attributes):
+    def test_dumps(self, categories, attributes, subcatalog_polygon):
         subcatalog = Polygon2DSubcatalog()
-        subcatalog.is_tracking = _POLYGON_SUBCATALOG["isTracking"]
+        subcatalog.is_tracking = subcatalog_polygon["isTracking"]
         subcatalog.categories = categories
         subcatalog.attributes = attributes
-        assert subcatalog.dumps() == _POLYGON_SUBCATALOG
+
+        # isTracking will not dumps out when isTracking is false
+        if not subcatalog_polygon["isTracking"]:
+            del subcatalog_polygon["isTracking"]
+
+        assert subcatalog.dumps() == subcatalog_polygon
