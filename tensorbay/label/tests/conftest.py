@@ -11,7 +11,7 @@ import pytest
 
 from ...utility import NameOrderedDict
 from ..attributes import AttributeInfo
-from ..supports import CategoryInfo
+from ..supports import CategoryInfo, KeypointsInfo
 
 
 @pytest.fixture
@@ -21,7 +21,10 @@ def attributes_catalog_data():
     Returns:
         A list containing attributes info
     """
-    return [{"name": "gender", "enum": ["male", "female"]}]
+    return [
+        {"name": "gender", "enum": ["male", "female"]},
+        {"name": "occluded", "type": "integer", "minimum": 1, "maximum": 5},
+    ]
 
 
 @pytest.fixture
@@ -31,7 +34,16 @@ def categories_catalog_data():
     Returns:
         A list containing categories info
     """
-    return [{"name": "0"}, {"name": "1"}]
+    return [
+        {
+            "name": "0",
+            "description": "This is an exmaple of test",
+        },
+        {
+            "name": "1",
+            "description": "This is an exmaple of test",
+        },
+    ]
 
 
 @pytest.fixture(params=[True, False])
@@ -45,6 +57,29 @@ def is_tracking_data(request):
         True or False
     """
     return request.param
+
+
+@pytest.fixture
+def keypoints_info_data():
+    """Argument for KeypointsInfo.
+
+    Returns:
+        A dict containing kepoints info
+    """
+    return {
+        "number": 5,
+        "names": [
+            "L_shoulder",
+            "L_Elbow",
+            "L_wrist",
+            "R_Shoulder",
+            "R_Elbow",
+        ],
+        "skeleton": [(0, 1), (1, 2), (3, 4), (4, 5)],
+        "visible": "TERNARY",
+        "parentCategories": ["person"],
+        "description": "test description",
+    }
 
 
 @pytest.fixture
@@ -77,3 +112,16 @@ def attributes(attributes_catalog_data):
     for attribute in attributes_catalog_data:
         attribute_dict.append(AttributeInfo.loads(attribute))
     return attribute_dict
+
+
+@pytest.fixture
+def keypoints(keypoints_info_data):
+    """Load keypoints info data into KeypointsInfo.
+
+    Arguments:
+        keypoints_info_data: A dict containing keypoints info.
+
+    Returns:
+        A loaded KeypointsInfo.
+    """
+    return KeypointsInfo.loads(keypoints_info_data)

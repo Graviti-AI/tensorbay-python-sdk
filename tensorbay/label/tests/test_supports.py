@@ -12,52 +12,6 @@ from ..supports import (
 
 _CATEGORYINFO_DATA = {"name": "test", "description": "This is an exmaple of test"}
 
-_KEYPOINTSINFO_DATA = {
-    "number": 5,
-    "names": ["1", "2", "3", "4", "5"],
-    "skeleton": [(1, 2), (1, 5)],
-    "visible": "TERNARY",
-    "parentCategories": ["string"],
-    "description": "Testing",
-}
-
-_ISTRACKINGMIXIN_DATA = {"isTracking": True}
-_CATEGORIESMIXIN_DATA = {
-    "categories": [
-        {
-            "name": "Test",
-            "description": "This is an exmaple of test",
-        },
-        {
-            "name": "Test2",
-            "description": "This is an exmaple of test",
-        },
-    ],
-    "categoryDelimiter": ".",
-}
-_CATEGORIESMIXIN_DATA_OTHER = {
-    "categories": [
-        {
-            "name": "Test1",
-            "description": "This is an exmaple of test",
-        },
-        {
-            "name": "Test2",
-            "description": "This is an exmaple of test",
-        },
-    ],
-    "categoryDelimiter": "-",
-}
-
-_ATTRIBUTESMIXIN_DATA = {
-    "attributes": [
-        {"name": "Test", "enum": [1, 2, 3, 4, 5], "type": "integer", "minimum": 1, "maximum": 5}
-    ]
-}
-_ATTRIBUTESMIXIN_DATA_OTHER = {
-    "attributes": [{"name": "Test", "enum": ["1", "2", "3", "4", "5"], "type": "integer"}]
-}
-
 
 class TestCategoryInfo:
     def test_loads(self):
@@ -140,27 +94,27 @@ class TestKeypointsInfo:
         assert keypoints_info1 == keypoints_info2
         assert keypoints_info1 != keypoints_info3
 
-    def test_loads(self):
-        keypoints_info = KeypointsInfo.loads(_KEYPOINTSINFO_DATA)
+    def test_loads(self, keypoints_info_data):
+        keypoints_info = KeypointsInfo.loads(keypoints_info_data)
 
-        assert keypoints_info.number == _KEYPOINTSINFO_DATA["number"]
-        assert keypoints_info.names == _KEYPOINTSINFO_DATA["names"]
-        assert keypoints_info.skeleton == _KEYPOINTSINFO_DATA["skeleton"]
-        assert keypoints_info.visible == _KEYPOINTSINFO_DATA["visible"]
-        assert keypoints_info.parent_categories == _KEYPOINTSINFO_DATA["parentCategories"]
-        assert keypoints_info.description == _KEYPOINTSINFO_DATA["description"]
+        assert keypoints_info.number == keypoints_info_data["number"]
+        assert keypoints_info.names == keypoints_info_data["names"]
+        assert keypoints_info.skeleton == keypoints_info_data["skeleton"]
+        assert keypoints_info.visible == keypoints_info_data["visible"]
+        assert keypoints_info.parent_categories == keypoints_info_data["parentCategories"]
+        assert keypoints_info.description == keypoints_info_data["description"]
 
     def test_number(self):
         keypoints_info = KeypointsInfo(number=5)
         assert keypoints_info.number == 5
 
-    def test_dumps(self):
-        number = _KEYPOINTSINFO_DATA["number"]
-        names = _KEYPOINTSINFO_DATA["names"]
-        skeleton = _KEYPOINTSINFO_DATA["skeleton"]
-        visible = _KEYPOINTSINFO_DATA["visible"]
-        parent_categories = _KEYPOINTSINFO_DATA["parentCategories"]
-        description = _KEYPOINTSINFO_DATA["description"]
+    def test_dumps(self, keypoints_info_data):
+        number = keypoints_info_data["number"]
+        names = keypoints_info_data["names"]
+        skeleton = keypoints_info_data["skeleton"]
+        visible = keypoints_info_data["visible"]
+        parent_categories = keypoints_info_data["parentCategories"]
+        description = keypoints_info_data["description"]
 
         keypoints_info = KeypointsInfo(
             number=number,
@@ -171,7 +125,7 @@ class TestKeypointsInfo:
             description=description,
         )
 
-        assert keypoints_info.dumps() == _KEYPOINTSINFO_DATA
+        assert keypoints_info.dumps() == keypoints_info_data
 
 
 class TestSubcatalogMixin:
@@ -197,41 +151,57 @@ class TestIsTrackingMixin:
         assert support_is_tracking1 == support_is_tracking2
         assert support_is_tracking1 != support_is_tracking3
 
-    def test_loads(self):
+    def test_loads(self, is_tracking_data):
         support_is_tracking = IsTrackingMixin()
-        support_is_tracking._loads(contents=_ISTRACKINGMIXIN_DATA)
-        assert support_is_tracking.is_tracking == True
+        support_is_tracking._loads(contents={"isTracking": is_tracking_data})
+        assert support_is_tracking.is_tracking == is_tracking_data
 
-    def test_dumps(self):
-        is_tracking = _ISTRACKINGMIXIN_DATA["isTracking"]
-        support_is_tracking = IsTrackingMixin(is_tracking)
-        assert support_is_tracking._dumps() == _ISTRACKINGMIXIN_DATA
+    def test_dumps(self, is_tracking_data):
+        support_is_tracking = IsTrackingMixin(is_tracking_data)
+        assert (
+            support_is_tracking._dumps() == {"isTracking": is_tracking_data}
+        ) == is_tracking_data
 
 
 class TestCategoriesMixin:
-    def test_loads(self):
+    def test_loads(self, categories_catalog_data):
         support_categories = CategoriesMixin()
-        support_categories._loads(contents=_CATEGORIESMIXIN_DATA)
-        assert support_categories.category_delimiter == _CATEGORIESMIXIN_DATA["categoryDelimiter"]
+        support_categories._loads(
+            contents={"categories": categories_catalog_data, "categoryDelimiter": "."}
+        )
+        assert support_categories.category_delimiter == "."
 
-        support_categories_data = _CATEGORIESMIXIN_DATA["categories"]
-        support_categorie_1 = support_categories.categories["Test"]
-        assert support_categorie_1.name == support_categories_data[0]["name"]
-        assert support_categorie_1.description == support_categories_data[0]["description"]
-
-        support_categorie_2 = support_categories.categories["Test2"]
-        assert support_categorie_2.name == support_categories_data[1]["name"]
-        assert support_categorie_2.description == support_categories_data[1]["description"]
+        for category in categories_catalog_data:
+            support_categorie_0 = support_categories.categories[category["name"]]
+            assert support_categorie_0.name == category["name"]
+            assert support_categorie_0.description == category["description"]
 
     def test_eq(self):
+        content_1 = {
+            "categories": [
+                {
+                    "name": "Test",
+                }
+            ],
+            "categoryDelimiter": ".",
+        }
+        content_2 = {
+            "categories": [
+                {
+                    "name": "Test",
+                }
+            ],
+            "categoryDelimiter": "-",
+        }
+
         support_categories_1 = CategoriesMixin()
-        support_categories_1._loads(_CATEGORIESMIXIN_DATA)
+        support_categories_1._loads(content_1)
 
         support_categories_2 = CategoriesMixin()
-        support_categories_2._loads(_CATEGORIESMIXIN_DATA)
+        support_categories_2._loads(content_1)
 
         support_categories_3 = CategoriesMixin()
-        support_categories_3._loads(_CATEGORIESMIXIN_DATA_OTHER)
+        support_categories_3._loads(content_2)
 
         assert support_categories_1 == support_categories_2
         assert support_categories_1 != support_categories_3
@@ -245,40 +215,55 @@ class TestCategoriesMixin:
         assert support_categories.categories["Test"].name == name
         assert support_categories.categories["Test"].description == description
 
-    def test_dumps(self):
+    def test_dumps(self, categories_catalog_data):
         support_categories = CategoriesMixin()
-        name_1 = _CATEGORIESMIXIN_DATA["categories"][0]["name"]
-        name_2 = _CATEGORIESMIXIN_DATA["categories"][1]["name"]
-        description = _CATEGORIESMIXIN_DATA["categories"][0]["description"]
+        name_1 = categories_catalog_data[0]["name"]
+        name_2 = categories_catalog_data[1]["name"]
+        description = categories_catalog_data[0]["description"]
         support_categories.add_category(name=name_1, description=description)
         support_categories.add_category(name=name_2, description=description)
         support_categories.category_delimiter = "."
 
-        assert support_categories._dumps() == _CATEGORIESMIXIN_DATA
+        assert support_categories._dumps() == {
+            "categories": categories_catalog_data,
+            "categoryDelimiter": ".",
+        }
 
 
 class TestAttributesMixin:
-    def test_loads(self):
+    def test_loads(self, attributes_catalog_data):
         support_attributes = AttributesMixin()
-        support_attributes._loads(contents=_ATTRIBUTESMIXIN_DATA)
-        support_attributes_test = support_attributes.attributes["Test"]
-        support_attributes_data = _ATTRIBUTESMIXIN_DATA["attributes"][0]
+        support_attributes._loads(contents={"attributes": attributes_catalog_data})
+        gender = support_attributes.attributes["gender"]
+        occluded = support_attributes.attributes["occluded"]
 
-        assert support_attributes_test.name == support_attributes_data["name"]
-        assert support_attributes_test.type == support_attributes_data["type"]
-        assert support_attributes_test.enum == support_attributes_data["enum"]
-        assert support_attributes_test.minimum == support_attributes_data["minimum"]
-        assert support_attributes_test.maximum == support_attributes_data["maximum"]
+        assert gender.name == attributes_catalog_data[0]["name"]
+        assert gender.enum == attributes_catalog_data[0]["enum"]
+
+        assert occluded.type == attributes_catalog_data[1]["type"]
+        assert occluded.minimum == attributes_catalog_data[1]["minimum"]
+        assert occluded.maximum == attributes_catalog_data[1]["maximum"]
 
     def test_eq(self):
+        content_1 = {
+            "attributes": [
+                {"name": "occluded", "enum": [1, 2, 3, 4, 5]},
+            ]
+        }
+        content_2 = {
+            "attributes": [
+                {"name": "truncated", "enum": [1, 2, 3, 4, 5]},
+            ]
+        }
+
         support_attributes_1 = AttributesMixin()
-        support_attributes_1._loads(contents=_ATTRIBUTESMIXIN_DATA)
+        support_attributes_1._loads(contents=content_1)
 
         support_attributes_2 = AttributesMixin()
-        support_attributes_2._loads(contents=_ATTRIBUTESMIXIN_DATA)
+        support_attributes_2._loads(contents=content_1)
 
         support_attributes_3 = AttributesMixin()
-        support_attributes_3._loads(contents=_ATTRIBUTESMIXIN_DATA_OTHER)
+        support_attributes_3._loads(contents=content_2)
 
         assert support_attributes_1 == support_attributes_2
         assert support_attributes_1 != support_attributes_3
@@ -301,16 +286,8 @@ class TestAttributesMixin:
         assert support_attributes.attributes["Test"].minimum == minimum
         assert support_attributes.attributes["Test"].maximum == maximum
 
-    def test_dumps(self):
-        support_attributes_data = _ATTRIBUTESMIXIN_DATA["attributes"][0]
-        name = support_attributes_data["name"]
-        type_ = support_attributes_data["type"]
-        enum = support_attributes_data["enum"]
-        minimum = support_attributes_data["minimum"]
-        maximum = support_attributes_data["maximum"]
-
+    def test_dumps(self, attributes, attributes_catalog_data):
         support_attributes = AttributesMixin()
-        support_attributes.add_attribute(
-            name=name, type_=type_, enum=enum, minimum=minimum, maximum=maximum
-        )
-        assert support_attributes._dumps() == _ATTRIBUTESMIXIN_DATA
+        support_attributes.attributes = attributes
+
+        assert support_attributes._dumps() == {"attributes": attributes_catalog_data}
