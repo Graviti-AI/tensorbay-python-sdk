@@ -180,7 +180,7 @@ class Client:
         if not url.startswith("https://"):
             raise TypeError("Invalid url, only support url starts with 'https://'")
 
-        self.gateway_url = urljoin(url, "gateway/")
+        self.gateway_url = urljoin(url, "gatewayv2/")
         self.access_key = access_key
 
         self.session = UserSession()
