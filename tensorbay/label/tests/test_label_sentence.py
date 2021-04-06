@@ -9,7 +9,6 @@ from .. import LabeledSentence, SentenceSubcatalog, Word
 from ..supports import AttributesMixin
 
 _ATTRIBUTES = {"key": "value"}
-_ENUMS = ["male", "female"]
 
 _TEXT = "Hello, World"
 _BEGIN = 1
@@ -24,12 +23,16 @@ _LABELEDSENTENCE_DATA = {
     "attributes": {"key": "value"},
 }
 _LEXICON = ["mean", "m", "iy", "n"]
-_SENTENCE_SUBCATALOG = {
-    "isSample": True,
-    "sampleRate": 16000,
-    "lexicon": [_LEXICON],
-    "attributes": [{"name": "gender", "enum": _ENUMS}],
-}
+
+
+@pytest.fixture
+def subcatalog_sentence(attributes_catalog_data):
+    return {
+        "isSample": True,
+        "sampleRate": 16000,
+        "lexicon": [_LEXICON],
+        "attributes": attributes_catalog_data,
+    }
 
 
 class TestWord:
@@ -160,21 +163,21 @@ class TestSentenceSubcatalog:
         assert sentence_subcatalog1 == sentence_subcatalog2
         assert sentence_subcatalog1 != sentence_subcatalog3
 
-    def test_loads(self, attributes):
-        sentence_subcatalog = SentenceSubcatalog.loads(_SENTENCE_SUBCATALOG)
-        assert sentence_subcatalog.is_sample == _SENTENCE_SUBCATALOG["isSample"]
-        assert sentence_subcatalog.sample_rate == _SENTENCE_SUBCATALOG["sampleRate"]
-        assert sentence_subcatalog.lexicon == _SENTENCE_SUBCATALOG["lexicon"]
+    def test_loads(self, attributes, subcatalog_sentence):
+        sentence_subcatalog = SentenceSubcatalog.loads(subcatalog_sentence)
+        assert sentence_subcatalog.is_sample == subcatalog_sentence["isSample"]
+        assert sentence_subcatalog.sample_rate == subcatalog_sentence["sampleRate"]
+        assert sentence_subcatalog.lexicon == subcatalog_sentence["lexicon"]
         assert sentence_subcatalog.attributes == attributes
 
-    def test_dumps(self, attributes):
+    def test_dumps(self, attributes, subcatalog_sentence):
         sentence_subcatalog = SentenceSubcatalog(
-            _SENTENCE_SUBCATALOG["isSample"],
-            _SENTENCE_SUBCATALOG["sampleRate"],
-            _SENTENCE_SUBCATALOG["lexicon"],
+            subcatalog_sentence["isSample"],
+            subcatalog_sentence["sampleRate"],
+            subcatalog_sentence["lexicon"],
         )
         sentence_subcatalog.attributes = attributes
-        assert sentence_subcatalog.dumps() == _SENTENCE_SUBCATALOG
+        assert sentence_subcatalog.dumps() == subcatalog_sentence
 
     def append_lexicon(self):
         sentence_subcatalog = SentenceSubcatalog()

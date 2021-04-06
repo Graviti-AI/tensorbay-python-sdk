@@ -2,6 +2,8 @@
 #
 # Copyright 2021 Graviti. Licensed under MIT License.  #
 
+import pytest
+
 from ...geometry import Vector2D
 from .. import LabeledPolyline2D, Polyline2DSubcatalog
 from ..supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
@@ -17,11 +19,15 @@ _LABELEDPOLYLINE2D_DATA = {
     "attributes": {"key": "value"},
     "instance": "12345",
 }
-_POLYLINE_SUBCATALOG = {
-    "isTracking": True,
-    "categories": [{"name": "0"}, {"name": "1"}],
-    "attributes": [{"name": "gender", "enum": ["male", "female"]}],
-}
+
+
+@pytest.fixture
+def subcatalog_polyline(is_tracking_data, categories_catalog_data, attributes_catalog_data):
+    return {
+        "isTracking": is_tracking_data,
+        "categories": categories_catalog_data,
+        "attributes": attributes_catalog_data,
+    }
 
 
 class TestLabeledPolyline2D:
@@ -86,16 +92,21 @@ class TestPolyline2DSubcatalog:
         assert polyline2d_subcatalog1 == polyline2d_subcatalog2
         assert polyline2d_subcatalog1 != polyline2d_subcatalog3
 
-    def test_loads(self, categories, attributes):
-        subcatalog = Polyline2DSubcatalog.loads(_POLYLINE_SUBCATALOG)
+    def test_loads(self, categories, attributes, subcatalog_polyline):
+        subcatalog = Polyline2DSubcatalog.loads(subcatalog_polyline)
 
-        assert subcatalog.is_tracking == _POLYLINE_SUBCATALOG["isTracking"]
+        assert subcatalog.is_tracking == subcatalog_polyline["isTracking"]
         assert subcatalog.categories == categories
         assert subcatalog.attributes == attributes
 
-    def test_dumps(self, categories, attributes):
+    def test_dumps(self, categories, attributes, subcatalog_polyline):
         subcatalog = Polyline2DSubcatalog()
-        subcatalog.is_tracking = _POLYLINE_SUBCATALOG["isTracking"]
+        subcatalog.is_tracking = subcatalog_polyline["isTracking"]
         subcatalog.categories = categories
         subcatalog.attributes = attributes
-        assert subcatalog.dumps() == _POLYLINE_SUBCATALOG
+
+        # isTracking will not dumps out when isTracking is false
+        if not subcatalog_polyline["isTracking"]:
+            del subcatalog_polyline["isTracking"]
+
+        assert subcatalog.dumps() == subcatalog_polyline

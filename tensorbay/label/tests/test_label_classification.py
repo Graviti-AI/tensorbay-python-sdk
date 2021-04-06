@@ -3,6 +3,8 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
+import pytest
+
 from .. import Classification, ClassificationSubcatalog
 from ..supports import AttributesMixin, CategoriesMixin
 
@@ -10,11 +12,15 @@ _CATEGORY = "test"
 _ATTRIBUTES = {"key": "value"}
 
 _CLASSIFICATION_DATA = {"category": "test", "attributes": {"key": "value"}}
-_CLASSIFICATION_SUBCATALOG = {
-    "categories": [{"name": "0"}, {"name": "1"}],
-    "attributes": [{"name": "gender", "enum": ["male", "female"]}],
-    "categoryDelimiter": "-",
-}
+
+
+@pytest.fixture
+def subcatalog_classification(categories_catalog_data, attributes_catalog_data):
+    return {
+        "categories": categories_catalog_data,
+        "attributes": attributes_catalog_data,
+        "categoryDelimiter": ".",
+    }
 
 
 class TestClassification:
@@ -59,14 +65,21 @@ class TestClassificationSubcatalog:
         assert classification_subcatalog1 == classification_subcatalog2
         assert classification_subcatalog1 != classification_subcatalog3
 
-    def test_loads(self, categories, attributes):
-        classification_subcatalog = ClassificationSubcatalog.loads(_CLASSIFICATION_SUBCATALOG)
+    def test_loads(self, categories, attributes, subcatalog_classification):
+        classification_subcatalog = ClassificationSubcatalog.loads(subcatalog_classification)
         assert classification_subcatalog.categories == categories
         assert classification_subcatalog.attributes == attributes
+        assert (
+            classification_subcatalog.category_delimiter
+            == subcatalog_classification["categoryDelimiter"]
+        )
 
-    def test_dumps(self, categories, attributes):
+    def test_dumps(self, categories, attributes, subcatalog_classification):
         classification_subcatalog = ClassificationSubcatalog()
-        classification_subcatalog.category_delimiter = "-"
         classification_subcatalog.categories = categories
         classification_subcatalog.attributes = attributes
-        assert classification_subcatalog.dumps() == _CLASSIFICATION_SUBCATALOG
+        classification_subcatalog.category_delimiter = subcatalog_classification[
+            "categoryDelimiter"
+        ]
+
+        assert classification_subcatalog.dumps() == subcatalog_classification
