@@ -25,7 +25,7 @@ Please refer to :class:`~tensorbay.dataset.dataset.FusionDataset` for more infor
 import sys
 from typing import TYPE_CHECKING, Any, Dict, Iterator, Optional, Tuple
 
-from ..dataset import Data, Frame, FusionSegment, Segment
+from ..dataset import Data, Frame, FusionSegment, Notes, Segment
 from ..label import Catalog
 from ..utility import Deprecated
 from .commit_status import CommitStatus
@@ -477,6 +477,19 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         patch_data.update(self._status.get_status_info())
 
         self._client.open_api_do("PATCH", "notes", self.dataset_id, json=patch_data)
+
+    def get_notes(self) -> Notes:
+        """Get the notes.
+
+        Returns:
+            The :class:`~tensorbay.dataset.dataset.Notes`.
+
+        """
+        params: Dict[str, Any] = self._status.get_status_info()
+
+        return Notes.loads(
+            self._client.open_api_do("GET", "notes", self.dataset_id, param=params).json()
+        )
 
     def list_segment_names(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[str]:
         """List all segment names in a certain commit.
