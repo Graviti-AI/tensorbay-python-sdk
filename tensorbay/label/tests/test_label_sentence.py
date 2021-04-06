@@ -8,20 +8,6 @@ import pytest
 from .. import LabeledSentence, SentenceSubcatalog, Word
 from ..supports import AttributesMixin
 
-_ATTRIBUTES = {"key": "value"}
-
-_TEXT = "Hello, World"
-_BEGIN = 1
-_END = 1
-
-_WORD_DATA = {"text": "Hello, World", "begin": 1, "end": 1}
-
-_LABELEDSENTENCE_DATA = {
-    "sentence": [{"text": "qi1shi2", "begin": 1, "end": 1}],
-    "spell": [{"text": "qi1", "begin": 1, "end": 1}],
-    "phone": [{"text": "q", "begin": 1, "end": 1}],
-    "attributes": {"key": "value"},
-}
 _LEXICON = ["mean", "m", "iy", "n"]
 
 
@@ -37,11 +23,11 @@ def subcatalog_sentence(attributes_catalog_data):
 
 class TestWord:
     def test_init(self):
-        word = Word(text=_TEXT, begin=_BEGIN, end=_END)
+        word = Word(text="Hello", begin=1, end=3)
 
-        assert word.text == _TEXT
-        assert word.begin == _BEGIN
-        assert word.end == _END
+        assert word.text == "Hello"
+        assert word.begin == 1
+        assert word.end == 3
 
     def test_eq(self):
         word1 = Word("Hello", 0, 1)
@@ -52,26 +38,26 @@ class TestWord:
         assert word1 != word3
 
     def test_loads(self):
-        word = Word.loads(_WORD_DATA)
+        word = Word.loads({"text": "Hello", "begin": 1, "end": 3})
 
-        assert word.text == _TEXT
-        assert word.begin == _BEGIN
-        assert word.end == _END
+        assert word.text == "Hello"
+        assert word.begin == 1
+        assert word.end == 3
 
     def test_dumps(self):
-        word = Word(text=_TEXT, begin=_BEGIN, end=_END)
+        word = Word(text="Hello", begin=1, end=3)
 
-        assert word.dumps() == _WORD_DATA
+        assert word.dumps() == {"text": "Hello", "begin": 1, "end": 3}
 
 
 class TestLabeledSentence:
     def test_init(self):
-        sentence = [Word(text="qi1shi2", begin=_BEGIN, end=_END)]
-        spell = [Word(text="qi1", begin=_BEGIN, end=_END)]
-        phone = [Word(text="q", begin=_BEGIN, end=_END)]
+        sentence = [Word(text="qi1shi2", begin=1, end=3)]
+        spell = [Word(text="qi1", begin=1, end=3)]
+        phone = [Word(text="q", begin=1, end=3)]
 
         labeledsentence = LabeledSentence(
-            sentence=sentence, spell=spell, phone=phone, attributes=_ATTRIBUTES
+            sentence=sentence, spell=spell, phone=phone, attributes={"gender": "male"}
         )
 
         assert labeledsentence.sentence == list(sentence)
@@ -87,47 +73,58 @@ class TestLabeledSentence:
         assert sentence1 != sentence3
 
     def test_load_word(self):
-        sentence = LabeledSentence._load_word(_LABELEDSENTENCE_DATA["sentence"])
-        spell = LabeledSentence._load_word(_LABELEDSENTENCE_DATA["spell"])
-        phone = LabeledSentence._load_word(_LABELEDSENTENCE_DATA["phone"])
+        sentence = LabeledSentence._load_word([{"text": "qi1shi2", "begin": 1, "end": 3}])
+        spell = LabeledSentence._load_word([{"text": "qi1", "begin": 1, "end": 2}])
+        phone = LabeledSentence._load_word([{"text": "q", "begin": 1, "end": 1.5}])
 
         assert sentence[0].text == "qi1shi2"
-        assert sentence[0].begin == _BEGIN
-        assert sentence[0].end == _END
+        assert sentence[0].begin == 1
+        assert sentence[0].end == 3
 
         assert spell[0].text == "qi1"
-        assert spell[0].begin == _BEGIN
-        assert spell[0].end == _END
+        assert spell[0].begin == 1
+        assert spell[0].end == 2
 
         assert phone[0].text == "q"
-        assert phone[0].begin == _BEGIN
-        assert phone[0].end == _END
+        assert phone[0].begin == 1
+        assert phone[0].end == 1.5
 
     def test_loads(self):
-        labeledsentence = LabeledSentence.loads(_LABELEDSENTENCE_DATA)
+        contents = {
+            "sentence": [{"text": "qi1shi2", "begin": 1, "end": 3}],
+            "spell": [{"text": "qi1", "begin": 1, "end": 2}],
+            "phone": [{"text": "q", "begin": 1, "end": 1.5}],
+            "attributes": {"gender": "male"},
+        }
+        labeledsentence = LabeledSentence.loads(contents)
 
-        assert labeledsentence.sentence[0].text == _LABELEDSENTENCE_DATA["sentence"][0]["text"]
-        assert labeledsentence.sentence[0].begin == _LABELEDSENTENCE_DATA["sentence"][0]["begin"]
-        assert labeledsentence.sentence[0].end == _LABELEDSENTENCE_DATA["sentence"][0]["end"]
+        assert labeledsentence.sentence[0].text == "qi1shi2"
+        assert labeledsentence.sentence[0].begin == 1
+        assert labeledsentence.sentence[0].end == 3
 
-        assert labeledsentence.spell[0].text == _LABELEDSENTENCE_DATA["spell"][0]["text"]
-        assert labeledsentence.spell[0].begin == _LABELEDSENTENCE_DATA["spell"][0]["begin"]
-        assert labeledsentence.spell[0].end == _LABELEDSENTENCE_DATA["spell"][0]["end"]
+        assert labeledsentence.spell[0].text == "qi1"
+        assert labeledsentence.spell[0].begin == 1
+        assert labeledsentence.spell[0].end == 2
 
-        assert labeledsentence.phone[0].text == _LABELEDSENTENCE_DATA["phone"][0]["text"]
-        assert labeledsentence.phone[0].begin == _LABELEDSENTENCE_DATA["phone"][0]["begin"]
-        assert labeledsentence.phone[0].end == _LABELEDSENTENCE_DATA["phone"][0]["end"]
+        assert labeledsentence.phone[0].text == "q"
+        assert labeledsentence.phone[0].begin == 1
+        assert labeledsentence.phone[0].end == 1.5
 
     def test_dumps(self):
-        sentence = [Word(text="qi1shi2", begin=_BEGIN, end=_END)]
-        spell = [Word(text="qi1", begin=_BEGIN, end=_END)]
-        phone = [Word(text="q", begin=_BEGIN, end=_END)]
+        sentence = [Word(text="qi1shi2", begin=1, end=3)]
+        spell = [Word(text="qi1", begin=1, end=2)]
+        phone = [Word(text="q", begin=1, end=1.5)]
 
         labeledsentence = LabeledSentence(
-            sentence=sentence, spell=spell, phone=phone, attributes=_ATTRIBUTES
+            sentence=sentence, spell=spell, phone=phone, attributes={"gender": "male"}
         )
 
-        labeledsentence.dumps = _LABELEDSENTENCE_DATA
+        labeledsentence.dumps = {
+            "sentence": [{"text": "qi1shi2", "begin": 1, "end": 3}],
+            "spell": [{"text": "qi1", "begin": 1, "end": 2}],
+            "phone": [{"text": "q", "begin": 1, "end": 1.5}],
+            "attributes": {"gender": "male"},
+        }
 
 
 class TestSentenceSubcatalog:
@@ -144,21 +141,21 @@ class TestSentenceSubcatalog:
         assert sentence_subcatalog.lexicon == [_LEXICON]
 
     def test_eq(self):
-        content1 = {
+        contents1 = {
             "isSample": True,
             "sampleRate": 16000,
             "lexicon": ["mean", "m", "iy", "n"],
             "attributes": [{"name": "gender", "enum": ["male", "female"]}],
         }
-        content2 = {
+        contents2 = {
             "isSample": True,
             "sampleRate": 16000,
             "lexicon": ["mean", "m"],
             "attributes": [{"name": "gender", "enum": ["male", "female"]}],
         }
-        sentence_subcatalog1 = SentenceSubcatalog.loads(content1)
-        sentence_subcatalog2 = SentenceSubcatalog.loads(content1)
-        sentence_subcatalog3 = SentenceSubcatalog.loads(content2)
+        sentence_subcatalog1 = SentenceSubcatalog.loads(contents1)
+        sentence_subcatalog2 = SentenceSubcatalog.loads(contents1)
+        sentence_subcatalog3 = SentenceSubcatalog.loads(contents2)
 
         assert sentence_subcatalog1 == sentence_subcatalog2
         assert sentence_subcatalog1 != sentence_subcatalog3

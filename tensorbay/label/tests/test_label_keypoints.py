@@ -9,19 +9,6 @@ from ...geometry import Keypoint2D
 from .. import Keypoints2DSubcatalog, LabeledKeypoints2D
 from ..supports import AttributesMixin, CategoriesMixin, IsTrackingMixin, KeypointsInfo
 
-_CATEGORY = "test"
-_ATTRIBUTES = {"key": "value"}
-_INSTANCE = "12345"
-
-_LABELEDKEYPOINTS2D_DATA = {
-    "keypoints2d": [
-        {"x": 1, "y": 1, "v": 2},
-    ],
-    "category": "test",
-    "attributes": {"key": "value"},
-    "instance": "12345",
-}
-
 
 @pytest.fixture
 def subcatalog_keypoings2d(
@@ -38,36 +25,52 @@ def subcatalog_keypoings2d(
 class TestLabeledKeypoints2D:
     def test_init(self):
         labeledkeypoints2d = LabeledKeypoints2D(
-            [(1, 2)], category=_CATEGORY, attributes=_ATTRIBUTES, instance=_INSTANCE
+            [(1, 2)], category="cat", attributes={"gender": "male"}, instance=12345
         )
 
         assert labeledkeypoints2d[0] == Keypoint2D(x=1, y=2)
-        assert labeledkeypoints2d.category == _CATEGORY
-        assert labeledkeypoints2d.attributes == _ATTRIBUTES
-        assert labeledkeypoints2d.instance == _INSTANCE
+        assert labeledkeypoints2d.category == "cat"
+        assert labeledkeypoints2d.attributes == {"gender": "male"}
+        assert labeledkeypoints2d.instance == 12345
 
     def test_eq(self):
-        keypoints1 = LabeledKeypoints2D([[1, 1, 2]], category=_CATEGORY, attributes=_ATTRIBUTES)
-        keypoints2 = LabeledKeypoints2D([[1, 1, 2]], category=_CATEGORY, attributes=_ATTRIBUTES)
-        keypoints3 = LabeledKeypoints2D([[1, 2, 2]], category=_CATEGORY, attributes=_ATTRIBUTES)
+        keypoints1 = LabeledKeypoints2D([[1, 1, 2]], category="cat", attributes={"gender": "male"})
+        keypoints2 = LabeledKeypoints2D([[1, 1, 2]], category="cat", attributes={"gender": "male"})
+        keypoints3 = LabeledKeypoints2D([[1, 2, 2]], category="cat", attributes={"gender": "male"})
 
         assert keypoints1 == keypoints2
         assert keypoints1 != keypoints3
 
     def test_loads(self):
-        labeledkeypoints2d = LabeledKeypoints2D.loads(_LABELEDKEYPOINTS2D_DATA)
+        contents = {
+            "keypoints2d": [
+                {"x": 1, "y": 1, "v": 2},
+            ],
+            "category": "cat",
+            "attributes": {"gender": "male"},
+            "instance": 12345,
+        }
+
+        labeledkeypoints2d = LabeledKeypoints2D.loads(contents)
 
         assert labeledkeypoints2d[0] == Keypoint2D(x=1, y=1, v=2)
-        assert labeledkeypoints2d.category == _LABELEDKEYPOINTS2D_DATA["category"]
-        assert labeledkeypoints2d.attributes == _LABELEDKEYPOINTS2D_DATA["attributes"]
-        assert labeledkeypoints2d.instance == _LABELEDKEYPOINTS2D_DATA["instance"]
+        assert labeledkeypoints2d.category == "cat"
+        assert labeledkeypoints2d.attributes == {"gender": "male"}
+        assert labeledkeypoints2d.instance == 12345
 
     def test_dumps(self):
         labeledkeypoints2d = LabeledKeypoints2D(
-            [(1, 1, 2)], category=_CATEGORY, attributes=_ATTRIBUTES, instance=_INSTANCE
+            [(1, 1, 2)], category="cat", attributes={"gender": "male"}, instance=12345
         )
 
-        assert labeledkeypoints2d.dumps() == _LABELEDKEYPOINTS2D_DATA
+        assert labeledkeypoints2d.dumps() == {
+            "keypoints2d": [
+                {"x": 1, "y": 1, "v": 2},
+            ],
+            "category": "cat",
+            "attributes": {"gender": "male"},
+            "instance": 12345,
+        }
 
 
 class TestKeypoints2DSubcatalog:
@@ -80,7 +83,7 @@ class TestKeypoints2DSubcatalog:
         )
 
     def test_eq(self):
-        content1 = {
+        contents1 = {
             "isTracking": True,
             "categories": [{"name": "0"}, {"name": "1"}],
             "attributes": [{"name": "gender", "enum": ["male", "female"]}],
@@ -95,7 +98,7 @@ class TestKeypoints2DSubcatalog:
                 }
             ],
         }
-        content2 = {
+        contents2 = {
             "isTracking": True,
             "categories": [{"name": "0"}, {"name": "1"}],
             "attributes": [{"name": "gender", "enum": ["male", "female"]}],
@@ -108,9 +111,9 @@ class TestKeypoints2DSubcatalog:
                 }
             ],
         }
-        keypoints2d_subcatalog1 = Keypoints2DSubcatalog.loads(content1)
-        keypoints2d_subcatalog2 = Keypoints2DSubcatalog.loads(content1)
-        keypoints2d_subcatalog3 = Keypoints2DSubcatalog.loads(content2)
+        keypoints2d_subcatalog1 = Keypoints2DSubcatalog.loads(contents1)
+        keypoints2d_subcatalog2 = Keypoints2DSubcatalog.loads(contents1)
+        keypoints2d_subcatalog3 = Keypoints2DSubcatalog.loads(contents2)
 
         assert keypoints2d_subcatalog1 == keypoints2d_subcatalog2
         assert keypoints2d_subcatalog1 != keypoints2d_subcatalog3
