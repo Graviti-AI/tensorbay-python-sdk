@@ -409,6 +409,23 @@ class TestDatasetClient:
 
         gas_client.delete_dataset(dataset_name)
 
+    def test_notes(self, accesskey, url):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_random_dataset_name()
+        dataset_client = gas_client.create_dataset(dataset_name)
+
+        with pytest.raises(TypeError):
+            dataset_client.update_notes(is_continuous=True)
+        dataset_client.create_draft("draft-1")
+        notes_1 = dataset_client.get_notes()
+        assert notes_1.is_continuous is False
+
+        dataset_client.update_notes(is_continuous=True)
+        notes_2 = dataset_client.get_notes()
+        assert notes_2.is_continuous is True
+
+        gas_client.delete_dataset(dataset_name)
+
     def test_create_segment(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_random_dataset_name()
