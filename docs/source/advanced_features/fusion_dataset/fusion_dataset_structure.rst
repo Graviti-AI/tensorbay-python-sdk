@@ -7,6 +7,7 @@ In this topic, we explain the related concepts.
 The TensorBay fusion dataset format looks like::
 
    fusion dataset
+   ├── notes
    ├── catalog
    │   ├── subcatalog
    │   ├── subcatalog
@@ -34,6 +35,13 @@ Fusion dataset is the topmost concept in TensorBay format.
 Each fusion dataset includes a catalog and a certain number of fusion segments.
 
 The corresponding class of fusion dataset is :class:`~tensorbay.dataset.dataset.FusionDataset`.
+
+*******
+ notes
+*******
+
+The notes of the fusion dataset is the same as the notes
+(:ref:`ref <reference/dataset_structure:notes>`) of the dataset.
 
 ****************************************
  catalog & subcatalog in fusion dataset
