@@ -97,7 +97,7 @@ You can also create a segment by ``dataset.create_segment(SEGMENT_NAME)``.
 See :ref:`this page <reference/label_format:Keypoints2D>` for more details for about Keypoints2D annotation details.
 
 .. note::
-   The :ref:`LeedsSportsPose dataloader <LeedsSportsPose-dataloader>` above uses relative import(L11-13).
+   The :ref:`Leeds Sports Pose dataloader <LeedsSportsPose-dataloader>` above uses relative import(L11-13).
    However, when you write your own dataloader you should use regular import.
    And when you want to contribute your own dataloader, remember to use relative import.
 

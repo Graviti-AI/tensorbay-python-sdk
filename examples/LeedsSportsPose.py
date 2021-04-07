@@ -21,7 +21,7 @@ gas = GAS(ACCESS_KEY)
 """"""
 
 """Create Dataset"""
-gas.create_dataset("LeedsSportsPose")
+gas.create_dataset("Leeds Sports Pose")
 """"""
 
 """List Dataset Names"""
@@ -35,11 +35,11 @@ dataset = LeedsSportsPose("path/to/dataset/directory")
 """Upload Dataset"""
 # dataset is the one you initialized in "Organize Dataset" section
 dataset_client = gas.upload_dataset(dataset, jobs=8, skip_uploaded_files=False)
-dataset_client.commit("LeedsSportsPose")
+dataset_client.commit("Leeds Sports Pose")
 """"""
 
 """Read Dataset / get dataset"""
-dataset_client = gas.get_dataset("LeedsSportsPose")
+dataset_client = gas.get_dataset("Leeds Sports Pose")
 """"""
 
 """Read Dataset / get segment"""
@@ -60,5 +60,5 @@ v = data.label.keypoints2d[0][0].v
 """"""
 
 """Delete Dataset"""
-gas.delete_dataset("LeedsSportsPose")
+gas.delete_dataset("Leeds Sports Pose")
 """"""
