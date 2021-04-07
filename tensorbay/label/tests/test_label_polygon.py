@@ -9,20 +9,6 @@ from ...geometry import Polygon2D, Vector2D
 from .. import LabeledPolygon2D, Polygon2DSubcatalog
 from ..supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
 
-_CATEGORY = "test"
-_ATTRIBUTES = {"key": "value"}
-_INSTANCE = "12345"
-
-
-_LABELEDPOLYGON2D_DATA = {
-    "polygon2d": [
-        {"x": 1, "y": 2},
-    ],
-    "category": "test",
-    "attributes": {"key": "value"},
-    "instance": "12345",
-}
-
 
 @pytest.fixture
 def subcatalog_polygon(is_tracking_data, categories_catalog_data, attributes_catalog_data):
@@ -36,36 +22,51 @@ def subcatalog_polygon(is_tracking_data, categories_catalog_data, attributes_cat
 class TestLabeledPolygon2D:
     def test_init(self):
         labeledpolygon2d = LabeledPolygon2D(
-            [(1, 2)], category=_CATEGORY, attributes=_ATTRIBUTES, instance=_INSTANCE
+            [(1, 2)], category="cat", attributes={"gender": "male"}, instance=12345
         )
 
         assert labeledpolygon2d[0] == Vector2D(1, 2)
-        assert labeledpolygon2d.category == _CATEGORY
-        assert labeledpolygon2d.attributes == _ATTRIBUTES
-        assert labeledpolygon2d.instance == _INSTANCE
+        assert labeledpolygon2d.category == "cat"
+        assert labeledpolygon2d.attributes == {"gender": "male"}
+        assert labeledpolygon2d.instance == 12345
 
     def test_eq(self):
-        polygon1 = LabeledPolygon2D([[1, 1], [1, 2]], category=_CATEGORY, attributes=_ATTRIBUTES)
-        polygon2 = LabeledPolygon2D([[1, 1], [1, 2]], category=_CATEGORY, attributes=_ATTRIBUTES)
-        polygon3 = LabeledPolygon2D([[1, 1], [1, 3]], category=_CATEGORY, attributes=_ATTRIBUTES)
+        polygon1 = LabeledPolygon2D([[1, 1], [1, 2]], category="cat", attributes={"gender": "male"})
+        polygon2 = LabeledPolygon2D([[1, 1], [1, 2]], category="cat", attributes={"gender": "male"})
+        polygon3 = LabeledPolygon2D([[1, 1], [1, 3]], category="cat", attributes={"gender": "male"})
 
         assert polygon1 == polygon2
         assert polygon1 != polygon3
 
     def test_loads(self):
-        labeledpolygon2d = LabeledPolygon2D.loads(_LABELEDPOLYGON2D_DATA)
+        content = {
+            "polygon2d": [
+                {"x": 1, "y": 2},
+            ],
+            "category": "cat",
+            "attributes": {"gender": "male"},
+            "instance": 12345,
+        }
+        labeledpolygon2d = LabeledPolygon2D.loads(content)
 
         assert labeledpolygon2d[0] == Vector2D(1, 2)
-        assert labeledpolygon2d.category == _LABELEDPOLYGON2D_DATA["category"]
-        assert labeledpolygon2d.attributes == _LABELEDPOLYGON2D_DATA["attributes"]
-        assert labeledpolygon2d.instance == _LABELEDPOLYGON2D_DATA["instance"]
+        assert labeledpolygon2d.category == "cat"
+        assert labeledpolygon2d.attributes == {"gender": "male"}
+        assert labeledpolygon2d.instance == 12345
 
     def test_dumps(self):
         labeledpolygon2d = LabeledPolygon2D(
-            [(1, 2)], category=_CATEGORY, attributes=_ATTRIBUTES, instance=_INSTANCE
+            [(1, 2)], category="cat", attributes={"gender": "male"}, instance=12345
         )
 
-        assert labeledpolygon2d.dumps() == _LABELEDPOLYGON2D_DATA
+        assert labeledpolygon2d.dumps() == {
+            "polygon2d": [
+                {"x": 1, "y": 2},
+            ],
+            "category": "cat",
+            "attributes": {"gender": "male"},
+            "instance": 12345,
+        }
 
 
 class TestPolygon2DSubcatalog:

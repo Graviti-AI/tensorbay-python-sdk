@@ -5,26 +5,6 @@
 
 from .. import Classification, Label, LabeledBox2D, LabelType
 
-_FAILED_DATA = {
-    "box2d": [
-        {
-            "box2d": {"xmin": 1, "ymin": 1, "xmax": 2, "ymax": 2},
-        }
-    ]
-}
-_CLASSIFICATION_DATA = {
-    "CLASSIFICATION": {"category": "test_categoty", "attributes": {"test_attribute1": "a"}}
-}
-_BOX2D_DATA = {
-    "BOX2D": [
-        {
-            "box2d": {"xmin": 1, "ymin": 1, "xmax": 2, "ymax": 2},
-            "category": "test_categoty",
-            "attributes": {"test_attribute1": "a"},
-        }
-    ]
-}
-
 
 class TestLabelType:
     def test_init(self):
@@ -59,29 +39,42 @@ class TestLabel:
         assert label1 != label3
 
     def test_loads(self):
-        label = Label.loads(_FAILED_DATA)
-        assert hasattr(label, "box2d") == False
 
-        label = Label.loads(_CLASSIFICATION_DATA)
-        assert label.classification.category == _CLASSIFICATION_DATA["CLASSIFICATION"]["category"]
-        assert (
-            label.classification.attributes == _CLASSIFICATION_DATA["CLASSIFICATION"]["attributes"]
-        )
+        contents_failed = {"classification": {"category": "cat"}}
+        label = Label.loads(contents_failed)
+        assert hasattr(label, "classification") == False
 
-        label = Label.loads(_BOX2D_DATA)
-        box2d_object = label.box2d[0]
-        box2d = _BOX2D_DATA["BOX2D"][0]
-        assert box2d_object.category == box2d["category"]
-        assert box2d_object.attributes == box2d["attributes"]
-        assert box2d_object._data == (1, 1, 2, 2)
+        contents = {
+            "CLASSIFICATION": {"category": "cat", "attributes": {"gender": "male"}},
+            "BOX2D": [
+                {
+                    "box2d": {"xmin": 1, "ymin": 1, "xmax": 2, "ymax": 2},
+                    "category": "dog",
+                    "attributes": {"gender": "female"},
+                }
+            ],
+        }
+        label = Label.loads(contents)
+        assert label.classification.category == "cat"
+        assert label.classification.attributes == {"gender": "male"}
+
+        assert label.box2d[0].category == "dog"
+        assert label.box2d[0].attributes == {"gender": "female"}
+        assert label.box2d[0]._data == (1, 1, 2, 2)
 
     def test_dumps(self):
-        category = "test_categoty"
-        attributes = {"test_attribute1": "a"}
-        label = Label()
-        label.classification = Classification(category, attributes)
-        assert label.dumps() == _CLASSIFICATION_DATA
+        contents = {
+            "CLASSIFICATION": {"category": "cat", "attributes": {"gender": "male"}},
+            "BOX2D": [
+                {
+                    "box2d": {"xmin": 1, "ymin": 1, "xmax": 2, "ymax": 2},
+                    "category": "dog",
+                    "attributes": {"gender": "female"},
+                }
+            ],
+        }
 
         label = Label()
-        label.box2d = [LabeledBox2D(1, 1, 2, 2, category=category, attributes=attributes)]
-        assert label.dumps() == _BOX2D_DATA
+        label.classification = Classification.loads(contents["CLASSIFICATION"])
+        label.box2d = [LabeledBox2D.loads(contents["BOX2D"][0])]
+        assert label.dumps() == contents

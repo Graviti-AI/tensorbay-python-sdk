@@ -10,14 +10,13 @@ from ..supports import (
     _VisibleType,
 )
 
-_CATEGORYINFO_DATA = {"name": "test", "description": "This is an exmaple of test"}
-
 
 class TestCategoryInfo:
     def test_loads(self):
-        category_info = CategoryInfo.loads(_CATEGORYINFO_DATA)
-        assert category_info.name == _CATEGORYINFO_DATA["name"]
-        assert category_info.description == _CATEGORYINFO_DATA["description"]
+        contents = {"name": "cat", "description": "This is an exmaple of test"}
+        category_info = CategoryInfo.loads(contents)
+        assert category_info.name == "cat"
+        assert category_info.description == "This is an exmaple of test"
 
     def test_eq(self):
         category_info1 = CategoryInfo(name="cat", description="This is a cat")
@@ -27,10 +26,8 @@ class TestCategoryInfo:
         assert category_info1 != category_info3
 
     def test_dumps(self):
-        name = _CATEGORYINFO_DATA["name"]
-        description = _CATEGORYINFO_DATA["description"]
-        category_info = CategoryInfo(name=name, description=description)
-        assert category_info.dumps() == _CATEGORYINFO_DATA
+        category_info = CategoryInfo(name="cat", description="This is an exmaple of test")
+        assert category_info.dumps() == {"name": "cat", "description": "This is an exmaple of test"}
 
 
 class TestKeypointsInfo:
@@ -177,7 +174,7 @@ class TestCategoriesMixin:
             assert support_categorie_0.description == category["description"]
 
     def test_eq(self):
-        content_1 = {
+        contents1 = {
             "categories": [
                 {
                     "name": "Test",
@@ -185,7 +182,7 @@ class TestCategoriesMixin:
             ],
             "categoryDelimiter": ".",
         }
-        content_2 = {
+        contents2 = {
             "categories": [
                 {
                     "name": "Test",
@@ -195,13 +192,13 @@ class TestCategoriesMixin:
         }
 
         support_categories_1 = CategoriesMixin()
-        support_categories_1._loads(content_1)
+        support_categories_1._loads(contents1)
 
         support_categories_2 = CategoriesMixin()
-        support_categories_2._loads(content_1)
+        support_categories_2._loads(contents1)
 
         support_categories_3 = CategoriesMixin()
-        support_categories_3._loads(content_2)
+        support_categories_3._loads(contents2)
 
         assert support_categories_1 == support_categories_2
         assert support_categories_1 != support_categories_3
@@ -245,25 +242,25 @@ class TestAttributesMixin:
         assert occluded.maximum == attributes_catalog_data[1]["maximum"]
 
     def test_eq(self):
-        content_1 = {
+        contents1 = {
             "attributes": [
                 {"name": "occluded", "enum": [1, 2, 3, 4, 5]},
             ]
         }
-        content_2 = {
+        contents2 = {
             "attributes": [
                 {"name": "truncated", "enum": [1, 2, 3, 4, 5]},
             ]
         }
 
         support_attributes_1 = AttributesMixin()
-        support_attributes_1._loads(contents=content_1)
+        support_attributes_1._loads(contents=contents1)
 
         support_attributes_2 = AttributesMixin()
-        support_attributes_2._loads(contents=content_1)
+        support_attributes_2._loads(contents=contents1)
 
         support_attributes_3 = AttributesMixin()
-        support_attributes_3._loads(contents=content_2)
+        support_attributes_3._loads(contents=contents2)
 
         assert support_attributes_1 == support_attributes_2
         assert support_attributes_1 != support_attributes_3

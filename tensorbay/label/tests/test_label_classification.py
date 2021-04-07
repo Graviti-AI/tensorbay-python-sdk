@@ -8,11 +8,6 @@ import pytest
 from .. import Classification, ClassificationSubcatalog
 from ..supports import AttributesMixin, CategoriesMixin
 
-_CATEGORY = "test"
-_ATTRIBUTES = {"key": "value"}
-
-_CLASSIFICATION_DATA = {"category": "test", "attributes": {"key": "value"}}
-
 
 @pytest.fixture
 def subcatalog_classification(categories_catalog_data, attributes_catalog_data):
@@ -25,29 +20,30 @@ def subcatalog_classification(categories_catalog_data, attributes_catalog_data):
 
 class TestClassification:
     def test_init(self):
-        classification = Classification(category=_CATEGORY, attributes=_ATTRIBUTES)
+        classification = Classification(category="cat", attributes={"gender": "male"})
 
-        assert classification.category == _CATEGORY
-        assert classification.attributes == _ATTRIBUTES
+        assert classification.category == "cat"
+        assert classification.attributes == {"gender": "male"}
 
     def test_eq(self):
-        classification1 = Classification("cat", _ATTRIBUTES)
-        classification2 = Classification("cat", _ATTRIBUTES)
-        classification3 = Classification("dog", _ATTRIBUTES)
+        classification1 = Classification("cat", {"gender": "male"})
+        classification2 = Classification("cat", {"gender": "male"})
+        classification3 = Classification("dog", {"gender": "male"})
 
         assert classification1 == classification2
         assert classification1 != classification3
 
     def test_loads(self):
-        classification = Classification.loads(_CLASSIFICATION_DATA)
+        contents = {"category": "cat", "attributes": {"gender": "male"}}
+        classification = Classification.loads(contents)
 
-        assert classification.category == _CLASSIFICATION_DATA["category"]
-        assert classification.attributes == _CLASSIFICATION_DATA["attributes"]
+        assert classification.category == "cat"
+        assert classification.attributes == {"gender": "male"}
 
     def test_dumps(self):
-        classification = Classification(category=_CATEGORY, attributes=_ATTRIBUTES)
+        classification = Classification(category="cat", attributes={"gender": "male"})
 
-        assert classification.dumps() == _CLASSIFICATION_DATA
+        assert classification.dumps() == {"category": "cat", "attributes": {"gender": "male"}}
 
 
 class TestClassificationSubcatalog:
@@ -56,11 +52,14 @@ class TestClassificationSubcatalog:
         classification_subcatalog._supports = (CategoriesMixin, AttributesMixin)
 
     def test_eq(self):
-        content1 = {"category": "cat", "attributes": [{"name": "color", "enum": ["white", "red"]}]}
-        content2 = {"category": "cat", "attributes": [{"name": "color", "enum": ["white", "blue"]}]}
-        classification_subcatalog1 = ClassificationSubcatalog.loads(content1)
-        classification_subcatalog2 = ClassificationSubcatalog.loads(content1)
-        classification_subcatalog3 = ClassificationSubcatalog.loads(content2)
+        contents1 = {"category": "cat", "attributes": [{"name": "color", "enum": ["white", "red"]}]}
+        contents2 = {
+            "category": "cat",
+            "attributes": [{"name": "color", "enum": ["white", "blue"]}],
+        }
+        classification_subcatalog1 = ClassificationSubcatalog.loads(contents1)
+        classification_subcatalog2 = ClassificationSubcatalog.loads(contents1)
+        classification_subcatalog3 = ClassificationSubcatalog.loads(contents2)
 
         assert classification_subcatalog1 == classification_subcatalog2
         assert classification_subcatalog1 != classification_subcatalog3
