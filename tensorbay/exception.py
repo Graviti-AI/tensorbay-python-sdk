@@ -20,6 +20,8 @@ The class hierarchy for TensorBay custom exceptions is::
                  +-- ResourceNotExistError
                  +-- ResponseSystemError
                  +-- UnauthorizedError
+        +-- UtilityError
+            +-- AttrError
          +-- TBRNError
          +-- OpenDatasetError
              +-- NoFileError
@@ -319,3 +321,14 @@ ResponseErrorDistributor: Dict[str, Type[ResponseError]] = {
     "SystemError": ResponseSystemError,
     "Unauthorized": UnauthorizedError,
 }
+
+
+class UtilityError(TensorBayException):
+    """This is the base class for custom exceptions in TensorBay utility module."""
+
+
+class AttrError(UtilityError):
+    """This class defines the exception for dynamic attr have default value."""
+
+    def __str__(self) -> str:
+        return "Dynamic attr cannot have default value."
