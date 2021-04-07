@@ -87,10 +87,10 @@ The :ref:`code block <neolixod-dataloader>` below displays the "Neolix OD" datal
    :language: python
    :name: neolixod-dataloader
    :linenos:
-   :emphasize-lines: 11-12,39
+   :emphasize-lines: 13-14,41
 
 Note that after creating the :ref:`reference/dataset_structure:Dataset`,
-you need to load the :ref:`reference/dataset_structure:catalog`.(L39)
+you need to load the :ref:`reference/dataset_structure:catalog`.(L41)
 The catalog file "catalog.json" is in the same directory with dataloader file.
 
 In this example, we create segments by ``dataset.create_segment(SEGMENT_NAME)``.
@@ -100,7 +100,7 @@ will be "".
 See :ref:`this page <reference/label_format:Box3D>` for more details for about Box3D annotation details.
 
 .. note::
-   The :ref:`Neolix OD dataloader <neolixod-dataloader>` above uses relative import(L11-12).
+   The :ref:`Neolix OD dataloader <neolixod-dataloader>` above uses relative import(L13-14).
    However, when you write your own dataloader you should use regular import.
    And when you want to contribute your own dataloader, remember to use relative import.
 
