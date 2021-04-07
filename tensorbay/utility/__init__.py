@@ -5,6 +5,7 @@
 
 """Utility classes."""
 
+from .attr import AttrMixin, Field
 from .common import Deprecated, EqMixin, KwargsDeprecated, MatrixType, common_loads, locked
 from .name import NameMixin, NameOrderedDict, NameSortedDict, NameSortedList
 from .repr import ReprMixin, ReprType, repr_config
@@ -15,6 +16,7 @@ from .user import UserMapping, UserMutableMapping, UserMutableSequence, UserSequ
 __all__ = [
     "Deprecated",
     "EqMixin",
+    "Field",
     "KwargsDeprecated",
     "MatrixType",
     "NameMixin",
@@ -35,5 +37,6 @@ __all__ = [
     "UserSequence",
     "common_loads",
     "locked",
+    "AttrMixin",
     "repr_config",
 ]
