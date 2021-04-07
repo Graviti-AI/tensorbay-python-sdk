@@ -19,5 +19,4 @@ between different versions of a dataset.
 .. toctree::
    :maxdepth: 1
 
-   ../version_control/checkout
-   ../version_control/create_draft_and_commit
+   ../version_control/draft_and_commit
