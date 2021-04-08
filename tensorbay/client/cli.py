@@ -30,7 +30,7 @@ from typing import Dict, Iterable, Iterator, Tuple, Union
 
 import click
 
-from .. import __version__
+from ..__verison__ import __version__
 from ..dataset import Data, Segment
 from ..utility import TBRN, TBRNType
 from .gas import GAS
