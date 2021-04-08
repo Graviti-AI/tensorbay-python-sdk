@@ -5,7 +5,7 @@
 
 """Graviti python SDK."""
 
+from .__verison__ import __version__
 from .client import GAS
 
-__version__ = "1.2.0-dev"
-__all__ = ["GAS"]
+__all__ = ["__version__", "GAS"]

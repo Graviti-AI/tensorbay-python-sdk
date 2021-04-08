@@ -23,6 +23,7 @@ from requests.exceptions import RequestException
 from requests.models import PreparedRequest, Response
 from urllib3.util.retry import Retry
 
+from ..__verison__ import __version__
 from .exceptions import GASResponseError
 from .log import RequestLogging, ResponseLogging
 
@@ -223,7 +224,9 @@ class Client:
 
         """
         kwargs.setdefault("headers", {})["X-Token"] = self.access_key
-        kwargs["headers"]["X-Source"] = default_config._x_source  # pylint: disable=protected-access
+        kwargs["headers"][
+            "X-Source"
+        ] = f"{default_config._x_source}/{__version__}"  # pylint: disable=protected-access
 
         return self.do(method=method, url=self._url_make(section, dataset_id), **kwargs)
 
