@@ -99,6 +99,7 @@ class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
     """
 
     def __init__(self, is_tracking: bool = False) -> None:
+        SubcatalogBase.__init__(self)
         IsTrackingMixin.__init__(self, is_tracking)
         self._keypoints: List[KeypointsInfo] = []
 
@@ -134,7 +135,7 @@ class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
         skeleton: Optional[Iterable[Iterable[int]]] = None,
         visible: Optional[str] = None,
         parent_categories: Union[None, str, Iterable[str]] = None,
-        description: Optional[str] = None,
+        description: str = "",
     ) -> None:
         """Add a type of keypoints to the subcatalog.
 

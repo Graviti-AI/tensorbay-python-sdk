@@ -82,6 +82,7 @@ class Polyline2DSubcatalog(  # pylint: disable=too-many-ancestors
     """
 
     def __init__(self, is_tracking: bool = False) -> None:
+        SubcatalogBase.__init__(self)
         IsTrackingMixin.__init__(self, is_tracking)
 
 

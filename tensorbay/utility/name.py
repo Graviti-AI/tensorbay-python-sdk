@@ -39,20 +39,16 @@ class NameMixin(ReprMixin, EqMixin):
 
     _P = TypeVar("_P", bound="NameMixin")
 
-    description = ""
-
-    def __init__(self, name: str, description: Optional[str] = None) -> None:
+    def __init__(self, name: str, description: str = "") -> None:
         self._name = name
-        if description:
-            self.description = description
+        self.description = description
 
     def _repr_head(self) -> str:
         return f'{self.__class__.__name__}("{self._name}")'
 
     def _loads(self, contents: Dict[str, str]) -> None:
         self._name = contents["name"]
-        if "description" in contents:
-            self.description = contents["description"]
+        self.description = contents.get("description", "")
 
     def _dumps(self) -> Dict[str, str]:
         """Dumps the instance into a dict.
