@@ -154,7 +154,7 @@ class KeypointsInfo(ReprMixin, EqMixin):
         skeleton: Optional[Iterable[Iterable[int]]] = None,
         visible: Optional[str] = None,
         parent_categories: Union[None, str, Iterable[str]] = None,
-        description: Optional[str] = None,
+        description: str = "",
     ):
         self._number = number
         if names:
@@ -169,8 +169,7 @@ class KeypointsInfo(ReprMixin, EqMixin):
             except KeyError as error:
                 raise ValueError("Visible can only be 'BINARY' or 'TERNARY'") from error
 
-        if description:
-            self.description = description
+        self.description = description
 
         if not parent_categories:
             return
@@ -195,8 +194,7 @@ class KeypointsInfo(ReprMixin, EqMixin):
         if "parentCategories" in contents:
             self.parent_categories = contents["parentCategories"]
 
-        if "description" in contents:
-            self.description = contents["description"]
+        self.description = contents.get("description", "")
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -357,7 +355,7 @@ class CategoriesMixin(SubcatalogMixin):  # pylint: disable=too-few-public-method
             contents["categoryDelimiter"] = self.category_delimiter
         return contents
 
-    def add_category(self, name: str, description: Optional[str] = None) -> None:
+    def add_category(self, name: str, description: str = "") -> None:
         """Add a category to the Subcatalog.
 
         Arguments:
@@ -407,7 +405,7 @@ class AttributesMixin(SubcatalogMixin):  # pylint: disable=too-few-public-method
         maximum: Optional[float] = None,
         items: Optional[Items] = None,
         parent_categories: Union[None, str, Iterable[str]] = None,
-        description: Optional[str] = None,
+        description: str = "",
     ) -> None:
         """Add an attribute to the Subcatalog.
 

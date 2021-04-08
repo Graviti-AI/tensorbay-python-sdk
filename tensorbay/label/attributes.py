@@ -310,7 +310,7 @@ class AttributeInfo(NameMixin, Items):
         maximum: Optional[float] = None,
         items: Optional[Items] = None,
         parent_categories: Union[None, str, Iterable[str]] = None,
-        description: Optional[str] = None,
+        description: str = "",
     ):
         NameMixin.__init__(self, name, description)
         Items.__init__(self, type_=type_, enum=enum, minimum=minimum, maximum=maximum, items=items)

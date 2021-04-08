@@ -78,6 +78,7 @@ class SentenceSubcatalog(SubcatalogBase, AttributesMixin):  # pylint: disable=to
         sample_rate: Optional[int] = None,
         lexicon: Optional[List[List[str]]] = None,
     ) -> None:
+        SubcatalogBase.__init__(self)
         if is_sample and not sample_rate:
             raise TypeError(
                 f"Require 'sample_rate' to init {self.__class__.__name__} when is_sample is True"

@@ -99,6 +99,9 @@ class SubcatalogBase(TypeMixin[LabelType], ReprMixin, EqMixin):
 
     The Subcatalog format varies by label type.
 
+    Arguments:
+        description: The description of the entire subcatalog.
+
     Attributes:
         description: The description of the entire subcatalog.
 
@@ -120,7 +123,8 @@ class SubcatalogBase(TypeMixin[LabelType], ReprMixin, EqMixin):
 
     _supports: Tuple[Type[SubcatalogMixin], ...]
 
-    description = ""
+    def __init__(self, description: str = "") -> None:
+        self.description = description
 
     def __init_subclass__(cls) -> None:
         cls._supports = tuple(
@@ -128,8 +132,7 @@ class SubcatalogBase(TypeMixin[LabelType], ReprMixin, EqMixin):
         )
 
     def _loads(self, contents: Dict[str, Any]) -> None:
-        if "description" in contents:
-            self.description = contents["description"]
+        self.description = contents.get("description", "")
         for support in self._supports:
             support._loads(self, contents)  # pylint: disable=protected-access
 
