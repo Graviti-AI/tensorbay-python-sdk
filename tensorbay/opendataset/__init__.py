@@ -19,6 +19,7 @@ from .Elpv import Elpv
 from .FLIC import FLIC
 from .Flower import Flower17, Flower102
 from .FSDD import FSDD
+from .HalpeFullBody import HalpeFullBody
 from .HardHatWorkers import HardHatWorkers
 from .HeadPoseImage import HeadPoseImage
 from .ImageEmotion import ImageEmotionAbstract, ImageEmotionArtphoto
@@ -51,6 +52,7 @@ __all__ = [
     "Elpv",
     "FLIC",
     "FSDD",
+    "HalpeFullBody",
     "Flower102",
     "Flower17",
     "HardHatWorkers",
