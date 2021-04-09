@@ -1,0 +1,38 @@
+{
+    "KEYPOINTS2D": {
+        "keypoints": [
+            {
+                "number": 2,
+                "names": ["L", "R"],
+                "parentCategories": ["EyePosition"]
+            },
+            {
+                "number": 20,
+                "names": [
+                    "right eye pupil",
+                    "left eye pupil",
+                    "right mouth corner",
+                    "left mouth corner",
+                    "outer end of right eye brow",
+                    "inner end of right eye brow",
+                    "inner end of left eye brow",
+                    "outer end of left eye brow",
+                    "right temple",
+                    "outer corner of right eye",
+                    "inner corner of right eye",
+                    "inner corner of left eye",
+                    "outer corner of left eye",
+                    "left temple",
+                    "tip of nose",
+                    "right nostril",
+                    "left nostril",
+                    "centre point on outer edge of upper lip",
+                    "centre point on outer edge of lower lip",
+                    "tip of chin"
+                ],
+                "parentCategories": ["Face"]
+            }
+        ],
+        "categories": [{ "name": "EyePosition" }, { "name": "Face" }]
+    }
+}
