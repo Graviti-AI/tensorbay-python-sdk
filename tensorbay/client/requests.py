@@ -13,8 +13,21 @@
 
 import logging
 from concurrent.futures import FIRST_EXCEPTION, ThreadPoolExecutor, wait
-from itertools import repeat, zip_longest
-from typing import Any, Callable, Iterable, Iterator, Optional, Tuple, TypeVar
+from itertools import count, repeat, zip_longest
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Generator,
+    Iterable,
+    Iterator,
+    Optional,
+    Sequence,
+    Tuple,
+    TypeVar,
+    Union,
+    overload,
+)
 from urllib.parse import urljoin
 
 from requests import Session
@@ -24,6 +37,7 @@ from requests.models import PreparedRequest, Response
 from urllib3.util.retry import Retry
 
 from ..__verison__ import __version__
+from ..utility import ReprMixin, ReprType
 from .exceptions import GASResponseError
 from .log import RequestLogging, ResponseLogging
 
@@ -270,6 +284,112 @@ def multithread_upload(
             future.cancel()
         for future in done:
             future.result()
+
+
+class PagingList(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancestors
+    """PagingList is a wrap of web paging request.
+
+    It follows the python Sequence protocal, which means it can be used like a python builtin list.
+    And it provides features like lazy evaluation and cache.
+
+    Arguments:
+        func: A paging generator function, which inputs offset<int> and limit<int> and returns a
+            generator. The returned generator should yield the element user needs, and return the
+            total count of the elements in the paging request.
+        limit: The page size of each paging request.
+        slicing: The required slice of PagingList.
+
+    """
+
+    _S = TypeVar("_S", bound="PagingList[_T]")
+
+    _repr_type = ReprType.SEQUENCE
+
+    def __init__(
+        self,
+        func: Callable[[int, int], Generator[_T, None, int]],
+        limit: int,
+        slicing: slice = slice(0, None),
+    ) -> None:
+        self._data: Dict[int, _T] = {}
+        self._attr: Dict[str, int] = {}
+        self._func = func
+        self._limit = limit
+
+        if slicing.step is not None:
+            raise ValueError("The step slice is not supported yet.")
+
+        self._slice = slicing
+        self._len: Optional[int] = None
+
+    def __len__(self) -> int:
+        return self._get_len()
+
+    @overload
+    def __getitem__(self: _S, index: int) -> _T:
+        ...
+
+    @overload
+    def __getitem__(self: _S, index: slice) -> _S:
+        ...
+
+    def __getitem__(self: _S, index: Union[int, slice]) -> Union[_T, _S]:
+        if isinstance(index, slice):
+            return self._get_slice(index)
+
+        index = self._make_index_positive(index)
+        if index < 0 or index >= self._get_len(index):
+            raise IndexError("list index out of range")
+
+        paging_index = self._slice.start + index
+        if paging_index not in self._data:
+            self._extend(paging_index)
+
+        return self._data[paging_index]
+
+    def _extend(self, index: int) -> int:
+        offset = index // self._limit * self._limit
+        generator = self._func(offset, self._limit)
+        try:
+            for i in count(offset):
+                data = next(generator)
+                self._data[i] = data
+        except StopIteration as error:
+            return error.value  # type: ignore[no-any-return]
+
+        raise TypeError("Impossible to be here, add this to make pylint and mypy happy")
+
+    def _get_len(self, index: int = 0) -> int:
+        if self._len is None:
+            if "totalCount" not in self._attr:
+                self._attr["totalCount"] = self._extend(index)
+
+            total_count = self._attr["totalCount"]
+            stop = total_count if self._slice.stop is None else min(total_count, self._slice.stop)
+            start = min(total_count, self._slice.start)
+            self._len = stop - start
+
+        return self._len
+
+    def _make_index_positive(self, index: int) -> int:
+        return index if index >= 0 else self._get_len() + index
+
+    def _get_slice(self: _S, input_slice: slice) -> _S:
+        start = self._slice.start
+        if input_slice.start is not None:
+            start += self._make_index_positive(input_slice.start)
+
+        stop = input_slice.stop
+        if stop is not None:
+            stop = self._make_index_positive(stop) + self._slice.start
+
+        paging_list = self.__class__(self._func, self._limit, slice(start, stop))
+
+        # The sliced PagingList shares the "_data" and "_attr" with the root PagingList
+        paging_list._data = self._data  # pylint: disable=protected-access
+        paging_list._attr = self._attr  # pylint: disable=protected-access
+
+        return paging_list
 
 
 def paging_range(start: int, stop: int, limit: int) -> Iterator[Tuple[int, int]]:
