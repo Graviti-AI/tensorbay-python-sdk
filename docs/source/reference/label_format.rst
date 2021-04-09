@@ -31,10 +31,10 @@ and has a corresponding :ref:`subcatalog <reference/dataset_structure:Catalog>` 
 Different types of labels contain differenct aspects of annotation information about the data.
 Some are more general, and some are unique to a specific label type.
 
-We first introduce three common properties of a label,
+Three common properties of a label will be introduced first,
 and the unique ones will be explained under the corresponding type of label.
 
-Here we take a :ref:`2D box label <reference/label_format:Box2D>` as an example:
+Take a :ref:`2D box label <reference/label_format:Box2D>` as an example:
 
     >>> from tensorbay.label import LabeledBox2D
     >>> label = LabeledBox2D(
@@ -84,12 +84,12 @@ which is mostly used for tracking tasks.
 ******************************
 
 Before creating a label or adding a label to data,
-you need to define the annotation rules of the specific label type inside the dataset,
-which is subcatalog.
+it's necessary to define the annotation rules of the specific label type inside the dataset.
+This task is done by subcatalog.
 
 Different label types have different subcatalog classes.
 
-Here we take :class:`~tensorbay.label.label_box.Box2DSubcatalog` as an example
+Take :class:`~tensorbay.label.label_box.Box2DSubcatalog` as an example
 to describe some common features of subcatalog.
 
    >>> from tensorbay.label import Box2DSubcatalog
@@ -105,8 +105,8 @@ TrackingInformation
 If the label of this type in the dataset has the information of instance IDs,
 then the subcatalog should set a flag to show its support for tracking information.
 
-You can pass ``True`` to the ``is_tracking`` parameter while creating the subcatalog,
-or you can set the ``is_tracking`` attr after initialization.
+Pass ``True`` to the ``is_tracking`` parameter while creating the subcatalog,
+or set the ``is_tracking`` attr after initialization.
 
    >>> box2d_subcatalog.is_tracking = True
 
@@ -119,7 +119,7 @@ then the subcatalog should contain all the optional categories.
 Each :ref:`category<reference/label_format:Category>` of a label
 appeared in the dataset should be within the categories of the subcatalog.
 
-You can add category information to the subcatalog.
+Category information can be added to the subcatalog.
 
     >>> box2d_subcatalog.add_category(name="cat", description="The Flerken")
     >>> box2d_subcatalog.categories
@@ -127,7 +127,7 @@ You can add category information to the subcatalog.
       'cat': CategoryInfo("cat")
     }
 
-We use :class:`~tensorbay.label.supports.CategoryInfo` to describe
+:class:`~tensorbay.label.supports.CategoryInfo` is used to describe
 a :ref:`category<reference/label_format:Category>`.
 See details in :class:`~tensorbay.label.supports.CategoryInfo`.
 
@@ -140,7 +140,7 @@ then the subcatalog should contain all the rules for different attributes.
 Each :ref:`attribute<reference/label_format:Attributes>` of a label
 appeared in the dataset should follow the rules set in the attributes of the subcatalog.
 
-You can add attribute information to the subcatalog.
+Attribute information ca be added to the subcatalog.
 
     >>> box2d_subcatalog.add_attribute(
     ... name="attribute_name",
@@ -154,7 +154,7 @@ You can add attribute information to the subcatalog.
       'attribute_name': AttributeInfo("attribute_name")(...)
     }
 
-We use :class:`~tensorbay.label.attributes.AttributeInfo` to describe the rules of an
+:class:`~tensorbay.label.attributes.AttributeInfo` is used to describe the rules of an
 :ref:`attribute<reference/label_format:Attributes>`, which refers to the `Json schema`_ method.
 
 See details in :class:`~tensorbay.label.attributes.AttributeInfo`.
@@ -288,8 +288,8 @@ Box2D.box2d
 
 To construct a :class:`~tensorbay.label.label_box.LabeledBox2D` instance with only the geometry
 information,
-you can use the coordinates of the top-left and bottom-right vertexes of the 2D bounding box,
-or you can use the coordinate of the top-left vertex, the height and the width of the bounding box.
+use the coordinates of the top-left and bottom-right vertexes of the 2D bounding box,
+or the coordinate of the top-left vertex, the height and the width of the bounding box.
 
     >>> LabeledBox2D(10, 20, 30, 40)
     LabeledBox2D(10, 20, 30, 40)()
@@ -426,8 +426,8 @@ Box3D.box3d
 
 To construct a :class:`~tensorbay.label.label_box.LabeledBox3D` instance with only the geometry
 information,
-you can use the transform matrix and the size of the 3D bounding box,
-or you can use translation and rotation to represent the transform of the 3D bounding box.
+use the transform matrix and the size of the 3D bounding box,
+or use translation and rotation to represent the transform of the 3D bounding box.
 
     >>> LabeledBox3D(
     ... size=[10, 20, 30],
@@ -567,8 +567,8 @@ Keypoints2D.keypoints2d
 
 To construct a :class:`~tensorbay.label.label_keypoints.LabeledKeypoints2D` instance with only the geometry
 information,
-you need the coordinates of the set of 2D keypoints.
-You can also add the visible status of each 2D keypoint.
+The coordinates of the set of 2D keypoints are necessary.
+The visible status of each 2D keypoint is optional.
 
     >>> LabeledKeypoints2D([[10, 20], [15, 25], [20, 30]])
     LabeledKeypoints2D [
@@ -583,8 +583,8 @@ You can also add the visible status of each 2D keypoint.
       Keypoint2D(20, 30, 1)
     ]()
 
-It contains the basic geometry information of the 2D keypoints.
-And you can access the keypoints by index.
+It contains the basic geometry information of the 2D keypoints,
+which can be obtained by index.
 
     >>> keypoints2d_label[0]
     Keypoint2D(10, 20)
@@ -640,7 +640,7 @@ to describe a set of keypoints corresponding to certain categories.
       (parent_categories): [...]
     )]
 
-We use :class:`~tensorbay.label.supports.KeypointsInfo` to describe a set of 2D keypoints.
+:class:`~tensorbay.label.supports.KeypointsInfo` is used to describe a set of 2D keypoints.
 
 The first parameter of :meth:`~tensorbay.label.label_keypoints.Keypoints2DSubcatalog.add_keypoints`
 is the number of the set of 2D keypoints, which is required.
@@ -852,7 +852,7 @@ The ``lexicon`` is a list consists all of text and phone.
 
 Besides giving the parameters while initialing
 :class:`~tensorbay.label.label_sentence.SetenceSubcatalog`,
-you can set them after intialization.
+it's also feasible to set them after initialization.
 
    >>> from tensorbay.label import SentenceSubcatalog
    >>> sentence_subcatalog = SentenceSubcatalog()

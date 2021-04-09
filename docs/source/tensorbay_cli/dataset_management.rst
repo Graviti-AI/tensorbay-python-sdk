@@ -2,7 +2,7 @@
  Dataset Management
 ####################
 
-TensorBay CLI offers following sub-commands to manage your dataset.
+TensorBay CLI offers following sub-commands to manage dataset.
 (:numref:`Table. %s <sub_commands>`)
 
 .. _sub_commands:
@@ -61,7 +61,7 @@ The basic structure of the sub-command to List data, segments and datasets:
      tb:[dataset_name]:[segment_name]://[remote_path]
 
 If the path is empty, list the names of all datasets.
-You can list data in the following ways:
+The following ways can list data:
 
 | 1. List the names of all datasets.
 

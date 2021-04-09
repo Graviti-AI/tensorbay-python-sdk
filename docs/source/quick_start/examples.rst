@@ -2,7 +2,7 @@
  Examples
 ##########
 
-In this topic, we write a series of examples to help developers to use TensorBay(:numref:`Table. %s <examples_table>`).
+The following table lists a series of examples to help developers to use TensorBay(:numref:`Table. %s <examples_table>`).
 
 .. _examples_table:
 

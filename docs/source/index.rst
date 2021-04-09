@@ -21,11 +21,11 @@ TensorBay Python SDK is a python library to access TensorBay and manage your dat
 It provides:
 
 - A :ref:`pythonic way <quick_start/getting_started_with_tensorbay:Getting Started with TensorBay>`
-  to access your TensorBay resources by TensorBay `OpenAPI`_.
+  to access TensorBay resources by TensorBay `OpenAPI`_.
 - An easy-to-use CLI tool :ref:`gas <tensorbay_cli/getting_started_with_CLI:Getting Started with CLI>`
   (Graviti AI service) to communicate with TensorBay.
 - A consistent :ref:`dataset structure <reference/dataset_structure:Dataset Structure>`
-  to read and write your datasets.
+  to read and write datasets.
 
 .. _OpenAPI: https://docs.graviti.cn/dev-doc/tools/api-center
 

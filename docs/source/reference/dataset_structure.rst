@@ -3,7 +3,7 @@
 ###################
 
 For ease of use, TensorBay defines a uniform dataset format.
-In this topic, we explain the related concepts.
+This topic explains the related concepts.
 The TensorBay dataset format looks like::
 
    dataset

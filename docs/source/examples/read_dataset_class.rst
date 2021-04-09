@@ -2,14 +2,14 @@
  Read "Dataset" Class
 ######################
 
-This topic describes how to read the :class:`~tensorbay.dataset.dataset.Dataset` class after you have
-:ref:`organized the "BSTLD" dataset <examples/BSTLD:Organize Dataset>`.
+This topic describes how to read the :class:`~tensorbay.dataset.dataset.Dataset` class after
+the "BSTLD" dataset have been :ref:`organized <examples/BSTLD:Organize Dataset>`.
 See `this page <https://gas.graviti.cn/dataset/data-decorators/BSTLD>`_  for more details about this dataset.
 
-As mentioned in :ref:`features/dataset_management:Dataset Management`, you need to write a
-:ref:`reference/glossary:Dataloader` to get a :class:`~tensorbay.dataset.dataset.Dataset`.
+As mentioned in :ref:`features/dataset_management:Dataset Management`, a
+:ref:`reference/glossary:Dataloader` is needed to get a :class:`~tensorbay.dataset.dataset.Dataset`.
 However, there are already a number of dataloaders in TensorBay SDK provided by the community.
-Thus, instead of writing, you can just import an available dataloader.
+Thus, instead of writing, importing an available dataloader is also feasible.
 
 The local directory structure for "BSTLD" should be like:
 
@@ -55,17 +55,17 @@ TensorBay supplies two methods to fetch :ref:`reference/dataset_structure:Segmen
    :start-after: """Read Dataset Class / get a segment"""
    :end-before: """"""
 
-The :ref:`reference/dataset_structure:Segment` you get now is the same as the one you :ref:`read from TensorBay <examples/BSTLD:Read Dataset>`.
-In the train :ref:`reference/dataset_structure:Segment`, there is a sequence of :ref:`reference/dataset_structure:Data`. You
-can get one by index.
+This :ref:`reference/dataset_structure:Segment` is the same as the one :ref:`read from TensorBay <examples/BSTLD:Read Dataset>`.
+In the train :ref:`reference/dataset_structure:Segment`, there is a sequence of :ref:`reference/dataset_structure:Data`,
+which can be obtained by index.
 
 .. literalinclude:: ../../../examples/BSTLD.py
    :language: python
    :start-after: """Read Dataset / get data"""
    :end-before: """"""
 
-In each :ref:`reference/dataset_structure:Data`, there is a sequence of :ref:`reference/label_format:Box2D` annotations.
-You can get one by index.
+In each :ref:`reference/dataset_structure:Data`, there is a sequence of :ref:`reference/label_format:Box2D` annotations,
+which can be obtained by index.
 
 .. literalinclude:: ../../../examples/BSTLD.py
    :language: python

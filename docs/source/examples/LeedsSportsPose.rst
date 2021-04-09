@@ -41,7 +41,7 @@ Then, create a dataset client by passing the dataset name to the GAS client.
  List Dataset Names
 ********************
 
-To check if you have created "Leeds Sports Pose" dataset, you can list all your available datasets.
+List all the available datasets to check if the "Leeds Sports Pose" dataset have been created.
 See :ref:`this page <features/dataset_management:Read Dataset>` for details.
 
 .. literalinclude:: ../../../examples/LeedsSportsPose.py
@@ -57,7 +57,7 @@ See :ref:`this page <features/dataset_management:Read Dataset>` for details.
  Organize Dataset
 ******************
 
-Now we describe how to organize the "Leeds Sports Pose" dataset by the :class:`~tensorbay.dataset.dataset.Dataset`
+This part describes how to organize the "Leeds Sports Pose" dataset by the :class:`~tensorbay.dataset.dataset.Dataset`
 object before uploading it to TensorBay. It takes the following steps to organize "Leeds Sports Pose".
 
 Write the Catalog
@@ -87,26 +87,27 @@ The :ref:`code block <LeedsSportsPose-dataloader>` below displays the "Leeds Spo
    :linenos:
    :emphasize-lines: 11-13,42
 
-Note that after creating the :ref:`reference/dataset_structure:Dataset`,
-you need to load the :ref:`reference/dataset_structure:catalog`.(L42)
+Note that after the :ref:`reference/dataset_structure:Dataset` is created,
+the :ref:`reference/dataset_structure:catalog` needs to be loaded.(L42)
 The catalog file "catalog.json" is in the same directory with dataloader file.
 
-In this example, we create a default segment without giving a specific name.
-You can also create a segment by ``dataset.create_segment(SEGMENT_NAME)``.
+In this example, a default segment is created without giving a specific name.
+A segment can also be created by ``dataset.create_segment(SEGMENT_NAME)``.
 
 See :ref:`this page <reference/label_format:Keypoints2D>` for more details for about Keypoints2D annotation details.
 
 .. note::
+
    The :ref:`LeedsSportsPose dataloader <LeedsSportsPose-dataloader>` above uses relative import(L11-13).
-   However, when you write your own dataloader you should use regular import.
-   And when you want to contribute your own dataloader, remember to use relative import.
+   However, use regular import when writing your own dataloader.
+   And use relative import when contributing the dataloader.
 
 ****************
  Upload Dataset
 ****************
 
-After you finish the :ref:`reference/glossary:Dataloader` and organize the "Leeds Sports Pose" into a
-:class:`~tensorbay.dataset.dataset.Dataset` object, you can upload it
+After finishing the :ref:`reference/glossary:Dataloader` and organize the "Leeds Sports Pose" into a
+:class:`~tensorbay.dataset.dataset.Dataset` object, upload it
 to TensorBay for sharing, reuse, etc.
 
 .. literalinclude:: ../../../examples/LeedsSportsPose.py
@@ -115,7 +116,7 @@ to TensorBay for sharing, reuse, etc.
    :end-before: """"""
 
 Remember to execute the commit step after uploading.
-If needed, you can re-upload and commit again.
+If needed, re-upload and commit again.
 Please see :ref:`this page <features/version_control:Version Control>` for more details about version control.
 
 .. note::
@@ -128,7 +129,7 @@ Please see :ref:`this page <features/version_control:Version Control>` for more 
  Read Dataset
 **************
 
-Now you can read "Leeds Sports Pose" dataset from TensorBay.
+Now "Leeds Sports Pose" dataset can be read from TensorBay.
 
 .. literalinclude:: ../../../examples/LeedsSportsPose.py
    :language: python
@@ -136,15 +137,15 @@ Now you can read "Leeds Sports Pose" dataset from TensorBay.
    :end-before: """"""
 
 In :ref:`reference/dataset_structure:Dataset` "Leeds Sports Pose", there is one default
-:ref:`Segments <reference/dataset_structure:Segment>` ``""`` (empty string). You can get it by passing the segment name.
+:ref:`Segments <reference/dataset_structure:Segment>` ``""`` (empty string). Get it by passing the segment name.
 
 .. literalinclude:: ../../../examples/LeedsSportsPose.py
    :language: python
    :start-after: """Read Dataset / get segment"""
    :end-before: """"""
 
-In the train :ref:`reference/dataset_structure:Segment`, there is a sequence of :ref:`reference/dataset_structure:Data`. You
-can get one by index.
+In the train :ref:`reference/dataset_structure:Segment`, there is a sequence of :ref:`reference/dataset_structure:Data`,
+which can be obtained by index.
 
 .. literalinclude:: ../../../examples/LeedsSportsPose.py
    :language: python
@@ -158,8 +159,8 @@ can get one by index.
    is created  without given name, then its name will be "".
 
 In each :ref:`reference/dataset_structure:Data`,
-there is a sequence of :ref:`reference/label_format:Keypoints2D` annotations.
-You can get one by index.
+there is a sequence of :ref:`reference/label_format:Keypoints2D` annotations,
+which can be obtained by index.
 
 .. literalinclude:: ../../../examples/LeedsSportsPose.py
    :language: python
