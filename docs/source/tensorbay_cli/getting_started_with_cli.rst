@@ -2,10 +2,10 @@
  Getting Started with CLI
 ##########################
 
-The TensorBay Command Line Interface is a tool to operate on your datasets.
+The TensorBay Command Line Interface is a tool to operate on datasets.
 It supports Windows, Linux, and Mac platforms.
 
-You can use TensorBay CLI to:
+TensorBay CLI can:
 
  - Create and delete dataset.
  - List data, segments and datasets on TensorBay.
@@ -43,11 +43,11 @@ Use the command below to configure the accessKey.
 
    $ gas config [accessKey]
 
-AccessKey_ is used for identification when using TensorBay to operate on your dataset.
+AccessKey_ is used for identification when using TensorBay to operate on dataset.
 
 .. _accesskey: https://gas.graviti.cn/tensorbay/developer
 
-You can set the accessKey into configuration:
+Set the accessKey into configuration:
 
 .. code:: console
 

@@ -33,7 +33,7 @@ Then, create a dataset client by passing the dataset name to the GAS client.
 List Dataset Names
 ********************
 
-To check if you have created "THCHS-30" dataset, you can list all your available datasets.
+List all the available datasets to check if the "THCHS-30" dataset have been created.
 See :ref:`this page <features/dataset_management:Read Dataset>` for details.
 
 .. literalinclude:: ../../../examples/THCHS30.py
@@ -49,7 +49,7 @@ See :ref:`this page <features/dataset_management:Read Dataset>` for details.
 Organize Dataset
 ******************
 
-Now we describe how to organize the "THCHS-30" dataset by the :class:`~tensorbay.dataset.dataset.Dataset`
+This part describes how to organize the "THCHS-30" dataset by the :class:`~tensorbay.dataset.dataset.Dataset`
 object before uploading it to TensorBay. It takes the following steps to organize "THCHS-30".
 
 Write the Catalog
@@ -58,7 +58,7 @@ Write the Catalog
 The first step is to write the :ref:`reference/dataset_structure:Catalog`.
 Typically, Catalog is a json file contains all label information of one dataset.
 See :ref:`this page <reference/dataset_structure:Catalog>` for more details.
-However the catalog of ``THCHS-30`` is too large, so we need to load the subcatalog by the raw file
+However the catalog of ``THCHS-30`` is too large, so the subcatalog is loaded by the raw file
 and map it to catalog, See :ref:`code block <THCHS30-dataloader>` below for more details.
 
 Write the Dataloader
@@ -75,26 +75,26 @@ The :ref:`code block <THCHS30-dataloader>` below displays the "THCHS-30" dataloa
    :linenos:
    :emphasize-lines: 13-14, 45
 
-Normally, after creating the :ref:`reference/dataset_structure:Dataset`,
-you need to load the :ref:`reference/dataset_structure:catalog`. However, 
+Normally, after the :ref:`reference/dataset_structure:Dataset` is created,
+the :ref:`reference/dataset_structure:catalog` needs to be loaded. However,
 in this example, there is no ``catalog.json`` file, because the lexion of
 ``THCHS-30`` is too large (See more details of lexion in :ref:`reference/label_format:Sentence`).
-Therefore, We load subcatalog from the raw file lexicon.txt and map it to have the catalog.(L45)
+Therefore,the subcatalog is loaded from the raw file lexicon.txt and map it to have the catalog.(L45)
 
 See :ref:`this page <reference/label_format:Sentence>` for more details
 about Sentence annotation details.
 
 .. note::
     The :ref:`THCHS-30 dataloader <THCHS30-dataloader>` above uses relative import(L13-14).
-    However, when you write your own dataloader you should use regular import.
-    And when you want to contribute your own dataloader, remember to use relative import.
+    However, use regular import when writing your own dataloader.
+    And use relative import when contributing the dataloader.
 
 ****************
 Upload Dataset
 ****************
 
-After you finish the :ref:`reference/glossary:Dataloader` and organize the "THCHS-30" into a
-:class:`~tensorbay.dataset.dataset.Dataset` object, you can upload it
+After finishing the :ref:`reference/glossary:Dataloader` and organize the "THCHS-30" into a
+:class:`~tensorbay.dataset.dataset.Dataset` object, upload it
 to TensorBay for sharing, reuse, etc.
 
 .. literalinclude:: ../../../examples/THCHS30.py
@@ -103,7 +103,7 @@ to TensorBay for sharing, reuse, etc.
    :end-before: """"""
 
 Remember to execute the commit step after uploading.
-If needed, you can re-upload and commit again.
+If needed, re-upload and commit again.
 Please see :ref:`features/version_control:Version Control` for more details.
 
 .. note::
@@ -116,7 +116,7 @@ Please see :ref:`features/version_control:Version Control` for more details.
 Read Dataset
 **************
 
-Now you can read "THCHS-30" dataset from TensorBay.
+Now "THCHS-30" dataset can be read from TensorBay.
 
 .. literalinclude:: ../../../examples/THCHS30.py
    :language: python
@@ -125,15 +125,15 @@ Now you can read "THCHS-30" dataset from TensorBay.
 
 In :ref:`reference/dataset_structure:Dataset` "THCHS-30", there are three
 :ref:`Segments <reference/dataset_structure:Segment>`:
-``dev``, ``train`` and ``test``,
-you can get the segment names by list them all.
+``dev``, ``train`` and ``test``.
+Get the segment names by listing them all.
 
 .. literalinclude:: ../../../examples/THCHS30.py
    :language: python
    :start-after: """Read Dataset / list segment names"""
    :end-before: """"""
 
-You can get a segment by passing the required segment name.
+Get a segment by passing the required segment name.
 
 .. literalinclude:: ../../../examples/THCHS30.py
    :language: python
@@ -141,8 +141,8 @@ You can get a segment by passing the required segment name.
    :end-before: """"""
 
 In the dev :ref:`reference/dataset_structure:Segment`,
-there is a sequence of :ref:`reference/dataset_structure:Data`.
-You can get one by index.
+there is a sequence of :ref:`reference/dataset_structure:Data`,
+which can be obtained by index.
 
 .. literalinclude:: ../../../examples/THCHS30.py
    :language: python
@@ -156,8 +156,8 @@ You can get one by index.
     is created without given name, then its name will be "".
 
 In each :ref:`reference/dataset_structure:Data`,
-there is a sequence of :ref:`reference/label_format:Sentence` annotations.
-You can get one by index.
+there is a sequence of :ref:`reference/label_format:Sentence` annotations,
+which can be obtained by index.
 
 .. literalinclude:: ../../../examples/THCHS30.py
    :language: python

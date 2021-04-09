@@ -7,7 +7,7 @@ accesskey
 
 An accesskey is an access credential for identification when using TensorBay to operate on your dataset.
 
-To obtain an accesskey, you need to log in to `Graviti AI Service(GAS)`_ and
+To obtain an accesskey, log in to `Graviti AI Service(GAS)`_ and
 visit the `developer page <https://gas.graviti.cn/tensorbay/developer>`_ to create one.
 
 .. _graviti ai service(gas): https://www.graviti.cn/tensorBay
@@ -113,8 +113,8 @@ The following is the general format for TBRN:
 
     tb:[dataset_name]:[segment_name]://[remote_path]
 
-Suppose we have an image ``000000.jpg`` under the default segment of a dataset named ``example``,
-then we have the TBRN of this image:
+Suppose there is an image ``000000.jpg`` under the default segment of a dataset named ``example``,
+then the TBRN of this image should be:
 
 .. code::
 
@@ -130,7 +130,7 @@ commit
 
 Similar with Git, a commit is a version of a dataset,
 which contains the changes compared with the former commit.
-You can view a certain commit of a dataset based on the given commit ID.
+A certain commit of a dataset can be accessed by passing the corresponding commit ID.
 
 A commit is readable, but is not writable.
 Thus, only read operations such as getting catalog, files and labels are allowed.
@@ -150,4 +150,4 @@ and the changes inside it will be made into a commit.
 
 There are scenarios when modifications of a dataset are required,
 such as correcting errors, enlarging dataset, adding more types of labels, etc.
-Under these circumstances, you can create a draft, edit the dataset and commit the draft.
+Under these circumstances, create a draft, edit the dataset and commit the draft.

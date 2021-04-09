@@ -3,7 +3,7 @@
 ##########################
 
 TensorBay also defines a uniform fusion dataset format.
-In this topic, we explain the related concepts.
+This topic explains the related concepts.
 The TensorBay fusion dataset format looks like::
 
    fusion dataset

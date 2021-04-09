@@ -42,7 +42,7 @@ Then, create a dataset client by passing the dataset name to the GAS client.
  List Dataset Names
 ********************
 
-To check if you have created "Neolix OD" dataset, you can list all your available datasets.
+List all the available datasets to check if the "Neolix OD" dataset have been created.
 See :ref:`this page <features/dataset_management:Read Dataset>` for details.
 
 .. literalinclude:: ../../../examples/NeolixOD.py
@@ -58,7 +58,7 @@ See :ref:`this page <features/dataset_management:Read Dataset>` for details.
  Organize Dataset
 ******************
 
-Now we describe how to organize the "Neolix OD" dataset by the :class:`~tensorbay.dataset.dataset.Dataset`
+This part describes how to organize the "Neolix OD" dataset by the :class:`~tensorbay.dataset.dataset.Dataset`
 object before uploading it to TensorBay. It takes the following steps to organize "Neolix OD".
 
 Write the Catalog
@@ -89,27 +89,28 @@ The :ref:`code block <neolixod-dataloader>` below displays the "Neolix OD" datal
    :linenos:
    :emphasize-lines: 13-14,41
 
-Note that after creating the :ref:`reference/dataset_structure:Dataset`,
-you need to load the :ref:`reference/dataset_structure:catalog`.(L41)
+Note that after the :ref:`reference/dataset_structure:Dataset` is created,
+the :ref:`reference/dataset_structure:catalog` needs to be loaded.(L41)
 The catalog file "catalog.json" is in the same directory with dataloader file.
 
-In this example, we create segments by ``dataset.create_segment(SEGMENT_NAME)``.
-You can also create a default segment without giving a specific name, then its name
+In this example, segments are created by ``dataset.create_segment(SEGMENT_NAME)``.
+A default segment can also be created without giving a specific name, then its name
 will be "".
 
 See :ref:`this page <reference/label_format:Box3D>` for more details for about Box3D annotation details.
 
 .. note::
+
    The :ref:`Neolix OD dataloader <neolixod-dataloader>` above uses relative import(L13-14).
-   However, when you write your own dataloader you should use regular import.
-   And when you want to contribute your own dataloader, remember to use relative import.
+   However, use regular import when writing your own dataloader.
+   And use relative import when contributing the dataloader.
 
 ****************
  Upload Dataset
 ****************
 
-After you finish the :ref:`reference/glossary:Dataloader` and organize the "Neolix OD" into a
-:class:`~tensorbay.dataset.dataset.Dataset` object, you can upload it
+After finishing the :ref:`reference/glossary:Dataloader` and organize the "Neolix OD" into a
+:class:`~tensorbay.dataset.dataset.Dataset` object, upload it
 to TensorBay for sharing, reuse, etc.
 
 .. literalinclude:: ../../../examples/NeolixOD.py
@@ -118,7 +119,7 @@ to TensorBay for sharing, reuse, etc.
    :end-before: """"""
 
 Remember to execute the commit step after uploading.
-If needed, you can re-upload and commit again.
+If needed, re-upload and commit again.
 Please see :ref:`this page <features/version_control:Version Control>` for more details about version control.
 
 .. note::
@@ -131,7 +132,7 @@ Please see :ref:`this page <features/version_control:Version Control>` for more 
  Read Dataset
 **************
 
-Now you can read "Neolix OD" dataset from TensorBay.
+Now "Neolix OD" dataset can be read from TensorBay.
 
 .. literalinclude:: ../../../examples/NeolixOD.py
    :language: python
@@ -140,7 +141,7 @@ Now you can read "Neolix OD" dataset from TensorBay.
 
 In :ref:`reference/dataset_structure:Dataset` "Neolix OD", there is one default
 :ref:`Segment <reference/dataset_structure:Segment>`: ``""`` (empty string).
-You can get a segment by passing the required segment name.
+Get a segment by passing the required segment name.
 
 .. literalinclude:: ../../../examples/NeolixOD.py
    :language: python
@@ -148,8 +149,8 @@ You can get a segment by passing the required segment name.
    :end-before: """"""
 
 In the default :ref:`reference/dataset_structure:Segment`,
-there is a sequence of :ref:`reference/dataset_structure:Data`.
-You can get one by index.
+there is a sequence of :ref:`reference/dataset_structure:Data`,
+which can be obtained by index.
 
 .. literalinclude:: ../../../examples/NeolixOD.py
    :language: python
@@ -163,8 +164,7 @@ You can get one by index.
    is created  without given name, then its name will be "".
 
 In each :ref:`reference/dataset_structure:Data`,
-there is a sequence of :ref:`reference/label_format:Box3D` annotations.
-You can get one by index.
+there is a sequence of :ref:`reference/label_format:Box3D` annotations,
 
 .. literalinclude:: ../../../examples/NeolixOD.py
    :language: python

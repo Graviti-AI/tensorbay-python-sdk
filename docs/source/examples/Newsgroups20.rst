@@ -32,8 +32,8 @@ Then, create a dataset client by passing the dataset name to the GAS client.
 ********************
  List Dataset Names
 ********************
-    
-To check if you have created "20 Newsgroups" dataset, you can list all your available datasets.
+
+List all the available datasets to check if the "20 Newsgroups" dataset have been created.
 See :ref:`this page <features/dataset_management:Read Dataset>` for details.
     
 .. literalinclude:: ../../../examples/Newsgroups20.py
@@ -49,7 +49,7 @@ See :ref:`this page <features/dataset_management:Read Dataset>` for details.
  Organize Dataset
 ******************
   
-Now we describe how to organize the "20 Newsgroups" dataset by the :class:`~tensorbay.dataset.dataset.Dataset`
+This part describes how to organize the "20 Newsgroups" dataset by the :class:`~tensorbay.dataset.dataset.Dataset`
 object before uploading it to TensorBay. It takes the following steps to organize "20 Newsgroups".
 
 Write the Catalog
@@ -85,33 +85,35 @@ The :ref:`code block <Newsgroups20-dataloader>` below displays the "20 Newsgroup
    :linenos:
    :emphasize-lines: 11-12, 77, 92
 
-Note that after creating the :ref:`reference/dataset_structure:Dataset`,
-you need to load the :ref:`reference/dataset_structure:catalog`. (L77)
+Note that after the :ref:`reference/dataset_structure:Dataset` is created,
+the :ref:`reference/dataset_structure:catalog` needs to be loaded. (L77)
 The catalog file "catalog.json" is in the same directory with dataloader file.
 
-In this example, we create segments by ``dataset.create_segment(SEGMENT_NAME)``.
-You can also create a default segment without giving a specific name, then its name
+In this example, segments are created by ``dataset.create_segment(SEGMENT_NAME)``.
+A default segment can also be created without giving a specific name, then its name
 will be "".
 
 See :ref:`this page <reference/label_format:Classification>` for more details for
 about Classification annotation details.
 
 .. note::
+
    The :ref:`20 Newsgroups dataloader <Newsgroups20-dataloader>` above uses relative import(L11-12).
-   However, when you write your own dataloader you should use regular import as shown below.
-   And when you want to contribute your own dataloader, remember to use relative import.
+   However, use regular import when writing your own dataloader.
+   And use relative import when contributing the dataloader.
 
 .. note::
+
    The data in "20 Newsgroups" do not have extensions
-   so that we add a "txt" extension to the remote path of each data file(L92)
+   so that a "txt" extension is added to the remote path of each data file(L92)
    to ensure the loaded dataset could function well on TensorBay.
 
 ****************
  Upload Dataset
 ****************
 
-After you finish the :ref:`reference/glossary:Dataloader` and organize the "20 Newsgroups" into a
-:class:`~tensorbay.dataset.dataset.Dataset` object, you can upload it
+After finishing the :ref:`reference/glossary:Dataloader` and organize the "20 Newsgroups" into a
+:class:`~tensorbay.dataset.dataset.Dataset` object, upload it
 to TensorBay for sharing, reuse, etc.
 
 .. literalinclude:: ../../../examples/Newsgroups20.py
@@ -120,7 +122,7 @@ to TensorBay for sharing, reuse, etc.
    :end-before: """"""
 
 Remember to execute the commit step after uploading.
-If needed, you can re-upload and commit again.
+If needed, re-upload and commit again.
 Please see :ref:`this page <features/version_control:Version Control>` for more details about version control.
 
 .. note::
@@ -133,7 +135,7 @@ Please see :ref:`this page <features/version_control:Version Control>` for more 
  Read Dataset
 **************
 
-Now you can read "20 Newsgroups" dataset from TensorBay.
+Now "20 Newsgroups" dataset can be read from TensorBay.
 
 .. literalinclude:: ../../../examples/Newsgroups20.py
    :language: python
@@ -142,23 +144,23 @@ Now you can read "20 Newsgroups" dataset from TensorBay.
 
 In :ref:`reference/dataset_structure:Dataset` "20 Newsgroups", there are four
 :ref:`Segments <reference/dataset_structure:Segment>`: ``20news-18828``,
-``20news-bydate-test`` and ``20news-bydate-train``, ``20_newsgroups``
-you can get the segment names by list them all.
+``20news-bydate-test`` and ``20news-bydate-train``, ``20_newsgroups``.
+Get the segment names by listing them all.
 
 .. literalinclude:: ../../../examples/Newsgroups20.py
    :language: python
    :start-after: """Read Dataset / list segment names"""
    :end-before: """"""
 
-You can get a segment by passing the required segment name.
+Get a segment by passing the required segment name.
 
 .. literalinclude:: ../../../examples/Newsgroups20.py
    :language: python
    :start-after: """Read Dataset / get segment"""
    :end-before: """"""
 
-In the 20news-18828 :ref:`reference/dataset_structure:Segment`, there is a sequence of :ref:`reference/dataset_structure:Data`. You
-can get one by index.
+In the 20news-18828 :ref:`reference/dataset_structure:Segment`, there is a sequence of :ref:`reference/dataset_structure:Data`,
+which can be obtained by index.
 
 .. literalinclude:: ../../../examples/Newsgroups20.py
    :language: python
@@ -172,8 +174,8 @@ can get one by index.
    is created  without given name, then its name will be "".
 
 In each :ref:`reference/dataset_structure:Data`,
-there is a sequence of :ref:`reference/label_format:Classification` annotations.
-You can get one by index.
+there is a sequence of :ref:`reference/label_format:Classification` annotations,
+which can be obtained by index.
 
 .. literalinclude:: ../../../examples/Newsgroups20.py
    :language: python
