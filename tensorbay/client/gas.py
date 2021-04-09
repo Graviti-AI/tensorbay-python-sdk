@@ -141,8 +141,8 @@ class GAS:
 
         Returns:
             The created :class:`~tensorbay.client.dataset.DatasetClient` instance or
-                :class:`~tensorbay.client.dataset.FusionDatasetClient` instance (is_fusion=True),
-                and the status of dataset client is "commit".
+            :class:`~tensorbay.client.dataset.FusionDatasetClient` instance (is_fusion=True),
+            and the status of dataset client is "commit".
 
         """
         post_data = {
@@ -269,7 +269,7 @@ class GAS:
 
             - Create a TensorBay dataset with the name and type of input local dataset.
             - Upload all :class:`~tensorbay.dataset.segment.Segment`
-                or :class:`~tensorbay.dataset.segment.FusionSegment` in the dataset to TensorBay.
+              or :class:`~tensorbay.dataset.segment.FusionSegment` in the dataset to TensorBay.
 
         Arguments:
             dataset: The :class:`~tensorbay.dataset.dataset.Dataset` or
@@ -280,8 +280,8 @@ class GAS:
 
         Returns:
             The :class:`~tensorbay.client.dataset.DatasetClient` or
-                :class:`~tensorbay.client.dataset.FusionDatasetClient`
-                bound with the uploaded dataset.
+            :class:`~tensorbay.client.dataset.FusionDatasetClient`
+            bound with the uploaded dataset.
 
         """
         dataset_client = self.get_dataset(dataset.name, isinstance(dataset, FusionDataset))
