@@ -122,6 +122,12 @@ class SubcatalogBase(TypeMixin[LabelType], ReprMixin, EqMixin):
 
     description = ""
 
+    def _repr_head(self) -> str:
+        for attr in self._repr_attrs:
+            if hasattr(self, attr):
+                return self.__class__.__name__
+        return f"<class is empty>\n{self.__class__.__name__}"
+
     def __init_subclass__(cls) -> None:
         cls._supports = tuple(
             filter(lambda class_: issubclass(class_, SubcatalogMixin), cls.__bases__)
@@ -257,6 +263,11 @@ class Label(ReprMixin, EqMixin):
     polyline2d: List["LabeledPolyline2D"]
     keypoints2d: List["LabeledKeypoints2D"]
     sentence: List["LabeledSentence"]
+
+    def _repr_head(self) -> str:
+        if bool(self):
+            return self.__class__.__name__
+        return f"<class is empty>\n{self.__class__.__name__}"
 
     def __bool__(self) -> bool:
         for label_type in LabelType:
