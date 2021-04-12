@@ -142,6 +142,14 @@ class TBRN:
         remote_path: Object path of the file.
         tbrn: Full TBRN string.
 
+    Attributes:
+        dataset_name: Name of the dataset.
+        segment_name: Name of the segment.
+        frame_index: Index of the frame.
+        sensor_name: Name of the sensor.
+        remote_path: Object path of the file.
+        type: The type of this TBRN.
+
     Raises:
         TypeError: The TBRN is invalid.
 

@@ -35,6 +35,9 @@ class NameMixin(ReprMixin, EqMixin):
         name: Name of the class.
         description: Description of the class.
 
+    Attributes:
+        name: Name of the class.
+
     """
 
     _P = TypeVar("_P", bound="NameMixin")

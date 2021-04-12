@@ -93,6 +93,10 @@ class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestor
     Arguments:
         name: The name of the dataset.
 
+    Attributes:
+        catalog: The :class:`~tensorbay.label.catalog.Catalog` of the dataset.
+        notes: The :class:`Notes` of the dataset.
+
     """
 
     _repr_type = ReprType.SEQUENCE

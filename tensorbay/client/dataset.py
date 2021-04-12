@@ -51,6 +51,11 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         dataset_id: Dataset ID.
         gas_client: The initial client to interact between local and TensorBay.
 
+    Attributes:
+        name: Dataset name.
+        dataset_id: Dataset ID.
+        status: The status of the dataset client.
+
     """
 
     _client: Client

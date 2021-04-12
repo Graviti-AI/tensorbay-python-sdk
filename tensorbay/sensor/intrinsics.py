@@ -493,9 +493,9 @@ class CameraIntrinsics(ReprMixin):
         **kwargs: Float values to initialize :class:`DistortionCoefficients`.
 
     Attributes:
-        _camera_matrix: A 3x3 Sequence of the camera matrix.
-        _distortion_coefficients: It is the deviation from rectilinear projection. It includes
-            radial distortion and tangential distortion.
+        camera_matrix: A 3x3 Sequence of the camera matrix.
+        distortion_coefficients: It is the deviation from rectilinear projection. It includes
+        radial distortion and tangential distortion.
 
     Examples:
         >>> matrix = [[1, 3, 3],

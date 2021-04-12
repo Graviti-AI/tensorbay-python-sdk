@@ -61,6 +61,10 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
         name: Segment name.
         dataset_client: The dataset client.
 
+    Attributes:
+        name: Segment name.
+        status: The status of the dataset client.
+
     """
 
     _EXPIRED_IN_SECOND = 240
