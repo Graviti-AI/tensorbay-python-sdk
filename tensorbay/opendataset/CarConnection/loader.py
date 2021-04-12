@@ -3,8 +3,8 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the The Car Connection Picture dataset."""
+# pylint: disable=missing-module-docstring
+# pylint: disable=line-too-long
 
 import os
 from typing import Union
@@ -18,18 +18,21 @@ DATASET_NAME = "The Car Connection Picture"
 
 
 def CarConnection(path: str) -> Dataset:
-    """Dataloader of the The Car Connection Picture dataset.
+    """Dataloader of `The Car Connection Picture`_ dataset.
+
+    .. _The Car Connection Picture: https://github.com/nicolas-gervais/predicting-car-price-from-scraped-data/tree/master/picture-scraper # noqa: E501
+
+    The file structure should be like::
+
+        <path>
+            <imagename>.jpg
+            ...
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                    <imagename>.jpg
-                    ...
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

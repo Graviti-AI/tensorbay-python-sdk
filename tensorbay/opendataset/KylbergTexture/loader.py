@@ -3,8 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the Kylberg Texture dataset."""
+# pylint: disable=missing-module-docstring
 
 import os
 
@@ -16,25 +15,28 @@ DATASET_NAME = "Kylberg Texture"
 
 
 def KylbergTexture(path: str) -> Dataset:
-    """Dataloader of the Kylberg Texture dataset.
+    """Dataloader of the `Kylberg Texture`_ dataset.
+
+    .. _Kylberg Texture: http://www.cb.uu.se/~gustaf/texture/
+
+    The file structure should be like::
+
+        <path>
+            originalPNG/
+                <imagename>.png
+                ...
+            withoutRotateAll/
+                <imagename>.png
+                ...
+            RotateAll/
+                <imagename>.png
+                ...
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                    originalPNG/
-                        <imagename>.png
-                        ...
-                    withoutRotateAll/
-                        <imagename>.png
-                        ...
-                    RotateAll/
-                        <imagename>.png
-                        ...
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

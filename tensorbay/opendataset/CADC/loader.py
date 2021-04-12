@@ -3,8 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the CADC dataset."""
+# pylint: disable=missing-module-docstring
 
 import json
 import os
@@ -22,52 +21,55 @@ DATASET_NAME = "CADC"
 
 
 def CADC(path: str) -> FusionDataset:
-    """Dataloader of the CADC dataset.
+    """Dataloader of the `CADC`_ dataset.
+
+    .. _CADC: http://cadcd.uwaterloo.ca/index.html
+
+    The file structure should be like::
+
+        <path>
+            2018_03_06/
+                0001/
+                    3d_ann.json
+                    labeled/
+                        image_00/
+                            data/
+                                0000000000.png
+                                0000000001.png
+                                ...
+                            timestamps.txt
+                        ...
+                        image_07/
+                            data/
+                            timestamps.txt
+                        lidar_points/
+                            data/
+                            timestamps.txt
+                        novatel/
+                            data/
+                            dataformat.txt
+                            timestamps.txt
+                ...
+                0018/
+                calib/
+                    00.yaml
+                    01.yaml
+                    02.yaml
+                    03.yaml
+                    04.yaml
+                    05.yaml
+                    06.yaml
+                    07.yaml
+                    extrinsics.yaml
+                    README.txt
+            2018_03_07/
+            2019_02_27/
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                    2018_03_06/
-                        0001/
-                            3d_ann.json
-                            labeled/
-                                image_00/
-                                    data/
-                                        0000000000.png
-                                        0000000001.png
-                                        ...
-                                    timestamps.txt
-                                ...
-                                image_07/
-                                    data/
-                                    timestamps.txt
-                                lidar_points/
-                                    data/
-                                    timestamps.txt
-                                novatel/
-                                    data/
-                                    dataformat.txt
-                                    timestamps.txt
-                        ...
-                        0018/
-                        calib/
-                            00.yaml
-                            01.yaml
-                            02.yaml
-                            03.yaml
-                            04.yaml
-                            05.yaml
-                            06.yaml
-                            07.yaml
-                            extrinsics.yaml
-                            README.txt
-                    2018_03_07/
-                    2019_02_27/
 
     Returns:
-        Loaded `FusionDataset` object.
+        Loaded `~tensorbay.dataset.dataset.FusionDataset` instance.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

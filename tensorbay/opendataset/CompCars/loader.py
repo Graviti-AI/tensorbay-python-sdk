@@ -3,8 +3,7 @@
 # Copytright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the CompCars dataset."""
+# pylint: disable=missing-module-docstring
 
 import os
 from typing import Any, Dict, List, Tuple
@@ -22,43 +21,46 @@ _SEGMENT_SPLIT_FILES = (
 
 
 def CompCars(path: str) -> Dataset:
-    """Dataloader of the CompCars dataset.
+    """Dataloader of the `CompCars`_ dataset.
+
+    .. _CompCars: http://mmlab.ie.cuhk.edu.hk/datasets/comp_cars/index.html
+
+    The file structure should be like::
+
+        <path>
+            data/
+                image/
+                    <make name id>/
+                        <model name id>/
+                            <year>/
+                                <image name>.jpg
+                                ...
+                            ...
+                        ...
+                    ...
+                label/
+                    <make name id>/
+                        <model name id>/
+                            <year>/
+                                <image name>.txt
+                                ...
+                            ...
+                        ...
+                    ...
+                misc/
+                    attributes.txt
+                    car_type.mat
+                    make_model_name.mat
+                train_test_split/
+                    classification/
+                        train.txt
+                        test.txt
 
     Arguments:
-        path: The root path of dataset.
-            The file structure should be like::
-
-                <path>
-                    data/
-                        image/
-                            <make name id>/
-                                <model name id>/
-                                    <year>/
-                                        <image name>.jpg
-                                        ...
-                                    ...
-                                ...
-                            ...
-                        label/
-                            <make name id>/
-                                <model name id>/
-                                    <year>/
-                                        <image name>.txt
-                                        ...
-                                    ...
-                                ...
-                            ...
-                        misc/
-                            attributes.txt
-                            car_type.mat
-                            make_model_name.mat
-                        train_test_split/
-                            classification/
-                                train.txt
-                                test.txt
+        path: The root directory of the dataset.
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     root_path = os.path.join(os.path.abspath(os.path.expanduser(path)), "data")

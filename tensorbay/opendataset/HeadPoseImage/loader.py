@@ -3,8 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the Head Pose Image dataset."""
+# pylint: disable=missing-module-docstring
 
 import os
 import re
@@ -19,26 +18,29 @@ DATASET_NAME = "Head Pose Image"
 
 
 def HeadPoseImage(path: str) -> Dataset:
-    """Dataloader of the Head Pose Image dataset.
+    """Dataloader of the `Head Pose Image`_ dataset.
+
+    .. _Head Pose Image: http://www-prima.inrialpes.fr/perso/Gourier/Faces/HPDatabase.html
+
+    The file structure should be like::
+
+        <path>
+            Person01/
+                person01100-90+0.jpg
+                person01100-90+0.txt
+                person01101-60-90.jpg
+                person01101-60-90.txt
+                ...
+            Person02/
+            Person03/
+            ...
+            Person15/
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                    Person01/
-                        person01100-90+0.jpg
-                        person01100-90+0.txt
-                        person01101-60-90.jpg
-                        person01101-60-90.txt
-                        ...
-                    Person02/
-                    Person03/
-                    ...
-                    Person15/
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     dataset = Dataset(DATASET_NAME)

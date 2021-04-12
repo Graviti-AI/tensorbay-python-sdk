@@ -3,8 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the THCHS-30 dataset."""
+# pylint: disable=missing-module-docstring
 
 import os
 from itertools import islice
@@ -19,26 +18,29 @@ _SEGMENT_NAME_LIST = ("train", "dev", "test")
 
 
 def THCHS30(path: str) -> Dataset:
-    """Dataloader of the THCHS-30 dataset.
+    """Dataloader of the `THCHS-30`_ dataset.
+
+    .. _THCHS-30: http://166.111.134.19:7777/data/thchs30/README.html
+
+    The file structure should be like::
+
+        <path>
+            lm_word/
+                lexicon.txt
+            data/
+                A11_0.wav.trn
+                ...
+            dev/
+                A11_101.wav
+                ...
+            train/
+            test/
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                    lm_word/
-                        lexicon.txt
-                    data/
-                        A11_0.wav.trn
-                        ...
-                    dev/
-                        A11_101.wav
-                        ...
-                    train/
-                    test/
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     dataset = Dataset(DATASET_NAME)

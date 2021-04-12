@@ -3,8 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the Coin Image dataset."""
+# pylint: disable=missing-module-docstring
 
 import csv
 import os
@@ -18,19 +17,22 @@ DATASET_NAME = "Coin Image"
 
 
 def CoinImage(path: str) -> Dataset:
-    """Dataloader of the Coin Image dataset.
+    """Dataloader of the `Coin Image`_ dataset.
+
+    .. _Coin Image: https://cvl.tuwien.ac.at/research/cvl-databases/coin-image-dataset/
+
+    The file structure should be like::
+
+        <path>
+            classes.csv
+            <imagename>.png
+            ...
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                    classes.csv
-                    <imagename>.png
-                    ...
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

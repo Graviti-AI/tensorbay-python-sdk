@@ -3,8 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the Newsgroups20 dataset."""
+# pylint: disable=missing-module-docstring
 
 import os
 
@@ -31,45 +30,48 @@ SEGMENT_DESCRIPTION_DICT = {
 
 
 def Newsgroups20(path: str) -> Dataset:
-    """Dataloader of the Newsgroups20 dataset.
+    """Dataloader of the `Newsgroups20`_ dataset.
+
+    .. _Newsgroups20: http://qwone.com/~jason/20Newsgroups/
+
+    The folder structure should be like::
+
+        <path>
+            20news-18828/
+                alt.atheism/
+                    49960
+                    51060
+                    51119
+                    51120
+                    ...
+                comp.graphics/
+                comp.os.ms-windows.misc/
+                comp.sys.ibm.pc.hardware/
+                comp.sys.mac.hardware/
+                comp.windows.x/
+                misc.forsale/
+                rec.autos/
+                rec.motorcycles/
+                rec.sport.baseball/
+                rec.sport.hockey/
+                sci.crypt/
+                sci.electronics/
+                sci.med/
+                sci.space/
+                soc.religion.christian/
+                talk.politics.guns/
+                talk.politics.mideast/
+                talk.politics.misc/
+                talk.religion.misc/
+            20news-bydate-test/
+            20news-bydate-train/
+            20_newsgroups/
 
     Arguments:
         path: The root directory of the dataset.
-            The folder structure should be like::
-
-                <path>
-                    20news-18828/
-                        alt.atheism/
-                            49960
-                            51060
-                            51119
-                            51120
-                            ...
-                        comp.graphics/
-                        comp.os.ms-windows.misc/
-                        comp.sys.ibm.pc.hardware/
-                        comp.sys.mac.hardware/
-                        comp.windows.x/
-                        misc.forsale/
-                        rec.autos/
-                        rec.motorcycles/
-                        rec.sport.baseball/
-                        rec.sport.hockey/
-                        sci.crypt/
-                        sci.electronics/
-                        sci.med/
-                        sci.space/
-                        soc.religion.christian/
-                        talk.politics.guns/
-                        talk.politics.mideast/
-                        talk.politics.misc/
-                        talk.religion.misc/
-                    20news-bydate-test/
-                    20news-bydate-train/
-                    20_newsgroups/
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

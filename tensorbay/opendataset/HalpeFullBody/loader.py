@@ -3,8 +3,8 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the Halpe Full-Body Human Keypoints and HOI-Det dataset."""
+# pylint: disable=missing-module-docstring
+# pylint: disable=line-too-long
 
 import json
 import os
@@ -23,26 +23,29 @@ _SEGMENT_SPLIT = (
 
 
 def HalpeFullBody(path: str) -> Dataset:
-    """Dataloader of the Halpe Full-Body Human Keypoints and HOI-Det dataset.
+    """Dataloader of the `Halpe Full-Body Human Keypoints and HOI-Det`_ dataset.
+
+    .. _Halpe Full-Body Human Keypoints and HOI-Det: https://github.com/Fang-Haoshu/Halpe-FullBody/ # noqa: E501
+
+    The folder structure should be like::
+
+        <path>
+            halpe_train_v1.json
+            halpe_val_v1.json
+            hico_20160224_det/
+                images/
+                    train2015/
+                        HICO_train2015_00000001.jpg
+                        ...
+            val2017/
+                000000000139.jpg
+                ...
 
     Arguments:
         path: The root directory of the dataset.
-            The folder structure should be like::
-
-                <path>
-                    halpe_train_v1.json
-                    halpe_val_v1.json
-                    hico_20160224_det/
-                        images/
-                            train2015/
-                                HICO_train2015_00000001.jpg
-                                ...
-                    val2017/
-                        000000000139.jpg
-                        ...
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

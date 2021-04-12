@@ -3,8 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the WIDER FACE dataset."""
+# pylint: disable=missing-module-docstring
 
 import os
 from collections import OrderedDict
@@ -24,34 +23,37 @@ _ATTRIBUTE_MAP_TYPE = Dict[str, List[Union[bool, str]]]
 
 
 def WIDER_FACE(path: str) -> Dataset:
-    """Dataloader of the WIDER FACE dataset.
+    """Dataloader of the `WIDER FACE`_ dataset.
+
+    .. _WIDER FACE: http://shuoyang1213.me/WIDERFACE/
+
+    The file structure should be like::
+
+        <path>
+            WIDER_train/
+                images/
+                    0--Parade/
+                        0_Parade_marchingband_1_100.jpg
+                        0_Parade_marchingband_1_1015.jpg
+                        0_Parade_marchingband_1_1030.jpg
+                        ...
+                    1--Handshaking/
+                    ...
+                    59--people--driving--car/
+                    61--Street_Battle/
+            WIDER_val/
+                ...
+            WIDER_test/
+                ...
+            wider_face_split/
+                wider_face_train_bbx_gt.txt
+                wider_face_val_bbx_gt.txt
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                    WIDER_train/
-                        images/
-                            0--Parade/
-                                0_Parade_marchingband_1_100.jpg
-                                0_Parade_marchingband_1_1015.jpg
-                                0_Parade_marchingband_1_1030.jpg
-                                ...
-                            1--Handshaking/
-                            ...
-                            59--people--driving--car/
-                            61--Street_Battle/
-                    WIDER_val/
-                        ...
-                    WIDER_test/
-                        ...
-                    wider_face_split/
-                        wider_face_train_bbx_gt.txt
-                        wider_face_val_bbx_gt.txt
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     dataset = Dataset(DATASET_NAME)

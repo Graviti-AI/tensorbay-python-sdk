@@ -3,8 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the NightOwls dataset."""
+# pylint: disable=missing-module-docstring
 
 import json
 import os
@@ -18,27 +17,30 @@ DATASET_NAME = "NightOwls"
 
 
 def NightOwls(path: str) -> Dataset:
-    """Dataloader of the NightOwls dataset.
+    """Dataloader of the `NightOwls`_ dataset.
+
+    .. _NightOwls: http://www.nightowls-dataset.org/
+
+    The file structure should be like::
+
+        <path>
+            nightowls_test/
+                <image_name>.png
+                ...
+            nightowls_training/
+                <image_name>.png
+                ...
+            nightowls_validation/
+                <image_name>.png
+                ...
+            nightowls_training.json
+            nightowls_validation.json
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                    nightowls_test/
-                        <image_name>.png
-                        ...
-                    nightowls_training/
-                        <image_name>.png
-                        ...
-                    nightowls_validation/
-                        <image_name>.png
-                        ...
-                    nightowls_training.json
-                    nightowls_validation.json
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

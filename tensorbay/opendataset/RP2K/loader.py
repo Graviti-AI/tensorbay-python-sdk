@@ -3,8 +3,7 @@
 # Copytright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the RP2K dataset."""
+# pylint: disable=missing-module-docstring
 
 import os
 
@@ -16,27 +15,30 @@ DATASET_NAME = "RP2K"
 
 
 def RP2K(path: str) -> Dataset:
-    """Dataloader of the RP2K dataset.
+    """Dataloader of the `RP2K`_ dataset.
+
+    .. _RP2K: https://www.pinlandata.com/rp2k_dataset
+
+    The file structure of RP2K looks like::
+
+        <path>
+            all/
+                test/
+                    <catagory>/
+                        <image_name>.jpg
+                        ...
+                    ...
+                train/
+                    <catagory>/
+                        <image_name>.jpg
+                        ...
+                    ...
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure of RP2K looks like::
-
-                <path>
-                    all/
-                        test/
-                            <catagory>/
-                                <image_name>.jpg
-                                ...
-                            ...
-                        train/
-                            <catagory>/
-                                <image_name>.jpg
-                                ...
-                            ...
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     root_path = os.path.join(os.path.abspath(os.path.expanduser(path)), "all")

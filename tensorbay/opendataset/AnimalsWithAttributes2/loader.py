@@ -3,8 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the Animals with attributes 2 dataset."""
+# pylint: disable=missing-module-docstring
 
 import os
 
@@ -16,24 +15,27 @@ DATASET_NAME = "Animals with attributes 2"
 
 
 def AnimalsWithAttributes2(path: str) -> Dataset:
-    """Dataloader of the Animals with attributes 2 dataset.
+    """Dataloader of the `Animals with attributes 2`_ dataset.
+
+    .. _Animals with attributes 2: https://cvml.ist.ac.at/AwA2/
+
+    The file structure should be like::
+
+        <path>
+            classes.txt
+            predicates.txt
+            predicate-matrix-binary.txt
+            JPEGImages/
+                <classname>/
+                    <imagename>.jpg
+                ...
+            ...
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                    classes.txt
-                    predicates.txt
-                    predicate-matrix-binary.txt
-                    JPEGImages/
-                        <classname>/
-                            <imagename>.jpg
-                        ...
-                    ...
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

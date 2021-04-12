@@ -3,8 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the NeolixOD dataset."""
+# pylint: disable=missing-module-docstring
 
 import os
 
@@ -18,21 +17,24 @@ DATASET_NAME = "Neolix OD"
 
 
 def NeolixOD(path: str) -> Dataset:
-    """Dataloader of the NeolixOD dataset.
+    """Dataloader of the `NeolixOD`_ dataset.
+
+    .. _NeolixOD: https://www.graviti.cn/dataset-detail/NeolixOD
+
+    The file structure should be like::
+
+        <path>
+            bins/
+                <id>.bin
+            labels/
+                <id>.txt
+            ...
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                    bins/
-                        <id>.bin
-                    labels/
-                        <id>.txt
-                    ...
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

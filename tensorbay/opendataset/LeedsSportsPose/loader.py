@@ -3,8 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the LeedsSportsPose dataset."""
+# pylint: disable=missing-module-docstring
 
 import os
 
@@ -17,21 +16,24 @@ DATASET_NAME = "Leeds Sports Pose"
 
 
 def LeedsSportsPose(path: str) -> Dataset:
-    """Dataloader of the LeedsSportsPose dataset.
+    """Dataloader of the `LeedsSportsPose`_ dataset.
+
+    .. _LeedsSportsPose: https://sam.johnson.io/research/lsp.html
+
+    The folder structure should be like::
+
+        <path>
+            joints.mat
+            images/
+                im0001.jpg
+                im0002.jpg
+                ...
 
     Arguments:
         path: The root directory of the dataset.
-            The folder structure should be like::
-
-                <path>
-                    joints.mat
-                    images/
-                        im0001.jpg
-                        im0002.jpg
-                        ...
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     from scipy.io import loadmat  # pylint: disable=import-outside-toplevel

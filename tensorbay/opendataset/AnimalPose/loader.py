@@ -3,8 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of 5 Categories AnimalPose dataset and 7 Categories AnimalPose dataset."""
+# pylint: disable=missing-module-docstring
 
 import json
 import os
@@ -43,40 +42,43 @@ _KEYPOINT_TO_INDEX = {
 
 
 def AnimalPose5(path: str) -> Dataset:
-    """Dataloader of 5 Categories AnimalPose dataset.
+    """Dataloader of the `5 Categories Animal Pose`_ dataset.
+
+    .. _5 Categories Animal Pose: https://sites.google.com/view/animal-pose/
+
+    The file structure should be like::
+
+        <path>
+            keypoint_image_part1/
+                cat/
+                    2007_000549.jpg
+                    2007_000876.jpg
+                    ...
+                ...
+            PASCAL2011_animal_annotation/
+                cat/
+                    2007_000549_1.xml
+                    2007_000876_1.xml
+                    2007_000876_2.xml
+                    ...
+                ...
+            animalpose_image_part2/
+                cat/
+                    ca1.jpeg
+                    ca2.jpeg
+                    ...
+                ...
+            animalpose_anno2/
+                cat/
+                    ca1.xml
+                    ca2.xml
+                ...
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                    keypoint_image_part1/
-                        cat/
-                            2007_000549.jpg
-                            2007_000876.jpg
-                            ...
-                        ...
-                    PASCAL2011_animal_annotation/
-                        cat/
-                            2007_000549_1.xml
-                            2007_000876_1.xml
-                            2007_000876_2.xml
-                            ...
-                        ...
-                    animalpose_image_part2/
-                        cat/
-                            ca1.jpeg
-                            ca2.jpeg
-                            ...
-                        ...
-                    animalpose_anno2/
-                        cat/
-                            ca1.xml
-                            ca2.xml
-                        ...
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))
@@ -178,24 +180,27 @@ _DATA_GETTERS = {"part1": _get_data_part1, "part2": _get_data_part2}
 
 
 def AnimalPose7(path: str) -> Dataset:
-    """Dataloader of 7 Categories AnimalPose dataset.
+    """Dataloader of `7 Categories Animal-Pose`_ dataset.
+
+    .. _7 Categories Animal-Pose: https://sites.google.com/view/animal-pose/
+
+    The file structure should be like::
+
+        <path>
+            bndbox_image/
+                antelope/
+                    Img-77.jpg
+                    ...
+                ...
+            bndbox_anno/
+                antelope.json
+                ...
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                    bndbox_image/
-                        antelope/
-                            Img-77.jpg
-                            ...
-                        ...
-                    bndbox_anno/
-                        antelope.json
-                        ...
 
     Returns:
-        loaded `Dataset` object.
+        loaded :class:`~tensorbay.dataset.dataset.Dataset` object.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

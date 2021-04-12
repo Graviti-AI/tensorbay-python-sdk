@@ -3,8 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the Hard Hat Workers dataset."""
+# pylint: disable=missing-module-docstring
 
 import os
 from typing import List
@@ -18,22 +17,25 @@ DATASET_NAME = "Hard Hat Workers"
 
 
 def HardHatWorkers(path: str) -> Dataset:
-    """Dataloader of the Hard Hat Workers dataset.
+    """Dataloader of the `Hard Hat Workers`_ dataset.
+
+    .. _Hard Hat Workers: https://makeml.app/datasets/hard-hat-workers
+
+    The file structure should be like::
+
+        <path>
+            annotations/
+                hard_hat_workers0.xml
+                ...
+            images/
+                hard_hat_workers0.png
+                ...
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                    annotations/
-                        hard_hat_workers0.xml
-                        ...
-                    images/
-                        hard_hat_workers0.png
-                        ...
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     dataset = Dataset(DATASET_NAME)

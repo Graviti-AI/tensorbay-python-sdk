@@ -3,8 +3,7 @@
 # Copytright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the BSTLD dataset."""
+# pylint: disable=missing-module-docstring
 
 import os
 
@@ -21,33 +20,36 @@ _LABEL_FILENAME_DICT = {
 
 
 def BSTLD(path: str) -> Dataset:
-    """Dataloader of the BSTLD dataset.
+    """Dataloader of the `BSTLD`_ dataset.
+
+    .. _BSTLD: https://hci.iwr.uni-heidelberg.de/content/bosch-small-traffic-lights-dataset
+
+    The file structure should be like::
+
+        <path>
+            rgb/
+                additional/
+                    2015-10-05-10-52-01_bag/
+                        <image_name>.jpg
+                        ...
+                    ...
+                test/
+                    <image_name>.jpg
+                    ...
+                train/
+                    2015-05-29-15-29-39_arastradero_traffic_light_loop_bag/
+                        <image_name>.jpg
+                        ...
+                    ...
+            test.yaml
+            train.yaml
+            additional_train.yaml
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                    rgb/
-                        additional/
-                            2015-10-05-10-52-01_bag/
-                                <image_name>.jpg
-                                ...
-                            ...
-                        test/
-                            <image_name>.jpg
-                            ...
-                        train/
-                            2015-05-29-15-29-39_arastradero_traffic_light_loop_bag/
-                                <image_name>.jpg
-                                ...
-                            ...
-                    test.yaml
-                    train.yaml
-                    additional_train.yaml
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     import yaml  # pylint: disable=import-outside-toplevel

@@ -3,8 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the DeepRoute Open Dataset."""
+# pylint: disable=missing-module-docstring
 
 import json
 import os
@@ -19,26 +18,29 @@ DATASET_NAME = "DeepRoute Open Dataset"
 
 
 def DeepRoute(path: str) -> Dataset:
-    """Dataloader of the DeepRoute Open Dataset.
+    """Dataloader of the `DeepRoute`_ Open Dataset.
+
+    .. _DeepRoute: https://www.graviti.cn/open-datasets/DeepRoute
+
+    The file structure should be like::
+
+        <path>
+            pointcloud/
+                00001.bin
+                00002.bin
+                ...
+                10000.bin
+            groundtruth/
+                00001.txt
+                00002.txt
+                ...
+                10000.txt
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                    pointcloud/
-                        00001.bin
-                        00002.bin
-                        ...
-                        10000.bin
-                    groundtruth/
-                        00001.txt
-                        00002.txt
-                        ...
-                        10000.txt
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

@@ -3,8 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the DogsVsCats dataset."""
+# pylint: disable=missing-module-docstring
 
 import os
 
@@ -17,25 +16,28 @@ _SEGMENTS = {"train": True, "test": False}
 
 
 def DogsVsCats(path: str) -> Dataset:
-    """Dataloader of the DogsVsCats dataset.
+    """Dataloader of the `DogsVsCats`_ dataset.
+
+    .. _DogsVsCats: https://www.kaggle.com/c/dogs-vs-cats
+
+    The file structure should be like::
+
+        <path>
+            train/
+                cat.0.jpg
+                ...
+                dog.0.jpg
+                ...
+            test/
+                1000.jpg
+                1001.jpg
+                ...
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                    train/
-                        cat.0.jpg
-                        ...
-                        dog.0.jpg
-                        ...
-                    test/
-                        1000.jpg
-                        1001.jpg
-                        ...
 
     Returns:
-        Loaded ``Dataset`` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))
