@@ -105,6 +105,7 @@ class KeypointsInfo(ReprMixin, EqMixin):
         description: The description of the keypoints.
 
     Attributes:
+        number: The number of the set of keypoints.
         names: All the names of the keypoints.
         skeleton: The skeleton of the keypoints
             indicating which keypoint should connect with another.

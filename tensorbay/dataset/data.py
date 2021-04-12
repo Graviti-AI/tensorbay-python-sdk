@@ -117,6 +117,7 @@ class Data(DataBase):
         path: The file local path.
         timestamp: The timestamp for the file.
         labels: The :class:`Labels` that contains all the label information of the file.
+        target_remote_path: The target remote path of the data.
 
     """
 

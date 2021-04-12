@@ -48,7 +48,12 @@ logger = logging.getLogger(__name__)
 
 
 class Config:  # pylint: disable=too-few-public-methods
-    """This is a base class defining the concept of Request Config."""
+    """This is a base class defining the concept of Request Config.
+
+    Attributes:
+         is_intern: Whether the request is from intern.
+
+    """
 
     def __init__(self) -> None:
 

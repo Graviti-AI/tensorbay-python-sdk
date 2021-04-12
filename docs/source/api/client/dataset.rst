@@ -4,4 +4,4 @@ tensorbay.client.dataset
 .. automodule:: tensorbay.client.dataset
    :members:
    :show-inheritance:
-   :exclude-members:
+   :exclude-members: name, dataset_id, status
