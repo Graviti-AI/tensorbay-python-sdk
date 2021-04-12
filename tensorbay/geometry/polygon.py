@@ -116,7 +116,7 @@ class PointList2D(UserMutableSequence[_T]):
 class Polygon2D(PointList2D[Vector2D]):
     """This class defines the concept of Polygon2D.
 
-    :class:`Polygon` contains the coordinates of the vertexes of the polygon and provides
+    :class:`Polygon2D` contains the coordinates of the vertexes of the polygon and provides
     :meth:`Polygon2D.area` to calculate the area of the polygon.
 
     Examples:
