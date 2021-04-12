@@ -177,8 +177,8 @@ class GAS:
 
         Returns:
             The requested :class:`~tensorbay.client.dataset.DatasetClient` instance or
-                :class:`~tensorbay.client.dataset.FusionDatasetClient` instance (is_fusion=True),
-                and the status of dataset client is "commit".
+            :class:`~tensorbay.client.dataset.FusionDatasetClient` instance (is_fusion=True),
+            and the status of dataset client is "commit".
 
         Raises:
             GASDatasetTypeError: When the requested dataset type is not the same as given.

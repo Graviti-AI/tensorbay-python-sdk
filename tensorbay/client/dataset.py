@@ -638,10 +638,10 @@ class DatasetClient(DatasetClientBase):
         """Upload a :class:`~tensorbay.dataset.segment.Segment` to the dataset.
 
         This function will upload all info contains in
-        the input :class:`~tensorbay.dataset.segment.Segment`,
-        which includes:
-        - Create a segment using the name of input Segment.
-        - Upload all Data in the Segment to the dataset.
+        the input :class:`~tensorbay.dataset.segment.Segment`, which includes:
+
+            - Create a segment using the name of input Segment.
+            - Upload all Data in the Segment to the dataset.
 
         Arguments:
             segment: The :class:`~tensorbay.dataset.segment.Segment`
@@ -651,7 +651,7 @@ class DatasetClient(DatasetClientBase):
 
         Returns:
             The :class:`~tensorbay.client.segment.SegmentClient`
-                used for uploading the data in the segment.
+            used for uploading the data in the segment.
 
         """
         self._status.check_authority_for_draft()
