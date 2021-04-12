@@ -3,8 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the Kenyan Food or Nonfood dataset and Kenyan Food Type dataset."""
+# pylint: disable=missing-module-docstring
 
 import os
 
@@ -19,27 +18,30 @@ SEGMENTS_FOOD_OR_NONFOOD = {"test": "test.txt", "train": "train.txt"}
 
 
 def KenyanFoodOrNonfood(path: str) -> Dataset:
-    """Dataloader of the Kenyan Food or Nonfood dataset.
+    """Dataloader of the `Kenyan Food or Nonfood`_ dataset.
+
+    .. _Kenyan Food or Nonfood: https://github.com/monajalal/Kenyan-Food
+
+    The file structure should be like::
+
+        <path>
+            images/
+                food/
+                    236171947206673742.jpg
+                    ...
+                nonfood/
+                    168223407.jpg
+                    ...
+            data.csv
+            split.py
+            test.txt
+            train.txt
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                        images/
-                            food/
-                                236171947206673742.jpg
-                                ...
-                            nonfood/
-                                168223407.jpg
-                                ...
-                        data.csv
-                        split.py
-                        test.txt
-                        train.txt
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))
@@ -59,39 +61,42 @@ def KenyanFoodOrNonfood(path: str) -> Dataset:
 
 
 def KenyanFoodType(path: str) -> Dataset:
-    """Dataloader of the Kenyan Food Type dataset.
+    """Dataloader of the `Kenyan Food Type`_ dataset.
+
+    .. _Kenyan Food Type: https://github.com/monajalal/Kenyan-Food
+
+    The file structure should be like::
+
+        <path>
+            test.csv
+            test/
+                bhaji/
+                    1611654056376059197.jpg
+                    ...
+                chapati/
+                    1451497832469337023.jpg
+                    ...
+                ...
+            train/
+                bhaji/
+                    190393222473009410.jpg
+                    ...
+                chapati/
+                    1310641031297661755.jpg
+                    ...
+            val/
+                bhaji/
+                    1615408264598518873.jpg
+                    ...
+                chapati/
+                    1553618479852020228.jpg
+                    ...
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                    test.csv
-                    test/
-                        bhaji/
-                            1611654056376059197.jpg
-                            ...
-                        chapati/
-                            1451497832469337023.jpg
-                            ...
-                        ...
-                    train/
-                        bhaji/
-                            190393222473009410.jpg
-                            ...
-                        chapati/
-                            1310641031297661755.jpg
-                            ...
-                    val/
-                        bhaji/
-                            1615408264598518873.jpg
-                            ...
-                        chapati/
-                            1553618479852020228.jpg
-                            ...
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

@@ -3,8 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the LISA traffic light dataset."""
+# pylint: disable=missing-module-docstring
 
 import csv
 import os
@@ -24,45 +23,48 @@ SUPERCATEGORY_INDEX = {
 
 
 def LISATrafficLight(path: str) -> Dataset:
-    """Dataloader of the LISA traffic light dataset.
+    """Dataloader of the `LISA traffic light`_ dataset.
+
+    .. _LISA traffic light: http://cvrr.ucsd.edu/LISA/datasets.html
+
+    The file structure should be like::
+
+        <path>
+            Annotations/Annotations/
+                daySequence1/
+                daySequence2/
+                dayTrain/
+                    dayClip1/
+                    dayClip10/
+                    ...
+                    dayClip9/
+                nightSequence1/
+                nightSequence2/
+                nightTrain/
+                    nightClip1/
+                    nightClip2/
+                    ...
+                    nightClip5/
+            daySequence1/daySequence1/
+            daySequence2/daySequence2/
+            dayTrain/dayTrain/
+                dayClip1/
+                dayClip10/
+                ...
+                dayClip9/
+            nightSequence1/nightSequence1/
+            nightSequence2/nightSequence2/
+            nightTrain/nightTrain/
+                nightClip1/
+                nightClip2/
+                ...
+                nightClip5/
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                    Annotations/Annotations/
-                        daySequence1/
-                        daySequence2/
-                        dayTrain/
-                            dayClip1/
-                            dayClip10/
-                            ...
-                            dayClip9/
-                        nightSequence1/
-                        nightSequence2/
-                        nightTrain/
-                            nightClip1/
-                            nightClip2/
-                            ...
-                            nightClip5/
-                    daySequence1/daySequence1/
-                    daySequence2/daySequence2/
-                    dayTrain/dayTrain/
-                        dayClip1/
-                        dayClip10/
-                        ...
-                        dayClip9/
-                    nightSequence1/nightSequence1/
-                    nightSequence2/nightSequence2/
-                    nightTrain/nightTrain/
-                        nightClip1/
-                        nightClip2/
-                        ...
-                        nightClip5/
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     Raises:
         FileStructureError: When frame number is discontinuous.

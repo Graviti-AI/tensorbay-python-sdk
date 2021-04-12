@@ -3,8 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the THUCNews dataset."""
+# pylint: disable=missing-module-docstring
 
 import os
 
@@ -16,24 +15,27 @@ DATASET_NAME = "THUCNews"
 
 
 def THUCNews(path: str) -> Dataset:
-    """Dataloader of the THUCNews dataset.
+    """Dataloader of the `THUCNews`_ dataset.
+
+    .. _THUCNews: http://thuctc.thunlp.org/
+
+    The folder structure should be like::
+
+        <path>
+            <category>/
+                0.txt
+                1.txt
+                2.txt
+                3.txt
+                ...
+            <category>/
+            ...
 
     Arguments:
         path: The root directory of the dataset.
-            The folder structure should be like::
-
-                <path>
-                    <category>/
-                        0.txt
-                        1.txt
-                        2.txt
-                        3.txt
-                        ...
-                    <category>/
-                    ...
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

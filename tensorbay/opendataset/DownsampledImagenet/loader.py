@@ -3,8 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the Downsampled Imagenet dataset."""
+# pylint: disable=missing-module-docstring
 
 import os
 
@@ -16,28 +15,31 @@ SEGMENT_NAMES = ["train_32x32", "train_64x64", "valid_32x32", "valid_64x64"]
 
 
 def DownsampledImagenet(path: str) -> Dataset:
-    """Dataloader of the Downsampled Imagenet dataset.
+    """Dataloader of the `Downsampled Imagenet`_ dataset.
+
+    .. _Downsampled Imagenet: http://image-net.org/small/download.php
+
+    The file structure should be like::
+
+        <path>
+            valid_32x32/
+                <imagename>.png
+                ...
+            valid_64x64/
+                <imagename>.png
+                ...
+            train_32x32/
+                <imagename>.png
+                ...
+            train_64x64/
+                <imagename>.png
+                ...
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                    valid_32x32/
-                        <imagename>.png
-                        ...
-                    valid_64x64/
-                        <imagename>.png
-                        ...
-                    train_32x32/
-                        <imagename>.png
-                        ...
-                    train_64x64/
-                        <imagename>.png
-                        ...
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

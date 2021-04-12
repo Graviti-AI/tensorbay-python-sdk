@@ -3,8 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the 17 Category Flower dataset and the 102 Category Flower dataset."""
+# pylint: disable=missing-module-docstring
 
 import os
 
@@ -18,15 +17,15 @@ _SEGMENT_NAMES_102 = {"train": "trnid", "validation": "valid", "test": "tstid"}
 
 
 def Flower17(path: str) -> Dataset:
-    """Dataloader of the 17 Category Flower dataset.
+    """Dataloader of the `17 Category Flower`_ dataset.
+
+    .. _17 Category Flower: http://www.robots.ox.ac.uk/~vgg/data/flowers/17/index.html
 
     The dataset are 3 separate splits.
     The results in the paper are averaged over the 3 splits.
     We just use (trn1, val1, tst1) to split it.
 
-    Arguments:
-        path: The root directory of the dataset.
-            The file structure should be like::
+    The file structure should be like::
 
                 <path>
                     jpg/
@@ -34,8 +33,11 @@ def Flower17(path: str) -> Dataset:
                         ...
                     datasplits.mat
 
+    Arguments:
+        path: The root directory of the dataset.
+
     Returns:
-        A loaded dataset.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     from scipy.io import loadmat  # pylint: disable=import-outside-toplevel
@@ -60,21 +62,24 @@ def Flower17(path: str) -> Dataset:
 
 
 def Flower102(path: str) -> Dataset:
-    """Dataloader of the 102 Category Flower dataset.
+    """Dataloader of the `102 Category Flower`_ dataset.
+
+    .. _102 Category Flower: http://www.robots.ox.ac.uk/~vgg/data/flowers/102/index.html
+
+    The file structure should be like::
+
+        <path>
+            jpg/
+                image_00001.jpg
+                ...
+            imagelabels.mat
+            setid.mat
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                    jpg/
-                        image_00001.jpg
-                        ...
-                    imagelabels.mat
-                    setid.mat
 
     Returns:
-        A loaded dataset.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     from scipy.io import loadmat  # pylint: disable=import-outside-toplevel

@@ -3,8 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the JHU-CROWD++ dataset."""
+# pylint: disable=missing-module-docstring
 
 import os
 from typing import Dict, List
@@ -20,26 +19,29 @@ _WEATHER_CONDITION_MAP = {0: "no weather degradationi", 1: "fog/haze", 2: "rain"
 
 
 def JHU_CROWD(path: str) -> Dataset:
-    """Dataloader of the JHU-CROWD++ dataset.
+    """Dataloader of the `JHU-CROWD++`_ dataset.
+
+    .. _JHU-CROWD++: http://www.crowd-counting.com/
+
+    The file structure should be like::
+
+        <path>
+            train/
+                images/
+                    0000.jpg
+                    ...
+                gt/
+                    0000.txt
+                    ...
+                image_labels.txt
+            test/
+            val/
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                    train/
-                        images/
-                            0000.jpg
-                            ...
-                        gt/
-                            0000.txt
-                            ...
-                        image_labels.txt
-                    test/
-                    val/
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     dataset = Dataset(DATASET_NAME)

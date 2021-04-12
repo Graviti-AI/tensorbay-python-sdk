@@ -3,8 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the ImageEmotionAbstract dataset and the ImageEmotionArtphoto dataset."""
+# pylint: disable=missing-module-docstring
 
 import csv
 import os
@@ -18,19 +17,22 @@ DATASET_NAME_ARTPHOTO = "ImageEmotion-artphoto"
 
 
 def ImageEmotionAbstract(path: str) -> Dataset:
-    """Dataloader of the ImageEmotionAbstract dataset.
+    """Dataloader of the `ImageEmotionAbstract`_ dataset.
+
+    .. _ImageEmotionAbstract: https://www.imageemotion.org/
+
+    The file structure should be like::
+
+        <path>
+            ABSTRACT_groundTruth.csv
+            abstract_xxxx.jpg
+            ...
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                    ABSTRACT_groundTruth.csv
-                    abstract_xxxx.jpg
-                    ...
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))
@@ -59,18 +61,21 @@ def ImageEmotionAbstract(path: str) -> Dataset:
 
 
 def ImageEmotionArtphoto(path: str) -> Dataset:
-    """Dataloader of the ImageEmotionArtphoto dataset.
+    """Dataloader of the `ImageEmotionArtphoto`_ dataset.
+
+    .. _ImageEmotionArtphoto: https://www.imageemotion.org/
+
+    The file structure should be like::
+
+        <path>
+            <filename>.jpg
+            ...
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                    <filename>.jpg
-                    ...
 
     Returns:
-        Loaded `Dataset` object
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

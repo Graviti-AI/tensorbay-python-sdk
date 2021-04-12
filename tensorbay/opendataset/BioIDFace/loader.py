@@ -3,8 +3,7 @@
 # Copytright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the BioID Face Database."""
+# pylint: disable=missing-module-docstring
 
 import os
 from itertools import islice
@@ -19,11 +18,11 @@ DATASET_NAME = "BioID Face Database"
 
 
 def BioIDFace(path: str) -> Dataset:
-    """Dataloader of the BioID Face Database.
+    """Dataloader of the `BioID Face`_ Dataset.
 
-    Arguments:
-        path: The root directory of the dataset.
-            The folder structure should be like::
+    .. BioID Face_: https://www.bioid.com/facedb/
+
+    The folder structure should be like::
 
                 <path>
                     BioID-FaceDatabase-V1.2/
@@ -33,8 +32,11 @@ def BioIDFace(path: str) -> Dataset:
                     points_20/
                         bioid_0000.pts
 
+    Arguments:
+        path: The root directory of the dataset.
+
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

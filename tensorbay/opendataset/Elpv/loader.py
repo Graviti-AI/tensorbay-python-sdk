@@ -3,8 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the elpv dataset."""
+# pylint: disable=missing-module-docstring
 
 import os
 
@@ -15,20 +14,23 @@ DATASET_NAME = "elpv"
 
 
 def Elpv(path: str) -> Dataset:
-    """Dataloader of the elpv dataset.
+    """Dataloader of the `elpv`_ dataset.
+
+    .. _elpv: https://github.com/zae-bayern/elpv-dataset
+
+    The file structure should be like::
+
+        <path>
+            labels.csv
+            images/
+                cell0001.png
+                ...
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                    labels.csv
-                    images/
-                        cell0001.png
-                        ...
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

@@ -3,8 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the Free Spoken Digit dataset."""
+# pylint: disable=missing-module-docstring
 
 import os
 
@@ -25,20 +24,23 @@ _METADATA = {
 
 
 def FSDD(path: str) -> Dataset:
-    """Dataloader of the Free Spoken Digit dataset.
+    """Dataloader of the `Free Spoken Digit`_ dataset.
+
+    .. _Free Spoken Digit: https://github.com/Jakobovski/free-spoken-digit-dataset
+
+    The file structure should be like::
+
+        <path>
+            recordings/
+                0_george_0.wav
+                0_george_1.wav
+                ...
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should be like::
-
-                <path>
-                    recordings/
-                        0_george_0.wav
-                        0_george_1.wav
-                        ...
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     label_map = {}

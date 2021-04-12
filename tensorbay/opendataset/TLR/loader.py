@@ -3,8 +3,7 @@
 # Copytright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the TLR dataset."""
+# pylint: disable=missing-module-docstring
 
 import os
 from collections import defaultdict
@@ -19,23 +18,26 @@ DATASET_NAME = "TLR"
 
 
 def TLR(path: str) -> Dataset:
-    """Dataloader of the TLR dataset.
+    """Dataloader of the `TLR`_ dataset.
+
+    .. _TLR: http://www.lara.prd.fr/benchmarks/trafficlightsrecognition
+
+    The file structure should like::
+
+        <path>
+            root_path/
+                Lara3D_URbanSeq1_JPG/
+                    frame_011149.jpg
+                    frame_011150.jpg
+                    frame_<frame_index>.jpg
+                    ...
+                Lara_UrbanSeq1_GroundTruth_cvml.xml
 
     Arguments:
         path: The root directory of the dataset.
-            The file structure should like::
-
-                <path>
-                    root_path/
-                        Lara3D_URbanSeq1_JPG/
-                            frame_011149.jpg
-                            frame_011150.jpg
-                            frame_<frame_index>.jpg
-                            ...
-                        Lara_UrbanSeq1_GroundTruth_cvml.xml
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))

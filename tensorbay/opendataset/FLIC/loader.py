@@ -3,8 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-
-"""Dataloader of the FLIC dataset."""
+# pylint: disable=missing-module-docstring
 
 import os
 from typing import Any, Dict, Iterator, Tuple
@@ -17,20 +16,23 @@ _VALID_KEYPOINT_INDICES = [0, 1, 2, 3, 4, 5, 6, 9, 12, 13, 16]
 
 
 def FLIC(path: str) -> Dataset:
-    """Dataloader of the FLIC dataset.
+    """Dataloader of the `FLIC`_ dataset.
+
+    .. _FLIC: https://bensapp.github.io/flic-dataset.html
+
+    The folder structure should be like::
+
+        <path>
+            exampls.mat
+            images/
+                2-fast-2-furious-00003571.jpg
+                ...
 
     Arguments:
         path: The root directory of the dataset.
-            The folder structure should be like::
-
-                <path>
-                    exampls.mat
-                    images/
-                        2-fast-2-furious-00003571.jpg
-                        ...
 
     Returns:
-        Loaded `Dataset` object.
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
     from scipy.io import loadmat  # pylint: disable=import-outside-toplevel
