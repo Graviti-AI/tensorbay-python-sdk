@@ -69,6 +69,9 @@ class Items(ReprMixin, EqMixin):
     When the value type of an attribute is array,
     the :class:`AttributeInfo` would contain an 'items' field.
 
+    .. todo::
+        The format of argument *type_* on the generated web page is incorrect.
+
     Arguments:
         type_: The type of the attribute value, could be a single type or multi-types.
             The type must be within the followings:
@@ -94,8 +97,8 @@ class Items(ReprMixin, EqMixin):
         items: The items inside array type attributes.
 
     Raises:
-        TypeError: When both enum and type_ are absent or
-            when type_ is array and items is absent.
+        TypeError: When both ``enum`` and ``type_`` are absent or
+            when ``type_`` is array and ``items`` is absent.
 
     Examples:
         >>> Items(type_="integer", enum=[1, 2, 3, 4, 5], minimum=1, maximum=5)
@@ -225,6 +228,9 @@ class AttributeInfo(NameMixin, Items):
     """This class represents the information of an attribute.
 
     It refers to the `Json schema`_ method to describe an attribute.
+
+    .. todo::
+        The format of argument *type_* on the generated web page is incorrect.
 
     Arguments:
         name: The name of the attribute.
