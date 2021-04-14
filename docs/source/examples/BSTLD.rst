@@ -49,10 +49,6 @@ See :ref:`this page <features/dataset_management:Read Dataset>` for details.
    :start-after: """List Dataset Names"""
    :end-before: """"""
 
-.. note::
-
-   Note that method ``list_dataset_names()`` returns an iterator, use ``list()`` to transfer it to a "list".
-
 ******************
  Organize Dataset
 ******************

@@ -14,14 +14,14 @@ AccessKey is required when operating with dataset.
 """
 
 import sys
-from typing import Any, Dict, Iterator, Optional, Type, Union, overload
+from typing import Any, Dict, Generator, Optional, Type, Union, overload
 
 from typing_extensions import Literal
 
 from ..dataset import Dataset, FusionDataset
 from .dataset import DatasetClient, FusionDatasetClient
 from .exceptions import GASDatasetError, GASDatasetTypeError
-from .requests import Client, paging_range
+from .requests import Client, PagingList
 
 DatasetClientType = Union[DatasetClient, FusionDatasetClient]
 
@@ -66,33 +66,45 @@ class GAS:
             raise GASDatasetError(name)
 
         try:
-            info = next(self._list_datasets(name))
-        except StopIteration as error:
+            response = self._list_datasets(name=name)
+            info = response["datasets"][0]
+        except IndexError as error:
             raise GASDatasetError(name) from error
 
-        return info
+        return info  # type: ignore[no-any-return]
 
     def _list_datasets(
         self,
         name: Optional[str] = None,
         need_team_dataset: bool = False,  # personal: False, all: True
-        *,
-        start: int = 0,
-        stop: int = sys.maxsize,
-        page_size: int = 128,
-    ) -> Iterator[Dict[str, Any]]:
-
-        params: Dict[str, Any] = {}
+        offset: int = 0,
+        limit: int = 128,
+    ) -> Dict[str, Any]:
+        params: Dict[str, Any] = {
+            "offset": offset,
+            "limit": limit,
+        }
         if name:
             params["name"] = name
         if need_team_dataset:
             params["needTeamDataset"] = need_team_dataset
 
-        for params["offset"], params["limit"] in paging_range(start, stop, page_size):
-            response = self._client.open_api_do("GET", "", params=params).json()
-            yield from response["datasets"]
-            if response["recordSize"] + response["offset"] >= response["totalCount"]:
-                break
+        response = self._client.open_api_do("GET", "", params=params)
+        return response.json()  # type: ignore[no-any-return]
+
+    def _generate_dataset_names(
+        self,
+        name: Optional[str] = None,
+        need_team_dataset: bool = False,  # personal: False, all: True
+        offset: int = 0,
+        limit: int = 128,
+    ) -> Generator[str, None, int]:
+        response = self._list_datasets(name, need_team_dataset, offset, limit)
+
+        for item in response["datasets"]:
+            yield item["name"]
+
+        return response["totalCount"]  # type: ignore[no-any-return]
 
     @overload
     def create_dataset(
@@ -195,18 +207,22 @@ class GAS:
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
         return ReturnType(name, dataset_id, self, commit_id=commit_id)
 
-    def list_dataset_names(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[str]:
+    def list_dataset_names(self, *, start: int = 0, stop: int = sys.maxsize) -> PagingList[str]:
         """List names of all TensorBay datasets.
 
         Arguments:
             start: The index to start.
             stop: The index to stop.
 
-        Yields:
-            Names of all datasets.
+        Returns:
+            The PagingList of all TensorBay dataset names.
 
         """
-        yield from (item["name"] for item in self._list_datasets(start=start, stop=stop))
+        return PagingList(
+            lambda offset, limit: self._generate_dataset_names(None, False, offset, limit),
+            128,
+            slice(start, stop),
+        )
 
     def rename_dataset(self, name: str, new_name: str) -> None:
         """Rename a TensorBay Dataset with given name.

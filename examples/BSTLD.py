@@ -25,7 +25,7 @@ gas.create_dataset("BSTLD")
 """"""
 
 """List Dataset Names"""
-list(gas.list_dataset_names())
+gas.list_dataset_names()
 """"""
 
 """Read Dataset Class / organize dataset"""
