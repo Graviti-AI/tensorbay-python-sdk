@@ -12,11 +12,14 @@
 """
 
 import logging
+from collections import defaultdict
 from concurrent.futures import FIRST_EXCEPTION, ThreadPoolExecutor, wait
 from itertools import count, repeat, zip_longest
+from threading import Lock
 from typing import (
     Any,
     Callable,
+    DefaultDict,
     Dict,
     Generator,
     Iterable,
@@ -302,6 +305,7 @@ class PagingList(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancestors
     """
 
     _S = TypeVar("_S", bound="PagingList[_T]")
+    _K = TypeVar("_K")
 
     _repr_type = ReprType.SEQUENCE
 
@@ -313,6 +317,7 @@ class PagingList(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancestors
     ) -> None:
         self._data: Dict[int, _T] = {}
         self._attr: Dict[str, int] = {}
+        self._locks: DefaultDict[Union[int, str], Lock] = defaultdict(Lock)
         self._func = func
         self._limit = limit
 
@@ -343,12 +348,12 @@ class PagingList(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancestors
 
         paging_index = self._slice.start + index
         if paging_index not in self._data:
-            self._extend(paging_index)
+            offset = self._get_offset(paging_index)
+            self._call_with_lock(offset, self._extend, offset)
 
         return self._data[paging_index]
 
-    def _extend(self, index: int) -> int:
-        offset = index // self._limit * self._limit
+    def _extend(self, offset: int) -> int:
         generator = self._func(offset, self._limit)
         try:
             for i in count(offset):
@@ -359,10 +364,14 @@ class PagingList(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancestors
 
         raise TypeError("Impossible to be here, add this to make pylint and mypy happy")
 
+    def _get_total_count(self, index: int) -> None:
+        offset = self._get_offset(index)
+        self._attr["totalCount"] = self._extend(offset)
+
     def _get_len(self, index: int = 0) -> int:
         if self._len is None:
             if "totalCount" not in self._attr:
-                self._attr["totalCount"] = self._extend(index)
+                self._call_with_lock("totalCount", self._get_total_count, index)
 
             total_count = self._attr["totalCount"]
             stop = total_count if self._slice.stop is None else min(total_count, self._slice.stop)
@@ -373,6 +382,21 @@ class PagingList(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancestors
 
     def _make_index_positive(self, index: int) -> int:
         return index if index >= 0 else self._get_len() + index
+
+    def _get_offset(self, index: int) -> int:
+        return index // self._limit * self._limit
+
+    def _call_with_lock(self, key: Union[int, str], func: Callable[[_K], Any], arg: _K) -> None:
+        lock = self._locks[key]
+        acquire = lock.acquire(blocking=False)
+        try:
+            if acquire:
+                func(arg)
+                del self._locks[key]
+            else:
+                lock.acquire()
+        finally:
+            lock.release()
 
     def _get_slice(self: _S, input_slice: slice) -> _S:
         start = self._slice.start
@@ -385,9 +409,10 @@ class PagingList(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancestors
 
         paging_list = self.__class__(self._func, self._limit, slice(start, stop))
 
-        # The sliced PagingList shares the "_data" and "_attr" with the root PagingList
+        # The sliced PagingList shares the "_data", "_attr" and "_locks" with the root PagingList
         paging_list._data = self._data  # pylint: disable=protected-access
         paging_list._attr = self._attr  # pylint: disable=protected-access
+        paging_list._locks = self._locks  # pylint: disable=protected-access
 
         return paging_list
 
