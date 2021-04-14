@@ -54,9 +54,6 @@ and :ref:`fusion datasets <advanced_features/fusion_dataset/fusion_dataset_struc
    :start-after: """List Dataset Names"""
    :end-before: """"""
 
-.. note::
-
-   Note that method ``list_dataset_names()`` returns an iterator, use ``list()`` to transfer it to a "list".
 
 *************************
  Organize Fusion Dataset

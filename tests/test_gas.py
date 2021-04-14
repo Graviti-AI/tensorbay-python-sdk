@@ -105,7 +105,7 @@ class TestGAS:
         dataset_name = get_random_dataset_name()
         gas_client.create_dataset(dataset_name)
 
-        datasets = list(gas_client.list_dataset_names())
+        datasets = gas_client.list_dataset_names()
         assert dataset_name in datasets
         dataset_name_1 = get_random_dataset_name()
         assert dataset_name_1 not in datasets

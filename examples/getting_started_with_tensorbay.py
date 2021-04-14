@@ -23,7 +23,7 @@ gas.create_dataset("DatasetName")
 """"""
 
 """List Dataset Names"""
-dataset_list = list(gas.list_dataset_names())
+dataset_names = gas.list_dataset_names()
 """"""
 
 """Upload Images to the Dataset"""

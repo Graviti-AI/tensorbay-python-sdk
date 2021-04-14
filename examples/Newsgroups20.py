@@ -25,7 +25,7 @@ gas.create_dataset("Newsgroups20")
 """"""
 
 """List Dataset Names"""
-list(gas.list_dataset_names())
+gas.list_dataset_names()
 """"""
 
 

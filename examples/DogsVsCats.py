@@ -25,7 +25,7 @@ gas.create_dataset("DogsVsCats")
 """"""
 
 """List Dataset Names"""
-list(gas.list_dataset_names())
+gas.list_dataset_names()
 """"""
 
 from tensorbay.opendataset import DogsVsCats
