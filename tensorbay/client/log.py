@@ -165,10 +165,7 @@ def _dump_response(response: Response) -> str:
     if "Content-Type" in response.headers:
         content_type = response.headers["Content-Type"]
         if content_type.startswith("application/json"):
-            try:
-                content = json.dumps(response.json(), indent=2)
-            except json.decoder.JSONDecodeError:
-                content = ""
+            content = json.dumps(response.json(), indent=2)
         elif content_type.startswith("text"):
             content = response.text
         elif len(response.content) > 512:
