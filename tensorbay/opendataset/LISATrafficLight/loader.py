@@ -11,6 +11,7 @@ import os
 import re
 
 from ...dataset import Data, Dataset, Segment
+from ...exception import FileStructureError
 from ...label import Classification, LabeledBox2D
 from .._utility import glob
 
@@ -64,7 +65,7 @@ def LISATrafficLight(path: str) -> Dataset:
         Loaded `Dataset` object.
 
     Raises:
-        TypeError: When frame number is discontinuous.
+        FileStructureError: When frame number is discontinuous.
 
     """
     root_path = os.path.abspath(os.path.expanduser(path))
@@ -87,7 +88,7 @@ def LISATrafficLight(path: str) -> Dataset:
 
         # Check the frame_number from filename: "daySequence1--00345.jpg"
         if _get_frame_number(image_paths[-1]) + 1 != len(image_paths):
-            raise TypeError(f"Discontinuous frame number in '{filedir}'")
+            raise FileStructureError(f"Discontinuous frame number in '{filedir}'")
 
         for image_path in image_paths:
             data = Data(image_path)

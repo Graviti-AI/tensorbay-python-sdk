@@ -8,7 +8,7 @@
 from glob import glob as buildin_glob
 from typing import List
 
-from .exceptions import OpenDatasetNoFileError
+from ...exception import NoFileError
 
 
 def glob(pathname: str, *, recursive: bool = False) -> List[str]:
@@ -27,12 +27,12 @@ def glob(pathname: str, *, recursive: bool = False) -> List[str]:
         A sorted list of paths matching a pathname pattern.
 
     Raises:
-        OpenDatasetNoFileError: When there is no file matching the given pathname pattern.
+        NoFileError: When there is no file matching the given pathname pattern.
 
     """
     paths = buildin_glob(pathname, recursive=recursive)
     if not paths:
-        raise OpenDatasetNoFileError(pathname)
+        raise NoFileError(pathname)
     paths.sort()
 
     return paths

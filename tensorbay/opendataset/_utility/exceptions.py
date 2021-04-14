@@ -3,24 +3,14 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Exceptions about open data loader."""
+"""Exceptions about open data loader.
 
+The content in this module is deprecated since v1.3.0, and will be removed in v1.5.0.
 
-class OpenDatasetException(Exception):
-    """This is the parent class to all open dataset exceptions."""
+Please use :class:`~tensorbay.exception.NoFileError` instead of :class:`OpenDatasetNoFileError`.
 
+"""
 
-class OpenDatasetNoFileError(OpenDatasetException):
-    """Exception for no file found in the opendataset directory.
+from ...exception import NoFileError
 
-    Arguments:
-        pattern: Glob pattern.
-
-    """
-
-    def __init__(self, pattern: str) -> None:
-        super().__init__()
-        self._pattern = pattern
-
-    def __str__(self) -> str:
-        return f'No file follows the giving pattern "{self._pattern}"'
+OpenDatasetNoFileError = NoFileError
