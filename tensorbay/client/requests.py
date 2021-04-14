@@ -12,6 +12,7 @@
 """
 
 import logging
+import os
 from collections import defaultdict
 from concurrent.futures import FIRST_EXCEPTION, ThreadPoolExecutor, wait
 from itertools import count, repeat, zip_longest
@@ -206,7 +207,7 @@ class Client:
         self.gateway_url = urljoin(url, "gatewayv2/")
         self.access_key = access_key
 
-        self.session = UserSession()
+        self._sessions: DefaultDict[int, UserSession] = defaultdict(UserSession)
         self._open_api = urljoin(self.gateway_url, "tensorbay-open-api/v1/")
 
     def _url_make(self, section: str, dataset_id: str = "") -> str:
@@ -229,6 +230,15 @@ class Client:
         else:
             url = urljoin(self._open_api, "datasets")
         return url
+
+    @property
+    def session(self) -> UserSession:
+        """Create and return a session per PID so each sub-processes will use their own session.
+
+        Returns:
+            The session corresponding to the process.
+        """
+        return self._sessions[os.getpid()]
 
     def open_api_do(
         self, method: str, section: str, dataset_id: str = "", **kwargs: Any
