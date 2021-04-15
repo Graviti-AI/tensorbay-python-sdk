@@ -260,7 +260,7 @@ class TestDatasetClient:
 
         commit_1_id = dataset_client.status.commit_id
 
-        branches = list(dataset_client.list_branches())
+        branches = dataset_client.list_branches()
         assert len(branches) == 1
         assert branches[0].name == "main"
         assert branches[0].commit_id == commit_1_id

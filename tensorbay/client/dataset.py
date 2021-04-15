@@ -130,26 +130,21 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
 
         return response["totalCount"]  # type: ignore[no-any-return]
 
-    def _list_branches(
-        self,
-        name: Optional[str] = None,
-        *,
-        start: int = 0,
-        stop: int = sys.maxsize,
-        page_size: int = 128,
-    ) -> Iterator[Branch]:
-        params: Dict[str, Any] = {}
+    def _generate_branches(
+        self, name: Optional[str] = None, offset: int = 0, limit: int = 128
+    ) -> Generator[Branch, None, int]:
+        params: Dict[str, Any] = {"offset": offset, "limit": limit}
         if name:
             params["name"] = name
 
-        for params["offset"], params["limit"] in paging_range(start, stop, page_size):
-            response = self._client.open_api_do(
-                "GET", "branches", self.dataset_id, params=params
-            ).json()
-            for branch_info in response["branches"]:
-                yield Branch.loads(branch_info)
-            if response["recordSize"] + response["offset"] >= response["totalCount"]:
-                break
+        response = self._client.open_api_do(
+            "GET", "branches", self.dataset_id, params=params
+        ).json()
+
+        for item in response["branches"]:
+            yield Branch.loads(item)
+
+        return response["totalCount"]  # type: ignore[no-any-return]
 
     def _create_segment(self, name: str) -> None:
         post_data: Dict[str, Any] = {"name": name}
@@ -399,24 +394,28 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             raise TypeError("The given branch name is illegal")
 
         try:
-            branch = next(self._list_branches(name))
+            branch = next(self._generate_branches(name))
         except StopIteration as error:
             raise TypeError(f"The branch: {name} does not exist.") from error
 
         return branch
 
-    def list_branches(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[Branch]:
+    def list_branches(self, *, start: int = 0, stop: int = sys.maxsize) -> PagingList[Branch]:
         """List the information of branches.
 
         Arguments:
             start: The index to start.
             stop: The index to end.
 
-        Yields:
-            The :class:`branches<.Branch>`.
+        Returns:
+            The PagingList of :class:`branches<.Branch>`.
 
         """
-        yield from self._list_branches(start=start, stop=stop)
+        return PagingList(
+            lambda offset, limit: self._generate_branches(None, offset, limit),
+            128,
+            slice(start, stop),
+        )
 
     def checkout(
         self, commit_key: Optional[str] = None, draft_number: Optional[int] = None
