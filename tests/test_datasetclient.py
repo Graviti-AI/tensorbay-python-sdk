@@ -354,21 +354,21 @@ class TestDatasetClient:
         dataset_client.commit("commit-3")
         commit_3_id = dataset_client.status.commit_id
 
-        commits = list(dataset_client.list_commits())
+        commits = dataset_client.list_commits()
         assert len(commits) == 3
         assert commits[0].commit_id == commit_3_id
         assert commits[1].commit_id == commit_2_id
 
-        commits = list(dataset_client.list_commits(commit_2_id))
+        commits = dataset_client.list_commits(commit_2_id)
         assert len(commits) == 2
         assert commits[0].commit_id == commit_2_id
         assert commits[1].commit_id == commit_1_id
 
-        commits = list(dataset_client.list_commits("V1"))
+        commits = dataset_client.list_commits("V1")
         assert len(commits) == 1
         assert commits[0].commit_id == commit_1_id
 
-        commits = list(dataset_client.list_commits("main"))
+        commits = dataset_client.list_commits("main")
         assert len(commits) == 3
 
         gas_client.delete_dataset(dataset_name)
