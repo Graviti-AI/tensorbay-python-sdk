@@ -14,17 +14,9 @@
 +----------------------+-----------------------------------------------------+
 | GASDatasetTypeError  | The type of the requested dataset is wrong          |
 +----------------------+-----------------------------------------------------+
-| GASDataTypeError     | Dataset has multiple data types                     |
-+----------------------+-----------------------------------------------------+
-| GASLabelsetError     | Requested data does not exist                       |
-+----------------------+-----------------------------------------------------+
-| GASLabelsetTypeError | The type of the requested data is wrong             |
-+----------------------+-----------------------------------------------------+
 | GASSegmentError      | The requested segment does not exist                |
 +----------------------+-----------------------------------------------------+
 | GASPathError         | Remote path does not follow linux style             |
-+----------------------+-----------------------------------------------------+
-| GASFrameError        | Uploading frame has no timestamp and no frame index.|
 +----------------------+-----------------------------------------------------+
 
 """
@@ -89,50 +81,6 @@ class GASDatasetTypeError(GASException):
         )
 
 
-class GASDataTypeError(GASException):
-    """This error is raised to indicate that the dataset has multiple data types."""
-
-    def __str__(self) -> str:
-        return "Dataset can only have one data type"
-
-
-class GASLabelsetError(GASException):
-    """This error is raised to indicate that requested data does not exist.
-
-    Arguments:
-        labelset_id: The labelset ID of the missing labelset.
-
-    """
-
-    def __init__(self, labelset_id: str) -> None:
-        super().__init__()
-        self._labelset_id = labelset_id
-
-    def __str__(self) -> str:
-        return f"Labelset '{self._labelset_id}' does not exist"
-
-
-class GASLabelsetTypeError(GASException):
-    """This error is raised to indicate that the type of the requested labelset is wrong.
-
-    Arguments:
-        labelset_id: The ID of the labelset whose requested type is wrong.
-        is_fusion: whether the labelset is a fusion labelset.
-
-    """
-
-    def __init__(self, labelset_id: str, is_fusion: bool) -> None:
-        super().__init__()
-        self._labelset_id = labelset_id
-        self._is_fusion = is_fusion
-
-    def __str__(self) -> str:
-        return (
-            f"Labelset '{self._labelset_id}' is "
-            f"{'' if self._is_fusion else 'not '}a fusion labelset"
-        )
-
-
 class GASSegmentError(GASException):
     """This error is raised to indicate that the requested segment does not exist.
 
@@ -163,10 +111,3 @@ class GASPathError(GASException):
 
     def __str__(self) -> str:
         return f'Invalid path: "{self._remote_path}"\nRemote path should follow linux style.'
-
-
-class GASFrameError(GASException):
-    """This error is raised to indicate that uploading frame has no timestamp and no frame index."""
-
-    def __str__(self) -> str:
-        return "Either data.timestamp or frame_index is required to sort frame in TensorBay"
