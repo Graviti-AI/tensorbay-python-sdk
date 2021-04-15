@@ -42,5 +42,5 @@ tag = dataset_client.get_tag("Tag-1")
 """"""
 
 """List Tags"""
-tags = list(dataset_client.list_tags())
+tags = dataset_client.list_tags()
 """"""

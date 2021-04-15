@@ -116,26 +116,19 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
 
         return response["totalCount"]  # type: ignore[no-any-return]
 
-    def _list_tags(
-        self,
-        name: Optional[str] = None,
-        *,
-        start: int = 0,
-        stop: int = sys.maxsize,
-        page_size: int = 128,
-    ) -> Iterator[Tag]:
-        params: Dict[str, Any] = {}
+    def _generate_tags(
+        self, name: Optional[str] = None, offset: int = 0, limit: int = 128
+    ) -> Generator[Tag, None, int]:
+        params: Dict[str, Any] = {"offset": offset, "limit": limit}
         if name:
             params["name"] = name
 
-        for params["offset"], params["limit"] in paging_range(start, stop, page_size):
-            response = self._client.open_api_do(
-                "GET", "tags", self.dataset_id, params=params
-            ).json()
-            for tag_info in response["tags"]:
-                yield Tag.loads(tag_info)
-            if response["recordSize"] + response["offset"] >= response["totalCount"]:
-                break
+        response = self._client.open_api_do("GET", "tags", self.dataset_id, params=params).json()
+
+        for item in response["tags"]:
+            yield Tag.loads(item)
+
+        return response["totalCount"]  # type: ignore[no-any-return]
 
     def _list_branches(
         self,
@@ -366,24 +359,28 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             raise TypeError("The given tag name is illegal")
 
         try:
-            tag = next(self._list_tags(name))
+            tag = next(self._generate_tags(name))
         except StopIteration as error:
             raise TypeError(f"The tag: {name} does not exist.") from error
 
         return tag
 
-    def list_tags(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[Tag]:
+    def list_tags(self, *, start: int = 0, stop: int = sys.maxsize) -> PagingList[Tag]:
         """List the information of tags.
 
         Arguments:
             start: The index to start.
             stop: The index to end.
 
-        Yields:
-            The :class:`tags<.Tag>`.
+        Returns:
+            The PagingList of :class:`tags<.Tag>`.
 
         """
-        yield from self._list_tags(start=start, stop=stop)
+        return PagingList(
+            lambda offset, limit: self._generate_tags(None, offset, limit),
+            128,
+            slice(start, stop),
+        )
 
     def get_branch(self, name: str) -> Branch:
         """Get the branch with the given name.
