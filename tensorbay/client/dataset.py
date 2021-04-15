@@ -102,26 +102,19 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
 
         return response["totalCount"]  # type: ignore[no-any-return]
 
-    def _list_commits(
-        self,
-        commit_key: Optional[str] = None,
-        *,
-        start: int = 0,
-        stop: int = sys.maxsize,
-        page_size: int = 128,
-    ) -> Iterator[Commit]:
-        params: Dict[str, Any] = {}
+    def _generate_commits(
+        self, commit_key: Optional[str] = None, offset: int = 0, limit: int = 128
+    ) -> Generator[Commit, None, int]:
+        params: Dict[str, Any] = {"offset": offset, "limit": limit}
         if commit_key:
             params["commit"] = commit_key
 
-        for params["offset"], params["limit"] in paging_range(start, stop, page_size):
-            response = self._client.open_api_do(
-                "GET", "commits", self.dataset_id, params=params
-            ).json()
-            for commit_info in response["commits"]:
-                yield Commit.loads(commit_info)
-            if response["recordSize"] + response["offset"] >= response["totalCount"]:
-                break
+        response = self._client.open_api_do("GET", "commits", self.dataset_id, params=params).json()
+
+        for item in response["commits"]:
+            yield Commit.loads(item)
+
+        return response["totalCount"]  # type: ignore[no-any-return]
 
     def _list_tags(
         self,
@@ -309,7 +302,7 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             raise TypeError("The given commit key is illegal")
 
         try:
-            commit = next(self._list_commits(commit_key))
+            commit = next(self._generate_commits(commit_key))
         except StopIteration as error:
             raise TypeError(f"The commit: {commit_key} does not exist.") from error
 
@@ -317,7 +310,7 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
 
     def list_commits(
         self, commit_key: Optional[str] = None, *, start: int = 0, stop: int = sys.maxsize
-    ) -> Iterator[Commit]:
+    ) -> PagingList[Commit]:
         """List the commits.
 
         Arguments:
@@ -328,13 +321,15 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             start: The index to start.
             stop: The index to end.
 
-        Yields:
-            The :class:`tags<.Commit>`.
+        Returns:
+            The PagingList of :class:`commits<.Commit>`.
 
         """
-        if not commit_key:
-            commit_key = self._status.commit_id
-        yield from self._list_commits(commit_key, start=start, stop=stop)
+        return PagingList(
+            lambda offset, limit: self._generate_commits(commit_key, offset, limit),
+            128,
+            slice(start, stop),
+        )
 
     def create_tag(self, name: str, commit: Optional[str] = None) -> None:
         """Create the tag for a commit.

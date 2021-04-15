@@ -53,7 +53,7 @@ commit_id = dataset_client.status.commit_id
 """"""
 
 """List Commits"""
-commits = list(dataset_client.list_commits())
+commits = dataset_client.list_commits()
 """"""
 
 """Get Commit"""
