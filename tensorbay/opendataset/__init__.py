@@ -33,6 +33,7 @@ from .LISATrafficLight import LISATrafficLight
 from .NeolixOD import NeolixOD
 from .Newsgroups20 import Newsgroups20
 from .NightOwls import NightOwls
+from .nuScenes import nuScenes
 from .RP2K import RP2K
 from .THCHS30 import THCHS30
 from .THUCNews import THUCNews
@@ -40,6 +41,7 @@ from .TLR import TLR
 from .WIDER_FACE import WIDER_FACE
 
 __all__ = [
+    "nuScenes",
     "AnimalPose5",
     "AnimalPose7",
     "AnimalsWithAttributes2",
