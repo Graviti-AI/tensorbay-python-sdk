@@ -21,7 +21,7 @@ gas = GAS(ACCESS_KEY)
 """"""
 
 """Create Dataset"""
-gas.create_dataset("Neolix OD")
+gas.create_dataset("NeolixOD")
 """"""
 
 """List Dataset Names"""
@@ -35,11 +35,11 @@ dataset = NeolixOD("path/to/dataset/directory")
 """Upload Dataset"""
 # dataset is the one you initialized in "Organize Dataset" section
 dataset_client = gas.upload_dataset(dataset, jobs=8, skip_uploaded_files=False)
-dataset_client.commit("Neolix OD")
+dataset_client.commit("NeolixOD")
 """"""
 
 """Read Dataset / get dataset"""
-dataset_client = gas.get_dataset("Neolix OD")
+dataset_client = gas.get_dataset("NeolixOD")
 """"""
 
 """Read Dataset / get segment"""
@@ -59,5 +59,5 @@ attributes = label_box3d.attributes
 """"""
 
 """Delete Dataset"""
-gas.delete_dataset("Neolix OD")
+gas.delete_dataset("NeolixOD")
 """"""
