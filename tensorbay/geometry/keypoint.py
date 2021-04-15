@@ -150,7 +150,7 @@ class Keypoints2D(PointList2D[Keypoint2D]):
         """Load a :class:`Keypoints2D` from a list of dict.
 
         Arguments:
-            contents: A list of dictionaries containing 2D keypoint::
+            contents: A list of dictionaries containing 2D keypoint.
 
         Returns:
             The loaded :class:`Keypoints2D` object.
