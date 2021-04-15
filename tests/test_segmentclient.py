@@ -221,7 +221,7 @@ class TestSegmentClient:
             local_path.write_text("CONTENT")
             segment_client.upload_file(local_path=str(local_path))
 
-        data_paths = list(segment_client.list_data_paths())
+        data_paths = segment_client.list_data_paths()
         assert data_paths[0] == "goodbye0.txt"
         assert data_paths[5] == "hello0.txt"
 
@@ -375,7 +375,7 @@ class TestSegmentClient:
             segment_client.upload_data(data)
 
         segment_client.delete_data("hello0.txt")
-        data_paths = list(segment_client.list_data_paths())
+        data_paths = segment_client.list_data_paths()
         assert "hello0.txt" not in data_paths
 
         segment_client.delete_data(segment_client.list_data_paths())
