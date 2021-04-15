@@ -6,8 +6,8 @@
 """Utility method for integration test."""
 
 import uuid
-from typing import Iterator
 
+from tensorbay.client.requests import PagingList
 from tensorbay.client.struct import Draft
 
 
@@ -21,7 +21,7 @@ def get_random_dataset_name() -> str:
     return f"test{uuid.uuid4().hex}"
 
 
-def get_draft_number_by_title(drafts: Iterator[Draft], title: str) -> int:
+def get_draft_number_by_title(drafts: PagingList[Draft], title: str) -> int:
     """Get the draft number with the given draft title.
 
     Arguments:

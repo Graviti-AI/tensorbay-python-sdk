@@ -98,7 +98,7 @@ class TestDatasetClient:
         with pytest.raises(TypeError):
             get_draft_number_by_title(dataset_client.list_drafts(), "draft-1")
 
-        drafts = list(dataset_client.list_drafts())
+        drafts = dataset_client.list_drafts()
         assert len(drafts) == 1
         assert drafts[0] == Draft(draft_number_2, "draft-2")
 
