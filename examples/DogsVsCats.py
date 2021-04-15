@@ -43,7 +43,7 @@ dataset_client = gas.get_dataset("DogsVsCats")
 """"""
 
 """Read Dataset / list segment names"""
-list(dataset_client.list_segment_names())
+dataset_client.list_segment_names()
 """"""
 
 """Read Dataset Class / get a segment"""

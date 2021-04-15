@@ -489,7 +489,7 @@ class TestDatasetClient:
         dataset_client.get_or_create_segment("segment1")
         dataset_client.get_or_create_segment("segment2")
 
-        segments = list(dataset_client.list_segment_names())
+        segments = dataset_client.list_segment_names()
         assert "segment1" in segments
         assert "segment2" in segments
         assert "segment3" not in segments

@@ -43,7 +43,7 @@ fusion_dataset_client = gas.get_dataset("CADC", is_fusion=True)
 """"""
 
 """Read Fusion Dataset / list fusion segment names"""
-list(fusion_dataset_client.list_segment_names())
+fusion_dataset_client.list_segment_names()
 """"""
 
 """Read Fusion Dataset / get fusion segment"""
