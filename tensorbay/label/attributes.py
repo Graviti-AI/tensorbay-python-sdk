@@ -94,8 +94,8 @@ class Items(ReprMixin, EqMixin):
         items: The items inside array type attributes.
 
     Raises:
-        TypeError: When both enum and type_ are absent or
-            when type_ is array and items is absent.
+        TypeError: When both ``enum`` and ``type_`` are absent or
+            when ``type_`` is array and ``items`` is absent.
 
     Examples:
         >>> Items(type_="integer", enum=[1, 2, 3, 4, 5], minimum=1, maximum=5)
