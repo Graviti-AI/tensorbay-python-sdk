@@ -19,8 +19,9 @@ from typing import Any, Dict, Generator, Optional, Type, Union, overload
 from typing_extensions import Literal
 
 from ..dataset import Dataset, FusionDataset
+from ..exception import DatasetTypeError
 from .dataset import DatasetClient, FusionDatasetClient
-from .exceptions import GASDatasetError, GASDatasetTypeError
+from .exceptions import GASDatasetError
 from .requests import Client, PagingList
 
 DatasetClientType = Union[DatasetClient, FusionDatasetClient]
@@ -249,7 +250,7 @@ class GAS:
             and the status of dataset client is "commit".
 
         Raises:
-            GASDatasetTypeError: When the requested dataset type is not the same as given.
+            DatasetTypeError: When the requested dataset type is not the same as given.
 
         """
         info = self._get_dataset(name)
@@ -259,7 +260,7 @@ class GAS:
         commit_id = info["HEAD"]["commitId"]
 
         if is_fusion != type_flag:
-            raise GASDatasetTypeError(name, type_flag)
+            raise DatasetTypeError(name, type_flag)
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
         return ReturnType(name, dataset_id, self, commit_id=commit_id)
 

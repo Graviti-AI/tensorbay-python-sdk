@@ -36,6 +36,7 @@ from requests_toolbelt import MultipartEncoder
 from ulid import from_timestamp
 
 from ..dataset import Data, Frame, RemoteData
+from ..exception import FrameError
 from ..sensor.sensor import Sensor, Sensors
 from .commit_status import CommitStatus
 from .exceptions import GASException, GASPathError
@@ -463,7 +464,7 @@ class FusionSegmentClient(SegmentClientBase):
         Raises:
             GASPathError: When remote_path does not follow linux style.
             GASException: When uploading frame failed.
-            TypeError: When frame id conflicts。                                `
+            FrameError: When lacking frame id or frame id conflicts.
 
         """
         self._status.check_authority_for_draft()
@@ -472,14 +473,14 @@ class FusionSegmentClient(SegmentClientBase):
             try:
                 frame_id = frame.frame_id
             except AttributeError as error:
-                raise TypeError(
+                raise FrameError(
                     "Lack frame id, please add frame id in frame or "
                     "give timestamp to the function!"
                 ) from error
         elif not hasattr(frame, "frame_id"):
             frame_id = from_timestamp(timestamp)
         else:
-            raise TypeError("Frame id conflicts, please do not give timestamp to the function!.")
+            raise FrameError("Frame id conflicts, please do not give timestamp to the function!.")
 
         for sensor_name, data in frame.items():
             if not isinstance(data, Data):

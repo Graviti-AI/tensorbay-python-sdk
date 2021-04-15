@@ -39,8 +39,8 @@ from requests.models import PreparedRequest, Response
 from urllib3.util.retry import Retry
 
 from ..__verison__ import __version__
+from ..exception import ResponseError
 from ..utility import ReprMixin, ReprType
-from .exceptions import GASResponseError
 from .log import RequestLogging, ResponseLogging
 
 logger = logging.getLogger(__name__)
@@ -153,14 +153,14 @@ class UserSession(Session):  # pylint: disable=too-few-public-methods
             Response of the request.
 
         Raises:
-            GASResponseError: If post response error.
+            ResponseError: If post response error.
 
         """
         try:
             response = super().request(method, url, *args, **kwargs)
             if response.status_code not in (200, 201):
                 logger.error("Invalid state code!%s", ResponseLogging(response))
-                raise GASResponseError(response)
+                raise ResponseError(response)
             logger.debug(ResponseLogging(response))
             return response
 

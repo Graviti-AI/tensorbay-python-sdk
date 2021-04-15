@@ -26,6 +26,7 @@ import sys
 from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Iterator, Optional, Tuple
 
 from ..dataset import Data, Frame, FusionSegment, Notes, Segment
+from ..exception import FrameError
 from ..label import Catalog
 from ..utility import Deprecated
 from .commit_status import CommitStatus
@@ -763,7 +764,7 @@ class FusionDatasetClient(DatasetClientBase):
             skip_uploaded_files: Set it to True to skip the uploaded files.
 
         Raises:
-            TypeError: When all the frames have the same patterns(both have frame id or not).
+            FrameError: When some frames have frame id while others do not.
 
         Returns:
             The :class:`~tensorbay.client.segment.FusionSegmentClient`
@@ -785,8 +786,8 @@ class FusionDatasetClient(DatasetClientBase):
 
         for frame in segment:
             if not hasattr(frame, "frame_id") == have_frame_id:
-                raise TypeError(
-                    "All the frames should have the same patterns(both have frame id or not)."
+                raise FrameError(
+                    "All the frames should have the same patterns(all have frame id or not)."
                 )
 
         if have_frame_id:

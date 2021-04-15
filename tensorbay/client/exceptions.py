@@ -8,41 +8,25 @@
 +----------------------+-----------------------------------------------------+
 | Error                | Description                                         |
 +======================+=====================================================+
-| GASResponseError     | Post response error                                 |
-+----------------------+-----------------------------------------------------+
 | GASDatasetError      | The requested dataset does not exist                |
-+----------------------+-----------------------------------------------------+
-| GASDatasetTypeError  | The type of the requested dataset is wrong          |
 +----------------------+-----------------------------------------------------+
 | GASSegmentError      | The requested segment does not exist                |
 +----------------------+-----------------------------------------------------+
 | GASPathError         | Remote path does not follow linux style             |
 +----------------------+-----------------------------------------------------+
 
+GASDatasetTypeError and GASResponseError are deprecated since v1.3.0, and will be removed in v1.5.0.
+
+Please use :class:`~tensorbay.exception.DatasetTypeError` instead of :class:`GASDatasetTypeError`.
+Please use :class:`~tensorbay.exception.ResponseError` instead of :class:`GASResponseError`.
+
 """
 
-from requests.models import Response
+from ..exception import DatasetTypeError, ResponseError, TensorBayClientException
 
-
-class GASException(Exception):
-    """This defines the parent class to the following specified error classes."""
-
-
-class GASResponseError(GASException):
-    """This error is raised to indicate post response error.
-
-    Arguments:
-        response: The response of the request.
-
-    """
-
-    def __init__(self, response: Response) -> None:
-        super().__init__()
-        self.response = response
-        self.status_code = response.status_code
-
-    def __str__(self) -> str:
-        return f"Invalid state code({self.status_code})! {self.response.url}"
+GASException = TensorBayClientException
+GASDatasetTypeError = DatasetTypeError
+GASResponseError = ResponseError
 
 
 class GASDatasetError(GASException):
@@ -59,26 +43,6 @@ class GASDatasetError(GASException):
 
     def __str__(self) -> str:
         return f"Dataset '{self._dataset_name}' does not exist"
-
-
-class GASDatasetTypeError(GASException):
-    """This error is raised to indicate that the type of the requested dataset is wrong.
-
-    Arguments:
-        dataset_name: The name of the dataset whose requested type is wrong.
-        is_fusion: Whether the dataset is a fusion dataset.
-
-    """
-
-    def __init__(self, dataset_name: str, is_fusion: bool) -> None:
-        super().__init__()
-        self._dataset_name = dataset_name
-        self._is_fusion = is_fusion
-
-    def __str__(self) -> str:
-        return (
-            f"Dataset '{self._dataset_name}' is {'' if self._is_fusion else 'not '}a fusion dataset"
-        )
 
 
 class GASSegmentError(GASException):
