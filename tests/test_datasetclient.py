@@ -208,7 +208,7 @@ class TestDatasetClient:
         dataset_client.create_draft("draft-2")
         dataset_client.commit("commit-2", tag="V2")
 
-        tags = list(dataset_client.list_tags())
+        tags = dataset_client.list_tags()
         assert tags[0].name == "V2"
         assert tags[1].name == "V1"
 
