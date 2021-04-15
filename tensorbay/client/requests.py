@@ -15,7 +15,7 @@ import logging
 import os
 from collections import defaultdict
 from concurrent.futures import FIRST_EXCEPTION, ThreadPoolExecutor, wait
-from itertools import count, repeat, zip_longest
+from itertools import count
 from threading import Lock
 from typing import (
     Any,
@@ -24,10 +24,8 @@ from typing import (
     Dict,
     Generator,
     Iterable,
-    Iterator,
     Optional,
     Sequence,
-    Tuple,
     TypeVar,
     Union,
     overload,
@@ -430,26 +428,3 @@ class PagingList(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancestors
         paging_list._locks = self._locks  # pylint: disable=protected-access
 
         return paging_list
-
-
-def paging_range(start: int, stop: int, limit: int) -> Iterator[Tuple[int, int]]:
-    """A Generator which generates offset and limit for paging request.
-
-    Examples:
-        >>> paging_range(0, 10, 3)
-        <generator object paging_range at 0x11b9932e0>
-
-        >>> list(paging_range(0, 10, 3))
-        [(0, 3), (3, 3), (6, 3), (9, 1)]
-
-    Arguments:
-        start: The paging index to start.
-        stop: The paging index to end.
-        limit: The paging limit.
-
-    Yields:
-        The tuple (offset, limit) for paging request.
-
-    """
-    div, mod = divmod(stop - start, limit)
-    yield from zip_longest(range(start, stop, limit), repeat(limit, div), fillvalue=mod)

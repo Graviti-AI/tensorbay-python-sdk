@@ -421,7 +421,7 @@ class TestSegmentClient:
             frame[LIDAR_DATA["name"]] = data
             segment_client.upload_frame(frame, timestamp=i)
 
-        frames = list(segment_client.list_frames())
+        frames = segment_client.list_frames()
         assert len(frames) == 5
         assert frames[0][LIDAR_DATA["name"]].path == "hello0.txt"
         assert not frames[0][LIDAR_DATA["name"]].label
@@ -471,7 +471,7 @@ class TestSegmentClient:
             frame[LIDAR_DATA["name"]] = data
             segment_client.upload_frame(frame, timestamp=i)
 
-        frames = list(segment_client.list_frames())
+        frames = segment_client.list_frames()
         assert len(frames) == 5
         assert frames[0][LIDAR_DATA["name"]].path == "hello0.txt"
         assert frames[0][LIDAR_DATA["name"]].label
@@ -527,7 +527,7 @@ class TestSegmentClient:
         with pytest.raises(TypeError):
             segment_client.upload_frame(frame)
 
-        frames = list(segment_client.list_frames())
+        frames = segment_client.list_frames()
         assert len(frames) == 10
         assert frames[0][LIDAR_DATA["name"]].path == "hello0.txt"
         assert frames[5][LIDAR_DATA["name"]].path == "goodbye5.txt"
