@@ -30,7 +30,7 @@ from ..label import Catalog
 from ..utility import Deprecated
 from .commit_status import CommitStatus
 from .exceptions import GASSegmentError
-from .requests import Client, PagingList, multithread_upload, paging_range
+from .requests import Client, PagingList, multithread_upload
 from .segment import FusionSegmentClient, SegmentClient
 from .struct import Branch, Commit, Draft, Tag
 
@@ -152,18 +152,21 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
 
         self._client.open_api_do("POST", "segments", self.dataset_id, json=post_data)
 
-    def _list_segments(
-        self, *, start: int = 0, stop: int = sys.maxsize, page_size: int = 128
-    ) -> Iterator[Dict[str, str]]:
+    def _generate_segment_names(
+        self, offset: int = 0, limit: int = 128
+    ) -> Generator[str, None, int]:
         params: Dict[str, Any] = self._status.get_status_info()
+        params["offset"] = offset
+        params["limit"] = limit
 
-        for params["offset"], params["limit"] in paging_range(start, stop, page_size):
-            response = self._client.open_api_do(
-                "GET", "segments", self.dataset_id, params=params
-            ).json()
-            yield from response["segments"]
-            if response["recordSize"] + response["offset"] >= response["totalCount"]:
-                break
+        response = self._client.open_api_do(
+            "GET", "segments", self.dataset_id, params=params
+        ).json()
+
+        for item in response["segments"]:
+            yield item["name"]
+
+        return response["totalCount"]  # type: ignore[no-any-return]
 
     @property
     def name(self) -> str:
@@ -492,18 +495,18 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             self._client.open_api_do("GET", "notes", self.dataset_id, params=params).json()
         )
 
-    def list_segment_names(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[str]:
+    def list_segment_names(self, *, start: int = 0, stop: int = sys.maxsize) -> PagingList[str]:
         """List all segment names in a certain commit.
 
         Arguments:
             start: The index to start.
             stop: The index to end.
 
-        Yields:
-            Required segment names.
+        Returns:
+            The PagingList of segment names.
 
         """
-        yield from (segment["name"] for segment in self._list_segments(start=start, stop=stop))
+        return PagingList(self._generate_segment_names, 128, slice(start, stop))
 
     def get_catalog(self) -> Catalog:
         """Get the catalog of the certain commit.

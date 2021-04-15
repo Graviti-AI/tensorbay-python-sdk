@@ -45,7 +45,7 @@ dataset_client = gas.get_dataset("Newsgroups20")
 """"""
 
 """Read Dataset / list segment names"""
-list(dataset_client.list_segment_names())
+dataset_client.list_segment_names()
 """"""
 
 """Read Dataset / get segment"""
