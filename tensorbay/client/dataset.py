@@ -23,14 +23,14 @@ Please refer to :class:`~tensorbay.dataset.dataset.FusionDataset` for more infor
 """
 
 import sys
-from typing import TYPE_CHECKING, Any, Dict, Iterator, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Dict, Generator, Iterator, Optional, Tuple
 
 from ..dataset import Data, Frame, FusionSegment, Notes, Segment
 from ..label import Catalog
 from ..utility import Deprecated
 from .commit_status import CommitStatus
 from .exceptions import GASSegmentError
-from .requests import Client, multithread_upload, paging_range
+from .requests import Client, PagingList, multithread_upload, paging_range
 from .segment import FusionSegmentClient, SegmentClient
 from .struct import Branch, Commit, Draft, Tag
 
@@ -93,19 +93,14 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         response = self._client.open_api_do("POST", "drafts", self.dataset_id, json=post_data)
         return response.json()["draftNumber"]  # type: ignore[no-any-return]
 
-    def _list_drafts(
-        self, *, start: int = 0, stop: int = sys.maxsize, page_size: int = 128
-    ) -> Iterator[Draft]:
-        params: Dict[str, Any] = {}
+    def _generate_drafts(self, offset: int = 0, limit: int = 128) -> Generator[Draft, None, int]:
+        params = {"offset": offset, "limit": limit}
+        response = self._client.open_api_do("GET", "drafts", self.dataset_id, params=params).json()
 
-        for params["offset"], params["limit"] in paging_range(start, stop, page_size):
-            response = self._client.open_api_do(
-                "GET", "drafts", self.dataset_id, params=params
-            ).json()
-            for draft_info in response["drafts"]:
-                yield Draft.loads(draft_info)
-            if response["recordSize"] + response["offset"] >= response["totalCount"]:
-                break
+        for item in response["drafts"]:
+            yield Draft.loads(item)
+
+        return response["totalCount"]  # type: ignore[no-any-return]
 
     def _list_commits(
         self,
@@ -255,7 +250,7 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         if not draft_number:
             raise TypeError("The given draft number is illegal")
 
-        for draft in self._list_drafts():
+        for draft in self.list_drafts():
             if draft_number == draft.number:
                 return draft
 
@@ -275,21 +270,21 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             The dict containing title and number of drafts.
 
         """
-        for draft in self._list_drafts(start=start, stop=stop):
+        for draft in self.list_drafts(start=start, stop=stop):
             yield draft.dumps()
 
-    def list_drafts(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[Draft]:
+    def list_drafts(self, *, start: int = 0, stop: int = sys.maxsize) -> PagingList[Draft]:
         """List all the drafts.
 
         Arguments:
             start: The index to start.
             stop: The index to end.
 
-        Yields:
-            The :class:`drafts<.Draft>`.
+        Returns:
+            The PagingList of :class:`drafts<.Draft>`.
 
         """
-        yield from self._list_drafts(start=start, stop=stop)
+        return PagingList(self._generate_drafts, 128, slice(start, stop))
 
     def get_commit(self, commit_key: Optional[str] = None) -> Commit:
         """Get the certain commit with the given commit key.

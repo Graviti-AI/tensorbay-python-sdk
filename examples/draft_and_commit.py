@@ -34,7 +34,7 @@ draft_number = dataset_client.status.draft_number
 """"""
 
 """List Drafts"""
-drafts = list(dataset_client.list_drafts())
+drafts = dataset_client.list_drafts()
 """"""
 
 """Get Draft"""
