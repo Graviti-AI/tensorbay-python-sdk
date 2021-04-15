@@ -23,7 +23,7 @@ It consists of a list of :class:`~tensorbay.dataset.segment.FusionSegment`.
 """
 
 import json
-from typing import Any, Dict, Sequence, Type, TypeVar, Union, overload
+from typing import Any, Dict, KeysView, Sequence, Type, TypeVar, Union, overload
 
 from ..label import Catalog
 from ..utility import EqMixin, NameMixin, NameSortedList, ReprMixin, ReprType, common_loads
@@ -47,6 +47,12 @@ class Notes(ReprMixin, EqMixin):
     def __init__(self, is_continuous: bool = False) -> None:
         self.is_continuous = is_continuous
 
+    def __getitem__(self, key: str) -> Any:
+        try:
+            return getattr(self, key)
+        except AttributeError as error:
+            raise KeyError(key) from error
+
     def _loads(self, contents: Dict[str, Any]) -> None:
         self.is_continuous = contents["isContinuous"]
 
@@ -66,6 +72,19 @@ class Notes(ReprMixin, EqMixin):
 
         """
         return common_loads(cls, contents)
+
+    def keys(self) -> KeysView[str]:
+        """Return the valid keys within the notes.
+
+        Returns:
+            The valid keys within the notes.
+
+        """
+        keys = set()
+        for attr in self._repr_attrs:
+            if hasattr(self, attr):
+                keys.add(attr)
+        return KeysView(keys)  # type: ignore[arg-type]
 
     def dumps(self) -> Dict[str, Any]:
         """Dumps the notes into a dict.

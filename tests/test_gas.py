@@ -184,6 +184,7 @@ class TestGAS:
         gas_client.create_dataset(dataset_name)
 
         dataset = Dataset(name=dataset_name)
+        dataset.notes.is_continuous = True
         segment = dataset.create_segment("Segment1")
 
         path = tmp_path / "sub"
@@ -194,6 +195,7 @@ class TestGAS:
             segment.append(Data(local_path=str(local_path)))
 
         dataset_client = gas_client.upload_dataset(dataset)
+        assert dataset_client.get_notes().is_continuous == True
         assert not dataset_client.get_catalog()
         segment1 = Segment("Segment1", client=dataset_client)
         assert len(segment1) == 10

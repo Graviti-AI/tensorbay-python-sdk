@@ -5,6 +5,7 @@
 
 import json
 import os
+from typing import KeysView
 
 import pytest
 
@@ -23,6 +24,14 @@ class TestNotes:
 
         notes = Notes()
         assert notes.is_continuous == False
+
+    def test_keys(self):
+        notes = Notes()
+        assert notes.keys() == KeysView(["is_continuous"])
+
+    def test_getitem(self):
+        notes = Notes()
+        assert notes["is_continuous"] == False
 
     def test_loads(self):
         notes = Notes.loads(_NOTES_DATA)
