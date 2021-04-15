@@ -399,6 +399,8 @@ class GAS:
         if dataset.catalog:
             dataset_client.upload_catalog(dataset.catalog)
 
+        dataset_client.update_notes(**dataset.notes)  # type: ignore[arg-type]
+
         for segment in dataset:
             dataset_client.upload_segment(
                 segment,  # type: ignore[arg-type]

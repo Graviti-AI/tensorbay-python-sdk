@@ -5,6 +5,7 @@
 
 import json
 import os
+from typing import KeysView
 
 import pytest
 
@@ -30,6 +31,19 @@ class TestNotes:
         notes = Notes(True, _NOTES_DATA["binPointCloudFields"])
         assert notes.is_continuous == True
         assert notes.bin_point_cloud_fields == _NOTES_DATA["binPointCloudFields"]
+
+    def test_keys(self):
+        notes = Notes()
+        assert notes.keys() == KeysView(["is_continuous"])
+
+        notes = Notes(True, _NOTES_DATA["binPointCloudFields"])
+        assert notes.keys() == KeysView(["is_continuous", "bin_point_cloud_fields"])
+
+    def test_getitem(self):
+        notes = Notes()
+        assert notes["is_continuous"] == False
+        with pytest.raises(KeyError):
+            notes["bin_point_cloud_fields"]
 
     def test_loads(self):
         notes = Notes.loads(_NOTES_DATA)
