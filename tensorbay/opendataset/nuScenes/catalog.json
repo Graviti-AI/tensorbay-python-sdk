@@ -1,0 +1,148 @@
+{
+    "BOX3D": {
+        "isTracking": true,
+        "categoryDelimiter": ".",
+        "categories": [
+            {
+                "name": "animal",
+                "description": "All animals, e.g. cats, rats, dogs, deer, birds."
+            },
+            {
+                "name": "human.pedestrian.adult",
+                "description": "Adult subcategory."
+            },
+            {
+                "name": "human.pedestrian.child",
+                "description": "Child subcategory."
+            },
+            {
+                "name": "human.pedestrian.construction_worker",
+                "description": "Construction worker"
+            },
+            {
+                "name": "human.pedestrian.personal_mobility",
+                "description": "A small electric or self-propelled vehicle, e.g. skateboard, segway, or scooters, on which the person typically travels in a upright position. Driver and (if applicable) rider should be included in the bounding box along with the vehicle."
+            },
+            {
+                "name": "human.pedestrian.police_officer",
+                "description": "Police officer."
+            },
+            {
+                "name": "human.pedestrian.stroller",
+                "description": "Strollers. If a person is in the stroller, include in the annotation."
+            },
+            {
+                "name": "human.pedestrian.wheelchair",
+                "description": "Wheelchairs. If a person is in the wheelchair, include in the annotation."
+            },
+            {
+                "name": "movable_object.barrier",
+                "description": "Temporary road barrier placed in the scene in order to redirect traffic. Commonly used at construction sites. This includes concrete barrier, metal barrier and water barrier. No fences."
+            },
+            {
+                "name": "movable_object.debris",
+                "description": "Movable object that is left on the driveable surface that is too large to be driven over safely, e.g tree branch, full trash bag etc."
+            },
+            {
+                "name": "movable_object.pushable_pullable",
+                "description": "Objects that a pedestrian may push or pull. For example dolleys, wheel barrows, garbage-bins, or shopping carts."
+            },
+            {
+                "name": "movable_object.trafficcone",
+                "description": "All types of traffic cone."
+            },
+            {
+                "name": "static_object.bicycle_rack",
+                "description": "Area or device intended to park or secure the bicycles in a row. It includes all the bikes parked in it and any empty slots that are intended for parking bikes."
+            },
+            {
+                "name": "vehicle.bicycle",
+                "description": "Human or electric powered 2-wheeled vehicle designed to travel at lower speeds either on road surface, sidewalks or bike paths."
+            },
+            {
+                "name": "vehicle.bus.bendy",
+                "description": "Bendy bus subcategory. Annotate each section of the bendy bus individually."
+            },
+            {
+                "name": "vehicle.bus.rigid",
+                "description": "Rigid bus subcategory."
+            },
+            {
+                "name": "vehicle.car",
+                "description": "Vehicle designed primarily for personal use, e.g. sedans, hatch-backs, wagons, vans, mini-vans, SUVs and jeeps. If the vehicle is designed to carry more than 10 people use vehicle.bus. If it is primarily designed to haul cargo use vehicle.truck. "
+            },
+            {
+                "name": "vehicle.construction",
+                "description": "Vehicles primarily designed for construction. Typically very slow moving or stationary. Cranes and extremities of construction vehicles are only included in annotations if they interfere with traffic. Trucks used to haul rocks or building materials are considered vehicle.truck rather than construction vehicles."
+            },
+            {
+                "name": "vehicle.emergency.ambulance",
+                "description": "All types of ambulances."
+            },
+            {
+                "name": "vehicle.emergency.police",
+                "description": "All types of police vehicles including police bicycles and motorcycles."
+            },
+            {
+                "name": "vehicle.motorcycle",
+                "description": "Gasoline or electric powered 2-wheeled vehicle designed to move rapidly (at the speed of standard cars) on the road surface. This category includes all motorcycles, vespas and scooters."
+            },
+            {
+                "name": "vehicle.trailer",
+                "description": "Any vehicle trailer, both for trucks, cars and bikes."
+            },
+            {
+                "name": "vehicle.truck",
+                "description": "Vehicles primarily designed to haul cargo including pick-ups, lorrys, trucks and semi-tractors. Trailers hauled after a semi-tractor should be labeled as vehicle.trailer"
+            }
+        ],
+        "attributes": [
+            {
+                "name": "vehicle_motion",
+                "enum": ["moving", "parked", "stopped"],
+                "parentCategories": [
+                    "vehicle.bicycle",
+                    "vehicle.bus.bendy",
+                    "vehicle.bus.rigid",
+                    "vehicle.car",
+                    "vehicle.construction",
+                    "vehicle.emergency.ambulance",
+                    "vehicle.emergency.police",
+                    "vehicle.motorcycle",
+                    "vehicle.trailer",
+                    "vehicle.truck"
+                ],
+                "description": "Motion of the vehicle."
+            },
+            {
+                "name": "cycle_rider",
+                "enum": ["with_rider", "without_rider"],
+                "parentCategories": [
+                    "static_object.bicycle_rack",
+                    "vehicle.bicycle",
+                    "vehicle.motorcycle"
+                ],
+                "description": "Whether the cycle has a rider on it."
+            },
+            {
+                "name": "pedestrian_motion",
+                "enum": ["moving", "sitting_lying_down", "standing"],
+                "parentCategories": [
+                    "human.pedestrian.adult",
+                    "human.pedestrian.child",
+                    "human.pedestrian.construction_worker",
+                    "human.pedestrian.personal_mobility",
+                    "human.pedestrian.police_officer",
+                    "human.pedestrian.stroller",
+                    "human.pedestrian.wheelchair"
+                ],
+                "description": "Motion of the pedestrain."
+            },
+            {
+                "name": "visibility",
+                "enum": ["v0-40", "v40-60", "v60-80", "v80-100"],
+                "description": "Visibility of whole object in percentage."
+            }
+        ]
+    }
+}
