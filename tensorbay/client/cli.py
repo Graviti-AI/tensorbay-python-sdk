@@ -329,8 +329,8 @@ def _ls_frame(gas: GAS, info: TBRN, list_all_files: bool) -> None:
     segment_client = dataset_client.get_segment(info.segment_name)
 
     try:
-        frame = next(segment_client.list_frames(start=info.frame_index, stop=info.frame_index + 1))
-    except StopIteration:
+        frame = segment_client.list_frames()[info.frame_index]
+    except IndexError:
         click.echo(f'No such frame: "{info.frame_index}"!', err=True)
         sys.exit(1)
 
@@ -358,8 +358,8 @@ def _ls_sensor(
     dataset_client = gas.get_dataset(info.dataset_name, is_fusion=True)
     segment_client = dataset_client.get_segment(info.segment_name)
     try:
-        frame = next(segment_client.list_frames(start=info.frame_index, stop=info.frame_index + 1))
-    except StopIteration:
+        frame = segment_client.list_frames()[info.frame_index]
+    except IndexError:
         click.echo(f'No such frame: "{info.frame_index}"!', err=True)
         sys.exit(1)
 
@@ -383,8 +383,8 @@ def _ls_fusion_file(
     dataset_client = gas.get_dataset(info.dataset_name, is_fusion=True)
     segment_client = dataset_client.get_segment(info.segment_name)
     try:
-        frame = next(segment_client.list_frames(start=info.frame_index, stop=info.frame_index + 1))
-    except StopIteration:
+        frame = segment_client.list_frames()[info.frame_index]
+    except IndexError:
         click.echo(f'No such frame: "{info.frame_index}"!', err=True)
         sys.exit(1)
 

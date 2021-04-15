@@ -29,7 +29,7 @@ import threading
 import time
 from copy import deepcopy
 from itertools import islice
-from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Iterator, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Optional, Tuple, Union
 
 import filetype
 from requests_toolbelt import MultipartEncoder
@@ -39,7 +39,7 @@ from ..dataset import Data, Frame, RemoteData
 from ..sensor.sensor import Sensor, Sensors
 from .commit_status import CommitStatus
 from .exceptions import GASException, GASPathError
-from .requests import PagingList, default_config, paging_range
+from .requests import PagingList, default_config
 
 if TYPE_CHECKING:
     from .dataset import DatasetClient, FusionDatasetClient
@@ -100,30 +100,16 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
         response = self._client.open_api_do("GET", "data/urls", self._dataset_id, params=params)
         return response.json()["urls"][0]["url"]  # type: ignore[no-any-return]
 
-    def _list_labels(
-        self, *, start: int = 0, stop: int = sys.maxsize, page_size: int = 128
-    ) -> Iterator[Dict[str, Any]]:
-        """List labels of the segment in a certain commit.
-
-        Arguments:
-            start: The index to start.
-            stop: The index to stop.
-            page_size: The page size for the listed labels.
-
-        Yields:
-            Labels in a segment in a certain commit.
-
-        """
-        params: Dict[str, Any] = {"segmentName": self._name}
+    def _list_labels(self, offset: int = 0, limit: int = 128) -> Dict[str, Any]:
+        params: Dict[str, Any] = {
+            "segmentName": self._name,
+            "offset": offset,
+            "limit": limit,
+        }
         params.update(self._status.get_status_info())
 
-        for params["offset"], params["limit"] in paging_range(start, stop, page_size):
-            response = self._client.open_api_do(
-                "GET", "labels", self._dataset_id, params=params
-            ).json()
-            yield from response["labels"]
-            if response["recordSize"] + response["offset"] >= response["totalCount"]:
-                break
+        response = self._client.open_api_do("GET", "labels", self._dataset_id, params=params)
+        return response.json()  # type: ignore[no-any-return]
 
     def _get_upload_permission(self) -> Dict[str, Any]:
         with self._permission_lock:
@@ -286,14 +272,7 @@ class SegmentClient(SegmentClientBase):
         return response["totalCount"]  # type: ignore[no-any-return]
 
     def _generate_data(self, offset: int = 0, limit: int = 128) -> Generator[RemoteData, None, int]:
-        params: Dict[str, Any] = {
-            "segmentName": self._name,
-            "offset": offset,
-            "limit": limit,
-        }
-        params.update(self._status.get_status_info())
-
-        response = self._client.open_api_do("GET", "labels", self._dataset_id, params=params).json()
+        response = self._list_labels(offset, limit)
 
         for item in response["labels"]:
             data = RemoteData.loads(item)
@@ -417,30 +396,17 @@ class FusionSegmentClient(SegmentClientBase):
     def __init__(self, name: str, data_client: "FusionDatasetClient") -> None:
         super().__init__(name, data_client)
 
-    def _list_frames(
-        self, *, start: int = 0, stop: int = sys.maxsize, page_size: int = 128
-    ) -> Iterator[Dict[str, Any]]:
-        """List all frames in a segment in a certain commit.
+    def _generate_frames(self, offset: int = 0, limit: int = 128) -> Generator[Frame, None, int]:
+        response = self._list_labels(offset, limit)
 
-        Arguments:
-            start: The index to start.
-            stop: The index to stop.
-            page_size: The page size for listed frames.
+        for item in response["labels"]:
+            frame = Frame.loads(item)
+            for data in frame.values():  # pylint: disable=no-member # pylint issue: #3131
+                # pylint: disable=protected-access
+                data._url_getter = self._get_url  # type: ignore[union-attr]
+            yield frame
 
-        Yields:
-             Required frames.
-
-        """
-        params: Dict[str, Any] = {"segmentName": self._name}
-        params.update(self._status.get_status_info())
-
-        for params["offset"], params["limit"] in paging_range(start, stop, page_size):
-            response = self._client.open_api_do(
-                "GET", "data", self._dataset_id, params=params
-            ).json()
-            yield from response["data"]
-            if response["recordSize"] + response["offset"] >= response["totalCount"]:
-                break
+        return response["totalCount"]  # type: ignore[no-any-return]
 
     def get_sensors(self) -> Sensors:
         """Return the sensors in a fusion segment client.
@@ -560,20 +526,15 @@ class FusionSegmentClient(SegmentClientBase):
                 raise
             self._upload_label(data)
 
-    def list_frames(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[Frame]:
+    def list_frames(self, *, start: int = 0, stop: int = sys.maxsize) -> PagingList[Frame]:
         """List required frames in the segment in a certain commit.
 
         Arguments:
             start: The index to start.
             stop: The index to stop.
 
-        Yields:
-            Required :class:`~tensorbay.dataset.frame.Frame`.
+        Returns:
+            The PagingList of :class:`~tensorbay.dataset.frame.Frame`.
 
         """
-        for frame_content in self._list_labels(start=start, stop=stop):
-            frame = Frame.loads(frame_content)
-            for data in frame.values():  # pylint: disable=no-member # pylint issue: #3131
-                # pylint: disable=protected-access
-                data._url_getter = self._get_url  # type: ignore[union-attr]
-            yield frame
+        return PagingList(self._generate_frames, 128, slice(start, stop))
