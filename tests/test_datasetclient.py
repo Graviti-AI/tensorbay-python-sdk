@@ -7,9 +7,10 @@
 
 import pytest
 
-from tensorbay.client import GAS, GASResponseError, GASSegmentError
+from tensorbay.client import GAS, GASSegmentError
 from tensorbay.client.struct import Draft
 from tensorbay.dataset import Data, Frame, FusionSegment, Segment
+from tensorbay.exception import CommitStatusError, ResponseError
 from tensorbay.label import Catalog, Label
 from tensorbay.sensor import Sensor
 
@@ -79,7 +80,7 @@ class TestDatasetClient:
         assert dataset_client.status.is_draft
         assert dataset_client.status.draft_number == draft_number_1
         assert dataset_client.status.commit_id is None
-        with pytest.raises(TypeError):
+        with pytest.raises(CommitStatusError):
             dataset_client.create_draft("draft-2")
         draft_number = get_draft_number_by_title(dataset_client.list_drafts(), "draft-1")
         assert draft_number_1 == draft_number
@@ -117,7 +118,7 @@ class TestDatasetClient:
         dataset_client.commit("commit-2", tag="V1")
 
         dataset_client.create_draft("draft-3")
-        with pytest.raises(GASResponseError):
+        with pytest.raises(ResponseError):
             dataset_client.commit("commit-3", tag="V1")
         dataset_client.commit("commit-3", tag="V2")
         assert not dataset_client.status.is_draft
@@ -136,17 +137,17 @@ class TestDatasetClient:
         dataset_client.create_draft("draft-1")
         dataset_client.commit("commit-1", tag="V1")
         # Can not create more than one tag for one commit
-        with pytest.raises(GASResponseError):
+        with pytest.raises(ResponseError):
             dataset_client.create_tag("V2")
         dataset_client.create_draft("draft-2")
         dataset_client.commit("commit-2")
         # Can not create duplicated tag
-        with pytest.raises(GASResponseError):
+        with pytest.raises(ResponseError):
             dataset_client.create_tag("V1")
         commit_2_id = dataset_client.status.commit_id
         dataset_client.create_draft("draft-3")
         # Can not create the tag without giving commit in the draft
-        with pytest.raises(TypeError):
+        with pytest.raises(CommitStatusError):
             dataset_client.create_tag("V2")
         dataset_client.create_tag("V2", commit=commit_2_id)
         dataset_client.commit("commit-3")
@@ -302,7 +303,7 @@ class TestDatasetClient:
 
         # Can not create the tag without giving commit in the draft
         dataset_client.create_draft("draft-3")
-        with pytest.raises(TypeError):
+        with pytest.raises(CommitStatusError):
             dataset_client.get_commit()
 
         gas_client.delete_dataset(dataset_name)
@@ -414,7 +415,7 @@ class TestDatasetClient:
         dataset_name = get_random_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
 
-        with pytest.raises(TypeError):
+        with pytest.raises(CommitStatusError):
             dataset_client.update_notes(is_continuous=True)
         dataset_client.create_draft("draft-1")
         notes_1 = dataset_client.get_notes()
@@ -438,7 +439,7 @@ class TestDatasetClient:
         dataset_name = get_random_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
 
-        with pytest.raises(TypeError):
+        with pytest.raises(CommitStatusError):
             dataset_client.create_segment("segment")
         dataset_client.create_draft("draft-1")
         segment_client = dataset_client.create_segment("segment")
@@ -456,7 +457,7 @@ class TestDatasetClient:
         dataset_name = get_random_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
 
-        with pytest.raises(TypeError):
+        with pytest.raises(CommitStatusError):
             dataset_client.get_or_create_segment("segment")
         dataset_client.create_draft("draft-1")
         segment_client = dataset_client.get_or_create_segment("segment")
@@ -471,7 +472,7 @@ class TestDatasetClient:
         dataset_name = get_random_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name, is_fusion=True)
 
-        with pytest.raises(TypeError):
+        with pytest.raises(CommitStatusError):
             dataset_client.get_or_create_segment("segment")
         dataset_client.create_draft("draft-1")
         segment_client = dataset_client.get_or_create_segment("segment")
@@ -501,7 +502,7 @@ class TestDatasetClient:
         dataset_name = get_random_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
 
-        with pytest.raises(TypeError):
+        with pytest.raises(CommitStatusError):
             dataset_client.upload_catalog(Catalog.loads(CATALOG))
         dataset_client.create_draft("draft-1")
         dataset_client.upload_catalog(Catalog.loads(CATALOG))

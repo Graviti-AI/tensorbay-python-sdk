@@ -5,22 +5,13 @@
 
 """Client module."""
 
-from .exceptions import (
-    GASDatasetError,
-    GASDatasetTypeError,
-    GASException,
-    GASPathError,
-    GASResponseError,
-    GASSegmentError,
-)
+from .exceptions import GASDatasetError, GASException, GASPathError, GASSegmentError
 from .gas import GAS
 
 __all__ = [
     "GAS",
     "GASDatasetError",
-    "GASDatasetTypeError",
     "GASException",
     "GASPathError",
-    "GASResponseError",
     "GASSegmentError",
 ]

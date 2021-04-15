@@ -7,8 +7,9 @@
 
 import pytest
 
-from tensorbay.client import GAS, GASDatasetError, GASResponseError
+from tensorbay.client import GAS, GASDatasetError
 from tensorbay.dataset import Data, Dataset, Segment
+from tensorbay.exception import ResponseError
 from tensorbay.label import Catalog, Label
 
 from .utility import get_random_dataset_name
@@ -83,7 +84,7 @@ class TestGAS:
 
         region = "guangzhou"
         dataset_name = get_random_dataset_name()
-        with pytest.raises(GASResponseError):
+        with pytest.raises(ResponseError):
             gas_client.create_dataset(dataset_name, region=region)
 
     def test_create_fusion_dataset(self, accesskey, url):
@@ -252,7 +253,7 @@ class TestGAS:
         assert segment1[0].path == "hello0.txt"
         assert not segment1[0].label
 
-        with pytest.raises(GASResponseError):
+        with pytest.raises(ResponseError):
             gas_client.upload_dataset(dataset, draft_number=draft_number + 1)
 
         gas_client.delete_dataset(dataset_name)

@@ -8,10 +8,10 @@
 import pytest
 import ulid
 
-from tensorbay.client.exceptions import GASResponseError
 from tensorbay.client.gas import GAS
 from tensorbay.dataset.data import Data, Label
 from tensorbay.dataset.frame import Frame
+from tensorbay.exception import FrameError, ResponseError
 from tensorbay.label.catalog import Catalog
 from tensorbay.sensor.sensor import Sensor, Sensors
 
@@ -242,7 +242,7 @@ class TestSegmentClient:
         data = Data(local_path=str(local_path))
         data.label = Label.loads(LABEL)
         # If not uploading file, uploading label is not allowed
-        with pytest.raises(GASResponseError):
+        with pytest.raises(ResponseError):
             segment_client.upload_label(data)
 
         # Uploading files
@@ -250,7 +250,7 @@ class TestSegmentClient:
 
         data.label = Label.loads(WRONG_LABEL)
         # Uploading wrong label is not allowed
-        with pytest.raises(GASResponseError):
+        with pytest.raises(ResponseError):
             segment_client.upload_label(data)
         data.label = Label.loads(LABEL)
         segment_client.upload_label(data)
@@ -305,7 +305,7 @@ class TestSegmentClient:
 
         # If not uploading catalog, uploading label is not allowed
         data.label = Label.loads(LABEL)
-        with pytest.raises(GASResponseError):
+        with pytest.raises(ResponseError):
             segment_client.upload_label(data)
 
         gas_client.delete_dataset(dataset_name)
@@ -445,7 +445,7 @@ class TestSegmentClient:
         frame[LIDAR_DATA["name"]] = data
 
         # If not uploading sensor, uploading frame is not allowed
-        with pytest.raises(GASResponseError):
+        with pytest.raises(ResponseError):
             segment_client.upload_frame(frame, timestamp=0)
 
         gas_client.delete_dataset(dataset_name)
@@ -515,7 +515,7 @@ class TestSegmentClient:
         local_path.write_text("CONTENT")
         data = Data(local_path=str(local_path))
         frame[LIDAR_DATA["name"]] = data
-        with pytest.raises(TypeError):
+        with pytest.raises(FrameError):
             segment_client.upload_frame(frame, timestamp=i)
 
         # Neither setting frame id in frame nor set timestamp(order) when uploading is not allowed
@@ -524,7 +524,7 @@ class TestSegmentClient:
         local_path.write_text("CONTENT")
         data = Data(local_path=str(local_path))
         frame[LIDAR_DATA["name"]] = data
-        with pytest.raises(TypeError):
+        with pytest.raises(FrameError):
             segment_client.upload_frame(frame)
 
         frames = segment_client.list_frames()
