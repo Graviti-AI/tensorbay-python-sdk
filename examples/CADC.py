@@ -42,7 +42,7 @@ fusion_dataset_client.commit("CADC")
 fusion_dataset_client = gas.get_dataset("CADC", is_fusion=True)
 """"""
 
-"""Read Dataset / list fusion segment names"""
+"""Read Fusion Dataset / list fusion segment names"""
 list(fusion_dataset_client.list_segment_names())
 """"""
 
