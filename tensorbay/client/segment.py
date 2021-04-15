@@ -285,6 +285,23 @@ class SegmentClient(SegmentClientBase):
 
         return response["totalCount"]  # type: ignore[no-any-return]
 
+    def _generate_data(self, offset: int = 0, limit: int = 128) -> Generator[RemoteData, None, int]:
+        params: Dict[str, Any] = {
+            "segmentName": self._name,
+            "offset": offset,
+            "limit": limit,
+        }
+        params.update(self._status.get_status_info())
+
+        response = self._client.open_api_do("GET", "labels", self._dataset_id, params=params).json()
+
+        for item in response["labels"]:
+            data = RemoteData.loads(item)
+            data._url_getter = self._get_url  # pylint: disable=protected-access
+            yield data
+
+        return response["totalCount"]  # type: ignore[no-any-return]
+
     def upload_file(self, local_path: str, target_remote_path: str = "") -> None:
         """Upload data with local path to the draft.
 
@@ -368,21 +385,18 @@ class SegmentClient(SegmentClientBase):
         """
         return PagingList(self._generate_data_paths, 128, slice(start, stop))
 
-    def list_data(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[RemoteData]:
+    def list_data(self, *, start: int = 0, stop: int = sys.maxsize) -> PagingList[RemoteData]:
         """List required Data object in a dataset segment.
 
         Arguments:
             start: The index to start.
             stop: The index to stop.
 
-        Yields:
-            Required Data object.
+        Returns:
+            The PagingList of :class:`~tensorbay.dataset.data.RemoteData`.
 
         """
-        for data_content in self._list_labels(start=start, stop=stop):
-            data = RemoteData.loads(data_content)
-            data._url_getter = self._get_url  # pylint: disable=protected-access
-            yield data
+        return PagingList(self._generate_data, 128, slice(start, stop))
 
 
 class FusionSegmentClient(SegmentClientBase):

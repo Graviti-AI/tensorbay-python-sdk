@@ -114,7 +114,7 @@ class TestSegmentClient:
             local_path.write_text("CONTENT")
             segment_client.upload_file(local_path=str(local_path))
 
-        data = list(segment_client.list_data())
+        data = segment_client.list_data()
         assert data[0].path == "hello0.txt"
         assert data[0].open().read() == b"CONTENT"
         assert not data[0].label
@@ -141,7 +141,7 @@ class TestSegmentClient:
             local_path.write_text("ADD CONTENT")
             segment_client.upload_file(local_path=str(local_path))
 
-        data = list(segment_client.list_data())
+        data = segment_client.list_data()
         assert data[0].path == "hello0.txt"
         assert data[0].open().read() == b"ADD CONTENT"
         assert not data[0].label
@@ -168,7 +168,7 @@ class TestSegmentClient:
             local_path.write_text("CONTENT")
             segment_client.upload_file(local_path=str(local_path))
 
-        data = list(segment_client.list_data())
+        data = segment_client.list_data()
         assert data[0].path == "goodbye0.txt"
         assert data[5].path == "hello0.txt"
 
@@ -195,7 +195,7 @@ class TestSegmentClient:
             local_path.write_text("CONTENT")
             segment_client.upload_file(local_path=str(local_path))
 
-        data = list(segment_client.list_data())
+        data = segment_client.list_data()
         assert data[0].path == "goodbye0.txt"
         assert data[5].path == "hello0.txt"
 
@@ -255,7 +255,7 @@ class TestSegmentClient:
         data.label = Label.loads(LABEL)
         segment_client.upload_label(data)
 
-        data = list(segment_client.list_data())
+        data = segment_client.list_data()
         assert data[0].path == "hello0.txt"
         assert data[0].label
         # todo: match the input and output label
@@ -283,7 +283,7 @@ class TestSegmentClient:
         data.label = Label.loads(NEW_LABEL)
         segment_client.upload_label(data)
 
-        data = list(segment_client.list_data())
+        data = segment_client.list_data()
         assert data[0].path == "hello0.txt"
         assert data[0].label
         # todo: match the input and output label
@@ -324,7 +324,7 @@ class TestSegmentClient:
             local_path.write_text("CONTENT")
             segment_client.upload_data(Data(local_path=str(local_path)))
 
-        data = list(segment_client.list_data())
+        data = segment_client.list_data()
         assert data[0].path == "hello0.txt"
         assert data[0].open().read() == b"CONTENT"
         assert not data[0].label
@@ -349,7 +349,7 @@ class TestSegmentClient:
             data.label = Label.loads(LABEL)
             segment_client.upload_data(data)
 
-        data = list(segment_client.list_data())
+        data = segment_client.list_data()
         assert data[0].path == "hello0.txt"
         assert data[0].open().read() == b"CONTENT"
         assert data[0].label
@@ -379,7 +379,7 @@ class TestSegmentClient:
         assert "hello0.txt" not in data_paths
 
         segment_client.delete_data(segment_client.list_data_paths())
-        data = list(segment_client.list_data())
+        data = segment_client.list_data()
         assert len(data) == 0
 
         gas_client.delete_dataset(dataset_name)
