@@ -29,7 +29,7 @@ import threading
 import time
 from copy import deepcopy
 from itertools import islice
-from typing import TYPE_CHECKING, Any, Dict, Iterable, Iterator, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Iterator, Optional, Tuple, Union
 
 import filetype
 from requests_toolbelt import MultipartEncoder
@@ -39,7 +39,7 @@ from ..dataset import Data, Frame, RemoteData
 from ..sensor.sensor import Sensor, Sensors
 from .commit_status import CommitStatus
 from .exceptions import GASException, GASPathError
-from .requests import default_config, paging_range
+from .requests import PagingList, default_config, paging_range
 
 if TYPE_CHECKING:
     from .dataset import DatasetClient, FusionDatasetClient
@@ -270,30 +270,20 @@ class SegmentClient(SegmentClientBase):
     def __init__(self, name: str, data_client: "DatasetClient") -> None:
         super().__init__(name, data_client)
 
-    def _list_data(
-        self, *, start: int = 0, stop: int = sys.maxsize, page_size: int = 128
-    ) -> Iterator[Dict[str, Any]]:
-        """List data in a segment in a certain commit.
-
-        Arguments:
-            start: The index to start.
-            stop: The index to stop.
-            page_size: The page size for listed data.
-
-        Yields:
-            Data in a segment client.
-
-        """
-        params: Dict[str, Any] = {"segmentName": self._name}
+    def _generate_data_paths(self, offset: int = 0, limit: int = 128) -> Generator[str, None, int]:
+        params: Dict[str, Any] = {
+            "segmentName": self._name,
+            "offset": offset,
+            "limit": limit,
+        }
         params.update(self._status.get_status_info())
 
-        for params["offset"], params["limit"] in paging_range(start, stop, page_size):
-            response = self._client.open_api_do(
-                "GET", "data", self._dataset_id, params=params
-            ).json()
-            yield from response["data"]
-            if response["recordSize"] + response["offset"] >= response["totalCount"]:
-                break
+        response = self._client.open_api_do("GET", "data", self._dataset_id, params=params).json()
+
+        for item in response["data"]:
+            yield item["remotePath"]
+
+        return response["totalCount"]  # type: ignore[no-any-return]
 
     def upload_file(self, local_path: str, target_remote_path: str = "") -> None:
         """Upload data with local path to the draft.
@@ -365,18 +355,18 @@ class SegmentClient(SegmentClientBase):
         self.upload_file(data.path, data.target_remote_path)
         self._upload_label(data)
 
-    def list_data_paths(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[str]:
+    def list_data_paths(self, *, start: int = 0, stop: int = sys.maxsize) -> PagingList[str]:
         """List required data path in a segment in a certain commit.
 
         Arguments:
             start: The index to start.
             stop: The index to end.
 
-        Yields:
-            Required data paths.
+        Returns:
+            The PagingList of data paths.
 
         """
-        yield from (item["remotePath"] for item in self._list_data(start=start, stop=stop))
+        return PagingList(self._generate_data_paths, 128, slice(start, stop))
 
     def list_data(self, *, start: int = 0, stop: int = sys.maxsize) -> Iterator[RemoteData]:
         """List required Data object in a dataset segment.
