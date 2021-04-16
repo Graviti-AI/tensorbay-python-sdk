@@ -37,7 +37,7 @@ dataset = THCHS30("path/to/dataset/directory")
 """Upload Dataset"""
 # dataset is the one you initialized in "Organize Dataset" section
 dataset_client = gas.upload_dataset(dataset, jobs=8, skip_uploaded_files=False)
-dataset_client.commit("THCHS-30")
+dataset_client.commit("initial commit")
 """"""
 
 """Read Dataset / get dataset"""

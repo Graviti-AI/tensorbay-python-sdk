@@ -35,7 +35,7 @@ fusion_dataset = CADC("path/to/dataset/directory")
 """Upload Fusion Dataset"""
 # fusion_dataset is the one you initialized in "Organize Fusion Dataset" section
 fusion_dataset_client = gas.upload_dataset(fusion_dataset, jobs=8, skip_uploaded_files=False)
-fusion_dataset_client.commit("CADC")
+fusion_dataset_client.commit("initial commit")
 """"""
 
 """Read Fusion Dataset / get fusion dataset"""
