@@ -38,6 +38,7 @@ from ulid import from_timestamp
 from ..dataset import Data, Frame, RemoteData
 from ..exception import FrameError
 from ..sensor.sensor import Sensor, Sensors
+from ..utility import KwargsDeprecated
 from .commit_status import CommitStatus
 from .exceptions import GASException, GASPathError
 from .requests import PagingList, default_config
@@ -353,30 +354,46 @@ class SegmentClient(SegmentClientBase):
         self.upload_file(data.path, data.target_remote_path)
         self._upload_label(data)
 
-    def list_data_paths(self, *, start: int = 0, stop: int = sys.maxsize) -> PagingList[str]:
+    @KwargsDeprecated(
+        ("start", "stop"),
+        since="1.3.0",
+        removed_in="1.5.0",
+        substitute="PagingList[start:stop]",
+    )
+    def list_data_paths(self, **kwargs: int) -> PagingList[str]:
         """List required data path in a segment in a certain commit.
 
         Arguments:
-            start: The index to start.
-            stop: The index to end.
+            kwargs: For deprecated keyword arguments: "start" and "stop".
 
         Returns:
             The PagingList of data paths.
 
         """
+        start = kwargs.get("start", 0)
+        stop = kwargs.get("stop", sys.maxsize)
+
         return PagingList(self._generate_data_paths, 128, slice(start, stop))
 
-    def list_data(self, *, start: int = 0, stop: int = sys.maxsize) -> PagingList[RemoteData]:
+    @KwargsDeprecated(
+        ("start", "stop"),
+        since="1.3.0",
+        removed_in="1.5.0",
+        substitute="PagingList[start:stop]",
+    )
+    def list_data(self, **kwargs: int) -> PagingList[RemoteData]:
         """List required Data object in a dataset segment.
 
         Arguments:
-            start: The index to start.
-            stop: The index to stop.
+            kwargs: For deprecated keyword arguments: "start" and "stop".
 
         Returns:
             The PagingList of :class:`~tensorbay.dataset.data.RemoteData`.
 
         """
+        start = kwargs.get("start", 0)
+        stop = kwargs.get("stop", sys.maxsize)
+
         return PagingList(self._generate_data, 128, slice(start, stop))
 
 
@@ -528,15 +545,23 @@ class FusionSegmentClient(SegmentClientBase):
                 raise
             self._upload_label(data)
 
-    def list_frames(self, *, start: int = 0, stop: int = sys.maxsize) -> PagingList[Frame]:
+    @KwargsDeprecated(
+        ("start", "stop"),
+        since="1.3.0",
+        removed_in="1.5.0",
+        substitute="PagingList[start:stop]",
+    )
+    def list_frames(self, **kwargs: int) -> PagingList[Frame]:
         """List required frames in the segment in a certain commit.
 
         Arguments:
-            start: The index to start.
-            stop: The index to stop.
+            kwargs: For deprecated keyword arguments: "start" and "stop".
 
         Returns:
             The PagingList of :class:`~tensorbay.dataset.frame.Frame`.
 
         """
+        start = kwargs.get("start", 0)
+        stop = kwargs.get("stop", sys.maxsize)
+
         return PagingList(self._generate_frames, 128, slice(start, stop))

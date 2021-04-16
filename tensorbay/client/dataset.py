@@ -28,7 +28,7 @@ from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Iterator, Opti
 from ..dataset import Data, Frame, FusionSegment, Notes, Segment
 from ..exception import FrameError
 from ..label import Catalog
-from ..utility import Deprecated
+from ..utility import Deprecated, KwargsDeprecated
 from .commit_status import CommitStatus
 from .exceptions import GASSegmentError
 from .requests import Client, PagingList, multithread_upload
@@ -258,17 +258,25 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         for draft in self.list_drafts(start=start, stop=stop):
             yield draft.dumps()
 
-    def list_drafts(self, *, start: int = 0, stop: int = sys.maxsize) -> PagingList[Draft]:
+    @KwargsDeprecated(
+        ("start", "stop"),
+        since="1.3.0",
+        removed_in="1.5.0",
+        substitute="PagingList[start:stop]",
+    )
+    def list_drafts(self, **kwargs: int) -> PagingList[Draft]:
         """List all the drafts.
 
         Arguments:
-            start: The index to start.
-            stop: The index to end.
+            kwargs: For deprecated keyword arguments: "start" and "stop".
 
         Returns:
             The PagingList of :class:`drafts<.Draft>`.
 
         """
+        start = kwargs.get("start", 0)
+        stop = kwargs.get("stop", sys.maxsize)
+
         return PagingList(self._generate_drafts, 128, slice(start, stop))
 
     def get_commit(self, commit_key: Optional[str] = None) -> Commit:
@@ -300,9 +308,13 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
 
         return commit
 
-    def list_commits(
-        self, commit_key: Optional[str] = None, *, start: int = 0, stop: int = sys.maxsize
-    ) -> PagingList[Commit]:
+    @KwargsDeprecated(
+        ("start", "stop"),
+        since="1.3.0",
+        removed_in="1.5.0",
+        substitute="PagingList[start:stop]",
+    )
+    def list_commits(self, commit_key: Optional[str] = None, **kwargs: int) -> PagingList[Commit]:
         """List the commits.
 
         Arguments:
@@ -310,13 +322,15 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
                 the branch, or the tag.
                 If is given, list the commits before the given commit.
                 If is not given, list the commits before the current commit.
-            start: The index to start.
-            stop: The index to end.
+            kwargs: For deprecated keyword arguments: "start" and "stop".
 
         Returns:
             The PagingList of :class:`commits<.Commit>`.
 
         """
+        start = kwargs.get("start", 0)
+        stop = kwargs.get("stop", sys.maxsize)
+
         return PagingList(
             lambda offset, limit: self._generate_commits(commit_key, offset, limit),
             128,
@@ -364,17 +378,25 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
 
         return tag
 
-    def list_tags(self, *, start: int = 0, stop: int = sys.maxsize) -> PagingList[Tag]:
+    @KwargsDeprecated(
+        ("start", "stop"),
+        since="1.3.0",
+        removed_in="1.5.0",
+        substitute="PagingList[start:stop]",
+    )
+    def list_tags(self, **kwargs: int) -> PagingList[Tag]:
         """List the information of tags.
 
         Arguments:
-            start: The index to start.
-            stop: The index to end.
+            kwargs: For deprecated keyword arguments: "start" and "stop".
 
         Returns:
             The PagingList of :class:`tags<.Tag>`.
 
         """
+        start = kwargs.get("start", 0)
+        stop = kwargs.get("stop", sys.maxsize)
+
         return PagingList(
             lambda offset, limit: self._generate_tags(None, offset, limit),
             128,
@@ -404,17 +426,25 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
 
         return branch
 
-    def list_branches(self, *, start: int = 0, stop: int = sys.maxsize) -> PagingList[Branch]:
+    @KwargsDeprecated(
+        ("start", "stop"),
+        since="1.3.0",
+        removed_in="1.5.0",
+        substitute="PagingList[start:stop]",
+    )
+    def list_branches(self, **kwargs: int) -> PagingList[Branch]:
         """List the information of branches.
 
         Arguments:
-            start: The index to start.
-            stop: The index to end.
+            kwargs: For deprecated keyword arguments: "start" and "stop".
 
         Returns:
             The PagingList of :class:`branches<.Branch>`.
 
         """
+        start = kwargs.get("start", 0)
+        stop = kwargs.get("stop", sys.maxsize)
+
         return PagingList(
             lambda offset, limit: self._generate_branches(None, offset, limit),
             128,
@@ -496,17 +526,25 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             self._client.open_api_do("GET", "notes", self.dataset_id, params=params).json()
         )
 
-    def list_segment_names(self, *, start: int = 0, stop: int = sys.maxsize) -> PagingList[str]:
+    @KwargsDeprecated(
+        ("start", "stop"),
+        since="1.3.0",
+        removed_in="1.5.0",
+        substitute="PagingList[start:stop]",
+    )
+    def list_segment_names(self, **kwargs: int) -> PagingList[str]:
         """List all segment names in a certain commit.
 
         Arguments:
-            start: The index to start.
-            stop: The index to end.
+            kwargs: For deprecated keyword arguments: "start" and "stop".
 
         Returns:
             The PagingList of segment names.
 
         """
+        start = kwargs.get("start", 0)
+        stop = kwargs.get("stop", sys.maxsize)
+
         return PagingList(self._generate_segment_names, 128, slice(start, stop))
 
     def get_catalog(self) -> Catalog:

@@ -20,6 +20,7 @@ from typing_extensions import Literal
 
 from ..dataset import Dataset, FusionDataset
 from ..exception import DatasetTypeError
+from ..utility import KwargsDeprecated
 from .dataset import DatasetClient, FusionDatasetClient
 from .exceptions import GASDatasetError
 from .requests import Client, PagingList
@@ -288,17 +289,25 @@ class GAS:
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
         return ReturnType(name, dataset_id, self, commit_id=commit_id)
 
-    def list_dataset_names(self, *, start: int = 0, stop: int = sys.maxsize) -> PagingList[str]:
+    @KwargsDeprecated(
+        ("start", "stop"),
+        since="1.3.0",
+        removed_in="1.5.0",
+        substitute="PagingList[start:stop]",
+    )
+    def list_dataset_names(self, **kwargs: int) -> PagingList[str]:
         """List names of all TensorBay datasets.
 
         Arguments:
-            start: The index to start.
-            stop: The index to stop.
+            kwargs: For deprecated keyword arguments: "start" and "stop".
 
         Returns:
             The PagingList of all TensorBay dataset names.
 
         """
+        start = kwargs.get("start", 0)
+        stop = kwargs.get("stop", sys.maxsize)
+
         return PagingList(
             lambda offset, limit: self._generate_dataset_names(None, False, offset, limit),
             128,
