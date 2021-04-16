@@ -4,7 +4,7 @@
 
 TensorBay supports multiple types of labels.
 
-Each :class:`~tensorbay.dataset.data.Data` object
+Each :class:`~tensorbay.dataset.data.Data` instance
 can have multiple types of :class:`label <~tensorbay.label.basic.Label>`.
 
 And each type of :class:`label <~tensorbay.label.basic.Label>` is supported with a specific label

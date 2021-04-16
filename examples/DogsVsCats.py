@@ -13,7 +13,7 @@
 
 """This files includes the python code example in dogsvscats.rst."""
 
-"""Authorize a Client Object"""
+"""Authorize a Client Instance"""
 from tensorbay import GAS
 
 ACCESS_KEY = "Accesskey-*****"

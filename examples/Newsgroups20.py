@@ -13,7 +13,7 @@
 
 """This file includes the python code of NewsGroups.rst and read_dataset_class.rst."""
 
-"""Authorize a Client Object"""
+"""Authorize a Client Instance"""
 from tensorbay import GAS
 
 ACCESS_KEY = "Accesskey-*****"

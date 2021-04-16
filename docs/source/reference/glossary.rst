@@ -13,7 +13,7 @@ visit the `developer page <https://gas.graviti.cn/tensorbay/developer>`_ to crea
 .. _graviti ai service(gas): https://www.graviti.cn/tensorBay
 
 For the usage of accesskey via Tensorbay SDK or CLI,
-please see :ref:`SDK authorization <quick_start/getting_started_with_tensorbay:Authorize a Client Object>`
+please see :ref:`SDK authorization <quick_start/getting_started_with_tensorbay:Authorize a Client Instance>`
 or :ref:`CLI configration <tensorbay_cli/getting_started_with_cli:Configuration>`.
 
 dataset

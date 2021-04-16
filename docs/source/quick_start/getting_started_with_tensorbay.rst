@@ -37,12 +37,12 @@ Before using TensorBay SDK, please finish the following registration steps:
  Usage
 *******
 
-Authorize a Client Object
-=========================
+Authorize a Client Instance
+============================
 
 .. literalinclude:: ../../../examples/getting_started_with_tensorbay.py
       :language: python
-      :start-after: """Authorize a Client Object"""
+      :start-after: """Authorize a Client Instance"""
       :end-before: """"""
 
 See :ref:`this page <tensorbay_cli/getting_started_with_cli:Configuration>` for details

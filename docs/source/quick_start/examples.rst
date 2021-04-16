@@ -26,7 +26,7 @@ The following table lists a series of examples to help developers to use TensorB
    :ref:`Dataset Management: THCHS-30 <examples/THCHS30:THCHS-30>`                            | This example describes how to manage `THCHS-30`_ dataset,
                                                                                               | which is an audio dataset with :ref:`reference/label_format:Sentence` label.
    :ref:`Read "Dataset" Class: BSTLD <examples/read_dataset_class:Read "Dataset" Class>`      | This example describes how to read `BSTLD`_ dataset
-                                                                                              | when it has been organized by a :class:`~tensorbay.dataset.dataset.Dataset` class.
+                                                                                              | when it has been organized by a :class:`~tensorbay.dataset.dataset.Dataset` instance.
    =========================================================================================  ====================================================================================
 
 .. _Dogs vs Cats: https://gas.graviti.cn/dataset/data-decorators/DogsVsCats

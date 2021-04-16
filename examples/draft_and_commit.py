@@ -14,7 +14,7 @@
 
 """This file includes the python code of draft_and_commit.rst."""
 
-"""Authorize a Dataset Client Object"""
+"""Authorize a Dataset Client Instance"""
 from tensorbay import GAS
 
 ACCESS_KEY = "Accesskey-*****"

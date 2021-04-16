@@ -17,15 +17,15 @@ See `this page <https://gas.graviti.cn/dataset/hello-dataset/CADC>`_ for more de
 
    The preview of a point cloud from "CADC" with Box3D labels.
 
-***************************
- Authorize a Client Object
-***************************
+*****************************
+ Authorize a Client Instance
+*****************************
 
 First of all, create a GAS client.
 
 .. literalinclude:: ../../../../examples/CADC.py
    :language: python
-   :start-after: """Authorize a Client Object"""
+   :start-after: """Authorize a Client Instance"""
    :end-before: """"""
 
 ***********************
@@ -60,7 +60,7 @@ and :ref:`fusion datasets <advanced_features/fusion_dataset/fusion_dataset_struc
 *************************
 
 Now we describe how to organize the "CADC" fusion dataset by the :class:`~tensorbay.dataset.dataset.FusionDataset`
-object before uploading it to TensorBay. It takes the following steps to organize "CADC".
+instance before uploading it to TensorBay. It takes the following steps to organize "CADC".
 
 Write the Catalog
 =================
@@ -84,7 +84,7 @@ Write the Dataloader
 
 The second step is to write the :ref:`reference/glossary:Dataloader`.
 The :ref:`reference/glossary:Dataloader` function of "CADC" is to manage all the files and annotations of "CADC" into a
-:class:`~tensorbay.dataset.dataset.FusionDataset` object.
+:class:`~tensorbay.dataset.dataset.FusionDataset` instance.
 The :ref:`code block <cadc-dataloader>` below displays the "CADC" dataloader.
 
 .. literalinclude:: ../../../../tensorbay/opendataset/CADC/loader.py
@@ -166,7 +166,7 @@ See :ref:`this page <reference/label_format:Box3D>` for more details about Box3D
 ***********************
 
 After you finish the :ref:`reference/glossary:Dataloader` and organize the "CADC" into a
-:class:`~tensorbay.dataset.dataset.FusionDataset` object, you can upload it
+:class:`~tensorbay.dataset.dataset.FusionDataset` instance, you can upload it
 to TensorBay for sharing, reuse, etc.
 
 .. literalinclude:: ../../../../examples/CADC.py
