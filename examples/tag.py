@@ -21,20 +21,20 @@ ACCESS_KEY = "Accesskey-*****"
 gas = GAS(ACCESS_KEY)
 dataset_client = gas.create_dataset("DatasetName")
 dataset_client.create_draft("draft-1")
-dataset_client.commit("commit-1")
-""""""
-
-"""Create Tag"""
-dataset_client.create_tag("Tag-1")
-""""""
-
-"""Delete Tag"""
-dataset_client.delete_tag("Tag-1")
+# do the modifications in this draft
 """"""
 
 """Create Tag When Committing"""
-dataset_client.create_draft("draft-2")
-dataset_client.commit("commit-2", tag="Tag-1")
+dataset_client.commit("commit-1", tag="Tag-1")
+""""""
+
+"""Create Tag Straightforwardly"""
+dataset_client.create_tag("Tag-1")
+""""""
+
+"""Create Tag on an Existing Commit"""
+commit_id = dataset_client.status.commit_id
+dataset_client.create_tag("Tag-1", revision=commit_id)
 """"""
 
 """Get Tag"""
@@ -43,4 +43,8 @@ tag = dataset_client.get_tag("Tag-1")
 
 """List Tags"""
 tags = dataset_client.list_tags()
+""""""
+
+"""Delete Tag"""
+dataset_client.delete_tag("Tag-1")
 """"""

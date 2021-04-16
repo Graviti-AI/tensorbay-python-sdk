@@ -1,53 +1,20 @@
 ##################
- Draft And Commit
+ Draft and Commit
 ##################
 
-The version control is based on the :ref:`version_control/draft_and_commit:draft` and
-:ref:`version_control/draft_and_commit:commit`.
+The version control is based on the :ref:`reference/glossary:draft` and
+:ref:`reference/glossary:commit`.
 
-In TensorBay SDK, the :class:`~tensorbay.client.gas.GAS` is responsible for operating the datasets, while
-the :class:`~tensorbay.client.dataset.DatasetClient` is for operating content of one dataset
-in the draft or commit. Thus, the dataset client supports the function of version control.
-
-In this section, you’ll learn the relationship between the draft and commit.
-
-*******
-Commit
-*******
-
-Similar with Git, a commit is a version of a dataset,
+Similar with Git, a :ref:`reference/glossary:commit` is a version of a dataset,
 which contains the changes compared with the former commit.
-You can view a certain commit of a dataset based on the given commit ID.
 
-A commit is readable, but is not writable.
-Thus, only read operations such as getting catalog, files and labels are allowed.
-To make changes to a dataset, please create a draft first.
-See :ref:`version_control/draft_and_commit:draft` for details.
+Unlike Git, a :ref:`reference/glossary:draft` is a new concept which represents a workspace in which changing the dataset is allowed.
 
-On the other hand,
-"commit" also represents the action to save the changes inside a :ref:`version_control/draft_and_commit:draft`
-into a commit.
+In TensorBay SDK, the dataset client supplies the function of version control.
 
-******
-Draft
-******
-
-Unlike Git, a draft is a new concept which represents a workspace in which changing the dataset is allowed.
-
-A draft is created based on a :ref:`version_control/draft_and_commit:commit`,
-and the changes inside it will be made into a commit.
-
-There are scenarios when modifications of a dataset are required,
-such as correcting errors, enlarging dataset, adding more types of labels, etc.
-Under these circumstances, you can create a draft, edit the dataset and commit the draft.
-
-***********
-Before Use
-***********
-
-In the next part, you'll learn the basic operations towards draft and commit.
-
-First, a dataset client instance is needed.
+**************
+Authorization
+**************
 
 .. literalinclude:: ../../../examples/draft_and_commit.py
       :language: python
@@ -66,8 +33,7 @@ TensorBay SDK supports creating the draft straightforwardly, which is based on t
       :end-before: """"""
 
 Then the dataset client will change the status to "draft" and store the draft number.
-The draft number will be auto-increasing every time you create a draft.
-The draft number can be found through listing drafts.
+The draft number will be auto-increasing every time a draft is created.
 
 .. literalinclude:: ../../../examples/draft_and_commit.py
       :language: python
@@ -78,7 +44,7 @@ The draft number can be found through listing drafts.
 List Drafts
 ************
 
-Listing the existing :class:`~tensorbay.client.struct.Draft` in TensorBay SDK is simple.
+The draft number can be found through listing drafts.
 
 .. literalinclude:: ../../../examples/draft_and_commit.py
       :language: python
@@ -89,8 +55,6 @@ Listing the existing :class:`~tensorbay.client.struct.Draft` in TensorBay SDK is
 Get Draft
 **********
 
-TensorBay SDK supports getting the :class:`~tensorbay.client.struct.Draft` with the draft number.
-
 .. literalinclude:: ../../../examples/draft_and_commit.py
       :language: python
       :start-after: """Get Draft"""
@@ -100,25 +64,16 @@ TensorBay SDK supports getting the :class:`~tensorbay.client.struct.Draft` with 
 Commit Draft
 *************
 
-TensorBay SDK supports committing the draft, after that the draft will be closed.
+After the commit, the draft will be closed.
 
 .. literalinclude:: ../../../examples/draft_and_commit.py
       :language: python
       :start-after: """Commit Draft"""
       :end-before: """"""
 
-Then the dataset client will change the status to "commit" and store the commit ID.
-
-.. literalinclude:: ../../../examples/draft_and_commit.py
-      :language: python
-      :start-after: """Commit ID Will Be Stored"""
-      :end-before: """"""
-
 ***********
 Get Commit
 ***********
-
-TensorBay SDK supports getting the :class:`~tensorbay.client.struct.Commit` with the commit ID.
 
 .. literalinclude:: ../../../examples/draft_and_commit.py
       :language: python
@@ -129,8 +84,6 @@ TensorBay SDK supports getting the :class:`~tensorbay.client.struct.Commit` with
 List Commits
 *************
 
-Listing the existing :class:`~tensorbay.client.struct.Commit` in TensorBay SDK is simple.
-
 .. literalinclude:: ../../../examples/draft_and_commit.py
       :language: python
       :start-after: """List Commits"""
@@ -139,8 +92,6 @@ Listing the existing :class:`~tensorbay.client.struct.Commit` in TensorBay SDK i
 *********
 Checkout
 *********
-
-The dataset client can checkout to other draft with draft number or to commit with commit id.
 
 .. literalinclude:: ../../../examples/draft_and_commit.py
       :language: python
