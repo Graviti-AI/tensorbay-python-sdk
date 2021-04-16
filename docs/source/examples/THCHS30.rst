@@ -7,15 +7,15 @@ This topic describes how to manage the "THCHS-30" dataset.
 "THCHS-30" is a dataset with :ref:`reference/label_format:Sentence` label type. 
 See `this page <https://www.graviti.com/open-datasets/data-decorators/THCHS30>`_ for more details about this dataset.
 
-***************************
- Authorize a Client Object
-***************************
+*****************************
+ Authorize a Client Instance
+*****************************
 
 First of all, create a GAS client.
 
 .. literalinclude:: ../../../examples/THCHS30.py
    :language: python
-   :start-after: """Authorize a Client Object"""
+   :start-after: """Authorize a Client Instance"""
    :end-before: """"""
 
 ****************
@@ -46,7 +46,7 @@ Organize Dataset
 ******************
 
 This part describes how to organize the "THCHS-30" dataset by the :class:`~tensorbay.dataset.dataset.Dataset`
-object before uploading it to TensorBay. It takes the following steps to organize "THCHS-30".
+instance before uploading it to TensorBay. It takes the following steps to organize "THCHS-30".
 
 Write the Catalog
 =================
@@ -62,7 +62,7 @@ Write the Dataloader
 
 The second step is to write the :ref:`reference/glossary:Dataloader`.
 The function of :ref:`reference/glossary:Dataloader` is to read the dataset into a
-:class:`~tensorbay.dataset.dataset.Dataset` object.
+:class:`~tensorbay.dataset.dataset.Dataset` instance.
 The :ref:`code block <THCHS30-dataloader>` below displays the "THCHS-30" dataloader.
 
 .. literalinclude:: ../../../tensorbay/opendataset/THCHS30/loader.py
@@ -90,7 +90,7 @@ Upload Dataset
 ****************
 
 After finishing the :ref:`reference/glossary:Dataloader` and organize the "THCHS-30" into a
-:class:`~tensorbay.dataset.dataset.Dataset` object, upload it
+:class:`~tensorbay.dataset.dataset.Dataset` instance, upload it
 to TensorBay for sharing, reuse, etc.
 
 .. literalinclude:: ../../../examples/THCHS30.py

@@ -13,7 +13,7 @@
 
 """This file includes the python code of NeolixOD.rst."""
 
-"""Authorize a Client Object"""
+"""Authorize a Client Instance"""
 from tensorbay import GAS
 
 ACCESS_KEY = "Accesskey-*****"

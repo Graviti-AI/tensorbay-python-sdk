@@ -15,15 +15,15 @@ See `this page <https://gas.graviti.cn/dataset/data-decorators/LeedsSportsPose>`
 
    The preview of an image with labels from "Leeds Sports Pose".
 
-***************************
- Authorize a Client Object
-***************************
+*****************************
+ Authorize a Client Instance
+*****************************
 
 First of all, create a GAS client.
 
 .. literalinclude:: ../../../examples/LeedsSportsPose.py
    :language: python
-   :start-after: """Authorize a Client Object"""
+   :start-after: """Authorize a Client Instance"""
    :end-before: """"""
 
 ****************
@@ -54,7 +54,7 @@ See :ref:`this page <features/dataset_management:Read Dataset>` for details.
 ******************
 
 This part describes how to organize the "Leeds Sports Pose" dataset by the :class:`~tensorbay.dataset.dataset.Dataset`
-object before uploading it to TensorBay. It takes the following steps to organize "Leeds Sports Pose".
+instance before uploading it to TensorBay. It takes the following steps to organize "Leeds Sports Pose".
 
 Write the Catalog
 =================
@@ -74,7 +74,7 @@ Write the Dataloader
 
 The second step is to write the :ref:`reference/glossary:Dataloader`.
 The function of :ref:`reference/glossary:Dataloader` is to read the dataset into a
-:class:`~tensorbay.dataset.dataset.Dataset` object.
+:class:`~tensorbay.dataset.dataset.Dataset` instance.
 The :ref:`code block <LeedsSportsPose-dataloader>` below displays the "Leeds Sports Pose" dataloader.
 
 .. literalinclude:: ../../../tensorbay/opendataset/LeedsSportsPose/loader.py
@@ -103,7 +103,7 @@ See :ref:`this page <reference/label_format:Keypoints2D>` for more details for a
 ****************
 
 After finishing the :ref:`reference/glossary:Dataloader` and organize the "Leeds Sports Pose" into a
-:class:`~tensorbay.dataset.dataset.Dataset` object, upload it
+:class:`~tensorbay.dataset.dataset.Dataset` instance, upload it
 to TensorBay for sharing, reuse, etc.
 
 .. literalinclude:: ../../../examples/LeedsSportsPose.py

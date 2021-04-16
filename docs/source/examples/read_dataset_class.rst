@@ -2,7 +2,7 @@
  Read "Dataset" Class
 ######################
 
-This topic describes how to read the :class:`~tensorbay.dataset.dataset.Dataset` class after
+This topic describes how to read the :class:`~tensorbay.dataset.dataset.Dataset` instance after
 the "BSTLD" dataset have been :ref:`organized <examples/BSTLD:Organize Dataset>`.
 See `this page <https://gas.graviti.cn/dataset/data-decorators/BSTLD>`_  for more details about this dataset.
 

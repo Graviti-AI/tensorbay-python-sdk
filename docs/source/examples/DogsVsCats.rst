@@ -7,15 +7,15 @@ This topic describes how to manage the "Dogs vs Cats" dataset.
 "Dogs vs Cats" is a dataset with :ref:`reference/label_format:Classification` label type.
 See `this page <https://gas.graviti.cn/dataset/data-decorators/DogsVsCats>`_  for more details about this dataset.
 
-***************************
- Authorize a Client Object
-***************************
+*****************************
+ Authorize a Client Instance
+*****************************
 
 First of all, create a GAS client.
 
 .. literalinclude:: ../../../examples/DogsVsCats.py
    :language: python
-   :start-after: """Authorize a Client Object"""
+   :start-after: """Authorize a Client Instance"""
    :end-before: """"""
 
 ****************
@@ -46,7 +46,7 @@ See :ref:`this page <features/dataset_management:Read Dataset>` for details.
 ******************
 
 This part describes how to organize the "Dogs vs Cats" dataset by the :class:`~tensorbay.dataset.dataset.Dataset`
-object before uploading it to TensorBay. It takes the following steps to organize "Dogs vs Cats".
+instance before uploading it to TensorBay. It takes the following steps to organize "Dogs vs Cats".
 
 Write the Catalog
 =================
@@ -70,7 +70,7 @@ Write the Dataloader
 
 The second step is to write the :ref:`reference/glossary:Dataloader`.
 The function of :ref:`reference/glossary:Dataloader` is to read the dataset into a
-:class:`~tensorbay.dataset.dataset.Dataset` object.
+:class:`~tensorbay.dataset.dataset.Dataset` instance.
 The :ref:`code block <BSTLD-dataloader>` below displays the "Dogs vs Cats" dataloader.
 
 .. literalinclude:: ../../../tensorbay/opendataset/DogsVsCats/loader.py
@@ -104,7 +104,7 @@ See :ref:`this page <reference/label_format:Classification>` for more details fo
 ****************
 
 After finishing the :ref:`reference/glossary:Dataloader` and organize the "Dogs vs Cats" into a
-:class:`~tensorbay.dataset.dataset.Dataset` object, upload it
+:class:`~tensorbay.dataset.dataset.Dataset` instance, upload it
 to TensorBay for sharing, reuse, etc.
 
 .. literalinclude:: ../../../examples/DogsVsCats.py

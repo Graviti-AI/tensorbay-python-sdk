@@ -6,11 +6,11 @@ TensorBay SDK has the ability to tag specific commits in a dataset's history as 
 Typically, people use this functionality to mark release points (v1.0, v2.0 and so on).
 In this section, you'll learn how to list existing tags, how to create and delete tags.
 
-Before operating tags, a dataset client object with commit is needed.
+Before operating tags, a dataset client instance with commit is needed.
 
 .. literalinclude:: ../../../examples/tag.py
       :language: python
-      :start-after: """Authorize a Dataset Client Object"""
+      :start-after: """Authorize a Dataset Client Instance"""
       :end-before: """"""
 
 ************

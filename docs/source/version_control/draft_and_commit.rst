@@ -47,11 +47,11 @@ Before Use
 
 In the next part, you'll learn the basic operations towards draft and commit.
 
-First, a dataset client object is needed.
+First, a dataset client instance is needed.
 
 .. literalinclude:: ../../../examples/draft_and_commit.py
       :language: python
-      :start-after: """Authorize a Dataset Client Object"""
+      :start-after: """Authorize a Dataset Client Instance"""
       :end-before: """"""
 
 *************

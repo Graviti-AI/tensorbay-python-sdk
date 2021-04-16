@@ -12,7 +12,7 @@
 
 """This file includes the python code of getting_started_with_tensorbay.rst."""
 
-"""Authorize a Client Object"""
+"""Authorize a Client Instance"""
 from tensorbay import GAS
 
 gas = GAS("<YOUR_ACCESSKEY>")
