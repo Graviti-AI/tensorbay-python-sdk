@@ -2,11 +2,10 @@
  Tag
 #####
 
-TensorBay SDK has the ability to tag specific commits in a dataset's history as being important.
-Typically, people use this functionality to mark release points (v1.0, v2.0 and so on).
-In this section, you'll learn how to list existing :ref:`tags <reference/glossary:tag>`, how to create and delete tags.
+TensorBay supports tagging specific commits in a dataset's history as being important.
+Typically, people use this functionality to mark release revisions (v1.0, v2.0 and so on).
 
-Before operating tags, a dataset client instance with commit is needed.
+Before operating tags, a dataset client instance with existing commit is needed.
 
 .. literalinclude:: ../../../examples/tag.py
       :language: python
@@ -17,28 +16,32 @@ Before operating tags, a dataset client instance with commit is needed.
  Create Tag
 ************
 
-TensorBay SDK supports two approaches of creating the tag.
+TensorBay SDK supports three approaches of creating the tag.
 
-One is creating the tag straightforwardly, which is based on the current commit.
-
-.. literalinclude:: ../../../examples/tag.py
-      :language: python
-      :start-after: """Create Tag"""
-      :end-before: """"""
-
-
-The other is creating the tag when committing.
+First is to create the tag when committing.
 
 .. literalinclude:: ../../../examples/tag.py
       :language: python
       :start-after: """Create Tag When Committing"""
       :end-before: """"""
 
+Second is to create the tag straightforwardly, which is based on the current commit.
+
+.. literalinclude:: ../../../examples/tag.py
+      :language: python
+      :start-after: """Create Tag Straightforwardly"""
+      :end-before: """"""
+
+Third is to create tag on an existing commit.
+
+.. literalinclude:: ../../../examples/tag.py
+      :language: python
+      :start-after: """Create Tag on an Existing Commit"""
+      :end-before: """"""
+
 *********
  Get Tag
 *********
-
-TensorBay SDK supports getting the :class:`~tensorbay.client.struct.Tag` with the tag name.
 
 .. literalinclude:: ../../../examples/tag.py
       :language: python
@@ -46,10 +49,8 @@ TensorBay SDK supports getting the :class:`~tensorbay.client.struct.Tag` with th
       :end-before: """"""
 
 ***********
- list Tags
+ List Tags
 ***********
-
-Listing the existing :class:`~tensorbay.client.struct.Tag` in TensorBay SDK is simple.
 
 .. literalinclude:: ../../../examples/tag.py
       :language: python
@@ -59,8 +60,6 @@ Listing the existing :class:`~tensorbay.client.struct.Tag` in TensorBay SDK is s
 ************
  Delete Tag
 ************
-
-TensorBay SDK supports deleting the tag with the tag name.
 
 .. literalinclude:: ../../../examples/tag.py
       :language: python
