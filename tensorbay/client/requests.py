@@ -50,7 +50,12 @@ class Config:  # pylint: disable=too-few-public-methods
     """This is a base class defining the concept of Request Config.
 
     Attributes:
-         is_intern: Whether the request is from intern.
+        max_retries: Maximum retry times of the request.
+        allowed_retry_methods: The allowed methods for retrying request.
+        allowed_retry_status: The allowed status for retrying request.
+            If both methods and status are fitted, the retrying strategy will work.
+        timeout: Timeout value of the request in seconds.
+        is_internal: Whether the request is from internal.
 
     """
 
@@ -61,18 +66,8 @@ class Config:  # pylint: disable=too-few-public-methods
         self.allowed_retry_status = [429, 500, 502, 503, 504]
 
         self.timeout = 30
-        self._is_intern = False
+        self.is_internal = False
         self._x_source = "PYTHON-SDK"
-
-    @property
-    def is_intern(self) -> bool:
-        """Get whether the request is from intern.
-
-        Returns:
-            Whether the request is from intern.
-
-        """
-        return self._is_intern
 
 
 default_config = Config()
