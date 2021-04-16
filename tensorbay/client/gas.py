@@ -41,6 +41,19 @@ class GAS:
     def __init__(self, access_key: str, url: str = "") -> None:
         self._client = Client(access_key, url)
 
+    def _generate_auth_storage_configs(
+        self, name: Optional[str] = None, offset: int = 0, limit: int = 128
+    ) -> Generator[Dict[str, Any], None, int]:
+        params: Dict[str, Any] = {"offset": offset, "limit": limit}
+        if name:
+            params["name"] = name
+
+        response = self._client.open_api_do("GET", "auth-storage-configs", "", params=params).json()
+
+        yield from response["configs"]
+
+        return response["totalCount"]  # type: ignore[no-any-return]
+
     def _get_dataset_with_any_type(self, name: str) -> DatasetClientType:
         info = self._get_dataset(name)
         dataset_id = info["id"]
@@ -105,6 +118,49 @@ class GAS:
             yield item["name"]
 
         return response["totalCount"]  # type: ignore[no-any-return]
+
+    def get_auth_storage_config(self, name: str) -> Dict[str, Any]:
+        """Get the auth storage config with the given name.
+
+        Arguments:
+            name: The required auth storage config name.
+
+        Returns:
+            The auth storage config with the given name.
+
+        Raises:
+            TypeError: When the required auth storage config does not exist
+                 or the given auth storage config is illegal.
+
+        """
+        if not name:
+            raise TypeError("The given auth storage config name is illegal")
+
+        try:
+            config = next(self._generate_auth_storage_configs(name))
+        except StopIteration as error:
+            raise TypeError(f"The auth storage config: {name} does not exist.") from error
+
+        return config
+
+    def list_auth_storage_configs(
+        self, *, start: int = 0, stop: int = sys.maxsize
+    ) -> PagingList[Dict[str, Any]]:
+        """List auth storage configs.
+
+        Arguments:
+            start: The index to start.
+            stop: The index to stop.
+
+        Returns:
+            The PagingList of all auth storage configs.
+
+        """
+        return PagingList(
+            lambda offset, limit: self._generate_auth_storage_configs(None, offset, limit),
+            128,
+            slice(start, stop),
+        )
 
     @overload
     def create_dataset(

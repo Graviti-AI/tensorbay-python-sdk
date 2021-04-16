@@ -226,7 +226,10 @@ class Client:
             else:
                 url = urljoin(dataset_url, dataset_id)
         else:
-            url = urljoin(self._open_api, "datasets")
+            if section:
+                url = urljoin(self._open_api, section)
+            else:
+                url = urljoin(self._open_api, "datasets")
         return url
 
     @property
