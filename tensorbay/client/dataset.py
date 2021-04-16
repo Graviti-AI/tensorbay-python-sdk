@@ -241,23 +241,6 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
 
         raise TypeError(f"The draft: {draft_number} does not exist.")
 
-    @Deprecated(since="1.2.0", removed_in="1.5.0", substitute="DatasetClientBase.list_draft")
-    def list_draft_titles_and_numbers(
-        self, *, start: int = 0, stop: int = sys.maxsize
-    ) -> Iterator[Dict[str, Any]]:
-        """List the dict containing title and number of drafts.
-
-        Arguments:
-            start: The index to start.
-            stop: The index to end.
-
-        Yields:
-            The dict containing title and number of drafts.
-
-        """
-        for draft in self.list_drafts(start=start, stop=stop):
-            yield draft.dumps()
-
     @KwargsDeprecated(
         ("start", "stop"),
         since="1.3.0",
@@ -278,6 +261,23 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         stop = kwargs.get("stop", sys.maxsize)
 
         return PagingList(self._generate_drafts, 128, slice(start, stop))
+
+    @Deprecated(since="1.2.0", removed_in="1.5.0", substitute=list_drafts)
+    def list_draft_titles_and_numbers(
+        self, *, start: int = 0, stop: int = sys.maxsize
+    ) -> Iterator[Dict[str, Any]]:
+        """List the dict containing title and number of drafts.
+
+        Arguments:
+            start: The index to start.
+            stop: The index to end.
+
+        Yields:
+            The dict containing title and number of drafts.
+
+        """
+        for draft in self.list_drafts(start=start, stop=stop):
+            yield draft.dumps()
 
     def get_commit(self, commit_key: Optional[str] = None) -> Commit:
         """Get the certain commit with the given commit key.

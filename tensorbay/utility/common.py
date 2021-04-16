@@ -66,11 +66,23 @@ class Deprecated:  # pylint: disable=too-few-public-methods
     """
 
     def __init__(
-        self, *, since: str, removed_in: Optional[str] = None, substitute: Optional[str] = None
+        self,
+        *,
+        since: str,
+        removed_in: Optional[str] = None,
+        substitute: Union[None, str, Callable[..., Any]] = None,
     ) -> None:
         self._since = since
         self._removed_in = removed_in
-        self._substitute = substitute
+        if not substitute:
+            self._substitute = None
+            self._meth = None
+        elif callable(substitute):
+            self._substitute = substitute.__qualname__
+            self._meth = f":meth:`~{substitute.__module__}.{substitute.__qualname__}`"
+        else:
+            self._substitute = substitute.rsplit(".", 1)[-1]
+            self._meth = f":meth:`~{substitute}`"
 
     def __call__(self, func: _Callable) -> _Callable:
         """Wrap the decorated function by adding the deprecated message.
@@ -105,8 +117,8 @@ class Deprecated:  # pylint: disable=too-few-public-methods
         insert_block = [f".. deprecated:: {self._since}"]
         if self._removed_in:
             insert_block.append(f"   Will be removed in version {self._removed_in}.")
-        if self._substitute:
-            insert_block.append(f"   Use :meth:`{self._substitute}` instead.")
+        if self._meth:
+            insert_block.append(f"   Use {self._meth} instead.")
 
         if not docstring:
             return "\n".join(insert_block)
