@@ -225,6 +225,30 @@ class GAS:
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
         return ReturnType(name, response.json()["id"], self)
 
+    def create_auth_dataset(self, name: str, config_name: str, path: str) -> DatasetClient:
+        """Create a TensorBay dataset with given name in auth cloud storage.
+
+        The dataset will be linked to the given auth cloud storage
+            and all of relative data will be stored in auth cloud storage.
+
+        Arguments:
+            name: Name of the dataset, unique for a user.
+            config_name: The auth storage config name.
+            path: The path of the dataset to create in auth cloud storage.
+
+        Returns:
+            The created :class:`~tensorbay.client.dataset.DatasetClient` instance
+                and the status of dataset client is "commit".
+
+        """
+        post_data = {
+            "name": name,
+            "type": 0,  # normal dataset: 0, fusion dataset: 1
+            "storageConfig": {"configName": config_name, "path": path},
+        }
+        response = self._client.open_api_do("POST", "", json=post_data)
+        return DatasetClient(name, response.json()["id"], self)
+
     @overload
     def get_dataset(self, name: str, is_fusion: Literal[False] = False) -> DatasetClient:
         ...
