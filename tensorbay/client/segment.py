@@ -98,6 +98,9 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
         }
         params.update(self._status.get_status_info())
 
+        if default_config.is_internal:
+            params["isInternal"] = True
+
         response = self._client.open_api_do("GET", "data/urls", self._dataset_id, params=params)
         return response.json()["urls"][0]["url"]  # type: ignore[no-any-return]
 
@@ -121,14 +124,12 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
                 }
                 params.update(self._status.get_status_info())
 
+                if default_config.is_internal:
+                    params["isInternal"] = True
+
                 self._permission = self._client.open_api_do(
                     "GET", "policies", self._dataset_id, params=params
                 ).json()
-
-                if default_config.is_intern:
-                    urlsplit = self._permission["extra"]["host"].rsplit(".", 2)
-                    urlsplit[0] += "-internal"
-                    self._permission["extra"]["host"] = ".".join(urlsplit)
 
             return deepcopy(self._permission)
 
