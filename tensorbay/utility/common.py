@@ -14,7 +14,7 @@ which compares all the instance variables.
 
 import warnings
 from functools import wraps
-from typing import Any, Callable, Optional, Sequence, Type, TypeVar, Union
+from typing import Any, Callable, Optional, Sequence, Tuple, Type, TypeVar, Union
 
 import numpy as np
 
@@ -59,6 +59,7 @@ class Deprecated:  # pylint: disable=too-few-public-methods
     """A decorator for deprecated functions.
 
     Arguments:
+        since: The version the function is deprecated.
         remove_in: The version the function will be removed in.
         substitute: The substitute function.
 
@@ -122,3 +123,71 @@ class Deprecated:  # pylint: disable=too-few-public-methods
         lines.insert(1, "")
 
         return "\n".join(lines)
+
+
+class KwargsDeprecated:  # pylint: disable=too-few-public-methods
+    """A decorator for the function which has deprecated keyword arguments.
+
+    Arguments:
+        keywords: The keyword arguments which need to be deprecated.
+        since: The version the keyword arguments are deprecated.
+        remove_in: The version the keyword arguments will be removed in.
+        substitute: The substitute usage.
+
+    """
+
+    def __init__(
+        self,
+        keywords: Tuple[str, ...],
+        *,
+        since: str,
+        removed_in: Optional[str] = None,
+        substitute: Optional[str] = None,
+    ) -> None:
+        self._keywords = keywords
+        self._since = since
+        self._removed_in = removed_in
+        self._substitute = substitute
+
+    def __call__(self, func: _Callable) -> _Callable:
+        """Wrap the decorated function by adding the deprecated message.
+
+        Arguments:
+            func: The deprecated function.
+
+        Returns:
+            The wrapped function which shows the deprecated message when calling.
+
+        """
+        keywords = tuple(f'"{keyword}"' for keyword in self._keywords)
+        if len(keywords) == 1:
+            keyword_message = keywords[0]
+            argument = "argument"
+            be = "is"  # pylint: disable=invalid-name
+        else:
+            keyword_message = f"{' '.join(keywords[:-1])} and {keywords[-1]}"
+            argument = "arguments"
+            be = "are"  # pylint: disable=invalid-name
+
+        messages = [
+            (
+                f'The keyword {argument}: {keyword_message} in "{func.__name__}" '
+                f"{be} deprecated since version {self._since}."
+            )
+        ]
+        if self._removed_in:
+            messages.append(f'Will be removed in version "{self._removed_in}".')
+
+        if self._substitute:
+            messages.append(f'Use "{self._substitute}" instead.')
+
+        message = " ".join(messages)
+
+        @wraps(func)
+        def wrapper(*arg: Any, **kwargs: Any) -> Any:
+            if set(self._keywords) & kwargs.keys():
+                warnings.warn(message, DeprecationWarning, 2)
+
+            return func(*arg, **kwargs)
+
+        return wrapper  # type: ignore[return-value]
