@@ -11,6 +11,4 @@ API Reference
    ../api/opendataset/opendataset_module
    ../api/sensor/sensor_module
    ../api/utility/utility_module
-
-..
    ../api/exception

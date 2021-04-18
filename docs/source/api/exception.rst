@@ -1,6 +1,7 @@
-:orphan:
-:nosearch:
+tensorbay.exception
+===================
 
-############
- Exceptions
-############
+.. automodule:: tensorbay.exception
+   :members:
+   :show-inheritance:
+   :exclude-members: name

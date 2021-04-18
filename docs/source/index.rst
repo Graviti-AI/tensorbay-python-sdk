@@ -64,6 +64,7 @@ It provides:
    reference/glossary
    reference/dataset_structure
    reference/label_format
+   reference/exception
    reference/api_reference
 
 ..
