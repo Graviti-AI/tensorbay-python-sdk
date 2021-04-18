@@ -13,6 +13,7 @@ The class hierarchy for TensorBay custom exceptions is::
              +-- :class:`DatasetTypeError`
              +-- :class:`FrameError`
              +-- :class:`ResponseError`
+         +-- :class:`TBRNError`
          +-- :class:`TensorBayOpenDatasetError`
              +-- :class:`NoFileError`
              +-- :class:`FileStructureError`
@@ -121,6 +122,22 @@ class NoFileError(TensorBayOpendatasetException):
 
 class FileStructureError(TensorBayOpendatasetException):
     """This class defines the exception for incorrect file structure in the opendataset directory.
+
+    Arguments:
+        message: The error message.
+
+    """
+
+    def __init__(self, message: str) -> None:
+        super().__init__()
+        self._message = message
+
+    def __str__(self) -> str:
+        return self._message
+
+
+class TBRNError(TensorBayException):
+    """This class defines the exception for invalid TBRN.
 
     Arguments:
         message: The error message.
