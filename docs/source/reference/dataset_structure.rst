@@ -35,10 +35,12 @@ The corresponding class of dataset is :class:`~tensorbay.dataset.dataset.Dataset
  notes
 *******
 
-Notes contains the basic information of a dataset, such as the time continuity of the data inside the
-dataset.
+Notes contains the basic information of a dataset, including
 
-The corresponding class of notes is :class:`~tensorbay.dataset.dataset.Notes`
+- the time continuity of the data inside the dataset
+- the fields of bin point cloud files inside the dataset
+
+The corresponding class of notes is :class:`~tensorbay.dataset.dataset.Notes`.
 
 *********
  catalog 
