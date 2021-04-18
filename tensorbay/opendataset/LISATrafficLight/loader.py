@@ -23,9 +23,9 @@ SUPERCATEGORY_INDEX = {
 
 
 def LISATrafficLight(path: str) -> Dataset:
-    """Dataloader of the `LISA traffic light`_ dataset.
+    """Dataloader of the `LISA Traffic Light`_ dataset.
 
-    .. _LISA traffic light: http://cvrr.ucsd.edu/LISA/datasets.html
+    .. _LISA Traffic Light: http://cvrr.ucsd.edu/LISA/datasets.html
 
     The file structure should be like::
 
