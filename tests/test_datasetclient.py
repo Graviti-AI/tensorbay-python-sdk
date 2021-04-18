@@ -388,16 +388,16 @@ class TestDatasetClient:
             dataset_client.checkout()
         # Both commit key and draft number are given
         with pytest.raises(TypeError):
-            dataset_client.checkout(commit_key=commit_1_id, draft_number=3)
-        dataset_client.checkout(commit_key=commit_1_id)
+            dataset_client.checkout(revision=commit_1_id, draft_number=3)
+        dataset_client.checkout(revision=commit_1_id)
         assert dataset_client._status.commit_id == commit_1_id
         # The commit does not exist.
         with pytest.raises(TypeError):
-            dataset_client.checkout(commit_key="123")
+            dataset_client.checkout(revision="123")
         assert dataset_client._status.commit_id == commit_1_id
-        dataset_client.checkout(commit_key="V1")
+        dataset_client.checkout(revision="V1")
         assert dataset_client._status.commit_id == commit_1_id
-        dataset_client.checkout(commit_key="main")
+        dataset_client.checkout(revision="main")
         assert dataset_client._status.commit_id == commit_2_id
 
         dataset_client.create_draft("draft-3")

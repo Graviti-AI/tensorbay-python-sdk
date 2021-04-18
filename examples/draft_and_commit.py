@@ -64,5 +64,5 @@ commit = dataset_client.get_commit(commit_id)
 # checkout to the draft.
 dataset_client.checkout(draft_number=draft_number)
 # checkout to the commit.
-dataset_client.checkout(commit_key=commit_id)
+dataset_client.checkout(revision=commit_id)
 """"""
