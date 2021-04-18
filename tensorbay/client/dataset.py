@@ -71,7 +71,7 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
 
         self._status = CommitStatus()
         if commit_id:
-            self.checkout(commit_key=commit_id)
+            self.checkout(revision=commit_id)
 
     def _commit(self, message: str, tag: Optional[str] = None) -> str:
         post_data: Dict[str, Any] = {
@@ -104,11 +104,11 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         return response["totalCount"]  # type: ignore[no-any-return]
 
     def _generate_commits(
-        self, commit_key: Optional[str] = None, offset: int = 0, limit: int = 128
+        self, revision: Optional[str] = None, offset: int = 0, limit: int = 128
     ) -> Generator[Commit, None, int]:
         params: Dict[str, Any] = {"offset": offset, "limit": limit}
-        if commit_key:
-            params["commit"] = commit_key
+        if revision:
+            params["commit"] = revision
 
         response = self._client.open_api_do("GET", "commits", self.dataset_id, params=params).json()
 
@@ -279,32 +279,32 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         for draft in self.list_drafts(start=start, stop=stop):
             yield draft.dumps()
 
-    def get_commit(self, commit_key: Optional[str] = None) -> Commit:
-        """Get the certain commit with the given commit key.
+    def get_commit(self, revision: Optional[str] = None) -> Commit:
+        """Get the certain commit with the given revision.
 
         Arguments:
-            commit_key: The information to locate the specific commit, which can be the commit id,
-                the branch, or the tag.
+            revision: The information to locate the specific commit, which can be the commit id,
+                the branch name, or the tag name.
                 If is not given, get the current commit.
 
         Returns:
-            The :class:`.Commit` instance with the given commit key.
+            The :class:`.Commit` instance with the given revision.
 
         Raises:
-            TypeError: When the required commit does not exist or the given commit key is illegal.
+            TypeError: When the required commit does not exist or the given revision is illegal.
 
         """
-        if commit_key is None:
+        if revision is None:
             self._status.check_authority_for_commit()
-            commit_key = self._status.commit_id
+            revision = self._status.commit_id
 
-        if not commit_key:
-            raise TypeError("The given commit key is illegal")
+        if not revision:
+            raise TypeError("The given revision is illegal")
 
         try:
-            commit = next(self._generate_commits(commit_key))
+            commit = next(self._generate_commits(revision))
         except StopIteration as error:
-            raise TypeError(f"The commit: {commit_key} does not exist.") from error
+            raise TypeError(f"The commit: {revision} does not exist.") from error
 
         return commit
 
@@ -314,12 +314,12 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         removed_in="1.5.0",
         substitute="PagingList[start:stop]",
     )
-    def list_commits(self, commit_key: Optional[str] = None, **kwargs: int) -> PagingList[Commit]:
+    def list_commits(self, revision: Optional[str] = None, **kwargs: int) -> PagingList[Commit]:
         """List the commits.
 
         Arguments:
-            commit_key: The information to locate the specific commit, which can be the commit id,
-                the branch, or the tag.
+            revision: The information to locate the specific commit, which can be the commit id,
+                the branch name, or the tag name.
                 If is given, list the commits before the given commit.
                 If is not given, list the commits before the current commit.
             kwargs: For deprecated keyword arguments: "start" and "stop".
@@ -332,7 +332,7 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         stop = kwargs.get("stop", sys.maxsize)
 
         return PagingList(
-            lambda offset, limit: self._generate_commits(commit_key, offset, limit),
+            lambda offset, limit: self._generate_commits(revision, offset, limit),
             128,
             slice(start, stop),
         )
@@ -451,13 +451,11 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             slice(start, stop),
         )
 
-    def checkout(
-        self, commit_key: Optional[str] = None, draft_number: Optional[int] = None
-    ) -> None:
+    def checkout(self, revision: Optional[str] = None, draft_number: Optional[int] = None) -> None:
         """Checkout to commit or draft.
 
         Arguments:
-            commit_key: The information to locate the specific commit, which can be the commit id,
+            revision: The information to locate the specific commit, which can be the commit id,
                 the branch, or the tag.
             draft_number: The draft number.
 
@@ -465,13 +463,13 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             TypeError: When both commit and draft number are provided or neither.
 
         """
-        if commit_key is None and draft_number is None:
-            raise TypeError("Neither commit key nor draft number is given, please give one")
-        if commit_key is not None and draft_number is not None:
-            raise TypeError("Both commit key and draft number are given, please only give one")
+        if revision is None and draft_number is None:
+            raise TypeError("Neither revision nor draft number is given, please give one")
+        if revision is not None and draft_number is not None:
+            raise TypeError("Both revision and draft number are given, please only give one")
 
-        if commit_key:
-            commit_id = self.get_commit(commit_key).commit_id
+        if revision:
+            commit_id = self.get_commit(revision).commit_id
             self._status.checkout(commit_id=commit_id)
 
         if draft_number:
