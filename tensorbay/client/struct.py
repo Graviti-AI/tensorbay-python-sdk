@@ -92,7 +92,7 @@ class Commit(ReprMixin, EqMixin):
 
     _T = TypeVar("_T", bound="Commit")
 
-    _repr_attrs: Tuple[str, ...] = ("commit_id", "parent_commit_id", "message", "committer")
+    _repr_attrs: Tuple[str, ...] = ("parent_commit_id", "message", "committer")
     _repr_maxlevel = 2
 
     def __init__(
@@ -106,6 +106,9 @@ class Commit(ReprMixin, EqMixin):
         self.parent_commit_id = parent_commit_id
         self.message = message
         self.committer = committer
+
+    def _repr_head(self) -> str:
+        return f'{self.__class__.__name__}("{self.commit_id}")'
 
     def _loads(self, contents: Dict[str, Any]) -> None:
         self.commit_id = contents["commitId"]
@@ -176,6 +179,8 @@ class _NamedCommit(Commit):
     """
 
     _T = TypeVar("_T", bound="_NamedCommit")
+
+    _repr_attrs = ("commit_id",) + Commit._repr_attrs
 
     def __init__(  # pylint: disable=too-many-arguments
         self,
