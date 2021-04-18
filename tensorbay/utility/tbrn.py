@@ -15,6 +15,8 @@
 from enum import Enum, Flag, auto
 from typing import Any, List, Optional, Tuple, TypeVar
 
+from ..exception import TBRNError
+
 
 class _TBRNFlag(Flag):
     FIELD_HEAD = 1 << 0
@@ -152,7 +154,7 @@ class TBRN:
         type: The type of this TBRN.
 
     Raises:
-        TypeError: The TBRN is invalid.
+        TBRNError: The TBRN is invalid.
 
     """
 
@@ -196,7 +198,7 @@ class TBRN:
             names: List[Any] = splits[0].split(TBRN._NAMES_SEPARATOR, TBRN._NAMES_MAX_SPLIT)
 
             if names[0] != TBRN._HEAD:
-                raise TypeError('TensorBay Resource Name should startwith "tb:"')
+                raise TBRNError('TensorBay Resource Name should startwith "tb:"')
 
             names += [None] * (TBRN._NAMES_MAX_SPLIT + 1 - len(names))
             frame_index = names[TBRN._FRAME_INDEX]
@@ -221,7 +223,7 @@ class TBRN:
         try:
             self._type, self._field_length = self._check_type()
         except KeyError as error:
-            raise TypeError("Invalid TensorBay Resource Name") from error
+            raise TBRNError("Invalid TensorBay Resource Name") from error
 
     def __repr__(self) -> str:
         return self.get_tbrn()
