@@ -16,9 +16,9 @@ _SEGMENTS = {"train": True, "test": False}
 
 
 def DogsVsCats(path: str) -> Dataset:
-    """Dataloader of the `DogsVsCats`_ dataset.
+    """Dataloader of the `Dogs vs Cats`_ dataset.
 
-    .. _DogsVsCats: https://www.kaggle.com/c/dogs-vs-cats
+    .. _Dogs vs Cats: https://www.kaggle.com/c/dogs-vs-cats
 
     The file structure should be like::
 

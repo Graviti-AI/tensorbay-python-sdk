@@ -42,9 +42,9 @@ _KEYPOINT_TO_INDEX = {
 
 
 def AnimalPose5(path: str) -> Dataset:
-    """Dataloader of the `5 Categories Animal Pose`_ dataset.
+    """Dataloader of the `5 Categories Animal-Pose`_ dataset.
 
-    .. _5 Categories Animal Pose: https://sites.google.com/view/animal-pose/
+    .. _5 Categories Animal-Pose: https://sites.google.com/view/animal-pose/
 
     The file structure should be like::
 
