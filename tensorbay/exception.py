@@ -7,16 +7,16 @@
 
 The class hierarchy for TensorBay custom exceptions is::
 
-     +-- :class:`TensorBayException`
-         +-- :class:`TensorBayClientError`
-             +-- :class:`CommitStatusError`
-             +-- :class:`DatasetTypeError`
-             +-- :class:`FrameError`
-             +-- :class:`ResponseError`
-         +-- :class:`TBRNError`
-         +-- :class:`TensorBayOpenDatasetError`
-             +-- :class:`NoFileError`
-             +-- :class:`FileStructureError`
+     +-- TensorBayException
+         +-- TensorBayClientError
+             +-- CommitStatusError
+             +-- DatasetTypeError
+             +-- FrameError
+             +-- ResponseError
+         +-- TBRNError
+         +-- TensorBayOpenDatasetError
+             +-- NoFileError
+             +-- FileStructureError
 
 """
 
