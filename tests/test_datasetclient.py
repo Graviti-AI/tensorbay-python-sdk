@@ -5,6 +5,8 @@
 
 """This file defines class TestDatasetClient"""
 
+import time
+
 import pytest
 
 from tensorbay.client import GAS, GASResponseError, GASSegmentError
@@ -677,6 +679,7 @@ class TestDatasetClient:
 
         dataset_client.upload_segment(segment)
         dataset_client.commit("commit-1")
+        time.sleep(2)
         segment1 = Segment(name="segment1", client=dataset_client)
         assert len(segment1) == 10
         assert segment1[0].get_url()
