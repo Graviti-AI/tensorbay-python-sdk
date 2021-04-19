@@ -14,21 +14,20 @@ This topic describes the key operations towards datasets, including:
 ******************
 
 TensorBay SDK supports methods to organize local datasets
-into uniform TensorBay dataset strucutre
-(:ref:`ref <reference/dataset_structure:Dataset Structure>`).
+into uniform TensorBay :ref:`dataset structure <reference/dataset_structure:Dataset Structure>`.
 The typical steps to organize a local dataset:
 
-- First, write a dataloader (:ref:`ref <reference/glossary:dataloader>`)
+- First, write a :ref:`dataloader <reference/glossary:dataloader>`
   to load the whole local dataset into a :class:`~tensorbay.dataset.dataset.Dataset`
-  instance,
-- Second, write a catalog (:ref:`ref <reference/dataset_structure:Catalog>`)
+  instance.
+- Second, write a :ref:`catalog <reference/dataset_structure:Catalog>`
   to store all the label meta information inside a dataset.
 
 .. note::
 
    A catalog is needed only if there is label information inside the dataset.
-
-:ref:`This part <examples/bstld:Organize Dataset>` is an example for organizing a dataset.
+   
+Take the :ref:`Organization of BSTLD <examples/bstld:Organize Dataset>` as an example.
 
 
 ****************
@@ -39,12 +38,9 @@ There are two usages for the organized local dataset
 (i.e. the initialized :class:`~tensorbay.dataset.dataset.Dataset` instance):
 
 - Upload it to TensorBay.
-- Use it directly.
+- Use it from local.
 
 This section mainly discusses the uploading operation.
-See :ref:`this example <examples/read_dataset_class:Read "Dataset" class>`
-for details about the latter usage.
-
 There are plenty of benefits of uploading local datasets to TensorBay.
 
 - **REUSE**: uploaded datasets can be reused without preprocessing again.
@@ -52,8 +48,7 @@ There are plenty of benefits of uploading local datasets to TensorBay.
 - **VISUALIZATION**: uploaded datasets can be visualized without coding.
 - **VERSION CONTROL**: different versions of one dataset can be uploaded and controlled conveniently.
 
-
-:ref:`This part <examples/bstld:Upload Dataset>` is an example for uploading a dataset.
+Take the :ref:`Uploading of BSTLD <examples/bstld:Upload Dataset>` as an example.
 
 **************
  Read Dataset
@@ -62,7 +57,9 @@ There are plenty of benefits of uploading local datasets to TensorBay.
 Two types of datasets can be read from TensorBay:
 
 - Datasets uploaded by yourself as mentioned in :ref:`features/dataset_management:Upload Dataset`.
-- Datasets uplaoded by the community (i.e. the `open datasets`_).
+- Datasets uploaded by the community (check them on the `Open Datasets`_ platform.).
+
+Take the :ref:`Reading of BSTLD <examples/bstld:Read Dataset>` as an example.
 
 .. note::
 
@@ -70,11 +67,10 @@ Two types of datasets can be read from TensorBay:
 
 .. note::
 
-   Visit our `Graviti AI Service(GAS)`_ platform to check the dataset details,
-   such as dataset name, version information, etc.
-
-:ref:`This part <examples/bstld:Read Dataset>` is an example for reading a dataset.
+   Visit `my datasets(or team datasets)`_ panel of `TensorBay`_ platform to check all
+   datasets that can be read.
 
 .. _fork: https://docs.graviti.cn/guide/opendataset/fork
-.. _open datasets: https://www.graviti.cn/open-datasets
-.. _Graviti AI Service(GAS): https://www.graviti.cn/tensorBay
+.. _Open Datasets: https://www.graviti.cn/open-datasets
+.. _my datasets(or team datasets): https://gas.graviti.cn/tensorbay/dataset-list
+.. _TensorBay: https://gas.graviti.cn/tensorbay/
