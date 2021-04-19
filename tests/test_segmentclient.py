@@ -8,6 +8,7 @@
 import pytest
 import ulid
 
+from tensorbay import __version__
 from tensorbay.client.exceptions import GASResponseError
 from tensorbay.client.gas import GAS
 from tensorbay.dataset.data import Data, Label
@@ -227,6 +228,7 @@ class TestSegmentClient:
 
         gas_client.delete_dataset(dataset_name)
 
+    @pytest.mark.xfail(__version__ < "1.5.0", reason="not supported at least until v1.5.0")
     def test_upload_label(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_random_dataset_name()

@@ -7,6 +7,7 @@
 
 import pytest
 
+from tensorbay import __version__
 from tensorbay.client import GAS, GASResponseError, GASSegmentError
 from tensorbay.client.struct import Draft
 from tensorbay.dataset import Data, Frame, FusionSegment, Segment
@@ -661,6 +662,7 @@ class TestDatasetClient:
 
         gas_client.delete_dataset(dataset_name)
 
+    @pytest.mark.xfail(__version__ < "1.5.0", reason="not supported at least until v1.5.0")
     def test_draft_and_top_commit_inherit(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_random_dataset_name()
