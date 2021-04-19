@@ -196,7 +196,7 @@ class Transform3D(ReprMixin):
             Translation in :class:`~tensorbay.geometry.vector.Vector3D`.
 
         Examples:
-            >>> transform = Transform3D([[1, 0, 0, 1], [0, 1, 0, 1], [0, 0, 1, 1]])
+            >>> transform = Transform3D(matrix=[[1, 0, 0, 1], [0, 1, 0, 1], [0, 0, 1, 1]])
             >>> transform.translation
             Vector3D(1, 1, 1)
 
@@ -211,7 +211,7 @@ class Transform3D(ReprMixin):
             Rotation in numpy quaternion.
 
         Examples:
-            >>> transform = Transform3D([[1, 0, 0, 1], [0, 1, 0, 1], [0, 0, 1, 1]])
+            >>> transform = Transform3D(matrix=[[1, 0, 0, 1], [0, 1, 0, 1], [0, 0, 1, 1]])
             >>> transform.rotation
             quaternion(1, -0, -0, -0)
 
@@ -226,7 +226,7 @@ class Transform3D(ReprMixin):
             of the :class:`Transform3D`.
 
         Examples:
-            >>> transform = Transform3D([[1, 0, 0, 1], [0, 1, 0, 1], [0, 0, 1, 1]])
+            >>> transform = Transform3D(matrix=[[1, 0, 0, 1], [0, 1, 0, 1], [0, 0, 1, 1]])
             >>> transform.dumps()
             {
                 'translation': {'x': 1, 'y': 1, 'z': 1},
