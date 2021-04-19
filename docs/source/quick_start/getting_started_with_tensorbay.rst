@@ -25,9 +25,10 @@ To verify the SDK and CLI version, run the following command:
 Before using TensorBay SDK, please finish the following registration steps:
 
 - Please visit `Graviti AI Service(GAS)`_ to sign up.
-- Please visit `this page <https://gas.graviti.cn/tensorbay/developer>`_ to get an AccessKey.
+- Please visit `Graviti Developer Tools`_ to get an AccessKey.
 
-.. _graviti ai service(gas): https://www.graviti.cn/tensorBay
+.. _graviti ai service(gas): https://gas.graviti.cn/tensorbay/
+.. _Graviti Developer Tools: https://gas.graviti.cn/tensorbay/developer
 
 .. note::
    An AccessKey is needed to authenticate identity when using TensorBay via SDK or CLI.
@@ -45,8 +46,9 @@ Authorize a Client Instance
       :start-after: """Authorize a Client Instance"""
       :end-before: """"""
 
-See :ref:`this page <tensorbay_cli/getting_started_with_cli:Configuration>` for details
-about authenticating identity via CLI.
+See :ref:`CLI Configuration <tensorbay_cli/getting_started_with_cli:Configuration>` for
+details about authenticating identity via CLI.
+
 
 Create a Dataset 
 ================
