@@ -37,13 +37,7 @@ The following is the general format for TBRN:
  Configuration
 ***************
 
-Use the command below to configure the accessKey.
-
-.. code:: console
-
-   $ gas config [accessKey]
-
-AccessKey_ is used for identification when using TensorBay to operate on dataset.
+An accessKey_ is used for identification when using TensorBay to operate datasets.
 
 .. _accesskey: https://gas.graviti.cn/tensorbay/developer
 
