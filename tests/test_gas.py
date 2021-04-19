@@ -255,7 +255,7 @@ class TestGAS:
         assert segment1[0].path == "hello0.txt"
         assert not segment1[0].label
 
-        with pytest.raises(ResponseError):
+        with pytest.raises(TypeError):
             gas_client.upload_dataset(dataset, draft_number=draft_number + 1)
 
         gas_client.delete_dataset(dataset_name)
