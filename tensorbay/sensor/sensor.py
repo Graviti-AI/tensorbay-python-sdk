@@ -152,7 +152,7 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
             Lidar("Lidar1")(
                 (extrinsics): Transform3D(
                     (translation): Vector3D(1.1, 2.2, 3.3),
-                    (rotation): Quaternion(1.1, 2.2, 3.3, 4.4)
+                    (rotation): quaternion(1.1, 2.2, 3.3, 4.4)
                 )
             )
 
@@ -205,7 +205,7 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
             Lidar("Lidar1")(
                 (extrinsics): Transform3D(
                     (translation): Vector3D(1, 2, 3),
-                    (rotation): Quaternion(1, 2, 3, 4)
+                    (rotation): quaternion(1, 2, 3, 4)
                 )
             )
 
@@ -247,7 +247,7 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
             Lidar("Lidar1")(
                 (extrinsics): Transform3D(
                     ...
-                    (rotation): Quaternion(2, 3, 4, 5)
+                    (rotation): quaternion(2, 3, 4, 5)
                 )
             )
 
@@ -271,7 +271,7 @@ class Lidar(Sensor):
         Lidar("Lidar1")(
             (extrinsics): Transform3D(
                 (translation): Vector3D(1, 2, 3),
-                (rotation): Quaternion(1, 2, 3, 4)
+                (rotation): quaternion(1, 2, 3, 4)
             )
         )
 
@@ -292,7 +292,7 @@ class Radar(Sensor):
         Radar("Radar1")(
             (extrinsics): Transform3D(
                 (translation): Vector3D(1, 2, 3),
-                (rotation): Quaternion(1, 2, 3, 4)
+                (rotation): quaternion(1, 2, 3, 4)
             )
         )
 
@@ -382,7 +382,7 @@ class Camera(Sensor):
             Camera("Camera1")(
                     (extrinsics): Transform3D(
                         (translation): Vector3D(1, 2, 3),
-                        (rotation): Quaternion(1, 2, 3, 4)
+                        (rotation): quaternion(1, 2, 3, 4)
                     ),
                     (intrinsics): CameraIntrinsics(
                         (camera_matrix): CameraMatrix(
@@ -523,7 +523,7 @@ class FisheyeCamera(Camera):  # pylint: disable=too-many-ancestors
         FisheyeCamera("FisheyeCamera1")(
             (extrinsics): Transform3D(
                 (translation): Vector3D(1, 2, 3),
-                (rotation): Quaternion(1, 2, 3, 4)
+                (rotation): quaternion(1, 2, 3, 4)
             )
         )
 

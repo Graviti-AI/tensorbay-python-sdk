@@ -293,7 +293,7 @@ or the coordinate of the top-left vertex, the height and the width of the boundi
 
     >>> LabeledBox2D(10, 20, 30, 40)
     LabeledBox2D(10, 20, 30, 40)()
-    >>> LabeledBox2D(x=10, y=20, width=20, height=20)
+    >>> LabeledBox2D.from_xywh(x=10, y=20, width=20, height=20)
     LabeledBox2D(10, 20, 30, 40)()
 
 It contains the basic geometry information of the 2D bounding box.
