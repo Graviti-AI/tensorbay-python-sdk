@@ -20,6 +20,8 @@ The class hierarchy for TensorBay custom exceptions is::
 
 """
 
+from typing import Optional, Union
+
 from requests.models import Response
 
 
@@ -91,12 +93,137 @@ class ResponseError(TensorBayClientException):
 
     """
 
+    STATUS_CODE: int
+
     def __init__(self, response: Response) -> None:
         super().__init__()
         self.response = response
+        self._indent = " " * len(self.__class__.__name__)
 
     def __str__(self) -> str:
-        return f"Unexpected status code({self.response.status_code})! {self.response.url}"
+        return (
+            f"Unexpected status code({self.response.status_code})! {self.response.url}!"
+            f"\n{self._indent}  {self.response.json()['message']}"
+        )
+
+
+class AccessDeniedError(ResponseError):
+    """This class defines the exception for access denied response error.
+
+    Arguments:
+        response: The response of the request.
+
+    """
+
+    STATUS_CODE = 403
+
+
+class InvalidParamsError(ResponseError):
+    """This class defines the exception for invalid parameters response error.
+
+    Arguments:
+        response: The response of the request.
+        param_name: The name of the invalid parameter.
+        param_value: The value of the invalid parameter.
+
+    """
+
+    STATUS_CODE = 400
+
+    def __init__(  # pylint: disable=super-init-not-called
+        self,
+        response: Optional[Response] = None,
+        *,
+        param_name: Optional[str] = None,
+        param_value: Optional[str] = None,
+    ) -> None:
+        pass
+
+    def __str__(self) -> str:
+        pass
+
+
+class NameConflictError(ResponseError):
+    """This class defines the exception for name conflict response error.
+
+    Arguments:
+        response: The response of the request.
+        resource: The type of the conflict resource.
+        identification: The identification of the conflict resource.
+
+    """
+
+    STATUS_CODE = 400
+
+    def __init__(  # pylint: disable=super-init-not-called
+        self,
+        response: Optional[Response] = None,
+        *,
+        resource: Optional[str] = None,
+        identification: Union[int, str, None] = None,
+    ) -> None:
+        pass
+
+    def __str__(self) -> str:
+        pass
+
+
+class RequestParamsMissingError(ResponseError):
+    """This class defines the exception for request parameters missing response error.
+
+    Arguments:
+        response: The response of the request.
+
+    """
+
+    STATUS_CODE = 400
+
+
+class ResourceNotExistError(ResponseError):
+    """This class defines the exception for resource not existing response error.
+
+    Arguments:
+        response: The response of the request.
+        resource: The type of the conflict resource.
+        identification: The identification of the conflict resource.
+
+    """
+
+    STATUS_CODE = 404
+
+    def __init__(  # pylint: disable=super-init-not-called
+        self,
+        response: Optional[Response] = None,
+        *,
+        resource: Optional[str] = None,
+        identification: Union[int, str, None] = None,
+    ) -> None:
+        pass
+
+    def __str__(self) -> str:
+        pass
+
+
+class ResponseSystemError(ResponseError):
+    """This class defines the exception for system response error.
+
+    Arguments:
+        response: The response of the request.
+
+    """
+
+    STATUS_CODE = 500
+
+
+class UnauthorizedError(ResponseError):
+    """This class defines the exception for unauthorized response error.
+
+    Arguments:
+        response: The response of the request.
+
+    """
+
+    STATUS_CODE = 401
 
 
 class TensorBayOpendatasetException(TensorBayException):
@@ -149,3 +276,14 @@ class TBRNError(TensorBayException):
 
     def __str__(self) -> str:
         return self._message
+
+
+ResponseErrorDistributor = {
+    "AccessDenied": AccessDeniedError,
+    "InvalidParamsValue": InvalidParamsError,
+    "NameConflict": NameConflictError,
+    "RequestParamsMissing": RequestParamsMissingError,
+    "ResourceNotExist": ResourceNotExistError,
+    "SystemError": ResponseSystemError,
+    "Unauthorized": UnauthorizedError,
+}
