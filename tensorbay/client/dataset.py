@@ -336,17 +336,17 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             revision = self._status.commit_id
         yield from self._list_commits(revision, start=start, stop=stop)
 
-    def create_tag(self, name: str, commit: Optional[str] = None) -> None:
+    def create_tag(self, name: str, revision: Optional[str] = None) -> None:
         """Create the tag for a commit.
 
         Arguments:
             name: The tag name to be created for the specific commit.
-            commit: The information to locate the specific commit, which can be the commit id,
-                the branch, or the tag.
+            revision: The information to locate the specific commit, which can be the commit id,
+                the branch name, or the tag name.
                 If the commit is not given, create the tag for the current commit.
 
         """
-        if not commit:
+        if not revision:
             self._status.check_authority_for_commit()
             commit = self._status.commit_id
 

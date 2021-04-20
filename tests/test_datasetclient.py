@@ -149,7 +149,7 @@ class TestDatasetClient:
         # Can not create the tag without giving commit in the draft
         with pytest.raises(TypeError):
             dataset_client.create_tag("V2")
-        dataset_client.create_tag("V2", commit=commit_2_id)
+        dataset_client.create_tag("V2", revision=commit_2_id)
         dataset_client.commit("commit-3")
         commit_3_id = dataset_client.status.commit_id
         dataset_client.create_tag("V3")
