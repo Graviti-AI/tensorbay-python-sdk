@@ -45,7 +45,7 @@ Set the accessKey into configuration:
 
 .. code:: console
 
-   $ gas config Accesskey-*****
+   $ gas config <YOUR_ACCESSKEY>
 
 To show configuration information:
 
