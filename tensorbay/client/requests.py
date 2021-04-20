@@ -154,7 +154,9 @@ class UserSession(Session):  # pylint: disable=too-few-public-methods
         try:
             response = super().request(method, url, *args, **kwargs)
             if response.status_code not in (200, 201):
-                logger.error("Invalid state code!%s", ResponseLogging(response))
+                logger.error(
+                    "Unexpected status code(%d)!%s", response.status_code, ResponseLogging(response)
+                )
                 raise ResponseError(response)
             logger.debug(ResponseLogging(response))
             return response

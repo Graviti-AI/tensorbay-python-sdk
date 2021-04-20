@@ -94,10 +94,9 @@ class ResponseError(TensorBayClientException):
     def __init__(self, response: Response) -> None:
         super().__init__()
         self.response = response
-        self.status_code = response.status_code
 
     def __str__(self) -> str:
-        return f"Invalid state code({self.status_code})! {self.response.url}"
+        return f"Unexpected status code({self.response.status_code})! {self.response.url}"
 
 
 class TensorBayOpendatasetException(TensorBayException):
