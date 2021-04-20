@@ -4,7 +4,7 @@
 
 TensorBay SDK has the ability to tag specific commits in a dataset's history as being important.
 Typically, people use this functionality to mark release points (v1.0, v2.0 and so on).
-In this section, you'll learn how to list existing tags, how to create and delete tags.
+In this section, you'll learn how to list existing :ref:`tags <reference/glossary:tag>`, how to create and delete tags.
 
 Before operating tags, a dataset client instance with commit is needed.
 
