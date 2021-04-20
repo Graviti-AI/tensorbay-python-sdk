@@ -151,3 +151,11 @@ and the changes inside it will be made into a commit.
 There are scenarios when modifications of a dataset are required,
 such as correcting errors, enlarging dataset, adding more types of labels, etc.
 Under these circumstances, create a draft, edit the dataset and commit the draft.
+
+
+tag
+===
+
+TensorBay SDK has the ability to tag the specific :ref:`reference/glossary:commit` in a dataset's history
+as being important. Typically, people use this functionality to mark release points (v1.0, v2.0 and so on).
+
