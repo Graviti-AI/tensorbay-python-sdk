@@ -36,11 +36,11 @@ from requests_toolbelt import MultipartEncoder
 from ulid import from_timestamp
 
 from ..dataset import Data, Frame, RemoteData
-from ..exception import FrameError
+from ..exception import FrameError, ResponseError
 from ..sensor.sensor import Sensor, Sensors
 from ..utility import KwargsDeprecated
 from .commit_status import CommitStatus
-from .exceptions import GASException, GASPathError
+from .exceptions import GASPathError
 from .requests import PagingList, default_config
 
 if TYPE_CHECKING:
@@ -293,7 +293,7 @@ class SegmentClient(SegmentClientBase):
 
         Raises:
             GASPathError: When target_remote_path does not follow linux style.
-            GASException: When uploading data failed.
+            ResponseError: When uploading data failed.
 
         """
         self._status.check_authority_for_draft()
@@ -327,7 +327,7 @@ class SegmentClient(SegmentClientBase):
 
             self._synchronize_upload_info(post_data["key"], version_id, etag)
 
-        except GASException:
+        except ResponseError:
             self._clear_upload_permission()
             raise
 
@@ -481,7 +481,7 @@ class FusionSegmentClient(SegmentClientBase):
 
         Raises:
             GASPathError: When remote_path does not follow linux style.
-            GASException: When uploading frame failed.
+            ResponseError: When uploading frame failed.
             FrameError: When lacking frame id or frame id conflicts.
 
         """
@@ -540,7 +540,7 @@ class FusionSegmentClient(SegmentClientBase):
 
                 self._synchronize_upload_info(post_data["key"], version_id, etag, frame_info)
 
-            except GASException:
+            except ResponseError:
                 self._clear_upload_permission()
                 raise
             self._upload_label(data)
