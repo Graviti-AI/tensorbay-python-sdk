@@ -2,7 +2,7 @@
  Dataset Management 
 ####################
 
-This topic describes the key operations towards datasets, including:
+This topic describes dataset management, including:
 
 - :ref:`features/dataset_management:Organize Dataset`
 - :ref:`features/dataset_management:Upload Dataset`
@@ -17,11 +17,11 @@ TensorBay SDK supports methods to organize local datasets
 into uniform TensorBay :ref:`dataset structure <reference/dataset_structure:Dataset Structure>`.
 The typical steps to organize a local dataset:
 
-- First, write a :ref:`dataloader <reference/glossary:dataloader>`
+- First, write a catalog (:ref:`ref <reference/dataset_structure:Catalog>`)
+  to store all the label schema information inside a dataset.
+- Second, write a dataloader (:ref:`ref <reference/glossary:dataloader>`)
   to load the whole local dataset into a :class:`~tensorbay.dataset.dataset.Dataset`
   instance.
-- Second, write a :ref:`catalog <reference/dataset_structure:Catalog>`
-  to store all the label meta information inside a dataset.
 
 .. note::
 
@@ -34,11 +34,11 @@ Take the :ref:`Organization of BSTLD <examples/bstld:Organize Dataset>` as an ex
  Upload Dataset
 ****************
 
-There are two usages for the organized local dataset
-(i.e. the initialized :class:`~tensorbay.dataset.dataset.Dataset` instance):
+For an organized local dataset (i.e. the initialized :class:`~tensorbay.dataset.dataset.Dataset`
+instance), users can: 
 
 - Upload it to TensorBay.
-- Use it from local.
+- Read it directly.
 
 This section mainly discusses the uploading operation.
 There are plenty of benefits of uploading local datasets to TensorBay.
@@ -57,9 +57,7 @@ Take the :ref:`Uploading of BSTLD <examples/bstld:Upload Dataset>` as an example
 Two types of datasets can be read from TensorBay:
 
 - Datasets uploaded by yourself as mentioned in :ref:`features/dataset_management:Upload Dataset`.
-- Datasets uploaded by the community (check them on the `Open Datasets`_ platform.).
-
-Take the :ref:`Reading of BSTLD <examples/bstld:Read Dataset>` as an example.
+- Datasets uploaded by the shared `Open Datasets`_ platform.
 
 .. note::
 
