@@ -50,7 +50,7 @@ Take a :ref:`2D box label <reference/label_format:Box2D>` as an example:
       (instance): 'instance_ID'
     )
 
-Category
+category
 ========
 
 Category is a string indicating the class of the labeled object.
@@ -58,7 +58,7 @@ Category is a string indicating the class of the labeled object.
     >>> label.category
     'data_category'
 
-Attributes
+attributes
 ==========
 
 Attributes are the additional information about this data,
@@ -70,7 +70,7 @@ The attribute names and values are stored in key-value pairs.
    {'attribute_name': 'attribute_value'}
 
 
-Instance
+instance
 ========
 
 Instance is the unique id for the object inside of the label,
@@ -99,8 +99,8 @@ to describe some common features of subcatalog.
       (is_tracking): True
    )
 
-TrackingInformation
-===================
+tracking information
+====================
 
 If the label of this type in the dataset has the information of instance IDs,
 then the subcatalog should set a flag to show its support for tracking information.
@@ -110,13 +110,13 @@ or set the ``is_tracking`` attr after initialization.
 
    >>> box2d_subcatalog.is_tracking = True
 
-CategoryInformation
-===================
+category information
+====================
 
 If the label of this type in the dataset has category,
 then the subcatalog should contain all the optional categories.
 
-Each :ref:`category<reference/label_format:Category>` of a label
+Each :ref:`reference/label_format:category` of a label
 appeared in the dataset should be within the categories of the subcatalog.
 
 Category information can be added to the subcatalog.
@@ -128,16 +128,16 @@ Category information can be added to the subcatalog.
     }
 
 :class:`~tensorbay.label.supports.CategoryInfo` is used to describe
-a :ref:`category<reference/label_format:Category>`.
+a :ref:`reference/label_format:category`.
 See details in :class:`~tensorbay.label.supports.CategoryInfo`.
 
-AttributesInformation
-=====================
+attributes information
+======================
 
 If the label of this type in the dataset has attributes,
 then the subcatalog should contain all the rules for different attributes.
 
-Each :ref:`attribute<reference/label_format:Attributes>` of a label
+Each :ref:`reference/label_format:attributes` of a label
 appeared in the dataset should follow the rules set in the attributes of the subcatalog.
 
 Attribute information ca be added to the subcatalog.
@@ -155,7 +155,7 @@ Attribute information ca be added to the subcatalog.
     }
 
 :class:`~tensorbay.label.attributes.AttributeInfo` is used to describe the rules of an
-:ref:`attribute<reference/label_format:Attributes>`, which refers to the `Json schema`_ method.
+:ref:`reference/label_format:attributes`, which refers to the `Json schema`_ method.
 
 See details in :class:`~tensorbay.label.attributes.AttributeInfo`.
 
@@ -201,17 +201,17 @@ To create a :class:`~tensorbay.label.label_classification.Classification` label:
     )
 
 
-Classification.Category
+Classification.category
 =======================
 
 The category of the entire data file.
-See :ref:`reference/label_format:Category` for details.
+See :ref:`reference/label_format:category` for details.
 
-Classification.Attributes
+Classification.attributes
 =========================
 
 The attributes of the entire data file.
-See :ref:`reference/label_format:Attributes` for details.
+See :ref:`reference/label_format:attributes` for details.
 
 .. note::
 
@@ -225,8 +225,8 @@ Before adding the classification label to data,
 
 :class:`~tensorbay.label.label_classification.ClassificationSubcatalog`
 has categories and attributes information,
-see :ref:`reference/label_format:CategoryInformation` and
-:ref:`reference/label_format:AttributesInformation` for details.
+see :ref:`reference/label_format:category information` and
+:ref:`reference/label_format:attributes information` for details.
 
 To add a :class:`~tensorbay.label.label_classification.Classification` label to one data:
 
@@ -313,24 +313,24 @@ It contains the basic geometry information of the 2D bounding box.
     >>> box2d_label.area()
     400
 
-Box2D.Category
+Box2D.category
 ==============
 
 The category of the object inside the 2D bounding box.
-See :ref:`reference/label_format:Category` for details.
+See :ref:`reference/label_format:category` for details.
 
-Box2D.Attributes
+Box2D.attributes
 ================
 
 Attributes are the additional information about this object, which are stored in key-value pairs.
-See :ref:`reference/label_format:Attributes` for details.
+See :ref:`reference/label_format:attributes` for details.
 
-Box2D.Instance
+Box2D.instance
 ==============
 
 Instance is the unique ID for the object inside of the 2D bounding box,
 which is mostly used for tracking tasks.
-See :ref:`reference/label_format:Instance` for details.
+See :ref:`reference/label_format:instance` for details.
 
 Box2DSubcatalog
 ===============
@@ -340,9 +340,9 @@ Before adding the Box2D labels to data,
 
 :class:`~tensorbay.label.label_box.Box2DSubcatalog`
 has categories, attributes and tracking information,
-see :ref:`reference/label_format:CategoryInformation`,
-:ref:`reference/label_format:AttributesInformation` and
-:ref:`reference/label_format:TrackingInformation` for details.
+see :ref:`reference/label_format:category information`,
+:ref:`reference/label_format:attributes information` and
+:ref:`reference/label_format:tracking information` for details.
 
 To add a :class:`~tensorbay.label.label_box.LabeledBox2D` label to one data:
 
@@ -465,24 +465,24 @@ It contains the basic geometry information of the 3D bounding box.
     >>> box3d_label.volumn()
     6000
 
-Box3D.Category
+Box3D.category
 ==============
 
 The category of the object inside the 3D bounding box.
-See :ref:`reference/label_format:Category` for details.
+See :ref:`reference/label_format:category` for details.
 
-Box3D.Attributes
+Box3D.attributes
 ================
 
 Attributes are the additional information about this object, which are stored in key-value pairs.
-See :ref:`reference/label_format:Attributes` for details.
+See :ref:`reference/label_format:attributes` for details.
 
-Box3D.Instance
+Box3D.instance
 ==============
 
 Instance is the unique id for the object inside of the 3D bounding box,
 which is mostly used for tracking tasks.
-See :ref:`reference/label_format:Instance` for details.
+See :ref:`reference/label_format:instance` for details.
 
 Box3DSubcatalog
 ===============
@@ -492,9 +492,9 @@ Before adding the Box3D labels to data,
 
 :class:`~tensorbay.label.label_box.Box3DSubcatalog`
 has categories, attributes and tracking information,
-see :ref:`reference/label_format:CategoryInformation`,
-:ref:`reference/label_format:AttributesInformation` and
-:ref:`reference/label_format:TrackingInformation` for details.
+see :ref:`reference/label_format:category information`,
+:ref:`reference/label_format:attributes information` and
+:ref:`reference/label_format:tracking information` for details.
 
 To add a :class:`~tensorbay.label.label_box.LabeledBox3D` label to one data:
 
@@ -589,24 +589,24 @@ which can be obtained by index.
     >>> keypoints2d_label[0]
     Keypoint2D(10, 20)
 
-Keypoints2D.Category
+Keypoints2D.category
 ====================
 
 The category of the object inside the 2D keypoints.
-See :ref:`reference/label_format:Category` for details.
+See :ref:`reference/label_format:category` for details.
 
-Keypoints2D.Attributes
+Keypoints2D.attributes
 ======================
 
 Attributes are the additional information about this object, which are stored in key-value pairs.
-See :ref:`reference/label_format:Attributes` for details.
+See :ref:`reference/label_format:attributes` for details.
 
-Keypoints2D.Instance
+Keypoints2D.instance
 ====================
 
 Instance is the unique ID for the object inside of the 2D keypoints,
 which is mostly used for tracking tasks.
-See :ref:`reference/label_format:Instance` for details.
+See :ref:`reference/label_format:instance` for details.
 
 Keypoints2DSubcatalog
 =====================
@@ -614,9 +614,9 @@ Keypoints2DSubcatalog
 Before adding 2D keypoints labels to the dataset,
 :class:`~tensorbay.label.label_keypoints.Keypoints2DSubcatalog` should be defined.
 
-Besides :ref:`reference/label_format:AttributesInformation`,
-:ref:`reference/label_format:CategoryInformation`,
-:ref:`reference/label_format:TrackingInformation` in
+Besides :ref:`reference/label_format:attributes information`,
+:ref:`reference/label_format:category information`,
+:ref:`reference/label_format:tracking information` in
 :class:`~tensorbay.label.label_keypoints.Keypoints2DSubcatalog`,
 it also has :attr:`~tensorbay.label.label_keypoints.Keypoints2DSubcatalog.keypoints`
 to describe a set of keypoints corresponding to certain categories.
@@ -809,11 +809,11 @@ containing the content of the word, the start and the end time in the audio.
 and :attr:`~tensorbay.label.label_sentence.LabeledSentence.phone` of a sentence label all compose of
 :class:`~tensorbay.label.label_sentence.Word`.
 
-Sentence.Attributes
+Sentence.attributes
 ===================
 
 The attributes of the transcripted sentence.
-See :ref:`reference/label_format:AttributesInformation` for details.
+See :ref:`reference/label_format:attributes information` for details.
 
 SentenceSubcatalog
 ==================
@@ -821,7 +821,7 @@ SentenceSubcatalog
 Before adding sentence labels to the dataset,
 :class:`~tensorbay.label.label_sentence.SetenceSubcatalog` should be defined.
 
-Besides :ref:`reference/label_format:AttributesInformation` in
+Besides :ref:`reference/label_format:attributes information` in
 :class:`~tensorbay.label.label_sentence.SetenceSubcatalog`,
 it also has :attr:`~tensorbay.label.label_sentence.SetenceSubcatalog.is_sample`,
 :attr:`~tensorbay.label.label_sentence.SetenceSubcatalog.sample_rate`
