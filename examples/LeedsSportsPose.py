@@ -10,6 +10,8 @@
 # pylint: disable=import-error
 # pylint: disable=pointless-string-statement
 # pylint: disable=invalid-name
+# pylint: disable=unused-import
+# flake8: noqa: F401
 
 """This file includes the python code of LeedsSportsPose.rst."""
 
@@ -24,17 +26,21 @@ gas = GAS(ACCESS_KEY)
 gas.create_dataset("LeedsSportsPose")
 """"""
 
-"""List Dataset Names"""
-gas.list_dataset_names()
+"""Organize Dataset / regular import"""
+from tensorbay.dataset import Data, Dataset
+from tensorbay.geometry import Keypoint2D
+from tensorbay.label import LabeledKeypoints2D
+
 """"""
 
+"""Organize dataset / import dataloader"""
 from tensorbay.opendataset import LeedsSportsPose
 
 dataset = LeedsSportsPose("path/to/dataset/directory")
+""""""
 
 """Upload Dataset"""
-# dataset is the one you initialized in "Organize Dataset" section
-dataset_client = gas.upload_dataset(dataset, jobs=8, skip_uploaded_files=False)
+dataset_client = gas.upload_dataset(dataset)
 dataset_client.commit("initial commit")
 """"""
 
