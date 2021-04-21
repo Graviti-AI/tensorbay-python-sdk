@@ -49,8 +49,7 @@ class Notes(ReprMixin, EqMixin):
         self, is_continuous: bool = False, bin_point_cloud_fields: Optional[Iterable[str]] = None
     ) -> None:
         self.is_continuous = is_continuous
-        if bin_point_cloud_fields:
-            self.bin_point_cloud_fields = list(bin_point_cloud_fields)
+        self.bin_point_cloud_fields = bin_point_cloud_fields
 
     def __getitem__(self, key: str) -> Any:
         try:
@@ -60,8 +59,7 @@ class Notes(ReprMixin, EqMixin):
 
     def _loads(self, contents: Dict[str, Any]) -> None:
         self.is_continuous = contents["isContinuous"]
-        if "binPointCloudFields" in contents:
-            self.bin_point_cloud_fields = contents["binPointCloudFields"]
+        self.bin_point_cloud_fields = contents.get("binPointCloudFields")
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -72,7 +70,7 @@ class Notes(ReprMixin, EqMixin):
 
                     {
                         "isContinuous":            <boolean>
-                        "binPointCloudFields": [
+                        "binPointCloudFields": [   <array> or null
                                 <field_name>,      <str>
                                 ...
                         ]
@@ -91,11 +89,7 @@ class Notes(ReprMixin, EqMixin):
             The valid keys within the notes.
 
         """
-        keys = set()
-        for attr in self._repr_attrs:
-            if hasattr(self, attr):
-                keys.add(attr)
-        return KeysView(keys)  # type: ignore[arg-type]
+        return KeysView(self._repr_attrs)  # type: ignore[arg-type]
 
     def dumps(self) -> Dict[str, Any]:
         """Dumps the notes into a dict.
@@ -105,7 +99,7 @@ class Notes(ReprMixin, EqMixin):
 
                 {
                     "isContinuous":           <boolean>
-                    "binPointCloudFields": [
+                    "binPointCloudFields": [  <array> or null
                         <field_name>,         <str>
                         ...
                     ]
@@ -113,7 +107,7 @@ class Notes(ReprMixin, EqMixin):
 
         """
         contents: Dict[str, Any] = {"isContinuous": self.is_continuous}
-        if hasattr(self, "bin_point_cloud_fields"):
+        if self.bin_point_cloud_fields:
             contents["binPointCloudFields"] = self.bin_point_cloud_fields
         return contents
 

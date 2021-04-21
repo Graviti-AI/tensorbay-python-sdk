@@ -25,8 +25,7 @@ class TestNotes:
 
         notes = Notes()
         assert notes.is_continuous == False
-        with pytest.raises(AttributeError):
-            notes.bin_point_cloud_fields
+        assert notes.bin_point_cloud_fields == None
 
         notes = Notes(True, _NOTES_DATA["binPointCloudFields"])
         assert notes.is_continuous == True
@@ -34,7 +33,7 @@ class TestNotes:
 
     def test_keys(self):
         notes = Notes()
-        assert notes.keys() == KeysView(["is_continuous"])
+        assert notes.keys() == KeysView(["is_continuous", "bin_point_cloud_fields"])
 
         notes = Notes(True, _NOTES_DATA["binPointCloudFields"])
         assert notes.keys() == KeysView(["is_continuous", "bin_point_cloud_fields"])
@@ -42,8 +41,7 @@ class TestNotes:
     def test_getitem(self):
         notes = Notes()
         assert notes["is_continuous"] == False
-        with pytest.raises(KeyError):
-            notes["bin_point_cloud_fields"]
+        assert notes["bin_point_cloud_fields"] == None
 
     def test_loads(self):
         notes = Notes.loads(_NOTES_DATA)

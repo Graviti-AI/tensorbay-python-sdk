@@ -23,7 +23,7 @@ Please refer to :class:`~tensorbay.dataset.dataset.FusionDataset` for more infor
 """
 
 import sys
-from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Iterator, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Iterator, Optional, Tuple, Union
 
 from ..dataset import Data, Frame, FusionSegment, Notes, Segment
 from ..exception import FrameError
@@ -491,7 +491,7 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         self,
         *,
         is_continuous: Optional[bool] = None,
-        bin_point_cloud_fields: Optional[Iterable[str]] = None,
+        bin_point_cloud_fields: Union[Iterable[str], None] = ...,  # type: ignore[assignment]
     ) -> None:
         """Update the notes.
 
@@ -505,8 +505,12 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         patch_data: Dict[str, Any] = {}
         if is_continuous is not None:
             patch_data["isContinuous"] = is_continuous
-        if bin_point_cloud_fields:
+
+        if bin_point_cloud_fields is None:
+            patch_data["binPointCloudFields"] = bin_point_cloud_fields
+        elif bin_point_cloud_fields is not ...:  # type: ignore[comparison-overlap]
             patch_data["binPointCloudFields"] = list(bin_point_cloud_fields)
+
         patch_data.update(self._status.get_status_info())
 
         self._client.open_api_do("PATCH", "notes", self.dataset_id, json=patch_data)
