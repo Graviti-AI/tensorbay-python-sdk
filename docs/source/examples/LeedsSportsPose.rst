@@ -2,10 +2,8 @@
  Leeds Sports Pose
 ###################
 
-This topic describes how to manage the "Leeds Sports Pose" dataset.
-
-"Leeds Sports Pose" is a dataset with :ref:`reference/label_format:Keypoints2D` label type (:numref:`Fig. %s <example-leedssportspose>`).
-See `this page <https://gas.graviti.cn/dataset/data-decorators/LeedsSportsPose>`_  for more details about this dataset.
+This topic describes how to manage the `Leeds Sports Pose Dataset <https://gas.graviti.cn/dataset/data-decorators/LeedsSportsPose>`_,
+which is a dataset with :ref:`reference/label_format:Keypoints2D` label(:numref:`Fig. %s <example-leedssportspose>`).
 
 .. _example-leedssportspose:
 
@@ -19,7 +17,7 @@ See `this page <https://gas.graviti.cn/dataset/data-decorators/LeedsSportsPose>`
  Authorize a Client Instance
 *****************************
 
-First of all, create a GAS client.
+An :ref:`reference/glossary:accesskey` is needed to authenticate identity when using TensorBay.
 
 .. literalinclude:: ../../../examples/LeedsSportsPose.py
    :language: python
@@ -30,96 +28,84 @@ First of all, create a GAS client.
  Create Dataset
 ****************
 
-Then, create a dataset client by passing the dataset name to the GAS client.
-
 .. literalinclude:: ../../../examples/LeedsSportsPose.py
    :language: python
    :start-after: """Create Dataset"""
-   :end-before: """"""
-
-********************
- List Dataset Names
-********************
-
-List all the available datasets to check if the "Leeds Sports Pose" dataset have been created.
-See :ref:`this page <features/dataset_management:Read Dataset>` for details.
-
-.. literalinclude:: ../../../examples/LeedsSportsPose.py
-   :language: python
-   :start-after: """List Dataset Names"""
    :end-before: """"""
 
 ******************
  Organize Dataset
 ******************
 
-This part describes how to organize the "Leeds Sports Pose" dataset by the :class:`~tensorbay.dataset.dataset.Dataset`
-instance before uploading it to TensorBay. It takes the following steps to organize "Leeds Sports Pose".
+It takes the following steps to organize the "Leeds Sports Pose" dataset by the :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
-Write the Catalog
-=================
+Step 1: Write the Catalog
+=========================
 
-The first step is to write the :ref:`reference/dataset_structure:Catalog`.
-Catalog is a json file contains all label information of one dataset.
-See :ref:`this page <reference/dataset_structure:Catalog>` for more details.
-The only annotation type for "Leeds Sports Pose" is :ref:`reference/label_format:Keypoints2D`.
+A :ref:`reference/dataset_structure:catalog` contains all label information of one dataset, which
+is typically stored in a json file.
 
 .. literalinclude:: ../../../tensorbay/opendataset/LeedsSportsPose/catalog.json
    :language: json
    :name: LeedsSportsPose-catalog
    :linenos:
 
-Write the Dataloader
-====================
+The only annotation type for "Leeds Sports Pose" is :ref:`reference/label_format:Keypoints2D`.
 
-The second step is to write the :ref:`reference/glossary:Dataloader`.
-The function of :ref:`reference/glossary:Dataloader` is to read the dataset into a
-:class:`~tensorbay.dataset.dataset.Dataset` instance.
-The :ref:`code block <LeedsSportsPose-dataloader>` below displays the "Leeds Sports Pose" dataloader.
+.. important::
+
+   See :ref:`catalog table <reference/dataset_structure:catalog>` for more catalogs with different label types.
+
+Step 2: Write the Dataloader
+============================
+
+A :ref:`reference/glossary:dataloader` is needed to organize the dataset into
+a :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
 .. literalinclude:: ../../../tensorbay/opendataset/LeedsSportsPose/loader.py
    :language: python
    :name: LeedsSportsPose-dataloader
    :linenos:
-   :emphasize-lines: 11-13,42
 
-Note that after the :ref:`reference/dataset_structure:Dataset` is created,
-the :ref:`reference/dataset_structure:catalog` needs to be loaded.(L42)
-The catalog file "catalog.json" is in the same directory with dataloader file.
-
-In this example, a default segment is created without giving a specific name.
-A segment can also be created by ``dataset.create_segment(SEGMENT_NAME)``.
-
-See :ref:`this page <reference/label_format:Keypoints2D>` for more details for about Keypoints2D annotation details.
+See :ref:`Keipoints2D annotation <reference/label_format:Keypoints2D>` for more details.
 
 .. note::
 
-   The :ref:`LeedsSportsPose dataloader <LeedsSportsPose-dataloader>` above uses relative import(L11-13).
-   However, use regular import when writing your own dataloader.
-   And use relative import when contributing the dataloader.
+   Since the :ref:`Leeds Sports Pose dataloader <LeedsSportsPose-dataloader>` above is already included in TensorBay,
+   so it uses relative import.
+   However, the regular import should be used when writing a new dataloader.
+
+.. literalinclude:: ../../../examples/LeedsSportsPose.py
+   :language: python
+   :start-after: """Organize Dataset / regular import"""
+   :end-at: from tensorbay.label import LabeledKeypoints2D
+
+There are already a number of dataloaders in TensorBay SDK provided by the community.
+Thus, instead of writing, importing an available dataloader is also feasible.
+
+.. literalinclude:: ../../../examples/LeedsSportsPose.py
+   :language: python
+   :start-after: """Organize dataset / import dataloader"""
+   :end-before: """"""
+
+.. important::
+
+   See :ref:`dataloader table <reference/glossary:dataloader>` for dataloaders with different label types.
 
 ****************
  Upload Dataset
 ****************
 
-After finishing the :ref:`reference/glossary:Dataloader` and organize the "Leeds Sports Pose" into a
-:class:`~tensorbay.dataset.dataset.Dataset` instance, upload it
-to TensorBay for sharing, reuse, etc.
+The organized "BSTLD" dataset can be uploaded to TensorBay for sharing, reuse, etc.
 
 .. literalinclude:: ../../../examples/LeedsSportsPose.py
    :language: python
    :start-after: """Upload Dataset"""
    :end-before: """"""
 
-Remember to execute the commit step after uploading.
-If needed, re-upload and commit again.
-Please see :ref:`this page <features/version_control:Version Control>` for more details about version control.
-
-.. note::
-
-   Commit operation can also be done on our GAS_ Platform.
-
-.. _gas: https://www.graviti.cn/tensorBay
+Similar with Git, the commit step after uploading can record changes to the dataset as a version.
+If needed, do the modifications and commit again.
+Please see :ref:`features/version_control:Version Control` for more details.
 
 **************
  Read Dataset
@@ -132,15 +118,15 @@ Now "Leeds Sports Pose" dataset can be read from TensorBay.
    :start-after: """Read Dataset / get dataset"""
    :end-before: """"""
 
-In :ref:`reference/dataset_structure:Dataset` "Leeds Sports Pose", there is one default
-:ref:`Segments <reference/dataset_structure:Segment>` ``""`` (empty string). Get it by passing the segment name.
+In :ref:`reference/dataset_structure:dataset` "Leeds Sports Pose", there is one default
+:ref:`reference/dataset_structure:segment` ``""`` (empty string). Get it by passing the segment name.
 
 .. literalinclude:: ../../../examples/LeedsSportsPose.py
    :language: python
    :start-after: """Read Dataset / get segment"""
    :end-before: """"""
 
-In the train :ref:`reference/dataset_structure:Segment`, there is a sequence of :ref:`reference/dataset_structure:Data`,
+In the default :ref:`reference/dataset_structure:segment`, there is a sequence of :ref:`reference/dataset_structure:data`,
 which can be obtained by index.
 
 .. literalinclude:: ../../../examples/LeedsSportsPose.py
@@ -148,13 +134,7 @@ which can be obtained by index.
    :start-after: """Read Dataset / get data"""
    :end-before: """"""
 
-.. note::
-
-   If the :ref:`reference/dataset_structure:Segment` or
-   :ref:`advanced_features/fusion_dataset/fusion_dataset_structure:fusion segment`
-   is created  without given name, then its name will be "".
-
-In each :ref:`reference/dataset_structure:Data`,
+In each :ref:`reference/dataset_structure:data`,
 there is a sequence of :ref:`reference/label_format:Keypoints2D` annotations,
 which can be obtained by index.
 
@@ -165,14 +145,12 @@ which can be obtained by index.
 
 There is only one label type in "Leeds Sports Pose" dataset, which is ``keypoints2d``. The information stored in ``x`` (``y``) is
 the x (y) coordinate of one keypoint of one keypoints list. The information stored in ``v`` is
-the visible status of one keypoint of one keypoints list. See :ref:`this page <reference/label_format:Keypoints2D>`
-for more details about the structure of Keypoints2D.
+the visible status of one keypoint of one keypoints list. See :ref:`reference/label_format:Keypoints2D`
+label format for more details.
 
 ****************
  Delete Dataset
 ****************
-
-To delete "Leeds Sports Pose", run the following code:
 
 .. literalinclude:: ../../../examples/LeedsSportsPose.py
    :language: python
