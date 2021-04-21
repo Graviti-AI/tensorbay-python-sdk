@@ -97,7 +97,7 @@ Thus, instead of writing, importing an available dataloadert is also feasible.
  Upload Dataset
 ****************
 
-The organized "BSTLD" dataset can be uploaded to dataset for sharing, reuse, etc.
+The organized "BSTLD" dataset can be uploaded to TensorBay for sharing, reuse, etc.
 
 .. literalinclude:: ../../../examples/BSTLD.py
    :language: python
