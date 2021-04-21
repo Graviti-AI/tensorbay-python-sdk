@@ -10,7 +10,7 @@ import os
 from ...dataset import Data, Dataset, Segment
 from .._utility import glob
 
-DATASET_NAME = "Downsampled Imagenet"
+DATASET_NAME = "DownsampledImagenet"
 SEGMENT_NAMES = ["train_32x32", "train_64x64", "valid_32x32", "valid_64x64"]
 
 

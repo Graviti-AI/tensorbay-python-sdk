@@ -13,7 +13,7 @@ from ...dataset import Data, Dataset
 from ...label import LabeledBox2D
 from .._utility import glob
 
-DATASET_NAME = "Hard Hat Workers"
+DATASET_NAME = "HardHatWorkers"
 
 
 def HardHatWorkers(path: str) -> Dataset:

@@ -11,7 +11,7 @@ from ...dataset import Data, Dataset
 from ...label import Classification
 from .._utility import glob
 
-DATASET_NAME = "Kylberg Texture"
+DATASET_NAME = "KylbergTexture"
 
 
 def KylbergTexture(path: str) -> Dataset:

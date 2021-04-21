@@ -14,7 +14,7 @@ from ...dataset import Data, Dataset
 from ...geometry import Keypoint2D
 from ...label import Classification, LabeledBox2D, LabeledKeypoints2D
 
-DATASET_NAME = "Halpe Full-Body Human Keypoints and HOI-Det"
+DATASET_NAME = "HalpeFullBody"
 
 _SEGMENT_SPLIT = (
     ("train", "halpe_train_v1.json", os.path.join("hico_20160224_det", "images", "train2015")),

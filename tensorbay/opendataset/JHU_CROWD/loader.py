@@ -13,7 +13,7 @@ from ...label import Classification, LabeledBox2D
 from .._utility import glob
 
 SEGMENT_LIST = ["train", "val", "test"]
-DATASET_NAME = "JHU-CROWD++"
+DATASET_NAME = "JHU-CROWD"
 _OCCLUSION_MAP = {1: "visible", 2: "partial-occlusion", 3: "full-occlusion"}
 _WEATHER_CONDITION_MAP = {0: "no weather degradationi", 1: "fog/haze", 2: "rain", 3: "snow"}
 

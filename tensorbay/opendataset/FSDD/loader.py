@@ -11,7 +11,7 @@ from ...dataset import Data, Dataset
 from ...label import Classification
 from .._utility import glob
 
-DATASET_NAME = "Free Spoken Digit"
+DATASET_NAME = "FSDD"
 
 _METADATA = {
     "jackson": {"gender": "male", "accent": "USA/neutral", "language": "english"},

@@ -13,7 +13,7 @@ from typing import Dict, Iterator, List, Union
 from ...dataset import Data, Dataset
 from ...label import Classification, LabeledBox2D
 
-DATASET_NAME = "WIDER FACE"
+DATASET_NAME = "WIDER_FACE"
 _SEGMENT_LIST = {
     "test": "wider_face_test_filelist.txt",
     "train": "wider_face_train_bbx_gt.txt",

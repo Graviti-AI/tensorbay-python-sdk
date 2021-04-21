@@ -14,7 +14,7 @@ from ...label import AttributeInfo, Classification
 from ...utility import NameOrderedDict
 from .._utility import glob
 
-DATASET_NAME = "The Car Connection Picture"
+DATASET_NAME = "CarConnectionPicture"
 
 
 def CarConnection(path: str) -> Dataset:

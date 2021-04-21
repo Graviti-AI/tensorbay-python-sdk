@@ -11,7 +11,7 @@ from ...dataset import Data, Dataset
 from ...label import Classification
 from .._utility import glob
 
-DATASET_NAME = "20 Newsgroups"
+DATASET_NAME = "Newsgroups20"
 SEGMENT_DESCRIPTION_DICT = {
     "20_newsgroups": "Original 20 Newsgroups data set",
     "20news-bydate-train": (

@@ -14,7 +14,7 @@ from ...dataset import Data, Dataset
 from ...label import LabeledBox3D
 from .._utility import glob
 
-DATASET_NAME = "DeepRoute Open Dataset"
+DATASET_NAME = "DeepRoute"
 
 
 def DeepRoute(path: str) -> Dataset:

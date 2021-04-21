@@ -14,7 +14,7 @@ from ...dataset import Data, Dataset
 from ...label import LabeledBox2D
 from .._utility import glob
 
-DATASET_NAME = "Head Pose Image"
+DATASET_NAME = "HeadPoseImage"
 
 
 def HeadPoseImage(path: str) -> Dataset:
