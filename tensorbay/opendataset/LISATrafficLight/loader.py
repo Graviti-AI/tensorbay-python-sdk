@@ -14,7 +14,7 @@ from ...exception import FileStructureError
 from ...label import Classification, LabeledBox2D
 from .._utility import glob
 
-DATASET_NAME = "LISA Traffic Light"
+DATASET_NAME = "LISATrafficLight"
 
 SUPERCATEGORY_INDEX = {
     "frameAnnotationsBOX.csv": "BOX",

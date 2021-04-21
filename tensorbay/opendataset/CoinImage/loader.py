@@ -13,7 +13,7 @@ from ...dataset import Data, Dataset
 from ...label import Classification
 from .._utility import glob
 
-DATASET_NAME = "Coin Image"
+DATASET_NAME = "CoinImage"
 
 
 def CoinImage(path: str) -> Dataset:

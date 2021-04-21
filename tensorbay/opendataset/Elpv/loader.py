@@ -10,7 +10,7 @@ import os
 from ...dataset import Data, Dataset
 from ...label import Classification
 
-DATASET_NAME = "elpv"
+DATASET_NAME = "Elpv"
 
 
 def Elpv(path: str) -> Dataset:

@@ -10,8 +10,8 @@ import os
 from ...dataset import Data, Dataset
 from ...label import Classification
 
-DATASET_NAME_17 = "17 Category Flower"
-DATASET_NAME_102 = "102 Category Flower"
+DATASET_NAME_17 = "Flower17"
+DATASET_NAME_102 = "Flower102"
 _SEGMENT_NAMES_17 = {"train": "trn1", "validation": "val1", "test": "tst1"}
 _SEGMENT_NAMES_102 = {"train": "trnid", "validation": "valid", "test": "tstid"}
 

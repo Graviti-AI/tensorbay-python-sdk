@@ -14,7 +14,7 @@ from ...geometry import Keypoint2D
 from ...label import LabeledKeypoints2D
 from .._utility import glob
 
-DATASET_NAME = "BioID Face Database"
+DATASET_NAME = "BioIDFace"
 
 
 def BioIDFace(path: str) -> Dataset:

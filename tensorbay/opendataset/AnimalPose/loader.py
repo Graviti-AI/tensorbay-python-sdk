@@ -14,8 +14,8 @@ from ...geometry import Keypoint2D
 from ...label import LabeledBox2D, LabeledKeypoints2D
 from .._utility import glob
 
-DATASET_NAME_5 = "5 Categories Animal-Pose"
-DATASET_NAME_7 = "7 Categories Animal-Pose"
+DATASET_NAME_5 = "AnimalPose5"
+DATASET_NAME_7 = "AnimalPose7"
 
 _KEYPOINT_TO_INDEX = {
     "L_Eye": 0,

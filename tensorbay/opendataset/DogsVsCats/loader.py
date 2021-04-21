@@ -11,7 +11,7 @@ from ...dataset import Data, Dataset
 from ...label import Classification
 from .._utility import glob
 
-DATASET_NAME = "Dogs vs Cats"
+DATASET_NAME = "DogsVsCats"
 _SEGMENTS = {"train": True, "test": False}
 
 
