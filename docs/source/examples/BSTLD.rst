@@ -60,7 +60,7 @@ The only annotation type for "BSTLD" is :ref:`reference/label_format:Box2D`, and
 Step 2: Write the Dataloader
 ============================
 
-A :ref:`reference/label_format:attributes` is needed to organize the dataset into
+A :ref:`reference/glossary:dataloader` is needed to organize the dataset into
 a :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
 .. literalinclude:: ../../../tensorbay/opendataset/BSTLD/loader.py
@@ -82,7 +82,7 @@ See :ref:`Box2D annotation <reference/label_format:Box2D>` for more details.
    :end-at: from tensorbay.label import LabeledBox2D
 
 There are already a number of dataloaders in TensorBay SDK provided by the community.
-Thus, instead of writing, importing an available dataloadert is also feasible.
+Thus, instead of writing, importing an available dataloader is also feasible.
 
 .. literalinclude:: ../../../examples/BSTLD.py
    :language: python
