@@ -2,11 +2,11 @@
  Neolix OD
 ###########
 
-This topic describes how to manage the "Neolix OD" dataset.
-
-"Neolix OD" is a dataset with :ref:`reference/label_format:Box3D` label type
+This topic describes how to manage the `Neolix OD dataset`_,
+which is a dataset with :ref:`reference/label_format:Box3D` label type
 (:numref:`Fig. %s <example-neolixod>`).
-See `this page <https://gas.graviti.cn/dataset/graviti-open-dataset/NeolixOD>`_ for more details about this dataset.
+
+.. _Neolix OD dataset: https://gas.graviti.cn/dataset/graviti-open-dataset/NeolixOD
 
 .. _example-neolixod:
 
@@ -20,7 +20,7 @@ See `this page <https://gas.graviti.cn/dataset/graviti-open-dataset/NeolixOD>`_ 
  Authorize a Client Instance
 *****************************
 
-First of all, create a GAS client.
+An :ref:`reference/glossary:accesskey` is needed to authenticate identity when using TensorBay.
 
 .. literalinclude:: ../../../examples/NeolixOD.py
    :language: python
@@ -31,98 +31,86 @@ First of all, create a GAS client.
  Create Dataset
 ****************
 
-Then, create a dataset client by passing the dataset name to the GAS client.
 
 .. literalinclude:: ../../../examples/NeolixOD.py
    :language: python
    :start-after: """Create Dataset"""
    :end-before: """"""
 
-********************
- List Dataset Names
-********************
-
-List all the available datasets to check if the "Neolix OD" dataset have been created.
-See :ref:`this page <features/dataset_management:Read Dataset>` for details.
-
-.. literalinclude:: ../../../examples/NeolixOD.py
-   :language: python
-   :start-after: """List Dataset Names"""
-   :end-before: """"""
-
 ******************
  Organize Dataset
 ******************
 
-This part describes how to organize the "Neolix OD" dataset by the :class:`~tensorbay.dataset.dataset.Dataset`
-instance before uploading it to TensorBay. It takes the following steps to organize "Neolix OD".
+It takes the following steps to organize "Neolix OD" dataset by the :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
-Write the Catalog
-=================
+Step 1: Write the Catalog
+=========================
 
-The first step is to write the :ref:`reference/dataset_structure:Catalog`.
-Catalog is a json file contains all label information of one dataset.
-See :ref:`this page <reference/dataset_structure:Catalog>` for more details.
-The only annotation type for "Neolix OD" is :ref:`reference/label_format:Box3D`, and there are 15
-:ref:`reference/label_format:Category` types and 3 :ref:`reference/label_format:Attributes` types.
+A :ref:`Catalog <reference/dataset_structure:catalog>` contains all label information of one dataset,
+which is typically stored in a json file.
 
 .. literalinclude:: ../../../tensorbay/opendataset/NeolixOD/catalog.json
    :language: json
    :name: neolixod-catalog
    :linenos:
 
-Write the Dataloader
-====================
+The only annotation type for "Neolix OD" is :ref:`reference/label_format:Box3D`, and there are 15
+:ref:`reference/label_format:Category` types and 3 :ref:`reference/label_format:Attributes` types.
 
-The second step is to write the :ref:`reference/glossary:Dataloader`.
-The function of :ref:`reference/glossary:Dataloader` is to read the dataset into a
-:class:`~tensorbay.dataset.dataset.Dataset` instance.
-The :ref:`code block <neolixod-dataloader>` below displays the "Neolix OD" dataloader.
+.. important::
+
+   See :ref:`catalog table <reference/dataset_structure:catalog>` for more catalogs with different label types.
+
+Step 2: Write the Dataloader
+============================
+
+A :ref:`reference/glossary:dataloader` is needed to organize the dataset into
+a :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
 .. literalinclude:: ../../../tensorbay/opendataset/NeolixOD/loader.py
    :language: python
    :name: neolixod-dataloader
    :linenos:
-   :emphasize-lines: 13-14,41
 
-Note that after the :ref:`reference/dataset_structure:Dataset` is created,
-the :ref:`reference/dataset_structure:catalog` needs to be loaded.(L41)
-The catalog file "catalog.json" is in the same directory with dataloader file.
-
-In this example, segments are created by ``dataset.create_segment(SEGMENT_NAME)``.
-A default segment can also be created without giving a specific name, then its name
-will be "".
-
-See :ref:`this page <reference/label_format:Box3D>` for more details for about Box3D annotation details.
+See :ref:`Box3D annotation <reference/label_format:Box3D>` for more details.
 
 .. note::
 
-   The :ref:`Neolix OD dataloader <neolixod-dataloader>` above uses relative import(L13-14).
-   However, use regular import when writing your own dataloader.
-   And use relative import when contributing the dataloader.
+   Since the :ref:`Neolix OD dataloader <neolixod-dataloader>` above is already included in TensorBay,
+   so it uses relative import.
+   However, the regular import should be used when writing a new dataloader.
+
+.. literalinclude:: ../../../examples/NeolixOD.py
+   :language: python
+   :start-after: """Organize Dataset / regular import"""
+   :end-at: from tensorbay.label import LabeledBox3D
+
+There are already a number of dataloaders in TensorBay SDK provided by the community.
+Thus, instead of writing, importing an available dataloader is also feasible.
+
+.. literalinclude:: ../../../examples/NeolixOD.py
+   :language: python
+   :start-after: """Organize dataset / import dataloader"""
+   :end-before: """"""
+
+.. important::
+
+   See :ref:`dataloader table <reference/glossary:dataloader>` for dataloaders with different label types.
 
 ****************
  Upload Dataset
 ****************
 
-After finishing the :ref:`reference/glossary:Dataloader` and organize the "Neolix OD" into a
-:class:`~tensorbay.dataset.dataset.Dataset` instance, upload it
-to TensorBay for sharing, reuse, etc.
+The organized "Neolix OD" dataset can be uploaded to tensorBay for sharing, reuse, etc.
 
 .. literalinclude:: ../../../examples/NeolixOD.py
    :language: python
    :start-after: """Upload Dataset"""
    :end-before: """"""
 
-Remember to execute the commit step after uploading.
-If needed, re-upload and commit again.
-Please see :ref:`this page <features/version_control:Version Control>` for more details about version control.
-
-.. note::
-
-   Commit operation can also be done on our GAS_ Platform.
-
-.. _gas: https://www.graviti.cn/tensorBay
+Similar with Git, the commit step after uploading can record changes to the dataset as a version.
+If needed, do the modifications and commit again.
+Please see :ref:`features/version_control:Version Control` for more details.
 
 **************
  Read Dataset
@@ -135,7 +123,7 @@ Now "Neolix OD" dataset can be read from TensorBay.
    :start-after: """Read Dataset / get dataset"""
    :end-before: """"""
 
-In :ref:`reference/dataset_structure:Dataset` "Neolix OD", there is one default
+In :ref:`reference/dataset_structure:Dataset` "Neolix OD", there is only one default
 :ref:`Segment <reference/dataset_structure:Segment>`: ``""`` (empty string).
 Get a segment by passing the required segment name.
 
@@ -153,12 +141,6 @@ which can be obtained by index.
    :start-after: """Read Dataset / get data"""
    :end-before: """"""
 
-.. note::
-
-   If the :ref:`reference/dataset_structure:Segment` or
-   :ref:`advanced_features/fusion_dataset/fusion_dataset_structure:fusion segment`
-   is created  without given name, then its name will be "".
-
 In each :ref:`reference/dataset_structure:Data`,
 there is a sequence of :ref:`reference/label_format:Box3D` annotations,
 
@@ -172,14 +154,11 @@ The information stored in :ref:`reference/label_format:Category` is
 one of the category names in "categories" list of :ref:`catalog.json <neolixod-catalog>`.
 The information stored in :ref:`reference/label_format:Attributes`
 is one of the attributes in "attributes" list of :ref:`catalog.json <neolixod-catalog>`.
-
-See :ref:`this page <reference/label_format:Box3D>` for more details about the structure of Box3D.
+See :ref:`reference/label_format:Box3D` label format for more details.
 
 ****************
  Delete Dataset
 ****************
-
-To delete "Neolix OD", run the following code:
 
 .. literalinclude:: ../../../examples/NeolixOD.py
    :language: python
