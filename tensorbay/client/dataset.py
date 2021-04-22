@@ -344,14 +344,14 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             name: The tag name to be created for the specific commit.
             revision: The information to locate the specific commit, which can be the commit id,
                 the branch name, or the tag name.
-                If the commit is not given, create the tag for the current commit.
+                If the revision is not given, create the tag for the current commit.
 
         """
         if not revision:
             self._status.check_authority_for_commit()
-            commit = self._status.commit_id
+            revision = self._status.commit_id
 
-        post_data: Dict[str, Any] = {"commit": commit, "name": name}
+        post_data: Dict[str, Any] = {"commit": revision, "name": name}
 
         self._client.open_api_do("POST", "tags", self.dataset_id, json=post_data)
 
