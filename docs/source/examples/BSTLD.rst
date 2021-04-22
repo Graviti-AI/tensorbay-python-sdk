@@ -42,7 +42,7 @@ It takes the following steps to organize the "BSTLD" dataset by the :class:`~ten
 Step 1: Write the Catalog
 =========================
 
-:ref:`Catalog <reference/dataset_structure:catalog>` contains all label information of one dataset, which
+A :ref:`reference/dataset_structure:catalog` contains all label information of one dataset, which
 is typically stored in a json file.
 
 .. literalinclude:: ../../../tensorbay/opendataset/BSTLD/catalog.json
