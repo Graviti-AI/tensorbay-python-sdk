@@ -12,7 +12,7 @@ from typing import Any, Dict
 
 from ...dataset import Data, Dataset
 from ...geometry import Keypoint2D
-from ...label import Classification, LabeledBox2D, LabeledKeypoints2D
+from ...label import LabeledKeypoints2D
 
 DATASET_NAME = "HalpeFullBody"
 
@@ -82,10 +82,5 @@ def _get_data(image_path: str, annotation: Dict[str, Any]) -> Data:
         keypoints.append(Keypoint2D(x, y, v if v in (0, 1, 2) else 2))  # pylint: disable=no-member
 
     data.label.keypoints2d = [keypoints]
-
-    data.label.box2d = [LabeledBox2D.from_xywh(*annotation["bbox"])]
-
-    if "hoi" in annotation.keys():
-        data.label.classification = Classification(attributes={"hoi": annotation["hoi"]})
 
     return data
