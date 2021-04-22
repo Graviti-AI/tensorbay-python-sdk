@@ -81,6 +81,10 @@ Thus, instead of writing, importing an available dataloadert is also feasible.
    :start-after: """Organize dataset / import dataloader"""
    :end-before: """"""
 
+.. note::
+
+   Note that catalogs are automatically loaded in available dataloaders, users do not have to write them again.
+
 .. important::
 
    See :ref:`dataloader table <reference/glossary:dataloader>` for more examples of dataloaders with different label types.
