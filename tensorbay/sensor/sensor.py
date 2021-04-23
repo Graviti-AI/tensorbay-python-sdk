@@ -125,7 +125,8 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
 
     def _loads(self, contents: Dict[str, Any]) -> None:
         super()._loads(contents)
-        if "extrinsics" in contents:
+        extrinsics = contents.get("extrinsics")
+        if extrinsics:
             self.extrinsics = Transform3D.loads(contents["extrinsics"])
 
     @staticmethod
@@ -352,7 +353,8 @@ class Camera(Sensor):
 
     def _loads(self, contents: Dict[str, Any]) -> None:
         super()._loads(contents)
-        if "intrinsics" in contents:
+        intrinsics = contents.get("intrinsics")
+        if intrinsics:
             self.intrinsics = CameraIntrinsics.loads(contents["intrinsics"])
 
     @classmethod
