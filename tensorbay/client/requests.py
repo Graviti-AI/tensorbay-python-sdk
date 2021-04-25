@@ -39,7 +39,7 @@ from requests.models import PreparedRequest, Response
 from urllib3.util.retry import Retry
 
 from ..__verison__ import __version__
-from ..exception import ResponseError
+from ..exception import ResponseError, ResponseErrorDistributor
 from ..utility import ReprMixin, ReprType
 from .log import RequestLogging, ResponseLogging
 
@@ -135,7 +135,7 @@ class UserSession(Session):  # pylint: disable=too-few-public-methods
 
     def request(  # type: ignore[override]  # pylint: disable=signature-differs
         self, method: str, url: str, *args: Any, **kwargs: Any
-    ) -> Response:
+    ) -> Response:  # noqa: DAR401
         """Make the request.
 
         Arguments:
@@ -147,7 +147,7 @@ class UserSession(Session):  # pylint: disable=too-few-public-methods
         Returns:
             Response of the request.
 
-        Raises:
+        Raises:  # noqa: DAR402
             ResponseError: If post response error.
 
         """
@@ -157,7 +157,8 @@ class UserSession(Session):  # pylint: disable=too-few-public-methods
                 logger.error(
                     "Unexpected status code(%d)!%s", response.status_code, ResponseLogging(response)
                 )
-                raise ResponseError(response)
+                error_code = response.json()["code"]
+                raise ResponseErrorDistributor.get(error_code, ResponseError)(response)
             logger.debug(ResponseLogging(response))
             return response
 

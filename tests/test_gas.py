@@ -7,9 +7,9 @@
 
 import pytest
 
-from tensorbay.client import GAS, GASDatasetError
+from tensorbay.client import GAS
 from tensorbay.dataset import Data, Dataset, Segment
-from tensorbay.exception import ResponseError
+from tensorbay.exception import ResourceNotExistError, ResponseError
 from tensorbay.label import Catalog, Label
 
 from .utility import get_random_dataset_name
@@ -173,7 +173,7 @@ class TestGAS:
 
         new_dataset_name = get_random_dataset_name()
         gas_client.rename_dataset(name=dataset_name, new_name=new_dataset_name)
-        with pytest.raises(GASDatasetError):
+        with pytest.raises(ResourceNotExistError):
             gas_client.get_dataset(dataset_name)
         gas_client.get_dataset(new_dataset_name)
 
@@ -255,7 +255,7 @@ class TestGAS:
         assert segment1[0].path == "hello0.txt"
         assert not segment1[0].label
 
-        with pytest.raises(TypeError):
+        with pytest.raises(ResourceNotExistError):
             gas_client.upload_dataset(dataset, draft_number=draft_number + 1)
 
         gas_client.delete_dataset(dataset_name)
@@ -266,7 +266,7 @@ class TestGAS:
         gas_client.create_dataset(dataset_name_1)
 
         gas_client.delete_dataset(dataset_name_1)
-        with pytest.raises(GASDatasetError):
+        with pytest.raises(ResourceNotExistError):
             gas_client.get_dataset(dataset_name_1)
 
         dataset_name_2 = get_random_dataset_name()
@@ -274,5 +274,5 @@ class TestGAS:
         dataset_client_2.create_draft("v_test")
         dataset_client_2.commit(message="Test", tag="V1")
         gas_client.delete_dataset(dataset_name_2)
-        with pytest.raises(GASDatasetError):
+        with pytest.raises(ResourceNotExistError):
             gas_client.get_dataset(dataset_name_2)

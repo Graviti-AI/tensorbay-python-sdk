@@ -19,10 +19,9 @@ from typing import Any, Dict, Generator, Optional, Type, Union, overload
 from typing_extensions import Literal
 
 from ..dataset import Dataset, FusionDataset
-from ..exception import DatasetTypeError
+from ..exception import DatasetTypeError, ResourceNotExistError
 from ..utility import KwargsDeprecated
 from .dataset import DatasetClient, FusionDatasetClient
-from .exceptions import GASDatasetError
 from .requests import Client, PagingList
 
 DatasetClientType = Union[DatasetClient, FusionDatasetClient]
@@ -74,17 +73,17 @@ class GAS:
             The dict of dataset information.
 
         Raises:
-            GASDatasetError: When the required dataset does not exist.
+            ResourceNotExistError: When the required dataset does not exist.
 
         """
         if not name:
-            raise GASDatasetError(name)
+            raise ResourceNotExistError(resource="dataset", identification=name)
 
         try:
             response = self._list_datasets(name=name)
             info = response["datasets"][0]
         except IndexError as error:
-            raise GASDatasetError(name) from error
+            raise ResourceNotExistError(resource="dataset", identification=name) from error
 
         return info  # type: ignore[no-any-return]
 
@@ -131,8 +130,8 @@ class GAS:
             The auth storage config with the given name.
 
         Raises:
-            TypeError: When the required auth storage config does not exist
-                 or the given auth storage config is illegal.
+            TypeError: When the given auth storage config is illegal.
+            ResourceNotExistError: When the required auth storage config does not exist.
 
         """
         if not name:
@@ -141,7 +140,9 @@ class GAS:
         try:
             config = next(self._generate_auth_storage_configs(name))
         except StopIteration as error:
-            raise TypeError(f"The auth storage config: {name} does not exist.") from error
+            raise ResourceNotExistError(
+                resource="auth storage config", identification=name
+            ) from error
 
         return config
 
