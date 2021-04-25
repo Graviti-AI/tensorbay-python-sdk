@@ -70,7 +70,7 @@ class Config:  # pylint: disable=too-few-public-methods
         self._x_source = "PYTHON-SDK"
 
 
-default_config = Config()
+config = Config()
 
 
 class TimeoutHTTPAdapter(HTTPAdapter):
@@ -84,7 +84,7 @@ class TimeoutHTTPAdapter(HTTPAdapter):
     """
 
     def __init__(self, *args: Any, timeout: Optional[int] = None, **kwargs: Any) -> None:
-        self.timeout = timeout if timeout is not None else default_config.timeout
+        self.timeout = timeout if timeout is not None else config.timeout
         super().__init__(*args, **kwargs)
 
     def send(  # pylint: disable=too-many-arguments
@@ -124,9 +124,9 @@ class UserSession(Session):  # pylint: disable=too-few-public-methods
         # self.session.hooks["response"] = [logging_hook]
 
         retry_strategy = Retry(
-            total=default_config.max_retries,
-            status_forcelist=default_config.allowed_retry_status,
-            method_whitelist=default_config.allowed_retry_methods,
+            total=config.max_retries,
+            status_forcelist=config.allowed_retry_status,
+            method_whitelist=config.allowed_retry_methods,
             raise_on_status=False,
         )
 
@@ -256,7 +256,7 @@ class Client:
         kwargs.setdefault("headers", {})["X-Token"] = self.access_key
         kwargs["headers"][
             "X-Source"
-        ] = f"{default_config._x_source}/{__version__}"  # pylint: disable=protected-access
+        ] = f"{config._x_source}/{__version__}"  # pylint: disable=protected-access
 
         return self.do(method=method, url=self._url_make(section, dataset_id), **kwargs)
 
