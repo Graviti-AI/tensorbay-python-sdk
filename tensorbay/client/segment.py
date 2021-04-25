@@ -41,7 +41,7 @@ from ..sensor.sensor import Sensor, Sensors
 from ..utility import KwargsDeprecated
 from .commit_status import CommitStatus
 from .exceptions import GASPathError
-from .requests import PagingList, default_config
+from .requests import PagingList, config
 
 if TYPE_CHECKING:
     from .dataset import DatasetClient, FusionDatasetClient
@@ -99,7 +99,7 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
         }
         params.update(self._status.get_status_info())
 
-        if default_config.is_internal:
+        if config.is_internal:
             params["isInternal"] = True
 
         response = self._client.open_api_do("GET", "data/urls", self._dataset_id, params=params)
@@ -125,7 +125,7 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
                 }
                 params.update(self._status.get_status_info())
 
-                if default_config.is_internal:
+                if config.is_internal:
                     params["isInternal"] = True
 
                 self._permission = self._client.open_api_do(
