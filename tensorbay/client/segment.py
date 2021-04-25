@@ -36,11 +36,10 @@ from requests_toolbelt import MultipartEncoder
 from ulid import from_timestamp
 
 from ..dataset import Data, Frame, RemoteData
-from ..exception import FrameError, ResponseError
+from ..exception import FrameError, InvalidParamsError, ResponseError
 from ..sensor.sensor import Sensor, Sensors
 from ..utility import KwargsDeprecated
 from .commit_status import CommitStatus
-from .exceptions import GASPathError
 from .requests import PagingList, config
 
 if TYPE_CHECKING:
@@ -292,7 +291,7 @@ class SegmentClient(SegmentClientBase):
             target_remote_path: The path to save the data in segment client.
 
         Raises:
-            GASPathError: When target_remote_path does not follow linux style.
+            InvalidParamsError: When target_remote_path does not follow linux style.
             ResponseError: When uploading data failed.
 
         """
@@ -302,7 +301,7 @@ class SegmentClient(SegmentClientBase):
             target_remote_path = os.path.basename(local_path)
 
         if "\\" in target_remote_path:
-            raise GASPathError(target_remote_path)
+            raise InvalidParamsError(param_name="path", param_value=target_remote_path)
 
         permission = self._get_upload_permission()
         post_data = permission["result"]
@@ -480,9 +479,9 @@ class FusionSegmentClient(SegmentClientBase):
             timestamp: The mark to sort frames, supporting timestamp and float.
 
         Raises:
-            GASPathError: When remote_path does not follow linux style.
-            ResponseError: When uploading frame failed.
             FrameError: When lacking frame id or frame id conflicts.
+            InvalidParamsError: When remote_path does not follow linux style.
+            ResponseError: When uploading frame failed.
 
         """
         self._status.check_authority_for_draft()
@@ -507,7 +506,7 @@ class FusionSegmentClient(SegmentClientBase):
             target_remote_path = data.target_remote_path
 
             if "\\" in target_remote_path:
-                raise GASPathError(target_remote_path)
+                raise InvalidParamsError(param_name="path", param_value=target_remote_path)
 
             permission = self._get_upload_permission()
             post_data = permission["result"]

@@ -26,11 +26,10 @@ import sys
 from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Iterator, Optional, Tuple, Union
 
 from ..dataset import Data, Frame, FusionSegment, Notes, Segment
-from ..exception import FrameError
+from ..exception import FrameError, NameConflictError, ResourceNotExistError
 from ..label import Catalog
 from ..utility import Deprecated, KwargsDeprecated
 from .commit_status import CommitStatus
-from .exceptions import GASSegmentError
 from .requests import Client, PagingList, multithread_upload
 from .segment import FusionSegmentClient, SegmentClient
 from .struct import Branch, Commit, Draft, Tag
@@ -225,7 +224,8 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             The :class:`.Draft` instance with the given number.
 
         Raises:
-            TypeError: When the required draft does not exist or the given draft number is illegal.
+            TypeError: When the given draft number is illegal.
+            ResourceNotExistError: When the required draft does not exist.
 
         """
         if draft_number is None:
@@ -239,7 +239,7 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             if draft_number == draft.number:
                 return draft
 
-        raise TypeError(f"The draft: {draft_number} does not exist.")
+        raise ResourceNotExistError(resource="draft", identification=draft_number)
 
     @KwargsDeprecated(
         ("start", "stop"),
@@ -291,7 +291,8 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             The :class:`.Commit` instance with the given revision.
 
         Raises:
-            TypeError: When the required commit does not exist or the given revision is illegal.
+            TypeError: When the given revision is illegal.
+            ResourceNotExistError: When the required commit does not exist.
 
         """
         if revision is None:
@@ -304,7 +305,7 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         try:
             commit = next(self._generate_commits(revision))
         except StopIteration as error:
-            raise TypeError(f"The commit: {revision} does not exist.") from error
+            raise ResourceNotExistError(resource="commit", identification=revision) from error
 
         return commit
 
@@ -365,7 +366,8 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             The :class:`.Tag` instance with the given name.
 
         Raises:
-            TypeError: When the required tag does not exist or the given tag is illegal.
+            TypeError: When the given tag is illegal.
+            ResourceNotExistError: When the required tag does not exist.
 
         """
         if not name:
@@ -374,7 +376,7 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         try:
             tag = next(self._generate_tags(name))
         except StopIteration as error:
-            raise TypeError(f"The tag: {name} does not exist.") from error
+            raise ResourceNotExistError(resource="tag", identification=name) from error
 
         return tag
 
@@ -413,7 +415,8 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             The :class:`.Branch` instance with the given name.
 
         Raises:
-            TypeError: When the required branch does not exist or the given branch is illegal.
+            TypeError: When the given branch is illegal.
+            ResourceNotExistError: When the required branch does not exist.
 
         """
         if not name:
@@ -422,7 +425,7 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         try:
             branch = next(self._generate_branches(name))
         except StopIteration as error:
-            raise TypeError(f"The branch: {name} does not exist.") from error
+            raise ResourceNotExistError(resource="branch", identification=name) from error
 
         return branch
 
@@ -645,14 +648,14 @@ class DatasetClient(DatasetClientBase):
             The created :class:`~tensorbay.client.segment.SegmentClient` with given name.
 
         Raises:
-            TypeError: When the segment exists.
+            NameConflictError: When the segment exists.
 
         """
         self._status.check_authority_for_draft()
         if name not in self.list_segment_names():
             self._create_segment(name)
         else:
-            raise TypeError(f"The segment: {name} exists")
+            raise NameConflictError(resource="segment", identification=name)
         return SegmentClient(name, self)
 
     def get_segment(self, name: str = "") -> SegmentClient:
@@ -665,11 +668,11 @@ class DatasetClient(DatasetClientBase):
             The required class:`~tensorbay.client.segment.SegmentClient`.
 
         Raises:
-            GASSegmentError: When the required segment does not exist.
+            ResourceNotExistError: When the required segment does not exist.
 
         """
         if name not in self.list_segment_names():
-            raise GASSegmentError(name)
+            raise ResourceNotExistError(resource="segment", identification=name)
 
         return SegmentClient(name, self)
 
@@ -755,14 +758,14 @@ class FusionDatasetClient(DatasetClientBase):
             The created :class:`~tensorbay.client.segment.FusionSegmentClient` with given name.
 
         Raises:
-            TypeError: When the segment exists.
+            NameConflictError: When the segment exists.
 
         """
         self._status.check_authority_for_draft()
         if name not in self.list_segment_names():
             self._create_segment(name)
         else:
-            raise TypeError(f"The segment: {name} exists")
+            raise NameConflictError(resource="segment", identification=name)
         return FusionSegmentClient(name, self)
 
     def get_segment(self, name: str = "") -> FusionSegmentClient:
@@ -775,11 +778,11 @@ class FusionDatasetClient(DatasetClientBase):
             The required class:`~tensorbay.client.segment.FusionSegmentClient`.
 
         Raises:
-            GASSegmentError: When the required fusion segment does not exist.
+            ResourceNotExistError: When the required fusion segment does not exist.
 
         """
         if name not in self.list_segment_names():
-            raise GASSegmentError(name)
+            raise ResourceNotExistError(resource="segment", identification=name)
         return FusionSegmentClient(name, self)
 
     def upload_segment(
