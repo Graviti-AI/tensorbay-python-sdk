@@ -1,0 +1,175 @@
+{
+    "CLASSIFICATION": {
+        "categoryDelimiter": "/",
+        "categories": [
+            { "name": "No Finding" },
+            { "name": "Pneumonia" },
+            { "name": "Pneumonia/Aspiration" },
+            { "name": "Pneumonia/Bacterial" },
+            { "name": "Pneumonia/Bacterial/Chlamydophila" },
+            { "name": "Pneumonia/Bacterial/E.Coli" },
+            { "name": "Pneumonia/Bacterial/Klebsiella" },
+            { "name": "Pneumonia/Bacterial/Legionella" },
+            { "name": "Pneumonia/Bacterial/Mycoplasma" },
+            { "name": "Pneumonia/Bacterial/Nocardia" },
+            { "name": "Pneumonia/Bacterial/Staphylococcus/MRSA" },
+            { "name": "Pneumonia/Bacterial/Streptococcus" },
+            { "name": "Pneumonia/Fungal/Aspergillosis" },
+            { "name": "Pneumonia/Fungal/Pneumocystis" },
+            { "name": "Pneumonia/Lipoid" },
+            { "name": "Pneumonia/Viral/COVID-19" },
+            { "name": "Pneumonia/Viral/Herpes " },
+            { "name": "Pneumonia/Viral/Influenza" },
+            { "name": "Pneumonia/Viral/Influenza/H1N1" },
+            { "name": "Pneumonia/Viral/MERS-CoV" },
+            { "name": "Pneumonia/Viral/SARS" },
+            { "name": "Pneumonia/Viral/Varicella" },
+            { "name": "Tuberculosis" },
+            { "name": "Unknown" },
+            { "name": "finding" },
+            { "name": "todo" }
+        ],
+        "attributes": [
+            {
+                "name": "patientid",
+                "description": "Internal identifier",
+                "type": "string"
+            },
+            {
+                "name": "offset",
+                "description": "Number of days since the start of symptoms or hospitalization for each image. If a report indicates \"after a few days\", then 5 days is assumed. This is very important to have when there are multiple images for the same patient to track progression.",
+                "type": ["integer", "null"],
+                "minimum": -365,
+                "maximum": 365
+            },
+            {
+                "name": "sex",
+                "description": "Male (M), Female (F), blank if unknown",
+                "type": ["string", "null"],
+                "enum": ["M", "F", null]
+            },
+            {
+                "name": "age",
+                "description": "Age of the patient in years, blank if unknown",
+                "type": ["integer", "null"],
+                "minimum": 0
+            },
+            {
+                "name": "RT_PCR_positive",
+                "description": "Yes (Y) or no (N) or blank if unknown",
+                "enum": ["Y", "N", null]
+            },
+            {
+                "name": "survival",
+                "description": "Yes (Y) or no (N) or blank if unknown",
+                "enum": ["Y", "N", null]
+            },
+            {
+                "name": "intubated",
+                "description": "Yes (Y) if the patient was intubated (or ventilated) at any point during this illness or No (N) or blank if unknown.",
+                "enum": ["Y", "N", null]
+            },
+            {
+                "name": "intubation_present",
+                "description": "Yes (Y) if the patient was intubated (or ventilated) at present during this illness or No (N) or blank if unknown.",
+                "enum": ["Y", "N", null]
+            },
+            {
+                "name": "went_icu",
+                "description": "Yes (Y) if the patient was in the ICU (intensive care unit) or CCU (critical care unit) at any point during this illness or No (N) or blank if unknown.",
+                "enum": ["Y", "N", null]
+            },
+            {
+                "name": "in_icu",
+                "description": "Yes (Y) if the patient was in the ICU (intensive care unit) or CCU (critical care unit) now during this illness or No (N) or blank if unknown.",
+                "enum": ["Y", "N", null]
+            },
+            {
+                "name": "needed_supplemental_O2",
+                "description": "Yes (Y) if the patient required supplemental oxygen at any point during this illness or No (N) or blank if unknown",
+                "enum": ["Y", "N", null]
+            },
+            {
+                "name": "extubated",
+                "description": "Yes (Y) if the patient was successfully extubated or No (N) or blank if unknown",
+                "enum": ["Y", "N", null]
+            },
+            {
+                "name": "temperature",
+                "description": "Temperature of the patient in Celsius at the time of the image, blank if unknown",
+                "type": ["number", "null"],
+                "minimum": 36.0,
+                "maximum": 95.0
+            },
+            {
+                "name": "pO2_saturation",
+                "description": "partial pressure of oxygen saturation in % at the time of the image, blank if unknown",
+                "type": ["number", "null"],
+                "minimum": 0.0
+            },
+            {
+                "name": "leukocyte_count",
+                "description": "white blood cell count in units of 10^3/uL at the time of the image, blank if unknown",
+                "type": ["number", "null"],
+                "minimum": 0.0
+            },
+            {
+                "name": "neutrophil_count",
+                "description": "neutrophil cell count in units of 10^3/uL at the time of the image, blank if unknown",
+                "type": ["number", "null"],
+                "minimum": 0.0
+            },
+            {
+                "name": "lymphocyte_count",
+                "description": "lymphocyte cell count in units of 10^3/uL at the time of the image, blank if unknown",
+                "type": ["number", "null"],
+                "minimum": 0.0
+            },
+            {
+                "name": "view",
+                "description": "Posteroanterior (PA), Anteroposterior (AP), AP Supine (APS), or Lateral (L) for X-rays; Axial or Coronal for CT scans. Translations: Bettaufnahme->Supine, Liegend->Supine",
+                "type": "string"
+            },
+            {
+                "name": "modality",
+                "description": "CT, X-ray, or something else",
+                "type": "string"
+            },
+            {
+                "name": "date",
+                "description": "Date on which the image was acquired, blank if unknown",
+                "type": ["string", "null"]
+            },
+            {
+                "name": "location",
+                "description": "Hospital name, city, state, country, blank if unknown",
+                "type": ["string", "null"]
+            },
+            {
+                "name": "doi",
+                "description": "Digital object identifier (DOI) of the research article, blank if unknown",
+                "type": ["string", "null"]
+            },
+            {
+                "name": "url",
+                "description": "URL of the paper or website where the image came from, blank if unknown",
+                "type": "string"
+            },
+            {
+                "name": "license",
+                "description": "License of the image such as CC BY-NC-SA, blank if unknown",
+                "type": ["string", "null"]
+            },
+            {
+                "name": "clinical_notes",
+                "description": "Clinical notes about the image and/or the patient, blank if unknown",
+                "type": ["string", "null"]
+            },
+            {
+                "name": "other_notes",
+                "description": "e.g. credit, blank if unknown",
+                "type": ["string", "null"]
+            }
+        ]
+    }
+}
