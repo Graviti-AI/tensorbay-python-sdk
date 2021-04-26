@@ -13,6 +13,7 @@ from .CADC import CADC
 from .CarConnection import CarConnection
 from .CoinImage import CoinImage
 from .CompCars import CompCars
+from .COVIDChestXRay import COVIDChestXRay
 from .DeepRoute import DeepRoute
 from .DogsVsCats import DogsVsCats
 from .DownsampledImagenet import DownsampledImagenet
@@ -47,6 +48,7 @@ __all__ = [
     "CADC",
     "CarConnection",
     "CoinImage",
+    "COVIDChestXRay",
     "CompCars",
     "DeepRoute",
     "DogsVsCats",
