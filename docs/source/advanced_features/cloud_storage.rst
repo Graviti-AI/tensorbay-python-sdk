@@ -53,3 +53,7 @@ Create a dataset with authorized cloud storage:
 .. code:: python
 
     dataset_client = gas.create_auth_dataset("dataset_name", "config_name", "path/to/dataset")
+
+.. note::
+
+    Path to dataset need empty when create a Fusion authorized storage Dataset.
