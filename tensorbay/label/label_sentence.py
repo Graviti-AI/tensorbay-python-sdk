@@ -59,7 +59,7 @@ class SentenceSubcatalog(SubcatalogBase, AttributesMixin):  # pylint: disable=to
         >>> contents = {
         ...     "isSample": True,
         ...     "sampleRate": 16000,
-        ...     "lexicon": ["mean", "m", "iy", "n"],
+        ...     "lexicon": [["mean", "m", "iy", "n"]],
         ...     "attributes": [{"name": "gender", "enum": ["male", "female"]}],
         ... }
         >>> SentenceSubcatalog.loads(contents)
@@ -97,9 +97,6 @@ class SentenceSubcatalog(SubcatalogBase, AttributesMixin):  # pylint: disable=to
         if self.is_sample:
             self.sample_rate = contents["sampleRate"]
 
-        lexicon = contents.get("lexicon")
-        if lexicon:
-            self.lexicon = lexicon
         if "lexicon" in contents:
             self.lexicon = contents["lexicon"]
 
