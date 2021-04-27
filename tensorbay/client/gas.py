@@ -13,7 +13,6 @@ AccessKey is required when operating with dataset.
 
 """
 
-import sys
 from typing import Any, Dict, Generator, Optional, Type, Union, overload
 
 from typing_extensions import Literal
@@ -304,14 +303,16 @@ class GAS:
             The PagingList of all TensorBay dataset names.
 
         """
-        start = kwargs.get("start", 0)
-        stop = kwargs.get("stop", sys.maxsize)
-
-        return PagingList(
+        start = kwargs.get("start")
+        stop = kwargs.get("stop")
+        paging_list = PagingList(
             lambda offset, limit: self._generate_dataset_names(None, False, offset, limit),
             128,
-            slice(start, stop),
         )
+        if start is not None or stop is not None:
+            return paging_list[start:stop]
+
+        return paging_list
 
     def rename_dataset(self, name: str, new_name: str) -> None:
         """Rename a TensorBay Dataset with given name.
