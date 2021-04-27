@@ -146,14 +146,8 @@ class GAS:
 
         return config
 
-    def list_auth_storage_configs(
-        self, *, start: int = 0, stop: int = sys.maxsize
-    ) -> PagingList[Dict[str, Any]]:
+    def list_auth_storage_configs(self) -> PagingList[Dict[str, Any]]:
         """List auth storage configs.
-
-        Arguments:
-            start: The index to start.
-            stop: The index to stop.
 
         Returns:
             The PagingList of all auth storage configs.
@@ -162,7 +156,6 @@ class GAS:
         return PagingList(
             lambda offset, limit: self._generate_auth_storage_configs(None, offset, limit),
             128,
-            slice(start, stop),
         )
 
     @overload
