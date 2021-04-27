@@ -356,6 +356,30 @@ class CategoriesMixin(SubcatalogMixin):  # pylint: disable=too-few-public-method
             contents["categoryDelimiter"] = self.category_delimiter
         return contents
 
+    def get_category_to_index(self) -> Dict[str, int]:
+        """Return the dict containing the conversion from category to index.
+
+        Returns:
+            A dict containing the conversion from category to index.
+
+        """
+        if not hasattr(self, "categories"):
+            return {}
+
+        return {category: index for index, category in enumerate(self.categories)}
+
+    def get_index_to_category(self) -> Dict[int, str]:
+        """Return the dict containing the conversion from index to category.
+
+        Returns:
+            A dict containing the conversion from index to category.
+
+        """
+        if not hasattr(self, "categories"):
+            return {}
+
+        return dict(enumerate(self.categories))
+
     def add_category(self, name: str, description: str = "") -> None:
         """Add a category to the Subcatalog.
 

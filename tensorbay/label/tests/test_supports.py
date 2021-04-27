@@ -173,6 +173,16 @@ class TestCategoriesMixin:
             assert support_categorie_0.name == category["name"]
             assert support_categorie_0.description == category["description"]
 
+    def test_get_category_to_index(self, categories_catalog_data):
+        support_categories = CategoriesMixin()
+        support_categories._loads(contents={"categories": categories_catalog_data})
+        assert support_categories.get_category_to_index() == {"0": 0, "1": 1}
+
+    def test_get_index_to_category(self, categories_catalog_data):
+        support_categories = CategoriesMixin()
+        support_categories._loads(contents={"categories": categories_catalog_data})
+        assert support_categories.get_index_to_category() == {0: "0", 1: "1"}
+
     def test_eq(self):
         contents1 = {
             "categories": [
