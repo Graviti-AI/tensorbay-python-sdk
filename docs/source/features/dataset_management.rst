@@ -7,6 +7,7 @@ This topic describes dataset management, including:
 - :ref:`features/dataset_management:Organize Dataset`
 - :ref:`features/dataset_management:Upload Dataset`
 - :ref:`features/dataset_management:Read Dataset`
+- :ref:`features/dataset_management:Update Dataset`
 
 
 ******************
@@ -72,3 +73,12 @@ Two types of datasets can be read from TensorBay:
 .. _Open Datasets: https://www.graviti.cn/open-datasets
 .. _my datasets(or team datasets): https://gas.graviti.cn/tensorbay/dataset-list
 .. _TensorBay: https://gas.graviti.cn/tensorbay/
+
+****************
+ Update Dataset
+****************
+
+Since TensorBay supports version control, users can update data and labels to a new commit of a dataset.
+Thus, different versions of data and labels can coexist in one dataset, which greatly facilitates the datasets' maintenance.
+
+- Please see :ref:`update dataset<examples/update_dataset:Update Dataset>` example for more details
