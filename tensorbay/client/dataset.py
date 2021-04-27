@@ -257,10 +257,14 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             The PagingList of :class:`drafts<.Draft>`.
 
         """
-        start = kwargs.get("start", 0)
-        stop = kwargs.get("stop", sys.maxsize)
+        start = kwargs.get("start")
+        stop = kwargs.get("stop")
 
-        return PagingList(self._generate_drafts, 128, slice(start, stop))
+        paging_list = PagingList(self._generate_drafts, 128)
+        if start is not None or stop is not None:
+            return paging_list[start:stop]
+
+        return paging_list
 
     @Deprecated(since="1.2.0", removed_in="1.5.0", substitute=list_drafts)
     def list_draft_titles_and_numbers(
@@ -329,14 +333,16 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             The PagingList of :class:`commits<.Commit>`.
 
         """
-        start = kwargs.get("start", 0)
-        stop = kwargs.get("stop", sys.maxsize)
+        start = kwargs.get("start")
+        stop = kwargs.get("stop")
 
-        return PagingList(
-            lambda offset, limit: self._generate_commits(revision, offset, limit),
-            128,
-            slice(start, stop),
+        paging_list = PagingList(
+            lambda offset, limit: self._generate_commits(revision, offset, limit), 128
         )
+        if start is not None or stop is not None:
+            return paging_list[start:stop]
+
+        return paging_list
 
     def create_tag(self, name: str, revision: Optional[str] = None) -> None:
         """Create the tag for a commit.
@@ -396,14 +402,16 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             The PagingList of :class:`tags<.Tag>`.
 
         """
-        start = kwargs.get("start", 0)
-        stop = kwargs.get("stop", sys.maxsize)
+        start = kwargs.get("start")
+        stop = kwargs.get("stop")
 
-        return PagingList(
-            lambda offset, limit: self._generate_tags(None, offset, limit),
-            128,
-            slice(start, stop),
+        paging_list = PagingList(
+            lambda offset, limit: self._generate_tags(None, offset, limit), 128
         )
+        if start is not None or stop is not None:
+            return paging_list[start:stop]
+
+        return paging_list
 
     def get_branch(self, name: str) -> Branch:
         """Get the branch with the given name.
@@ -445,14 +453,16 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             The PagingList of :class:`branches<.Branch>`.
 
         """
-        start = kwargs.get("start", 0)
-        stop = kwargs.get("stop", sys.maxsize)
-
-        return PagingList(
+        start = kwargs.get("start")
+        stop = kwargs.get("stop")
+        paging_list = PagingList(
             lambda offset, limit: self._generate_branches(None, offset, limit),
             128,
-            slice(start, stop),
         )
+        if start is not None or stop is not None:
+            return paging_list[start:stop]
+
+        return paging_list
 
     def checkout(self, revision: Optional[str] = None, draft_number: Optional[int] = None) -> None:
         """Checkout to commit or draft.
@@ -547,10 +557,14 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             The PagingList of segment names.
 
         """
-        start = kwargs.get("start", 0)
-        stop = kwargs.get("stop", sys.maxsize)
+        start = kwargs.get("start")
+        stop = kwargs.get("stop")
 
-        return PagingList(self._generate_segment_names, 128, slice(start, stop))
+        paging_list = PagingList(self._generate_segment_names, 128)
+        if start is not None or stop is not None:
+            return paging_list[start:stop]
+
+        return paging_list
 
     def get_catalog(self) -> Catalog:
         """Get the catalog of the certain commit.

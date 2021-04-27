@@ -24,7 +24,6 @@ for more information.
 """
 
 import os
-import sys
 import threading
 import time
 from copy import deepcopy
@@ -369,10 +368,14 @@ class SegmentClient(SegmentClientBase):
             The PagingList of data paths.
 
         """
-        start = kwargs.get("start", 0)
-        stop = kwargs.get("stop", sys.maxsize)
+        start = kwargs.get("start")
+        stop = kwargs.get("stop")
 
-        return PagingList(self._generate_data_paths, 128, slice(start, stop))
+        paging_list = PagingList(self._generate_data_paths, 128)
+        if start is not None or stop is not None:
+            return paging_list[start:stop]
+
+        return paging_list
 
     @KwargsDeprecated(
         ("start", "stop"),
@@ -390,10 +393,14 @@ class SegmentClient(SegmentClientBase):
             The PagingList of :class:`~tensorbay.dataset.data.RemoteData`.
 
         """
-        start = kwargs.get("start", 0)
-        stop = kwargs.get("stop", sys.maxsize)
+        start = kwargs.get("start")
+        stop = kwargs.get("stop")
 
-        return PagingList(self._generate_data, 128, slice(start, stop))
+        paging_list = PagingList(self._generate_data, 128)
+        if start is not None or stop is not None:
+            return paging_list[start:stop]
+
+        return paging_list
 
 
 class FusionSegmentClient(SegmentClientBase):
@@ -560,7 +567,11 @@ class FusionSegmentClient(SegmentClientBase):
             The PagingList of :class:`~tensorbay.dataset.frame.Frame`.
 
         """
-        start = kwargs.get("start", 0)
-        stop = kwargs.get("stop", sys.maxsize)
+        start = kwargs.get("start")
+        stop = kwargs.get("stop")
 
-        return PagingList(self._generate_frames, 128, slice(start, stop))
+        paging_list = PagingList(self._generate_frames, 128)
+        if start is not None or stop is not None:
+            return paging_list[start:stop]
+
+        return paging_list
