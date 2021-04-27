@@ -50,6 +50,7 @@ It provides:
 
    advanced_features/fusion_dataset
    advanced_features/cloud_storage
+   advanced_features/request_configuration
 
 .. toctree::
    :maxdepth: 1
