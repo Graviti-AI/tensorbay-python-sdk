@@ -7,14 +7,30 @@
 /docs/ @Hoteryoung
 /examples/ @Hoteryoung
 
-tests/ @AChenQ
+/tests/ @AChenQ
+/.github/workflows/ @AChenQ
+/.pre-commit-config.yaml @AChenQ
 
 /tensorbay/client/ @rexzheng324-c
+/tensorbay/client/tests/ @rexzheng324-c @AChenQ
+
 /tensorbay/dataset/ @Lee-000
+/tensorbay/dataset/tests/ @Lee-000 @AChenQ
+
 /tensorbay/geometry/ @Lee-000
+/tensorbay/geometry/tests/ @Lee-000 @AChenQ
+
 /tensorbay/healthcheck/ @linjiX
+/tensorbay/healthcheck/tests/ @linjiX @AChenQ
+
 /tensorbay/label/ @AChenQ
+
 /tensorbay/opendataset/ @linjiX
+
 /tensorbay/sensor/ @Lee-000
+/tensorbay/sensor/tests/ @Lee-000 @AChenQ
+
 /tensorbay/utility/ @linjiX
+/tensorbay/utility/tests/ @linjiX @AChenQ
+
 /tensorbay/exception.py @Lee-000
