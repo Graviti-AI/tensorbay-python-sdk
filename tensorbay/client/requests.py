@@ -26,8 +26,8 @@ from typing import (
     Iterable,
     Iterator,
     List,
+    MutableSequence,
     Optional,
-    Sequence,
     Tuple,
     TypeVar,
     Union,
@@ -321,12 +321,29 @@ class LazyItem(Generic[_T]):  # pylint: disable=too-few-public-methods
 
     """
 
+    _S = TypeVar("_S", bound="LazyItem[_T]")
+
     __slots__ = ("data", "_page")
 
     data: _T
 
     def __init__(self, page: "LazyPage[_T]"):
         self._page = page
+
+    @classmethod
+    def from_data(cls, data: _T) -> "LazyItem[_T]":
+        """Create a LazyItem instance from data.
+
+        Arguments:
+            data: The actual data needs to be stored in LazyItem.
+
+        Returns:
+            The LazyItem instance which stores the input data.
+
+        """
+        obj: "LazyItem[_T]" = object.__new__(cls)
+        obj.data = data
+        return obj
 
     def get(self) -> _T:
         """Access the actual element represented by LazyItem.
@@ -390,11 +407,11 @@ class LazyPage(Generic[_T]):  # pylint: disable=too-few-public-methods
             return self._total_count
 
 
-class PagingList(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancestors
+class PagingList(MutableSequence[_T], ReprMixin):  # pylint: disable=too-many-ancestors
     """PagingList is a wrap of web paging request.
 
-    It follows the python Sequence protocal, which means it can be used like a python builtin list.
-    And it provides features like lazy evaluation and cache.
+    It follows the python MutableSequence protocal, which means it can be used like a python builtin
+    list. And it provides features like lazy evaluation and cache.
 
     Arguments:
         func: A paging generator function, which takes offset<int> and limit<int> as inputs and
@@ -417,7 +434,7 @@ class PagingList(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancestors
         self._init_items: Callable[[int], List[LazyItem[_T]]] = self._init_all_items
 
     def __len__(self) -> int:
-        return self._get_data().__len__()
+        return self._get_items().__len__()
 
     @overload
     def __getitem__(self: _S, index: int) -> _T:
@@ -431,7 +448,32 @@ class PagingList(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancestors
         if isinstance(index, slice):
             return self._get_slice(index)
 
-        return self._get_data(index)[index].get()
+        return self._get_items(index)[index].get()
+
+    @overload
+    def __setitem__(self, index: int, value: _T) -> None:
+        ...
+
+    @overload
+    def __setitem__(self, index: slice, value: Iterable[_T]) -> None:
+        ...
+
+    def __setitem__(self, index: Union[int, slice], value: Union[_T, Iterable[_T]]) -> None:
+        # https://github.com/python/mypy/issues/7858
+        if isinstance(index, slice):
+            self._get_items().__setitem__(
+                index,
+                map(LazyItem.from_data, value),  # type: ignore[arg-type]
+            )
+            return
+
+        self._get_items(index).__setitem__(
+            index,
+            LazyItem.from_data(value),  # type: ignore[arg-type]
+        )
+
+    def __delitem__(self, index: Union[int, slice]) -> None:
+        self._get_items().__delitem__(index)
 
     @staticmethod
     def _range(total_count: int, limit: int) -> Iterator[Tuple[int, int]]:
@@ -466,7 +508,7 @@ class PagingList(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancestors
 
         return items
 
-    def _get_data(self, index: int = 0) -> List[LazyItem[_T]]:
+    def _get_items(self, index: int = 0) -> List[LazyItem[_T]]:
         if not hasattr(self, "_items"):
             acquire = self._lock.acquire(blocking=False)
             try:
@@ -486,7 +528,17 @@ class PagingList(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancestors
             paging_list._items = self._items[slicing]  # pylint: disable=protected-access
         else:
             paging_list._init_items = (  # pylint: disable=protected-access
-                lambda index: self._get_data()[slicing]
+                lambda index: self._get_items()[slicing]
             )
 
         return paging_list
+
+    def insert(self, index: int, value: _T) -> None:
+        """Insert object before index.
+
+        Arguments:
+            index: Position of the PagingList.
+            value: Element to be inserted into the PagingList.
+
+        """
+        self._get_items(index).insert(index, LazyItem.from_data(value))
