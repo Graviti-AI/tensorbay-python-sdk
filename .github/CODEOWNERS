@@ -1,0 +1,20 @@
+#
+# Copyright 2021 Graviti. Licensed under MIT License.
+#
+
+* @linjiX
+
+/docs/ @Hoteryoung
+/examples/ @Hoteryoung
+
+tests/ @AChenQ
+
+/tensorbay/client/ @rexzheng324-c
+/tensorbay/dataset/ @Lee-000
+/tensorbay/geometry/ @Lee-000
+/tensorbay/healthcheck/ @linjiX
+/tensorbay/label/ @AChenQ
+/tensorbay/opendataset/ @linjiX
+/tensorbay/sensor/ @Lee-000
+/tensorbay/utility/ @linjiX
+/tensorbay/exception.py @Lee-000
