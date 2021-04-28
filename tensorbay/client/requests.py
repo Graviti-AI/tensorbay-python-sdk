@@ -433,6 +433,28 @@ class PagingList(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancestors
 
         return self._get_data(index)[index].get()
 
+    @staticmethod
+    def _range(total_count: int, limit: int) -> Iterator[Tuple[int, int]]:
+        """A Generator which generates offset and limit for paging request.
+
+        Examples:
+            >>> self._range(10, 3)
+            <generator object paging_range at 0x11b9932e0>
+
+            >>> list(self._range(10, 3))
+            [(0, 3), (3, 3), (6, 3), (9, 1)]
+
+        Arguments:
+            total_count: The total count of the page.
+            limit: The paging limit.
+
+        Yields:
+            The tuple (offset, limit) for paging request.
+
+        """
+        div, mod = divmod(total_count, limit)
+        yield from zip_longest(range(0, total_count, limit), repeat(limit, div), fillvalue=mod)
+
     def _init_all_items(self, index: int = 0) -> List[LazyItem[_T]]:
         index_offset = index // self._limit * self._limit
         index_page = LazyPage(index_offset, self._limit, self._func)
@@ -468,25 +490,3 @@ class PagingList(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancestors
             )
 
         return paging_list
-
-    @staticmethod
-    def _range(total_count: int, limit: int) -> Iterator[Tuple[int, int]]:
-        """A Generator which generates offset and limit for paging request.
-
-        Examples:
-            >>> self._range(10, 3)
-            <generator object paging_range at 0x11b9932e0>
-
-            >>> list(self._range(10, 3))
-            [(0, 3), (3, 3), (6, 3), (9, 1)]
-
-        Arguments:
-            total_count: The total count of the page.
-            limit: The paging limit.
-
-        Yields:
-            The tuple (offset, limit) for paging request.
-
-        """
-        div, mod = divmod(total_count, limit)
-        yield from zip_longest(range(0, total_count, limit), repeat(limit, div), fillvalue=mod)
