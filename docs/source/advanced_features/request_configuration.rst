@@ -12,9 +12,9 @@ Note that the default settings can satisfy most use cases.
    :align: center
    :widths: auto
 
-   ===================== =================================================================
+   ===================== ======================================================================================
    Variables             Description                                              
-   ===================== =================================================================
+   ===================== ======================================================================================
    max_retries           | The number of maximum retry times of the request.
                          | If the request method is one of the allowed_retry_methods
                          | and the response status is one of the allowed_retry_status,
@@ -31,9 +31,9 @@ Note that the default settings can satisfy most use cases.
    is_internal           | Whether the request is from internal or not. 
                          | Scenario: Set it to True for quicker network speed when datasets
                          | and cloud servers are in the same region.
-                         | See :ref:`advanced features/use_internal_endpoint` for details.
+                         | See :ref:`advanced_features/use_internal_endpoint:Use Internal Endpoint` for details.
                          | Default: False
-   ===================== =================================================================
+   ===================== ======================================================================================
 
 Usage
 =====
