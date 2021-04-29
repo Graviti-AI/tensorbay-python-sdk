@@ -16,7 +16,7 @@ along with multiple :class:`~tensorbay.sensor.sensor.Sensors`.
 
 """
 
-from typing import TYPE_CHECKING, Any, Callable, List, Optional, TypeVar
+from typing import TYPE_CHECKING, Any, Callable, MutableSequence, Optional, TypeVar
 
 from ..sensor import Sensors
 from ..utility import NameMixin, ReprType, UserMutableSequence
@@ -61,10 +61,10 @@ class Segment(NameMixin, UserMutableSequence["DataBase._Type"]):
     def __init__(self, name: str = "", client: Optional["DatasetClient"] = None) -> None:
         super().__init__(name)
 
-        self._data: List[DataBase._Type]
+        self._data: MutableSequence[DataBase._Type]
         if client:
             self._client = client.get_segment(name)
-            self._data = list(self._client.list_data())
+            self._data = self._client.list_data()  # type: ignore[assignment]
         else:
             self._data = []
 
@@ -85,8 +85,16 @@ class Segment(NameMixin, UserMutableSequence["DataBase._Type"]):
                 By default, the data within the segment is sorted by fileuri.
             reverse: The reverse flag can be set as True to sort in descending order.
 
+        Raises:
+            NotImplementedError: The sort method for segment init from client is not supported yet.
+
         """
-        self._data.sort(key=key, reverse=reverse)
+        try:
+            self._data.sort(key=key, reverse=reverse)  # type: ignore[attr-defined]
+        except AttributeError as error:
+            raise NotImplementedError(
+                "The sort method for segment init from client is not supported yet."
+            ) from error
 
 
 class FusionSegment(NameMixin, UserMutableSequence[Frame]):
@@ -130,12 +138,12 @@ class FusionSegment(NameMixin, UserMutableSequence[Frame]):
 
     def __init__(self, name: str = "", client: Optional["FusionDatasetClient"] = None) -> None:
         super().__init__(name)
-        self.sensors = Sensors()
 
-        self._data: List[Frame]
+        self._data: MutableSequence[Frame]
         if client:
             self._client = client.get_segment(name)
-            self._data = list(self._client.list_frames())
+            self._data = self._client.list_frames()
             self.sensors = self._client.get_sensors()
         else:
             self._data = []
+            self.sensors = Sensors()
