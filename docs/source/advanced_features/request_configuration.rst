@@ -38,10 +38,6 @@ Note that the default settings can satisfy most use cases.
 Usage
 =====
 
-Use upload `LISATrafficLight`_ dataset as an exmaple:
-
-.. _LISATrafficLight: https://gas.graviti.cn/dataset/hello-dataset/LISATrafficLight
-
 .. literalinclude:: ../../../examples/request_configuration.py
    :language: python
    :start-after: """Example of request config"""
