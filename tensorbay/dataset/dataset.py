@@ -23,11 +23,26 @@ It consists of a list of :class:`~tensorbay.dataset.segment.FusionSegment`.
 """
 
 import json
-from typing import Any, Dict, Iterable, KeysView, Optional, Sequence, Type, TypeVar, Union, overload
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Dict,
+    Iterable,
+    KeysView,
+    Optional,
+    Sequence,
+    Type,
+    TypeVar,
+    Union,
+    overload,
+)
 
 from ..label import Catalog
 from ..utility import EqMixin, NameMixin, NameSortedList, ReprMixin, ReprType, common_loads
 from .segment import FusionSegment, Segment
+
+if TYPE_CHECKING:
+    from ..client import GAS
 
 _T = TypeVar("_T", FusionSegment, Segment)
 
@@ -130,13 +145,24 @@ class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestor
 
     """
 
+    _is_fusion: bool
+
     _repr_type = ReprType.SEQUENCE
 
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, gas: Optional["GAS"] = None) -> None:
         super().__init__(name)
         self._segments: NameSortedList[_T] = NameSortedList()
-        self._catalog: Catalog = Catalog()
-        self._notes = Notes()
+
+        if gas:
+            self._client = gas.get_dataset(name, is_fusion=self._is_fusion)
+            for segment in self._client._list_segment_instances():
+                self._segments.add(segment)  # type: ignore[arg-type]
+
+            self._catalog = self._client.get_catalog()
+            self._notes = self._client.get_notes()
+        else:
+            self._catalog = Catalog()
+            self._notes = Notes()
 
     def __len__(self) -> int:
         return self._segments.__len__()
@@ -213,6 +239,8 @@ class Dataset(DatasetBase[Segment]):
 
     """
 
+    _is_fusion = False
+
     def create_segment(self, segment_name: str = "") -> Segment:
         """Create a segment with the given name.
 
@@ -234,6 +262,8 @@ class FusionDataset(DatasetBase[FusionSegment]):
     FusionDataset is made up of data collected from multiple sensors.
     It consists of a list of :class:`~tensorbay.dataset.segment.FusionSegment`.
     """
+
+    _is_fusion = True
 
     def create_segment(self, segment_name: str = "") -> FusionSegment:
         """Create a fusion segment with the given name.

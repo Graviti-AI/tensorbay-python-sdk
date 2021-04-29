@@ -152,9 +152,7 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
 
         self._client.open_api_do("POST", "segments", self.dataset_id, json=post_data)
 
-    def _generate_segment_names(
-        self, offset: int = 0, limit: int = 128
-    ) -> Generator[str, None, int]:
+    def _list_segments(self, offset: int = 0, limit: int = 128) -> Dict[str, Any]:
         params: Dict[str, Any] = self._status.get_status_info()
         params["offset"] = offset
         params["limit"] = limit
@@ -162,6 +160,14 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         response = self._client.open_api_do(
             "GET", "segments", self.dataset_id, params=params
         ).json()
+
+        response = self._client.open_api_do("GET", "segments", self._dataset_id, params=params)
+        return response.json()  # type: ignore[no-any-return]
+
+    def _generate_segment_names(
+        self, offset: int = 0, limit: int = 128
+    ) -> Generator[str, None, int]:
+        response = self._list_segments(offset, limit)
 
         for item in response["segments"]:
             yield item["name"]
@@ -637,6 +643,23 @@ class DatasetClient(DatasetClientBase):
 
     """
 
+    def _generate_segments(
+        self, offset: int = 0, limit: int = 128
+    ) -> Generator[Segment, None, int]:
+        response = self._list_segments(offset, limit)
+
+        for item in response["segments"]:
+            segment = Segment._from_client(  # pylint: disable=protected-access
+                SegmentClient(item["name"], self)
+            )
+            segment.description = item["description"]
+            yield segment
+
+        return response["totalCount"]  # type: ignore[no-any-return]
+
+    def _list_segment_instances(self) -> PagingList[Segment]:
+        return PagingList(self._generate_segments, 128)
+
     def get_or_create_segment(self, name: str = "") -> SegmentClient:
         """Get or create a segment with the given name.
 
@@ -746,6 +769,23 @@ class FusionDatasetClient(DatasetClientBase):
     :class:`FusionDatasetClient` has multiple sensors.
 
     """
+
+    def _generate_segments(
+        self, offset: int = 0, limit: int = 128
+    ) -> Generator[FusionSegment, None, int]:
+        response = self._list_segments(offset, limit)
+
+        for item in response["segments"]:
+            segment = FusionSegment._from_client(  # pylint: disable=protected-access
+                FusionSegmentClient(item["name"], self)
+            )
+            segment.description = item["description"]
+            yield segment
+
+        return response["totalCount"]  # type: ignore[no-any-return]
+
+    def _list_segment_instances(self) -> PagingList[FusionSegment]:
+        return PagingList(self._generate_segments, 128)
 
     def get_or_create_segment(self, name: str = "") -> FusionSegmentClient:
         """Get or create a fusion segment with the given name.
