@@ -16,7 +16,7 @@ along with multiple :class:`~tensorbay.sensor.sensor.Sensors`.
 
 """
 
-from typing import TYPE_CHECKING, Any, Callable, MutableSequence, Optional, TypeVar
+from typing import TYPE_CHECKING, Any, Callable, MutableSequence, Optional, Type, TypeVar
 
 from ..sensor import Sensors
 from ..utility import NameMixin, ReprType, UserMutableSequence
@@ -25,6 +25,7 @@ from .frame import Frame
 
 if TYPE_CHECKING:
     from ..client.dataset import DatasetClient, FusionDatasetClient
+    from ..client.segment import FusionSegmentClient, SegmentClient
 
 
 class Segment(NameMixin, UserMutableSequence["DataBase._Type"]):
@@ -67,6 +68,23 @@ class Segment(NameMixin, UserMutableSequence["DataBase._Type"]):
             self._data = self._client.list_data()  # type: ignore[assignment]
         else:
             self._data = []
+
+    @classmethod
+    def _from_client(cls: Type[_T], client: "SegmentClient") -> _T:
+        """Init a Segment from :class:`~tensorbay.client.segment.SegmentClient`.
+
+        Arguments:
+            client: The :class:`~tensorbay.client.segment.SegmentClient`.
+
+        Returns:
+            The Segment of the input :class:`~tensorbay.client.segment.SegmentClient`.
+
+        """
+        # pylint: disable=protected-access
+        segment = cls(client.name)
+        segment._client = client
+        segment._data = client.list_data()  # type: ignore[assignment]
+        return segment
 
     def sort(
         self,
@@ -147,3 +165,21 @@ class FusionSegment(NameMixin, UserMutableSequence[Frame]):
         else:
             self._data = []
             self.sensors = Sensors()
+
+    @classmethod
+    def _from_client(cls: Type[_T], client: "FusionSegmentClient") -> _T:
+        """Init a FusionSegment from :class:`~tensorbay.client.segment.FusionSegmentClient`.
+
+        Arguments:
+            client: The :class:`~tensorbay.client.segment.FusionSegmentClient`.
+
+        Returns:
+            The FusionSegment of the input :class:`~tensorbay.client.segment.FusionSegmentClient`.
+
+        """
+        # pylint: disable=protected-access
+        segment = cls(client.name)
+        segment._client = client
+        segment._data = client.list_frames()
+        segment.sensors = client.get_sensors()
+        return segment
