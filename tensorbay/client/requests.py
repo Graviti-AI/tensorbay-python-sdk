@@ -15,6 +15,7 @@ import logging
 import os
 from collections import defaultdict
 from concurrent.futures import FIRST_EXCEPTION, ThreadPoolExecutor, wait
+from functools import wraps
 from itertools import repeat, zip_longest
 from threading import Lock
 from typing import (
@@ -39,6 +40,7 @@ from requests import Session
 from requests.adapters import HTTPAdapter
 from requests.exceptions import RequestException
 from requests.models import PreparedRequest, Response
+from typing_extensions import Protocol
 from urllib3.util.retry import Retry
 
 from ..__verison__ import __version__
@@ -319,16 +321,34 @@ class LazyItem(Generic[_T]):  # pylint: disable=too-few-public-methods
     Arguments:
         page: The page the item belongs to.
 
+    Attributes:
+        page: The parent :class:`LazyPage` of this item.
+        data: The actual element stored in this item.
+
     """
 
     _S = TypeVar("_S", bound="LazyItem[_T]")
 
-    __slots__ = ("data", "_page")
+    __slots__ = ("page", "data")
 
-    data: _T
+    def __init__(self, page: "LazyPage[_T]", data: _T):
+        self.page = page
+        self.data = data
 
-    def __init__(self, page: "LazyPage[_T]"):
-        self._page = page
+    @classmethod
+    def from_page(cls, page: "LazyPage[_T]") -> "LazyItem[_T]":
+        """Create a LazyItem instance from page.
+
+        Arguments:
+            page: The page of the element.
+
+        Returns:
+            The LazyItem instance which stores the input page.
+
+        """
+        obj: "LazyItem[_T]" = object.__new__(cls)
+        obj.page = page
+        return obj
 
     @classmethod
     def from_data(cls, data: _T) -> "LazyItem[_T]":
@@ -356,9 +376,64 @@ class LazyItem(Generic[_T]):  # pylint: disable=too-few-public-methods
 
         """
         if not hasattr(self, "data"):
-            self._page.pull()
+            self.page.pull()
 
         return self.data
+
+
+_R = TypeVar("_R")
+
+_Callable = TypeVar("_Callable", bound=Callable[..., None])
+
+
+class _Locked(Protocol):  # pylint: disable=too-few-public-methods
+    _lock: Lock
+
+
+def locked(func: _Callable) -> _Callable:
+    """The decorator to add threading lock for methods.
+
+    Arguments:
+        func: The method needs to add threading lock.
+
+    Returns:
+        The method with theading locked.
+
+    """
+
+    @wraps(func)
+    def wrapper(self: _Locked, *arg: Any, **kwargs: Any) -> None:
+        # pylint: disable=protected-access
+        acquire = self._lock.acquire(blocking=False)
+        try:
+            if acquire:
+                func(self, *arg, **kwargs)
+            else:
+                self._lock.acquire()
+        finally:
+            self._lock.release()
+
+    return wrapper  # type: ignore[return-value]
+
+
+class ReturnGenerator(Generic[_T, _R]):  # pylint: disable=too-few-public-methods
+    """ReturnGenerator is a generator wrap to get the return value easily.
+
+    Arguments:
+        generator: The generator needs to be wrapped.
+
+    Attributes:
+        value: The return value of the input generator.
+
+    """
+
+    value: _R
+
+    def __init__(self, generator: Generator[_T, Any, _R]):
+        self._generator = generator
+
+    def __iter__(self) -> Iterator[_T]:
+        self.value = yield from self._generator
 
 
 class LazyPage(Generic[_T]):  # pylint: disable=too-few-public-methods
@@ -374,37 +449,62 @@ class LazyPage(Generic[_T]):  # pylint: disable=too-few-public-methods
             returns a generator. The returned generator should yield the element user needs, and
             return the total count of the elements in the paging request.
 
+    Attributes:
+        items: The :class:`LazyItem` list which represents a page of elements.
+
     """
 
-    __slots__ = ("_offset", "_limit", "_func", "_lock", "_total_count", "items")
+    __slots__ = ("_offset", "_limit", "_func", "_lock", "items")
 
     def __init__(self, offset: int, limit: int, func: PagingGenerator[_T]) -> None:
+        self.items: Tuple[LazyItem[_T], ...] = tuple(LazyItem.from_page(self) for _ in range(limit))
+
+        self._init(offset, limit, func)
+
+    def _init(self, offset: int, limit: int, func: PagingGenerator[_T]) -> None:
         self._offset = offset
         self._limit = limit
         self._func = func
         self._lock = Lock()
-        self._total_count: Optional[int] = None
 
-        self.items: Tuple[LazyItem[_T], ...] = tuple(LazyItem(self) for _ in range(limit))
+    @locked
+    def pull(self) -> None:
+        """Send paging request to pull a page of elements and store them in :class:`LazyItem`."""
+        for data, item in zip(self._func(self._offset, self._limit), self.items):
+            item.data = data
 
-    def pull(self) -> int:
-        """Send paging request to pull a page of elements and store them in :class:`LazyItem`.
 
-        Returns:
-            The totalCount of all elements.
+class InitPage(LazyPage[_T]):  # pylint: disable=too-few-public-methods
+    """In paging lazy evaluation system, InitPage is the page for initializing :class:`PagingList`.
 
-        """
-        with self._lock:
-            if self._total_count is None:
-                iterator = zip(self._func(self._offset, self._limit), self.items)
-                try:
-                    while True:
-                        data, item = next(iterator)
-                        item.data = data
-                except StopIteration as error:
-                    self._total_count = error.value
+    InitPage will send a paging request to pull a page of elements and storing them in different
+    :class:`LazyItem` instances when construction. And the totalCount of the page will also be
+    stored in the instance.
 
-            return self._total_count
+    Arguments:
+        offset: The offset of the page.
+        limit: The limit of the page.
+        func: A paging generator function, which takes offset<int> and limit<int> as inputs and
+            returns a generator. The returned generator should yield the element user needs, and
+            return the total count of the elements in the paging request.
+
+    Attributes:
+        items: The :class:`LazyItem` list which represents a page of elements.
+        total_count: The totalCount of the paging request.
+
+    """
+
+    __slots__ = LazyPage.__slots__ + ("total_count",)
+
+    def __init__(  # pylint: disable=super-init-not-called
+        self, offset: int, limit: int, func: PagingGenerator[_T]
+    ) -> None:
+        generator = ReturnGenerator(func(offset, limit))
+        self.items: Tuple[LazyItem[_T], ...] = tuple(LazyItem(self, data) for data in generator)
+
+        self._init(offset, len(self.items), func)
+
+        self.total_count = generator.value
 
 
 class PagingList(MutableSequence[_T], ReprMixin):  # pylint: disable=too-many-ancestors
@@ -431,7 +531,7 @@ class PagingList(MutableSequence[_T], ReprMixin):  # pylint: disable=too-many-an
         self._func = func
         self._limit = limit
         self._lock = Lock()
-        self._init_items: Callable[[int], List[LazyItem[_T]]] = self._init_all_items
+        self._init_items: Callable[[int], None] = self._init_all_items
 
     def __len__(self) -> int:
         return self._get_items().__len__()
@@ -497,39 +597,34 @@ class PagingList(MutableSequence[_T], ReprMixin):  # pylint: disable=too-many-an
         div, mod = divmod(total_count, limit)
         yield from zip_longest(range(0, total_count, limit), repeat(limit, div), fillvalue=mod)
 
-    def _init_all_items(self, index: int = 0) -> List[LazyItem[_T]]:
+    @locked
+    def _init_all_items(self, index: int = 0) -> None:
+        index = index if index >= 0 else 0
         index_offset = index // self._limit * self._limit
-        index_page = LazyPage(index_offset, self._limit, self._func)
-        total_count = index_page.pull()
-        items: List[LazyItem[_T]] = []
+        init_page = InitPage(index_offset, self._limit, self._func)
+        total_count = init_page.total_count
+        self._items: List[LazyItem[_T]] = []
         for offset, limit in self._range(total_count, self._limit):
-            page = index_page if offset == index_offset else LazyPage(offset, limit, self._func)
-            items.extend(page.items)
+            page = init_page if offset == index_offset else LazyPage(offset, limit, self._func)
+            self._items.extend(page.items)
 
-        return items
+    @locked
+    def _init_sliced_items(self, parent: _S, slicing: slice) -> None:
+        self._items = parent._get_items()[slicing]  # pylint: disable=protected-access
 
     def _get_items(self, index: int = 0) -> List[LazyItem[_T]]:
         if not hasattr(self, "_items"):
-            acquire = self._lock.acquire(blocking=False)
-            try:
-                if acquire:
-                    index = index if index >= 0 else 0
-                    self._items = self._init_items(index)
-                else:
-                    self._lock.acquire()
-            finally:
-                self._lock.release()
+            self._init_items(index)
 
         return self._items
 
     def _get_slice(self: _S, slicing: slice) -> _S:
+        # pylint: disable=protected-access
         paging_list = self.__class__(self._func, self._limit)
         if hasattr(self, "_items"):
-            paging_list._items = self._items[slicing]  # pylint: disable=protected-access
+            paging_list._items = self._items[slicing]
         else:
-            paging_list._init_items = (  # pylint: disable=protected-access
-                lambda index: self._get_items()[slicing]
-            )
+            paging_list._init_items = lambda index: paging_list._init_sliced_items(self, slicing)
 
         return paging_list
 
