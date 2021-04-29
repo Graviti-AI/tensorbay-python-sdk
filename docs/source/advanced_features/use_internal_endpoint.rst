@@ -27,16 +27,8 @@ and reading datasets.
 Usage
 =====
 
-For users with unstable network, we recommend the following solution:
-
-   #. Make sure that a cloud server in a specific region is available.
-   #. Create and upload datasets to TensorBay storage space which is in the same region as your cloud server.
-   #. Read the datasets from your cloud server using the internal endpoint. 
-
-Use upload `LISATrafficLight`_ dataset as an exmaple, set `is_internal` to `True` when using
-internal endpoint:
-
-.. _LISATrafficLight: https://gas.graviti.cn/dataset/hello-dataset/LISATrafficLight
+If the endpoint of the cloud server is the same as the TensorBay storage, set `is_internal` to `True`
+to use the internal endpoint for obtaining a faster network speed.
 
 .. literalinclude:: ../../../examples/use_internal_endpoint.py
    :language: python

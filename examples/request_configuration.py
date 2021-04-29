@@ -15,14 +15,14 @@
 
 """Example of request config"""
 from tensorbay import GAS
-from tensorbay.client.requests import config
-from tensorbay.opendataset import LISATrafficLight
+from tensorbay.client import config
 
+# Enlarge timeout and max_retries of configuration.
 config.timeout = 40
 config.max_retries = 4
 
-gas = GAS(access_key="Accesskey-***")
+gas = GAS("<YOUR_ACCESSKEY>")
 
-dataset = LISATrafficLight("/path/to/dataset")
-gas.upload_dataset(dataset)
+# The configs will apply to all the requests sent by TensorBay SDK.
+gas.list_dataset_names()
 """"""

@@ -16,16 +16,23 @@
 
 """Usage of Upload Dataset By Internal Endpoint"""
 from tensorbay import GAS
-from tensorbay.client.requests import config
-from tensorbay.opendataset import LISATrafficLight
+from tensorbay.client import config
+from tensorbay.dataset import Data, Dataset
 
-DATASET_NAME = "LISA Traffic Light"
-
+# Set is_internal to True for using internal endpoint.
 config.is_internal = True
 
-gas = GAS(access_key="Accesskey-***")
-gas.create_dataset(DATASET_NAME)
+gas = GAS("<YOUR_ACCESSKEY>")
 
-dataset = LISATrafficLight("/path/to/dataset")
-gas.upload_dataset(dataset)
+# Organize the local dataset by the "Dataset" class before uploading.
+dataset = Dataset("DatasetName")
+
+segment = dataset.create_segment()
+segment.append(Data("0000001.jpg"))
+segment.append(Data("0000002.jpg"))
+
+# All the data will be uploaded through internal endpoint.
+dataset_client = gas.upload_dataset(dataset)
+
+dataset_client.commit("Initial commit")
 """"""
