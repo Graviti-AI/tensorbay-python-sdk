@@ -29,7 +29,35 @@ TensorBay SDK defines a series of custom exceptions.
 
     ResponseError
         :class:`~tensorbay.exception.ResponseError` defines the exception for post response error in the client module.
-        Raised when the response from TensorBay has error.
+        Raised when the response from TensorBay has error. And different subclass exceptions will be raised according to different error code.
+
+    AccessDeniedError
+        :class:`~tensorbay.exception.AccessDeniedError` defines the exception for access denied response error in the client module.
+        Raised when the current account has no permission to access the resource.
+
+    InvalidParamsError
+        :class:`~tensorbay.exception.InvalidParamsError` defines the exception for invalid parameters response error in the client module.
+        Raised when the parameters of the request are invalid.
+
+    NameConflictError
+        :class:`~tensorbay.exception.NameConflictError` defines the exception for name conflict response error in the client module.
+        Raised when the name of the resource to be created already exists on Tensorbay.
+
+    RequestParamsMissingError
+        :class:`~tensorbay.exception.RequestParamsMissingError` defines the exception for request parameters missing response error in the client module.
+        Raised when necessary parameters of the request are missing.
+
+    ResourceNotExistError
+        :class:`~tensorbay.exception.ResourceNotExistError` defines the exception for resource not existing response error in the client module.
+        Raised when the request resource does not exist on Tensorbay.
+
+    ResponseSystemError
+        :class:`~tensorbay.exception.ResponseSystemError` defines the exception for system response error in the client module.
+        Raised when system error was responded.
+
+    UnauthorizedError
+        :class:`~tensorbay.exception.UnauthorizedError` defines the exception for unauthorized response error in the client module.
+        Raised when the :ref:`reference/glossary:accesskey` is incorrect.
 
     TensorBayOpenDatasetError
         :class:`~tensorbay.exception.TensorBayOpenDatasetError` is the base class for custom exceptions in the opendataset module.
@@ -52,6 +80,13 @@ The class hierarchy for TensorBay custom exceptions is::
          +-- DatasetTypeError
          +-- FrameError
          +-- ResponseError
+             +-- AccessDeniedError
+             +-- InvalidParamsError
+             +-- NameConflictError
+             +-- RequestParamsMissingError
+             +-- ResourceNotExistError
+             +-- ResponseSystemError
+             +-- UnauthorizedError
      +-- TBRNError
      +-- TensorBayOpenDatasetError
          +-- NoFileError

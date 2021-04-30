@@ -13,6 +13,13 @@ The class hierarchy for TensorBay custom exceptions is::
              +-- DatasetTypeError
              +-- FrameError
              +-- ResponseError
+                 +-- AccessDeniedError
+                 +-- InvalidParamsError
+                 +-- NameConflictError
+                 +-- RequestParamsMissingError
+                 +-- ResourceNotExistError
+                 +-- ResponseSystemError
+                 +-- UnauthorizedError
          +-- TBRNError
          +-- TensorBayOpenDatasetError
              +-- NoFileError
