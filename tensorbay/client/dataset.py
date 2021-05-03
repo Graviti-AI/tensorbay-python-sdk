@@ -30,7 +30,7 @@ from ..exception import FrameError, NameConflictError, ResourceNotExistError
 from ..label import Catalog
 from ..utility import Deprecated, KwargsDeprecated
 from .commit_status import CommitStatus
-from .requests import Client, PagingList, multithread_upload
+from .requests import Client, PagingList, Tqdm, multithread_upload
 from .segment import FusionSegmentClient, SegmentClient
 from .struct import Branch, Commit, Draft, Tag
 
@@ -660,6 +660,32 @@ class DatasetClient(DatasetClientBase):
     def _list_segment_instances(self) -> PagingList[Segment]:
         return PagingList(self._generate_segments, 128)
 
+    def _upload_segment(
+        self,
+        segment: Segment,
+        *,
+        jobs: int = 1,
+        skip_uploaded_files: bool = False,
+        pbar: Tqdm,
+    ) -> SegmentClient:
+        segment_client = self.get_or_create_segment(segment.name)
+        local_data: Iterator[Data] = filter(
+            lambda data: pbar.update_for_skip(isinstance(data, Data)),
+            segment,  # type: ignore[arg-type]
+        )
+        if skip_uploaded_files:
+            done_set = set(segment_client.list_data_paths())
+            segment_filter = filter(
+                lambda data: pbar.update_for_skip(data.target_remote_path not in done_set),
+                local_data,
+            )
+        else:
+            segment_filter = local_data
+
+        multithread_upload(segment_client.upload_data, segment_filter, jobs=jobs, pbar=pbar)
+
+        return segment_client
+
     def get_or_create_segment(self, name: str = "") -> SegmentClient:
         """Get or create a segment with the given name.
 
@@ -719,6 +745,7 @@ class DatasetClient(DatasetClientBase):
         *,
         jobs: int = 1,
         skip_uploaded_files: bool = False,
+        quiet: bool = False,
     ) -> SegmentClient:
         """Upload a :class:`~tensorbay.dataset.segment.Segment` to the dataset.
 
@@ -733,6 +760,7 @@ class DatasetClient(DatasetClientBase):
                 contains the information needs to be upload.
             jobs: The number of the max workers in multi-thread uploading method.
             skip_uploaded_files: True for skipping the uploaded files.
+            quiet: Set to True to stop showing the upload process bar.
 
         Returns:
             The :class:`~tensorbay.client.segment.SegmentClient`
@@ -740,21 +768,10 @@ class DatasetClient(DatasetClientBase):
 
         """
         self._status.check_authority_for_draft()
-
-        segment_client = self.get_or_create_segment(segment.name)
-        local_data: Iterator[Data] = filter(
-            lambda data: isinstance(data, Data), segment  # type: ignore[arg-type]
-        )
-        if skip_uploaded_files:
-            done_set = set(segment_client.list_data_paths())
-            segment_filter = filter(
-                lambda data: data.target_remote_path not in done_set, local_data
+        with Tqdm(len(segment), disable=quiet) as pbar:
+            return self._upload_segment(
+                segment, jobs=jobs, skip_uploaded_files=skip_uploaded_files, pbar=pbar
             )
-        else:
-            segment_filter = local_data
-
-        multithread_upload(segment_client.upload_data, segment_filter, jobs=jobs)
-        return segment_client
 
 
 class FusionDatasetClient(DatasetClientBase):
@@ -786,6 +803,45 @@ class FusionDatasetClient(DatasetClientBase):
 
     def _list_segment_instances(self) -> PagingList[FusionSegment]:
         return PagingList(self._generate_segments, 128)
+
+    def _upload_segment(
+        self,
+        segment: FusionSegment,
+        *,
+        jobs: int,
+        skip_uploaded_files: bool,  # pylint: disable=unused-argument
+        pbar: Tqdm,
+    ) -> FusionSegmentClient:
+        segment_client = self.get_or_create_segment(segment.name)
+        for sensor in segment.sensors.values():
+            segment_client.upload_sensor(sensor)
+
+        segment_filter: Iterator[Tuple[Frame, Optional[int]]]
+
+        if not segment:
+            return segment_client
+
+        have_frame_id = hasattr(segment[0], "frame_id")
+
+        for frame in segment:
+            if not hasattr(frame, "frame_id") == have_frame_id:
+                raise FrameError(
+                    "All the frames should have the same patterns(all have frame id or not)."
+                )
+
+        if have_frame_id:
+            segment_filter = ((frame, None) for frame in segment)
+        else:
+            segment_filter = ((frame, 10 * index + 10) for index, frame in enumerate(segment))
+
+        multithread_upload(
+            lambda args: segment_client.upload_frame(*args),
+            segment_filter,
+            jobs=jobs,
+            pbar=pbar,
+        )
+
+        return segment_client
 
     def get_or_create_segment(self, name: str = "") -> FusionSegmentClient:
         """Get or create a fusion segment with the given name.
@@ -845,6 +901,7 @@ class FusionDatasetClient(DatasetClientBase):
         *,
         jobs: int = 1,
         skip_uploaded_files: bool = False,  # pylint: disable=unused-argument
+        quiet: bool = False,
     ) -> FusionSegmentClient:
         """Upload a fusion segment object to the draft.
 
@@ -859,9 +916,7 @@ class FusionDatasetClient(DatasetClientBase):
             segment: The :class:`~tensorbay.dataset.segment.FusionSegment`.
             jobs: The number of the max workers in multi-thread upload.
             skip_uploaded_files: Set it to True to skip the uploaded files.
-
-        Raises:
-            FrameError: When some frames have frame id while others do not.
+            quiet: Set to True to stop showing the upload process bar.
 
         Returns:
             The :class:`~tensorbay.client.segment.FusionSegmentClient`
@@ -869,33 +924,7 @@ class FusionDatasetClient(DatasetClientBase):
 
         """
         self._status.check_authority_for_draft()
-
-        segment_client = self.get_or_create_segment(segment.name)
-        for sensor in segment.sensors.values():
-            segment_client.upload_sensor(sensor)
-
-        segment_filter: Iterator[Tuple[Frame, Optional[int]]]
-
-        if not segment:
-            return segment_client
-
-        have_frame_id = hasattr(segment[0], "frame_id")
-
-        for frame in segment:
-            if not hasattr(frame, "frame_id") == have_frame_id:
-                raise FrameError(
-                    "All the frames should have the same patterns(all have frame id or not)."
-                )
-
-        if have_frame_id:
-            segment_filter = ((frame, None) for frame in segment)
-        else:
-            segment_filter = ((frame, 10 * index + 10) for index, frame in enumerate(segment))
-
-        multithread_upload(
-            lambda args: segment_client.upload_frame(*args),
-            segment_filter,
-            jobs=jobs,
-        )
-
-        return segment_client
+        with Tqdm(len(segment), disable=quiet) as pbar:
+            return self._upload_segment(
+                segment, jobs=jobs, skip_uploaded_files=skip_uploaded_files, pbar=pbar
+            )
