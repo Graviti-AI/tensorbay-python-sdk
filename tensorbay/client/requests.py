@@ -40,6 +40,7 @@ from requests import Session
 from requests.adapters import HTTPAdapter
 from requests.exceptions import RequestException
 from requests.models import PreparedRequest, Response
+from tqdm import tqdm
 from typing_extensions import Protocol
 from urllib3.util.retry import Retry
 
@@ -284,11 +285,44 @@ class Client:
 _T = TypeVar("_T")
 
 
+class Tqdm(tqdm):  # type: ignore[misc]
+    """A wrapper class of tqdm for showing the process bar.
+
+    Arguments:
+        total: The number of excepted iterations.
+        disable: Whether to disable the entire progress bar.
+
+    """
+
+    def __init__(self, total: int, disable: bool = False) -> None:
+        super().__init__(desc="Uploading", total=total, disable=disable)
+
+    def update_callback(self, _: Any) -> None:
+        """Callback function for updating process bar when multithread task is done."""
+        self.update()
+
+    def update_for_skip(self, condition: bool) -> bool:
+        """Update process bar for the items which are skipped in builtin filter function.
+
+        Arguments:
+            condition: The filter condition, the process bar will be updated if condition is False.
+
+        Returns:
+            The input condition.
+
+        """
+        if not condition:
+            self.update()
+
+        return condition
+
+
 def multithread_upload(
     function: Callable[[_T], None],
     arguments: Iterable[_T],
     *,
     jobs: int = 1,
+    pbar: Tqdm,
 ) -> None:
     """Multi-thread upload framework.
 
@@ -296,10 +330,13 @@ def multithread_upload(
         function: The upload function.
         arguments: The arguments of the upload function.
         jobs: The number of the max workers in multi-thread uploading procession.
+        pbar: The :class:`Tqdm` instance for showing the upload process bar.
 
     """
     with ThreadPoolExecutor(jobs) as executor:
         futures = [executor.submit(function, argument) for argument in arguments]
+        for future in futures:
+            future.add_done_callback(pbar.update_callback)
 
         done, not_done = wait(futures, return_when=FIRST_EXCEPTION)
         for future in not_done:

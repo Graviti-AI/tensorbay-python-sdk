@@ -21,7 +21,7 @@ from ..dataset import Dataset, FusionDataset
 from ..exception import DatasetTypeError, ResourceNotExistError
 from ..utility import KwargsDeprecated
 from .dataset import DatasetClient, FusionDatasetClient
-from .requests import Client, PagingList
+from .requests import Client, PagingList, Tqdm
 
 DatasetClientType = Union[DatasetClient, FusionDatasetClient]
 
@@ -334,6 +334,7 @@ class GAS:
         *,
         jobs: int = 1,
         skip_uploaded_files: bool = False,
+        quiet: bool = False,
     ) -> DatasetClient:
         ...
 
@@ -345,6 +346,7 @@ class GAS:
         *,
         jobs: int = 1,
         skip_uploaded_files: bool = False,
+        quiet: bool = False,
     ) -> FusionDatasetClient:
         ...
 
@@ -356,6 +358,7 @@ class GAS:
         *,
         jobs: int = 1,
         skip_uploaded_files: bool = False,
+        quiet: bool = False,
     ) -> DatasetClientType:
         ...
 
@@ -366,6 +369,7 @@ class GAS:
         *,
         jobs: int = 1,
         skip_uploaded_files: bool = False,
+        quiet: bool = False,
     ) -> DatasetClientType:
         """Upload a local dataset to TensorBay.
 
@@ -383,6 +387,7 @@ class GAS:
             jobs: The number of the max workers in multi-thread upload.
             skip_uploaded_files: Set it to True to skip the uploaded files.
             draft_number: The draft number.
+            quiet: Set to True to stop showing the upload process bar.
 
         Returns:
             The :class:`~tensorbay.client.dataset.DatasetClient` or
@@ -401,12 +406,14 @@ class GAS:
 
         dataset_client.update_notes(**dataset.notes)  # type: ignore[arg-type]
 
-        for segment in dataset:
-            dataset_client.upload_segment(
-                segment,  # type: ignore[arg-type]
-                jobs=jobs,
-                skip_uploaded_files=skip_uploaded_files,
-            )
+        with Tqdm(sum(len(segment) for segment in dataset), disable=quiet) as pbar:
+            for segment in dataset:
+                dataset_client._upload_segment(  # pylint: disable=protected-access
+                    segment,  # type: ignore[arg-type]
+                    jobs=jobs,
+                    skip_uploaded_files=skip_uploaded_files,
+                    pbar=pbar,
+                )
 
         return dataset_client
 
