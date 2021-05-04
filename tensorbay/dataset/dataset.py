@@ -154,8 +154,6 @@ class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestor
 
         if gas:
             self._client = gas.get_dataset(name, is_fusion=self._is_fusion)
-            self._catalog = self._client.get_catalog()
-            self._notes = self._client.get_notes()
         else:
             self._segments: NameSortedList[_T] = NameSortedList()
             self._catalog = Catalog()
@@ -192,6 +190,9 @@ class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestor
             The :class:`~tensorbay.label.catalog.Catalog` of the dataset.
 
         """
+        if not hasattr(self, "_catalog"):
+            self._catalog = self._client.get_catalog()
+
         return self._catalog
 
     @property
@@ -202,6 +203,9 @@ class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestor
             The class:`Notes` of the dataset.
 
         """
+        if not hasattr(self, "_notes"):
+            self._notes = self._client.get_notes()
+
         return self._notes
 
     def load_catalog(self, filepath: str) -> None:
