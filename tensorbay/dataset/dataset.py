@@ -151,21 +151,18 @@ class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestor
 
     def __init__(self, name: str, gas: Optional["GAS"] = None) -> None:
         super().__init__(name)
-        self._segments: NameSortedList[_T] = NameSortedList()
 
         if gas:
             self._client = gas.get_dataset(name, is_fusion=self._is_fusion)
-            for segment in self._client._list_segment_instances():
-                self._segments.add(segment)  # type: ignore[arg-type]
-
             self._catalog = self._client.get_catalog()
             self._notes = self._client.get_notes()
         else:
+            self._segments: NameSortedList[_T] = NameSortedList()
             self._catalog = Catalog()
             self._notes = Notes()
 
     def __len__(self) -> int:
-        return self._segments.__len__()
+        return self._get_segments().__len__()
 
     @overload
     def __getitem__(self, index: int) -> _T:
@@ -176,7 +173,16 @@ class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestor
         ...
 
     def __getitem__(self, index: Union[int, slice]) -> Union[Sequence[_T], _T]:
-        return self._segments.__getitem__(index)
+        return self._get_segments().__getitem__(index)
+
+    def _get_segments(self) -> NameSortedList[_T]:
+        if not hasattr(self, "_segments"):
+            self._segments = NameSortedList()
+            # pylint: disable=protected-access
+            for segment in self._client._list_segment_instances():
+                self._segments.add(segment)  # type: ignore[arg-type]
+
+        return self._segments
 
     @property
     def catalog(self) -> Catalog:
@@ -219,7 +225,7 @@ class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestor
             The segment which matches the input name.
 
         """
-        return self._segments.get_from_name(name)
+        return self._get_segments().get_from_name(name)
 
     def add_segment(self, segment: _T) -> None:
         """Add a segment to the dataset.
@@ -228,7 +234,7 @@ class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestor
             segment: The segment to be added.
 
         """
-        self._segments.add(segment)
+        self._get_segments().add(segment)
 
 
 class Dataset(DatasetBase[Segment]):
@@ -252,7 +258,7 @@ class Dataset(DatasetBase[Segment]):
 
         """
         segment = Segment(segment_name)
-        self._segments.add(segment)
+        self._get_segments().add(segment)
         return segment
 
 
@@ -277,5 +283,5 @@ class FusionDataset(DatasetBase[FusionSegment]):
 
         """
         segment = FusionSegment(segment_name)
-        self._segments.add(segment)
+        self._get_segments().add(segment)
         return segment
