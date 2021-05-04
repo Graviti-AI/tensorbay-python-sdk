@@ -70,7 +70,7 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
 
         self._status = CommitStatus()
         if commit_id:
-            self.checkout(revision=commit_id)
+            self._status.checkout(commit_id=commit_id)
 
     def _commit(self, message: str, tag: Optional[str] = None) -> str:
         post_data: Dict[str, Any] = {
