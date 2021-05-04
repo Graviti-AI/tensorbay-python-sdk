@@ -20,12 +20,15 @@ from typing import TYPE_CHECKING, Any, Callable, MutableSequence, Optional, Type
 
 from ..sensor import Sensors
 from ..utility import NameMixin, ReprType, UserMutableSequence
-from .data import DataBase
 from .frame import Frame
 
 if TYPE_CHECKING:
     from ..client.dataset import DatasetClient, FusionDatasetClient
     from ..client.segment import FusionSegmentClient, SegmentClient
+    from .data import DataBase
+
+_S = TypeVar("_S", bound="Segment")
+_FS = TypeVar("_FS", bound="FusionSegment")
 
 
 class Segment(NameMixin, UserMutableSequence["DataBase._Type"]):
@@ -55,14 +58,11 @@ class Segment(NameMixin, UserMutableSequence["DataBase._Type"]):
 
     """
 
-    _T = TypeVar("_T", bound="Segment")
-
     _repr_type = ReprType.SEQUENCE
 
     def __init__(self, name: str = "", client: Optional["DatasetClient"] = None) -> None:
         super().__init__(name)
 
-        self._data: MutableSequence[DataBase._Type]
         if client:
             self._client = client.get_segment(name)
             self._data = self._client.list_data()  # type: ignore[assignment]
@@ -70,7 +70,7 @@ class Segment(NameMixin, UserMutableSequence["DataBase._Type"]):
             self._data = []
 
     @classmethod
-    def _from_client(cls: Type[_T], client: "SegmentClient") -> _T:
+    def _from_client(cls: Type[_S], client: "SegmentClient") -> _S:
         """Init a Segment from :class:`~tensorbay.client.segment.SegmentClient`.
 
         Arguments:
@@ -148,8 +148,6 @@ class FusionSegment(NameMixin, UserMutableSequence[Frame]):
 
     """
 
-    _T = TypeVar("_T", bound="FusionSegment")
-
     _repr_type = ReprType.SEQUENCE
     _repr_attrs = ("sensors",)
     _repr_maxlevel = 2
@@ -161,13 +159,12 @@ class FusionSegment(NameMixin, UserMutableSequence[Frame]):
         if client:
             self._client = client.get_segment(name)
             self._data = self._client.list_frames()
-            self.sensors = self._client.get_sensors()
         else:
             self._data = []
-            self.sensors = Sensors()
+            self._sensors = Sensors()
 
     @classmethod
-    def _from_client(cls: Type[_T], client: "FusionSegmentClient") -> _T:
+    def _from_client(cls: Type[_FS], client: "FusionSegmentClient") -> _FS:
         """Init a FusionSegment from :class:`~tensorbay.client.segment.FusionSegmentClient`.
 
         Arguments:
@@ -178,8 +175,25 @@ class FusionSegment(NameMixin, UserMutableSequence[Frame]):
 
         """
         # pylint: disable=protected-access
-        segment = cls(client.name)
+        segment: _FS = object.__new__(cls)
+        super(cls, segment).__init__(client.name)
         segment._client = client
         segment._data = client.list_frames()
-        segment.sensors = client.get_sensors()
         return segment
+
+    @property
+    def sensors(self) -> Sensors:
+        """Return the sensors of the fusion segment.
+
+        Returns:
+            The :class:`~tensorbay.sensor.sensor.Sensors` of the fusion dataset.
+
+        """
+        if not hasattr(self, "_sensors"):
+            self._sensors = self._client.get_sensors()
+
+        return self._sensors
+
+    @sensors.setter
+    def sensors(self, sensors: Sensors) -> None:
+        self._sensors = sensors
