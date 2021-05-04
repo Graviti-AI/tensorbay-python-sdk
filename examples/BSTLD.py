@@ -44,22 +44,16 @@ dataset_client.commit("initial commit")
 """"""
 
 """Read Dataset / get dataset"""
-dataset_client = gas.get_dataset("BSTLD")
+dataset = Dataset("BSTLD", gas)
 """"""
 
 """Read Dataset / list segment names"""
-dataset_client.list_segment_names()
-""""""
-
-"""Read Dataset Class / get a segment"""
-train_segment = dataset["train"]
-first_segment = dataset[0]
+dataset.keys()
 """"""
 
 """Read Dataset / get segment"""
-from tensorbay.dataset import Segment
-
-train_segment = Segment("train", dataset_client)
+first_segment = dataset[0]
+train_segment = dataset["train"]
 """"""
 
 """Read Dataset / get data"""

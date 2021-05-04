@@ -44,17 +44,15 @@ dataset_client.commit("initial commit")
 """"""
 
 """Read Dataset / get dataset"""
-dataset_client = gas.get_dataset("NeolixOD")
+dataset = Dataset("NeolixOD", gas)
 """"""
 
 """Read Dataset / get segment"""
-from tensorbay.dataset import Segment
-
-default_segment = Segment("", dataset_client)
+segment = dataset[0]
 """"""
 
 """Read Dataset / get data"""
-data = default_segment[0]
+data = segment[0]
 """"""
 
 """Read Dataset / get label"""

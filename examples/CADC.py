@@ -15,6 +15,7 @@
 
 """Authorize a Client Instance"""
 from tensorbay import GAS
+from tensorbay.dataset import FusionDataset
 
 ACCESS_KEY = "Accesskey-*****"
 gas = GAS(ACCESS_KEY)
@@ -39,17 +40,15 @@ fusion_dataset_client.commit("initial commit")
 """"""
 
 """Read Fusion Dataset / get fusion dataset"""
-fusion_dataset_client = gas.get_dataset("CADC", is_fusion=True)
+fusion_dataset = FusionDataset("CADC", gas)
 """"""
 
 """Read Fusion Dataset / list fusion segment names"""
-fusion_dataset_client.list_segment_names()
+fusion_dataset.keys()
 """"""
 
 """Read Fusion Dataset / get fusion segment"""
-from tensorbay.dataset import FusionSegment
-
-fusion_segment = FusionSegment("2018_03_06/0001", fusion_dataset_client)
+fusion_segment = fusion_dataset["2018_03_06/0001"]
 """"""
 
 """Read Fusion Dataset / get sensors"""
