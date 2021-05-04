@@ -46,11 +46,9 @@ dataset_client.commit("Initial commit")
 
 """Read Images from the Dataset"""
 from PIL import Image
-from tensorbay.dataset import Segment
 
-dataset_client = gas.get_dataset("DatasetName")
-
-segment = Segment("", dataset_client)
+dataset = Dataset("DatasetName", gas)
+segment = dataset[0]
 
 for data in segment:
     with data.open() as fp:

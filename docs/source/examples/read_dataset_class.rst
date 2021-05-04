@@ -53,7 +53,7 @@ TensorBay supplies two methods to fetch :ref:`reference/dataset_structure:Segmen
 
 .. literalinclude:: ../../../examples/BSTLD.py
    :language: python
-   :start-after: """Read Dataset Class / get a segment"""
+   :start-after: """Read Dataset / get segment"""
    :end-before: """"""
 
 This :ref:`reference/dataset_structure:Segment` is the same as the one :ref:`read from TensorBay <examples/BSTLD:Read Dataset>`.

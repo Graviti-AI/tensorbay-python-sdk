@@ -44,21 +44,19 @@ dataset_client.commit("initial commit")
 """"""
 
 """Read Dataset / get dataset"""
-dataset_client = gas.get_dataset("Newsgroups20")
+dataset = Dataset("Newsgroups20", gas)
 """"""
 
 """Read Dataset / list segment names"""
-dataset_client.list_segment_names()
+dataset.keys()
 """"""
 
 """Read Dataset / get segment"""
-from tensorbay.dataset import Segment
-
-segment_20news_18828 = Segment("20news-18828", dataset_client)
+segment = dataset["20news-18828"]
 """"""
 
 """Read Dataset / get data"""
-data = segment_20news_18828[0]
+data = segment[0]
 """"""
 
 """Read Dataset / get label"""
