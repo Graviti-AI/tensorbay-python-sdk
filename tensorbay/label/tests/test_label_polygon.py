@@ -5,7 +5,7 @@
 
 import pytest
 
-from ...geometry import Polygon2D, Vector2D
+from ...geometry import Vector2D
 from .. import LabeledPolygon2D, Polygon2DSubcatalog
 from ..supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
 

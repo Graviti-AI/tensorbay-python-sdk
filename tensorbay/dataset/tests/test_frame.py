@@ -6,7 +6,6 @@
 import pytest
 import ulid
 
-from ...geometry import Transform3D
 from .. import Data, Frame
 
 _FRAME_ID = ulid.from_str("01F29QVWASMNGNA2FZBMZCDEG1")

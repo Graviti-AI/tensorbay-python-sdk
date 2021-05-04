@@ -1,14 +1,7 @@
 import pytest
 
-from ...utility import NameOrderedDict
 from .. import CategoryInfo, KeypointsInfo
-from ..supports import (
-    AttributesMixin,
-    CategoriesMixin,
-    IsTrackingMixin,
-    SubcatalogMixin,
-    _VisibleType,
-)
+from ..supports import AttributesMixin, CategoriesMixin, IsTrackingMixin, SubcatalogMixin
 
 
 class TestCategoryInfo:
