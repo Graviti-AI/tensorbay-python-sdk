@@ -22,13 +22,13 @@ def subcatalog_polygon(is_tracking_data, categories_catalog_data, attributes_cat
 class TestLabeledPolygon2D:
     def test_init(self):
         labeledpolygon2d = LabeledPolygon2D(
-            [(1, 2)], category="cat", attributes={"gender": "male"}, instance=12345
+            [(1, 2)], category="cat", attributes={"gender": "male"}, instance="12345"
         )
 
         assert labeledpolygon2d[0] == Vector2D(1, 2)
         assert labeledpolygon2d.category == "cat"
         assert labeledpolygon2d.attributes == {"gender": "male"}
-        assert labeledpolygon2d.instance == 12345
+        assert labeledpolygon2d.instance == "12345"
 
     def test_eq(self):
         polygon1 = LabeledPolygon2D([[1, 1], [1, 2]], category="cat", attributes={"gender": "male"})
@@ -56,7 +56,7 @@ class TestLabeledPolygon2D:
 
     def test_dumps(self):
         labeledpolygon2d = LabeledPolygon2D(
-            [(1, 2)], category="cat", attributes={"gender": "male"}, instance=12345
+            [(1, 2)], category="cat", attributes={"gender": "male"}, instance="12345"
         )
 
         assert labeledpolygon2d.dumps() == {
@@ -65,7 +65,7 @@ class TestLabeledPolygon2D:
             ],
             "category": "cat",
             "attributes": {"gender": "male"},
-            "instance": 12345,
+            "instance": "12345",
         }
 
 
