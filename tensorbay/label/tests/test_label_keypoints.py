@@ -25,13 +25,13 @@ def subcatalog_keypoings2d(
 class TestLabeledKeypoints2D:
     def test_init(self):
         labeledkeypoints2d = LabeledKeypoints2D(
-            [(1, 2)], category="cat", attributes={"gender": "male"}, instance=12345
+            [(1, 2)], category="cat", attributes={"gender": "male"}, instance="12345"
         )
 
         assert labeledkeypoints2d[0] == Keypoint2D(x=1, y=2)
         assert labeledkeypoints2d.category == "cat"
         assert labeledkeypoints2d.attributes == {"gender": "male"}
-        assert labeledkeypoints2d.instance == 12345
+        assert labeledkeypoints2d.instance == "12345"
 
     def test_eq(self):
         keypoints1 = LabeledKeypoints2D([[1, 1, 2]], category="cat", attributes={"gender": "male"})
@@ -48,7 +48,7 @@ class TestLabeledKeypoints2D:
             ],
             "category": "cat",
             "attributes": {"gender": "male"},
-            "instance": 12345,
+            "instance": "12345",
         }
 
         labeledkeypoints2d = LabeledKeypoints2D.loads(contents)
@@ -56,11 +56,11 @@ class TestLabeledKeypoints2D:
         assert labeledkeypoints2d[0] == Keypoint2D(x=1, y=1, v=2)
         assert labeledkeypoints2d.category == "cat"
         assert labeledkeypoints2d.attributes == {"gender": "male"}
-        assert labeledkeypoints2d.instance == 12345
+        assert labeledkeypoints2d.instance == "12345"
 
     def test_dumps(self):
         labeledkeypoints2d = LabeledKeypoints2D(
-            [(1, 1, 2)], category="cat", attributes={"gender": "male"}, instance=12345
+            [(1, 1, 2)], category="cat", attributes={"gender": "male"}, instance="12345"
         )
 
         assert labeledkeypoints2d.dumps() == {
@@ -69,7 +69,7 @@ class TestLabeledKeypoints2D:
             ],
             "category": "cat",
             "attributes": {"gender": "male"},
-            "instance": 12345,
+            "instance": "12345",
         }
 
 

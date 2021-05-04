@@ -30,12 +30,12 @@ class TestLabeledBox2D:
             6,
             category="cat",
             attributes={"gender": "male"},
-            instance=12345,
+            instance="12345",
         )
 
         assert labeledbox2d.category == "cat"
         assert labeledbox2d.attributes == {"gender": "male"}
-        assert labeledbox2d.instance == 12345
+        assert labeledbox2d.instance == "12345"
 
         assert labeledbox2d[0] == 1
         assert labeledbox2d[1] == 2
@@ -61,12 +61,12 @@ class TestLabeledBox2D:
             height,
             category="cat",
             attributes={"gender": "male"},
-            instance=12345,
+            instance="12345",
         )
 
         assert labeledbox2d.category == "cat"
         assert labeledbox2d.attributes == {"gender": "male"}
-        assert labeledbox2d.instance == 12345
+        assert labeledbox2d.instance == "12345"
 
         assert labeledbox2d[0] == xmin
         assert labeledbox2d[1] == xmax
@@ -99,14 +99,14 @@ class TestLabeledBox2D:
             8,
             category="cat",
             attributes={"gender": "male"},
-            instance=12345,
+            instance="12345",
         )
 
         assert labeledbox2d.dumps() == {
             "box2d": {"xmin": 1, "ymin": 2, "xmax": 5, "ymax": 8},
             "category": "cat",
             "attributes": {"gender": "male"},
-            "instance": 12345,
+            "instance": "12345",
         }
 
 
@@ -122,7 +122,7 @@ class TestLabeledBox3D:
             rotation=rotation,
             category="cat",
             attributes={"gender": "male"},
-            instance=12345,
+            instance="12345",
         )
 
         assert labeledbox3d.translation == translation
@@ -130,7 +130,7 @@ class TestLabeledBox3D:
         assert labeledbox3d.size == size
         assert labeledbox3d.category == "cat"
         assert labeledbox3d.attributes == {"gender": "male"}
-        assert labeledbox3d.instance == 12345
+        assert labeledbox3d.instance == "12345"
 
     def test_rmul(self):
         size = [1, 2, 3]
@@ -145,7 +145,7 @@ class TestLabeledBox3D:
             rotation=rotation,
             category="cat",
             attributes={"gender": "male"},
-            instance=12345,
+            instance="12345",
         )
 
         assert labeledbox3d.__rmul__(transform) == LabeledBox3D(
@@ -154,7 +154,7 @@ class TestLabeledBox3D:
             rotation=[-1, 0, 0, 0],
             category="cat",
             attributes={"gender": "male"},
-            instance=12345,
+            instance="12345",
         )
 
         assert labeledbox3d.__rmul__(quaternion_1) == LabeledBox3D(
@@ -163,7 +163,7 @@ class TestLabeledBox3D:
             rotation=[-2, 1, 4, -3],
             category="cat",
             attributes={"gender": "male"},
-            instance=12345,
+            instance="12345",
         )
 
         assert labeledbox3d.__rmul__(1) == NotImplemented
@@ -229,7 +229,7 @@ class TestLabeledBox3D:
             rotation=rotation,
             category="cat",
             attributes={"gender": "male"},
-            instance=12345,
+            instance="12345",
         )
 
         assert labeledbox3d.dumps() == {
@@ -240,7 +240,7 @@ class TestLabeledBox3D:
             },
             "category": "cat",
             "attributes": {"gender": "male"},
-            "instance": 12345,
+            "instance": "12345",
         }
 
 

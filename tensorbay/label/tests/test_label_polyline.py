@@ -28,13 +28,13 @@ def subcatalog_polyline(is_tracking_data, categories_catalog_data, attributes_ca
 class TestLabeledPolyline2D:
     def test_init(self):
         labeledpolyline2d = LabeledPolyline2D(
-            [(1, 2)], category="cat", attributes={"gender": "male"}, instance=12345
+            [(1, 2)], category="cat", attributes={"gender": "male"}, instance="12345"
         )
 
         assert labeledpolyline2d[0] == Vector2D(1, 2)
         assert labeledpolyline2d.category == "cat"
         assert labeledpolyline2d.attributes == {"gender": "male"}
-        assert labeledpolyline2d.instance == 12345
+        assert labeledpolyline2d.instance == "12345"
 
     def test_eq(self):
         polyline1 = LabeledPolyline2D(
@@ -55,25 +55,25 @@ class TestLabeledPolyline2D:
             "polyline2d": [{"x": 1, "y": 2}],
             "category": "cat",
             "attributes": {"gender": "male"},
-            "instance": 12345,
+            "instance": "12345",
         }
         labeledpolygonline2d = LabeledPolyline2D.loads(contents)
 
         assert labeledpolygonline2d[0] == Vector2D(1, 2)
         assert labeledpolygonline2d.category == "cat"
         assert labeledpolygonline2d.attributes == {"gender": "male"}
-        assert labeledpolygonline2d.instance == 12345
+        assert labeledpolygonline2d.instance == "12345"
 
     def test_dumps(self):
         labeledpolygonline2d = LabeledPolyline2D(
-            [(1, 2)], category="cat", attributes={"gender": "male"}, instance=12345
+            [(1, 2)], category="cat", attributes={"gender": "male"}, instance="12345"
         )
 
         assert labeledpolygonline2d.dumps() == {
             "polyline2d": [{"x": 1, "y": 2}],
             "category": "cat",
             "attributes": {"gender": "male"},
-            "instance": 12345,
+            "instance": "12345",
         }
 
 
