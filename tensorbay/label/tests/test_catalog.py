@@ -6,7 +6,6 @@
 
 import pytest
 
-from ...utility import NameOrderedDict
 from .. import (
     Box2DSubcatalog,
     Box3DSubcatalog,
@@ -17,7 +16,6 @@ from .. import (
     Polyline2DSubcatalog,
     SentenceSubcatalog,
 )
-from ..supports import CategoryInfo, KeypointsInfo
 
 _CATALOG_DICT = {
     "classification": ClassificationSubcatalog,
