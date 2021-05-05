@@ -68,7 +68,10 @@ class TypeMixin(Generic[_T]):  # pylint: disable=too-few-public-methods
         return self._enum
 
 
-class TypeRegister:  # pylint: disable=too-few-public-methods
+_S = TypeVar("_S", bound=TypeMixin[Any])
+
+
+class TypeRegister(Generic[_T]):  # pylint: disable=too-few-public-methods
     """TypeRegister is a decorator, which is used for registering TypeMixin to TypeEnum.
 
     Arguments:
@@ -76,10 +79,10 @@ class TypeRegister:  # pylint: disable=too-few-public-methods
 
     """
 
-    def __init__(self, enum: TypeEnum) -> None:
+    def __init__(self, enum: _T) -> None:
         self._enum = enum
 
-    def __call__(self, class_: Type[TypeMixin[_T]]) -> Type[TypeMixin[_T]]:
+    def __call__(self, class_: Type[_S]) -> Type[_S]:
         """Call the TypeRegister as a function.
 
         Arguments:
@@ -94,7 +97,7 @@ class TypeRegister:  # pylint: disable=too-few-public-methods
         return class_
 
 
-class SubcatalogTypeRegister:  # pylint: disable=too-few-public-methods
+class SubcatalogTypeRegister(Generic[_T]):  # pylint: disable=too-few-public-methods
     """SubcatalogTypeRegister is a decorator, which is used for registering TypeMixin to TypeEnum.
 
     Arguments:
@@ -102,10 +105,10 @@ class SubcatalogTypeRegister:  # pylint: disable=too-few-public-methods
 
     """
 
-    def __init__(self, enum: TypeEnum) -> None:
+    def __init__(self, enum: _T) -> None:
         self._enum = enum
 
-    def __call__(self, class_: Type[TypeMixin[_T]]) -> Type[TypeMixin[_T]]:
+    def __call__(self, class_: Type[_S]) -> Type[_S]:
         """Call the SubcatalogTypeRegister as a function.
 
         Arguments:

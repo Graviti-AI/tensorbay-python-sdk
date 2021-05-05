@@ -14,7 +14,7 @@
 
 from abc import ABC
 from enum import Enum, auto
-from typing import Any, Callable, Dict, Iterable, Mapping, Sequence, Tuple, Type, Union
+from typing import Any, Callable, Dict, Iterable, Mapping, Sequence, Tuple, Type, TypeVar, Union
 
 
 class ReprType(Enum):
@@ -111,10 +111,12 @@ class _PrinterRegister:  # pylint: disable=too-few-public-methods
 
     """
 
+    _S = TypeVar("_S", bound=_ReprPrinter)
+
     def __init__(self, key: Union[Type[Any], ReprType]) -> None:
         self._key = key
 
-    def __call__(self, printer: _ReprPrinter) -> _ReprPrinter:
+    def __call__(self, printer: _S) -> _S:
         _PRINTERS[self._key] = printer
         return printer
 
