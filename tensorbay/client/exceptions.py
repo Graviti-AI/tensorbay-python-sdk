@@ -22,9 +22,9 @@ Please use :class:`~tensorbay.exception.ResponseError` instead of :class:`GASRes
 
 """
 
-from ..exception import DatasetTypeError, ResponseError, TensorBayClientException
+from ..exception import DatasetTypeError, ResponseError, TensorBayClientError
 
-GASException = TensorBayClientException
+GASException = TensorBayClientError
 GASDatasetTypeError = DatasetTypeError
 GASResponseError = ResponseError
 
