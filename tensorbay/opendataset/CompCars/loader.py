@@ -151,10 +151,9 @@ def _create_classification_label(
     # <root_path>/<make_name_id>/<model_name_id>/<release_year>/<file_name>.jpg"
     image_path_split = image_path.rsplit(os.sep, 4)
 
-    value = model_to_attributes.get(image_path_split[-3])
-    if value:
-        attributes = value.copy()
-        released_year = image_path_split[-2]
-        attributes["released_year"] = int(released_year) if released_year != "unknown" else None
+    value = model_to_attributes[image_path_split[-3]]
+    attributes = value.copy()
+    released_year = image_path_split[-2]
+    attributes["released_year"] = int(released_year) if released_year != "unknown" else None
 
     return Classification(category=categories[int(image_path_split[-4]) - 1], attributes=attributes)
