@@ -25,10 +25,10 @@ from ..exception import (
     InvalidParamsError,
     ResourceNotExistError,
     ResponseError,
-    TensorBayClientException,
+    TensorBayClientError,
 )
 
-GASException = TensorBayClientException
+GASException = TensorBayClientError
 GASDatasetTypeError = DatasetTypeError
 GASResponseError = ResponseError
 GASDatasetError = ResourceNotExistError
