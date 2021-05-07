@@ -35,6 +35,7 @@ class ReprMixin:  # pylint: disable=too-few-public-methods
     _repr_type = ReprType.INSTANCE
     _repr_attrs: Iterable[str] = ()
     _repr_maxlevel = 1
+    _repr_non_empty = False
 
     def __repr__(self) -> str:
         return _repr1(self, self._repr_maxlevel, self._repr_maxlevel, True)
@@ -248,6 +249,9 @@ def _repr_builtin_dict(obj: Mapping[Any, Any], level: int, maxlevel: int, foldin
         "repr" of the object.
 
     """
+    if getattr(obj, "_repr_non_empty", False) and level <= 0:
+        return "{...}"
+
     object_length = len(obj)
     if object_length == 0:
         return "{}"
@@ -321,6 +325,9 @@ def _repr_builtin_sequence(  # pylint: disable=too-many-arguments
         "repr" of the object.
 
     """
+    if getattr(obj, "_repr_non_empty", False) and level <= 0:
+        return f"{left}...{right}"
+
     object_length = len(obj)
     if object_length == 0:
         return f"{left}{right}"

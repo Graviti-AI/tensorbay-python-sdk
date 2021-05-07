@@ -66,6 +66,7 @@ class Segment(NameMixin, UserMutableSequence["DataBase._Type"]):
         if client:
             self._client = client.get_segment(name)
             self._data = self._client.list_data()  # type: ignore[assignment]
+            self._repr_non_empty = True
         else:
             self._data = []
 
@@ -84,6 +85,7 @@ class Segment(NameMixin, UserMutableSequence["DataBase._Type"]):
         segment = cls(client.name)
         segment._client = client
         segment._data = client.list_data()  # type: ignore[assignment]
+        segment._repr_non_empty = True
         return segment
 
     def sort(
@@ -159,6 +161,7 @@ class FusionSegment(NameMixin, UserMutableSequence[Frame]):
         if client:
             self._client = client.get_segment(name)
             self._data = self._client.list_frames()
+            self._repr_non_empty = True
         else:
             self._data = []
             self._sensors = Sensors()
@@ -179,6 +182,7 @@ class FusionSegment(NameMixin, UserMutableSequence[Frame]):
         super(cls, segment).__init__(client.name)
         segment._client = client
         segment._data = client.list_frames()
+        segment._repr_non_empty = True
         return segment
 
     @property
