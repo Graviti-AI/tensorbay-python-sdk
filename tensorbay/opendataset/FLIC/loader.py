@@ -56,7 +56,7 @@ def FLIC(path: str) -> Dataset:
         flag = False
 
     for data, segment_name in _get_data(root_path, annotations, flag):
-        dataset.get_segment_by_name(segment_name).append(data)
+        dataset[segment_name].append(data)
 
     return dataset
 

@@ -74,11 +74,26 @@ class TestDatasetBase:
             catalog = json.load(fp)
         assert dataset.catalog.dumps() == catalog
 
-    def test_get_segment_by_name(self):
+    def test_getitem(self):
         dataset = DatasetBase("test_name")
-        segment = Segment("train")
-        dataset.add_segment(segment)
-        assert segment is dataset.get_segment_by_name("train")
+        train_segment = Segment("train")
+        test_segment = Segment("test")
+        dataset.add_segment(train_segment)
+        dataset.add_segment(test_segment)
+        assert test_segment is dataset[0] is dataset["test"]
+        assert train_segment is dataset[1] is dataset["train"]
+
+        with pytest.raises(IndexError):
+            dataset[2]
+        with pytest.raises(KeyError):
+            dataset["unknown"]
+
+    def test_keys(self):
+        dataset = DatasetBase("test_name")
+        keys = ("test", "train")
+        for key in keys:
+            dataset.add_segment(Segment(key))
+        assert dataset.keys() == keys
 
 
 class TestDataset:
