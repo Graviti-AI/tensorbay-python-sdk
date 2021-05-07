@@ -37,3 +37,20 @@ for segment in dataset:
 """Update label / commit dataset"""
 dataset_client.commit("update labels")
 """"""
+
+"""Updata data/ upload dataset"""
+gas.upload_dataset(dataset, skip_uploaded_files=True)
+""""""
+
+"""Updata data/ overwrite dataset"""
+gas.upload_dataset(dataset)
+""""""
+
+"""Updata data/ delete segment"""
+dataset_client.delete_segment("SegmentName")
+""""""
+
+"""Updata data/ delete data"""
+segment_client = dataset_client.get_segment("SegmentName")
+segment_client.delete_data(["a.png", "b.png"])
+""""""
