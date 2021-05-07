@@ -782,9 +782,12 @@ class FusionDatasetClient(DatasetClientBase):
     :class:`FusionDatasetClient` has multiple sensors.
 
     """
+
     @staticmethod
     def _skip_upload_frame(
-        segment_filter: Iterator[Tuple[Frame, Optional[int], bool]], done_set: Dict[float, Frame], pbar: Tqdm,
+        segment_filter: Iterator[Tuple[Frame, Optional[int], bool]],
+        done_set: Dict[float, Frame],
+        pbar: Tqdm,
     ) -> Iterator[Tuple[Frame, Optional[int], bool]]:
         for frame, timestamp, _ in segment_filter:
             if timestamp is None:
