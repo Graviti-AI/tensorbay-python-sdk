@@ -7,9 +7,6 @@ This topic describes how to update datasets, including:
 - :ref:`examples/update_dataset:Update Label`
 - :ref:`examples/update_dataset:Update Data`
 
-.. note::
-   Update data will instructions later.
-
 The following scenario is used for demonstrating how to update data and label:
 
 #. Upload a dataset.
@@ -57,10 +54,48 @@ Commit the dataset:
 | Users can switch between different commits to use different version of labels.
 
 .. important::
-   | uploading labels operation will overwrite all types of labels in data.
+   Uploading labels operation will overwrite all types of labels in data.
 
 ***************
  Update Data
 ***************
 
-This part will be introduced later.
+Add new data to dataset.
+
+.. literalinclude:: ../../../examples/update_dataset.py
+   :language: python
+   :start-after: """Updata data/ upload dataset"""
+   :end-before: """"""
+
+Set `skip_uploaded_files=True` to skip uploaded data.
+
+Overwrite uploaded data to dataset.
+
+.. literalinclude:: ../../../examples/update_dataset.py
+   :language: python
+   :start-after: """Updata data/ overwrite dataset"""
+   :end-before: """"""
+
+The default value of `skip_uploaded_files` is false, use it to overwrite uploaded data.
+
+.. note::
+   The segment name and data name are used to identify data,
+   which means if two data's segment names and data names are the same,
+   then they will be regarded as one data.
+
+.. important::
+   Uploading dataset operation will only add or overwrite data, Data uploaded before will not be deleted.
+
+Delete segment by the segment name.
+
+.. literalinclude:: ../../../examples/update_dataset.py
+   :language: python
+   :start-after: """Updata data/ delete segment"""
+   :end-before: """"""
+
+Delete data by the file list.
+
+.. literalinclude:: ../../../examples/update_dataset.py
+   :language: python
+   :start-after: """Updata data/ delete data"""
+   :end-before: """"""
