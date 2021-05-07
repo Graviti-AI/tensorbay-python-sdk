@@ -782,6 +782,21 @@ class FusionDatasetClient(DatasetClientBase):
     :class:`FusionDatasetClient` has multiple sensors.
 
     """
+    @staticmethod
+    def _skip_upload_frame(
+        segment_filter: Iterator[Tuple[Frame, Optional[int], bool]], done_set: Dict[float, Frame], pbar: Tqdm,
+    ) -> Iterator[Tuple[Frame, Optional[int], bool]]:
+        for frame, timestamp, _ in segment_filter:
+            if timestamp is None:
+                timestamp = frame.frame_id.timestamp().timestamp
+            remote_frame = done_set.get(timestamp)
+            if remote_frame is None:
+                yield frame, timestamp, False
+            elif len(frame) != len(remote_frame):
+                remote_frame.frame_id = frame.frame_id
+                yield remote_frame, None, True
+            else:
+                pbar.update()
 
     def _generate_segments(
         self, offset: int = 0, limit: int = 128
@@ -805,14 +820,14 @@ class FusionDatasetClient(DatasetClientBase):
         segment: FusionSegment,
         *,
         jobs: int,
-        skip_uploaded_files: bool,  # pylint: disable=unused-argument
+        skip_uploaded_files: bool,
         pbar: Tqdm,
     ) -> FusionSegmentClient:
         segment_client = self.get_or_create_segment(segment.name)
         for sensor in segment.sensors.values():
             segment_client.upload_sensor(sensor)
 
-        segment_filter: Iterator[Tuple[Frame, Optional[int]]]
+        segment_filter: Iterator[Tuple[Frame, Optional[int], bool]]
 
         if not segment:
             return segment_client
@@ -826,9 +841,18 @@ class FusionDatasetClient(DatasetClientBase):
                 )
 
         if have_frame_id:
-            segment_filter = ((frame, None) for frame in segment)
+            segment_filter = ((frame, None, False) for frame in segment)
         else:
-            segment_filter = ((frame, 10 * index + 10) for index, frame in enumerate(segment))
+            segment_filter = (
+                (frame, 10 * index + 10, False) for index, frame in enumerate(segment)
+            )
+
+        if skip_uploaded_files:
+            done_set = {
+                frame.frame_id.timestamp().timestamp: frame
+                for frame in segment_client.list_frames()
+            }
+            segment_filter = self._skip_upload_frame(segment_filter, done_set, pbar)
 
         multithread_upload(
             lambda args: segment_client.upload_frame(*args),

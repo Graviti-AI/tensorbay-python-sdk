@@ -35,7 +35,7 @@ from requests_toolbelt import MultipartEncoder
 from ulid import from_timestamp
 
 from ..dataset import Data, Frame, RemoteData
-from ..exception import FrameError, InvalidParamsError, ResponseError
+from ..exception import FrameError, InvalidParamsError, ResponseError, ResponseSystemError
 from ..sensor.sensor import Sensor, Sensors
 from ..utility import KwargsDeprecated
 from .commit_status import CommitStatus
@@ -170,8 +170,13 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
             response_headers = self._client.do("PUT", url, data=fp, headers=request_headers).headers
             return response_headers["x-ms-version-id"], response_headers["ETag"].strip('"')
 
-    def _synchronize_upload_info(
-        self, key: str, version_id: str, etag: str, frame_info: Optional[Dict[str, Any]] = None
+    def _synchronize_upload_info(  # pylint: disable=too-many-arguments
+        self,
+        key: str,
+        version_id: str,
+        etag: str,
+        frame_info: Optional[Dict[str, Any]] = None,
+        skip_uploaded_files: bool = False,
     ) -> None:
         put_data: Dict[str, Any] = {
             "key": key,
@@ -183,7 +188,11 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
         if frame_info:
             put_data.update(frame_info)
 
-        self._client.open_api_do("PUT", "callback", self._dataset_id, json=put_data)
+        try:
+            self._client.open_api_do("PUT", "callback", self._dataset_id, json=put_data)
+        except ResponseSystemError:
+            if not skip_uploaded_files:
+                raise
 
     def _upload_label(self, data: Data) -> None:
         label = data.label.dumps()
@@ -478,12 +487,15 @@ class FusionSegmentClient(SegmentClientBase):
 
         self._client.open_api_do("DELETE", "sensors", self._dataset_id, json=delete_data)
 
-    def upload_frame(self, frame: Frame, timestamp: Optional[float] = None) -> None:
+    def upload_frame(  # pylint: disable=too-many-locals
+        self, frame: Frame, timestamp: Optional[float] = None, skip_uploaded_files: bool = False
+    ) -> None:
         """Upload frame to the draft.
 
         Arguments:
             frame: The :class:`~tensorbay.dataset.frame.Frame` to upload.
             timestamp: The mark to sort frames, supporting timestamp and float.
+            skip_uploaded_files: Set it to True to skip the uploaded files.
 
         Raises:
             FrameError: When lacking frame id or frame id conflicts.
@@ -544,7 +556,9 @@ class FusionSegmentClient(SegmentClientBase):
                 if hasattr(data, "timestamp"):
                     frame_info["timestamp"] = data.timestamp
 
-                self._synchronize_upload_info(post_data["key"], version_id, etag, frame_info)
+                self._synchronize_upload_info(
+                    post_data["key"], version_id, etag, frame_info, skip_uploaded_files
+                )
 
             except ResponseError:
                 self._clear_upload_permission()
