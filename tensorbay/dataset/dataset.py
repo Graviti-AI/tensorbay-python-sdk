@@ -138,6 +138,8 @@ class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestor
 
     Arguments:
         name: The name of the dataset.
+        gas: The :class:`~tensorbay.client.gas.GAS` client for getting a remote dataset.
+        revision: The revision of the remote dataset.
 
     Attributes:
         catalog: The :class:`~tensorbay.label.catalog.Catalog` of the dataset.
@@ -149,11 +151,15 @@ class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestor
 
     _repr_type = ReprType.SEQUENCE
 
-    def __init__(self, name: str, gas: Optional["GAS"] = None) -> None:
+    def __init__(
+        self, name: str, gas: Optional["GAS"] = None, revision: Optional[str] = None
+    ) -> None:
         super().__init__(name)
 
         if gas:
             self._client = gas.get_dataset(name, is_fusion=self._is_fusion)
+            if revision:
+                self._client.checkout(revision)
         else:
             self._segments: NameSortedList[_T] = NameSortedList()
             self._catalog = Catalog()
