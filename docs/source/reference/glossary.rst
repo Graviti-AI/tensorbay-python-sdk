@@ -41,6 +41,28 @@ The corresponding class of fusion dataset is :class:`~tensorbay.dataset.dataset.
 
 See :ref:`advanced_features/fusion_dataset/fusion_dataset_structure:Fusion Dataset Structure` for more details.
 
+continuity
+==========
+
+Continuity is a characteristic to describe the data within a :ref:`reference/glossary:dataset` or a :ref:`reference/glossary:fusion dataset`.
+
+A dataset is continuous means the data in each segment of the dataset is collected over a continuous period of time
+and the collection order is indicated by the data paths or frame indexes.
+
+The continuity can be set in :ref:`reference/dataset_structure:notes`.
+
+Only continuous datasets can have :ref:`reference/glossary:tracking` labels.
+
+tracking
+========
+
+Tracking is a characteristic to describe the labels within a :ref:`reference/glossary:dataset` or a :ref:`reference/glossary:fusion dataset`.
+
+The labels of a dataset are tracking means the labels contain tracking information, such as tracking ID, which is used for tracking tasks.
+
+Tracking characteristic is stored in :ref:`reference/dataset_structure:catalog`,
+please see :ref:`reference/label_format:Label Format` for more details.
+
 dataloader
 ==========
 
