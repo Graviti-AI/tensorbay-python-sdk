@@ -157,10 +157,6 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         params["offset"] = offset
         params["limit"] = limit
 
-        response = self._client.open_api_do(
-            "GET", "segments", self.dataset_id, params=params
-        ).json()
-
         response = self._client.open_api_do("GET", "segments", self._dataset_id, params=params)
         return response.json()  # type: ignore[no-any-return]
 
