@@ -52,7 +52,7 @@ dataset_client.list_segment_names()
 """"""
 
 """Read Dataset Class / get a segment"""
-train_segment = dataset.get_segment_by_name("train")
+train_segment = dataset["train"]
 first_segment = dataset[0]
 """"""
 

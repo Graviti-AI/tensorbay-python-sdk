@@ -31,6 +31,7 @@ from typing import (
     KeysView,
     Optional,
     Sequence,
+    Tuple,
     Type,
     TypeVar,
     Union,
@@ -38,7 +39,15 @@ from typing import (
 )
 
 from ..label import Catalog
-from ..utility import EqMixin, NameMixin, NameSortedList, ReprMixin, ReprType, common_loads
+from ..utility import (
+    Deprecated,
+    EqMixin,
+    NameMixin,
+    NameSortedList,
+    ReprMixin,
+    ReprType,
+    common_loads,
+)
 from .segment import FusionSegment, Segment
 
 if TYPE_CHECKING:
@@ -169,14 +178,17 @@ class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestor
         return self._get_segments().__len__()
 
     @overload
-    def __getitem__(self, index: int) -> _T:
+    def __getitem__(self, index: Union[int, str]) -> _T:
         ...
 
     @overload
     def __getitem__(self, index: slice) -> Sequence[_T]:
         ...
 
-    def __getitem__(self, index: Union[int, slice]) -> Union[Sequence[_T], _T]:
+    def __getitem__(self, index: Union[int, str, slice]) -> Union[Sequence[_T], _T]:
+        if isinstance(index, str):
+            return self._get_segments().get_from_name(index)
+
         return self._get_segments().__getitem__(index)
 
     def _get_segments(self) -> NameSortedList[_T]:
@@ -214,6 +226,16 @@ class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestor
 
         return self._notes
 
+    def keys(self) -> Tuple[str, ...]:
+        """Get all segment names.
+
+        Returns:
+            A tuple containing all segment names.
+
+        """
+        # pylint: disable=protected-access
+        return tuple(self._segments._data)
+
     def load_catalog(self, filepath: str) -> None:
         """Load catalog from a json file.
 
@@ -225,6 +247,7 @@ class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestor
             contents = json.load(fp)
         self._catalog = Catalog.loads(contents)
 
+    @Deprecated(since="v1.4.0", removed_in="v1.7.0", substitute=__getitem__)
     def get_segment_by_name(self, name: str) -> _T:
         """Return the segment corresponding to the given name.
 
