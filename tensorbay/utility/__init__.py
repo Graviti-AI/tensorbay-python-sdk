@@ -5,7 +5,7 @@
 
 """Utility classes."""
 
-from .common import Deprecated, EqMixin, KwargsDeprecated, MatrixType, common_loads
+from .common import Deprecated, EqMixin, KwargsDeprecated, MatrixType, common_loads, locked
 from .name import NameMixin, NameOrderedDict, NameSortedDict, NameSortedList
 from .repr import ReprMixin, ReprType, repr_config
 from .tbrn import TBRN, TBRNType
@@ -34,5 +34,6 @@ __all__ = [
     "UserMutableSequence",
     "UserSequence",
     "common_loads",
+    "locked",
     "repr_config",
 ]

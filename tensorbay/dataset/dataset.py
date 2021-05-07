@@ -23,6 +23,7 @@ It consists of a list of :class:`~tensorbay.dataset.segment.FusionSegment`.
 """
 
 import json
+from threading import Lock
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -47,6 +48,7 @@ from ..utility import (
     ReprMixin,
     ReprType,
     common_loads,
+    locked,
 )
 from .segment import FusionSegment, Segment
 
@@ -164,6 +166,7 @@ class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestor
         self, name: str, gas: Optional["GAS"] = None, revision: Optional[str] = None
     ) -> None:
         super().__init__(name)
+        self._lock = Lock()
 
         if gas:
             self._client = gas.get_dataset(name, is_fusion=self._is_fusion)
@@ -191,12 +194,16 @@ class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestor
 
         return self._get_segments().__getitem__(index)
 
+    @locked
+    def _init_segments(self) -> None:
+        self._segments = NameSortedList()
+        # pylint: disable=protected-access
+        for segment in self._client._list_segment_instances():
+            self._segments.add(segment)  # type: ignore[arg-type]
+
     def _get_segments(self) -> NameSortedList[_T]:
         if not hasattr(self, "_segments"):
-            self._segments = NameSortedList()
-            # pylint: disable=protected-access
-            for segment in self._client._list_segment_instances():
-                self._segments.add(segment)  # type: ignore[arg-type]
+            self._init_segments()
 
         return self._segments
 

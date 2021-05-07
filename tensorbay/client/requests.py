@@ -15,7 +15,6 @@ import logging
 import os
 from collections import defaultdict
 from concurrent.futures import FIRST_EXCEPTION, ThreadPoolExecutor, wait
-from functools import wraps
 from itertools import repeat, zip_longest
 from threading import Lock
 from typing import (
@@ -41,12 +40,11 @@ from requests.adapters import HTTPAdapter
 from requests.exceptions import RequestException
 from requests.models import PreparedRequest, Response
 from tqdm import tqdm
-from typing_extensions import Protocol
 from urllib3.util.retry import Retry
 
 from ..__verison__ import __version__
 from ..exception import ResponseError, ResponseErrorDistributor
-from ..utility import ReprMixin, ReprType
+from ..utility import ReprMixin, ReprType, locked
 from .log import RequestLogging, ResponseLogging
 
 logger = logging.getLogger(__name__)
@@ -419,38 +417,6 @@ class LazyItem(Generic[_T]):  # pylint: disable=too-few-public-methods
 
 
 _R = TypeVar("_R")
-
-_Callable = TypeVar("_Callable", bound=Callable[..., None])
-
-
-class _Locked(Protocol):  # pylint: disable=too-few-public-methods
-    _lock: Lock
-
-
-def locked(func: _Callable) -> _Callable:
-    """The decorator to add threading lock for methods.
-
-    Arguments:
-        func: The method needs to add threading lock.
-
-    Returns:
-        The method with theading locked.
-
-    """
-
-    @wraps(func)
-    def wrapper(self: _Locked, *arg: Any, **kwargs: Any) -> None:
-        # pylint: disable=protected-access
-        acquire = self._lock.acquire(blocking=False)
-        try:
-            if acquire:
-                func(self, *arg, **kwargs)
-            else:
-                self._lock.acquire()
-        finally:
-            self._lock.release()
-
-    return wrapper  # type: ignore[return-value]
 
 
 class ReturnGenerator(Generic[_T, _R]):  # pylint: disable=too-few-public-methods
