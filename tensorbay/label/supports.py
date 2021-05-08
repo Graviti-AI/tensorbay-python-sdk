@@ -145,8 +145,6 @@ class KeypointsInfo(ReprMixin, EqMixin):
         "parent_categories",
     )
 
-    description = ""
-
     def __init__(
         self,
         number: int,
