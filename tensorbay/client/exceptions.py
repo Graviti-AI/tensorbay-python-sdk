@@ -21,14 +21,14 @@ Please use :class:`~tensorbay.exception.InvalidParamsError` instead of :class:`G
 """
 
 from ..exception import (
+    ClientError,
     DatasetTypeError,
     InvalidParamsError,
     ResourceNotExistError,
     ResponseError,
-    TensorBayClientError,
 )
 
-GASException = TensorBayClientError
+GASException = ClientError
 GASDatasetTypeError = DatasetTypeError
 GASResponseError = ResponseError
 GASDatasetError = ResourceNotExistError
