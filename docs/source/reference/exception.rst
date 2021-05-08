@@ -15,15 +15,15 @@ TensorBayException
 
 :class:`~tensorbay.exception.TensorBayException` is the base class for TensorBay SDK custom exceptions.
 
-TensorBayClientError
-^^^^^^^^^^^^^^^^^^^^
+ClientError
+^^^^^^^^^^^
 
-:class:`~tensorbay.exception.TensorBayClientError` is the base class for custom exceptions in client module.
+:class:`~tensorbay.exception.ClientError` is the base class for custom exceptions in client module.
 
-TensorBayOpenDatasetError
-^^^^^^^^^^^^^^^^^^^^^^^^^
+OpenDatasetError
+^^^^^^^^^^^^^^^^
 
-:class:`~tensorbay.exception.TensorBayOpenDatasetError` is the base class for custom exceptions in opendataset module.
+:class:`~tensorbay.exception.OpenDatasetError` is the base class for custom exceptions in opendataset module.
 
 *********************
  Concrete Exceptions
@@ -71,13 +71,13 @@ FileStructureError
 The class hierarchy for TensorBay custom exceptions is::
 
  +-- TensorBayException
-     +-- TensorBayClientError
+     +-- ClientError
          +-- CommitStatusError
          +-- DatasetTypeError
          +-- FrameError
          +-- ResponseError
      +-- TBRNError
-     +-- TensorBayOpenDatasetError
+     +-- OpenDatasetError
          +-- NoFileError
          +-- FileStructureError
 

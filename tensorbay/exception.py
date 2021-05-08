@@ -8,13 +8,13 @@
 The class hierarchy for TensorBay custom exceptions is::
 
      +-- TensorBayException
-         +-- TensorBayClientError
+         +-- ClientError
              +-- CommitStatusError
              +-- DatasetTypeError
              +-- FrameError
              +-- ResponseError
          +-- TBRNError
-         +-- TensorBayOpenDatasetError
+         +-- OpenDatasetError
              +-- NoFileError
              +-- FileStructureError
 
@@ -27,11 +27,11 @@ class TensorBayException(Exception):
     """This is the base class for TensorBay custom exceptions."""
 
 
-class TensorBayClientError(TensorBayException):
+class ClientError(TensorBayException):
     """This is the base class for custom exceptions in TensorBay client module."""
 
 
-class CommitStatusError(TensorBayClientError):
+class CommitStatusError(ClientError):
     """This class defines the exception for illegal commit status.
 
     Arguments:
@@ -47,7 +47,7 @@ class CommitStatusError(TensorBayClientError):
         return f"The status is not {self._required_status}"
 
 
-class DatasetTypeError(TensorBayClientError):
+class DatasetTypeError(ClientError):
     """This class defines the exception for incorrect type of the requested dataset.
 
     Arguments:
@@ -67,7 +67,7 @@ class DatasetTypeError(TensorBayClientError):
         )
 
 
-class FrameError(TensorBayClientError):
+class FrameError(ClientError):
     """This class defines the exception for incorrect frame id.
 
     Arguments:
@@ -83,7 +83,7 @@ class FrameError(TensorBayClientError):
         return self._message
 
 
-class ResponseError(TensorBayClientError):
+class ResponseError(ClientError):
     """This class defines the exception for post response error.
 
     Arguments:
@@ -99,11 +99,11 @@ class ResponseError(TensorBayClientError):
         return f"Unexpected status code({self.response.status_code})! {self.response.url}"
 
 
-class TensorBayOpendatasetError(TensorBayException):
+class OpenDatasetError(TensorBayException):
     """This is the base class for custom exceptions in TensorBay opendataset module."""
 
 
-class NoFileError(TensorBayOpendatasetError):
+class NoFileError(OpenDatasetError):
     """This class defines the exception for no matching file found in the opendataset directory.
 
     Arguments:
@@ -119,7 +119,7 @@ class NoFileError(TensorBayOpendatasetError):
         return f'No file follows the giving pattern "{self._pattern}"'
 
 
-class FileStructureError(TensorBayOpendatasetError):
+class FileStructureError(OpenDatasetError):
     """This class defines the exception for incorrect file structure in the opendataset directory.
 
     Arguments:
