@@ -39,7 +39,7 @@ dataset = BSTLD("path/to/dataset/directory")
 """"""
 
 """Upload Dataset"""
-dataset_client = gas.upload_dataset(dataset)
+dataset_client = gas.upload_dataset(dataset, jobs=8, skip_uploaded_files=False)
 dataset_client.commit("initial commit")
 """"""
 
