@@ -11,6 +11,9 @@
 /.github/workflows/ @AChenQ
 /.pre-commit-config.yaml @AChenQ
 
+/tensorbay/cli/ @rexzheng324-c
+/tensorbay/cli/tests/ @rexzheng324-c @AChenQ
+
 /tensorbay/client/ @rexzheng324-c
 /tensorbay/client/tests/ @rexzheng324-c @AChenQ
 
