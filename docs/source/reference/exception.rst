@@ -12,8 +12,8 @@ TensorBay SDK defines a series of custom exceptions.
     TBRNError
         :class:`~tensorbay.exception.TBRNError` defines the exception for invalid TBRN. Raised when the TBRN format is incorrect.
 
-    TensorBayClientError
-        :class:`~tensorbay.exception.TensorBayClientError` is the base class for custom exceptions in the client module.
+    ClientError
+        :class:`~tensorbay.exception.ClientError` is the base class for custom exceptions in the client module.
 
     CommitStatusError
         :class:`~tensorbay.exception.CommitStatusError` defines the exception for illegal commit status in the client module.
@@ -59,8 +59,8 @@ TensorBay SDK defines a series of custom exceptions.
         :class:`~tensorbay.exception.UnauthorizedError` defines the exception for unauthorized response error in the client module.
         Raised when the :ref:`reference/glossary:accesskey` is incorrect.
 
-    TensorBayOpenDatasetError
-        :class:`~tensorbay.exception.TensorBayOpenDatasetError` is the base class for custom exceptions in the opendataset module.
+    OpenDatasetError
+        :class:`~tensorbay.exception.OpenDatasetError` is the base class for custom exceptions in the opendataset module.
 
     NoFileError
         :class:`~tensorbay.exception.NoFileError` defines the exception for no matching file found in the opendataset directory.
@@ -75,7 +75,7 @@ TensorBay SDK defines a series of custom exceptions.
 The class hierarchy for TensorBay custom exceptions is::
 
  +-- TensorBayException
-     +-- TensorBayClientError
+     +-- ClientError
          +-- CommitStatusError
          +-- DatasetTypeError
          +-- FrameError
@@ -88,7 +88,7 @@ The class hierarchy for TensorBay custom exceptions is::
              +-- ResponseSystemError
              +-- UnauthorizedError
      +-- TBRNError
-     +-- TensorBayOpenDatasetError
+     +-- OpenDatasetError
          +-- NoFileError
          +-- FileStructureError
 
