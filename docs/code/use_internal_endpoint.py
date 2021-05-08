@@ -32,7 +32,7 @@ segment.append(Data("0000001.jpg"))
 segment.append(Data("0000002.jpg"))
 
 # All the data will be uploaded through internal endpoint.
-dataset_client = gas.upload_dataset(dataset)
+dataset_client = gas.upload_dataset(dataset, jobs=8)
 
 dataset_client.commit("Initial commit")
 """"""

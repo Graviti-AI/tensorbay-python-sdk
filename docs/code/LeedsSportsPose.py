@@ -40,7 +40,7 @@ dataset = LeedsSportsPose("path/to/dataset/directory")
 """"""
 
 """Upload Dataset"""
-dataset_client = gas.upload_dataset(dataset)
+dataset_client = gas.upload_dataset(dataset, jobs=8)
 dataset_client.commit("initial commit")
 """"""
 
