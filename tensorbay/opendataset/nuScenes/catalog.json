@@ -98,21 +98,16 @@
         ],
         "attributes": [
             {
-                "name": "vehicle_motion",
-                "enum": ["moving", "parked", "stopped"],
-                "parentCategories": [
-                    "vehicle.bicycle",
-                    "vehicle.bus.bendy",
-                    "vehicle.bus.rigid",
-                    "vehicle.car",
-                    "vehicle.construction",
-                    "vehicle.emergency.ambulance",
-                    "vehicle.emergency.police",
-                    "vehicle.motorcycle",
-                    "vehicle.trailer",
-                    "vehicle.truck"
-                ],
-                "description": "Motion of the vehicle."
+                "name": "num_lidar_pts",
+                "type": "integer",
+                "minimum": 0,
+                "description": "Number of lidar points in this box. Points are counted during the lidar sweep identified with this sample."
+            },
+            {
+                "name": "num_radar_pts",
+                "type": "integer",
+                "minimum": 0,
+                "description": "Number of radar points in this box. Points are counted during the radar sweep identified with this sample. This number is summed across all radar sensors without any invalid point filtering."
             },
             {
                 "name": "cycle_rider",
@@ -137,6 +132,23 @@
                     "human.pedestrian.wheelchair"
                 ],
                 "description": "Motion of the pedestrain."
+            },
+            {
+                "name": "vehicle_motion",
+                "enum": ["moving", "parked", "stopped"],
+                "parentCategories": [
+                    "vehicle.bicycle",
+                    "vehicle.bus.bendy",
+                    "vehicle.bus.rigid",
+                    "vehicle.car",
+                    "vehicle.construction",
+                    "vehicle.emergency.ambulance",
+                    "vehicle.emergency.police",
+                    "vehicle.motorcycle",
+                    "vehicle.trailer",
+                    "vehicle.truck"
+                ],
+                "description": "Motion of the vehicle."
             },
             {
                 "name": "visibility",

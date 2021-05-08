@@ -267,6 +267,8 @@ def _get_labeled_box(
     attributes["visibility"] = annotation_info["visibility"][
         instance_annotation["visibility_token"]
     ]["level"]
+    attributes["num_lidar_pts"] = instance_annotation["num_lidar_pts"]
+    attributes["num_radar_pts"] = instance_annotation["num_radar_pts"]
 
     width, length, height = instance_annotation["size"]
     return LabeledBox3D(
