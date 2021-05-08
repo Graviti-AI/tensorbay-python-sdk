@@ -116,7 +116,7 @@ class Items(ReprMixin, EqMixin):
     _repr_attrs: Tuple[str, ...] = ("type", "enum", "minimum", "maximum", "items")
 
     def __init__(
-        self: _T,
+        self,
         *,
         type_: _ArgType = "",
         enum: Optional[Iterable[_EnumElementType]] = None,

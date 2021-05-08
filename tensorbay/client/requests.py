@@ -540,7 +540,7 @@ class PagingList(MutableSequence[_T], ReprMixin):  # pylint: disable=too-many-an
         return self._get_items().__len__()
 
     @overload
-    def __getitem__(self: _S, index: int) -> _T:
+    def __getitem__(self, index: int) -> _T:
         ...
 
     @overload
@@ -612,7 +612,7 @@ class PagingList(MutableSequence[_T], ReprMixin):  # pylint: disable=too-many-an
             self._items.extend(page.items)
 
     @locked
-    def _init_sliced_items(self, parent: _S, slicing: slice) -> None:
+    def _init_sliced_items(self: _S, parent: _S, slicing: slice) -> None:
         self._items = parent._get_items()[slicing]  # pylint: disable=protected-access
 
     def _get_items(self, index: int = 0) -> List[LazyItem[_T]]:

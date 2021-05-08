@@ -108,7 +108,7 @@ class Transform3D(ReprMixin):
         ...
 
     @overload
-    def __mul__(self: _T, other: Iterable[float]) -> Vector3D:
+    def __mul__(self, other: Iterable[float]) -> Vector3D:
         ...
 
     def __mul__(self: _T, other: Union[_T, Iterable[float]]) -> Union[_T, Vector3D]:
