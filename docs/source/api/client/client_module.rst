@@ -5,7 +5,6 @@ tensorbay.client
    :maxdepth: 4
 
    dataset
-   exceptions
    gas
    log
    requests
