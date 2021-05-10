@@ -35,6 +35,30 @@ RESPONSE_TEMPLATE = """
 """
 
 
+UPLOAD_DATASET_RESUME_TEMPLATE = """
+*****************************************************************************
+ This upload action was interrupted.
+ The draft number is %d.
+ To resume this upload, please pass the draft number to the upload function:
+
+     gas.upload_dataset(dataset, draft_number=%d, skip_uploaded_files=True)
+
+*****************************************************************************
+"""
+
+UPLOAD_SEGMENT_RESUME_TEMPLATE = """
+*****************************************************************************
+ This upload action was interrupted.
+ The draft number is %d.
+ To resume this upload, please checkout to the previous dataset draft first:
+
+     dataset_client.checkout(draft_number=%d)
+     dataset_client.upload_segment(segment, skip_uploaded_files=True)
+
+*****************************************************************************
+"""
+
+
 class RequestLogging:  # pylint: disable=too-few-public-methods
     """This class used to lazy load request to logging.
 

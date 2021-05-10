@@ -13,6 +13,7 @@ AccessKey is required when operating with dataset.
 
 """
 
+import logging
 from typing import Any, Dict, Generator, Optional, Type, Union, overload
 
 from typing_extensions import Literal
@@ -20,9 +21,12 @@ from typing_extensions import Literal
 from ..dataset import Dataset, FusionDataset
 from ..exception import DatasetTypeError, ResourceNotExistError
 from .dataset import DatasetClient, FusionDatasetClient
+from .log import UPLOAD_DATASET_RESUME_TEMPLATE
 from .requests import Client, PagingList, Tqdm
 
 DatasetClientType = Union[DatasetClient, FusionDatasetClient]
+
+logger = logging.getLogger(__name__)
 
 
 class GAS:
@@ -377,6 +381,9 @@ class GAS:
             :class:`~tensorbay.client.dataset.FusionDatasetClient`
             bound with the uploaded dataset.
 
+        Raises:
+            Exception: When Exception was raised during uploding dataset.
+
         """
         dataset_client = self.get_dataset(dataset.name, isinstance(dataset, FusionDataset))
         if draft_number:
@@ -384,19 +391,27 @@ class GAS:
         else:
             dataset_client.create_draft()
 
-        if dataset.catalog:
-            dataset_client.upload_catalog(dataset.catalog)
+        try:
+            if dataset.catalog:
+                dataset_client.upload_catalog(dataset.catalog)
 
-        dataset_client.update_notes(**dataset.notes)  # type: ignore[arg-type]
+            dataset_client.update_notes(**dataset.notes)  # type: ignore[arg-type]
 
-        with Tqdm(sum(len(segment) for segment in dataset), disable=quiet) as pbar:
-            for segment in dataset:
-                dataset_client._upload_segment(  # pylint: disable=protected-access
-                    segment,  # type: ignore[arg-type]
-                    jobs=jobs,
-                    skip_uploaded_files=skip_uploaded_files,
-                    pbar=pbar,
-                )
+            with Tqdm(sum(len(segment) for segment in dataset), disable=quiet) as pbar:
+                for segment in dataset:
+                    dataset_client._upload_segment(  # pylint: disable=protected-access
+                        segment,  # type: ignore[arg-type]
+                        jobs=jobs,
+                        skip_uploaded_files=skip_uploaded_files,
+                        pbar=pbar,
+                    )
+        except Exception:
+            logger.error(
+                UPLOAD_DATASET_RESUME_TEMPLATE,
+                draft_number,
+                draft_number,
+            )
+            raise
 
         return dataset_client
 
