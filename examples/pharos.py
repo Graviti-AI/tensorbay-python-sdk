@@ -17,7 +17,7 @@
 """Organize a Dataset"""
 from tensorbay.dataset import Dataset
 
-dataset = Dataset("Dataset_name")
+dataset = Dataset("DatasetName")
 """"""
 
 """Visualize The Dataset"""
