@@ -74,6 +74,8 @@ Two types of datasets can be read from TensorBay:
 .. _my datasets(or team datasets): https://gas.graviti.cn/tensorbay/dataset-list
 .. _TensorBay: https://gas.graviti.cn/tensorbay/
 
+Take the :ref:`Uploading of BSTLD <examples/bstld:Read Dataset>` as an example.
+
 ****************
  Update Dataset
 ****************
@@ -81,4 +83,4 @@ Two types of datasets can be read from TensorBay:
 Since TensorBay supports version control, users can update data and labels to a new commit of a dataset.
 Thus, different versions of data and labels can coexist in one dataset, which greatly facilitates the datasets' maintenance.
 
-- Please see :ref:`update dataset<examples/update_dataset:Update Dataset>` example for more details
+Please see :ref:`Update dataset<examples/update_dataset:Update Dataset>` example for more details.
