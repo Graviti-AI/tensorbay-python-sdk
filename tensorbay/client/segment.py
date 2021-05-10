@@ -37,7 +37,6 @@ from ulid import from_timestamp
 from ..dataset import Data, Frame, RemoteData
 from ..exception import FrameError, InvalidParamsError, ResponseError, ResponseSystemError
 from ..sensor.sensor import Sensor, Sensors
-from ..utility import KwargsDeprecated
 from .commit_status import CommitStatus
 from .requests import PagingList, config
 
@@ -361,55 +360,23 @@ class SegmentClient(SegmentClientBase):
         self.upload_file(data.path, data.target_remote_path)
         self._upload_label(data)
 
-    @KwargsDeprecated(
-        ("start", "stop"),
-        since="1.3.0",
-        removed_in="1.5.0",
-        substitute="PagingList[start:stop]",
-    )
-    def list_data_paths(self, **kwargs: int) -> PagingList[str]:
+    def list_data_paths(self) -> PagingList[str]:
         """List required data path in a segment in a certain commit.
-
-        Arguments:
-            kwargs: For deprecated keyword arguments: "start" and "stop".
 
         Returns:
             The PagingList of data paths.
 
         """
-        start = kwargs.get("start")
-        stop = kwargs.get("stop")
+        return PagingList(self._generate_data_paths, 128)
 
-        paging_list = PagingList(self._generate_data_paths, 128)
-        if start is not None or stop is not None:
-            return paging_list[start:stop]
-
-        return paging_list
-
-    @KwargsDeprecated(
-        ("start", "stop"),
-        since="1.3.0",
-        removed_in="1.5.0",
-        substitute="PagingList[start:stop]",
-    )
-    def list_data(self, **kwargs: int) -> PagingList[RemoteData]:
+    def list_data(self) -> PagingList[RemoteData]:
         """List required Data object in a dataset segment.
-
-        Arguments:
-            kwargs: For deprecated keyword arguments: "start" and "stop".
 
         Returns:
             The PagingList of :class:`~tensorbay.dataset.data.RemoteData`.
 
         """
-        start = kwargs.get("start")
-        stop = kwargs.get("stop")
-
-        paging_list = PagingList(self._generate_data, 128)
-        if start is not None or stop is not None:
-            return paging_list[start:stop]
-
-        return paging_list
+        return PagingList(self._generate_data, 128)
 
 
 class FusionSegmentClient(SegmentClientBase):
@@ -565,27 +532,11 @@ class FusionSegmentClient(SegmentClientBase):
                 raise
             self._upload_label(data)
 
-    @KwargsDeprecated(
-        ("start", "stop"),
-        since="1.3.0",
-        removed_in="1.5.0",
-        substitute="PagingList[start:stop]",
-    )
-    def list_frames(self, **kwargs: int) -> PagingList[Frame]:
+    def list_frames(self) -> PagingList[Frame]:
         """List required frames in the segment in a certain commit.
-
-        Arguments:
-            kwargs: For deprecated keyword arguments: "start" and "stop".
 
         Returns:
             The PagingList of :class:`~tensorbay.dataset.frame.Frame`.
 
         """
-        start = kwargs.get("start")
-        stop = kwargs.get("stop")
-
-        paging_list = PagingList(self._generate_frames, 128)
-        if start is not None or stop is not None:
-            return paging_list[start:stop]
-
-        return paging_list
+        return PagingList(self._generate_frames, 128)
