@@ -22,18 +22,22 @@ Please refer to :class:`~tensorbay.dataset.dataset.FusionDataset` for more infor
 
 """
 
+import logging
 from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Iterator, Optional, Tuple, Union
 
 from ..dataset import Data, Frame, FusionSegment, Notes, Segment
 from ..exception import FrameError, NameConflictError, ResourceNotExistError
 from ..label import Catalog
 from .commit_status import CommitStatus
+from .log import UPLOAD_SEGMENT_RESUME_TEMPLATE
 from .requests import Client, PagingList, Tqdm, multithread_upload
 from .segment import FusionSegmentClient, SegmentClient
 from .struct import Branch, Commit, Draft, Tag
 
 if TYPE_CHECKING:
     from .gas import GAS
+
+logger = logging.getLogger(__name__)
 
 
 class DatasetClientBase:  # pylint: disable=too-many-public-methods
@@ -657,16 +661,27 @@ class DatasetClient(DatasetClientBase):
             skip_uploaded_files: True for skipping the uploaded files.
             quiet: Set to True to stop showing the upload process bar.
 
+        Raises:
+            Exception: When the upload got interrupted by Exception.
+
         Returns:
             The :class:`~tensorbay.client.segment.SegmentClient`
             used for uploading the data in the segment.
 
         """
         self._status.check_authority_for_draft()
-        with Tqdm(len(segment), disable=quiet) as pbar:
-            return self._upload_segment(
-                segment, jobs=jobs, skip_uploaded_files=skip_uploaded_files, pbar=pbar
+        try:
+            with Tqdm(len(segment), disable=quiet) as pbar:
+                return self._upload_segment(
+                    segment, jobs=jobs, skip_uploaded_files=skip_uploaded_files, pbar=pbar
+                )
+        except Exception:
+            logger.error(
+                UPLOAD_SEGMENT_RESUME_TEMPLATE,
+                self._status.draft_number,
+                self._status.draft_number,
             )
+            raise
 
 
 class FusionDatasetClient(DatasetClientBase):
@@ -840,13 +855,24 @@ class FusionDatasetClient(DatasetClientBase):
             skip_uploaded_files: Set it to True to skip the uploaded files.
             quiet: Set to True to stop showing the upload process bar.
 
+        Raises:
+            Exception: When the upload got interrupted by Exception.
+
         Returns:
             The :class:`~tensorbay.client.segment.FusionSegmentClient`
                 used for uploading the data in the segment.
 
         """
         self._status.check_authority_for_draft()
-        with Tqdm(len(segment), disable=quiet) as pbar:
-            return self._upload_segment(
-                segment, jobs=jobs, skip_uploaded_files=skip_uploaded_files, pbar=pbar
+        try:
+            with Tqdm(len(segment), disable=quiet) as pbar:
+                return self._upload_segment(
+                    segment, jobs=jobs, skip_uploaded_files=skip_uploaded_files, pbar=pbar
+                )
+        except Exception:
+            logger.error(
+                UPLOAD_SEGMENT_RESUME_TEMPLATE,
+                self._status.draft_number,
+                self._status.draft_number,
             )
+            raise
