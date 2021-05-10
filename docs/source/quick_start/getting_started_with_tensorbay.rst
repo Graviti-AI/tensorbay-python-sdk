@@ -46,9 +46,6 @@ Authorize a Client Instance
       :start-after: """Authorize a Client Instance"""
       :end-before: """"""
 
-See :ref:`CLI Configuration <tensorbay_cli/getting_started_with_cli:Configuration>` for
-details about authenticating identity via CLI.
-
 
 Create a Dataset 
 ================
