@@ -22,7 +22,7 @@ which is a dataset with :ref:`reference/label_format:Box3D` label type
 
 An :ref:`reference/glossary:accesskey` is needed to authenticate identity when using TensorBay.
 
-.. literalinclude:: ../../../examples/NeolixOD.py
+.. literalinclude:: ../../../docs/code/NeolixOD.py
    :language: python
    :start-after: """Authorize a Client Instance"""
    :end-before: """"""
@@ -32,7 +32,7 @@ An :ref:`reference/glossary:accesskey` is needed to authenticate identity when u
 ****************
 
 
-.. literalinclude:: ../../../examples/NeolixOD.py
+.. literalinclude:: ../../../docs/code/NeolixOD.py
    :language: python
    :start-after: """Create Dataset"""
    :end-before: """"""
@@ -80,7 +80,7 @@ See :ref:`Box3D annotation <reference/label_format:Box3D>` for more details.
    so it uses relative import.
    However, the regular import should be used when writing a new dataloader.
 
-.. literalinclude:: ../../../examples/NeolixOD.py
+.. literalinclude:: ../../../docs/code/NeolixOD.py
    :language: python
    :start-after: """Organize Dataset / regular import"""
    :end-at: from tensorbay.label import LabeledBox3D
@@ -88,7 +88,7 @@ See :ref:`Box3D annotation <reference/label_format:Box3D>` for more details.
 There are already a number of dataloaders in TensorBay SDK provided by the community.
 Thus, instead of writing, importing an available dataloader is also feasible.
 
-.. literalinclude:: ../../../examples/NeolixOD.py
+.. literalinclude:: ../../../docs/code/NeolixOD.py
    :language: python
    :start-after: """Organize dataset / import dataloader"""
    :end-before: """"""
@@ -107,7 +107,7 @@ Thus, instead of writing, importing an available dataloader is also feasible.
 
 The organized "Neolix OD" dataset can be uploaded to tensorBay for sharing, reuse, etc.
 
-.. literalinclude:: ../../../examples/NeolixOD.py
+.. literalinclude:: ../../../docs/code/NeolixOD.py
    :language: python
    :start-after: """Upload Dataset"""
    :end-before: """"""
@@ -122,7 +122,7 @@ Please see :ref:`features/version_control:Version Control` for more details.
 
 Now "Neolix OD" dataset can be read from TensorBay.
 
-.. literalinclude:: ../../../examples/NeolixOD.py
+.. literalinclude:: ../../../docs/code/NeolixOD.py
    :language: python
    :start-after: """Read Dataset / get dataset"""
    :end-before: """"""
@@ -131,7 +131,7 @@ In :ref:`reference/dataset_structure:Dataset` "Neolix OD", there is only one def
 :ref:`Segment <reference/dataset_structure:Segment>`: ``""`` (empty string).
 Get a segment by passing the required segment name.
 
-.. literalinclude:: ../../../examples/NeolixOD.py
+.. literalinclude:: ../../../docs/code/NeolixOD.py
    :language: python
    :start-after: """Read Dataset / get segment"""
    :end-before: """"""
@@ -140,7 +140,7 @@ In the default :ref:`reference/dataset_structure:Segment`,
 there is a sequence of :ref:`reference/dataset_structure:Data`,
 which can be obtained by index.
 
-.. literalinclude:: ../../../examples/NeolixOD.py
+.. literalinclude:: ../../../docs/code/NeolixOD.py
    :language: python
    :start-after: """Read Dataset / get data"""
    :end-before: """"""
@@ -148,7 +148,7 @@ which can be obtained by index.
 In each :ref:`reference/dataset_structure:Data`,
 there is a sequence of :ref:`reference/label_format:Box3D` annotations,
 
-.. literalinclude:: ../../../examples/NeolixOD.py
+.. literalinclude:: ../../../docs/code/NeolixOD.py
    :language: python
    :start-after: """Read Dataset / get label"""
    :end-before: """"""
@@ -164,7 +164,7 @@ See :ref:`reference/label_format:Box3D` label format for more details.
  Delete Dataset
 ****************
 
-.. literalinclude:: ../../../examples/NeolixOD.py
+.. literalinclude:: ../../../docs/code/NeolixOD.py
    :language: python
    :start-after: """Delete Dataset"""
    :end-before: """"""

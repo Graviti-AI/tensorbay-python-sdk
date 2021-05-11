@@ -23,7 +23,7 @@ To install Pharos plug-in by **pip**, run the following command:
 Organize a Dataset
 ==================
 
-.. literalinclude:: ../../../examples/pharos.py
+.. literalinclude:: ../../../docs/code/pharos.py
       :language: python
       :start-after: """Organize a Dataset"""
       :end-before: """"""
@@ -31,7 +31,7 @@ Organize a Dataset
 Visualize the Dataset
 ======================
 
-.. literalinclude:: ../../../examples/pharos.py
+.. literalinclude:: ../../../docs/code/pharos.py
       :language: python
       :start-after: """Visualize The Dataset"""
       :end-before: """"""

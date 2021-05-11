@@ -23,7 +23,7 @@ See `this page <https://gas.graviti.cn/dataset/hello-dataset/CADC>`_ for more de
 
 First of all, create a GAS client.
 
-.. literalinclude:: ../../../../examples/CADC.py
+.. literalinclude:: ../../../../docs/code/CADC.py
    :language: python
    :start-after: """Authorize a Client Instance"""
    :end-before: """"""
@@ -34,7 +34,7 @@ First of all, create a GAS client.
 
 Then, create a fusion dataset client by passing the fusion dataset name and ``is_fusion`` argument to the GAS client.
 
-.. literalinclude:: ../../../../examples/CADC.py
+.. literalinclude:: ../../../../docs/code/CADC.py
    :language: python
    :start-after: """Create Fusion Dataset"""
    :end-before: """"""
@@ -49,7 +49,7 @@ See :ref:`this page <features/dataset_management:Read Dataset>` for details.
 The datasets listed here include both :ref:`datasets <reference/dataset_structure:dataset>`
 and :ref:`fusion datasets <advanced_features/fusion_dataset/fusion_dataset_structure:fusion dataset>`.
 
-.. literalinclude:: ../../../../examples/CADC.py
+.. literalinclude:: ../../../../docs/code/CADC.py
    :language: python
    :start-after: """List Dataset Names"""
    :end-before: """"""
@@ -169,7 +169,7 @@ After you finish the :ref:`reference/glossary:Dataloader` and organize the "CADC
 :class:`~tensorbay.dataset.dataset.FusionDataset` instance, you can upload it
 to TensorBay for sharing, reuse, etc.
 
-.. literalinclude:: ../../../../examples/CADC.py
+.. literalinclude:: ../../../../docs/code/CADC.py
    :language: python
    :start-after: """Upload Fusion Dataset"""
    :end-before: """"""
@@ -190,7 +190,7 @@ Please see :ref:`this page <features/version_control:Version Control>` for more 
 
 Now you can read "CADC" dataset from TensorBay.
 
-.. literalinclude:: ../../../../examples/CADC.py
+.. literalinclude:: ../../../../docs/code/CADC.py
    :language: python
    :start-after: """Read Fusion Dataset / get fusion dataset"""
    :end-before: """"""
@@ -200,14 +200,14 @@ In :ref:`reference/dataset_structure:Dataset` "CADC", there are lots of
 
 You can get the segment names by list them all.
 
-.. literalinclude:: ../../../../examples/CADC.py
+.. literalinclude:: ../../../../docs/code/CADC.py
    :language: python
    :start-after: """Read Fusion Dataset / list fusion segment names"""
    :end-before: """"""
 
 You can get a segment by passing the required segment name.
 
-.. literalinclude:: ../../../../examples/CADC.py
+.. literalinclude:: ../../../../docs/code/CADC.py
    :language: python
    :start-after: """Read Fusion Dataset / get fusion segment"""
    :end-before: """"""
@@ -223,7 +223,7 @@ there are several :ref:`sensors<advanced_features/fusion_dataset/fusion_dataset_
 You can get all the sensors by accessing the :class:`sensors<tensorbay.sensor.sensor.Sensors>`
 of the :class:`~tensorbay.dataset.dataset.FusionSegment`.
 
-.. literalinclude:: ../../../../examples/CADC.py
+.. literalinclude:: ../../../../docs/code/CADC.py
    :language: python
    :start-after: """Read Fusion Dataset / get sensors"""
    :end-before: """"""
@@ -232,7 +232,7 @@ In each :ref:`advanced_features/fusion_dataset/fusion_dataset_structure:fusion s
 there are a sequence of :ref:`frames<advanced_features/fusion_dataset/fusion_dataset_structure:frame>`.
 You can get one by index.
 
-.. literalinclude:: ../../../../examples/CADC.py
+.. literalinclude:: ../../../../docs/code/CADC.py
    :language: python
    :start-after: """Read Fusion Dataset / get frame"""
    :end-before: """"""
@@ -242,7 +242,7 @@ there are several :ref:`data<advanced_features/fusion_dataset/fusion_dataset_str
 corresponding to different sensors.
 You can get each data by the corresponding sensor name.
 
-.. literalinclude:: ../../../../examples/CADC.py
+.. literalinclude:: ../../../../docs/code/CADC.py
    :language: python
    :start-after: """Read Fusion Dataset / get data"""
    :end-before: """"""
@@ -252,7 +252,7 @@ under :class:`~tensorbay.sensor.sensor.Lidar`
 has a sequence of :ref:`reference/label_format:Box3D` annotations.
 You can get one by index.
 
-.. literalinclude:: ../../../../examples/CADC.py
+.. literalinclude:: ../../../../docs/code/CADC.py
    :language: python
    :start-after: """Read Fusion Dataset / get label"""
    :end-before: """"""
@@ -271,7 +271,7 @@ See :ref:`this page <reference/label_format:Box3D>` for more details about the s
 
 To delete "CADC", run the following code:
 
-.. literalinclude:: ../../../../examples/CADC.py
+.. literalinclude:: ../../../../docs/code/CADC.py
    :language: python
    :start-after: """Delete Fusion Dataset"""
    :end-before: """"""

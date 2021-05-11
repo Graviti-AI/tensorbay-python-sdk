@@ -41,7 +41,7 @@ Before using TensorBay SDK, please finish the following registration steps:
 Authorize a Client Instance
 ============================
 
-.. literalinclude:: ../../../examples/getting_started_with_tensorbay.py
+.. literalinclude:: ../../../docs/code/getting_started_with_tensorbay.py
       :language: python
       :start-after: """Authorize a Client Instance"""
       :end-before: """"""
@@ -50,7 +50,7 @@ Authorize a Client Instance
 Create a Dataset 
 ================
 
-.. literalinclude:: ../../../examples/getting_started_with_tensorbay.py
+.. literalinclude:: ../../../docs/code/getting_started_with_tensorbay.py
       :language: python
       :start-after: """Create a Dataset"""
       :end-before: """"""
@@ -58,7 +58,7 @@ Create a Dataset
 List Dataset Names
 ==================
 
-.. literalinclude:: ../../../examples/getting_started_with_tensorbay.py
+.. literalinclude:: ../../../docs/code/getting_started_with_tensorbay.py
       :language: python
       :start-after: """List Dataset Names"""
       :end-before: """"""
@@ -66,7 +66,7 @@ List Dataset Names
 Upload Images to the Dataset
 ============================
 
-.. literalinclude:: ../../../examples/getting_started_with_tensorbay.py
+.. literalinclude:: ../../../docs/code/getting_started_with_tensorbay.py
       :language: python
       :start-after: """Upload Images to the Dataset"""
       :end-before: """"""
@@ -74,7 +74,7 @@ Upload Images to the Dataset
 Read Images from the Dataset
 ============================
 
-.. literalinclude:: ../../../examples/getting_started_with_tensorbay.py
+.. literalinclude:: ../../../docs/code/getting_started_with_tensorbay.py
       :language: python
       :start-after: """Read Images from the Dataset"""
       :end-before: """"""
@@ -82,7 +82,7 @@ Read Images from the Dataset
 Delete the Dataset
 ==================
 
-.. literalinclude:: ../../../examples/getting_started_with_tensorbay.py
+.. literalinclude:: ../../../docs/code/getting_started_with_tensorbay.py
       :language: python
       :start-after: """Delete the Dataset"""
       :end-before: """"""

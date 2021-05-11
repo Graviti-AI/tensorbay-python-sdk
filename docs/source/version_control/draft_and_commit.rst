@@ -16,7 +16,7 @@ In TensorBay SDK, the dataset client supplies the function of version control.
 Authorization
 **************
 
-.. literalinclude:: ../../../examples/draft_and_commit.py
+.. literalinclude:: ../../../docs/code/draft_and_commit.py
       :language: python
       :start-after: """Authorize a Dataset Client Instance"""
       :end-before: """"""
@@ -27,7 +27,7 @@ Create Draft
 
 TensorBay SDK supports creating the draft straightforwardly, which is based on the current commit.
 
-.. literalinclude:: ../../../examples/draft_and_commit.py
+.. literalinclude:: ../../../docs/code/draft_and_commit.py
       :language: python
       :start-after: """Create Draft"""
       :end-before: """"""
@@ -35,7 +35,7 @@ TensorBay SDK supports creating the draft straightforwardly, which is based on t
 Then the dataset client will change the status to "draft" and store the draft number.
 The draft number will be auto-increasing every time a draft is created.
 
-.. literalinclude:: ../../../examples/draft_and_commit.py
+.. literalinclude:: ../../../docs/code/draft_and_commit.py
       :language: python
       :start-after: """Draft Number Will Be Stored"""
       :end-before: """"""
@@ -46,7 +46,7 @@ List Drafts
 
 The draft number can be found through listing drafts.
 
-.. literalinclude:: ../../../examples/draft_and_commit.py
+.. literalinclude:: ../../../docs/code/draft_and_commit.py
       :language: python
       :start-after: """List Drafts"""
       :end-before: """"""
@@ -55,7 +55,7 @@ The draft number can be found through listing drafts.
 Get Draft
 **********
 
-.. literalinclude:: ../../../examples/draft_and_commit.py
+.. literalinclude:: ../../../docs/code/draft_and_commit.py
       :language: python
       :start-after: """Get Draft"""
       :end-before: """"""
@@ -66,7 +66,7 @@ Commit Draft
 
 After the commit, the draft will be closed.
 
-.. literalinclude:: ../../../examples/draft_and_commit.py
+.. literalinclude:: ../../../docs/code/draft_and_commit.py
       :language: python
       :start-after: """Commit Draft"""
       :end-before: """"""
@@ -75,7 +75,7 @@ After the commit, the draft will be closed.
 Get Commit
 ***********
 
-.. literalinclude:: ../../../examples/draft_and_commit.py
+.. literalinclude:: ../../../docs/code/draft_and_commit.py
       :language: python
       :start-after: """Get Commit"""
       :end-before: """"""
@@ -84,7 +84,7 @@ Get Commit
 List Commits
 *************
 
-.. literalinclude:: ../../../examples/draft_and_commit.py
+.. literalinclude:: ../../../docs/code/draft_and_commit.py
       :language: python
       :start-after: """List Commits"""
       :end-before: """"""
@@ -93,7 +93,7 @@ List Commits
 Checkout
 *********
 
-.. literalinclude:: ../../../examples/draft_and_commit.py
+.. literalinclude:: ../../../docs/code/draft_and_commit.py
       :language: python
       :start-after: """Checkout"""
       :end-before: """"""

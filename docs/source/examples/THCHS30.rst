@@ -13,7 +13,7 @@ which is a dataset with :ref:`reference/label_format:Sentence` label
 
 An :ref:`reference/glossary:accesskey` is needed to authenticate identity when using TensorBay.
 
-.. literalinclude:: ../../../examples/THCHS30.py
+.. literalinclude:: ../../../docs/code/THCHS30.py
    :language: python
    :start-after: """Authorize a Client Instance"""
    :end-before: """"""
@@ -22,7 +22,7 @@ An :ref:`reference/glossary:accesskey` is needed to authenticate identity when u
  Create Dataset
 ****************
 
-.. literalinclude:: ../../../examples/THCHS30.py
+.. literalinclude:: ../../../docs/code/THCHS30.py
    :language: python
    :start-after: """Create Dataset"""
    :end-before: """"""
@@ -64,7 +64,7 @@ See :ref:`Sentence annotation <reference/label_format:Sentence>` for more detail
     so it uses relative import.
     However, the regular import should be used when writing a new dataloader.
 
-.. literalinclude:: ../../../examples/THCHS30.py
+.. literalinclude:: ../../../docs/code/THCHS30.py
    :language: python
    :start-after: """Organize Dataset / regular import"""
    :end-at: from tensorbay.label import LabeledSentence, SentenceSubcatalog, Word
@@ -72,7 +72,7 @@ See :ref:`Sentence annotation <reference/label_format:Sentence>` for more detail
 There are already a number of dataloaders in TensorBay SDK provided by the community.
 Thus, instead of writing, importing an available dataloadert is also feasible.
 
-.. literalinclude:: ../../../examples/THCHS30.py
+.. literalinclude:: ../../../docs/code/THCHS30.py
    :language: python
    :start-after: """Organize dataset / import dataloader"""
    :end-before: """"""
@@ -91,7 +91,7 @@ Upload Dataset
 
 The organized "THCHS-30" dataset can be uploaded to TensorBay for sharing, reuse, etc.
 
-.. literalinclude:: ../../../examples/THCHS30.py
+.. literalinclude:: ../../../docs/code/THCHS30.py
    :language: python
    :start-after: """Upload Dataset"""
    :end-before: """"""
@@ -106,7 +106,7 @@ Read Dataset
 
 Now "THCHS-30" dataset can be read from TensorBay.
 
-.. literalinclude:: ../../../examples/THCHS30.py
+.. literalinclude:: ../../../docs/code/THCHS30.py
    :language: python
    :start-after: """Read Dataset / get dataset"""
    :end-before: """"""
@@ -116,14 +116,14 @@ In :ref:`reference/dataset_structure:Dataset` "THCHS-30", there are three
 ``dev``, ``train`` and ``test``.
 Get the segment names by listing them all.
 
-.. literalinclude:: ../../../examples/THCHS30.py
+.. literalinclude:: ../../../docs/code/THCHS30.py
    :language: python
    :start-after: """Read Dataset / list segment names"""
    :end-before: """"""
 
 Get a segment by passing the required segment name.
 
-.. literalinclude:: ../../../examples/THCHS30.py
+.. literalinclude:: ../../../docs/code/THCHS30.py
    :language: python
    :start-after: """Read Dataset / get segment"""
    :end-before: """"""
@@ -132,7 +132,7 @@ In the dev :ref:`reference/dataset_structure:Segment`,
 there is a sequence of :ref:`reference/dataset_structure:Data`,
 which can be obtained by index.
 
-.. literalinclude:: ../../../examples/THCHS30.py
+.. literalinclude:: ../../../docs/code/THCHS30.py
    :language: python
    :start-after: """Read Dataset / get data"""
    :end-before: """"""
@@ -141,7 +141,7 @@ In each :ref:`reference/dataset_structure:Data`,
 there is a sequence of :ref:`reference/label_format:Sentence` annotations,
 which can be obtained by index.
 
-.. literalinclude:: ../../../examples/THCHS30.py
+.. literalinclude:: ../../../docs/code/THCHS30.py
    :language: python
    :start-after: """Read Dataset / get label"""
    :end-before: """"""
@@ -154,7 +154,7 @@ label format for more details.
 Delete Dataset
 ****************
 
-.. literalinclude:: ../../../examples/THCHS30.py
+.. literalinclude:: ../../../docs/code/THCHS30.py
    :language: python
    :start-after: """Delete Dataset"""
    :end-before: """"""

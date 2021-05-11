@@ -24,28 +24,28 @@ TensorBay SDK supports methods to update labels to overwrite previous labels.
 
 Get a previously uploaded dataset and create a draft:
 
-.. literalinclude:: ../../../examples/update_dataset.py
+.. literalinclude:: ../../../docs/code/update_dataset.py
    :language: python
    :start-after: """Update label / get dataset an create draft"""
    :end-before: """"""
 
 Update the catalog if needed:
 
-.. literalinclude:: ../../../examples/update_dataset.py
+.. literalinclude:: ../../../docs/code/update_dataset.py
    :language: python
    :start-after: """Update label / update catalog"""
    :end-before: """"""
 
 Overwrite previous labels with new label on dataset:
 
-.. literalinclude:: ../../../examples/update_dataset.py
+.. literalinclude:: ../../../docs/code/update_dataset.py
    :language: python
    :start-after: """Update label / overwrite label"""
    :end-before: """"""
 
 Commit the dataset:
 
-.. literalinclude:: ../../../examples/update_dataset.py
+.. literalinclude:: ../../../docs/code/update_dataset.py
    :language: python
    :start-after: """Update label / commit dataset"""
    :end-before: """"""
@@ -62,7 +62,7 @@ Commit the dataset:
 
 Add new data to dataset.
 
-.. literalinclude:: ../../../examples/update_dataset.py
+.. literalinclude:: ../../../docs/code/update_dataset.py
    :language: python
    :start-after: """Updata data/ upload dataset"""
    :end-before: """"""
@@ -71,7 +71,7 @@ Set `skip_uploaded_files=True` to skip uploaded data.
 
 Overwrite uploaded data to dataset.
 
-.. literalinclude:: ../../../examples/update_dataset.py
+.. literalinclude:: ../../../docs/code/update_dataset.py
    :language: python
    :start-after: """Updata data/ overwrite dataset"""
    :end-before: """"""
@@ -88,14 +88,14 @@ The default value of `skip_uploaded_files` is false, use it to overwrite uploade
 
 Delete segment by the segment name.
 
-.. literalinclude:: ../../../examples/update_dataset.py
+.. literalinclude:: ../../../docs/code/update_dataset.py
    :language: python
    :start-after: """Updata data/ delete segment"""
    :end-before: """"""
 
 Delete data by the file list.
 
-.. literalinclude:: ../../../examples/update_dataset.py
+.. literalinclude:: ../../../docs/code/update_dataset.py
    :language: python
    :start-after: """Updata data/ delete data"""
    :end-before: """"""
