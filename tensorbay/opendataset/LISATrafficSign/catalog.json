@@ -1,0 +1,81 @@
+{
+    "BOX2D": {
+        "categories": [
+            { "name": "addedLane" },
+            { "name": "curveLeft" },
+            { "name": "curveRight" },
+            { "name": "dip" },
+            { "name": "doNotEnter" },
+            { "name": "doNotPass" },
+            { "name": "intersection" },
+            { "name": "keepRight" },
+            { "name": "laneEnds" },
+            { "name": "merge" },
+            { "name": "noLeftTurn" },
+            { "name": "noRightTurn" },
+            { "name": "pedestrianCrossing" },
+            { "name": "rampSpeedAdvisory20" },
+            { "name": "rampSpeedAdvisory35" },
+            { "name": "rampSpeedAdvisory40" },
+            { "name": "rampSpeedAdvisory45" },
+            { "name": "rampSpeedAdvisory50" },
+            { "name": "rampSpeedAdvisoryUrdbl" },
+            { "name": "rightLaneMustTurn" },
+            { "name": "roundabout" },
+            { "name": "school" },
+            { "name": "schoolSpeedLimit25" },
+            { "name": "signalAhead" },
+            { "name": "slow" },
+            { "name": "speedLimit15" },
+            { "name": "speedLimit25" },
+            { "name": "speedLimit30" },
+            { "name": "speedLimit35" },
+            { "name": "speedLimit40" },
+            { "name": "speedLimit45" },
+            { "name": "speedLimit50" },
+            { "name": "speedLimit55" },
+            { "name": "speedLimit65" },
+            { "name": "speedLimitUrdbl" },
+            { "name": "stop" },
+            { "name": "stopAhead" },
+            { "name": "thruMergeLeft" },
+            { "name": "thruMergeRight" },
+            { "name": "thruTrafficMergeLeft" },
+            { "name": "truckSpeedLimit55" },
+            { "name": "turnLeft" },
+            { "name": "turnRight" },
+            { "name": "yield" },
+            { "name": "yieldAhead" },
+            { "name": "zoneAhead25" },
+            { "name": "zoneAhead45" }
+        ],
+        "attributes": [
+            {
+                "name": "Occluded",
+                "type": "boolean"
+            },
+            {
+                "name": "On another road",
+                "type": "boolean"
+            },
+            {
+                "name": "Origin file",
+                "type": "string"
+            },
+            {
+                "name": "Origin frame number",
+                "type": "integer",
+                "minimum": 0
+            },
+            {
+                "name": "Origin track",
+                "type": "string"
+            },
+            {
+                "name": "Origin track frame number",
+                "type": "integer",
+                "minimum": 0
+            }
+        ]
+    }
+}

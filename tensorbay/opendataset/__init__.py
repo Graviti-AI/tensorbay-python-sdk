@@ -30,6 +30,7 @@ from .KenyanFood import KenyanFoodOrNonfood, KenyanFoodType
 from .KylbergTexture import KylbergTexture
 from .LeedsSportsPose import LeedsSportsPose
 from .LISATrafficLight import LISATrafficLight
+from .LISATrafficSign import LISATrafficSign
 from .NeolixOD import NeolixOD
 from .Newsgroups20 import Newsgroups20
 from .NightOwls import NightOwls
@@ -70,6 +71,7 @@ __all__ = [
     "KenyanFoodType",
     "KylbergTexture",
     "LISATrafficLight",
+    "LISATrafficSign",
     "LeedsSportsPose",
     "NeolixOD",
     "Newsgroups20",
