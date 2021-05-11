@@ -53,6 +53,9 @@ todo_include_todos = True
 autosectionlabel_prefix_document = True
 numfig = True
 
+# The default options for autodoc
+autodoc_default_options = {"member-order": "bysource"}
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
