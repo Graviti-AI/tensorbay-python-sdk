@@ -13,7 +13,7 @@ with :ref:`reference/label_format:Classification` label type.
 
 An :ref:`reference/glossary:accesskey` is needed to authenticate identity when using TensorBay.
 
-.. literalinclude:: ../../../examples/Newsgroups20.py
+.. literalinclude:: ../../../docs/code/Newsgroups20.py
    :language: python
    :start-after: """Authorize a Client Instance"""
    :end-before: """"""
@@ -22,7 +22,7 @@ An :ref:`reference/glossary:accesskey` is needed to authenticate identity when u
  Create Dataset
 ****************
   
-.. literalinclude:: ../../../examples/Newsgroups20.py
+.. literalinclude:: ../../../docs/code/Newsgroups20.py
    :language: python
    :start-after: """Create Dataset"""
    :end-before: """"""
@@ -82,7 +82,7 @@ See :ref:`Classification annotation <reference/label_format:Classification>` for
    in TensorBay, so it uses relative import. However, use regular import should be used when
    writing a new dataloader.
 
-.. literalinclude:: ../../../examples/Newsgroups20.py
+.. literalinclude:: ../../../docs/code/Newsgroups20.py
    :language: python
    :start-after: """Organize Dataset / regular import"""
    :end-at: from tensorbay.label import LabeledBox2D
@@ -90,7 +90,7 @@ See :ref:`Classification annotation <reference/label_format:Classification>` for
 There are already a number of dataloaders in TensorBay SDK provided by the community.
 Thus, instead of writing, importing an available dataloader is also feasible.
 
-.. literalinclude:: ../../../examples/Newsgroups20.py
+.. literalinclude:: ../../../docs/code/Newsgroups20.py
    :language: python
    :start-after: """Organize dataset / import dataloader"""
    :end-before: """"""
@@ -109,7 +109,7 @@ Thus, instead of writing, importing an available dataloader is also feasible.
 
 The organized "20 Newsgroups" dataset can be uploaded to TensorBay for sharing, reuse, etc.
 
-.. literalinclude:: ../../../examples/Newsgroups20.py
+.. literalinclude:: ../../../docs/code/Newsgroups20.py
    :language: python
    :start-after: """Upload Dataset"""
    :end-before: """"""
@@ -124,7 +124,7 @@ Please see :ref:`features/version_control:Version Control` for more details.
 
 Now "20 Newsgroups" dataset can be read from TensorBay.
 
-.. literalinclude:: ../../../examples/Newsgroups20.py
+.. literalinclude:: ../../../docs/code/Newsgroups20.py
    :language: python
    :start-after: """Read Dataset / get dataset"""
    :end-before: """"""
@@ -134,14 +134,14 @@ In :ref:`reference/dataset_structure:Dataset` "20 Newsgroups", there are four
 ``20news-bydate-test`` and ``20news-bydate-train``, ``20_newsgroups``.
 Get the segment names by listing them all.
 
-.. literalinclude:: ../../../examples/Newsgroups20.py
+.. literalinclude:: ../../../docs/code/Newsgroups20.py
    :language: python
    :start-after: """Read Dataset / list segment names"""
    :end-before: """"""
 
 Get a segment by passing the required segment name.
 
-.. literalinclude:: ../../../examples/Newsgroups20.py
+.. literalinclude:: ../../../docs/code/Newsgroups20.py
    :language: python
    :start-after: """Read Dataset / get segment"""
    :end-before: """"""
@@ -149,7 +149,7 @@ Get a segment by passing the required segment name.
 In the 20news-18828 :ref:`reference/dataset_structure:Segment`, there is a sequence of :ref:`reference/dataset_structure:Data`,
 which can be obtained by index.
 
-.. literalinclude:: ../../../examples/Newsgroups20.py
+.. literalinclude:: ../../../docs/code/Newsgroups20.py
    :language: python
    :start-after: """Read Dataset / get data"""
    :end-before: """"""
@@ -158,7 +158,7 @@ In each :ref:`reference/dataset_structure:Data`,
 there is a sequence of :ref:`reference/label_format:Classification` annotations,
 which can be obtained by index.
 
-.. literalinclude:: ../../../examples/Newsgroups20.py
+.. literalinclude:: ../../../docs/code/Newsgroups20.py
    :language: python
    :start-after: """Read Dataset / get label"""
    :end-before: """"""
@@ -173,7 +173,7 @@ structure of Classification.
  Delete Dataset
 ****************
 
-.. literalinclude:: ../../../examples/Newsgroups20.py
+.. literalinclude:: ../../../docs/code/Newsgroups20.py
    :language: python
    :start-after: """Delete Dataset"""
    :end-before: """"""

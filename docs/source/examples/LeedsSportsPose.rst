@@ -19,7 +19,7 @@ which is a dataset with :ref:`reference/label_format:Keypoints2D` label(:numref:
 
 An :ref:`reference/glossary:accesskey` is needed to authenticate identity when using TensorBay.
 
-.. literalinclude:: ../../../examples/LeedsSportsPose.py
+.. literalinclude:: ../../../docs/code/LeedsSportsPose.py
    :language: python
    :start-after: """Authorize a Client Instance"""
    :end-before: """"""
@@ -28,7 +28,7 @@ An :ref:`reference/glossary:accesskey` is needed to authenticate identity when u
  Create Dataset
 ****************
 
-.. literalinclude:: ../../../examples/LeedsSportsPose.py
+.. literalinclude:: ../../../docs/code/LeedsSportsPose.py
    :language: python
    :start-after: """Create Dataset"""
    :end-before: """"""
@@ -75,7 +75,7 @@ See :ref:`Keipoints2D annotation <reference/label_format:Keypoints2D>` for more 
    so it uses relative import.
    However, the regular import should be used when writing a new dataloader.
 
-.. literalinclude:: ../../../examples/LeedsSportsPose.py
+.. literalinclude:: ../../../docs/code/LeedsSportsPose.py
    :language: python
    :start-after: """Organize Dataset / regular import"""
    :end-at: from tensorbay.label import LabeledKeypoints2D
@@ -83,7 +83,7 @@ See :ref:`Keipoints2D annotation <reference/label_format:Keypoints2D>` for more 
 There are already a number of dataloaders in TensorBay SDK provided by the community.
 Thus, instead of writing, importing an available dataloader is also feasible.
 
-.. literalinclude:: ../../../examples/LeedsSportsPose.py
+.. literalinclude:: ../../../docs/code/LeedsSportsPose.py
    :language: python
    :start-after: """Organize dataset / import dataloader"""
    :end-before: """"""
@@ -102,7 +102,7 @@ Thus, instead of writing, importing an available dataloader is also feasible.
 
 The organized "BSTLD" dataset can be uploaded to TensorBay for sharing, reuse, etc.
 
-.. literalinclude:: ../../../examples/LeedsSportsPose.py
+.. literalinclude:: ../../../docs/code/LeedsSportsPose.py
    :language: python
    :start-after: """Upload Dataset"""
    :end-before: """"""
@@ -117,7 +117,7 @@ Please see :ref:`features/version_control:Version Control` for more details.
 
 Now "Leeds Sports Pose" dataset can be read from TensorBay.
 
-.. literalinclude:: ../../../examples/LeedsSportsPose.py
+.. literalinclude:: ../../../docs/code/LeedsSportsPose.py
    :language: python
    :start-after: """Read Dataset / get dataset"""
    :end-before: """"""
@@ -125,7 +125,7 @@ Now "Leeds Sports Pose" dataset can be read from TensorBay.
 In :ref:`reference/dataset_structure:dataset` "Leeds Sports Pose", there is one default
 :ref:`reference/dataset_structure:segment` ``""`` (empty string). Get it by passing the segment name.
 
-.. literalinclude:: ../../../examples/LeedsSportsPose.py
+.. literalinclude:: ../../../docs/code/LeedsSportsPose.py
    :language: python
    :start-after: """Read Dataset / get segment"""
    :end-before: """"""
@@ -133,7 +133,7 @@ In :ref:`reference/dataset_structure:dataset` "Leeds Sports Pose", there is one 
 In the default :ref:`reference/dataset_structure:segment`, there is a sequence of :ref:`reference/dataset_structure:data`,
 which can be obtained by index.
 
-.. literalinclude:: ../../../examples/LeedsSportsPose.py
+.. literalinclude:: ../../../docs/code/LeedsSportsPose.py
    :language: python
    :start-after: """Read Dataset / get data"""
    :end-before: """"""
@@ -142,7 +142,7 @@ In each :ref:`reference/dataset_structure:data`,
 there is a sequence of :ref:`reference/label_format:Keypoints2D` annotations,
 which can be obtained by index.
 
-.. literalinclude:: ../../../examples/LeedsSportsPose.py
+.. literalinclude:: ../../../docs/code/LeedsSportsPose.py
    :language: python
    :start-after: """Read Dataset / get label"""
    :end-before: """"""
@@ -156,7 +156,7 @@ label format for more details.
  Delete Dataset
 ****************
 
-.. literalinclude:: ../../../examples/LeedsSportsPose.py
+.. literalinclude:: ../../../docs/code/LeedsSportsPose.py
    :language: python
    :start-after: """Delete Dataset"""
    :end-before: """"""

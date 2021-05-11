@@ -38,7 +38,7 @@ Note that the default settings can satisfy most use cases.
 Usage
 =====
 
-.. literalinclude:: ../../../examples/request_configuration.py
+.. literalinclude:: ../../../docs/code/request_configuration.py
    :language: python
    :start-after: """Example of request config"""
    :end-before: """"""

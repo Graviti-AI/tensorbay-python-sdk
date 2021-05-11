@@ -30,7 +30,7 @@ Usage
 If the endpoint of the cloud server is the same as the TensorBay storage, set `is_internal` to `True`
 to use the internal endpoint for obtaining a faster network speed.
 
-.. literalinclude:: ../../../examples/use_internal_endpoint.py
+.. literalinclude:: ../../../docs/code/use_internal_endpoint.py
    :language: python
    :start-after: """Usage of Upload Dataset By Internal Endpoint"""
    :end-before: """"""

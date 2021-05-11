@@ -14,7 +14,7 @@
 | In default cloud storage mode, data are stored on TensorBay cloud.
 | Create a dataset with default storage:
 
-.. literalinclude:: ../../../examples/getting_started_with_tensorbay.py
+.. literalinclude:: ../../../docs/code/getting_started_with_tensorbay.py
       :language: python
       :start-after: """Create a Dataset"""
       :end-before: """"""
