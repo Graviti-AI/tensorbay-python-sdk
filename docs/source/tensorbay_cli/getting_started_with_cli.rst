@@ -21,18 +21,6 @@ To use TensorBay CLI, please install TensorBay SDK first.
 
    $ pip3 install tensorbay
 
-******
- TBRN
-******
-
-TensorBay Resource Name(TBRN) uniquely defines the data stored in TensorBay.
-TBRN begins with ``tb:``. Default segment can be defined as ``""`` (empty string).
-The following is the general format for TBRN:
-
-.. code:: console
-
-   tb:[dataset_name]:[segment_name]://[remote_path]
-
 ***************
  Configuration
 ***************
@@ -52,3 +40,20 @@ To show configuration information:
 .. code:: console
 
    $ gas config
+
+******
+ TBRN
+******
+
+TensorBay Resource Name(TBRN) uniquely defines the data stored in TensorBay.
+TBRN begins with ``tb:``. Default segment can be defined as ``""`` (empty string).
+The following is the general format for TBRN:
+
+.. code:: console
+
+   tb:[dataset_name]:[segment_name]://[remote_path]
+
+
+*******
+ Usage
+*******
