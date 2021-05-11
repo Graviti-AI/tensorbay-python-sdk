@@ -23,7 +23,8 @@ astroid == 2.5.2
 
 # test
 pytest == 6.2.2
-pytest-cov
+pytest-cov==2.11.1
+coveralls==2.2
 
 # optional dependences
 scipy >= 1.3.2

@@ -48,3 +48,11 @@ jobs:
 
       - name: Run pytest
         run: pytest tensorbay
+
+      - if: "startsWith(matrix.os, 'ubuntu') && matrix.python-version == 3.8"
+        name: Upload coverage data to coveralls.io
+        run: |
+          pytest tensorbay --cov
+          coveralls --service=github
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
