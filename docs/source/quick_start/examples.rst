@@ -16,7 +16,7 @@ The following table lists a series of examples to help developers to use TensorB
    :ref:`examples/DogsVsCats:Dogs vs Cats`                  | Topic: Dataset Management
                                                             | Data Type: Image
                                                             | Label Type: :ref:`reference/label_format:Classification`
-   :ref:`examples/NewsGroups20:20 Newsgroups`               | Topic: Dataset Management
+   :ref:`examples/Newsgroups20:20 Newsgroups`               | Topic: Dataset Management
                                                             | Data Type: Text
                                                             | Label Type: :ref:`reference/label_format:Classification`
    :ref:`examples/BSTLD:BSTLD`                              | Topic: Dataset Management
