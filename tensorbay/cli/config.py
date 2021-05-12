@@ -15,14 +15,6 @@ from .utility import get_config_filepath
 
 
 def _implement_config(obj: Dict[str, str], access_key: str, url: str) -> None:
-    """Configure the accessKey (and URL) of gas.\f
-
-    Arguments:
-        obj: A dict contains config information.
-        access_key: The accessKey of gas to write into config file.
-        url: The URL of gas to write into config file.
-
-    """  # noqa: D301,D415
     config_file = get_config_filepath()
     config_parser = ConfigParser()
     config_parser.read(config_file)

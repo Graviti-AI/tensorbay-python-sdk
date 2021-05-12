@@ -15,14 +15,6 @@ from .utility import get_gas
 
 
 def _implement_delete(obj: Dict[str, str], name: str, yes: bool) -> None:
-    """Delete a dataset.\f
-
-    Arguments:
-        obj: A dict including config info.
-        name: The name of the dataset to be deleted, like "tb:KITTI".
-        yes: Confirm to delete the dataset completely.
-
-    """  # noqa: D301,D415
     info = TBRN(tbrn=name)
     if info.type != TBRNType.DATASET:
         click.echo(f'"{name}" is not a dataset', err=True)

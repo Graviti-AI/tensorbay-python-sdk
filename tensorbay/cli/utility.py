@@ -20,16 +20,6 @@ from ..client import config as client_config
 def _implement_cli(
     ctx: click.Context, access_key: str, url: str, profile_name: str, debug: bool
 ) -> None:
-    """You can use 'gas' + COMMAND to operate on your dataset.\f
-
-    Arguments:
-        ctx: The context to be passed as the first argument.
-        access_key: The accessKey of gas.
-        url: The login URL.
-        profile_name: The environment to login.
-        debug: Debug mode flag.
-
-    """  # noqa: D301,D415
     ctx.obj = {
         "access_key": access_key,
         "url": url,
