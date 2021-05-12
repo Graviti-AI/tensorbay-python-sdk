@@ -1,7 +1,7 @@
 # TensorBay Python SDK
 
-[![Pre-commit check](https://github.com/Graviti-AI/tensorbay-python-sdk/actions/workflows/pre-commit.yaml/badge.svg)](https://github.com/Graviti-AI/tensorbay-python-sdk/actions/workflows/pre-commit.yaml)
-[![Run unit test](https://github.com/Graviti-AI/tensorbay-python-sdk/actions/workflows/test_unit.yaml/badge.svg)](https://github.com/Graviti-AI/tensorbay-python-sdk/actions/workflows/test_unit.yaml)
+[![Pre-commit](https://github.com/Graviti-AI/tensorbay-python-sdk/actions/workflows/pre-commit.yaml/badge.svg)](https://github.com/Graviti-AI/tensorbay-python-sdk/actions/workflows/pre-commit.yaml)
+[![Unit Test](https://github.com/Graviti-AI/tensorbay-python-sdk/actions/workflows/unit_test.yaml/badge.svg)](https://github.com/Graviti-AI/tensorbay-python-sdk/actions/workflows/unit_test.yaml)
 [![Documentation Status](https://readthedocs.org/projects/tensorbay-python-sdk/badge/?version=latest)](https://tensorbay-python-sdk.graviti.com/en/latest/?badge=latest)
 [![GitHub](https://img.shields.io/github/license/Graviti-AI/tensorbay-python-sdk)](https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/LICENSE)
 [![PyPI](https://img.shields.io/pypi/v/tensorbay)](https://pypi.org/project/tensorbay/)

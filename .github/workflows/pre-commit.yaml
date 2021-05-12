@@ -3,7 +3,7 @@
 #
 
 ---
-name: Pre-commit check
+name: Pre-commit
 
 on: [push, pull_request]
 
@@ -20,7 +20,7 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Set up Ruby
+      - name: Set up ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.6
@@ -32,7 +32,7 @@ jobs:
           path: /opt/hostedtoolcache/Python/${{ matrix.python-version }}
           key: ${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}
 
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
@@ -46,7 +46,7 @@ jobs:
           path: ~/.cache/pre-commit
           key: ${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
 
-      - name: Run pre commit for all files
+      - name: Run pre-commit for all files
         run: |
           pre-commit run --all-files
           git show --format=%B --no-patch > commit-msg
