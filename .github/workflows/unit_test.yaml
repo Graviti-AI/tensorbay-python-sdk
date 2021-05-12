@@ -25,14 +25,14 @@ jobs:
           bundler-cache: true
 
       - name: Cache python ${{ matrix.python-version }} in ubuntu
-        if: startsWith(matrix.os, 'ubuntu')
+        if: "matrix.os == 'ubuntu-18.04'"
         uses: actions/cache@v2
         with:
           path: /opt/hostedtoolcache/Python/${{ matrix.python-version }}
           key: ${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}
 
       - name: Cache python ${{ matrix.python-version }} in macos
-        if: startsWith(matrix.os, 'macos')
+        if: "matrix.os == 'macos-10.15'"
         uses: actions/cache@v2
         with:
           path: /Users/runner/hostedtoolcache/Python/${{ matrix.python-version }}
@@ -49,7 +49,7 @@ jobs:
       - name: Run pytest
         run: pytest tensorbay
 
-      - if: "startsWith(matrix.os, 'ubuntu') && matrix.python-version == 3.8"
+      - if: "matrix.os == 'ubuntu-18.04' && matrix.python-version == 3.8"
         name: Upload coverage data to coveralls.io
         run: |
           pytest tensorbay --cov
