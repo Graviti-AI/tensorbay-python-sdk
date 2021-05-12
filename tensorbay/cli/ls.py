@@ -206,14 +206,6 @@ _LS_FUNCS = {
 def _implement_ls(  # pylint: disable=invalid-name
     obj: Dict[str, str], tbrn: str, list_all_files: bool
 ) -> None:
-    """List data under the path. If path is empty, list the names of all datasets.\f
-
-    Arguments:
-        obj: A dict contains config information.
-        tbrn: Path to be listed, like "tb:KITTI:seg1". If empty, list names of all datasets.
-        list_all_files: If true, list all files under the segment.
-
-    """  # noqa: D301,D415
     gas = get_gas(**obj)
 
     if not tbrn:
