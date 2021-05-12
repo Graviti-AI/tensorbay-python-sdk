@@ -3,9 +3,9 @@
 #
 
 ---
-name: Run unit test
+name: Integration Test
 
-on: [push, pull_request]
+on: workflow_dispatch
 
 jobs:
   build:
@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up Ruby
+      - name: Set up ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.6
@@ -38,7 +38,7 @@ jobs:
           path: /Users/runner/hostedtoolcache/Python/${{ matrix.python-version }}
           key: ${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}
 
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
@@ -47,4 +47,4 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run pytest
-        run: pytest tensorbay
+        run: pytest tests --accesskey ${{ secrets.accesskey }} --url ${{ secrets.url }}
