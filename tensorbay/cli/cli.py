@@ -129,5 +129,21 @@ def config(obj: Dict[str, str], access_key: str, url: str) -> None:
     _implement_config(obj, access_key, url)
 
 
+@cli.command()
+@click.argument("name", type=str)
+@click.pass_obj
+def dataset(obj: Dict[str, str], name: str) -> None:
+    """Create a dataset.\f
+
+    Arguments:
+        obj: A dict including config information.
+        name: The name of the dataset to be created, like "tb:KITTI".
+
+    """  # noqa: D301,D415
+    from .dataset import _implement_dataset
+
+    _implement_dataset(obj, name)
+
+
 if __name__ == "__main__":
     cli()  # pylint: disable=no-value-for-parameter
