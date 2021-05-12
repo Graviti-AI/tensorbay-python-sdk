@@ -130,19 +130,18 @@ def config(obj: Dict[str, str], access_key: str, url: str) -> None:
 
 
 @cli.command()
-@click.argument("name", type=str)
+@click.argument("tbrn", type=str, default="")
 @click.pass_obj
-def dataset(obj: Dict[str, str], name: str) -> None:
-    """Create a dataset.\f
+def dataset(obj: Dict[str, str], tbrn: str) -> None:
+    """Work with TensorBay datasets\f
 
     Arguments:
         obj: A dict including config information.
-        name: The name of the dataset to be created, like "tb:KITTI".
-
+        tbrn: The tbrn of the dataset to be created, like "tb:KITTI".
     """  # noqa: D301,D415
     from .dataset import _implement_dataset
 
-    _implement_dataset(obj, name)
+    _implement_dataset(obj, tbrn)
 
 
 if __name__ == "__main__":
