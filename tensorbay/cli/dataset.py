@@ -22,6 +22,7 @@ def _implement_dataset(obj: Dict[str, str], tbrn: str) -> None:
             click.echo(f'"{tbrn}" is not a dataset', err=True)
             sys.exit(1)
         gas.create_dataset(info.dataset_name)
+        click.echo(f'Dataset "{tbrn}" is created successfully')
     else:
         for dataset_name in gas.list_dataset_names():
             click.echo(TBRN(dataset_name).get_tbrn())
