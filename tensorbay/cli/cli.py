@@ -131,17 +131,21 @@ def config(obj: Dict[str, str], access_key: str, url: str) -> None:
 
 @cli.command()
 @click.argument("tbrn", type=str, default="")
+@click.option("-d", "--delete", "is_delete", is_flag=True, help="Delete TensorBay dataset")
+@click.option("-y", "--yes", is_flag=True, help="Confirm to delete the dataset completely.")
 @click.pass_obj
-def dataset(obj: Dict[str, str], tbrn: str) -> None:
+def dataset(obj: Dict[str, str], tbrn: str, is_delete: bool, yes: bool) -> None:
     """Work with TensorBay datasets\f
 
     Arguments:
         obj: A dict including config information.
         tbrn: The tbrn of the dataset to be created, like "tb:KITTI".
+        is_delete: Whether to delete the TensorBay dataset.
+        yes: Confirm to delete the dataset completely.
     """  # noqa: D301,D415
     from .dataset import _implement_dataset
 
-    _implement_dataset(obj, tbrn)
+    _implement_dataset(obj, tbrn, is_delete, yes)
 
 
 if __name__ == "__main__":
