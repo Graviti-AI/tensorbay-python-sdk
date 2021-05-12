@@ -144,6 +144,8 @@ class TBRN:
         sensor_name: Name of the sensor.
         remote_path: Object path of the file.
         tbrn: Full TBRN string.
+        draft_number: The draft number (if the status is draft).
+        revision: The commit revision (if the status is commit).
 
     Attributes:
         dataset_name: Name of the dataset.
@@ -152,6 +154,9 @@ class TBRN:
         sensor_name: Name of the sensor.
         remote_path: Object path of the file.
         type: The type of this TBRN.
+        draft_number: The draft number (if the status is draft).
+        revision: The revision (if the status is not draft).
+        is_draft: whether the status is draft, True for draft, False for commit.
 
     Raises:
         TBRNError: The TBRN is invalid.
@@ -160,6 +165,10 @@ class TBRN:
 
     _HEAD = "tb"
     _NAMES_SEPARATOR = ":"
+
+    _DRAFT_SEPARATOR = "#"
+    _REVISION_SEPARATOR = "@"
+
     _NAMES_MAX_SPLIT = 4
     _PATH_SEPARATOR = "://"
     _PATH_MAX_SPLIT = 1
@@ -183,7 +192,7 @@ class TBRN:
         Optional[str],
     ]
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-locals
         self,
         dataset_name: Optional[str] = None,
         segment_name: Optional[str] = None,
@@ -191,6 +200,8 @@ class TBRN:
         sensor_name: Optional[str] = None,
         *,
         remote_path: Optional[str] = None,
+        draft_number: Optional[int] = None,
+        revision: Optional[str] = None,
         tbrn: Optional[str] = None,
     ) -> None:
         if tbrn is not None:
@@ -200,7 +211,26 @@ class TBRN:
             if names[0] != TBRN._HEAD:
                 raise TBRNError('TensorBay Resource Name should startwith "tb:"')
 
+            dataset_name = names[1]
+            if not dataset_name:
+                raise TBRNError(
+                    'TensorBay Resource Name should add dataset name "tb:<dataset name>"'
+                )
+
+            self.revision: Optional[str] = None
+            self.draft_number: Optional[int] = None
+
+            if TBRN._REVISION_SEPARATOR in dataset_name:
+                names[1], self.revision = dataset_name.split(TBRN._REVISION_SEPARATOR, 1)
+
+            elif TBRN._DRAFT_SEPARATOR in dataset_name:
+                names[1], number = dataset_name.split(TBRN._DRAFT_SEPARATOR)
+                self.draft_number = int(number)
+            else:
+                names[1] = dataset_name
+
             names += [None] * (TBRN._NAMES_MAX_SPLIT + 1 - len(names))
+
             frame_index = names[TBRN._FRAME_INDEX]
             names[TBRN._FRAME_INDEX] = int(frame_index) if frame_index else None
 
@@ -219,6 +249,12 @@ class TBRN:
                 sensor_name,
                 remote_path,
             )
+
+            if draft_number is not None and revision is not None:
+                raise TBRNError("TensorBay Resource Name should not contain draft and commit info")
+
+            self.draft_number = draft_number
+            self.revision = revision
 
         try:
             self._type, self._field_length = self._check_type()
@@ -302,6 +338,16 @@ class TBRN:
         """
         return self._type
 
+    @property
+    def is_draft(self) -> bool:
+        """Return the frame index.
+
+        Returns:
+            The frame index.
+
+        """
+        return bool(self.draft_number)
+
     def get_tbrn(self, frame_width: int = 0) -> str:
         """Generate the full TBRN string.
 
@@ -324,6 +370,10 @@ class TBRN:
                     names[TBRN._FRAME_INDEX] = f"{frame_index}"
             else:
                 names[TBRN._FRAME_INDEX] = ""
+        if self.is_draft:
+            names[1] = f"{names[1]}{TBRN._DRAFT_SEPARATOR}{self.draft_number}"
+        elif self.revision is not None:
+            names[1] = f"{names[1]}{TBRN._REVISION_SEPARATOR}{self.revision}"
         tbrn = TBRN._NAMES_SEPARATOR.join(names)
         if self._names[4] is not None:
             tbrn = f"{tbrn}{TBRN._PATH_SEPARATOR}{self.remote_path}"
