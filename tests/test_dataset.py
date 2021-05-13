@@ -3,60 +3,16 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""This file defines class TestGAS"""
-
 import pytest
 
-from tensorbay.client import GAS
-from tensorbay.dataset import Data, Dataset, Segment
-from tensorbay.exception import ResourceNotExistError, ResponseError
-from tensorbay.label import Catalog, Label
+from tensorbay import GAS
+from tensorbay.exception import CommitStatusError, ResourceNotExistError, ResponseError
+from tensorbay.label import Catalog
 
 from .utility import get_random_dataset_name
 
-CATALOG = {
-    "BOX2D": {
-        "categories": [
-            {"name": "01"},
-            {"name": "02"},
-            {"name": "03"},
-            {"name": "04"},
-            {"name": "05"},
-            {"name": "06"},
-            {"name": "07"},
-            {"name": "08"},
-            {"name": "09"},
-            {"name": "10"},
-            {"name": "11"},
-            {"name": "12"},
-            {"name": "13"},
-            {"name": "14"},
-            {"name": "15"},
-        ],
-        "attributes": [
-            {"name": "Vertical angle", "enum": [-90, -60, -30, -15, 0, 15, 30, 60, 90]},
-            {
-                "name": "Horizontal angle",
-                "enum": [-90, -75, -60, -45, -30, -15, 0, 15, 30, 45, 60, 75, 90],
-            },
-            {"name": "Serie", "enum": [1, 2]},
-            {"name": "Number", "type": "integer", "minimum": 0, "maximum": 92},
-        ],
-    }
-}
 
-LABEL = {
-    "BOX2D": [
-        {
-            "category": "01",
-            "attributes": {"Vertical angle": -90, "Horizontal angle": 60, "Serie": 1, "Number": 5},
-            "box2d": {"xmin": 639.85, "ymin": 175.24, "xmax": 667.59, "ymax": 200.41},
-        }
-    ]
-}
-
-
-class TestGAS:
+class TestDataset:
     def test_create_dataset(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_random_dataset_name()
@@ -179,87 +135,6 @@ class TestGAS:
 
         gas_client.delete_dataset(new_dataset_name)
 
-    def test_upload_dataset_only_with_file(self, accesskey, url, tmp_path):
-        gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
-        gas_client.create_dataset(dataset_name)
-
-        dataset = Dataset(name=dataset_name)
-        dataset.notes.is_continuous = True
-        segment = dataset.create_segment("Segment1")
-
-        path = tmp_path / "sub"
-        path.mkdir()
-        for i in range(10):
-            local_path = path / f"hello{i}.txt"
-            local_path.write_text("CONTENT")
-            segment.append(Data(local_path=str(local_path)))
-
-        dataset_client = gas_client.upload_dataset(dataset)
-        assert dataset_client.get_notes().is_continuous == True
-        assert not dataset_client.get_catalog()
-        segment1 = Segment("Segment1", client=dataset_client)
-        assert len(segment1) == 10
-        assert segment1[0].path == "hello0.txt"
-        assert not segment1[0].label
-
-        gas_client.delete_dataset(dataset_name)
-
-    def test_upload_dataset_with_label(self, accesskey, url, tmp_path):
-        gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
-        gas_client.create_dataset(dataset_name)
-
-        dataset = Dataset(name=dataset_name)
-        segment = dataset.create_segment("Segment1")
-        # When uploading label, upload catalog first.
-        dataset._catalog = Catalog.loads(CATALOG)
-
-        path = tmp_path / "sub"
-        path.mkdir()
-        for i in range(10):
-            local_path = path / f"hello{i}.txt"
-            local_path.write_text("CONTENT")
-            data = Data(local_path=str(local_path))
-            data.label = Label.loads(LABEL)
-            segment.append(data)
-
-        dataset_client = gas_client.upload_dataset(dataset)
-        assert dataset_client.get_catalog()
-        segment1 = Segment("Segment1", client=dataset_client)
-        assert len(segment1) == 10
-        assert segment1[0].path == "hello0.txt"
-        assert segment1[0].label
-
-        gas_client.delete_dataset(dataset_name)
-
-    def test_upload_dataset_to_given_draft(self, accesskey, url, tmp_path):
-        gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
-        dataset_client_1 = gas_client.create_dataset(dataset_name)
-        draft_number = dataset_client_1.create_draft("test")
-
-        dataset = Dataset(name=dataset_name)
-        segment = dataset.create_segment("Segment1")
-
-        path = tmp_path / "sub"
-        path.mkdir()
-        for i in range(10):
-            local_path = path / f"hello{i}.txt"
-            local_path.write_text("CONTENT")
-            segment.append(Data(local_path=str(local_path)))
-
-        dataset_client_2 = gas_client.upload_dataset(dataset, draft_number=draft_number)
-        segment1 = Segment("Segment1", client=dataset_client_2)
-        assert len(segment1) == 10
-        assert segment1[0].path == "hello0.txt"
-        assert not segment1[0].label
-
-        with pytest.raises(ResourceNotExistError):
-            gas_client.upload_dataset(dataset, draft_number=draft_number + 1)
-
-        gas_client.delete_dataset(dataset_name)
-
     def test_delete_dataset(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name_1 = get_random_dataset_name()
@@ -276,3 +151,63 @@ class TestGAS:
         gas_client.delete_dataset(dataset_name_2)
         with pytest.raises(ResourceNotExistError):
             gas_client.get_dataset(dataset_name_2)
+
+    def test_checkout(self, accesskey, url):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_random_dataset_name()
+        dataset_client = gas_client.create_dataset(dataset_name)
+        dataset_client.create_draft("draft-1")
+        dataset_client.commit("commit-1", tag="V1")
+        commit_1_id = dataset_client.status.commit_id
+        dataset_client.create_draft("draft-2")
+        dataset_client.commit("commit-2")
+        commit_2_id = dataset_client.status.commit_id
+        # Neither commit key nor draft number is given
+        with pytest.raises(TypeError):
+            dataset_client.checkout()
+        # Both commit key and draft number are given
+        with pytest.raises(TypeError):
+            dataset_client.checkout(revision=commit_1_id, draft_number=3)
+        dataset_client.checkout(revision=commit_1_id)
+        assert dataset_client._status.commit_id == commit_1_id
+        # The commit does not exist.
+        with pytest.raises(ResourceNotExistError):
+            dataset_client.checkout(revision="123")
+        assert dataset_client._status.commit_id == commit_1_id
+        dataset_client.checkout(revision="V1")
+        assert dataset_client._status.commit_id == commit_1_id
+        dataset_client.checkout(revision="main")
+        assert dataset_client._status.commit_id == commit_2_id
+
+        dataset_client.create_draft("draft-3")
+        # The draft does not exist.
+        with pytest.raises(ResourceNotExistError):
+            dataset_client.checkout(draft_number=2)
+        dataset_client.checkout(draft_number=3)
+        assert dataset_client._status.draft_number == 3
+
+        gas_client.delete_dataset(dataset_name)
+
+    def test_notes(self, accesskey, url):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_random_dataset_name()
+        dataset_client = gas_client.create_dataset(dataset_name)
+
+        with pytest.raises(CommitStatusError):
+            dataset_client.update_notes(is_continuous=True)
+        dataset_client.create_draft("draft-1")
+        notes_1 = dataset_client.get_notes()
+        assert notes_1.is_continuous is False
+
+        dataset_client.update_notes(is_continuous=True)
+        notes_2 = dataset_client.get_notes()
+        assert notes_2.is_continuous is True
+
+        dataset_client.update_notes(
+            is_continuous=False, bin_point_cloud_fields=["X", "Y", "Z", "Intensity", "Ring"]
+        )
+        notes_2 = dataset_client.get_notes()
+        assert notes_2.is_continuous is False
+        assert notes_2.bin_point_cloud_fields == ["X", "Y", "Z", "Intensity", "Ring"]
+
+        gas_client.delete_dataset(dataset_name)
