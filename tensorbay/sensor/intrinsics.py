@@ -27,10 +27,10 @@ from typing import Dict, Iterator, Optional, Sequence, Tuple, Type, TypeVar
 import numpy as np
 
 from ..geometry import Vector2D
-from ..utility import MatrixType, ReprMixin, ReprType, common_loads
+from ..utility import EqMixin, MatrixType, ReprMixin, ReprType, common_loads
 
 
-class CameraMatrix(ReprMixin):
+class CameraMatrix(ReprMixin, EqMixin):
     """CameraMatrix represents camera matrix.
 
     Camera matrix describes the mapping of a pinhole camera model from 3D points in the world
@@ -126,18 +126,6 @@ class CameraMatrix(ReprMixin):
 
         raise TypeError(
             f"Require 'fx', 'fy', 'cx', 'cy' or 3x3 matrix to initialize {self.__class__.__name__}"
-        )
-
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, self.__class__):
-            return False
-
-        return (
-            self.fx == other.fx
-            and self.fy == other.fy
-            and self.cx == other.cx
-            and self.cy == other.cy
-            and self.skew == other.skew
         )
 
     def _loads(self, contents: Dict[str, float]) -> None:
@@ -257,7 +245,7 @@ class CameraMatrix(ReprMixin):
         return Vector2D(x, y)
 
 
-class DistortionCoefficients(ReprMixin):
+class DistortionCoefficients(ReprMixin, EqMixin):
     """DistortionCoefficients represents camera distortion coefficients.
 
     Distortion is the deviation from rectilinear projection including radial distortion
@@ -295,16 +283,6 @@ class DistortionCoefficients(ReprMixin):
             raise TypeError(
                 f"Require tangential or radial distortion to initialize {self.__class__.__name__}"
             )
-
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, self.__class__):
-            return False
-
-        for key in self._DISTORTION_KEYS:
-            if tuple(self._list_distortions(key)) != tuple(other._list_distortions(key)):
-                return False
-
-        return True
 
     @staticmethod
     def _distortion_generator(
@@ -475,7 +453,7 @@ class DistortionCoefficients(ReprMixin):
         return Vector2D(x, y)
 
 
-class CameraIntrinsics(ReprMixin):
+class CameraIntrinsics(ReprMixin, EqMixin):
     """CameraIntrinsics represents camera intrinsics.
 
     Camera intrinsic parameters including camera matrix and distortion coeffecients.
@@ -567,15 +545,6 @@ class CameraIntrinsics(ReprMixin):
     ) -> None:
         self._camera_matrix = CameraMatrix(fx, fy, cx, cy, skew, matrix=camera_matrix)
         self._distortion_coefficients = DistortionCoefficients.loads(kwargs) if kwargs else None
-
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, self.__class__):
-            return False
-
-        return (
-            self.camera_matrix == other.camera_matrix
-            and self.distortion_coefficients == other.distortion_coefficients
-        )
 
     def _loads(self, contents: Dict[str, Dict[str, float]]) -> None:
         self._camera_matrix = CameraMatrix.loads(contents["cameraMatrix"])
