@@ -6,7 +6,7 @@
 from tensorbay import GAS
 from tensorbay.sensor import Sensor, Sensors
 
-from .utility import get_random_dataset_name
+from .utility import get_dataset_name
 
 LIDAR_DATA = {
     "name": "Lidar1",
@@ -21,7 +21,7 @@ LIDAR_DATA = {
 class TestSensor:
     def test_sensor(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name, is_fusion=True)
         dataset_client.create_draft("draft-1")
         segment_client = dataset_client.get_or_create_segment("segment1")

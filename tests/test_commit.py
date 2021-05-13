@@ -9,13 +9,13 @@ from tensorbay import GAS, __version__
 from tensorbay.dataset import Data, Segment
 from tensorbay.exception import CommitStatusError, ResourceNotExistError
 
-from .utility import get_random_dataset_name
+from .utility import get_dataset_name
 
 
 class TestCommit:
     def test_get_commit(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
         dataset_client.commit("commit-1", tag="V1")
@@ -55,7 +55,7 @@ class TestCommit:
 
     def test_get_commit_by_ref(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
         dataset_client.commit("commit-1", tag="V1")
@@ -88,7 +88,7 @@ class TestCommit:
 
     def test_list_commits(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
         dataset_client.commit("commit-1", tag="V1")
@@ -122,7 +122,7 @@ class TestCommit:
     @pytest.mark.xfail(__version__ < "1.7.0", reason="not supported at least until v1.7.0")
     def test_draft_and_top_commit_inherit(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
         segment = Segment("segment1")

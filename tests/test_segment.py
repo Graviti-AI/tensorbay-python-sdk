@@ -8,13 +8,13 @@ import pytest
 from tensorbay import GAS
 from tensorbay.exception import CommitStatusError, NameConflictError, ResourceNotExistError
 
-from .utility import get_random_dataset_name
+from .utility import get_dataset_name
 
 
 class TestSegment:
     def test_create_segment(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
 
         with pytest.raises(CommitStatusError):
@@ -32,7 +32,7 @@ class TestSegment:
 
     def test_get_or_create_segment(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
 
         with pytest.raises(CommitStatusError):
@@ -47,7 +47,7 @@ class TestSegment:
 
     def test_get_or_create_fusion_segment(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name, is_fusion=True)
 
         with pytest.raises(CommitStatusError):
@@ -62,7 +62,7 @@ class TestSegment:
 
     def test_list_segment_names(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
         dataset_client.get_or_create_segment("segment1")
@@ -77,7 +77,7 @@ class TestSegment:
 
     def test_delete_segment(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
         dataset_client.get_or_create_segment("segment1")

@@ -9,7 +9,7 @@ from tensorbay import GAS
 from tensorbay.exception import CommitStatusError
 from tensorbay.label import Catalog
 
-from .utility import get_random_dataset_name
+from .utility import get_dataset_name
 
 CATALOG = {
     "BOX2D": {
@@ -46,7 +46,7 @@ CATALOG = {
 class TestCatalog:
     def test_catalog(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
 
         with pytest.raises(CommitStatusError):

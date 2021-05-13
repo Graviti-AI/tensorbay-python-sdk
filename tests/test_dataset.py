@@ -9,13 +9,13 @@ from tensorbay import GAS
 from tensorbay.exception import CommitStatusError, ResourceNotExistError, ResponseError
 from tensorbay.label import Catalog
 
-from .utility import get_random_dataset_name
+from .utility import get_dataset_name
 
 
 class TestDataset:
     def test_create_dataset(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
 
         dataset_client = gas_client.create_dataset(dataset_name)
         assert dataset_client.status.commit_id is None
@@ -32,20 +32,20 @@ class TestDataset:
         regions = ("beijing", "hangzhou", "shanghai")
 
         for region in regions:
-            dataset_name = get_random_dataset_name()
+            dataset_name = get_dataset_name()
             gas_client.create_dataset(dataset_name, region=region)
             gas_client.get_dataset(dataset_name)
 
             gas_client.delete_dataset(dataset_name)
 
         region = "guangzhou"
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         with pytest.raises(ResponseError):
             gas_client.create_dataset(dataset_name, region=region)
 
     def test_create_fusion_dataset(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
 
         dataset_client = gas_client.create_dataset(dataset_name, is_fusion=True)
         assert dataset_client.status.commit_id is None
@@ -59,19 +59,19 @@ class TestDataset:
 
     def test_list_dataset_names(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         gas_client.create_dataset(dataset_name)
 
         datasets = gas_client.list_dataset_names()
         assert dataset_name in datasets
-        dataset_name_1 = get_random_dataset_name()
+        dataset_name_1 = get_dataset_name()
         assert dataset_name_1 not in datasets
 
         gas_client.delete_dataset(dataset_name)
 
     def test_get_new_dataset(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("v_test")
 
@@ -86,7 +86,7 @@ class TestDataset:
 
     def test_get_dataset_to_latest_commit(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("v_test_1")
         dataset_client.commit(message="Test", tag="V1")
@@ -104,7 +104,7 @@ class TestDataset:
 
     def test_get_fusion_dataset_to_latest_commit(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name, is_fusion=True)
         dataset_client.create_draft("v_test_1")
         dataset_client.commit(message="Test", tag="V1")
@@ -122,12 +122,12 @@ class TestDataset:
 
     def test_rename_dataset(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("v_test")
         dataset_client.commit(message="Test", tag="V1")
 
-        new_dataset_name = get_random_dataset_name()
+        new_dataset_name = get_dataset_name()
         gas_client.rename_dataset(name=dataset_name, new_name=new_dataset_name)
         with pytest.raises(ResourceNotExistError):
             gas_client.get_dataset(dataset_name)
@@ -137,14 +137,14 @@ class TestDataset:
 
     def test_delete_dataset(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name_1 = get_random_dataset_name()
+        dataset_name_1 = get_dataset_name()
         gas_client.create_dataset(dataset_name_1)
 
         gas_client.delete_dataset(dataset_name_1)
         with pytest.raises(ResourceNotExistError):
             gas_client.get_dataset(dataset_name_1)
 
-        dataset_name_2 = get_random_dataset_name()
+        dataset_name_2 = get_dataset_name()
         dataset_client_2 = gas_client.create_dataset(dataset_name_2)
         dataset_client_2.create_draft("v_test")
         dataset_client_2.commit(message="Test", tag="V1")
@@ -154,7 +154,7 @@ class TestDataset:
 
     def test_checkout(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
         dataset_client.commit("commit-1", tag="V1")
@@ -190,7 +190,7 @@ class TestDataset:
 
     def test_notes(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
 
         with pytest.raises(CommitStatusError):
