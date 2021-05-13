@@ -32,9 +32,6 @@ The following table lists a series of examples to help developers to use TensorB
                                                             | Data Type: Audio
                                                             | Label Type: :ref:`reference/label_format:Sentence`
    :ref:`examples/update_dataset:Update Dataset`            | Topic: Update Dataset
-   :ref:`examples/read_dataset_class:Read "Dataset" Class`  | Dataset: BSTLD
-                                                            | Data Type: Image
-                                                            | Label Type: :ref:`reference/label_format:Box2D`
    =======================================================  ===========================================================
 
 .. toctree::
@@ -48,4 +45,3 @@ The following table lists a series of examples to help developers to use TensorB
    ../examples/THCHS30
    ../examples/Newsgroups20
    ../examples/update_dataset
-   ../examples/read_dataset_class
