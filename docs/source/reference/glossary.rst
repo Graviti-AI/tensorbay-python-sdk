@@ -152,7 +152,10 @@ commit
 
 Similar with Git, a commit is a version of a dataset,
 which contains the changes compared with the former commit.
-A certain commit of a dataset can be accessed by passing the corresponding commit ID.
+
+Each commit has a unique commit ID, which is a uuid in a 36-byte hexadecimal string.
+A certain commit of a dataset can be accessed by passing the corresponding commit ID
+or other forms of :ref:`reference/glossary:revision`.
 
 A commit is readable, but is not writable.
 Thus, only read operations such as getting catalog, files and labels are allowed.
@@ -181,3 +184,26 @@ tag
 TensorBay SDK has the ability to tag the specific :ref:`reference/glossary:commit` in a dataset's history
 as being important. Typically, people use this functionality to mark release points (v1.0, v2.0 and so on).
 
+
+branch
+======
+
+Similar to git, a branch is a lightweight pointer to one of the commits.
+
+Currently, TensorBay only supports a single branch, which is the default "main" branch.
+
+Every time a :ref:`reference/glossary:commit` is submitted,
+the main branch pointer moves forward automatically to the latest commit.
+
+
+revision
+========
+
+Similar to Git, a revision is a reference to a single :ref:`reference/glossary:commit`.
+And many methods in TensorBay SDK take revision as an argument.
+
+Currently, a revision can be in the following forms:
+
+1. A full :ref:`reference/glossary:commit` ID.
+2. A :ref:`reference/glossary:tag`.
+3. A :ref:`reference/glossary:branch`.
