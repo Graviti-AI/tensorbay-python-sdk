@@ -9,13 +9,13 @@ from tensorbay.client import GAS
 from tensorbay.client.struct import Draft
 from tensorbay.exception import CommitStatusError, ResponseError
 
-from .utility import get_draft_number_by_title, get_random_dataset_name
+from .utility import get_dataset_name, get_draft_number_by_title
 
 
 class TestDraft:
     def test_create_draft(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
 
         draft_number_1 = dataset_client.create_draft("draft-1")
@@ -32,7 +32,7 @@ class TestDraft:
 
     def test_list_drafts(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
         dataset_client.commit(message="commit-draft-1")
@@ -53,7 +53,7 @@ class TestDraft:
 
     def test_commit_draft(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
         dataset_client.commit("commit-1")

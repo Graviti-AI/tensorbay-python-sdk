@@ -12,7 +12,7 @@ from tensorbay.exception import FrameError, ResourceNotExistError, ResponseError
 from tensorbay.label import Catalog, Label
 from tensorbay.sensor import Sensor
 
-from .utility import get_random_dataset_name
+from .utility import get_dataset_name
 
 CATALOG = {
     "BOX2D": {
@@ -78,7 +78,7 @@ WRONG_LABEL = {
 class TestUploadDataset:
     def test_upload_dataset_only_with_file(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         gas_client.create_dataset(dataset_name)
 
         dataset = Dataset(name=dataset_name)
@@ -104,7 +104,7 @@ class TestUploadDataset:
 
     def test_upload_dataset_with_label(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         gas_client.create_dataset(dataset_name)
 
         dataset = Dataset(name=dataset_name)
@@ -132,7 +132,7 @@ class TestUploadDataset:
 
     def test_upload_dataset_to_given_draft(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client_1 = gas_client.create_dataset(dataset_name)
         draft_number = dataset_client_1.create_draft("test")
 
@@ -161,7 +161,7 @@ class TestUploadDataset:
 class TestUploadSegment:
     def test_get_and_upload_segment_with_no_file(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("test")
 
@@ -175,7 +175,7 @@ class TestUploadSegment:
 
     def test_get_and_upload_segment_only_with_file(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
 
@@ -199,7 +199,7 @@ class TestUploadSegment:
 
     def test_get_and_upload_segment_with_label(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
         dataset_client.upload_catalog(Catalog.loads(CATALOG))
@@ -226,7 +226,7 @@ class TestUploadSegment:
 
     def test_get_and_upload_fusion_segment_with_no_file(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name, is_fusion=True)
         dataset_client.create_draft("draft-1")
 
@@ -241,7 +241,7 @@ class TestUploadSegment:
 
     def test_get_and_upload_fusion_segment_only_with_file(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name, is_fusion=True)
         dataset_client.create_draft("draft-1")
 
@@ -272,7 +272,7 @@ class TestUploadSegment:
 
     def test_get_and_upload_fusion_segment_with_label(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name, is_fusion=True)
         dataset_client.create_draft("draft-1")
         dataset_client.upload_catalog(Catalog.loads(CATALOG))
@@ -308,7 +308,7 @@ class TestUploadSegment:
 class TestUploadFrame:
     def test_upload_frame_without_label(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name, is_fusion=True)
         dataset_client.create_draft("draft-1")
         segment_client = dataset_client.get_or_create_segment("segment1")
@@ -334,7 +334,7 @@ class TestUploadFrame:
 
     def test_upload_frame_without_sensor(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name, is_fusion=True)
         dataset_client.create_draft("draft-1")
         segment_client = dataset_client.get_or_create_segment("segment1")
@@ -356,7 +356,7 @@ class TestUploadFrame:
 
     def test_upload_frame_with_label(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name, is_fusion=True)
         dataset_client.create_draft("draft-1")
         dataset_client.upload_catalog(Catalog.loads(CATALOG))
@@ -385,7 +385,7 @@ class TestUploadFrame:
 
     def test_upload_frame_with_order(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name, is_fusion=True)
         dataset_client.create_draft("draft-1")
         segment_client = dataset_client.get_or_create_segment("segment1")
@@ -444,7 +444,7 @@ class TestUploadFrame:
 class TeatUploadData:
     def test_add_file(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
         segment_client = dataset_client.get_or_create_segment("segment1")
@@ -470,7 +470,7 @@ class TeatUploadData:
 
     def test_upload_file(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
         segment_client = dataset_client.get_or_create_segment("segment1")
@@ -491,7 +491,7 @@ class TeatUploadData:
 
     def test_upload_data_without_label(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
         segment_client = dataset_client.get_or_create_segment("segment1")
@@ -513,7 +513,7 @@ class TeatUploadData:
 
     def test_upload_data_with_label(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
         dataset_client.upload_catalog(Catalog.loads(CATALOG))
@@ -538,7 +538,7 @@ class TeatUploadData:
 
     def test_upload_label_without_catalog(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
         segment_client = dataset_client.get_or_create_segment("segment1")
@@ -559,7 +559,7 @@ class TeatUploadData:
     @pytest.mark.xfail(__version__ < "1.5.0", reason="not supported at least until v1.5.0")
     def test_upload_label(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
         dataset_client.upload_catalog(Catalog.loads(CATALOG))

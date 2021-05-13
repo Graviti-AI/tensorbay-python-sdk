@@ -5,20 +5,21 @@
 
 """Utility method for integration test."""
 
-import uuid
+from datetime import datetime
+from inspect import stack
 
 from tensorbay.client.requests import PagingList
 from tensorbay.client.struct import Draft
 
 
-def get_random_dataset_name() -> str:
+def get_dataset_name() -> str:
     """Get the random dataset name.
 
     Returns:
         A random dataset name.
 
     """
-    return f"test{uuid.uuid4().hex}"
+    return f"{stack()[1].function}_{datetime.now().strftime('%Y-%m-%d_%H_%M_%S')}"
 
 
 def get_draft_number_by_title(drafts: PagingList[Draft], title: str) -> int:

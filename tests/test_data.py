@@ -7,7 +7,7 @@ from tensorbay import GAS
 from tensorbay.dataset import Data
 from tensorbay.label import Catalog, Label
 
-from .utility import get_random_dataset_name
+from .utility import get_dataset_name
 
 CATALOG = {
     "BOX2D": {
@@ -62,7 +62,7 @@ NEW_LABEL = {
 class TestData:
     def test_delete_data(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
         dataset_client.upload_catalog(Catalog.loads(CATALOG))
@@ -89,7 +89,7 @@ class TestData:
 
     def test_list_file_order(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
         segment_client = dataset_client.get_or_create_segment("segment1")
@@ -116,7 +116,7 @@ class TestData:
 
     def test_list_data_paths(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
         segment_client = dataset_client.get_or_create_segment("segment1")
@@ -142,7 +142,7 @@ class TestData:
 
     def test_replace_file(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
         segment_client = dataset_client.get_or_create_segment("segment1")
@@ -169,7 +169,7 @@ class TestData:
 
     def test_replace_label(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
         dataset_client.upload_catalog(Catalog.loads(CATALOG))

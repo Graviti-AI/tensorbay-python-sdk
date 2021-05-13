@@ -8,13 +8,13 @@ import pytest
 from tensorbay import GAS
 from tensorbay.exception import ResourceNotExistError
 
-from .utility import get_random_dataset_name
+from .utility import get_dataset_name
 
 
 class TestBranch:
     def test_get_branch(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
         dataset_client.commit("commit-1", tag="V1")
@@ -37,7 +37,7 @@ class TestBranch:
 
     def test_list_branches(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_random_dataset_name()
+        dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
         dataset_client.commit("commit-1", tag="V1")
