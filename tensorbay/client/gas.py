@@ -408,8 +408,8 @@ class GAS:
         except Exception:
             logger.error(
                 UPLOAD_DATASET_RESUME_TEMPLATE,
-                draft_number,
-                draft_number,
+                dataset_client.status.draft_number,
+                dataset_client.status.draft_number,
             )
             raise
 
