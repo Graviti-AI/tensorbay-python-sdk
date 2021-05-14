@@ -6,19 +6,20 @@
 """Implementation of gas ls."""
 
 import sys
-from typing import Dict, Iterable, Iterator, Union
+from typing import Dict, Iterable, Iterator, Optional, Union
 
 import click
 
 from ..client import GAS
 from ..client.segment import FusionSegmentClient, SegmentClient
 from .tbrn import TBRN, TBRNType
-from .utility import get_gas
+from .utility import get_dataset_client, get_gas
 
 
 def _echo_segment(
     dataset_name: str,
-    segment_name: str,
+    draft_number: Optional[int],
+    revision: Optional[str],
     segment: Union[SegmentClient, FusionSegmentClient],
     list_all_files: bool,
 ) -> None:
@@ -26,20 +27,30 @@ def _echo_segment(
 
     Arguments:
         dataset_name: The name of the dataset.
-        segment_name: The name of the segment.
+        draft_number: The draft number (if the status is draft).
+        revision: The revision (if the status is not draft).
         segment: A segment or a fusion segment.
         list_all_files: Only works when segment is a fusion one.
             If False, list frame indexes only.
             If True, list sensors and files, too.
 
     """
+    segment_name = segment.name
     if isinstance(segment, SegmentClient):
-        _echo_data(dataset_name, segment_name, segment.list_data_paths())
+        _echo_data(dataset_name, draft_number, revision, segment_name, segment.list_data_paths())
     else:
         frames = segment.list_frames()
         if not list_all_files:
             for index, _ in enumerate(frames):
-                click.echo(TBRN(dataset_name, segment_name, index).get_tbrn())
+                click.echo(
+                    TBRN(
+                        dataset_name,
+                        segment_name,
+                        index,
+                        draft_number=draft_number,
+                        revision=revision,
+                    ).get_tbrn()
+                )
         else:
             for index, frame in enumerate(frames):
                 for sensor_name, data in frame.items():
@@ -50,45 +61,62 @@ def _echo_segment(
                             index,
                             sensor_name,
                             remote_path=data.path,
+                            draft_number=draft_number,
+                            revision=revision,
                         )
                     )
 
 
-def _echo_data(dataset_name: str, segment_name: str, data_iter: Iterable[str]) -> None:
+def _echo_data(
+    dataset_name: str,
+    draft_number: Optional[int],
+    revision: Optional[str],
+    segment_name: str,
+    data_iter: Iterable[str],
+) -> None:
     """Echo files in data_iter under 'tb:dataset_name:segment_name'.
 
     Arguments:
         dataset_name: The name of the dataset the segment belongs to.
+        draft_number: The draft number (if the status is draft).
+        revision: The revision (if the status is not draft).
         segment_name: The name of the segment.
         data_iter: Iterable data to be echoed.
 
     """
     for data in data_iter:
-        click.echo(TBRN(dataset_name, segment_name, remote_path=data).get_tbrn())
+        click.echo(
+            TBRN(
+                dataset_name,
+                segment_name,
+                remote_path=data,
+                draft_number=draft_number,
+                revision=revision,
+            ).get_tbrn()
+        )
 
 
 def _ls_dataset(gas: GAS, info: TBRN, list_all_files: bool) -> None:
-    dataset = gas._get_dataset_with_any_type(info.dataset_name)  # pylint: disable=protected-access
-    segment_names = dataset.list_segment_names()
+    dataset_client = get_dataset_client(gas, info)
+    segment_names = dataset_client.list_segment_names()
     if not list_all_files:
         for segment_name in segment_names:
             click.echo(TBRN(info.dataset_name, segment_name).get_tbrn())
         return
 
     for segment_name in segment_names:
-        segment = dataset.get_segment(segment_name)
-        _echo_segment(info.dataset_name, segment_name, segment, list_all_files)
+        segment = dataset_client.get_segment(segment_name)
+        _echo_segment(info.dataset_name, info.draft_number, info.revision, segment, list_all_files)
 
 
 def _ls_segment(gas: GAS, info: TBRN, list_all_files: bool) -> None:
-    dataset = gas._get_dataset_with_any_type(info.dataset_name)  # pylint: disable=protected-access
-    _echo_segment(
-        info.dataset_name, info.segment_name, dataset.get_segment(info.segment_name), list_all_files
-    )
+    dataset_client = get_dataset_client(gas, info)
+    segment = dataset_client.get_segment(info.segment_name)
+    _echo_segment(info.dataset_name, info.draft_number, info.revision, segment, list_all_files)
 
 
 def _ls_frame(gas: GAS, info: TBRN, list_all_files: bool) -> None:
-    dataset_client = gas.get_dataset(info.dataset_name, is_fusion=True)
+    dataset_client = get_dataset_client(gas, info, is_fusion=True)
     segment_client = dataset_client.get_segment(info.segment_name)
 
     try:
@@ -99,7 +127,16 @@ def _ls_frame(gas: GAS, info: TBRN, list_all_files: bool) -> None:
 
     if not list_all_files:
         for sensor_name in frame:
-            click.echo(TBRN(info.dataset_name, info.segment_name, info.frame_index, sensor_name))
+            click.echo(
+                TBRN(
+                    info.dataset_name,
+                    info.segment_name,
+                    info.frame_index,
+                    sensor_name,
+                    draft_number=info.draft_number,
+                    revision=info.revision,
+                )
+            )
     else:
         for sensor_name, data in frame.items():
             click.echo(
@@ -109,6 +146,8 @@ def _ls_frame(gas: GAS, info: TBRN, list_all_files: bool) -> None:
                     info.frame_index,
                     sensor_name,
                     remote_path=data.path,
+                    draft_number=info.draft_number,
+                    revision=info.revision,
                 )
             )
 
@@ -118,7 +157,7 @@ def _ls_sensor(
     info: TBRN,
     list_all_files: bool,  # pylint: disable=unused-argument
 ) -> None:
-    dataset_client = gas.get_dataset(info.dataset_name, is_fusion=True)
+    dataset_client = get_dataset_client(gas, info, is_fusion=True)
     segment_client = dataset_client.get_segment(info.segment_name)
     try:
         frame = segment_client.list_frames()[info.frame_index]
@@ -134,6 +173,8 @@ def _ls_sensor(
             info.frame_index,
             info.sensor_name,
             remote_path=data.path,
+            draft_number=info.draft_number,
+            revision=info.revision,
         )
     )
 
@@ -143,7 +184,7 @@ def _ls_fusion_file(
     info: TBRN,
     list_all_files: bool,  # pylint: disable=unused-argument
 ) -> None:
-    dataset_client = gas.get_dataset(info.dataset_name, is_fusion=True)
+    dataset_client = get_dataset_client(gas, info, is_fusion=True)
     segment_client = dataset_client.get_segment(info.segment_name)
     try:
         frame = segment_client.list_frames()[info.frame_index]
@@ -184,10 +225,12 @@ def _filter_data(
 def _ls_normal_file(  # pylint: disable=unused-argument
     gas: GAS, info: TBRN, list_all_files: bool
 ) -> None:
-    dataset_client = gas.get_dataset(info.dataset_name)
+    dataset_client = get_dataset_client(gas, info, is_fusion=False)
     segment_client = dataset_client.get_segment(info.segment_name)
     _echo_data(
         info.dataset_name,
+        info.draft_number,
+        info.revision,
         info.segment_name,
         _filter_data(segment_client.list_data_paths(), info.remote_path),
     )
