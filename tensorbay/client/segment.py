@@ -24,7 +24,6 @@ for more information.
 """
 
 import os
-import threading
 import time
 from copy import deepcopy
 from itertools import islice
@@ -35,9 +34,9 @@ from requests_toolbelt import MultipartEncoder
 from ulid import from_timestamp
 
 from ..dataset import Data, Frame, RemoteData
-from ..exception import FrameError, InvalidParamsError, ResponseError, ResponseSystemError
+from ..exception import FrameError, InvalidParamsError, ResponseSystemError
 from ..sensor.sensor import Sensor, Sensors
-from ..utility import KwargsDeprecated
+from ..utility import KwargsDeprecated, locked
 from .commit_status import CommitStatus
 from .requests import PagingList, config
 
@@ -79,7 +78,6 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
         self._status = dataset_client.status
         self._client = dataset_client._client  # pylint: disable=protected-access
         self._permission: Dict[str, Any] = {"expireAt": 0}
-        self._permission_lock = threading.Lock()
 
     def _get_url(self, remote_path: str) -> str:
         """Get URL of a specific remote path.
@@ -114,27 +112,23 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
         response = self._client.open_api_do("GET", "labels", self._dataset_id, params=params)
         return response.json()  # type: ignore[no-any-return]
 
+    @locked
+    def _request_upload_permission(self) -> None:
+        params: Dict[str, Any] = {"expired": self._EXPIRED_IN_SECOND, "segmentName": self._name}
+        params.update(self._status.get_status_info())
+
+        if config.is_internal:
+            params["isInternal"] = True
+
+        self._permission = self._client.open_api_do(
+            "GET", "policies", self._dataset_id, params=params
+        ).json()
+
     def _get_upload_permission(self) -> Dict[str, Any]:
-        with self._permission_lock:
-            if int(time.time()) >= self._permission["expireAt"]:
-                params: Dict[str, Any] = {
-                    "expired": self._EXPIRED_IN_SECOND,
-                    "segmentName": self._name,
-                }
-                params.update(self._status.get_status_info())
+        if int(time.time()) >= self._permission["expireAt"]:
+            self._request_upload_permission()
 
-                if config.is_internal:
-                    params["isInternal"] = True
-
-                self._permission = self._client.open_api_do(
-                    "GET", "policies", self._dataset_id, params=params
-                ).json()
-
-            return deepcopy(self._permission)
-
-    def _clear_upload_permission(self) -> None:
-        with self._permission_lock:
-            self._permission = {"expireAt": 0}
+        return deepcopy(self._permission)
 
     def _post_multipart_formdata(
         self,
@@ -300,7 +294,6 @@ class SegmentClient(SegmentClientBase):
 
         Raises:
             InvalidParamsError: When target_remote_path does not follow linux style.
-            ResponseError: When uploading data failed.
 
         """
         self._status.check_authority_for_draft()
@@ -315,28 +308,23 @@ class SegmentClient(SegmentClientBase):
         post_data = permission["result"]
         post_data["key"] = permission["extra"]["objectPrefix"] + target_remote_path
 
-        try:
-            backend_type = permission["extra"]["backendType"]
-            if backend_type == "azure":
-                url = (
-                    f'{permission["extra"]["host"]}{permission["extra"]["objectPrefix"]}'
-                    f'{target_remote_path}?{permission["result"]["token"]}'
-                )
+        backend_type = permission["extra"]["backendType"]
+        if backend_type == "azure":
+            url = (
+                f'{permission["extra"]["host"]}{permission["extra"]["objectPrefix"]}'
+                f'{target_remote_path}?{permission["result"]["token"]}'
+            )
 
-                version_id, etag = self._put_binary_file_to_azure(url, local_path, post_data)
-            else:
-                version_id, etag = self._post_multipart_formdata(
-                    permission["extra"]["host"],
-                    local_path,
-                    target_remote_path,
-                    post_data,
-                )
+            version_id, etag = self._put_binary_file_to_azure(url, local_path, post_data)
+        else:
+            version_id, etag = self._post_multipart_formdata(
+                permission["extra"]["host"],
+                local_path,
+                target_remote_path,
+                post_data,
+            )
 
-            self._synchronize_upload_info(post_data["key"], version_id, etag)
-
-        except ResponseError:
-            self._clear_upload_permission()
-            raise
+        self._synchronize_upload_info(post_data["key"], version_id, etag)
 
     def upload_label(self, data: Data) -> None:
         """Upload label with Data object to the draft.
@@ -500,7 +488,6 @@ class FusionSegmentClient(SegmentClientBase):
         Raises:
             FrameError: When lacking frame id or frame id conflicts.
             InvalidParamsError: When remote_path does not follow linux style.
-            ResponseError: When uploading frame failed.
 
         """
         self._status.check_authority_for_draft()
@@ -531,38 +518,34 @@ class FusionSegmentClient(SegmentClientBase):
             post_data = permission["result"]
             post_data["key"] = permission["extra"]["objectPrefix"] + target_remote_path
 
-            try:
-                backend_type = permission["extra"]["backendType"]
-                if backend_type == "azure":
-                    url = (
-                        f'{permission["extra"]["host"]}{permission["extra"]["objectPrefix"]}'
-                        f'{target_remote_path}?{permission["result"]["token"]}'
-                    )
-
-                    version_id, etag = self._put_binary_file_to_azure(url, data.path, post_data)
-                else:
-                    version_id, etag = self._post_multipart_formdata(
-                        permission["extra"]["host"],
-                        data.path,
-                        target_remote_path,
-                        post_data,
-                    )
-
-                frame_info: Dict[str, Any] = {
-                    "segmentName": self._name,
-                    "sensorName": sensor_name,
-                    "frameId": str(frame_id),
-                }
-                if hasattr(data, "timestamp"):
-                    frame_info["timestamp"] = data.timestamp
-
-                self._synchronize_upload_info(
-                    post_data["key"], version_id, etag, frame_info, skip_uploaded_files
+            backend_type = permission["extra"]["backendType"]
+            if backend_type == "azure":
+                url = (
+                    f'{permission["extra"]["host"]}{permission["extra"]["objectPrefix"]}'
+                    f'{target_remote_path}?{permission["result"]["token"]}'
                 )
 
-            except ResponseError:
-                self._clear_upload_permission()
-                raise
+                version_id, etag = self._put_binary_file_to_azure(url, data.path, post_data)
+            else:
+                version_id, etag = self._post_multipart_formdata(
+                    permission["extra"]["host"],
+                    data.path,
+                    target_remote_path,
+                    post_data,
+                )
+
+            frame_info: Dict[str, Any] = {
+                "segmentName": self._name,
+                "sensorName": sensor_name,
+                "frameId": str(frame_id),
+            }
+            if hasattr(data, "timestamp"):
+                frame_info["timestamp"] = data.timestamp
+
+            self._synchronize_upload_info(
+                post_data["key"], version_id, etag, frame_info, skip_uploaded_files
+            )
+
             self._upload_label(data)
 
     @KwargsDeprecated(

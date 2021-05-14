@@ -23,7 +23,6 @@ It consists of a list of :class:`~tensorbay.dataset.segment.FusionSegment`.
 """
 
 import json
-from threading import Lock
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -166,7 +165,6 @@ class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestor
         self, name: str, gas: Optional["GAS"] = None, revision: Optional[str] = None
     ) -> None:
         super().__init__(name)
-        self._lock = Lock()
 
         if gas:
             self._client = gas.get_dataset(name, is_fusion=self._is_fusion)
