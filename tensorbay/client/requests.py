@@ -16,7 +16,6 @@ import os
 from collections import defaultdict
 from concurrent.futures import FIRST_EXCEPTION, ThreadPoolExecutor, wait
 from itertools import repeat, zip_longest
-from threading import Lock
 from typing import (
     Any,
     Callable,
@@ -457,7 +456,7 @@ class LazyPage(Generic[_T]):  # pylint: disable=too-few-public-methods
 
     """
 
-    __slots__ = ("_offset", "_limit", "_func", "_lock", "items")
+    __slots__ = ("_offset", "_limit", "_func", "items")
 
     def __init__(self, offset: int, limit: int, func: PagingGenerator[_T]) -> None:
         self.items: Tuple[LazyItem[_T], ...] = tuple(LazyItem.from_page(self) for _ in range(limit))
@@ -468,7 +467,6 @@ class LazyPage(Generic[_T]):  # pylint: disable=too-few-public-methods
         self._offset = offset
         self._limit = limit
         self._func = func
-        self._lock = Lock()
 
     @locked
     def pull(self) -> None:
@@ -533,7 +531,6 @@ class PagingList(MutableSequence[_T], ReprMixin):  # pylint: disable=too-many-an
     def __init__(self, func: PagingGenerator[_T], limit: int) -> None:
         self._func = func
         self._limit = limit
-        self._lock = Lock()
         self._init_items: Callable[[int], None] = self._init_all_items
 
     def __len__(self) -> int:

@@ -13,20 +13,16 @@ which compares all the instance variables.
 """
 
 import warnings
+from collections import defaultdict
 from functools import wraps
 from threading import Lock
-from typing import Any, Callable, Optional, Sequence, Tuple, Type, TypeVar, Union
+from typing import Any, Callable, DefaultDict, Optional, Sequence, Tuple, Type, TypeVar, Union
 
 import numpy as np
-from typing_extensions import Protocol
 
 _T = TypeVar("_T")
 _Callable = TypeVar("_Callable", bound=Callable[..., Any])
 _CallableWithoutReturnValue = TypeVar("_CallableWithoutReturnValue", bound=Callable[..., None])
-
-
-class _Locked(Protocol):  # pylint: disable=too-few-public-methods
-    _lock: Lock
 
 
 MatrixType = Union[Sequence[Sequence[float]], np.ndarray]
@@ -62,6 +58,9 @@ class EqMixin:  # pylint: disable=too-few-public-methods
         return self.__dict__ == other.__dict__
 
 
+locks: DefaultDict[int, Lock] = defaultdict(Lock)
+
+
 def locked(func: _CallableWithoutReturnValue) -> _CallableWithoutReturnValue:
     """The decorator to add threading lock for methods.
 
@@ -74,16 +73,18 @@ def locked(func: _CallableWithoutReturnValue) -> _CallableWithoutReturnValue:
     """
 
     @wraps(func)
-    def wrapper(self: _Locked, *arg: Any, **kwargs: Any) -> None:
-        # pylint: disable=protected-access
-        acquire = self._lock.acquire(blocking=False)
+    def wrapper(self: Any, *arg: Any, **kwargs: Any) -> None:
+        key = id(self)
+        lock = locks[key]
+        acquire = lock.acquire(blocking=False)
         try:
             if acquire:
                 func(self, *arg, **kwargs)
+                del locks[key]
             else:
-                self._lock.acquire()
+                lock.acquire()
         finally:
-            self._lock.release()
+            lock.release()
 
     return wrapper  # type: ignore[return-value]
 
