@@ -13,6 +13,7 @@ from typing import Any, Dict, List
 import quaternion
 
 from ...dataset import Data, Frame, FusionDataset
+from ...exception import ModuleImportError
 from ...label import LabeledBox3D
 from ...sensor import Camera, Lidar, Sensors
 from .._utility import glob
@@ -183,7 +184,10 @@ def _load_labels(boxes: List[Dict[str, Any]]) -> List[LabeledBox3D]:
 
 
 def _load_sensors(calib_path: str) -> Sensors:
-    import yaml  # pylint: disable=import-outside-toplevel
+    try:
+        import yaml  # pylint: disable=import-outside-toplevel
+    except ModuleNotFoundError as error:
+        raise ModuleImportError(error.name, "pyyaml") from error  # type: ignore[arg-type]
 
     sensors = Sensors()
 

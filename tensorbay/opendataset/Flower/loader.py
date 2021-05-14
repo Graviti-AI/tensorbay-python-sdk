@@ -8,6 +8,7 @@
 import os
 
 from ...dataset import Data, Dataset
+from ...exception import ModuleImportError
 from ...label import Classification
 
 DATASET_NAME_17 = "Flower17"
@@ -36,11 +37,17 @@ def Flower17(path: str) -> Dataset:
     Arguments:
         path: The root directory of the dataset.
 
+    Raises:
+        ModuleImportError: When the module "scipy" can not be found.
+
     Returns:
         Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
-    from scipy.io import loadmat  # pylint: disable=import-outside-toplevel
+    try:
+        from scipy.io import loadmat  # pylint: disable=import-outside-toplevel
+    except ModuleNotFoundError as error:
+        raise ModuleImportError(error.name) from error  # type: ignore[arg-type]
 
     root_path = os.path.abspath(os.path.expanduser(path))
     segment_info = loadmat(os.path.join(root_path, "datasplits.mat"))
@@ -78,11 +85,17 @@ def Flower102(path: str) -> Dataset:
     Arguments:
         path: The root directory of the dataset.
 
+    Raises:
+        ModuleImportError: When the module "scipy" can not be found.
+
     Returns:
         Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
-    from scipy.io import loadmat  # pylint: disable=import-outside-toplevel
+    try:
+        from scipy.io import loadmat  # pylint: disable=import-outside-toplevel
+    except ModuleNotFoundError as error:
+        raise ModuleImportError(error.name) from error  # type: ignore[arg-type]
 
     root_path = os.path.abspath(os.path.expanduser(path))
     labels = loadmat(os.path.join(root_path, "imagelabels.mat"))["labels"][0]
