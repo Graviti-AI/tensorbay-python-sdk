@@ -8,6 +8,7 @@
 import os
 
 from ...dataset import Data, Dataset
+from ...exception import ModuleImportError
 from ...label import LabeledBox2D
 
 DATASET_NAME = "BSTLD"
@@ -48,11 +49,17 @@ def BSTLD(path: str) -> Dataset:
     Arguments:
         path: The root directory of the dataset.
 
+    Raises:
+        ModuleImportError: When the module "yaml" can not be found.
+
     Returns:
         Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
-    import yaml  # pylint: disable=import-outside-toplevel
+    try:
+        import yaml  # pylint: disable=import-outside-toplevel
+    except ModuleNotFoundError as error:
+        raise ModuleImportError(error.name, "pyyaml") from error  # type: ignore[arg-type]
 
     root_path = os.path.abspath(os.path.expanduser(path))
 

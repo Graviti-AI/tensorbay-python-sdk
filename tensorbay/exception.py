@@ -296,6 +296,29 @@ class FileStructureError(OpenDatasetError):
         return self._message
 
 
+class ModuleImportError(OpenDatasetError, ModuleNotFoundError):
+    """This class defines the exception for import error of optional module in opendataset module.
+
+    Arguments:
+        module_name: The name of the optional module.
+        package_name: The package name of the optional module.
+
+    """
+
+    def __init__(self, module_name: str, package_name: Optional[str] = None) -> None:
+        super().__init__()
+        self._module_name = module_name
+        self._package_name = package_name if package_name else module_name
+
+    def __str__(self) -> str:
+        return (
+            f"No module named {self._module_name}."
+            "\n"
+            f'\n    To install the module, please run: "pip3 install {self._package_name}"'
+            "\n"
+        )
+
+
 class TBRNError(TensorBayException):
     """This class defines the exception for invalid TBRN.
 

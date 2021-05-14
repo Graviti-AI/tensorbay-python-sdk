@@ -10,6 +10,7 @@ import os
 from typing import Iterable, Iterator, List, Tuple
 
 from ...dataset import Data, Dataset
+from ...exception import ModuleImportError
 from ...geometry import Keypoint2D
 from ...label import LabeledBox2D, LabeledKeypoints2D
 from .._utility import glob
@@ -96,7 +97,10 @@ def AnimalPose5(path: str) -> Dataset:
 
 
 def _get_data_part1(root_path: str, aniamls: Iterable[str]) -> Iterator[Data]:
-    import xmltodict  # pylint: disable=import-outside-toplevel
+    try:
+        import xmltodict  # pylint: disable=import-outside-toplevel
+    except ModuleNotFoundError as error:
+        raise ModuleImportError(error.name) from error  # type: ignore[arg-type]
 
     for animal in aniamls:
         for image_path in glob(os.path.join(root_path, "keypoint_image_part1", animal, "*.jpg")):
@@ -138,7 +142,10 @@ def _get_data_part1(root_path: str, aniamls: Iterable[str]) -> Iterator[Data]:
 
 
 def _get_data_part2(root_path: str, aniamls: Iterable[str]) -> Iterator[Data]:
-    import xmltodict  # pylint: disable=import-outside-toplevel
+    try:
+        import xmltodict  # pylint: disable=import-outside-toplevel
+    except ModuleNotFoundError as error:
+        raise ModuleImportError(error.name) from error  # type: ignore[arg-type]
 
     for animal in aniamls:
         for image_path in glob(os.path.join(root_path, "animalpose_image_part2", animal, "*.jpeg")):

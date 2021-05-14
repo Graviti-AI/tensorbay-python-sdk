@@ -9,6 +9,7 @@ import os
 from typing import Any, Dict, Iterator, Tuple
 
 from ...dataset import Data, Dataset
+from ...exception import ModuleImportError
 from ...label import Classification, LabeledBox2D, LabeledKeypoints2D
 
 DATASET_NAME = "FLIC"
@@ -31,11 +32,17 @@ def FLIC(path: str) -> Dataset:
     Arguments:
         path: The root directory of the dataset.
 
+    Raises:
+        ModuleImportError: When the module "scipy" can not be found.
+
     Returns:
         Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
-    from scipy.io import loadmat  # pylint: disable=import-outside-toplevel
+    try:
+        from scipy.io import loadmat  # pylint: disable=import-outside-toplevel
+    except ModuleNotFoundError as error:
+        raise ModuleImportError(error.name) from error  # type: ignore[arg-type]
 
     root_path = os.path.abspath(os.path.expanduser(path))
 
