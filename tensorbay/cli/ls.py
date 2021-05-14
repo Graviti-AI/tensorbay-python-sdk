@@ -12,7 +12,7 @@ import click
 
 from ..client import GAS
 from ..client.segment import FusionSegmentClient, SegmentClient
-from ..utility import TBRN, TBRNType
+from .tbrn import TBRN, TBRNType
 from .utility import get_gas
 
 
