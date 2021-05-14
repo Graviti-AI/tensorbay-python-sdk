@@ -194,6 +194,17 @@ class DatasetBase(NameMixin, Sequence[_T]):  # pylint: disable=too-many-ancestor
 
         return self._get_segments().__getitem__(index)
 
+    def __delitem__(self, index: Union[int, str, slice]) -> None:
+        if isinstance(index, slice):
+            for key in self._get_segments()._data.keys()[index]:
+                self._get_segments()._data.__delitem__(key)
+            return
+
+        if isinstance(index, int):
+            index = self._get_segments()._data.keys()[index]
+
+        self._get_segments()._data.__delitem__(index)
+
     @locked
     def _init_segments(self) -> None:
         self._segments = NameSortedList()
