@@ -9,12 +9,15 @@ import logging
 import os
 import sys
 from configparser import ConfigParser
-from typing import Tuple
+from typing import Literal, Optional, Tuple, overload
 
 import click
 
 from ..client import GAS
 from ..client import config as client_config
+from ..client.dataset import DatasetClient, FusionDatasetClient
+from ..client.gas import DatasetClientType
+from .tbrn import TBRN
 
 
 def _implement_cli(
@@ -91,3 +94,47 @@ def get_gas(access_key: str, url: str, profile_name: str) -> GAS:
         sys.exit(1)
 
     return GAS(access_key, url)
+
+
+@overload
+def get_dataset_client(gas: GAS, info: TBRN, is_fusion: Literal[None] = None) -> DatasetClientType:
+    ...
+
+
+@overload
+def get_dataset_client(gas: GAS, info: TBRN, is_fusion: Literal[False]) -> DatasetClient:
+    ...
+
+
+@overload
+def get_dataset_client(gas: GAS, info: TBRN, is_fusion: Literal[True]) -> FusionDatasetClient:
+    ...
+
+
+@overload
+def get_dataset_client(gas: GAS, info: TBRN, is_fusion: Optional[bool] = None) -> DatasetClientType:
+    ...
+
+
+def get_dataset_client(gas: GAS, info: TBRN, is_fusion: Optional[bool] = None) -> DatasetClientType:
+    """Get the dataset client with any type and its version info.
+
+    Arguments:
+        gas: The gas client.
+        info: The tbrn of the resource
+        is_fusion: Whether the dataset is a fusion dataset, True for fusion dataset.
+
+    Returns:
+        The dataset client and its version info.
+
+    """
+    dataset_client = (
+        gas._get_dataset_with_any_type(info.dataset_name)  # pylint: disable=protected-access
+        if is_fusion is None
+        else gas.get_dataset(info.dataset_name, is_fusion)
+    )
+    if info.is_draft:
+        dataset_client.checkout(draft_number=info.draft_number)
+    elif info.revision is not None:
+        dataset_client.checkout(revision=info.revision)
+    return dataset_client
