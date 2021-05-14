@@ -10,7 +10,7 @@ from typing import Dict
 
 import click
 
-from ..utility import TBRN, TBRNType
+from .tbrn import TBRN, TBRNType
 from .utility import get_gas
 
 

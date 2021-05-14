@@ -9,7 +9,6 @@ from .attr import AttrsMixin, attr
 from .common import Deprecated, EqMixin, KwargsDeprecated, MatrixType, common_loads, locked
 from .name import NameMixin, NameOrderedDict, NameSortedDict, NameSortedList
 from .repr import ReprMixin, ReprType, repr_config
-from .tbrn import TBRN, TBRNType
 from .type import SubcatalogTypeRegister, TypeEnum, TypeMixin, TypeRegister
 from .user import UserMapping, UserMutableMapping, UserMutableSequence, UserSequence
 
@@ -26,8 +25,6 @@ __all__ = [
     "ReprMixin",
     "ReprType",
     "SubcatalogTypeRegister",
-    "TBRN",
-    "TBRNType",
     "TypeEnum",
     "TypeMixin",
     "TypeRegister",

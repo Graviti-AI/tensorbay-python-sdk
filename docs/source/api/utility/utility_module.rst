@@ -7,6 +7,5 @@ tensorbay.utility
    common
    name
    repr
-   tbrn
    type
    user
