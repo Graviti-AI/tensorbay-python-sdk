@@ -35,7 +35,7 @@ Different label types correspond to different label classes classes.
 
 """
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Type, TypeVar
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
 
 from ..utility import EqMixin, ReprMixin, ReprType, TypeEnum, TypeMixin, common_loads
 from .supports import SubcatalogMixin
@@ -190,14 +190,16 @@ class _LabelBase(TypeMixin[LabelType], ReprMixin, EqMixin):
 
     _repr_attrs = _label_attrs
 
+    _AttributeType = Dict[str, Union[str, int, float, bool, List[Union[str, int, float, bool]]]]
+
     category: str
-    attributes: Dict[str, Any]
+    attributes: _AttributeType
     instance: str
 
     def __init__(
         self,
         category: Optional[str] = None,
-        attributes: Optional[Dict[str, Any]] = None,
+        attributes: Optional[_AttributeType] = None,
         instance: Optional[str] = None,
     ):
         if category:
