@@ -88,6 +88,41 @@ class TestDatasetBase:
         with pytest.raises(KeyError):
             dataset["unknown"]
 
+    def test_delitem(self):
+        dataset = DatasetBase("test_name")
+        segments = [Segment(str(i)) for i in range(5)]
+        for segment in segments:
+            dataset.add_segment(segment)
+
+        del segments[1:3]
+        del dataset[1:3]
+        assert len(dataset) == len(segments)
+        for dataset_segment, segment in zip(dataset, segments):
+            assert dataset_segment is segment
+
+        del segments[1]
+        del dataset[1]
+        assert len(dataset) == len(segments)
+        for dataset_segment, segment in zip(dataset, segments):
+            assert dataset_segment is segment
+
+        del segments[segments.index(dataset["4"])]
+        del dataset["4"]
+        assert len(dataset) == len(segments)
+        for dataset_segment, segment in zip(dataset, segments):
+            assert dataset_segment is segment
+
+        del dataset[100:200]
+        assert len(dataset) == len(segments)
+        for dataset_segment, segment in zip(dataset, segments):
+            assert dataset_segment is segment
+
+        with pytest.raises(IndexError):
+            del dataset[100]
+
+        with pytest.raises(KeyError):
+            del dataset["100"]
+
     def test_keys(self):
         dataset = DatasetBase("test_name")
         keys = ("test", "train")
