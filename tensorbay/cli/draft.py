@@ -10,13 +10,16 @@ from typing import Dict
 
 import click
 
+from ..client.gas import DatasetClientType
+from ..exception import ResourceNotExistError
 from .tbrn import TBRN, TBRNType
+from .utility import get_dataset_client, get_gas
 
 
-def _implement_draft(
-    obj: Dict[str, str], tbrn: str, is_list: bool, title: str  # pylint: disable=unused-argument
-) -> None:
+def _implement_draft(obj: Dict[str, str], tbrn: str, is_list: bool, title: str) -> None:
+    gas = get_gas(**obj)
     info = TBRN(tbrn=tbrn)
+    dataset_client = get_dataset_client(gas, info)
 
     if info.type != TBRNType.DATASET:
         click.echo(f'To operate a draft, "{info}" must be a dataset', err=True)
@@ -24,9 +27,25 @@ def _implement_draft(
 
     if is_list:
         pass
-
-    elif title:
-        pass
-
     else:
-        pass
+        # todo: create draft base on revision
+        _create_draft(dataset_client, info, title)
+
+
+def _create_draft(dataset_client: DatasetClientType, info: TBRN, title: str) -> None:
+    if info.is_draft:
+        click.echo(f'Create a draft in draft status "{info}" is not permitted', err=True)
+        sys.exit(1)
+
+    if info.revision:
+        click.echo(f'Create a draft based on given revision "{info}" is not supported"', err=True)
+        sys.exit(1)
+
+    dataset_client.create_draft(title=title)
+    draft_tbrn = TBRN(info.dataset_name, draft_number=dataset_client.status.draft_number).get_tbrn()
+    click.echo(f"{draft_tbrn} is created successfully")
+    try:
+        click.echo(f"Branch: main({dataset_client.get_commit('main').commit_id}) -> main")
+    except ResourceNotExistError:
+        click.echo("Branch: main -> main")
+    click.echo(f"Title: {title}")
