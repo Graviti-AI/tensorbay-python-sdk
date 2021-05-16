@@ -16,6 +16,8 @@ Use 'gas delete' to delete a dataset.
 
 Use 'gas ls' to list data.
 
+Use 'gas draft' to operate a draft.
+
 """
 
 from typing import Dict
@@ -146,6 +148,31 @@ def dataset(obj: Dict[str, str], name: str, is_delete: bool, yes: bool) -> None:
     from .dataset import _implement_dataset
 
     _implement_dataset(obj, name, is_delete, yes)
+
+
+@cli.command()
+@click.argument("tbrn", type=str)
+@click.option("-l", "--list", "is_list", is_flag=True, help="List the drafts.")
+@click.option("-t", "--title", type=str, default="", help="The title of the draft.")
+@click.pass_obj
+def draft(
+    obj: Dict[str, str],
+    tbrn: str,
+    is_list: bool,
+    title: str,
+) -> None:
+    """Work with draft.
+
+    Arguments:
+        obj: A dict contains config information.
+        tbrn: The tbrn of the dataset.
+        is_list: Whether to list the drafts.
+        title: The title of the draft.
+
+    """  # noqa: D301,D415
+    from .draft import _implement_draft
+
+    _implement_draft(obj, tbrn, is_list, title)
 
 
 if __name__ == "__main__":
