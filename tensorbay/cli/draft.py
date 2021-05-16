@@ -26,7 +26,7 @@ def _implement_draft(obj: Dict[str, str], tbrn: str, is_list: bool, title: str) 
         sys.exit(1)
 
     if is_list:
-        pass
+        _list_drafts(dataset_client, info)
     else:
         # todo: create draft base on revision
         _create_draft(dataset_client, info, title)
@@ -44,8 +44,30 @@ def _create_draft(dataset_client: DatasetClientType, info: TBRN, title: str) -> 
     dataset_client.create_draft(title=title)
     draft_tbrn = TBRN(info.dataset_name, draft_number=dataset_client.status.draft_number).get_tbrn()
     click.echo(f"{draft_tbrn} is created successfully")
+    _echo_draft(dataset_client, title)
+
+
+def _list_drafts(dataset_client: DatasetClientType, info: TBRN) -> None:
+    if info.revision:
+        click.echo(f'list drafts based on given revision "{info}" is not supported', err=True)
+        sys.exit(1)
+
+    if info.is_draft:
+        draft = dataset_client.get_draft(info.draft_number)
+        click.echo(f"Draft: {TBRN(info.dataset_name, draft_number=draft.number).get_tbrn()}")
+        _echo_draft(dataset_client, title=draft.title)
+    else:
+        for draft in dataset_client.list_drafts():
+            click.echo(f"Draft: {TBRN(info.dataset_name, draft_number=draft.number).get_tbrn()}")
+            _echo_draft(dataset_client, title=draft.title)
+
+
+def _echo_draft(dataset_client: DatasetClientType, title: str = "") -> None:
     try:
         click.echo(f"Branch: main({dataset_client.get_commit('main').commit_id}) -> main")
     except ResourceNotExistError:
-        click.echo("Branch: main -> main")
-    click.echo(f"Title: {title}")
+        click.echo("Branch: main -> main\n")
+
+    if not title:
+        title = "<no title>"
+    click.echo(f"    {title}\n")
