@@ -25,7 +25,7 @@ def _implement_rm(obj: Dict[str, str], tbrn: str, is_recursive: bool) -> None:
 
     if not info.is_draft:
         click.echo(
-            f'To remove the data, "{info}" must be in draft status, like "{info}#1', err=True
+            f'To remove the data, "{info}" must be in draft status, like "{info}#1"', err=True
         )
         sys.exit(1)
 
