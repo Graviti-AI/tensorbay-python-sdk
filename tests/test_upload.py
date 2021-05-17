@@ -159,7 +159,7 @@ class TestUploadDataset:
 
 
 class TestUploadSegment:
-    def test_get_and_upload_segment_with_no_file(self, accesskey, url):
+    def test_upload_segment_without_file(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
@@ -173,7 +173,7 @@ class TestUploadSegment:
 
         gas_client.delete_dataset(dataset_name)
 
-    def test_get_and_upload_segment_only_with_file(self, accesskey, url, tmp_path):
+    def test_upload_segment_with_file(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
@@ -197,7 +197,7 @@ class TestUploadSegment:
 
         gas_client.delete_dataset(dataset_name)
 
-    def test_get_and_upload_segment_with_label(self, accesskey, url, tmp_path):
+    def test_upload_segment_with_label(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
@@ -224,7 +224,7 @@ class TestUploadSegment:
 
         gas_client.delete_dataset(dataset_name)
 
-    def test_get_and_upload_fusion_segment_with_no_file(self, accesskey, url):
+    def test_upload_fusion_segment_without_file(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name, is_fusion=True)
@@ -239,7 +239,7 @@ class TestUploadSegment:
 
         gas_client.delete_dataset(dataset_name)
 
-    def test_get_and_upload_fusion_segment_only_with_file(self, accesskey, url, tmp_path):
+    def test_upload_fusion_segment_with_file(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name, is_fusion=True)
@@ -270,7 +270,7 @@ class TestUploadSegment:
 
         gas_client.delete_dataset(dataset_name)
 
-    def test_get_and_upload_fusion_segment_with_label(self, accesskey, url, tmp_path):
+    def test_upload_fusion_segment_with_label(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name, is_fusion=True)
