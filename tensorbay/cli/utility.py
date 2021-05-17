@@ -9,7 +9,7 @@ import logging
 import os
 import sys
 from configparser import ConfigParser
-from typing import Literal, Optional, Tuple, overload
+from typing import Iterable, Iterator, Literal, Optional, Tuple, overload
 
 import click
 
@@ -138,3 +138,26 @@ def get_dataset_client(gas: GAS, info: TBRN, is_fusion: Optional[bool] = None) -
     elif info.revision is not None:
         dataset_client.checkout(revision=info.revision)
     return dataset_client
+
+
+def filter_data(
+    data_list: Iterable[str], remote_path: str, is_recursive: bool = True
+) -> Iterator[str]:
+    """Filter the remote paths based on the given path.
+
+    Arguments:
+        data_list: Candidate paths.
+        remote_path: The remote path to filter data.
+        is_recursive: Whether to filter data recursively.
+
+    Returns:
+        An iterator of the filtered remote paths.
+
+    """
+    if is_recursive:
+        return (
+            filter(lambda x: x.startswith(remote_path), data_list)
+            if remote_path.endswith("/")
+            else filter(lambda x: x.startswith(remote_path + "/") or x == remote_path, data_list)
+        )
+    return filter(lambda x: x == remote_path, data_list)
