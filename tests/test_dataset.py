@@ -64,8 +64,6 @@ class TestDataset:
 
         datasets = gas_client.list_dataset_names()
         assert dataset_name in datasets
-        dataset_name_1 = get_dataset_name()
-        assert dataset_name_1 not in datasets
 
         gas_client.delete_dataset(dataset_name)
 
