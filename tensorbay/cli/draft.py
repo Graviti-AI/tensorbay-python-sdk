@@ -38,7 +38,7 @@ def _create_draft(dataset_client: DatasetClientType, info: TBRN, title: str) -> 
         sys.exit(1)
 
     if info.revision:
-        click.echo(f'Create a draft based on given revision "{info}" is not supported"', err=True)
+        click.echo(f'Create a draft based on given revision "{info}" is not supported', err=True)
         sys.exit(1)
 
     dataset_client.create_draft(title=title)

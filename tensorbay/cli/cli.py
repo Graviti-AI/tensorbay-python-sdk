@@ -144,6 +144,7 @@ def dataset(obj: Dict[str, str], name: str, is_delete: bool, yes: bool) -> None:
         name: The name of the dataset to be created or the tbrn of dataset to be deleted.
         is_delete: Whether to delete the TensorBay dataset.
         yes: Confirm to delete the dataset completely.
+
     """  # noqa: D301,D415
     from .dataset import _implement_dataset
 
@@ -161,7 +162,7 @@ def draft(
     is_list: bool,
     title: str,
 ) -> None:
-    """Work with draft.
+    """Work with draft.\f
 
     Arguments:
         obj: A dict contains config information.
@@ -180,7 +181,7 @@ def draft(
 @click.option("-m", "--message", type=str, required=True, help="The message of the commit.")
 @click.pass_obj
 def commit(obj: Dict[str, str], tbrn: str, message: str) -> None:
-    """Work with commit.
+    """Work with commit.\f
 
     Arguments:
         obj: A dict contains config information.
@@ -216,7 +217,7 @@ def cp(  # pylint: disable=invalid-name, too-many-arguments
     jobs: int,
     skip_uploaded_files: bool,
 ) -> None:
-    """Copy local data to a remote path.
+    """Copy local data to a remote path.\f
 
     Arguments:
         obj: A dict contains config information.
@@ -241,7 +242,7 @@ def cp(  # pylint: disable=invalid-name, too-many-arguments
 def rm(  # pylint: disable=invalid-name, too-many-arguments
     obj: Dict[str, str], tbrn: str, is_recursive: bool
 ) -> None:
-    """Remove the remote data.
+    """Remove the remote data.\f
 
     Arguments:
         obj: A dict contains config information.

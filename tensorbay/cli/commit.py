@@ -24,7 +24,7 @@ def _implement_commit(obj: Dict[str, str], tbrn: str, message: str) -> None:
         sys.exit(1)
 
     if not info.is_draft:
-        click.echo(f'To commit, "{info}" must be in draft status, like "{info}#1', err=True)
+        click.echo(f'To commit, "{info}" must be in draft status, like "{info}#1"', err=True)
         sys.exit(1)
 
     dataset_client.checkout(draft_number=info.draft_number)

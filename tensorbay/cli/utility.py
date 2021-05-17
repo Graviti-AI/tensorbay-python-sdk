@@ -90,7 +90,7 @@ def get_gas(access_key: str, url: str, profile_name: str) -> GAS:
         access_key, url = read_config(get_config_filepath(), profile_name)
 
     if not access_key:
-        click.echo("accessKey should be appointed", err=True)
+        click.echo("AccessKey should be appointed", err=True)
         sys.exit(1)
 
     return GAS(access_key, url)
@@ -121,7 +121,7 @@ def get_dataset_client(gas: GAS, info: TBRN, is_fusion: Optional[bool] = None) -
 
     Arguments:
         gas: The gas client.
-        info: The tbrn of the resource
+        info: The tbrn of the resource.
         is_fusion: Whether the dataset is a fusion dataset, True for fusion dataset.
 
     Returns:
