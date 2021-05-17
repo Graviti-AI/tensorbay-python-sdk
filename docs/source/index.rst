@@ -56,6 +56,13 @@ It provides:
 
 .. toctree::
    :maxdepth: 1
+   :caption: Integrations
+
+   integrations/pytorch
+   integrations/tensorflow
+
+.. toctree::
+   :maxdepth: 1
    :caption: CLI
 
    tensorbay_cli/getting_started_with_cli
