@@ -27,10 +27,10 @@ from typing import Dict, Iterator, Optional, Sequence, Tuple, Type, TypeVar
 import numpy as np
 
 from ..geometry import Vector2D
-from ..utility import EqMixin, MatrixType, ReprMixin, ReprType, common_loads
+from ..utility import AttrsMixin, MatrixType, ReprMixin, ReprType, attr, camel, common_loads
 
 
-class CameraMatrix(ReprMixin, EqMixin):
+class CameraMatrix(ReprMixin, AttrsMixin):
     """CameraMatrix represents camera matrix.
 
     Camera matrix describes the mapping of a pinhole camera model from 3D points in the world
@@ -97,6 +97,12 @@ class CameraMatrix(ReprMixin, EqMixin):
     _repr_type = ReprType.INSTANCE
     _repr_attrs = ("fx", "fy", "cx", "cy", "skew")
 
+    fx: float = attr()
+    fy: float = attr()
+    cx: float = attr()
+    cy: float = attr()
+    skew: float = attr(default=0)
+
     def __init__(  # pylint: disable=too-many-arguments
         self,
         fx: Optional[float] = None,
@@ -127,13 +133,6 @@ class CameraMatrix(ReprMixin, EqMixin):
         raise TypeError(
             f"Require 'fx', 'fy', 'cx', 'cy' or 3x3 matrix to initialize {self.__class__.__name__}"
         )
-
-    def _loads(self, contents: Dict[str, float]) -> None:
-        self.fx = contents["fx"]
-        self.fy = contents["fy"]
-        self.cx = contents["cx"]
-        self.cy = contents["cy"]
-        self.skew = contents.get("skew", 0)
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
@@ -177,15 +176,7 @@ class CameraMatrix(ReprMixin, EqMixin):
             {'fx': 1, 'fy': 2, 'cx': 3, 'cy': 4, 'skew': 3}
 
         """
-        contents = {
-            "fx": self.fx,
-            "fy": self.fy,
-            "cx": self.cx,
-            "cy": self.cy,
-        }
-        if self.skew:
-            contents["skew"] = self.skew
-        return contents
+        return self._dumps()
 
     def as_matrix(self) -> np.ndarray:
         """Return the camera matrix as a 3x3 numpy array.
@@ -247,7 +238,7 @@ class CameraMatrix(ReprMixin, EqMixin):
         return Vector2D(x, y)
 
 
-class DistortionCoefficients(ReprMixin, EqMixin):
+class DistortionCoefficients(ReprMixin, AttrsMixin):
     """DistortionCoefficients represents camera distortion coefficients.
 
     Distortion is the deviation from rectilinear projection including radial distortion
@@ -455,7 +446,7 @@ class DistortionCoefficients(ReprMixin, EqMixin):
         return Vector2D(x, y)
 
 
-class CameraIntrinsics(ReprMixin, EqMixin):
+class CameraIntrinsics(ReprMixin, AttrsMixin):
     """CameraIntrinsics represents camera intrinsics.
 
     Camera intrinsic parameters including camera matrix and distortion coeffecients.
@@ -534,6 +525,9 @@ class CameraIntrinsics(ReprMixin, EqMixin):
     _repr_attrs = ("camera_matrix", "distortion_coefficients")
     _repr_maxlevel = 2
 
+    camera_matrix: CameraMatrix = attr(key=camel)
+    distortion_coefficients: DistortionCoefficients = attr(is_dynamic=True, key=camel)
+
     def __init__(  # pylint: disable=too-many-arguments
         self,
         fx: Optional[float] = None,
@@ -548,13 +542,6 @@ class CameraIntrinsics(ReprMixin, EqMixin):
         self.camera_matrix = CameraMatrix(fx, fy, cx, cy, skew, matrix=camera_matrix)
         if kwargs:
             self.distortion_coefficients = DistortionCoefficients.loads(kwargs)
-
-    def _loads(self, contents: Dict[str, Dict[str, float]]) -> None:
-        self.camera_matrix = CameraMatrix.loads(contents["cameraMatrix"])
-        if "distortionCoefficients" in contents:
-            self.distortion_coefficients = DistortionCoefficients.loads(
-                contents["distortionCoefficients"]
-            )
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Dict[str, float]]) -> _T:
@@ -615,11 +602,7 @@ class CameraIntrinsics(ReprMixin, EqMixin):
             'distortionCoefficients': {'p1': 5, 'k1': 6}}
 
         """
-        contents = {"cameraMatrix": self.camera_matrix.dumps()}
-        if hasattr(self, "distortion_coefficients"):
-            contents["distortionCoefficients"] = self.distortion_coefficients.dumps()
-
-        return contents
+        return self._dumps()
 
     def set_camera_matrix(  # pylint: disable=[too-many-arguments, invalid-name]
         self,
