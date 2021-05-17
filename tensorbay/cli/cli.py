@@ -175,5 +175,23 @@ def draft(
     _implement_draft(obj, tbrn, is_list, title)
 
 
+@cli.command()
+@click.argument("tbrn", type=str)
+@click.option("-m", "--message", type=str, required=True, help="The message of the commit.")
+@click.pass_obj
+def commit(obj: Dict[str, str], tbrn: str, message: str) -> None:
+    """Work with commit.
+
+    Arguments:
+        obj: A dict contains config information.
+        tbrn: The path to commit a draft, like "tb:KITTI#1".
+        message: The message of the commit.
+
+    """  # noqa: D301,D415
+    from .commit import _implement_commit
+
+    _implement_commit(obj, tbrn, message)
+
+
 if __name__ == "__main__":
     cli()  # pylint: disable=no-value-for-parameter
