@@ -20,7 +20,7 @@ Use 'gas draft' to operate a draft.
 
 """
 
-from typing import Dict
+from typing import Dict, Iterable
 
 import click
 
@@ -191,6 +191,45 @@ def commit(obj: Dict[str, str], tbrn: str, message: str) -> None:
     from .commit import _implement_commit
 
     _implement_commit(obj, tbrn, message)
+
+
+@cli.command()
+@click.argument("local_paths", type=str, nargs=-1)
+@click.argument("tbrn", type=str, nargs=1)
+@click.option(
+    "-r", "--recursive", "is_recursive", is_flag=True, help="Copy directories recursively."
+)
+@click.option("-j", "--jobs", type=int, default=1, help="The number of threads.")
+@click.option(
+    "-s",
+    "--skip",
+    "skip_uploaded_files",
+    is_flag=True,
+    help="Whether to skip the uploaded files.",
+)
+@click.pass_obj
+def cp(  # pylint: disable=invalid-name, too-many-arguments
+    obj: Dict[str, str],
+    local_paths: Iterable[str],
+    tbrn: str,
+    is_recursive: bool,
+    jobs: int,
+    skip_uploaded_files: bool,
+) -> None:
+    """Copy local data to a remote path.
+
+    Arguments:
+        obj: A dict contains config information.
+        local_paths: An iterable of local paths contains data to be uploaded.
+        tbrn: The path to save the uploaded data, like "tb:KITTI:seg1".
+        is_recursive: Whether copy directories recursively.
+        jobs: Number of threads to upload data.
+        skip_uploaded_files: Whether skip the uploaded files.
+
+    """  # noqa: D301,D415
+    from .cp import _implement_cp
+
+    _implement_cp(obj, local_paths, tbrn, is_recursive, jobs, skip_uploaded_files)
 
 
 if __name__ == "__main__":
