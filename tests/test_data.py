@@ -140,7 +140,7 @@ class TestData:
 
         gas_client.delete_dataset(dataset_name)
 
-    def test_replace_file(self, accesskey, url, tmp_path):
+    def test_overwrite_file(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
@@ -167,7 +167,7 @@ class TestData:
 
         gas_client.delete_dataset(dataset_name)
 
-    def test_replace_label(self, accesskey, url, tmp_path):
+    def test_overwrite_label(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)

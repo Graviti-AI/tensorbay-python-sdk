@@ -53,7 +53,7 @@ class TestCommit:
 
         gas_client.delete_dataset(dataset_name)
 
-    def test_get_commit_by_ref(self, accesskey, url):
+    def test_get_commit_by_revision(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
@@ -120,7 +120,7 @@ class TestCommit:
         gas_client.delete_dataset(dataset_name)
 
     @pytest.mark.xfail(__version__ < "1.7.0", reason="not supported at least until v1.7.0")
-    def test_draft_and_top_commit_inherit(self, accesskey, url, tmp_path):
+    def test_data_in_draft(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
