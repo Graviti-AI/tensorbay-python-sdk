@@ -6,14 +6,14 @@
 """Implementation of gas ls."""
 
 import sys
-from typing import Dict, Iterable, Iterator, Optional, Union
+from typing import Dict, Iterable, Optional, Union
 
 import click
 
 from ..client import GAS
 from ..client.segment import FusionSegmentClient, SegmentClient
 from .tbrn import TBRN, TBRNType
-from .utility import get_dataset_client, get_gas
+from .utility import filter_data, get_dataset_client, get_gas
 
 
 def _echo_segment(
@@ -199,29 +199,6 @@ def _ls_fusion_file(
     click.echo(info)
 
 
-def _filter_data(
-    data_list: Iterable[str], remote_path: str, is_recursive: bool = True
-) -> Iterator[str]:
-    """Get a list of paths under the remote_path.
-
-    Arguments:
-        data_list: A list of candidate paths.
-        remote_path: The remote path to filter data.
-        is_recursive: Whether to filter data recursively.
-
-    Returns:
-        A list of paths under the given remote_path.
-
-    """
-    if is_recursive:
-        return (
-            filter(lambda x: x.startswith(remote_path), data_list)
-            if remote_path.endswith("/")
-            else filter(lambda x: x.startswith(remote_path + "/") or x == remote_path, data_list)
-        )
-    return filter(lambda x: x == remote_path, data_list)
-
-
 def _ls_normal_file(  # pylint: disable=unused-argument
     gas: GAS, info: TBRN, list_all_files: bool
 ) -> None:
@@ -232,7 +209,7 @@ def _ls_normal_file(  # pylint: disable=unused-argument
         info.draft_number,
         info.revision,
         info.segment_name,
-        _filter_data(segment_client.list_data_paths(), info.remote_path),
+        filter_data(segment_client.list_data_paths(), info.remote_path),
     )
 
 

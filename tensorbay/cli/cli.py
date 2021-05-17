@@ -232,5 +232,27 @@ def cp(  # pylint: disable=invalid-name, too-many-arguments
     _implement_cp(obj, local_paths, tbrn, is_recursive, jobs, skip_uploaded_files)
 
 
+@cli.command()
+@click.argument("tbrn", type=str)
+@click.option(
+    "-r", "--recursive", "is_recursive", is_flag=True, help="Remove directories recursively."
+)
+@click.pass_obj
+def rm(  # pylint: disable=invalid-name, too-many-arguments
+    obj: Dict[str, str], tbrn: str, is_recursive: bool
+) -> None:
+    """Remove the remote data.
+
+    Arguments:
+        obj: A dict contains config information.
+        tbrn: The path to be removed, like "tb:KITTI#1".
+        is_recursive: Whether remove directories recursively.
+
+    """  # noqa: D301,D415
+    from .rm import _implement_rm
+
+    _implement_rm(obj, tbrn, is_recursive)
+
+
 if __name__ == "__main__":
     cli()  # pylint: disable=no-value-for-parameter
