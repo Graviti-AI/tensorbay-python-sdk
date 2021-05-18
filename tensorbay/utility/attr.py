@@ -57,11 +57,12 @@ class AttrsMixin:
 
     """
 
-    _attrs_fields: Dict[str, Field] = {}
-    _attrs_supports: Set[Any] = set()
+    _attrs_fields: Dict[str, Field]
+    _attrs_supports: Set[Any]
 
     def __init_subclass__(cls) -> None:
         for name, type_ in getattr(cls, "__annotations__", {}).items():
+            cls._attrs_fields = {}
             field = _get_field(cls, name, type_)
             if field:
                 cls._attrs_fields[name] = field
