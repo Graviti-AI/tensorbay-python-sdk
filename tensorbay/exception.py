@@ -120,7 +120,7 @@ class ResponseError(ClientError):
     def __str__(self) -> str:
         return (
             f"Unexpected status code({self.response.status_code})! {self.response.url}!"
-            f"\n{self._INDENT}  {self.response.json()['message']}"
+            f"\n{self._INDENT}  {self.response.text}"
         )
 
 
