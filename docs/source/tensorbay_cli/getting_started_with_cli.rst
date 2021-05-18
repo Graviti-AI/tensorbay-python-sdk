@@ -45,8 +45,9 @@ To show configuration information:
  TBRN
 ******
 
-TensorBay Resource Name(TBRN) uniquely defines the data stored in TensorBay.
+TensorBay Resource Name(TBRN) uniquely defines the resource stored in TensorBay.
 TBRN begins with ``tb:``. Default segment can be defined as ``""`` (empty string).
+See more details in :ref:`TBRN <tensorbay_cli/tbrn:TensorBay Resource Name>`.
 The following is the general format for TBRN:
 
 .. code:: console
