@@ -150,7 +150,7 @@ class UserSession(Session):  # pylint: disable=too-few-public-methods
         Returns:
             Response of the request.
 
-        Raises:  # noqa: DAR402
+        Raises:
             ResponseError: If post response error.
 
         """
@@ -160,8 +160,8 @@ class UserSession(Session):  # pylint: disable=too-few-public-methods
                 logger.error(
                     "Unexpected status code(%d)!%s", response.status_code, ResponseLogging(response)
                 )
-                error_code = response.json()["code"]
-                raise ResponseErrorDistributor.get(error_code, ResponseError)(response)
+                raise ResponseError(response)
+
             logger.debug(ResponseLogging(response))
             return response
 
@@ -253,6 +253,9 @@ class Client:
             dataset_id: Dataset ID.
             **kwargs: Extra keyword arguments to send in the POST request.
 
+        Raises:
+            ResponseError: When the status code OpenAPI returns is unexpected.
+
         Returns:
             Response of the request.
 
@@ -262,7 +265,12 @@ class Client:
             "X-Source"
         ] = f"{config._x_source}/{__version__}"  # pylint: disable=protected-access
 
-        return self.do(method=method, url=self._url_make(section, dataset_id), **kwargs)
+        try:
+            return self.do(method=method, url=self._url_make(section, dataset_id), **kwargs)
+        except ResponseError as error:
+            response = error.response
+            error_code = response.json()["code"]
+            raise ResponseErrorDistributor.get(error_code, ResponseError)(response) from None
 
     def do(self, method: str, url: str, **kwargs: Any) -> Response:  # pylint: disable=invalid-name
         """Send a request.
