@@ -40,12 +40,14 @@ from typing import (
 
 from ..label import Catalog
 from ..utility import (
+    AttrsMixin,
     Deprecated,
-    EqMixin,
     NameMixin,
     NameSortedList,
     ReprMixin,
     ReprType,
+    attr,
+    camel,
     common_loads,
     locked,
 )
@@ -57,7 +59,7 @@ if TYPE_CHECKING:
 _T = TypeVar("_T", FusionSegment, Segment)
 
 
-class Notes(ReprMixin, EqMixin):
+class Notes(AttrsMixin, ReprMixin):
     """This is a class stores the basic information of :class:`DatasetBase`.
 
     Arguments:
@@ -70,6 +72,9 @@ class Notes(ReprMixin, EqMixin):
 
     _repr_attrs = ("is_continuous", "bin_point_cloud_fields")
 
+    is_continuous: bool = attr(key=camel, default=False)
+    bin_point_cloud_fields: Optional[Iterable[str]] = attr(key=camel, default=None)
+
     def __init__(
         self, is_continuous: bool = False, bin_point_cloud_fields: Optional[Iterable[str]] = None
     ) -> None:
@@ -81,10 +86,6 @@ class Notes(ReprMixin, EqMixin):
             return getattr(self, key)
         except AttributeError as error:
             raise KeyError(key) from error
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        self.is_continuous = contents["isContinuous"]
-        self.bin_point_cloud_fields = contents.get("binPointCloudFields")
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -131,10 +132,7 @@ class Notes(ReprMixin, EqMixin):
                 }
 
         """
-        contents: Dict[str, Any] = {"isContinuous": self.is_continuous}
-        if self.bin_point_cloud_fields:
-            contents["binPointCloudFields"] = self.bin_point_cloud_fields
-        return contents
+        return self._dumps()
 
 
 # When the NameMixin is before Sequence[_T], typing will raise AttributeError.
