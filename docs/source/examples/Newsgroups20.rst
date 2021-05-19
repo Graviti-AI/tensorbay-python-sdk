@@ -103,6 +103,14 @@ Thus, instead of writing, importing an available dataloader is also feasible.
 
    See :ref:`dataloader table <reference/glossary:dataloader>` for dataloaders with different label types.
 
+*******************
+ Visualize Dataset
+*******************
+
+Optionally, the organized dataset can be visualized by **Pharos**, which is a TensorBay SDK plug-in.
+This step can help users to check whether the dataset is correctly organized.
+Please see :ref:`features/visualization:Visualization` for more details.
+
 ****************
  Upload Dataset
 ****************
