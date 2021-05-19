@@ -14,35 +14,42 @@ import click
 from .utility import get_config_filepath
 
 
-def _implement_config(obj: Dict[str, str], access_key: str, url: str) -> None:
+def _implement_config(obj: Dict[str, str], arg1: str, arg2: str) -> None:
     config_file = get_config_filepath()
     config_parser = ConfigParser()
     config_parser.read(config_file)
 
-    if not access_key:
+    if not arg1:
         for profile_name in config_parser.sections():
             click.echo(f"[{profile_name}]")
             for key, value in config_parser[profile_name].items():
                 click.echo(f"{key} = {value}")
         return
 
-    if not access_key.startswith(("Accesskey-", "ACCESSKEY-")):
+    if arg1.startswith(("Accesskey-", "ACCESSKEY-")):
+        profile_name = obj["profile_name"]
+        if profile_name == "config":
+            click.echo("Error: name 'config' is preserved for gas basic config", err=True)
+            sys.exit(1)
+
+        if profile_name not in config_parser:
+            config_parser.add_section(profile_name)
+
+        config_parser[profile_name]["accessKey"] = arg1
+        if arg2:
+            config_parser[profile_name]["url"] = arg2
+        else:
+            config_parser.remove_option(profile_name, "url")
+    elif arg1 == "editor":
+        if not arg2:
+            click.echo("Error: Missing editor name", err=True)
+            sys.exit(1)
+        if "config" not in config_parser:
+            config_parser.add_section("config")
+        config_parser["config"]["editor"] = arg2
+    else:
         click.echo("Error: Wrong accesskey format", err=True)
         sys.exit(1)
-
-    profile_name = obj["profile_name"]
-    if profile_name == "config":
-        click.echo("Error: name 'config' is preserved for gas basic config", err=True)
-        sys.exit(1)
-
-    if profile_name not in config_parser:
-        config_parser.add_section(profile_name)
-
-    config_parser[profile_name]["accessKey"] = access_key
-    if url:
-        config_parser[profile_name]["url"] = url
-    else:
-        config_parser.remove_option(profile_name, "url")
 
     with open(config_file, "w") as fp:
         config_parser.write(fp)

@@ -6,14 +6,21 @@
 """Implementation of gas draft."""
 
 import sys
-from typing import Dict
+from configparser import ConfigParser
+from typing import Dict, Tuple
 
 import click
 
 from ..client.gas import DatasetClientType
 from ..exception import ResourceNotExistError
 from .tbrn import TBRN, TBRNType
-from .utility import get_dataset_client, get_gas
+from .utility import clean_up, get_config_filepath, get_dataset_client, get_gas
+
+_DRAFT_HINT = """
+# Please enter the title for your draft.
+# Lines starting with '#' will be ignored.
+# And an empty draft title aborts the creation.
+"""
 
 
 def _implement_draft(obj: Dict[str, str], tbrn: str, is_list: bool, title: str) -> None:
@@ -39,6 +46,17 @@ def _create_draft(dataset_client: DatasetClientType, info: TBRN, title: str) -> 
 
     if info.revision:
         click.echo(f'Create a draft based on given revision "{info}" is not supported', err=True)
+        sys.exit(1)
+
+    if not title:
+        title, description = _edit_title()
+
+    if not title:
+        click.echo("Aborting creating draft due to empty draft title", err=True)
+        sys.exit(1)
+
+    if description:
+        click.echo('Creating draft with "description" is not supported yet', err=True)
         sys.exit(1)
 
     dataset_client.create_draft(title=title)
@@ -71,3 +89,13 @@ def _echo_draft(dataset_client: DatasetClientType, title: str = "") -> None:
     if not title:
         title = "<no title>"
     click.echo(f"    {title}\n")
+
+
+def _edit_title() -> Tuple[str, str]:
+    config_file = get_config_filepath()
+    config_parser = ConfigParser()
+    config_parser.read(config_file)
+
+    editor = config_parser["config"].get("editor") if "config" in config_parser else None
+    draft_info = click.edit(_DRAFT_HINT, editor=editor)
+    return clean_up(draft_info)
