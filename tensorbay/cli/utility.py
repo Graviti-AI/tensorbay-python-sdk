@@ -9,9 +9,10 @@ import logging
 import os
 import sys
 from configparser import ConfigParser
-from typing import Iterable, Iterator, Literal, Optional, Tuple, overload
+from typing import Iterable, Iterator, Optional, Tuple, overload
 
 import click
+from typing_extensions import Literal
 
 from ..client import GAS
 from ..client import config as client_config
