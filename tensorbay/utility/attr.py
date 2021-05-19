@@ -17,7 +17,7 @@ from ..exception import AttrError
 
 _T = TypeVar("_T")
 _A = TypeVar("_A", bound="AttrsMixin")
-_BUILTINS = {"builtins", None}
+_BUILTINS = {"builtins", None, "typing"}
 _DEFAULT_ERROR_MESSAGE = "'{class_name}' object has no attribute '{attr_name}'"
 _Callable = Callable[[Any], Any]
 
@@ -193,11 +193,11 @@ def _get_operators(annotation: Any, is_internal: bool = False) -> Tuple[_Callabl
         Operating methods of the annotation.
 
     """
-    if getattr(annotation, "__module__", None) in _BUILTINS:
-        return _builtin_operator, _builtin_operator
-
     if getattr(annotation, "__origin__", None) == list:
         return _get_operators(annotation.__args__[0], True)
+
+    if getattr(annotation, "__module__", None) in _BUILTINS:
+        return _builtin_operator, _builtin_operator
 
     if not is_internal:
         return annotation.loads, _attr_dumper
