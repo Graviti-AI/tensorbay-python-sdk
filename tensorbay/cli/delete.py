@@ -15,7 +15,12 @@ from .tbrn import TBRN, TBRNType
 from .utility import get_gas
 
 
-@Deprecated(since="v1.5.0", removed_in="v1.8.0")
+@Deprecated(
+    since="v1.5.0",
+    removed_in="v1.8.0",
+    substitute="gas dataset -d [dataset_name]",
+    is_from_cli=True,
+)
 def _implement_delete(obj: Dict[str, str], name: str, yes: bool) -> None:
     info = TBRN(tbrn=name)
     if info.type != TBRNType.DATASET:

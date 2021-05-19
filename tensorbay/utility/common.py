@@ -105,11 +105,11 @@ class Deprecated:  # pylint: disable=too-few-public-methods
         since: str,
         removed_in: Optional[str] = None,
         substitute: Union[None, str, Callable[..., Any]] = None,
-        is_cli: bool = False
+        is_from_cli: bool = False,
     ) -> None:
         self._since = since
         self._removed_in = removed_in
-        self._is_cli = is_cli
+        self._is_from_cli = is_from_cli
         if not substitute:
             self._substitute = None
             self._meth = None
@@ -130,8 +130,10 @@ class Deprecated:  # pylint: disable=too-few-public-methods
             The wrapped function which shows the deprecated message when calling.
 
         """
-        function_name = func.__name__ if not self._is_cli else func.__name__.
-        messages = [f'Function "{func.__name__}" is deprecated since version {self._since}.']
+        function_name = (
+            func.__name__ if not self._is_from_cli else f"gas {func.__name__.split('_', 2)[2]}"
+        )
+        messages = [f'Function "{function_name}" is deprecated since version {self._since}.']
         if self._removed_in:
             messages.append(f'It will be removed in version "{self._removed_in}".')
 
@@ -240,4 +242,3 @@ class KwargsDeprecated:  # pylint: disable=too-few-public-methods
             return func(*arg, **kwargs)
 
         return wrapper  # type: ignore[return-value]
-
