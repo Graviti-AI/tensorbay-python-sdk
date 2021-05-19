@@ -10,10 +10,12 @@ from typing import Dict
 
 import click
 
+from ..utility import Deprecated
 from .tbrn import TBRN, TBRNType
 from .utility import get_gas
 
 
+@Deprecated(since="v1.5.0", removed_in="v1.8.0")
 def _implement_delete(obj: Dict[str, str], name: str, yes: bool) -> None:
     info = TBRN(tbrn=name)
     if info.type != TBRNType.DATASET:

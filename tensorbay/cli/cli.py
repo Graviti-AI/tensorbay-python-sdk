@@ -25,6 +25,7 @@ from typing import Dict, Iterable
 import click
 
 from .. import __version__
+from ..utility import Deprecated
 
 
 @click.group()
