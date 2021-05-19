@@ -18,10 +18,10 @@ from urllib.request import urlopen
 from _io import BufferedReader
 
 from ..label import Label
-from ..utility import ReprMixin, ReprType, common_loads
+from ..utility import AttrsMixin, ReprMixin, ReprType, attr, common_loads
 
 
-class DataBase(ReprMixin):  # pylint: disable=too-few-public-methods
+class DataBase(AttrsMixin, ReprMixin):  # pylint: disable=too-few-public-methods
     """DataBase is a base class for the file and label combination.
 
     Arguments:
@@ -44,6 +44,9 @@ class DataBase(ReprMixin):  # pylint: disable=too-few-public-methods
 
     _PATH_KEY = ""
 
+    timestamp: float = attr(is_dynamic=True)
+    label: Label = attr()
+
     def __init__(self, path: str, *, timestamp: Optional[float] = None) -> None:
         self.path = path
         if timestamp is not None:
@@ -53,23 +56,6 @@ class DataBase(ReprMixin):  # pylint: disable=too-few-public-methods
 
     def _repr_head(self) -> str:
         return f'{self.__class__.__name__}("{self.path}")'
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        self.path = contents[self._PATH_KEY]
-        if "timestamp" in contents:
-            self.timestamp = contents["timestamp"]
-
-        self.label = Label.loads(contents["label"])
-
-    def _dumps(self) -> Dict[str, Any]:
-        contents: Dict[str, Any] = {self._PATH_KEY: self.path}
-
-        if hasattr(self, "timestamp"):
-            contents["timestamp"] = self.timestamp
-
-        contents["label"] = self.label.dumps()
-
-        return contents
 
     @staticmethod
     def loads(contents: Dict[str, Any]) -> "_Type":
@@ -124,6 +110,7 @@ class Data(DataBase):
     _T = TypeVar("_T", bound="Data")
 
     _PATH_KEY = "localPath"
+    path: str = attr(key=_PATH_KEY)
 
     def __init__(
         self,
@@ -240,6 +227,7 @@ class RemoteData(DataBase):
     _T = TypeVar("_T", bound="RemoteData")
 
     _PATH_KEY = "remotePath"
+    path: str = attr(key=_PATH_KEY)
 
     def __init__(
         self,

@@ -10,7 +10,6 @@
 :class:`Field` is a class describing the attr related fields.
 
 """
-
 from sys import version_info
 from typing import (
     Any,
@@ -43,7 +42,7 @@ class _A(Protocol):  # pylint: disable=too-few-public-methods
         """Dumps all the information of attrs into a dict."""
 
 
-class Field:  # pylint: disable=too-few-public-methods
+class Field:  # pylint: disable=too-few-public-methods, too-many-instance-attributes
     """A class to identify attr fields.
 
     Arguments:
@@ -308,7 +307,8 @@ def _get_operators(annotation: Any) -> Tuple[_Callable, _Callable]:
 
     """
     origin = _get_origin(annotation)
-    if origin and issubclass(origin, Sequence):
+    sequence: Any
+    if isinstance(origin, type) and issubclass(origin, Sequence):
         sequence = origin
         type_ = annotation.__args__[0]
     else:
