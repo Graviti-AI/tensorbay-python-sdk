@@ -161,6 +161,14 @@ See :ref:`this page <reference/label_format:Box3D>` for more details about Box3D
    However, when you write your own dataloader you should use regular import.
    And when you want to contribute your own dataloader, remember to use relative import.
 
+*******************
+ Visualize Dataset
+*******************
+
+Optionally, the organized dataset can be visualized by **Pharos**, which is a TensorBay SDK plug-in.
+This step can help users to check whether the dataset is correctly organized.
+Please see :ref:`features/visualization:Visualization` for more details.
+
 ***********************
  Upload Fusion Dataset
 ***********************
