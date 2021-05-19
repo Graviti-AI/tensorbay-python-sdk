@@ -177,11 +177,11 @@ class TBRN:
     _FLAG_TO_TYPE = {
         _TBRNFlag.DATASET: (TBRNType.DATASET, 1),
         _TBRNFlag.SEGMENT: (TBRNType.SEGMENT, 2),
-        _TBRNFlag.FRAME: (TBRNType.FRAME, 3),
-        _TBRNFlag.SEGMENT_SENSOR: (TBRNType.SEGMENT_SENSOR, 4),
-        _TBRNFlag.FRAME_SENSOR: (TBRNType.FRAME_SENSOR, 4),
+        # _TBRNFlag.FRAME: (TBRNType.FRAME, 3),
+        # _TBRNFlag.SEGMENT_SENSOR: (TBRNType.SEGMENT_SENSOR, 4),
+        # _TBRNFlag.FRAME_SENSOR: (TBRNType.FRAME_SENSOR, 4),
         _TBRNFlag.NORMAL_FILE: (TBRNType.NORMAL_FILE, 2),
-        _TBRNFlag.FUSION_FILE: (TBRNType.FUSION_FILE, 4),
+        # _TBRNFlag.FUSION_FILE: (TBRNType.FUSION_FILE, 4),
     }
 
     _names: Tuple[
