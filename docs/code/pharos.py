@@ -21,7 +21,7 @@ dataset = BSTLD("path/to/dataset")
 """"""
 
 """Visualize The Dataset"""
-from pharos import vision
+from pharos import visualize
 
-vision(dataset)
+visualize(dataset)
 """"""
