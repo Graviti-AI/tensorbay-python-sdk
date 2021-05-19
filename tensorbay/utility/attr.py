@@ -18,7 +18,7 @@ from ..exception import AttrError
 _T = TypeVar("_T")
 _A = TypeVar("_A", bound="AttrsMixin")
 _BUILTINS = {"builtins", None}
-_DEFAULT_ERROR_MESSAGE = "'{}' object has no attribute '{}'"
+_DEFAULT_ERROR_MESSAGE = "'{class_name}' object has no attribute '{attr_name}'"
 _Callable = Callable[[Any], Any]
 
 
