@@ -710,8 +710,8 @@ class FusionDatasetClient(DatasetClientBase):
             if remote_frame is None:
                 yield frame, timestamp, False
             elif len(frame) != len(remote_frame):
-                remote_frame.frame_id = frame.frame_id
-                yield remote_frame, None, True
+                frame.frame_id = remote_frame.frame_id
+                yield frame, None, True
             else:
                 pbar.update()
 
