@@ -11,7 +11,7 @@ from typing import Dict
 import click
 
 from .tbrn import TBRN, TBRNType
-from .utility import filter_data, get_dataset_client, get_gas
+from .utility import get_dataset_client, get_gas
 
 
 def _implement_rm(obj: Dict[str, str], tbrn: str, is_recursive: bool) -> None:
@@ -34,14 +34,7 @@ def _implement_rm(obj: Dict[str, str], tbrn: str, is_recursive: bool) -> None:
             click.echo("Please use -r option to remove the whole segment", err=True)
             sys.exit(1)
         dataset_client.delete_segment(info.segment_name)
-    elif info.remote_path.endswith("/") and not is_recursive:
-        click.echo("Please use -r option to remove recursively", err=True)
-        sys.exit(1)
-    else:
-        segment = dataset_client.get_segment(info.segment_name)
-        data = filter_data(segment.list_data_paths(), info.remote_path, is_recursive)
-        if not data:
-            echo_info = "file or directory" if is_recursive else "file"
-            click.echo(f'No such {echo_info} "{tbrn}" ', err=True)
-            sys.exit(1)
-        segment.delete_data(data)
+        return
+
+    segment = dataset_client.get_segment(info.segment_name)
+    segment.delete_data(info.remote_path)
