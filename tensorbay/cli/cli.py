@@ -10,21 +10,63 @@ Use 'gas' + COMMAND in terminal to operate on datasets.
 
 Use 'gas config' to  configure environment.
 
-Use 'gas create' to create a dataset.
-
-Use 'gas delete' to delete a dataset.
-
 Use 'gas ls' to list data.
 
 Use 'gas draft' to operate a draft.
 
 """
 
-from typing import Dict, Iterable
+from typing import Any, Dict, Iterable, Optional
 
 import click
 
 from .. import __version__
+
+
+class DeprecatedCommand(click.Command):
+    """Customized ``click.Command`` wrapper class for deprecated CLI commands.
+
+    Arguments:
+        args: The positional arguments pass to ``click.Command``.
+        since: The version the function is deprecated.
+        removed_in: The version the function will be removed in.
+        substitute: The substitute command.
+        kwargs: The keyword arguments pass to ``click.Command``.
+
+    """
+
+    def __init__(
+        self,
+        *args: Any,
+        since: str,
+        removed_in: Optional[str] = None,
+        substitute: Optional[str] = None,
+        **kwargs: Any,
+    ):
+        super().__init__(*args, **kwargs)
+
+        messages = [
+            f'DeprecationWarning: The command "{self.name}" is deprecated since version {since}.'
+        ]
+        if removed_in:
+            messages.append(f'It will be removed in version "{removed_in}".')
+        if substitute:
+            messages.append(f'Use "{substitute}" instead.')
+
+        self.deprecated_message = " ".join(messages)
+
+    def invoke(self, ctx: click.Context) -> Any:
+        """This invokes the command to print the deprecated message.
+
+        Arguments:
+            ctx: The click Context.
+
+        Returns:
+            The invoke result of ``click.Command``.
+
+        """
+        click.secho(self.deprecated_message, fg="red", err=True)
+        return super().invoke(ctx)
 
 
 @click.group()
@@ -57,7 +99,13 @@ def cli(ctx: click.Context, access_key: str, url: str, profile_name: str, debug:
     _implement_cli(ctx, access_key, url, profile_name, debug)
 
 
-@cli.command()
+@cli.command(
+    cls=DeprecatedCommand,
+    hidden=True,
+    since="v1.5.0",
+    removed_in="v1.8.0",
+    substitute="gas dataset [dataset_name]",
+)
 @click.argument("name", type=str)
 @click.pass_obj
 def create(obj: Dict[str, str], name: str) -> None:
@@ -68,12 +116,18 @@ def create(obj: Dict[str, str], name: str) -> None:
         name: The name of the dataset to be created, like "tb:KITTI".
 
     """  # noqa: D301,D415
-    from .create import _implement_create
+    from .dataset import _implement_dataset
 
-    _implement_create(obj, name)
+    _implement_dataset(obj, name, is_delete=False, yes=False)
 
 
-@cli.command()
+@cli.command(
+    cls=DeprecatedCommand,
+    hidden=True,
+    since="v1.5.0",
+    removed_in="v1.8.0",
+    substitute="gas dataset -d tb:[dataset_name]",
+)
 @click.argument("name", type=str)
 @click.option("-y", "--yes", is_flag=True, help="Confirm to delete the dataset completely.")
 @click.pass_obj
@@ -86,9 +140,9 @@ def delete(obj: Dict[str, str], name: str, yes: bool) -> None:
         yes: Confirm to delete the dataset completely.
 
     """  # noqa: D301,D415
-    from .delete import _implement_delete
+    from .dataset import _implement_dataset
 
-    _implement_delete(obj, name, yes)
+    _implement_dataset(obj, name, is_delete=True, yes=yes)
 
 
 @cli.command()

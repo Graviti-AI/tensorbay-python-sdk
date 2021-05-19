@@ -94,7 +94,7 @@ class Deprecated:  # pylint: disable=too-few-public-methods
 
     Arguments:
         since: The version the function is deprecated.
-        remove_in: The version the function will be removed in.
+        removed_in: The version the function will be removed in.
         substitute: The substitute function.
 
     """
