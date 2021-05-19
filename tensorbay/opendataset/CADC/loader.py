@@ -128,7 +128,9 @@ def _load_frame(
 
         # Each line of the timestamps file looks like:
         # 2018-03-06 15:02:33.000000000
-        timestamp = datetime.fromisoformat(timestamps[sensor_name][frame_index][:23]).timestamp()
+        timestamp = datetime.strptime(
+            timestamps[sensor_name][frame_index][:23], "%Y-%m-%d %H:%M:%S.%f"
+        ).timestamp()
         if sensor_name != "LIDAR":
             # The image folder corresponds to different cameras, whose name is likes "CAM00".
             # The image folder looks like "image_00".
