@@ -58,3 +58,50 @@ The following is the general format for TBRN:
 *******
  Usage
 *******
+
+CLI: Create a Dataset
+======================
+
+.. code:: console
+
+   gas dataset tb:[dataset_name]
+
+
+CLI: List Dataset Names
+========================
+
+.. code:: console
+
+   gas dataset
+
+
+CLI: Create a Draft
+====================
+
+.. code:: console
+
+   gas draft tb:[dataset_name] -t [title]
+
+
+CLI: List Drafts
+=================
+
+.. code:: console
+
+   gas draft -l tb:[dataset_name]
+
+
+CLI: Upload a File To the Dataset
+==================================
+
+.. code:: console
+
+   gas cp [local_path] tb:[dataset_name]#[draft_number]:[segment_name]
+
+
+CLI: Commit the Draft
+======================
+
+.. code:: console
+
+   gas commit tb:[dataset_name]#[draft_number] -m [message]
