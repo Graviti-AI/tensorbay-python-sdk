@@ -139,3 +139,26 @@ def get_dataset_client(gas: GAS, info: TBRN, is_fusion: Optional[bool] = None) -
     elif info.revision is not None:
         dataset_client.checkout(revision=info.revision)
     return dataset_client
+
+
+def clean_up(editor_input: Optional[str]) -> Tuple[str, str]:
+    """Clean up the information from the editor input.
+
+    Arguments:
+        editor_input: The editor input.
+
+    Returns:
+        The extracted title and the description.
+
+    """
+    if not editor_input:
+        return "", ""
+
+    cleaned_up_lines = []
+    for line in editor_input.splitlines():
+        if line and not line.startswith("#"):
+            cleaned_up_lines.append(line.rstrip())
+
+    if not cleaned_up_lines:
+        return "", ""
+    return cleaned_up_lines[0].lstrip(), "\n".join(cleaned_up_lines[1:])
