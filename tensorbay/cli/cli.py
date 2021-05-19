@@ -104,7 +104,7 @@ def cli(ctx: click.Context, access_key: str, url: str, profile_name: str, debug:
     hidden=True,
     since="v1.5.0",
     removed_in="v1.8.0",
-    substitute="gas dataset [dataset_name]",
+    substitute="gas dataset tb:[dataset_name]",
 )
 @click.argument("name", type=str)
 @click.pass_obj
@@ -186,23 +186,23 @@ def config(obj: Dict[str, str], access_key: str, url: str) -> None:
 
 
 @cli.command()
-@click.argument("name", type=str, default="")
+@click.argument("tbrn", type=str, default="")
 @click.option("-d", "--delete", "is_delete", is_flag=True, help="Delete TensorBay dataset")
 @click.option("-y", "--yes", is_flag=True, help="Confirm to delete the dataset completely.")
 @click.pass_obj
-def dataset(obj: Dict[str, str], name: str, is_delete: bool, yes: bool) -> None:
+def dataset(obj: Dict[str, str], tbrn: str, is_delete: bool, yes: bool) -> None:
     """Work with TensorBay datasets\f
 
     Arguments:
         obj: A dict including config information.
-        name: The name of the dataset to be created or the tbrn of dataset to be deleted.
+        tbrn: The tbrn of the dataset, like "tb:KITTI".
         is_delete: Whether to delete the TensorBay dataset.
         yes: Confirm to delete the dataset completely.
 
     """  # noqa: D301,D415
     from .dataset import _implement_dataset
 
-    _implement_dataset(obj, name, is_delete, yes)
+    _implement_dataset(obj, tbrn, is_delete, yes)
 
 
 @cli.command()
