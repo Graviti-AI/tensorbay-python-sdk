@@ -61,12 +61,19 @@ class AttrsMixin:
     _attrs_supports: Set[Any]
 
     def __init_subclass__(cls) -> None:
-        cls._attrs_fields = {}
+        attrs_fields = {}
+
+        for base_class in cls.__bases__:
+            base_fields = getattr(base_class, "_attrs_fields", None)
+            if base_fields:
+                attrs_fields.update(base_fields)
+
         for name, type_ in getattr(cls, "__annotations__", {}).items():
             field = _get_field(cls, name, type_)
             if field:
-                cls._attrs_fields[name] = field
+                attrs_fields[name] = field
 
+        cls._attrs_fields = attrs_fields
         cls._attrs_supports = set(getattr(cls, "_supports", ()))
 
     def __eq__(self, other: object) -> bool:
