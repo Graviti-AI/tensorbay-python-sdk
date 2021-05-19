@@ -14,6 +14,8 @@ Use 'gas ls' to list data.
 
 Use 'gas draft' to operate a draft.
 
+Use 'gas branch' to operate a branch.
+
 """
 
 from typing import Any, Dict, Iterable, Optional
@@ -307,6 +309,24 @@ def rm(  # pylint: disable=invalid-name, too-many-arguments
     from .rm import _implement_rm
 
     _implement_rm(obj, tbrn, is_recursive)
+
+
+@cli.command()
+@click.argument("tbrn", type=str)
+@click.option("-v", "--verbose", is_flag=True, help="Show short commit id and commit message.")
+@click.pass_obj
+def branch(obj: Dict[str, str], tbrn: str, verbose: bool) -> None:
+    """Work with branch.\f
+
+    Arguments:
+        obj: A dict contains config information.
+        tbrn: The tbrn of the dataset.
+        verbose: Whether to show the short commit id and commit message.
+
+    """  # noqa: D301,D415
+    from .branch import _implement_branch
+
+    _implement_branch(obj, tbrn, verbose)
 
 
 if __name__ == "__main__":
