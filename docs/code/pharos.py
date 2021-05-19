@@ -15,9 +15,9 @@
 """This file includes the python code of visualization.rst."""
 
 """Organize a Dataset"""
-from tensorbay.dataset import Dataset
+from tensorbay.opendataset import BSTLD
 
-dataset = Dataset("DatasetName")
+dataset = BSTLD("path/to/dataset")
 """"""
 
 """Visualize The Dataset"""
