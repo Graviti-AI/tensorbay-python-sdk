@@ -33,7 +33,8 @@ class Field:  # pylint: disable=too-few-public-methods
 
     """
 
-    __slots__ = ("is_dynamic", "key", "default", "error_message", "loader", "dumper")
+    # remove __slots__ and add __getattr__ due to: https://github.com/PyCQA/pylint/issues/4341
+    # __slots__ = ("is_dynamic", "key", "default", "error_message", "loader", "dumper")
 
     def __init__(
         self, is_dynamic: bool, key: str, default: Any, error_message: Optional[str]
@@ -47,6 +48,11 @@ class Field:  # pylint: disable=too-few-public-methods
 
         if error_message:
             self.error_message = error_message
+
+    def __getattr__(self, name: str) -> None:
+        raise AttributeError(
+            _DEFAULT_ERROR_MESSAGE.format(class_name=self.__class__.__name__, attr_name=name)
+        )
 
 
 class AttrsMixin:
