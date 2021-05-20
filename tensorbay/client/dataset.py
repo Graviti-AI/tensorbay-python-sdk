@@ -699,10 +699,10 @@ class FusionDatasetClient(DatasetClientBase):
 
     @staticmethod
     def _skip_upload_frame(
-        segment_filter: Iterator[Tuple[Frame, Optional[int], bool]],
+        segment_filter: Iterator[Tuple[Frame, Optional[float], bool]],
         done_set: Dict[float, Frame],
         pbar: Tqdm,
-    ) -> Iterator[Tuple[Frame, Optional[int], bool]]:
+    ) -> Iterator[Tuple[Frame, Optional[float], bool]]:
         for frame, timestamp, _ in segment_filter:
             if timestamp is None:
                 timestamp = frame.frame_id.timestamp().timestamp
@@ -744,7 +744,7 @@ class FusionDatasetClient(DatasetClientBase):
         for sensor in segment.sensors.values():
             segment_client.upload_sensor(sensor)
 
-        segment_filter: Iterator[Tuple[Frame, Optional[int], bool]]
+        segment_filter: Iterator[Tuple[Frame, Optional[float], bool]]
 
         if not segment:
             return segment_client
