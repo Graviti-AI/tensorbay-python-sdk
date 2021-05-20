@@ -1,6 +1,6 @@
-##################################
- Integrate TensorBay with PyTorch
-##################################
+#########
+ PyTorch
+#########
 
 This topic describes how to integrate TensorBay dataset with PyTorch Pipeline
 using the `MNIST Dataset <https://gas.graviti.cn/dataset/data-decorators/MNIST>`_ as an example.
