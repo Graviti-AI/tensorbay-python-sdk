@@ -13,13 +13,19 @@
 
 from typing import Any, Callable, Dict, List, Optional, Set, Tuple, TypeVar
 
+from typing_extensions import Protocol
+
 from ..exception import AttrError
 
 _T = TypeVar("_T")
-_A = TypeVar("_A", bound="AttrsMixin")
 _BUILTINS = {"builtins", None, "typing"}
 _DEFAULT_ERROR_MESSAGE = "'{class_name}' object has no attribute '{attr_name}'"
 _Callable = Callable[[Any], Any]
+
+
+class _A(Protocol):  # pylint: disable=too-few-public-methods
+    def dumps(self) -> Any:
+        """Dumps all the information of attrs into a dict."""
 
 
 class Field:  # pylint: disable=too-few-public-methods
@@ -223,8 +229,8 @@ def _builtin_operator(contents: _T) -> _T:
 
 
 def _attr_dumper(attr_: _A) -> Any:
-    return attr_._dumps()  # pylint: disable=protected-access
+    return attr_.dumps()
 
 
 def _attr_list_dumper(attrs: List[_A]) -> List[Any]:
-    return [attr_._dumps() for attr_ in attrs]  # pylint: disable=protected-access
+    return [attr_.dumps() for attr_ in attrs]
