@@ -1,7 +1,7 @@
 import pytest
 
 from .. import CategoryInfo, KeypointsInfo
-from ..supports import AttributesMixin, CategoriesMixin, IsTrackingMixin, SubcatalogMixin
+from ..supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
 
 
 class TestCategoryInfo:
@@ -116,16 +116,6 @@ class TestKeypointsInfo:
         )
 
         assert keypoints_info.dumps() == keypoints_info_data
-
-
-class TestSubcatalogMixin:
-    def test_loads(self):
-        with pytest.raises(NotImplementedError):
-            SubcatalogMixin._loads(1, {"test": 1})
-
-    def test_dumps(self):
-        with pytest.raises(NotImplementedError):
-            SubcatalogMixin._dumps(2)
 
 
 class TestIsTrackingMixin:

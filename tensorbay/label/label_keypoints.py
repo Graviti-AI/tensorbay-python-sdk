@@ -15,7 +15,7 @@ which is often used for CV tasks such as human body pose estimation.
 from typing import Any, Dict, Iterable, List, Optional, Type, TypeVar, Union
 
 from ..geometry import Keypoints2D
-from ..utility import ReprType, SubcatalogTypeRegister, TypeRegister, common_loads
+from ..utility import ReprType, SubcatalogTypeRegister, TypeRegister, attr, attr_base, common_loads
 from .basic import LabelType, SubcatalogBase, _LabelBase
 from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin, KeypointsInfo
 
@@ -98,16 +98,12 @@ class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
 
     """
 
+    _keypoints: List[KeypointsInfo] = attr(key="keypoints")
+
     def __init__(self, is_tracking: bool = False) -> None:
         SubcatalogBase.__init__(self)
         IsTrackingMixin.__init__(self, is_tracking)
         self._keypoints: List[KeypointsInfo] = []
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        super()._loads(contents)
-        self._keypoints = []
-        for keypoint in contents["keypoints"]:
-            self._keypoints.append(KeypointsInfo.loads(keypoint))
 
     @property
     def keypoints(self) -> List[KeypointsInfo]:
@@ -204,14 +200,11 @@ class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
             }
 
         """
-        contents: Dict[str, Any] = super().dumps()
-        if self._keypoints:
-            contents["keypoints"] = [keypoint.dumps() for keypoint in self._keypoints]
-        return contents
+        return self._dumps()
 
 
 @TypeRegister(LabelType.KEYPOINTS2D)
-class LabeledKeypoints2D(Keypoints2D, _LabelBase):  # pylint: disable=too-many-ancestors
+class LabeledKeypoints2D(_LabelBase, Keypoints2D):  # pylint: disable=too-many-ancestors
     """This class defines the concept of 2D keypoints label.
 
     :class:`LabeledKeypoints2D` is the 2D keypoints type of label,
@@ -250,6 +243,7 @@ class LabeledKeypoints2D(Keypoints2D, _LabelBase):  # pylint: disable=too-many-a
 
     _repr_type = ReprType.SEQUENCE
     _repr_attrs = _LabelBase._repr_attrs
+    _attrs_base: Keypoints2D = attr_base(key="keypoints2d")
 
     def __init__(
         self,
@@ -259,12 +253,8 @@ class LabeledKeypoints2D(Keypoints2D, _LabelBase):  # pylint: disable=too-many-a
         attributes: Optional[Dict[str, Any]] = None,
         instance: Optional[str] = None,
     ) -> None:
-        super().__init__(keypoints)
+        Keypoints2D.__init__(self, keypoints)  # type: ignore[arg-type]
         _LabelBase.__init__(self, category, attributes, instance)
-
-    def _loads(self, contents: Dict[str, Any]) -> None:  # type: ignore[override]
-        super()._loads(contents["keypoints2d"])
-        _LabelBase._loads(self, contents)
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:  # type: ignore[override]
@@ -321,7 +311,4 @@ class LabeledKeypoints2D(Keypoints2D, _LabelBase):  # pylint: disable=too-many-a
             }
 
         """
-        contents = _LabelBase.dumps(self)
-        contents["keypoints2d"] = super().dumps()
-
-        return contents
+        return self._dumps()

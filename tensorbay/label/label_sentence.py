@@ -17,7 +17,15 @@ which is often used for tasks such as automatic speech recognition.
 
 from typing import Any, Dict, Iterable, List, Optional, Type, TypeVar, Union
 
-from ..utility import EqMixin, ReprMixin, SubcatalogTypeRegister, TypeRegister, common_loads
+from ..utility import (
+    AttrsMixin,
+    ReprMixin,
+    SubcatalogTypeRegister,
+    TypeRegister,
+    attr,
+    camel,
+    common_loads,
+)
 from .basic import LabelType, SubcatalogBase, _LabelBase
 from .supports import AttributesMixin
 
@@ -72,6 +80,10 @@ class SentenceSubcatalog(SubcatalogBase, AttributesMixin):  # pylint: disable=to
 
     """
 
+    is_sample: bool = attr(key=camel, default=False)
+    sample_rate: int = attr(is_dynamic=True, key=camel)
+    lexicon: List[List[str]] = attr(is_dynamic=True)
+
     def __init__(
         self,
         is_sample: bool = False,
@@ -90,16 +102,6 @@ class SentenceSubcatalog(SubcatalogBase, AttributesMixin):  # pylint: disable=to
         if lexicon:
             self.lexicon = lexicon
 
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        super()._loads(contents)
-        self.is_sample = contents.get("isSample", False)
-
-        if self.is_sample:
-            self.sample_rate = contents["sampleRate"]
-
-        if "lexicon" in contents:
-            self.lexicon = contents["lexicon"]
-
     def dumps(self) -> Dict[str, Any]:
         """Dumps the information of this SentenceSubcatalog into a dict.
 
@@ -112,16 +114,7 @@ class SentenceSubcatalog(SubcatalogBase, AttributesMixin):  # pylint: disable=to
             {'isSample': True, 'sampleRate': 16000, 'lexicon': [['mean', 'm', 'iy', 'n']]}
 
         """
-        contents = super().dumps()
-
-        if self.is_sample:
-            contents["isSample"] = self.is_sample
-            contents["sampleRate"] = self.sample_rate
-
-        if hasattr(self, "lexicon"):
-            contents["lexicon"] = self.lexicon
-
-        return contents
+        return self._dumps()
 
     def append_lexicon(self, lexemes: List[str]) -> None:
         """Add lexemes to lexicon.
@@ -142,7 +135,7 @@ class SentenceSubcatalog(SubcatalogBase, AttributesMixin):  # pylint: disable=to
             self.lexicon = [lexemes]
 
 
-class Word(ReprMixin, EqMixin):
+class Word(ReprMixin, AttrsMixin):
     """This class defines the concept of word.
 
     :class:`Word` is a word within a phonetic transcription sentence,
@@ -172,6 +165,10 @@ class Word(ReprMixin, EqMixin):
 
     _repr_attrs = ("text", "begin", "end")
 
+    text: str = attr()
+    begin: float = attr(is_dynamic=True)
+    end: float = attr(is_dynamic=True)
+
     def __init__(
         self,
         text: str,
@@ -183,15 +180,6 @@ class Word(ReprMixin, EqMixin):
             self.begin = begin
         if end is not None:
             self.end = end
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        self.text = contents["text"]
-
-        if "begin" in contents:
-            self.begin = contents["begin"]
-
-        if "end" in contents:
-            self.end = contents["end"]
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Union[str, float]]) -> _T:
@@ -227,12 +215,7 @@ class Word(ReprMixin, EqMixin):
             {'text': 'example', 'begin': 1, 'end': 2}
 
         """
-        contents: Dict[str, Union[str, float]] = {"text": self.text}
-        if hasattr(self, "begin"):
-            contents["begin"] = self.begin
-        if hasattr(self, "end"):
-            contents["end"] = self.end
-        return contents
+        return self._dumps()
 
 
 @TypeRegister(LabelType.SENTENCE)  # pylint: disable=too-few-public-methods
@@ -300,6 +283,10 @@ class LabeledSentence(_LabelBase):
     _repr_attrs = ("sentence", "spell", "phone") + _label_attrs
     _repr_maxlevel = 3
 
+    sentence: List[Word] = attr(is_dynamic=True)
+    spell: List[Word] = attr(is_dynamic=True)
+    phone: List[Word] = attr(is_dynamic=True)
+
     def __init__(
         self,
         sentence: Optional[Iterable[Word]] = None,
@@ -319,18 +306,6 @@ class LabeledSentence(_LabelBase):
     @staticmethod
     def _load_word(contents: Iterable[Dict[str, Any]]) -> List[Word]:
         return [Word.loads(word) for word in contents]
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        super()._loads(contents)
-
-        if "sentence" in contents:
-            self.sentence = self._load_word(contents["sentence"])
-
-        if "spell" in contents:
-            self.spell = self._load_word(contents["spell"])
-
-        if "phone" in contents:
-            self.phone = self._load_word(contents["phone"])
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -405,11 +380,4 @@ class LabeledSentence(_LabelBase):
             }
 
         """
-        contents = _LabelBase.dumps(self)
-        if hasattr(self, "sentence"):
-            contents["sentence"] = [word.dumps() for word in self.sentence]
-        if hasattr(self, "spell"):
-            contents["spell"] = [word.dumps() for word in self.spell]
-        if hasattr(self, "phone"):
-            contents["phone"] = [word.dumps() for word in self.phone]
-        return contents
+        return self._dumps()

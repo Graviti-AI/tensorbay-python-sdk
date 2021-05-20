@@ -154,7 +154,7 @@ class AttrsMixin:
             error_message.format(class_name=self.__class__.__name__, attr_name=name)
         )
 
-    def _loads(self, contents: Dict[str, Any]) -> None:
+    def _loads(self, contents: Any) -> None:
         """Load an instance from a dict containing the information of the contents.
 
         Arguments:

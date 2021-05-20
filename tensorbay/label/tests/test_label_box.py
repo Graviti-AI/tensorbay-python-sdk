@@ -8,6 +8,7 @@ from quaternion import quaternion
 
 from ...geometry import Transform3D, Vector3D
 from .. import Box2DSubcatalog, Box3DSubcatalog, LabeledBox2D, LabeledBox3D
+from ..basic import SubcatalogBase
 from ..supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
 
 
@@ -248,13 +249,9 @@ class TestBox2dAndBox3dSubcatalog:
     """This class used to test Box2DSubcatalog and Box3DSubcatalog classes."""
 
     @pytest.mark.parametrize("SUBCATALOG", (Box2DSubcatalog, Box3DSubcatalog))
-    def test_init_subclass(self, SUBCATALOG):
-        subcatalog = SUBCATALOG()
-        assert subcatalog._supports == (
-            IsTrackingMixin,
-            CategoriesMixin,
-            AttributesMixin,
-        )
+    def test_init(self, SUBCATALOG, is_tracking_data):
+        box_subcatalog = SUBCATALOG(is_tracking_data)
+        assert box_subcatalog.is_tracking == is_tracking_data
 
     @pytest.mark.parametrize("SUBCATALOG", (Box2DSubcatalog, Box3DSubcatalog))
     def test_eq(self, SUBCATALOG):

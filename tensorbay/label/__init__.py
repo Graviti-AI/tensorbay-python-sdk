@@ -6,8 +6,9 @@
 """Label related classes."""
 
 from .attributes import AttributeInfo, Items
-from .basic import Label, LabelType
+from .basic import LabelType
 from .catalog import Catalog, Subcatalogs
+from .label import Label
 from .label_box import Box2DSubcatalog, Box3DSubcatalog, LabeledBox2D, LabeledBox3D
 from .label_classification import Classification, ClassificationSubcatalog
 from .label_keypoints import Keypoints2DSubcatalog, LabeledKeypoints2D

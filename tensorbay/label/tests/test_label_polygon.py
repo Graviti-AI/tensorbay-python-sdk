@@ -70,13 +70,9 @@ class TestLabeledPolygon2D:
 
 
 class TestPolygon2DSubcatalog:
-    def test_init_subclass(self):
-        subcatalog = Polygon2DSubcatalog()
-        assert subcatalog._supports == (
-            IsTrackingMixin,
-            CategoriesMixin,
-            AttributesMixin,
-        )
+    def test_init(self, is_tracking_data):
+        polygon2d_subcatalog = Polygon2DSubcatalog(is_tracking_data)
+        polygon2d_subcatalog.is_tracking = is_tracking_data
 
     def test_eq(self):
         content1 = {

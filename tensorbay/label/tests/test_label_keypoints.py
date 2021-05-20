@@ -74,13 +74,9 @@ class TestLabeledKeypoints2D:
 
 
 class TestKeypoints2DSubcatalog:
-    def test_init_subclass(self):
-        keypoints2d_subcatalog = Keypoints2DSubcatalog()
-        assert keypoints2d_subcatalog._supports == (
-            IsTrackingMixin,
-            CategoriesMixin,
-            AttributesMixin,
-        )
+    def test_init(self, is_tracking_data):
+        keypoints2d_subcatalog = Keypoints2DSubcatalog(is_tracking_data)
+        keypoints2d_subcatalog.is_tracking = is_tracking_data
 
     def test_eq(self):
         contents1 = {
