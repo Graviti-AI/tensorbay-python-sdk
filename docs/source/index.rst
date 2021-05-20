@@ -59,6 +59,8 @@ It provides:
    :caption: Integrations
 
    integrations/pytorch
+
+..
    integrations/tensorflow
 
 .. toctree::
