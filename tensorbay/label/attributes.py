@@ -17,7 +17,7 @@ It refers to the `Json schema`_ method to describe an attribute.
 from enum import Enum
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Union
 
-from ..utility import EqMixin, NameMixin, ReprMixin, common_loads
+from ..utility import EqMixin, NameMixin, ReprMixin, attr, attr_base, camel, common_loads
 
 _AvailaleType = Union[list, bool, int, float, str, None]
 _SingleArgType = Union[str, None, Type[_AvailaleType]]
@@ -306,6 +306,9 @@ class AttributeInfo(NameMixin, Items):
     _repr_attrs = ("name", "parent_categories") + Items._repr_attrs
     _repr_maxlevel = 2
 
+    _attrs_base: Items = attr_base(key=None)
+    parent_categories: List[str] = attr(is_dynamic=True, key=camel)
+
     def __init__(
         self,
         name: str,
@@ -328,13 +331,6 @@ class AttributeInfo(NameMixin, Items):
             self.parent_categories = [parent_categories]
         else:
             self.parent_categories = list(parent_categories)
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        NameMixin._loads(self, contents)
-        Items._loads(self, contents)
-
-        if "parentCategories" in contents:
-            self.parent_categories = contents["parentCategories"]
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -414,10 +410,4 @@ class AttributeInfo(NameMixin, Items):
             }
 
         """
-        contents: Dict[str, Any] = NameMixin._dumps(self)
-        contents.update(Items.dumps(self))
-
-        if hasattr(self, "parent_categories"):
-            contents["parentCategories"] = self.parent_categories
-
-        return contents
+        return self._dumps()

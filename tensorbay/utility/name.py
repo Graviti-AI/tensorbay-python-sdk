@@ -41,7 +41,7 @@ from .repr import ReprMixin
 from .user import UserMapping, UserSequence
 
 
-class NameMixin(ReprMixin, AttrsMixin):
+class NameMixin(AttrsMixin, ReprMixin):
     """A mixin class for instance which has immutable name and mutable description.
 
     Arguments:

@@ -47,9 +47,10 @@ class TestClassification:
 
 
 class TestClassificationSubcatalog:
-    def test_init_subclass(self):
-        classification_subcatalog = ClassificationSubcatalog()
-        classification_subcatalog._supports = (CategoriesMixin, AttributesMixin)
+    def test_init(self):
+        description = "This is a test text."
+        classification_subcatalog = ClassificationSubcatalog(description)
+        classification_subcatalog.description = description
 
     def test_eq(self):
         contents1 = {"category": "cat", "attributes": [{"name": "color", "enum": ["white", "red"]}]}

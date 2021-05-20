@@ -78,13 +78,9 @@ class TestLabeledPolyline2D:
 
 
 class TestPolyline2DSubcatalog:
-    def test_init_subclass(self):
-        subcatalog = Polyline2DSubcatalog()
-        assert subcatalog._supports == (
-            IsTrackingMixin,
-            CategoriesMixin,
-            AttributesMixin,
-        )
+    def test_init(self, is_tracking_data):
+        polyline2d_subcatalog = Polyline2DSubcatalog
+        polyline2d_subcatalog.is_tracking = is_tracking_data
 
     def test_eq(self):
         contents1 = {

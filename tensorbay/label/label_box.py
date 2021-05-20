@@ -25,7 +25,14 @@ with warnings.catch_warnings():
     from quaternion import quaternion
 
 from ..geometry import Box2D, Box3D, Transform3D
-from ..utility import MatrixType, ReprType, SubcatalogTypeRegister, TypeRegister, common_loads
+from ..utility import (
+    MatrixType,
+    ReprType,
+    SubcatalogTypeRegister,
+    TypeRegister,
+    attr_base,
+    common_loads,
+)
 from .basic import LabelType, SubcatalogBase, _LabelBase
 from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
 
@@ -101,7 +108,7 @@ class Box2DSubcatalog(  # pylint: disable=too-many-ancestors
 
 
 @TypeRegister(LabelType.BOX2D)
-class LabeledBox2D(Box2D, _LabelBase):  # pylint: disable=too-many-ancestors
+class LabeledBox2D(_LabelBase, Box2D):  # pylint: disable=too-many-ancestors
     """This class defines the concept of 2D bounding box label.
 
     :class:`LabeledBox2D` is the 2D bounding box type of label,
@@ -145,6 +152,8 @@ class LabeledBox2D(Box2D, _LabelBase):  # pylint: disable=too-many-ancestors
     _repr_type = ReprType.INSTANCE
     _repr_attrs = _LabelBase._repr_attrs
 
+    _attrs_base: Box2D = attr_base(key="box2d")
+
     def __init__(
         self,
         xmin: float,
@@ -158,10 +167,6 @@ class LabeledBox2D(Box2D, _LabelBase):  # pylint: disable=too-many-ancestors
     ):
         Box2D.__init__(self, xmin, ymin, xmax, ymax)
         _LabelBase.__init__(self, category, attributes, instance)
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        Box2D._loads(self, contents["box2d"])
-        _LabelBase._loads(self, contents)
 
     @classmethod
     def from_xywh(  # pylint: disable=arguments-differ
@@ -264,9 +269,7 @@ class LabeledBox2D(Box2D, _LabelBase):  # pylint: disable=too-many-ancestors
             }
 
         """
-        contents = _LabelBase.dumps(self)
-        contents["box2d"] = Box2D.dumps(self)
-        return contents
+        return self._dumps()
 
 
 @SubcatalogTypeRegister(LabelType.BOX3D)
@@ -340,7 +343,7 @@ class Box3DSubcatalog(  # pylint: disable=too-many-ancestors
 
 
 @TypeRegister(LabelType.BOX3D)
-class LabeledBox3D(Box3D, _LabelBase):
+class LabeledBox3D(_LabelBase, Box3D):
     """This class defines the concept of 3D bounding box label.
 
     :class:`LabeledBox3D` is the 3D bounding box type of label,
@@ -387,6 +390,8 @@ class LabeledBox3D(Box3D, _LabelBase):
 
     _repr_attrs = Box3D._repr_attrs + _LabelBase._repr_attrs
 
+    _attrs_base: Box3D = attr_base(key="box3d")
+
     def __init__(
         self,
         size: Iterable[float],
@@ -413,10 +418,6 @@ class LabeledBox3D(Box3D, _LabelBase):
             return labeled_box_3d
 
         return NotImplemented  # type: ignore[unreachable]
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        Box3D._loads(self, contents["box3d"])
-        _LabelBase._loads(self, contents)
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -480,6 +481,4 @@ class LabeledBox3D(Box3D, _LabelBase):
             }
 
         """
-        contents = _LabelBase.dumps(self)
-        contents["box3d"] = Box3D.dumps(self)
-        return contents
+        return self._dumps()

@@ -9,8 +9,6 @@
 
 :class:`KeypointsInfo` defines the structure of a set of keypoints.
 
-:class:`SubcatalogMixin` is the base class of different mixin classes for subcatalog.
-
 .. table:: mixin classes for subcatalog
    :widths: auto
 
@@ -27,7 +25,16 @@
 from enum import Enum, auto
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Union
 
-from ..utility import EqMixin, NamedList, NameMixin, ReprMixin, ReprType, common_loads
+from ..utility import (
+    AttrsMixin,
+    NamedList,
+    NameMixin,
+    ReprMixin,
+    ReprType,
+    attr,
+    camel,
+    common_loads,
+)
 from .attributes import AttributeInfo, Items, _ArgType, _EnumElementType
 
 
@@ -80,7 +87,7 @@ class CategoryInfo(NameMixin):
             {'name': 'example', 'description': 'This is an example'}
 
         """
-        return super()._dumps()
+        return self._dumps()
 
 
 class _VisibleType(Enum):
@@ -90,7 +97,7 @@ class _VisibleType(Enum):
     BINARY = auto()
 
 
-class KeypointsInfo(ReprMixin, EqMixin):
+class KeypointsInfo(ReprMixin, AttrsMixin):
     """This class defines the structure of a set of keypoints.
 
     Arguments:
@@ -144,6 +151,12 @@ class KeypointsInfo(ReprMixin, EqMixin):
         "visible",
         "parent_categories",
     )
+    _number: int = attr(key="number")
+    names: List[str] = attr(is_dynamic=True)
+    skeleton: List[Tuple[int]] = attr(is_dynamic=True)
+    visible: str = attr(is_dynamic=True)
+    parent_categories: List[str] = attr(is_dynamic=True, key=camel)
+    description: str = attr(default="")
 
     def __init__(
         self,
@@ -179,21 +192,9 @@ class KeypointsInfo(ReprMixin, EqMixin):
             self.parent_categories = list(parent_categories)
 
     def _loads(self, contents: Dict[str, Any]) -> None:
-        self._number = contents["number"]
-
-        if "names" in contents:
-            self.names = contents["names"]
-
-        if "skeleton" in contents:
-            self.skeleton = [tuple(line) for line in contents["skeleton"]]  # type: ignore[misc]
-
         if "visible" in contents:
-            self.visible = _VisibleType[contents["visible"]].name
-
-        if "parentCategories" in contents:
-            self.parent_categories = contents["parentCategories"]
-
-        self.description = contents.get("description", "")
+            _ = _VisibleType[contents["visible"]]
+        super()._loads(contents)
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -267,37 +268,10 @@ class KeypointsInfo(ReprMixin, EqMixin):
             }
 
         """
-        contents: Dict[str, Any] = {"number": self._number}
-
-        if hasattr(self, "names"):
-            contents["names"] = self.names
-
-        if hasattr(self, "skeleton"):
-            contents["skeleton"] = self.skeleton
-
-        if hasattr(self, "visible"):
-            contents["visible"] = self.visible
-
-        if hasattr(self, "parent_categories"):
-            contents["parentCategories"] = self.parent_categories
-
-        if self.description:
-            contents["description"] = self.description
-
-        return contents
+        return self._dumps()
 
 
-class SubcatalogMixin(EqMixin):  # pylint: disable=too-few-public-methods
-    """The base class of different mixin classes for subcatalog."""
-
-    def _loads(self: Any, contents: Dict[str, Any]) -> None:
-        raise NotImplementedError
-
-    def _dumps(self: Any) -> Dict[str, bool]:
-        raise NotImplementedError
-
-
-class IsTrackingMixin(SubcatalogMixin):  # pylint: disable=too-few-public-methods
+class IsTrackingMixin(AttrsMixin):  # pylint: disable=too-few-public-methods
     """A mixin class supporting tracking information of a subcatalog.
 
     Arguments:
@@ -308,17 +282,13 @@ class IsTrackingMixin(SubcatalogMixin):  # pylint: disable=too-few-public-method
 
     """
 
+    is_tracking: bool = attr(key=camel, default=False)
+
     def __init__(self, is_tracking: bool = False) -> None:
         self.is_tracking = is_tracking
 
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        self.is_tracking = contents.get("isTracking", False)
 
-    def _dumps(self) -> Dict[str, bool]:
-        return {"isTracking": self.is_tracking} if self.is_tracking else {}
-
-
-class CategoriesMixin(SubcatalogMixin):  # pylint: disable=too-few-public-methods
+class CategoriesMixin(AttrsMixin):  # pylint: disable=too-few-public-methods
     """A mixin class supporting category information of a subcatalog.
 
     Attributes:
@@ -330,29 +300,8 @@ class CategoriesMixin(SubcatalogMixin):  # pylint: disable=too-few-public-method
 
     """
 
-    category_delimiter: str
-    categories: NamedList[CategoryInfo]
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        if "categories" not in contents:
-            return
-        if "categoryDelimiter" in contents:
-            self.category_delimiter = contents["categoryDelimiter"]
-
-        self.categories = NamedList()
-        for category in contents["categories"]:
-            self.categories.append(CategoryInfo.loads(category))
-
-    def _dumps(self) -> Dict[str, Any]:
-        if not hasattr(self, "categories"):
-            return {}
-
-        contents: Dict[str, Any] = {
-            "categories": [category.dumps() for category in self.categories]
-        }
-        if hasattr(self, "category_delimiter"):
-            contents["categoryDelimiter"] = self.category_delimiter
-        return contents
+    category_delimiter: str = attr(is_dynamic=True, key=camel)
+    categories: NamedList[CategoryInfo] = attr(is_dynamic=True)
 
     def get_category_to_index(self) -> Dict[str, int]:
         """Return the dict containing the conversion from category to index.
@@ -392,7 +341,7 @@ class CategoriesMixin(SubcatalogMixin):  # pylint: disable=too-few-public-method
         self.categories.append(CategoryInfo(name, description))
 
 
-class AttributesMixin(SubcatalogMixin):  # pylint: disable=too-few-public-methods
+class AttributesMixin(AttrsMixin):  # pylint: disable=too-few-public-methods
     """A mixin class supporting attribute information of a subcatalog.
 
     Attributes:
@@ -403,20 +352,7 @@ class AttributesMixin(SubcatalogMixin):  # pylint: disable=too-few-public-method
 
     """
 
-    attributes: NamedList[AttributeInfo]
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        if "attributes" not in contents:
-            return
-
-        self.attributes = NamedList()
-        for attribute in contents["attributes"]:
-            self.attributes.append(AttributeInfo.loads(attribute))
-
-    def _dumps(self) -> Dict[str, Any]:
-        if hasattr(self, "attributes"):
-            return {"attributes": [attribute.dumps() for attribute in self.attributes]}
-        return {}
+    attributes: NamedList[AttributeInfo] = attr(is_dynamic=True)
 
     def add_attribute(
         self,

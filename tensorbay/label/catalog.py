@@ -32,7 +32,7 @@ corresponding to different types of labels.
 from typing import Any, Dict, Type, TypeVar, Union
 
 from ..label import LabelType
-from ..utility import EqMixin, ReprMixin, ReprType, common_loads
+from ..utility import AttrsMixin, ReprMixin, ReprType, attr, common_loads, upper
 from .label_box import Box2DSubcatalog, Box3DSubcatalog
 from .label_classification import ClassificationSubcatalog
 from .label_keypoints import Keypoints2DSubcatalog
@@ -51,7 +51,7 @@ Subcatalogs = Union[
 ]
 
 
-class Catalog(ReprMixin, EqMixin):
+class Catalog(ReprMixin, AttrsMixin):
     """This class defines the concept of catalog.
 
     :class:`Catalog` is used to describe the types of labels
@@ -87,24 +87,19 @@ class Catalog(ReprMixin, EqMixin):
     _repr_attrs = tuple(label_type.value for label_type in LabelType)
     _repr_maxlevel = 2
 
-    classification: ClassificationSubcatalog
-    box2d: Box2DSubcatalog
-    box3d: Box3DSubcatalog
-    polygon2d: Polygon2DSubcatalog
-    polyline2d: Polyline2DSubcatalog
-    keypoints2d: Keypoints2DSubcatalog
-    sentence: SentenceSubcatalog
+    classification: ClassificationSubcatalog = attr(is_dynamic=True, key=upper)
+    box2d: Box2DSubcatalog = attr(is_dynamic=True, key=upper)
+    box3d: Box3DSubcatalog = attr(is_dynamic=True, key=upper)
+    polygon2d: Polygon2DSubcatalog = attr(is_dynamic=True, key=upper)
+    polyline2d: Polyline2DSubcatalog = attr(is_dynamic=True, key=upper)
+    keypoints2d: Keypoints2DSubcatalog = attr(is_dynamic=True, key=upper)
+    sentence: SentenceSubcatalog = attr(is_dynamic=True, key=upper)
 
     def __bool__(self) -> bool:
         for label_type in LabelType:
             if hasattr(self, label_type.value):
                 return True
         return False
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        for type_name, subcatalog in contents.items():
-            label_type = LabelType[type_name]
-            setattr(self, label_type.value, label_type.subcatalog_type.loads(subcatalog))
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -159,9 +154,4 @@ class Catalog(ReprMixin, EqMixin):
             {'CLASSIFICATION': {'categories': [{'name': 'example'}]}}
 
         """
-        contents: Dict[str, Any] = {}
-        for label_type in LabelType:
-            subcatalog = getattr(self, label_type.value, None)
-            if subcatalog:
-                contents[label_type.name] = subcatalog.dumps()
-        return contents
+        return self._dumps()

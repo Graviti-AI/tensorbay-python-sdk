@@ -15,7 +15,7 @@ which is often used for CV tasks such as lane detection.
 from typing import Any, Dict, Iterable, Optional, Type, TypeVar
 
 from ..geometry import Polyline2D
-from ..utility import ReprType, SubcatalogTypeRegister, TypeRegister, common_loads
+from ..utility import ReprType, SubcatalogTypeRegister, TypeRegister, attr_base, common_loads
 from .basic import LabelType, SubcatalogBase, _LabelBase
 from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
 
@@ -87,7 +87,7 @@ class Polyline2DSubcatalog(  # pylint: disable=too-many-ancestors
 
 
 @TypeRegister(LabelType.POLYLINE2D)
-class LabeledPolyline2D(Polyline2D, _LabelBase):  # pylint: disable=too-many-ancestors
+class LabeledPolyline2D(_LabelBase, Polyline2D):  # pylint: disable=too-many-ancestors
     """This class defines the concept of polyline2D label.
 
     :class:`LabeledPolyline2D` is the 2D polyline type of label,
@@ -127,6 +127,7 @@ class LabeledPolyline2D(Polyline2D, _LabelBase):  # pylint: disable=too-many-anc
 
     _repr_type = ReprType.SEQUENCE
     _repr_attrs = _LabelBase._repr_attrs
+    _attrs_base: Polyline2D = attr_base(key="polyline2d")
 
     def __init__(
         self,
@@ -136,12 +137,8 @@ class LabeledPolyline2D(Polyline2D, _LabelBase):  # pylint: disable=too-many-anc
         attributes: Optional[Dict[str, Any]] = None,
         instance: Optional[str] = None,
     ):
-        super().__init__(points)
+        Polyline2D.__init__(self, points)  # type: ignore[arg-type]
         _LabelBase.__init__(self, category, attributes, instance)
-
-    def _loads(self, contents: Dict[str, Any]) -> None:  # type: ignore[override]
-        super()._loads(contents["polyline2d"])
-        _LabelBase._loads(self, contents)
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:  # type: ignore[override]
@@ -196,7 +193,4 @@ class LabeledPolyline2D(Polyline2D, _LabelBase):  # pylint: disable=too-many-anc
             }
 
         """
-        contents = _LabelBase.dumps(self)
-        contents["polyline2d"] = super().dumps()
-
-        return contents
+        return self._dumps()

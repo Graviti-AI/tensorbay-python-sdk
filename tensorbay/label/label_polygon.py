@@ -15,7 +15,7 @@ which is often used for CV tasks such as semantic segmentation.
 from typing import Any, Dict, Iterable, Optional, Type, TypeVar
 
 from ..geometry import Polygon2D
-from ..utility import ReprType, SubcatalogTypeRegister, TypeRegister, common_loads
+from ..utility import ReprType, SubcatalogTypeRegister, TypeRegister, attr_base, common_loads
 from .basic import LabelType, SubcatalogBase, _LabelBase
 from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
 
@@ -87,7 +87,7 @@ class Polygon2DSubcatalog(  # pylint: disable=too-many-ancestors
 
 
 @TypeRegister(LabelType.POLYGON2D)
-class LabeledPolygon2D(Polygon2D, _LabelBase):  # pylint: disable=too-many-ancestors
+class LabeledPolygon2D(_LabelBase, Polygon2D):  # pylint: disable=too-many-ancestors
     """This class defines the concept of polygon2D label.
 
     :class:`LabeledPolygon2D` is the 2D polygon type of label,
@@ -127,6 +127,7 @@ class LabeledPolygon2D(Polygon2D, _LabelBase):  # pylint: disable=too-many-ances
 
     _repr_type = ReprType.SEQUENCE
     _repr_attrs = _LabelBase._repr_attrs
+    _attrs_base: Polygon2D = attr_base(key="polygon2d")
 
     def __init__(
         self,
@@ -136,12 +137,8 @@ class LabeledPolygon2D(Polygon2D, _LabelBase):  # pylint: disable=too-many-ances
         attributes: Optional[Dict[str, Any]] = None,
         instance: Optional[str] = None,
     ):
-        super().__init__(points)
+        Polygon2D.__init__(self, points)  # type: ignore[arg-type]
         _LabelBase.__init__(self, category, attributes, instance)
-
-    def _loads(self, contents: Dict[str, Any]) -> None:  # type: ignore[override]
-        super()._loads(contents["polygon2d"])
-        _LabelBase._loads(self, contents)
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:  # type: ignore[override]
@@ -200,7 +197,4 @@ class LabeledPolygon2D(Polygon2D, _LabelBase):  # pylint: disable=too-many-ances
             }
 
         """
-        contents = _LabelBase.dumps(self)
-        contents["polygon2d"] = super().dumps()
-
-        return contents
+        return self._dumps()
