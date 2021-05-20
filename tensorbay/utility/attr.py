@@ -147,12 +147,11 @@ class AttrsMixin:
             if field.is_dynamic and not hasattr(self, name):
                 continue
 
-            if field.default is not ...:
-                value = getattr(self, name, field.default)
-            else:
-                value = getattr(self, name)
+            value = getattr(self, name)
+            if value == field.default:
+                continue
 
-            contents[field.key] = field.dumper(value)
+            contents[field.key] = value
         return contents
 
 
