@@ -141,7 +141,7 @@ class AttrsMixin:
         """
         contents: Dict[str, Any] = {}
         for support in getattr(self, "_supports", []):
-            contents.update(support._dumps(self))  # pylint: disable=protected-access
+            contents.update(support.dumps(self))
 
         for name, field in self._attrs_fields.items():
             if field.is_dynamic and not hasattr(self, name):
