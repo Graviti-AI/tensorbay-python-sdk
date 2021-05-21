@@ -5,7 +5,7 @@
 
 """Utility classes."""
 
-from .attr import AttrsMixin, attr
+from .attr import AttrsMixin, attr, attr_base
 from .common import Deprecated, EqMixin, KwargsDeprecated, MatrixType, common_loads, locked
 from .name import NameMixin, NameOrderedDict, NameSortedDict, NameSortedList
 from .repr import ReprMixin, ReprType, repr_config
@@ -33,6 +33,7 @@ __all__ = [
     "UserMutableSequence",
     "UserSequence",
     "attr",
+    "attr_base",
     "common_loads",
     "locked",
     "repr_config",

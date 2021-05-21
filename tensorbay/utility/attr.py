@@ -11,16 +11,17 @@
 
 """
 
-from typing import Any, Callable, Dict, List, Optional, Set, Tuple, TypeVar
+from typing import Any, Callable, Dict, List, Optional, Tuple, TypeVar
 
 from typing_extensions import Protocol
 
 from ..exception import AttrError
 
 _T = TypeVar("_T")
+_Callable = Callable[[Any], Any]
 _BUILTINS = {"builtins", None, "typing"}
 _DEFAULT_ERROR_MESSAGE = "'{class_name}' object has no attribute '{attr_name}'"
-_Callable = Callable[[Any], Any]
+_ATTRS_BASE = "_attrs_base"
 
 
 class _A(Protocol):  # pylint: disable=too-few-public-methods
@@ -61,6 +62,20 @@ class Field:  # pylint: disable=too-few-public-methods
         )
 
 
+class BaseField:  # pylint: disable=too-few-public-methods
+    """A class to identify fields of base class.
+
+    Arguments:
+        key: Display value of the attr.
+
+    """
+
+    def __init__(self, key: str) -> None:
+        self.loader: _Callable
+        self.dumper: _Callable
+        self.key = key
+
+
 class AttrsMixin:
     """AttrsMixin provides a list of special methods based on attr fields.
 
@@ -70,23 +85,28 @@ class AttrsMixin:
     """
 
     _attrs_fields: Dict[str, Field]
-    _attrs_supports: Set[Any]
+    _attrs_base: Any
 
     def __init_subclass__(cls) -> None:
-        attrs_fields = {}
+        type_ = cls.__annotations__.pop(_ATTRS_BASE, None)
+        if type_:
+            cls._attrs_base.loader = type_._loads  # pylint: disable=protected-access
+            cls._attrs_base.dumper = type_.dumps
 
+        attrs_fields = {}
         for base_class in cls.__bases__:
             base_fields = getattr(base_class, "_attrs_fields", None)
             if base_fields:
                 attrs_fields.update(base_fields)
-
         for name, type_ in getattr(cls, "__annotations__", {}).items():
-            field = _get_field(cls, name, type_)
-            if field:
+            field = getattr(cls, name, None)
+            if isinstance(field, Field):
+                field.loader, field.dumper = _get_operators(type_)
+                if not field.key:
+                    field.key = name
                 attrs_fields[name] = field
-
+                delattr(cls, name)
         cls._attrs_fields = attrs_fields
-        cls._attrs_supports = set(getattr(cls, "_supports", ()))
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, self.__class__):
@@ -118,8 +138,9 @@ class AttrsMixin:
             contents: A dict containing all data.
 
         """
-        for support in self._attrs_supports:
-            support._loads(self, contents)  # pylint: disable=protected-access
+        base = getattr(self, _ATTRS_BASE, None)
+        if base:
+            base.loader(self, contents[base.key])
 
         for name, field in self._attrs_fields.items():
             if field.is_dynamic and field.key not in contents:
@@ -140,8 +161,9 @@ class AttrsMixin:
 
         """
         contents: Dict[str, Any] = {}
-        for support in getattr(self, "_supports", []):
-            contents.update(support._dumps(self))  # pylint: disable=protected-access
+        base = getattr(self, _ATTRS_BASE, None)
+        if base:
+            contents[base.key] = base.dumper(self)
 
         for name, field in self._attrs_fields.items():
             if field.is_dynamic and not hasattr(self, name):
@@ -151,7 +173,7 @@ class AttrsMixin:
             if value == field.default:
                 continue
 
-            contents[field.key] = value
+            contents[field.key] = field.dumper(value)
         return contents
 
 
@@ -179,20 +201,21 @@ def attr(
     """
     if is_dynamic and default is not ...:
         raise AttrError()
+
     return Field(is_dynamic, key, default, error_message)
 
 
-def _get_field(obj: _T, name: str, annotation: Any) -> Optional[Field]:
-    field = getattr(obj, name, None)
-    if not isinstance(field, Field):
-        return None
+def attr_base(key: str) -> Any:
+    """Return an instance to identify base class fields.
 
-    field.loader, field.dumper = _get_operators(annotation)
-    if not field.key:
-        field.key = name
-    delattr(obj, name)
+    Arguments:
+        key: Display value of the attr.
 
-    return field
+    Returns:
+        A :class:`BaseField` instance containing all base class fields.
+
+    """
+    return BaseField(key)
 
 
 def _get_operators(annotation: Any, is_internal: bool = False) -> Tuple[_Callable, _Callable]:
