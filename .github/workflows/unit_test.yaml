@@ -29,14 +29,18 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /opt/hostedtoolcache/Python/${{ matrix.python-version }}
-          key: ${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}
+          key: >-
+            unit-test-${{ matrix.os }}-${{ matrix.python-version }}-
+            ${{ hashFiles('requirements.txt') }}-${{ hashFiles('requirements_test.txt') }}
 
       - name: Cache python ${{ matrix.python-version }} in macos
         if: "matrix.os == 'macos-10.15'"
         uses: actions/cache@v2
         with:
           path: /Users/runner/hostedtoolcache/Python/${{ matrix.python-version }}
-          key: ${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}
+          key: >-
+            unit-test-${{ matrix.os }}-${{ matrix.python-version }}-
+            ${{ hashFiles('requirements.txt') }}-${{ hashFiles('requirements_test.txt') }}
 
       - name: Set up python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
@@ -44,7 +48,9 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements_test.txt
 
       - name: Run pytest
         run: pytest tensorbay
