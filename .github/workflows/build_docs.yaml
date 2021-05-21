@@ -28,7 +28,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /opt/hostedtoolcache/Python/${{ matrix.python-version }}
-          key: ${{ matrix.os }}-sphinx-${{ hashFiles('requirements.txt') }}
+          key: >-
+            docs-${{ matrix.os }}-${{ matrix.python-version }}-
+            ${{ hashFiles('requirements.txt') }}
 
       - name: Set up python ${{ matrix.python-version }}
         uses: actions/setup-python@v2

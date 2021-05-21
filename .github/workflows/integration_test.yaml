@@ -14,6 +14,10 @@ jobs:
       matrix:
         python-version: [3.6, 3.7, 3.8]
         os: [ubuntu-18.04, macos-10.15, windows-2019]
+    env:
+      CACHE_KEY: >-
+        integration-test-${{ matrix.os }}-${{ matrix.python-version }}-
+        ${{ hashFiles('requirements.txt') }}-${{ hashFiles('requirements_test.txt') }}
 
     steps:
       - uses: actions/checkout@v2
@@ -29,14 +33,14 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /opt/hostedtoolcache/Python/${{ matrix.python-version }}
-          key: ${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}
+          key: ${{ CACHE_KEY }}
 
       - name: Cache python ${{ matrix.python-version }} in macos
         if: "matrix.os == 'macos-10.15'"
         uses: actions/cache@v2
         with:
           path: /Users/runner/hostedtoolcache/Python/${{ matrix.python-version }}
-          key: ${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}
+          key: ${{ CACHE_KEY }}
 
       - name: Set up python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
@@ -44,7 +48,9 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements_test.txt
 
       - name: Run pytest
         run: pytest tests --accesskey ${{ secrets.accesskey }} --url ${{ secrets.url }}
