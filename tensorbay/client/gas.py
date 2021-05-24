@@ -415,12 +415,15 @@ class GAS:
 
         return dataset_client
 
-    def delete_dataset(self, name: str) -> None:
+    def delete_dataset(self, name: str, is_force_delete: bool = False) -> None:
         """Delete a TensorBay dataset with given name.
 
         Arguments:
             name: Name of the dataset, unique for a user.
+            is_force_delete: When deleting the authorized dataset,
+                whether deleting the data in auth cloud storage. True for deleting, False for not.
 
         """
+        delete_data = {"ForceDelete": is_force_delete}
         dataset_id = self._get_dataset(name)["id"]
-        self._client.open_api_do("DELETE", "", dataset_id)
+        self._client.open_api_do("DELETE", "", dataset_id, json=delete_data)
