@@ -61,7 +61,7 @@ class GAS:
         info = self._get_dataset(name)
         dataset_id = info["id"]
         is_fusion = info["type"]
-        commit_id = info["HEAD"]["commitId"]
+        commit_id = info["commitId"]
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
         return ReturnType(name, dataset_id, self, commit_id=commit_id)
 
@@ -87,7 +87,10 @@ class GAS:
         except IndexError as error:
             raise ResourceNotExistError(resource="dataset", identification=name) from error
 
-        return info  # type: ignore[no-any-return]
+        dataset_id = info["id"]
+        response = self._client.open_api_do("GET", "", dataset_id).json()
+        response["id"] = dataset_id
+        return response
 
     def _list_datasets(
         self,
@@ -283,7 +286,7 @@ class GAS:
 
         dataset_id = info["id"]
         type_flag = info["type"]
-        commit_id = info["HEAD"]["commitId"]
+        commit_id = info["commitId"]
 
         if is_fusion != type_flag:
             raise DatasetTypeError(name, type_flag)
