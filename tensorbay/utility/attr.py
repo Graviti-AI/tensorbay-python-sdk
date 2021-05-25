@@ -11,7 +11,7 @@
 
 """
 
-from typing import Any, Callable, Dict, List, Optional, Tuple, TypeVar
+from typing import Any, Callable, Dict, List, Optional, Tuple, TypeVar, Union
 
 from typing_extensions import Protocol
 
@@ -19,6 +19,7 @@ from ..exception import AttrError
 
 _T = TypeVar("_T")
 _Callable = Callable[[Any], Any]
+_KeyConverter = Callable[[str], str]
 _BUILTINS = {"builtins", None, "typing"}
 _DEFAULT_ERROR_MESSAGE = "'{class_name}' object has no attribute '{attr_name}'"
 _ATTRS_BASE = "_attrs_base"
@@ -34,7 +35,7 @@ class Field:  # pylint: disable=too-few-public-methods
 
     Arguments:
         is_dynamic: Whether attr is a dynamic attr.
-        key: Display value of the attr.
+        key: Display value of the attr in contents.
         default: Default value of the attr.
         error_message: The custom error message of the attr.
 
@@ -44,14 +45,22 @@ class Field:  # pylint: disable=too-few-public-methods
     # __slots__ = ("is_dynamic", "key", "default", "error_message", "loader", "dumper")
 
     def __init__(
-        self, is_dynamic: bool, key: str, default: Any, error_message: Optional[str]
+        self,
+        is_dynamic: bool,
+        key: Union[str, None, _KeyConverter],
+        default: Any,
+        error_message: Optional[str],
     ) -> None:
         self.loader: _Callable
         self.dumper: _Callable
 
         self.is_dynamic = is_dynamic
-        self.key = key
         self.default = default
+
+        if callable(key):
+            self.key_converter = key
+        else:
+            self.key = key
 
         if error_message:
             self.error_message = error_message
@@ -102,8 +111,8 @@ class AttrsMixin:
             field = getattr(cls, name, None)
             if isinstance(field, Field):
                 field.loader, field.dumper = _get_operators(type_)
-                if not field.key:
-                    field.key = name
+                if hasattr(field, "key_converter"):
+                    field.key = field.key_converter(name)
                 attrs_fields[name] = field
                 delattr(cls, name)
         cls._attrs_fields = attrs_fields
@@ -140,13 +149,15 @@ class AttrsMixin:
         """
         base = getattr(self, _ATTRS_BASE, None)
         if base:
-            base.loader(self, contents[base.key])
+            base.loader(self, contents)
 
         for name, field in self._attrs_fields.items():
             if field.is_dynamic and field.key not in contents:
                 continue
 
-            if field.default is not ...:
+            if field.key is None:
+                value = contents
+            elif field.default is not ...:
                 value = contents.get(field.key, field.default)
             else:
                 value = contents[field.key]
@@ -173,14 +184,17 @@ class AttrsMixin:
             if value == field.default:
                 continue
 
-            contents[field.key] = field.dumper(value)
+            if field.key is None:
+                contents.update(value)
+            else:
+                contents[field.key] = value
         return contents
 
 
 def attr(
     *,
     is_dynamic: bool = False,
-    key: str = "",
+    key: Union[str, None, _KeyConverter] = lambda x: x,
     default: Any = ...,
     error_message: Optional[str] = None,
 ) -> Any:
@@ -188,7 +202,7 @@ def attr(
 
     Arguments:
         is_dynamic: Determine if this is a dynamic attr.
-        key: Display value of the attr.
+        key: Display value of the attr in contents.
         default: Default value of the attr.
         error_message: The custom error message of the attr.
 
@@ -216,6 +230,32 @@ def attr_base(key: str) -> Any:
 
     """
     return BaseField(key)
+
+
+def upper(name: str) -> str:
+    """Convert the name value to uppercase.
+
+    Arguments:
+        name: name of the attr.
+
+    Returns:
+        The uppercase value.
+    """
+    return name.upper()
+
+
+def camel(name: str) -> str:
+    """Convert the name value to camelcase.
+
+    Arguments:
+        name: name of the attr.
+
+    Returns:
+        The camelcase value.
+
+    """
+    mixed = name.title().replace("_", "")
+    return f"{mixed[0].lower()}{mixed[1:]}"
 
 
 def _get_operators(annotation: Any, is_internal: bool = False) -> Tuple[_Callable, _Callable]:
