@@ -23,12 +23,13 @@ from typing import Dict, Iterator, List, Mapping, Optional, Sequence, Type, Type
 
 from sortedcontainers import SortedDict
 
-from ..utility import EqMixin, common_loads
+from .attr import AttrsMixin, attr
+from .common import common_loads
 from .repr import ReprMixin
 from .user import UserMapping
 
 
-class NameMixin(ReprMixin, EqMixin):
+class NameMixin(ReprMixin, AttrsMixin):
     """A mixin class for instance which has immutable name and mutable description.
 
     Arguments:
@@ -42,6 +43,9 @@ class NameMixin(ReprMixin, EqMixin):
 
     _P = TypeVar("_P", bound="NameMixin")
 
+    _name: str = attr(key="name")
+    description: str = attr(default="")
+
     def __init__(self, name: str, description: str = "") -> None:
         self._name = name
         self.description = description
@@ -49,11 +53,7 @@ class NameMixin(ReprMixin, EqMixin):
     def _repr_head(self) -> str:
         return f'{self.__class__.__name__}("{self._name}")'
 
-    def _loads(self, contents: Dict[str, str]) -> None:
-        self._name = contents["name"]
-        self.description = contents.get("description", "")
-
-    def _dumps(self) -> Dict[str, str]:
+    def dumps(self) -> Dict[str, str]:
         """Dumps the instance into a dict.
 
         Returns:
@@ -66,11 +66,7 @@ class NameMixin(ReprMixin, EqMixin):
                 }
 
         """
-        contents = {"name": self._name}
-        if self.description:
-            contents["description"] = self.description
-
-        return contents
+        return self._dumps()
 
     @classmethod
     def loads(cls: Type[_P], contents: Dict[str, str]) -> _P:
