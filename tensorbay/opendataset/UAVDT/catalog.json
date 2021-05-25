@@ -1,0 +1,62 @@
+{
+    "BOX2D": {
+        "isTracking": true,
+        "categories": [{ "name": "car" }, { "name": "trunck" }, { "name": "bus" }],
+        "attributes": [
+            {
+                "name": "occlusion",
+                "description": "The score in the GROUNDTRUTH file indicates the degree of object parts appears outside a frame",
+                "enum": ["no", "large", "medium", "small"]
+            },
+            {
+                "name": "out_of_view",
+                "description": "The score in the GROUNDTRUTH fileindicates the fraction of objects being occluded",
+                "enum": ["no", "medium", "small"]
+            }
+        ]
+    },
+    "CLASSIFICATION": {
+        "attributes": [
+            {
+                "name": "daylight",
+                "type": "boolean"
+            },
+            {
+                "name": "night",
+                "type": "boolean"
+            },
+            {
+                "name": "fog",
+                "type": "boolean"
+            },
+            {
+                "name": "low-alt",
+                "type": "boolean"
+            },
+            {
+                "name": "medium-alt",
+                "type": "boolean"
+            },
+            {
+                "name": "high-alt",
+                "type": "boolean"
+            },
+            {
+                "name": "front-view",
+                "type": "boolean"
+            },
+            {
+                "name": "side-view",
+                "type": "boolean"
+            },
+            {
+                "name": "bird-view",
+                "type": "boolean"
+            },
+            {
+                "name": "long-term",
+                "type": "boolean"
+            }
+        ]
+    }
+}

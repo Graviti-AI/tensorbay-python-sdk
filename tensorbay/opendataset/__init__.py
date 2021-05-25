@@ -40,6 +40,7 @@ from .RP2K import RP2K
 from .THCHS30 import THCHS30
 from .THUCNews import THUCNews
 from .TLR import TLR
+from .UAVDT import UAVDT
 from .WIDER_FACE import WIDER_FACE
 
 __all__ = [
@@ -82,5 +83,6 @@ __all__ = [
     "THCHS30",
     "THUCNews",
     "TLR",
+    "UAVDT",
     "WIDER_FACE",
 ]
