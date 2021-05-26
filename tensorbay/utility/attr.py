@@ -185,9 +185,9 @@ class AttrsMixin:
                 continue
 
             if field.key is None:
-                contents.update(value)
+                contents.update(field.dumper(value))
             else:
-                contents[field.key] = value
+                contents[field.key] = field.dumper(value)
         return contents
 
 
