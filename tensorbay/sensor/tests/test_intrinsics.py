@@ -224,6 +224,10 @@ class TestCameraIntrinsics:
         assert camera_intrinsics_2.distortion_coefficients.p1 == 7
         assert camera_intrinsics_2.distortion_coefficients.k1 == 8
 
+        camera_intrinsics_3 = CameraIntrinsics(fx=1, fy=2, cx=3, cy=4)
+        with pytest.raises(AttributeError):
+            camera_intrinsics_3.distortion_coefficients
+
     def test_loads(self):
         camera_intrinsics = CameraIntrinsics.loads(_CAMERAINTRINSICS_DATA)
 
@@ -256,16 +260,6 @@ class TestCameraIntrinsics:
     def test_dumps(self):
         camera_intrinsics = CameraIntrinsics(fx=1, fy=2, cx=3, cy=4, skew=0, p1=1, k1=2)
         assert camera_intrinsics.dumps() == _CAMERAINTRINSICS_DATA
-
-    def test_camera_matrix(self):
-        camera_intrinsics = CameraIntrinsics(camera_matrix=_3x3_MATRIX, p1=1, p2=2, k1=1, k2=2)
-        assert camera_intrinsics.camera_matrix == CameraMatrix(matrix=_3x3_MATRIX)
-
-    def test_distortion_coefficients(self):
-        camera_intrinsics = CameraIntrinsics(camera_matrix=_3x3_MATRIX, p1=1, p2=2, k1=1, k2=2)
-        distortion_coefficients = camera_intrinsics.distortion_coefficients
-
-        assert distortion_coefficients == DistortionCoefficients(p1=1, p2=2, k1=1, k2=2)
 
     def test_set_camera_matrix(self):
         camera_intrinsics = CameraIntrinsics(fx=0, fy=0, cx=0, cy=0, p1=0, p2=0, k1=0, k2=0)
