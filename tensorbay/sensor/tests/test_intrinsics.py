@@ -13,10 +13,12 @@ _3x3_NUMPY = np.array([[1.0, 2.0, 3.0], [0.0, 5.0, 5.0], [0.0, 0.0, 1.0]])
 
 _CAMERA_MATRIX_DATA = {"fx": 2, "fy": 6, "cx": 4, "cy": 7, "skew": 3}
 
+_CAMERA_MATRIX_NO_SKEW_DATA = {"fx": 2, "fy": 6, "cx": 4, "cy": 7}
+
 _DISTORTIONCOEFFICIENTS_DATA = {"p1": 1, "p2": 2, "k1": 3, "k2": 4}
 
 _CAMERAINTRINSICS_DATA = {
-    "cameraMatrix": {"fx": 1, "fy": 2, "cx": 3, "cy": 4, "skew": 0},
+    "cameraMatrix": {"fx": 1, "fy": 2, "cx": 3, "cy": 4},
     "distortionCoefficients": {"p1": 1, "k1": 2},
 }
 
@@ -64,9 +66,11 @@ class TestCameraMatrix:
 
     def test_dumps(self):
         fx, fy, cx, cy, skew = 2, 6, 4, 7, 3
-        camera_matrix = CameraMatrix(fx=fx, fy=fy, cx=cx, cy=cy, skew=skew)
+        camera_matrix_1 = CameraMatrix(fx=fx, fy=fy, cx=cx, cy=cy, skew=skew)
+        assert camera_matrix_1.dumps() == _CAMERA_MATRIX_DATA
 
-        assert camera_matrix.dumps() == _CAMERA_MATRIX_DATA
+        camera_matrix_2 = CameraMatrix(fx=fx, fy=fy, cx=cx, cy=cy)
+        assert camera_matrix_2.dumps() == _CAMERA_MATRIX_NO_SKEW_DATA
 
     def test_as_matrix(self):
         camera_matrix = CameraMatrix(matrix=_3x3_MATRIX).as_matrix()
@@ -235,9 +239,7 @@ class TestCameraIntrinsics:
         assert camera_intrinsics.camera_matrix.fy == _CAMERAINTRINSICS_DATA["cameraMatrix"]["fy"]
         assert camera_intrinsics.camera_matrix.cx == _CAMERAINTRINSICS_DATA["cameraMatrix"]["cx"]
         assert camera_intrinsics.camera_matrix.cy == _CAMERAINTRINSICS_DATA["cameraMatrix"]["cy"]
-        assert (
-            camera_intrinsics.camera_matrix.skew == _CAMERAINTRINSICS_DATA["cameraMatrix"]["skew"]
-        )
+        assert camera_intrinsics.camera_matrix.skew == 0
         assert (
             camera_intrinsics.distortion_coefficients.p1
             == _CAMERAINTRINSICS_DATA["distortionCoefficients"]["p1"]

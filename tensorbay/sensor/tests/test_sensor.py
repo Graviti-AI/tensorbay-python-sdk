@@ -49,7 +49,7 @@ _CAMERA_DATA = {
         "rotation": {"w": 1.0, "x": 2.0, "y": 3.0, "z": 4.0},
     },
     "intrinsics": {
-        "cameraMatrix": {"fx": 1, "fy": 1, "cx": 1, "cy": 1, "skew": 0},
+        "cameraMatrix": {"fx": 1, "fy": 1, "cx": 1, "cy": 1},
         "distortionCoefficients": {"p1": 1, "p2": 1, "k1": 1, "k2": 1},
     },
 }

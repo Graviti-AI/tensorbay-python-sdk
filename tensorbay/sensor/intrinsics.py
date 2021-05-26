@@ -177,13 +177,15 @@ class CameraMatrix(ReprMixin, EqMixin):
             {'fx': 1, 'fy': 2, 'cx': 3, 'cy': 4, 'skew': 3}
 
         """
-        return {
+        contents = {
             "fx": self.fx,
             "fy": self.fy,
             "cx": self.cx,
             "cy": self.cy,
-            "skew": self.skew,
         }
+        if self.skew:
+            contents["skew"] = self.skew
+        return contents
 
     def as_matrix(self) -> np.ndarray:
         """Return the camera matrix as a 3x3 numpy array.

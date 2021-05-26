@@ -44,6 +44,18 @@ SENSORS_DATA = [
             "distortionCoefficients": {"k1": 1.0, "k2": 2.0, "p1": 3.0, "p2": 4.0},
         },
     },
+    {
+        "name": "Camera4",
+        "type": "CAMERA",
+        "extrinsics": {
+            "translation": {"x": 1, "y": 2, "z": 3},
+            "rotation": {"w": 1.0, "x": 2.0, "y": 3.0, "z": 4.0},
+        },
+        "intrinsics": {
+            "cameraMatrix": {"fx": 1, "fy": 2, "cx": 3, "cy": 4},
+            "distortionCoefficients": {"k1": 1.0, "k2": 2.0, "p1": 3.0, "p2": 4.0},
+        },
+    },
 ]
 
 
@@ -63,7 +75,7 @@ class TestSensor:
 
         segment_client.delete_sensor(SENSORS_DATA[0]["name"])
         sensors = segment_client.get_sensors()
-        assert len(sensors) == 3
+        assert len(sensors) == 4
         assert sensors == Sensors.loads(SENSORS_DATA[1:])
 
         gas_client.delete_dataset(dataset_name)
