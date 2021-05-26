@@ -544,7 +544,8 @@ class CameraIntrinsics(ReprMixin, EqMixin):
         **kwargs: float,
     ) -> None:
         self._camera_matrix = CameraMatrix(fx, fy, cx, cy, skew, matrix=camera_matrix)
-        self._distortion_coefficients = DistortionCoefficients.loads(kwargs) if kwargs else None
+        if kwargs:
+            self._distortion_coefficients = DistortionCoefficients.loads(kwargs)
 
     def _loads(self, contents: Dict[str, Dict[str, float]]) -> None:
         self._camera_matrix = CameraMatrix.loads(contents["cameraMatrix"])
@@ -552,8 +553,6 @@ class CameraIntrinsics(ReprMixin, EqMixin):
             self._distortion_coefficients = DistortionCoefficients.loads(
                 contents["distortionCoefficients"]
             )
-        else:
-            self._distortion_coefficients = None
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Dict[str, float]]) -> _T:
