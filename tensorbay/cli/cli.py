@@ -171,10 +171,10 @@ def ls(  # pylint: disable=invalid-name
 
 @cli.command()
 @click.argument("access_key", type=str, default="")
-@click.argument("url", type=str, default="")
+@click.argument("url", type=str, default="", metavar="")
 @click.pass_obj
 def config(obj: Dict[str, str], access_key: str, url: str) -> None:
-    """Configure the accessKey (and URL) of gas.\f
+    """Configure the accessKey of gas.\f
 
     Arguments:
         obj: A dict contains config information.
