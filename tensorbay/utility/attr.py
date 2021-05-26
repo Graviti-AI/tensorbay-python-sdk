@@ -11,7 +11,18 @@
 
 """
 
-from typing import Any, Callable, Dict, List, Optional, Tuple, TypeVar, Union
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    List,
+    NoReturn,
+    Optional,
+    Tuple,
+    TypeVar,
+    Union,
+    no_type_check,
+)
 
 from typing_extensions import Protocol
 
@@ -65,7 +76,7 @@ class Field:  # pylint: disable=too-few-public-methods
         if error_message:
             self.error_message = error_message
 
-    def __getattr__(self, name: str) -> None:
+    def __getattr__(self, name: str) -> NoReturn:
         raise AttributeError(
             _DEFAULT_ERROR_MESSAGE.format(class_name=self.__class__.__name__, attr_name=name)
         )
@@ -123,7 +134,8 @@ class AttrsMixin:
 
         return self.__dict__ == other.__dict__
 
-    def __getattr__(self, name: str) -> None:
+    @no_type_check
+    def __getattr__(self, name: str) -> NoReturn:
         """Raise an AttributeError exception when an attr does not exist.
 
         Arguments:
