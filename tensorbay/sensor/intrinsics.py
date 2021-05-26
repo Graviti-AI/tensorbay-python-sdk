@@ -543,17 +543,16 @@ class CameraIntrinsics(ReprMixin, EqMixin):
         camera_matrix: Optional[MatrixType] = None,
         **kwargs: float,
     ) -> None:
-        self._camera_matrix = CameraMatrix(fx, fy, cx, cy, skew, matrix=camera_matrix)
-        self._distortion_coefficients = DistortionCoefficients.loads(kwargs) if kwargs else None
+        self.camera_matrix = CameraMatrix(fx, fy, cx, cy, skew, matrix=camera_matrix)
+        if kwargs:
+            self.distortion_coefficients = DistortionCoefficients.loads(kwargs)
 
     def _loads(self, contents: Dict[str, Dict[str, float]]) -> None:
-        self._camera_matrix = CameraMatrix.loads(contents["cameraMatrix"])
+        self.camera_matrix = CameraMatrix.loads(contents["cameraMatrix"])
         if "distortionCoefficients" in contents:
-            self._distortion_coefficients = DistortionCoefficients.loads(
+            self.distortion_coefficients = DistortionCoefficients.loads(
                 contents["distortionCoefficients"]
             )
-        else:
-            self._distortion_coefficients = None
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Dict[str, float]]) -> _T:
@@ -602,44 +601,6 @@ class CameraIntrinsics(ReprMixin, EqMixin):
         """
         return common_loads(cls, contents)
 
-    @property
-    def camera_matrix(self) -> CameraMatrix:
-        """Get the camera matrix of the camera intrinsics.
-
-        Returns:
-            :class:`CameraMatrix` class object containing fx, fy, cx, cy, skew(optional).
-
-        Examples:
-            >>> camera_intrinsics.camera_matrix
-            CameraMatrix(
-                (fx): 1,
-                (fy): 2,
-                (cx): 3,
-                (cy): 4,
-                (skew): 3
-            )
-
-        """
-        return self._camera_matrix
-
-    @property
-    def distortion_coefficients(self) -> Optional[DistortionCoefficients]:
-        """Get the distortion coefficients of the camera intrinsics, could be None.
-
-        Returns:
-            :class:`DistortionCoefficients` class object containing tangential and
-            radial distortion coefficients.
-
-        Examples:
-            >>> camera_intrinsics.distortion_coefficients
-            DistortionCoefficients(
-                (p1): 5,
-                (k1): 6
-            )
-
-        """
-        return self._distortion_coefficients
-
     def dumps(self) -> Dict[str, Dict[str, float]]:
         """Dumps the camera intrinsics into a dict.
 
@@ -652,9 +613,9 @@ class CameraIntrinsics(ReprMixin, EqMixin):
             'distortionCoefficients': {'p1': 5, 'k1': 6}}
 
         """
-        contents = {"cameraMatrix": self._camera_matrix.dumps()}
-        if self._distortion_coefficients:
-            contents["distortionCoefficients"] = self._distortion_coefficients.dumps()
+        contents = {"cameraMatrix": self.camera_matrix.dumps()}
+        if hasattr(self, "distortion_coefficients"):
+            contents["distortionCoefficients"] = self.distortion_coefficients.dumps()
 
         return contents
 
@@ -700,7 +661,7 @@ class CameraIntrinsics(ReprMixin, EqMixin):
             )
 
         """
-        self._camera_matrix = CameraMatrix(fx, fy, cx, cy, skew, matrix=matrix)
+        self.camera_matrix = CameraMatrix(fx, fy, cx, cy, skew, matrix=matrix)
 
     def set_distortion_coefficients(self, **kwargs: float) -> None:
         """Set distortion coefficients of the camera intrinsics.
@@ -728,7 +689,7 @@ class CameraIntrinsics(ReprMixin, EqMixin):
             )
 
         """
-        self._distortion_coefficients = DistortionCoefficients(**kwargs)
+        self.distortion_coefficients = DistortionCoefficients(**kwargs)
 
     def project(self, point: Sequence[float], is_fisheye: bool = False) -> Vector2D:
         """Project a point to the pixel coordinates.
@@ -759,6 +720,6 @@ class CameraIntrinsics(ReprMixin, EqMixin):
             Vector2D(9.158401093771875, 28.633604375087504)
 
         """
-        if self._distortion_coefficients:
-            point = self._distortion_coefficients.distort(point, is_fisheye)
-        return self._camera_matrix.project(point)
+        if hasattr(self, "distortion_coefficients"):
+            point = self.distortion_coefficients.distort(point, is_fisheye)
+        return self.camera_matrix.project(point)
