@@ -320,20 +320,22 @@ def rm(  # pylint: disable=invalid-name, too-many-arguments
 
 @cli.command()
 @click.argument("tbrn", type=str)
+@click.argument("name", type=str, default="")
 @click.option("-v", "--verbose", is_flag=True, help="Show short commit id and commit message.")
 @click.pass_obj
-def branch(obj: Dict[str, str], tbrn: str, verbose: bool) -> None:
+def branch(obj: Dict[str, str], tbrn: str, name: str, verbose: bool) -> None:
     """Work with branch.\f
 
     Arguments:
         obj: A dict contains config information.
         tbrn: The tbrn of the dataset.
+        name: The name of the branch to be created.
         verbose: Whether to show the short commit id and commit message.
 
     """  # noqa: D301,D415
     from .branch import _implement_branch
 
-    _implement_branch(obj, tbrn, verbose)
+    _implement_branch(obj, tbrn, name, verbose)
 
 
 @cli.command()

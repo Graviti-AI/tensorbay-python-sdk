@@ -15,7 +15,7 @@ from .tbrn import TBRN, TBRNType
 from .utility import get_dataset_client, get_gas
 
 
-def _implement_branch(obj: Dict[str, str], tbrn: str, verbose: bool) -> None:
+def _implement_branch(obj: Dict[str, str], tbrn: str, name: str, verbose: bool) -> None:
     info = TBRN(tbrn=tbrn)
 
     if info.type != TBRNType.DATASET:
@@ -25,7 +25,26 @@ def _implement_branch(obj: Dict[str, str], tbrn: str, verbose: bool) -> None:
     gas = get_gas(**obj)
     dataset_client = get_dataset_client(gas, info)
 
-    _list_branches(dataset_client, verbose)
+    if name:
+        _create_branch(dataset_client, name)
+    else:
+        _list_branches(dataset_client, verbose)
+
+
+def _create_branch(dataset_client: DatasetClientType, name: str) -> None:
+    if dataset_client.status.is_draft:
+        click.echo("Branch cannot be created from a draft", err=True)
+        sys.exit(1)
+
+    if not dataset_client.status.commit_id:
+        click.echo(
+            f'To create a branch, "{dataset_client.name}" must have commit history', err=True
+        )
+        sys.exit(1)
+
+    dataset_client.create_branch(name)
+    branch_tbrn = TBRN(dataset_client.name, revision=name)
+    click.echo(f"{branch_tbrn} has been successfully created")
 
 
 def _list_branches(dataset_client: DatasetClientType, verbose: bool) -> None:
