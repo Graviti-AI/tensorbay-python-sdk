@@ -332,19 +332,21 @@ def branch(obj: Dict[str, str], tbrn: str, verbose: bool) -> None:
 @cli.command()
 @click.argument("tbrn", type=str)
 @click.argument("name", type=str, default="")
+@click.option("-d", "--delete", "is_delete", is_flag=True, help="Delete the tag.")
 @click.pass_obj
-def tag(obj: Dict[str, str], tbrn: str, name: str) -> None:
+def tag(obj: Dict[str, str], tbrn: str, name: str, is_delete: bool) -> None:
     """Work with tag.\f
 
     Arguments:
         obj: A dict contains config information.
         tbrn: The tbrn of the dataset.
         name: The name of the tag.
+        is_delete: Whether to delete the tag.
 
     """  # noqa: D301,D415
     from .tag import _implement_tag
 
-    _implement_tag(obj, tbrn, name)
+    _implement_tag(obj, tbrn, name, is_delete)
 
 
 if __name__ == "__main__":

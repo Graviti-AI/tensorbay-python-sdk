@@ -14,7 +14,7 @@ from .tbrn import TBRN, TBRNType
 from .utility import get_dataset_client, get_gas
 
 
-def _implement_tag(obj: Dict[str, str], tbrn: str, name: str) -> None:
+def _implement_tag(obj: Dict[str, str], tbrn: str, name: str, is_delete: bool) -> None:
     info = TBRN(tbrn=tbrn)
 
     if info.type != TBRNType.DATASET:
@@ -24,10 +24,22 @@ def _implement_tag(obj: Dict[str, str], tbrn: str, name: str) -> None:
     gas = get_gas(**obj)
     dataset_client = get_dataset_client(gas, info)
 
-    if name:
+    if is_delete:
+        _delete_tag(dataset_client, info)
+    elif name:
         _create_tag(dataset_client, name)
     else:
         _list_tags(dataset_client)
+
+
+def _delete_tag(dataset_client: DatasetClientType, info: TBRN) -> None:
+    if not info.revision:
+        click.echo(f'To delete a tag, "{info}" must have a tag name', err=True)
+        sys.exit(1)
+
+    dataset_client.delete_tag(info.revision)
+    tag_tbrn = TBRN(dataset_client.name, revision=info.revision).get_tbrn()
+    click.echo(f"{tag_tbrn} is deleted successfully")
 
 
 def _create_tag(dataset_client: DatasetClientType, name: str) -> None:
