@@ -19,6 +19,7 @@ The following table lists the currently supported CLI commands.(:numref:`Table. 
    :ref:`tensorbay_cli/cli_commands:gas rm`                 remove operations.
    :ref:`tensorbay_cli/cli_commands:gas draft`              draft operations.
    :ref:`tensorbay_cli/cli_commands:gas commit`             commit operations.
+   :ref:`tensorbay_cli/cli_commands:gas tag`                tag operations.
    =======================================================  ===========================================================
 
 *************
@@ -162,3 +163,27 @@ Commit a draft with a message.
    gas commit tb:[dataset_name]#[draft_number] -m [message]
 
 
+***********
+ gas tag
+***********
+
+Work with tag operations.
+
+Create a tag.
+
+.. code:: console
+
+   gas tag tb:[dataset_name] [tag_name]
+   gas tag tb:[dataset_name]@[revision] [tag_name]
+
+List all tags.
+
+.. code:: console
+
+   gas tag tb:[dataset_name]
+
+Delete a tag.
+
+.. code:: console
+
+   gas tag -d tb:[dataset_name]@[tag_name]
