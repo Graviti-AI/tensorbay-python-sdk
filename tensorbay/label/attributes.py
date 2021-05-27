@@ -14,10 +14,11 @@ It refers to the `Json schema`_ method to describe an attribute.
 
 """
 
+from collections import OrderedDict
 from enum import Enum
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Union
 
-from ..utility import EqMixin, NameMixin, ReprMixin, common_loads
+from ..utility import EqMixin, NameMixin, NameOrderedDict, ReprMixin, common_loads
 
 _AvailaleType = Union[list, bool, int, float, str, None]
 _SingleArgType = Union[str, None, Type[_AvailaleType]]
@@ -421,3 +422,36 @@ class AttributeInfo(NameMixin, Items):
             contents["parentCategories"] = self.parent_categories
 
         return contents
+
+
+class AttributesInfo(NameOrderedDict[AttributeInfo]):
+    """This class defines the concept of AttributesInfo."""
+
+    _T = TypeVar("_T", bound="AttributesInfo")
+
+    def _loads(self, contents: List[Dict[str, Any]]) -> None:
+        self._data: "OrderedDict[str, AttributeInfo]" = OrderedDict()
+        for attribute in contents:
+            self.append(AttributeInfo.loads(attribute))
+
+    @classmethod
+    def loads(cls: Type[_T], contents: List[Dict[str, Any]]) -> _T:
+        """Loads a AttributesInfo from a dict containing the attributes.
+
+        Arguments:
+            contents: A list containing the information of the attributesinfo.
+
+        Returns:
+            The loaded :class:`AttributesInfo` object.
+
+        """
+        return common_loads(cls, contents)
+
+    def dumps(self) -> List[Dict[str, str]]:
+        """Dumps the AttributesInfo into a list.
+
+        Returns:
+            A list containing the information in the AttributesInfo.
+
+        """
+        return [attribute.dumps() for attribute in self._data.values()]

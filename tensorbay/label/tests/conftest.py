@@ -9,9 +9,8 @@
 
 import pytest
 
-from ...utility import NameOrderedDict
-from ..attributes import AttributeInfo
-from ..supports import CategoryInfo, KeypointsInfo
+from ..attributes import AttributesInfo
+from ..supports import CategoriesInfo, KeypointsInfo
 
 
 @pytest.fixture
@@ -84,34 +83,28 @@ def keypoints_info_data():
 
 @pytest.fixture
 def categories(categories_catalog_data):
-    """Load CategoryInfo into a NameOrderedDict.
+    """Load CategoryInfo into a CategoriesInfo.
 
     Arguments:
         categories_catalog_data: A list containing categories info.
 
     Returns:
-        A NameOrderedDict containing multiple CategoryInfo.
+        A CategoriesInfo containing multiple CategoryInfo.
     """
-    category_dict = NameOrderedDict()
-    for category in categories_catalog_data:
-        category_dict.append(CategoryInfo.loads(category))
-    return category_dict
+    return CategoriesInfo.loads(categories_catalog_data)
 
 
 @pytest.fixture
 def attributes(attributes_catalog_data):
-    """Load AttributeInfo into a NameOrderedDict.
+    """Load the attributes_catalog_data into a AttributesInfo.
 
     Arguments:
         attributes_catalog_data: A list containing attributes info.
 
     Returns:
-        A NameOrderedDict containing multiple AttributeInfo.
+        A AttributesInfo containing multiple AttributeInfo.
     """
-    attribute_dict = NameOrderedDict()
-    for attribute in attributes_catalog_data:
-        attribute_dict.append(AttributeInfo.loads(attribute))
-    return attribute_dict
+    return AttributesInfo.loads(attributes_catalog_data)
 
 
 @pytest.fixture

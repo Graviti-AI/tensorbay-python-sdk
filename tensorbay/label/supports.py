@@ -24,11 +24,12 @@
 
 """
 
+from collections import OrderedDict
 from enum import Enum, auto
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Union
 
 from ..utility import EqMixin, NameMixin, NameOrderedDict, ReprMixin, ReprType, common_loads
-from .attributes import AttributeInfo, Items, _ArgType, _EnumElementType
+from .attributes import AttributeInfo, AttributesInfo, Items, _ArgType, _EnumElementType
 
 
 class CategoryInfo(NameMixin):
@@ -81,6 +82,39 @@ class CategoryInfo(NameMixin):
 
         """
         return super()._dumps()
+
+
+class CategoriesInfo(NameOrderedDict[CategoryInfo]):
+    """This class defines the concept of CategoriesInfo."""
+
+    _T = TypeVar("_T", bound="CategoriesInfo")
+
+    def _loads(self, contents: List[Dict[str, str]]) -> None:
+        self._data: "OrderedDict[str, CategoryInfo]" = OrderedDict()
+        for category in contents:
+            self.append(CategoryInfo.loads(category))
+
+    @classmethod
+    def loads(cls: Type[_T], contents: List[Dict[str, str]]) -> _T:
+        """Loads a CategoriesInfo from a dict containing the category.
+
+        Arguments:
+            contents: A list containing the information of the categoriesinfo.
+
+        Returns:
+            The loaded :class:`CategoriesInfo` object.
+
+        """
+        return common_loads(cls, contents)
+
+    def dumps(self) -> List[Dict[str, str]]:
+        """Dumps the CatagoriesInfo into a list.
+
+        Returns:
+            A list containing the information in the CatagoriesInfo.
+
+        """
+        return [category.dumps() for category in self._data.values()]
 
 
 class _VisibleType(Enum):
@@ -331,7 +365,7 @@ class CategoriesMixin(SubcatalogMixin):  # pylint: disable=too-few-public-method
     """
 
     category_delimiter: str
-    categories: NameOrderedDict[CategoryInfo]
+    categories: CategoriesInfo
 
     def _loads(self, contents: Dict[str, Any]) -> None:
         if "categories" not in contents:
@@ -339,17 +373,13 @@ class CategoriesMixin(SubcatalogMixin):  # pylint: disable=too-few-public-method
         if "categoryDelimiter" in contents:
             self.category_delimiter = contents["categoryDelimiter"]
 
-        self.categories = NameOrderedDict()
-        for category in contents["categories"]:
-            self.categories.append(CategoryInfo.loads(category))
+        self.categories = CategoriesInfo.loads(contents["categories"])
 
     def _dumps(self) -> Dict[str, Any]:
         if not hasattr(self, "categories"):
             return {}
 
-        contents: Dict[str, Any] = {
-            "categories": [category.dumps() for category in self.categories.values()]
-        }
+        contents: Dict[str, Any] = {"categories": self.categories.dumps()}
         if hasattr(self, "category_delimiter"):
             contents["categoryDelimiter"] = self.category_delimiter
         return contents
@@ -387,7 +417,7 @@ class CategoriesMixin(SubcatalogMixin):  # pylint: disable=too-few-public-method
 
         """
         if not hasattr(self, "categories"):
-            self.categories = NameOrderedDict()
+            self.categories = CategoriesInfo()
 
         self.categories.append(CategoryInfo(name, description))
 
@@ -403,19 +433,17 @@ class AttributesMixin(SubcatalogMixin):  # pylint: disable=too-few-public-method
 
     """
 
-    attributes: NameOrderedDict[AttributeInfo]
+    attributes: AttributesInfo
 
     def _loads(self, contents: Dict[str, Any]) -> None:
         if "attributes" not in contents:
             return
 
-        self.attributes = NameOrderedDict()
-        for attribute in contents["attributes"]:
-            self.attributes.append(AttributeInfo.loads(attribute))
+        self.attributes = AttributesInfo.loads(contents["attributes"])
 
     def _dumps(self) -> Dict[str, Any]:
         if hasattr(self, "attributes"):
-            return {"attributes": [attribute.dumps() for attribute in self.attributes.values()]}
+            return {"attributes": self.attributes.dumps()}
         return {}
 
     def add_attribute(
@@ -463,6 +491,6 @@ class AttributesMixin(SubcatalogMixin):  # pylint: disable=too-few-public-method
         )
 
         if not hasattr(self, "attributes"):
-            self.attributes = NameOrderedDict()
+            self.attributes = AttributesInfo()
 
         self.attributes.append(attribute_info)
