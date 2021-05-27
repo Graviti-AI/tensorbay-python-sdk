@@ -141,7 +141,26 @@ def get_dataset_client(gas: GAS, info: TBRN, is_fusion: Optional[bool] = None) -
     return dataset_client
 
 
-def clean_up(editor_input: Optional[str]) -> Tuple[str, str]:
+def edit_input(hint: str) -> Tuple[str, str]:
+    """Edit information input from the editor.
+
+    Arguments:
+        hint: The hint to be added in the temp file opened by the editor.
+
+    Returns:
+        The extracted title and the description.
+
+    """
+    config_file = get_config_filepath()
+    config_parser = ConfigParser()
+    config_parser.read(config_file)
+
+    editor = config_parser["config"].get("editor") if "config" in config_parser else None
+    input_info = click.edit(hint, editor=editor)
+    return _clean_up(input_info)
+
+
+def _clean_up(editor_input: Optional[str]) -> Tuple[str, str]:
     """Clean up the information from the editor input.
 
     Arguments:
