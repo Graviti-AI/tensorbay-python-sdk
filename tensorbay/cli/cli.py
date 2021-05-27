@@ -373,8 +373,8 @@ def log(
 
     Arguments:
         obj: A dict contains config information.
-        tbrn: The dataset to be showed.
-        max_count: Max number of commits.
+        tbrn: The tbrn of a dataset.
+        max_count: Max number of commits to show.
         oneline: Whether to show a commit message in oneline.
 
     """  # noqa: D301,D415
