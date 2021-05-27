@@ -60,7 +60,7 @@ class Segment(NameMixin, UserMutableSequence["DataBase._Type"]):
 
     _repr_type = ReprType.SEQUENCE
 
-    def __init__(self, name: str = "", client: Optional["DatasetClient"] = None) -> None:
+    def __init__(self, name: str = "default", client: Optional["DatasetClient"] = None) -> None:
         super().__init__(name)
 
         if client:
@@ -154,7 +154,9 @@ class FusionSegment(NameMixin, UserMutableSequence[Frame]):
     _repr_attrs = ("sensors",)
     _repr_maxlevel = 2
 
-    def __init__(self, name: str = "", client: Optional["FusionDatasetClient"] = None) -> None:
+    def __init__(
+        self, name: str = "default", client: Optional["FusionDatasetClient"] = None
+    ) -> None:
         super().__init__(name)
 
         self._data: MutableSequence[Frame]
