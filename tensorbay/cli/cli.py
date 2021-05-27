@@ -349,5 +349,32 @@ def tag(obj: Dict[str, str], tbrn: str, name: str, is_delete: bool) -> None:
     _implement_tag(obj, tbrn, name, is_delete)
 
 
+@cli.command()
+@click.argument("tbrn", type=str)
+@click.option(
+    "-n", "--max-count", type=int, default=None, help="Limit the max number of commits to be showed"
+)
+@click.option("--oneline", is_flag=True, help="Limit commit message to oneline")
+@click.pass_obj
+def log(
+    obj: Dict[str, str],
+    tbrn: str,
+    max_count: Optional[int],
+    oneline: bool,
+) -> None:
+    """Show commit logs.\f
+
+    Arguments:
+        obj: A dict contains config information.
+        tbrn: The dataset to be showed.
+        max_count: Max number of commits.
+        oneline: Whether to show a commit message in oneline.
+
+    """  # noqa: D301,D415
+    from .log import _implement_log
+
+    _implement_log(obj, tbrn, max_count, oneline)
+
+
 if __name__ == "__main__":
     cli()  # pylint: disable=no-value-for-parameter
