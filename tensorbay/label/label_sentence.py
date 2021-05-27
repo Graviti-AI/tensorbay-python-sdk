@@ -37,7 +37,7 @@ class SentenceSubcatalog(SubcatalogBase, AttributesMixin):  # pylint: disable=to
         sample_rate: The number of samples of audio carried per second.
         lexicon: A list consists all of text and phone.
         attributes: All the possible attributes in the corresponding dataset
-            stored in a :class:`~tensorbay.utility.name.NameOrderedDict`
+            stored in a :class:`~tensorbay.utility.name.NamedList`
             with the attribute names as keys
             and the :class:`~tensorbay.label.attribute.AttributeInfo` as values.
 
@@ -66,7 +66,7 @@ class SentenceSubcatalog(SubcatalogBase, AttributesMixin):  # pylint: disable=to
         SentenceSubcatalog(
           (is_sample): True,
           (sample_rate): 16000,
-          (attributes): NameOrderedDict {...},
+          (attributes): NamedList [...],
           (lexicon): [...]
         )
 

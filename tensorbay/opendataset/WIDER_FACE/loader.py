@@ -71,11 +71,11 @@ def WIDER_FACE(path: str) -> Dataset:
 
 def _get_attribute_map(dataset: Dataset) -> _ATTRIBUTE_MAP_TYPE:
     attribute_map: _ATTRIBUTE_MAP_TYPE = OrderedDict()
-    for key, value in dataset.catalog.box2d.attributes.items():
-        if getattr(value, "type", None) == "boolean":
-            attribute_map[key] = [False, True]
+    for info in dataset.catalog.box2d.attributes:
+        if getattr(info, "type", None) == "boolean":
+            attribute_map[info.name] = [False, True]
         else:
-            attribute_map[key] = value.enum  # type: ignore[assignment]
+            attribute_map[info.name] = info.enum  # type: ignore[assignment]
     return attribute_map
 
 

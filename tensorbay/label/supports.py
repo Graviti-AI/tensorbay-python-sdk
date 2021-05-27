@@ -27,7 +27,7 @@
 from enum import Enum, auto
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Union
 
-from ..utility import EqMixin, NameMixin, NameOrderedDict, ReprMixin, ReprType, common_loads
+from ..utility import EqMixin, NamedList, NameMixin, ReprMixin, ReprType, common_loads
 from .attributes import AttributeInfo, Items, _ArgType, _EnumElementType
 
 
@@ -323,7 +323,7 @@ class CategoriesMixin(SubcatalogMixin):  # pylint: disable=too-few-public-method
 
     Attributes:
         categories: All the possible categories in the corresponding dataset
-            stored in a :class:`~tensorbay.utility.name.NameOrderedDict`
+            stored in a :class:`~tensorbay.utility.name.NamedList`
             with the category names as keys
             and the :class:`~tensorbay.label.supports.CategoryInfo` as values.
         category_delimiter: The delimiter in category values indicating parent-child relationship.
@@ -331,7 +331,7 @@ class CategoriesMixin(SubcatalogMixin):  # pylint: disable=too-few-public-method
     """
 
     category_delimiter: str
-    categories: NameOrderedDict[CategoryInfo]
+    categories: NamedList[CategoryInfo]
 
     def _loads(self, contents: Dict[str, Any]) -> None:
         if "categories" not in contents:
@@ -339,7 +339,7 @@ class CategoriesMixin(SubcatalogMixin):  # pylint: disable=too-few-public-method
         if "categoryDelimiter" in contents:
             self.category_delimiter = contents["categoryDelimiter"]
 
-        self.categories = NameOrderedDict()
+        self.categories = NamedList()
         for category in contents["categories"]:
             self.categories.append(CategoryInfo.loads(category))
 
@@ -348,7 +348,7 @@ class CategoriesMixin(SubcatalogMixin):  # pylint: disable=too-few-public-method
             return {}
 
         contents: Dict[str, Any] = {
-            "categories": [category.dumps() for category in self.categories.values()]
+            "categories": [category.dumps() for category in self.categories]
         }
         if hasattr(self, "category_delimiter"):
             contents["categoryDelimiter"] = self.category_delimiter
@@ -364,7 +364,7 @@ class CategoriesMixin(SubcatalogMixin):  # pylint: disable=too-few-public-method
         if not hasattr(self, "categories"):
             return {}
 
-        return {category: index for index, category in enumerate(self.categories)}
+        return {category: index for index, category in enumerate(self.categories.keys())}
 
     def get_index_to_category(self) -> Dict[int, str]:
         """Return the dict containing the conversion from index to category.
@@ -376,7 +376,7 @@ class CategoriesMixin(SubcatalogMixin):  # pylint: disable=too-few-public-method
         if not hasattr(self, "categories"):
             return {}
 
-        return dict(enumerate(self.categories))
+        return dict(enumerate(self.categories.keys()))
 
     def add_category(self, name: str, description: str = "") -> None:
         """Add a category to the Subcatalog.
@@ -387,7 +387,7 @@ class CategoriesMixin(SubcatalogMixin):  # pylint: disable=too-few-public-method
 
         """
         if not hasattr(self, "categories"):
-            self.categories = NameOrderedDict()
+            self.categories = NamedList()
 
         self.categories.append(CategoryInfo(name, description))
 
@@ -397,25 +397,25 @@ class AttributesMixin(SubcatalogMixin):  # pylint: disable=too-few-public-method
 
     Attributes:
         attributes: All the possible attributes in the corresponding dataset
-            stored in a :class:`~tensorbay.utility.name.NameOrderedDict`
+            stored in a :class:`~tensorbay.utility.name.NamedList`
             with the attribute names as keys
             and the :class:`~tensorbay.label.attribute.AttributeInfo` as values.
 
     """
 
-    attributes: NameOrderedDict[AttributeInfo]
+    attributes: NamedList[AttributeInfo]
 
     def _loads(self, contents: Dict[str, Any]) -> None:
         if "attributes" not in contents:
             return
 
-        self.attributes = NameOrderedDict()
+        self.attributes = NamedList()
         for attribute in contents["attributes"]:
             self.attributes.append(AttributeInfo.loads(attribute))
 
     def _dumps(self) -> Dict[str, Any]:
         if hasattr(self, "attributes"):
-            return {"attributes": [attribute.dumps() for attribute in self.attributes.values()]}
+            return {"attributes": [attribute.dumps() for attribute in self.attributes]}
         return {}
 
     def add_attribute(
@@ -463,6 +463,6 @@ class AttributesMixin(SubcatalogMixin):  # pylint: disable=too-few-public-method
         )
 
         if not hasattr(self, "attributes"):
-            self.attributes = NameOrderedDict()
+            self.attributes = NamedList()
 
         self.attributes.append(attribute_info)

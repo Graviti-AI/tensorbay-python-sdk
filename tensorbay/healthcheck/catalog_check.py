@@ -16,7 +16,7 @@ it finds errors in fields such as 'type', 'enum', 'range' and 'parent categories
 from typing import Iterator, Optional, Tuple
 
 from ..label import AttributeInfo, Catalog, CategoryInfo, LabelType
-from ..utility import NameOrderedDict
+from ..utility import NamedList
 from .pipeline import PipelineForIterable
 from .report import Error
 
@@ -324,10 +324,8 @@ class CheckParentCategories:  # pylint: disable=too-few-public-methods
 
     """
 
-    def __init__(self, categories: Optional[NameOrderedDict[CategoryInfo]]) -> None:
-        if not categories:
-            categories = NameOrderedDict()
-        self._categories = categories
+    def __init__(self, categories: Optional[NamedList[CategoryInfo]]) -> None:
+        self._keys = set(categories.keys()) if categories else set()
 
     def __call__(self, attribute_info: AttributeInfo) -> Iterator[InvalidParentCategories]:
         """The health check method for parent categories.
@@ -344,5 +342,5 @@ class CheckParentCategories:  # pylint: disable=too-few-public-methods
 
         """
         for parent_category in attribute_info.parent_categories:
-            if parent_category not in self._categories:
+            if parent_category not in self._keys:
                 yield InvalidParentCategories(attribute_info.name, parent_category)

@@ -7,7 +7,7 @@
 
 from .attr import AttrsMixin, attr, attr_base, camel, upper
 from .common import Deprecated, EqMixin, KwargsDeprecated, MatrixType, common_loads, locked
-from .name import NameMixin, NameOrderedDict, NameSortedDict, NameSortedList
+from .name import NamedList, NameMixin, NameSortedDict, NameSortedList
 from .repr import ReprMixin, ReprType, repr_config
 from .type import SubcatalogTypeRegister, TypeEnum, TypeMixin, TypeRegister
 from .user import UserMapping, UserMutableMapping, UserMutableSequence, UserSequence
@@ -19,9 +19,9 @@ __all__ = [
     "KwargsDeprecated",
     "MatrixType",
     "NameMixin",
-    "NameOrderedDict",
     "NameSortedDict",
     "NameSortedList",
+    "NamedList",
     "ReprMixin",
     "ReprType",
     "SubcatalogTypeRegister",

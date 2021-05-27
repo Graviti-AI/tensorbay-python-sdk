@@ -28,12 +28,12 @@ class ClassificationSubcatalog(  # pylint: disable=too-many-ancestors
     Attributes:
         description: The description of the entire classification subcatalog.
         categories: All the possible categories in the corresponding dataset
-            stored in a :class:`~tensorbay.utility.name.NameOrderedDict`
+            stored in a :class:`~tensorbay.utility.name.NamedList`
             with the category names as keys
             and the :class:`~tensorbay.label.supports.CategoryInfo` as values.
         category_delimiter: The delimiter in category values indicating parent-child relationship.
         attributes: All the possible attributes in the corresponding dataset
-            stored in a :class:`~tensorbay.utility.name.NameOrderedDict`
+            stored in a :class:`~tensorbay.utility.name.NamedList`
             with the attribute names as keys
             and the :class:`~tensorbay.label.attribute.AttributeInfo` as values.
 
@@ -53,18 +53,18 @@ class ClassificationSubcatalog(  # pylint: disable=too-many-ancestors
         >>> ClassificationSubcatalog.loads(catalog["CLASSIFICATION"])
         ClassificationSubcatalog(
           (category_delimiter): '.',
-          (categories): NameOrderedDict {...},
-          (attributes): NameOrderedDict {...}
+          (categories): NamedList [...],
+          (attributes): NamedList [...]
         )
 
         *Initialization Method 2:* Init an empty ClassificationSubcatalog
         and then add the attributes.
 
-        >>> from tensorbay.utility import NameOrderedDict
+        >>> from tensorbay.utility import NamedList
         >>> from tensorbay.label import CategoryInfo, AttributeInfo, KeypointsInfo
-        >>> categories = NameOrderedDict()
+        >>> categories = NamedList()
         >>> categories.append(CategoryInfo("a"))
-        >>> attributes = NameOrderedDict()
+        >>> attributes = NamedList()
         >>> attributes.append(AttributeInfo("gender", enum=["female", "male"]))
         >>> classification_subcatalog = ClassificationSubcatalog()
         >>> classification_subcatalog.category_delimiter = "."
@@ -73,8 +73,8 @@ class ClassificationSubcatalog(  # pylint: disable=too-many-ancestors
         >>> classification_subcatalog
         ClassificationSubcatalog(
           (category_delimiter): '.',
-          (categories): NameOrderedDict {...},
-          (attributes): NameOrderedDict {...}
+          (categories): NamedList [...],
+          (attributes): NamedList [...]
         )
 
     """

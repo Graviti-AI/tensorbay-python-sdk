@@ -43,8 +43,7 @@ def THUCNews(path: str) -> Dataset:
     dataset.load_catalog(os.path.join(os.path.dirname(__file__), "catalog.json"))
     segment = dataset.create_segment()
 
-    categories = dataset.catalog.classification.categories
-    for category in categories:
+    for category in dataset.catalog.classification.categories.keys():
         text_paths = glob(os.path.join(root_path, category, "*.txt"))
         for text_path in text_paths:
             data = Data(text_path)

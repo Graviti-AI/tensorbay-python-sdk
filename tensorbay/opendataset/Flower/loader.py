@@ -54,7 +54,7 @@ def Flower17(path: str) -> Dataset:
 
     dataset = Dataset(DATASET_NAME_17)
     dataset.load_catalog(os.path.join(os.path.dirname(__file__), "catalog_17.json"))
-    categories = list(dataset.catalog.classification.categories)
+    index_to_category = dataset.catalog.classification.get_index_to_category()
     for key, value in _SEGMENT_NAMES_17.items():
         segment = dataset.create_segment(key)
         segment_info[value][0].sort()
@@ -62,7 +62,9 @@ def Flower17(path: str) -> Dataset:
             data = Data(os.path.join(root_path, "jpg", f"image_{index:04d}.jpg"))
 
             # There are 80 images for each category
-            data.label.classification = Classification(category=categories[(index - 1) // 80])
+            data.label.classification = Classification(
+                category=index_to_category[(index - 1) // 80]
+            )
             segment.append(data)
 
     return dataset
@@ -103,12 +105,14 @@ def Flower102(path: str) -> Dataset:
 
     dataset = Dataset(DATASET_NAME_102)
     dataset.load_catalog(os.path.join(os.path.dirname(__file__), "catalog_102.json"))
-    categories = list(dataset.catalog.classification.categories)
+    index_to_category = dataset.catalog.classification.get_index_to_category()
     for key, value in _SEGMENT_NAMES_102.items():
         segment = dataset.create_segment(key)
         segment_info[value][0].sort()
         for index in segment_info[value][0]:
             data = Data(os.path.join(root_path, "jpg", f"image_{index:05d}.jpg"))
-            data.label.classification = Classification(categories[int(labels[index - 1]) - 1])
+            data.label.classification = Classification(
+                index_to_category[int(labels[index - 1]) - 1]
+            )
             segment.append(data)
     return dataset
