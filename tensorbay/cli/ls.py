@@ -12,6 +12,7 @@ import click
 
 from ..client import GAS
 from ..client.dataset import FusionDatasetClient
+from ..client.gas import DatasetClientType
 from .tbrn import TBRN, TBRNType
 from .utility import get_dataset_client, get_gas
 
@@ -45,8 +46,16 @@ def _echo_data(
         )
 
 
+def _validate_dataset_client(dataset_client: DatasetClientType) -> None:
+    if not dataset_client.status.draft_number and not dataset_client.status.commit_id:
+        click.echo(f'"{dataset_client.name}" has no commit history.', err=True)
+        sys.exit(1)
+
+
 def _ls_dataset(gas: GAS, info: TBRN, list_all_files: bool) -> None:
     dataset_client = get_dataset_client(gas, info)
+    _validate_dataset_client(dataset_client)
+
     segment_names = dataset_client.list_segment_names()
     if not list_all_files:
         for segment_name in segment_names:
@@ -72,6 +81,7 @@ def _ls_segment(
     gas: GAS, info: TBRN, list_all_files: bool  # pylint: disable=unused-argument
 ) -> None:
     dataset_client = get_dataset_client(gas, info)
+    _validate_dataset_client(dataset_client)
     if isinstance(dataset_client, FusionDatasetClient):
         click.echo("List fusion segment is not supported yet", err=True)
         sys.exit(1)
