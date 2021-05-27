@@ -14,7 +14,7 @@ from .tbrn import TBRN, TBRNType
 from .utility import get_dataset_client, get_gas
 
 
-def _implement_tag(obj: Dict[str, str], tbrn: str) -> None:
+def _implement_tag(obj: Dict[str, str], tbrn: str, name: str) -> None:
     info = TBRN(tbrn=tbrn)
 
     if info.type != TBRNType.DATASET:
@@ -24,7 +24,24 @@ def _implement_tag(obj: Dict[str, str], tbrn: str) -> None:
     gas = get_gas(**obj)
     dataset_client = get_dataset_client(gas, info)
 
-    _list_tags(dataset_client)
+    if name:
+        _create_tag(dataset_client, name)
+    else:
+        _list_tags(dataset_client)
+
+
+def _create_tag(dataset_client: DatasetClientType, name: str) -> None:
+    if dataset_client.status.is_draft:
+        click.echo(f'To create a tag, "{dataset_client.name}" cannot be in draft status', err=True)
+        sys.exit(1)
+
+    if not dataset_client.status.commit_id:
+        click.echo(f'To create a tag, "{dataset_client.name}" should have commit history', err=True)
+        sys.exit(1)
+
+    dataset_client.create_tag(name=name)
+    tag_tbrn = TBRN(dataset_client.name, revision=name).get_tbrn()
+    click.echo(f"{tag_tbrn} is created successfully")
 
 
 def _list_tags(dataset_client: DatasetClientType) -> None:
