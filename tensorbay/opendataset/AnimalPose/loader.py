@@ -86,7 +86,7 @@ def AnimalPose5(path: str) -> Dataset:
 
     dataset = Dataset(DATASET_NAME_5)
     dataset.load_catalog(os.path.join(os.path.dirname(__file__), "catalog_5.json"))
-    animals = dataset.catalog.keypoints2d.categories
+    animals = dataset.catalog.keypoints2d.categories.keys()
 
     for segment_name, _get_data in _DATA_GETTERS.items():
         segment = dataset.create_segment(segment_name)
@@ -214,11 +214,10 @@ def AnimalPose7(path: str) -> Dataset:
 
     dataset = Dataset(DATASET_NAME_7)
     dataset.load_catalog(os.path.join(os.path.dirname(__file__), "catalog_7.json"))
-    animals = dataset.catalog.box2d.categories
 
     segment = dataset.create_segment()
 
-    for animal in animals:
+    for animal in dataset.catalog.box2d.categories.keys():
         with open(os.path.join(root_path, "bndbox_anno", f"{animal}.json"), encoding="utf-8") as fp:
             annotations = json.load(fp)
         for image_name, box2ds in annotations.items():

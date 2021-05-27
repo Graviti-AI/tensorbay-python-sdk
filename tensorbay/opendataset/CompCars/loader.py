@@ -6,11 +6,11 @@
 # pylint: disable=missing-module-docstring
 
 import os
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List
 
 from ...dataset import Data, Dataset
 from ...label import AttributeInfo, Classification, LabeledBox2D
-from ...utility import NameOrderedDict
+from ...utility import NamedList
 
 DATASET_NAME = "CompCars"
 
@@ -73,8 +73,8 @@ def CompCars(path: str) -> Dataset:
         dataset.catalog.classification.attributes,
     )
 
-    classification_categories = tuple(dataset.catalog.classification.categories)
-    box_categories = tuple(dataset.catalog.box2d.categories)
+    classification_index_to_category = dataset.catalog.classification.get_index_to_category()
+    box_index_to_category = dataset.catalog.box2d.get_index_to_category()
 
     for mode, segment_split_file in _SEGMENT_SPLIT_FILES:
         segment = dataset.create_segment(mode)
@@ -92,16 +92,16 @@ def CompCars(path: str) -> Dataset:
                 )
                 data = Data(image_path)
                 data.label.classification = _create_classification_label(
-                    image_path, model_to_attributes, classification_categories
+                    image_path, model_to_attributes, classification_index_to_category
                 )
-                data.label.box2d = _create_box_label(label_path, box_categories)
+                data.label.box2d = _create_box_label(label_path, box_index_to_category)
                 segment.append(data)
 
     return dataset
 
 
 def _get_model_to_attributes(
-    path: str, classification_attributes: NameOrderedDict[AttributeInfo]
+    path: str, classification_attributes: NamedList[AttributeInfo]
 ) -> Dict[str, Dict[str, Any]]:
     attributes = {}
 
@@ -124,19 +124,21 @@ def _get_model_to_attributes(
                 int(line_split[4]),
                 car_types[int(line_split[5])],
             )
-            attributes[line_split[0]] = dict(zip(classification_attributes, attributes_values))
+            attributes[line_split[0]] = dict(
+                zip(classification_attributes.keys(), attributes_values)
+            )
 
     return attributes
 
 
-def _create_box_label(label_path: str, categories: Tuple[str, ...]) -> List[LabeledBox2D]:
+def _create_box_label(label_path: str, index_to_category: Dict[int, str]) -> List[LabeledBox2D]:
     with open(label_path, encoding="utf-8") as fp:
         viewpoint_id = int(fp.readline().strip())
         viewpoint_index = viewpoint_id if viewpoint_id == -1 else viewpoint_id - 1
 
         fp.readline()
 
-        category = categories[viewpoint_index]
+        category = index_to_category[viewpoint_index]
         box2d = [LabeledBox2D(*map(int, line.strip().split()), category=category) for line in fp]
 
     return box2d
@@ -145,7 +147,7 @@ def _create_box_label(label_path: str, categories: Tuple[str, ...]) -> List[Labe
 def _create_classification_label(
     image_path: str,
     model_to_attributes: Dict[str, Dict[str, Any]],
-    categories: Tuple[str, ...],
+    index_to_category: Dict[int, str],
 ) -> Classification:
     # image_path looks like:
     # <root_path>/<make_name_id>/<model_name_id>/<release_year>/<file_name>.jpg"
@@ -156,4 +158,6 @@ def _create_classification_label(
     released_year = image_path_split[-2]
     attributes["released_year"] = int(released_year) if released_year != "unknown" else None
 
-    return Classification(category=categories[int(image_path_split[-4]) - 1], attributes=attributes)
+    return Classification(
+        category=index_to_category[int(image_path_split[-4]) - 1], attributes=attributes
+    )

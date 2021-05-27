@@ -3,7 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""NameMixin, NameSortedDict, NameSortedList and NameOrderedDict.
+"""NameMixin, NameSortedDict, NameSortedList and NamedList.
 
 :class:`NameMixin` is a mixin class for instance which has immutable name and mutable description.
 
@@ -13,20 +13,32 @@ The corrsponding key is the 'name' of :class:`NameMixin`.
 :class:`NameSortedList` is a sorted sequence class which contains :class:`NameMixin`.
 It is maintained in sorted order according to the 'name' of :class:`NameMixin`.
 
-:class:`NameOrderedDict` is an ordered mapping class which contains :class:`NameMixin`.
-The corrsponding key is the 'name' of :class:`NameMixin`.
+:class:`NamedList` is a list of named elements, supports searching the element by its name.
 
 """
 
-from collections import OrderedDict
-from typing import Dict, Iterator, List, Mapping, Optional, Sequence, Type, TypeVar, Union, overload
+from typing import (
+    Any,
+    Dict,
+    Iterable,
+    Iterator,
+    List,
+    Mapping,
+    Optional,
+    Sequence,
+    Tuple,
+    Type,
+    TypeVar,
+    Union,
+    overload,
+)
 
 from sortedcontainers import SortedDict
 
 from .attr import AttrsMixin, attr
 from .common import common_loads
 from .repr import ReprMixin
-from .user import UserMapping
+from .user import UserMapping, UserSequence
 
 
 class NameMixin(ReprMixin, AttrsMixin):
@@ -174,21 +186,57 @@ class NameSortedList(Sequence[_T]):  # pylint: disable=too-many-ancestors
         return self._data[name]  # type: ignore[no-any-return]
 
 
-class NameOrderedDict(UserMapping[str, _T]):
-    """Name ordered dict is an ordered mapping which contains NameMixin.
+class NamedList(UserSequence[_T]):
+    """NamedList is a list of named elements, supports searching the element by its name."""
 
-    The corrsponding key is the 'name' of :class:`NameMixin`.
+    def __init__(self, values: Iterable[_T] = ()) -> None:
+        self._data: List[_T] = []
+        self._mapping: Dict[str, _T] = {}
 
-    """
+        for value in values:
+            self.append(value)
 
-    def __init__(self) -> None:
-        self._data: "OrderedDict[str, _T]" = OrderedDict()
+    @overload
+    def __getitem__(self, index: Union[int, str]) -> _T:
+        ...
 
-    def append(self, value: _T) -> None:
-        """Store element in ordered dict.
+    @overload
+    def __getitem__(self, index: slice) -> List[_T]:
+        ...
 
-        Arguments:
-            value: :class:`NameMixin` instance.
+    def __getitem__(self, index: Union[int, str, slice]) -> Union[_T, List[_T]]:
+        if isinstance(index, str):
+            return self._mapping.__getitem__(index)
+
+        return self._data.__getitem__(index)
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, self.__class__):
+            return False
+
+        return self._data.__eq__(other._data)
+
+    def keys(self) -> Tuple[str, ...]:
+        """Get all element names.
+
+        Returns:
+            A tuple containing all elements names.
 
         """
-        self._data[value.name] = value
+        return tuple(item.name for item in self._data)
+
+    def append(self, value: _T) -> None:
+        """Append element to the end of the NamedList.
+
+        Arguments:
+            value: Element to be appended to the NamedList.
+
+        Raises:
+            KeyError: When the name of the appending object already exists in the NamedList.
+
+        """
+        if value.name in self._mapping:
+            raise KeyError(f'name "{value.name}" is duplicated')
+
+        self._data.append(value)
+        self._mapping[value.name] = value

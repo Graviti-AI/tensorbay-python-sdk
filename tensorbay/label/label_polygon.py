@@ -33,12 +33,12 @@ class Polygon2DSubcatalog(  # pylint: disable=too-many-ancestors
     Attributes:
         description: The description of the entire 2D polygon subcatalog.
         categories: All the possible categories in the corresponding dataset
-            stored in a :class:`~tensorbay.utility.name.NameOrderedDict`
+            stored in a :class:`~tensorbay.utility.name.NamedList`
             with the category names as keys
             and the :class:`~tensorbay.label.supports.CategoryInfo` as values.
         category_delimiter: The delimiter in category values indicating parent-child relationship.
         attributes: All the possible attributes in the corresponding dataset
-            stored in a :class:`~tensorbay.utility.name.NameOrderedDict`
+            stored in a :class:`~tensorbay.utility.name.NamedList`
             with the attribute names as keys
             and the :class:`~tensorbay.label.attribute.AttributeInfo` as values.
         is_tracking: Whether the Subcatalog contains tracking information.
@@ -56,17 +56,17 @@ class Polygon2DSubcatalog(  # pylint: disable=too-many-ancestors
         >>> Polygon2DSubcatalog.loads(catalog["POLYGON2D"])
         Polygon2DSubcatalog(
           (is_tracking): True,
-          (categories): NameOrderedDict {...},
-          (attributes): NameOrderedDict {...}
+          (categories): NamedList [...],
+          (attributes): NamedList [...]
         )
 
         *Initialization Method 2:* Init an empty Polygon2DSubcatalog and then add the attributes.
 
-        >>> from tensorbay.utility import NameOrderedDict
+        >>> from tensorbay.utility import NamedList
         >>> from tensorbay.label import CategoryInfo, AttributeInfo
-        >>> categories = NameOrderedDict()
+        >>> categories = NamedList()
         >>> categories.append(CategoryInfo("a"))
-        >>> attributes = NameOrderedDict()
+        >>> attributes = NamedList()
         >>> attributes.append(AttributeInfo("gender", enum=["female", "male"]))
         >>> polygon2d_subcatalog = Polygon2DSubcatalog()
         >>> polygon2d_subcatalog.is_tracking = True
@@ -75,8 +75,8 @@ class Polygon2DSubcatalog(  # pylint: disable=too-many-ancestors
         >>> polygon2d_subcatalog
         Polygon2DSubcatalog(
           (is_tracking): True,
-          (categories): NameOrderedDict {...},
-          (attributes): NameOrderedDict {...}
+          (categories): NamedList [...],
+          (attributes): NamedList [...]
         )
 
     """

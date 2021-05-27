@@ -123,9 +123,9 @@ Category information can be added to the subcatalog.
 
     >>> box2d_subcatalog.add_category(name="cat", description="The Flerken")
     >>> box2d_subcatalog.categories
-    NameOrderedDict {
-      'cat': CategoryInfo("cat")
-    }
+    NamedList [
+      CategoryInfo("cat")
+    ]
 
 :class:`~tensorbay.label.supports.CategoryInfo` is used to describe
 a :ref:`reference/label_format:category`.
@@ -150,9 +150,9 @@ Attribute information ca be added to the subcatalog.
     ... description="attribute description"
     ... )
     >>> box2d_subcatalog.attributes
-    NameOrderedDict {
-      'attribute_name': AttributeInfo("attribute_name")(...)
-    }
+    NamedList [
+      AttributeInfo("attribute_name")(...)
+    ]
 
 :class:`~tensorbay.label.attributes.AttributeInfo` is used to describe the rules of an
 :ref:`reference/label_format:attributes`, which refers to the `Json schema`_ method.

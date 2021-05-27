@@ -7,11 +7,10 @@
 # pylint: disable=line-too-long
 
 import os
-from typing import Union
+from typing import Tuple, Union
 
 from ...dataset import Data, Dataset
-from ...label import AttributeInfo, Classification
-from ...utility import NameOrderedDict
+from ...label import Classification
 from .._utility import glob
 
 DATASET_NAME = "CarConnectionPicture"
@@ -42,7 +41,7 @@ def CarConnection(path: str) -> Dataset:
     segment = dataset.create_segment()
 
     image_paths = glob(os.path.join(root_path, "*.jpg"))
-    keys = dataset.catalog.classification.attributes
+    keys = dataset.catalog.classification.attributes.keys()
 
     for image_path in image_paths:
         data = Data(image_path)
@@ -63,9 +62,7 @@ def _transfer_attribute_type(item: str) -> Union[int, str, None]:
     return item
 
 
-def _extract_label_from_basename(
-    keys: NameOrderedDict[AttributeInfo], filename: str
-) -> Classification:
+def _extract_label_from_basename(keys: Tuple[str, ...], filename: str) -> Classification:
     make, model, *spec_values = filename.split("_")[:-1]
 
     attributes = dict(zip(keys, map(_transfer_attribute_type, spec_values)))
