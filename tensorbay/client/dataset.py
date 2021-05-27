@@ -402,6 +402,17 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         """
         return PagingList(lambda offset, limit: self._generate_branches(None, offset, limit), 128)
 
+    def delete_branch(self, name: str) -> None:
+        """Delete a branch.
+
+        Arguments:
+            name: The name of the branch to be deleted.
+
+        """
+        delete_data: Dict[str, Any] = {"name": name}
+
+        self._client.open_api_do("DELETE", "branches", self.dataset_id, json=delete_data)
+
     def checkout(self, revision: Optional[str] = None, draft_number: Optional[int] = None) -> None:
         """Checkout to commit or draft.
 
