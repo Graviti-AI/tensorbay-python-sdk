@@ -299,7 +299,7 @@ class Dataset(DatasetBase[Segment]):
 
     _is_fusion = False
 
-    def create_segment(self, segment_name: str = "") -> Segment:
+    def create_segment(self, segment_name: str = "default") -> Segment:
         """Create a segment with the given name.
 
         Arguments:
@@ -323,7 +323,7 @@ class FusionDataset(DatasetBase[FusionSegment]):
 
     _is_fusion = True
 
-    def create_segment(self, segment_name: str = "") -> FusionSegment:
+    def create_segment(self, segment_name: str = "default") -> FusionSegment:
         """Create a fusion segment with the given name.
 
         Arguments:

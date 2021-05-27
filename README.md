@@ -60,7 +60,7 @@ from tensorbay.dataset import Data, Dataset
 dataset = Dataset("DatasetName")
 
 # TensorBay uses "segment" to separate different parts in a dataset.
-segment = dataset.create_segment()
+segment = dataset.create_segment("SegmentName")
 
 segment.append(Data("0000001.jpg"))
 segment.append(Data("0000002.jpg"))
