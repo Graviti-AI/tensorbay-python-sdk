@@ -26,7 +26,7 @@ import logging
 from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Iterator, Optional, Tuple, Union
 
 from ..dataset import Data, Frame, FusionSegment, Notes, Segment
-from ..exception import FrameError, NameConflictError, ResourceNotExistError
+from ..exception import CommitStatusError, FrameError, NameConflictError, ResourceNotExistError
 from ..label import Catalog
 from .commit_status import CommitStatus
 from .log import UPLOAD_SEGMENT_RESUME_TEMPLATE
@@ -228,12 +228,18 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             The :class:`.Draft` instance with the given number.
 
         Raises:
-            TypeError: When the given draft number is illegal.
+            TypeError: When not giving the revision, the status of dataset client should be commit
+                or when the given draft number is illegal.
             ResourceNotExistError: When the required draft does not exist.
 
         """
         if draft_number is None:
-            self._status.check_authority_for_draft()
+            try:
+                self._status.check_authority_for_draft()
+            except CommitStatusError as error:
+                raise TypeError(
+                    "If not giving the draft number, the status of dataset client should be draft"
+                ) from error
             draft_number = self._status.draft_number
 
         if not draft_number:
@@ -266,12 +272,18 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             The :class:`.Commit` instance with the given revision.
 
         Raises:
-            TypeError: When the given revision is illegal.
+            TypeError: When not giving the revision, the status of dataset client should be commit
+                or when the given revision is illegal.
             ResourceNotExistError: When the required commit does not exist.
 
         """
         if revision is None:
-            self._status.check_authority_for_commit()
+            try:
+                self._status.check_authority_for_commit()
+            except CommitStatusError as error:
+                raise TypeError(
+                    "If not giving the revision, the status of dataset client should be commit"
+                ) from error
             revision = self._status.commit_id
 
         if not revision:
@@ -310,10 +322,22 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
                 the branch name, or the tag name.
                 If the revision is not given, create the tag for the current commit.
 
+        Raises:
+            TypeError: When not giving the revision, the status of dataset client should be commit
+                or when creating tag for the dataset without commit.
+
         """
-        if not revision:
-            self._status.check_authority_for_commit()
+        if revision is None:
+            try:
+                self._status.check_authority_for_commit()
+            except CommitStatusError as error:
+                raise TypeError(
+                    "If not giving the revision, the status of dataset client should be commit"
+                ) from error
             revision = self._status.commit_id
+
+        if not revision:
+            raise TypeError("Creating tag for the dataset without commit is not allowed")
 
         post_data: Dict[str, Any] = {"commit": revision, "name": name}
 
