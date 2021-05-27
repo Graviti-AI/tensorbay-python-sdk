@@ -234,7 +234,7 @@ def draft(
 
 @cli.command()
 @click.argument("tbrn", type=str)
-@click.option("-m", "--message", type=str, required=True, help="The message of the commit.")
+@click.option("-m", "--message", type=str, default="", help="The message of the commit.")
 @click.pass_obj
 def commit(obj: Dict[str, str], tbrn: str, message: str) -> None:
     """Work with commit.\f

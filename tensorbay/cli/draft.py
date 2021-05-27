@@ -6,15 +6,14 @@
 """Implementation of gas draft."""
 
 import sys
-from configparser import ConfigParser
-from typing import Dict, Tuple
+from typing import Dict
 
 import click
 
 from ..client.gas import DatasetClientType
 from ..exception import ResourceNotExistError
 from .tbrn import TBRN, TBRNType
-from .utility import clean_up, get_config_filepath, get_dataset_client, get_gas
+from .utility import edit_input, get_dataset_client, get_gas
 
 _DRAFT_HINT = """
 # Please enter the title for your draft.
@@ -49,7 +48,7 @@ def _create_draft(dataset_client: DatasetClientType, info: TBRN, title: str) -> 
         sys.exit(1)
 
     if not title:
-        title, description = _edit_title()
+        title, description = edit_input(_DRAFT_HINT)
 
     if not title:
         click.echo("Aborting creating draft due to empty draft title", err=True)
@@ -89,13 +88,3 @@ def _echo_draft(dataset_client: DatasetClientType, title: str = "") -> None:
     if not title:
         title = "<no title>"
     click.echo(f"    {title}\n")
-
-
-def _edit_title() -> Tuple[str, str]:
-    config_file = get_config_filepath()
-    config_parser = ConfigParser()
-    config_parser.read(config_file)
-
-    editor = config_parser["config"].get("editor") if "config" in config_parser else None
-    draft_info = click.edit(_DRAFT_HINT, editor=editor)
-    return clean_up(draft_info)
