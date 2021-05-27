@@ -132,6 +132,10 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
 
         return response["totalCount"]  # type: ignore[no-any-return]
 
+    def _create_branch(self, name: str, revision: Optional[str] = None) -> None:
+        post_data: Dict[str, Any] = {"name": name, "commit": revision}
+        self._client.open_api_do("POST", "branches", self.dataset_id, json=post_data)
+
     def _generate_branches(
         self, name: Optional[str] = None, offset: int = 0, limit: int = 128
     ) -> Generator[Branch, None, int]:
@@ -351,6 +355,21 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
 
         """
         return PagingList(lambda offset, limit: self._generate_tags(None, offset, limit), 128)
+
+    def create_branch(self, name: str, revision: Optional[str] = None) -> None:
+        """Create the branch.
+
+        Arguments:
+            name: The branch name.
+            revision: The information to locate the specific commit, which can be the commit id,
+                the branch name, or the tag name.
+                If the revision is not given, create the tag for the current commit.
+
+        """
+        if not revision:
+            self._status.check_authority_for_commit()
+            revision = self._status.commit_id
+        self._create_branch(name, revision)
 
     def get_branch(self, name: str) -> Branch:
         """Get the branch with the given name.
