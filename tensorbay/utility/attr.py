@@ -18,6 +18,7 @@ from typing import (
     List,
     NoReturn,
     Optional,
+    Sequence,
     Tuple,
     TypeVar,
     Union,
@@ -270,32 +271,39 @@ def camel(name: str) -> str:
     return f"{mixed[0].lower()}{mixed[1:]}"
 
 
-def _get_operators(annotation: Any, is_internal: bool = False) -> Tuple[_Callable, _Callable]:
+def _get_operators(annotation: Any) -> Tuple[_Callable, _Callable]:
     """Get attr operating methods by annotations.
 
      AttrsMixin has three operating types which are classified by attr annotation.
         1. builtin types, like str, int, None
         2. tensorbay custom class, like tensorbay.label.Classification
-        3. tensorbay custom class list, like List[tensorbay.label.LabeledBox2D]
+        3. tensorbay custom class list or NamedList, like List[tensorbay.label.LabeledBox2D]
 
     Arguments:
         annotation: Type of the attr.
-        is_internal: Whether the annotation is inside of typing.List.
 
     Returns:
         Operating methods of the annotation.
 
     """
-    if getattr(annotation, "__origin__", None) == list:
-        return _get_operators(annotation.__args__[0], True)
+    origin = getattr(annotation, "__origin__", None)
+    if origin and issubclass(origin, Sequence):
+        sequence = origin
+        type_ = annotation.__args__[0]
+    else:
+        sequence = None
+        type_ = annotation
 
-    if getattr(annotation, "__module__", None) in _BUILTINS:
+    if {getattr(sequence, "__module__", None), getattr(type_, "__module__", None)} < _BUILTINS:
         return _builtin_operator, _builtin_operator
 
-    if not is_internal:
-        return annotation.loads, _attr_dumper
+    if sequence is None:
+        return type_.loads, _attr_dumper
 
-    return lambda contents: [annotation.loads(content) for content in contents], _attr_list_dumper
+    return (
+        lambda contents: sequence(type_.loads(content) for content in contents),
+        _attr_list_dumper,
+    )
 
 
 def _builtin_operator(contents: _T) -> _T:
