@@ -15,6 +15,7 @@
 
 """
 
+from sys import maxsize
 from typing import (
     AbstractSet,
     Any,
@@ -63,7 +64,7 @@ class UserSequence(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancesto
     def __iter__(self) -> Iterator[_T]:
         return self._data.__iter__()
 
-    def index(self, value: _T, start: int = 0, stop: int = -1) -> int:
+    def index(self, value: _T, start: int = 0, stop: int = maxsize) -> int:
         """Return the first index of the value.
 
         Arguments:
