@@ -71,7 +71,14 @@ class DeprecatedCommand(click.Command):
 
 @click.group()
 @click.version_option(__version__)
-@click.option("-k", "--key", "access_key", type=str, default="", help="The accessKey of gas.")
+@click.option(
+    "-k",
+    "--key",
+    "access_key",
+    type=str,
+    default="",
+    help="The AccessKey to TensorBay (replace the AccessKey in config file).",
+)
 @click.option("-u", "--url", type=str, default="", help="The login url.", hidden=True)
 @click.option(
     "-p",
@@ -79,7 +86,7 @@ class DeprecatedCommand(click.Command):
     "profile_name",
     type=str,
     default="default",
-    help="The environment to login.",
+    help="Choose a profile from the config file to login.",
 )
 @click.option("-d", "--debug", is_flag=True, help="Debug mode.")
 @click.pass_context
