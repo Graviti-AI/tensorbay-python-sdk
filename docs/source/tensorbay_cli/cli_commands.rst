@@ -59,13 +59,15 @@ List the segments of a dataset.(default branch)
 
     gas ls tb:[dataset_name]
 
-List the segments of a specific dataset revision.
+List the segments of a specific dataset :ref:`revision<reference/glossary:revision>`.
 
 .. code:: console
 
    gas ls tb:[dataset_name]@[revision]
 
 List the segments of a specific dataset draft.
+
+See :ref:`tensorbay_cli/cli_commands:gas draft` for more information.
 
 .. code:: console
 
@@ -92,9 +94,13 @@ Get a certain file.
  gas cp
 ********
 
+
 Work with copy operations.
 
 Upload a file to a segment. The ``local_path`` refers to a file.
+
+The target dataset must be in draft status,
+see :ref:`tensorbay_cli/cli_commands:gas draft` for more information.
 
 .. code:: console
 
@@ -121,6 +127,9 @@ Work with remove operations.
 
 Remove a segment.
 
+The target dataset must be in draft status,
+see :ref:`tensorbay_cli/cli_commands:gas draft` for more information.
+
 .. code:: console
 
     gas rm -r tb:[dataset_name]#[draft_number]:[segment_name]
@@ -135,7 +144,7 @@ Remove a file.
  gas draft
 ***********
 
-Work with draft operations.
+Work with :ref:`reference/glossary:draft` operations.
 
 Create a draft with a title.
 
@@ -156,7 +165,7 @@ List the drafts of a dataset.
 
 Work with commit operations.
 
-Commit a draft with a message.
+Commit a :ref:`reference/glossary:draft` with a message.
 
 .. code:: console
 
@@ -167,9 +176,9 @@ Commit a draft with a message.
  gas tag
 ***********
 
-Work with tag operations.
+Work with :ref:`reference/glossary:tag` operations.
 
-Create a tag.
+Create a tag on the current commit or a specific :ref:`revision<reference/glossary:revision>`.
 
 .. code:: console
 
