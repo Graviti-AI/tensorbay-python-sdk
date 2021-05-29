@@ -91,7 +91,7 @@ class BaseField:  # pylint: disable=too-few-public-methods
 
     """
 
-    def __init__(self, key: str) -> None:
+    def __init__(self, key: Optional[str]) -> None:
         self.loader: _Callable
         self.dumper: _Callable
         self.key = key
@@ -162,7 +162,8 @@ class AttrsMixin:
         """
         base = getattr(self, _ATTRS_BASE, None)
         if base:
-            base.loader(self, contents)
+            value = contents if base.key is None else contents[base.key]
+            base.loader(self, value)
 
         for name, field in self._attrs_fields.items():
             if field.is_dynamic and field.key not in contents:
@@ -187,7 +188,7 @@ class AttrsMixin:
         contents: Dict[str, Any] = {}
         base = getattr(self, _ATTRS_BASE, None)
         if base:
-            contents[base.key] = base.dumper(self)
+            _key_dumper(base.key, contents, base.dumper(self))
 
         for name, field in self._attrs_fields.items():
             if field.is_dynamic and not hasattr(self, name):
@@ -197,10 +198,7 @@ class AttrsMixin:
             if value == field.default:
                 continue
 
-            if field.key is None:
-                contents.update(field.dumper(value))
-            else:
-                contents[field.key] = field.dumper(value)
+            _key_dumper(field.key, contents, field.dumper(value))
         return contents
 
 
@@ -232,7 +230,7 @@ def attr(
     return Field(is_dynamic, key, default, error_message)
 
 
-def attr_base(key: str) -> Any:
+def attr_base(key: Optional[str] = None) -> Any:
     """Return an instance to identify base class fields.
 
     Arguments:
@@ -269,6 +267,13 @@ def camel(name: str) -> str:
     """
     mixed = name.title().replace("_", "")
     return f"{mixed[0].lower()}{mixed[1:]}"
+
+
+def _key_dumper(key: Optional[str], contents: Dict[str, Any], value: Any) -> None:
+    if key is None:
+        contents.update(value)
+    else:
+        contents[key] = value
 
 
 def _get_operators(annotation: Any) -> Tuple[_Callable, _Callable]:
