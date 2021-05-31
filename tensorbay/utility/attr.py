@@ -11,6 +11,7 @@
 
 """
 
+from sys import version_info
 from typing import (
     Any,
     Callable,
@@ -276,6 +277,21 @@ def _key_dumper(key: Optional[str], contents: Dict[str, Any], value: Any) -> Non
         contents[key] = value
 
 
+def _get_origin_in_3_7(annotation: Any) -> Any:
+    return getattr(annotation, "__origin__", None)
+
+
+def _get_origin_in_3_6(annotation: Any) -> Any:
+    module = getattr(annotation, "__module__", None)
+    if module in _BUILTINS:
+        return getattr(annotation, "__extra__", None)
+
+    return getattr(annotation, "__origin__", None)
+
+
+_get_origin = _get_origin_in_3_6 if version_info < (3, 7) else _get_origin_in_3_7
+
+
 def _get_operators(annotation: Any) -> Tuple[_Callable, _Callable]:
     """Get attr operating methods by annotations.
 
@@ -291,7 +307,7 @@ def _get_operators(annotation: Any) -> Tuple[_Callable, _Callable]:
         Operating methods of the annotation.
 
     """
-    origin = getattr(annotation, "__origin__", None)
+    origin = _get_origin(annotation)
     if origin and issubclass(origin, Sequence):
         sequence = origin
         type_ = annotation.__args__[0]
