@@ -7,6 +7,7 @@
 
 from .AnimalPose import AnimalPose5, AnimalPose7
 from .AnimalsWithAttributes2 import AnimalsWithAttributes2
+from .BDD100K import BDD100K
 from .BioIDFace import BioIDFace
 from .BSTLD import BSTLD
 from .CADC import CADC
@@ -47,6 +48,7 @@ __all__ = [
     "AnimalPose7",
     "AnimalsWithAttributes2",
     "BioIDFace",
+    "BDD100K",
     "BSTLD",
     "CADC",
     "CarConnection",
