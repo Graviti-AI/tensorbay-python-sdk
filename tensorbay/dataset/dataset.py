@@ -252,7 +252,7 @@ class DatasetBase(Sequence[_T], NameMixin):  # pylint: disable=too-many-ancestor
 
         """
         # pylint: disable=protected-access
-        return tuple(self._segments._data)
+        return tuple(self._get_segments()._data)
 
     def load_catalog(self, filepath: str) -> None:
         """Load catalog from a json file.
