@@ -12,6 +12,7 @@ which compares all the instance variables.
 
 """
 
+import inspect
 import warnings
 from collections import defaultdict
 from functools import wraps
@@ -232,6 +233,68 @@ class KwargsDeprecated:  # pylint: disable=too-few-public-methods
         @wraps(func)
         def wrapper(*arg: Any, **kwargs: Any) -> Any:
             if set(self._keywords) & kwargs.keys():
+                warnings.warn(message, DeprecationWarning, 2)
+
+            return func(*arg, **kwargs)
+
+        return wrapper  # type: ignore[return-value]
+
+
+class DefaultValueDeprecated:  # pylint: disable=too-few-public-methods
+    """A decorator for the function which has deprecated argument default value.
+
+    Arguments:
+        keyword: The argument keyword whose default value needs to be deprecated.
+        since: The version the keyword arguments are deprecated.
+        remove_in: The version the keyword arguments will be removed in.
+
+    """
+
+    def __init__(
+        self,
+        keyword: str,
+        *,
+        since: str,
+        removed_in: Optional[str] = None,
+    ) -> None:
+        self._keyword = keyword
+        self._since = since
+        self._removed_in = removed_in
+
+    def __call__(self, func: _Callable) -> _Callable:
+        """Wrap the decorated function by adding the deprecated message.
+
+        Arguments:
+            func: The deprecated function.
+
+        Returns:
+            The wrapped function which shows the deprecated message when calling.
+
+        """
+        signature = inspect.signature(func)
+        default_value = signature.parameters[self._keyword].default
+
+        messages = [
+            (
+                f'The argument "{self._keyword}" in "{func.__name__}" is required '
+                f'since version "{self._since}".'
+            )
+        ]
+        if self._removed_in:
+            messages.append(
+                (
+                    "Its default value is deprecated and "
+                    f'will be removed in version "{self._removed_in}".'
+                )
+            )
+
+        message = " ".join(messages)
+
+        @wraps(func)
+        def wrapper(*arg: Any, **kwargs: Any) -> Any:
+            bound_argument = signature.bind(*arg, **kwargs)
+            bound_argument.apply_defaults()
+            if bound_argument.arguments[self._keyword] == default_value:
                 warnings.warn(message, DeprecationWarning, 2)
 
             return func(*arg, **kwargs)
