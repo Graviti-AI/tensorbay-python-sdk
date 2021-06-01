@@ -6,15 +6,12 @@
 """Implementation of gas cp."""
 
 import os
-import sys
 from pathlib import Path, PurePosixPath
 from typing import Dict, Iterable
 
-import click
-
 from ..dataset import Data, Segment
 from .tbrn import TBRN, TBRNType
-from .utility import get_dataset_client, get_gas
+from .utility import error, get_dataset_client, get_gas
 
 
 def _implement_cp(  # pylint: disable=too-many-arguments
@@ -31,8 +28,7 @@ def _implement_cp(  # pylint: disable=too-many-arguments
     dataset_client = get_dataset_client(gas, info, is_fusion=False)
 
     if info.type not in (TBRNType.SEGMENT, TBRNType.NORMAL_FILE):
-        click.echo(f'"{tbrn}" is not a segment or file type', err=True)
-        sys.exit(1)
+        error(f'"{tbrn}" is not a segment or file type')
 
     target_remote_path = info.remote_path if info.type == TBRNType.NORMAL_FILE else ""
 
@@ -79,11 +75,7 @@ def _get_segment(
             continue
 
         if not is_recursive:
-            click.echo(
-                "Local paths include directories, please use -r option",
-                err=True,
-            )
-            sys.exit(1)
+            error("Local paths include directories, please use -r option")
 
         local_abspath = os.path.normpath(local_abspath)
         folder_name = os.path.basename(local_abspath)

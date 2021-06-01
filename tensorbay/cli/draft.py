@@ -5,7 +5,6 @@
 
 """Implementation of gas draft."""
 
-import sys
 from typing import Dict
 
 import click
@@ -13,7 +12,7 @@ import click
 from ..client.gas import DatasetClientType
 from ..exception import ResourceNotExistError
 from .tbrn import TBRN, TBRNType
-from .utility import edit_input, get_dataset_client, get_gas
+from .utility import edit_input, error, get_dataset_client, get_gas
 
 _DRAFT_HINT = """
 # Please enter the title for your draft.
@@ -28,8 +27,7 @@ def _implement_draft(obj: Dict[str, str], tbrn: str, is_list: bool, title: str) 
     dataset_client = get_dataset_client(gas, info)
 
     if info.type != TBRNType.DATASET:
-        click.echo(f'To operate a draft, "{info}" must be a dataset', err=True)
-        sys.exit(1)
+        error(f'To operate a draft, "{info}" must be a dataset')
 
     if is_list:
         _list_drafts(dataset_client, info)
@@ -40,23 +38,19 @@ def _implement_draft(obj: Dict[str, str], tbrn: str, is_list: bool, title: str) 
 
 def _create_draft(dataset_client: DatasetClientType, info: TBRN, title: str) -> None:
     if info.is_draft:
-        click.echo(f'Create a draft in draft status "{info}" is not permitted', err=True)
-        sys.exit(1)
+        error(f'Create a draft in draft status "{info}" is not permitted')
 
     if info.revision:
-        click.echo(f'Create a draft based on given revision "{info}" is not supported', err=True)
-        sys.exit(1)
+        error(f'Create a draft based on given revision "{info}" is not supported')
 
     if not title:
         title, description = edit_input(_DRAFT_HINT)
 
     if not title:
-        click.echo("Aborting creating draft due to empty draft title", err=True)
-        sys.exit(1)
+        error("Aborting creating draft due to empty draft title")
 
     if description:
-        click.echo('Creating draft with "description" is not supported yet', err=True)
-        sys.exit(1)
+        error('Creating draft with "description" is not supported yet')
 
     dataset_client.create_draft(title=title)
     draft_tbrn = TBRN(info.dataset_name, draft_number=dataset_client.status.draft_number).get_tbrn()
@@ -66,8 +60,7 @@ def _create_draft(dataset_client: DatasetClientType, info: TBRN, title: str) -> 
 
 def _list_drafts(dataset_client: DatasetClientType, info: TBRN) -> None:
     if info.revision:
-        click.echo(f'list drafts based on given revision "{info}" is not supported', err=True)
-        sys.exit(1)
+        error(f'list drafts based on given revision "{info}" is not supported')
 
     if info.is_draft:
         draft = dataset_client.get_draft(info.draft_number)
