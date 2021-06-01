@@ -8,7 +8,8 @@
 import logging
 import os
 import sys
-from configparser import ConfigParser
+from collections import OrderedDict
+from configparser import ConfigParser, SectionProxy
 from typing import NoReturn, Optional, Tuple, overload
 
 import click
@@ -35,7 +36,7 @@ def _implement_cli(
         logging.basicConfig(level=logging.DEBUG)
 
 
-def get_config_filepath() -> str:
+def _get_config_filepath() -> str:
     """Get the path of the config file.
 
     Returns:
@@ -46,29 +47,29 @@ def get_config_filepath() -> str:
     return os.path.join(os.environ[home], ".gasconfig")
 
 
-def read_config(config_filepath: str, profile_name: str) -> Tuple[str, str]:
+def _read_profile(profile_name: str) -> Tuple[str, str]:
     """Read accessKey and URL from the config file.
 
     Arguments:
-        config_filepath: The file containing config info.
         profile_name: The environment to login.
 
     Returns:
-        The accessKey of profile_name read from the config file.
-        The URL of profile_name read from the config file.
+        A tuple containing the accessKey and the url of profile_name read from the config file.
 
     """
+    config_filepath = _get_config_filepath()
     if not os.path.exists(config_filepath):
         error(
             f"{config_filepath} not exist"
             "\n\nPlease use 'gas config <accessKey>' to create config file"
         )
 
-    config_parser = ConfigParser()
-    config_parser.read(config_filepath)
-    access_key = config_parser[profile_name]["accessKey"]
-    url = config_parser[profile_name]["url"] if "url" in config_parser[profile_name] else ""
-    return access_key, url
+    update_config()
+    config_parser = read_config(config_filepath)
+    values = config_parser["profiles"][profile_name].split("\n")
+    if len(values) == 2:
+        return values[1], ""
+    return values[1], values[2]
 
 
 def get_gas(access_key: str, url: str, profile_name: str) -> GAS:
@@ -86,7 +87,7 @@ def get_gas(access_key: str, url: str, profile_name: str) -> GAS:
 
     """
     if not access_key and not url:
-        access_key, url = read_config(get_config_filepath(), profile_name)
+        access_key, url = _read_profile(profile_name)
 
     if not access_key:
         error("AccessKey should be appointed")
@@ -148,11 +149,9 @@ def edit_input(hint: str) -> Tuple[str, str]:
         The extracted title and the description.
 
     """
-    config_file = get_config_filepath()
-    config_parser = ConfigParser()
-    config_parser.read(config_file)
+    config_parser = read_config()
 
-    editor = config_parser["config"].get("editor") if "config" in config_parser else None
+    editor = config_parser["config"].get("editor") if config_parser.has_section("config") else None
     input_info = click.edit(hint, editor=editor)
     return _clean_up(input_info)
 
@@ -189,3 +188,96 @@ def error(message: str) -> NoReturn:
     """
     click.secho(f"ERROR: {message}", err=True, fg="red")
     sys.exit(1)
+
+
+def update_config() -> None:
+    """Update the config file to the new format."""
+    old_config_parser = read_config()
+    old_sections = old_config_parser.sections()
+
+    if not old_sections or old_sections == ["config"]:
+        return
+
+    if (old_sections in (["config", "profiles"], ["profiles"])) and _is_updated(
+        old_config_parser["profiles"]
+    ):
+        return
+
+    new_config_parser = ConfigParser(dict_type=OrderedDict)
+    new_config_parser.add_section("profiles")
+    for section_name, section_value in old_config_parser.items():
+        if section_name == "DEFAULT":
+            continue
+
+        if section_name == "config":
+            new_config_parser.add_section("config")
+            new_config_parser["config"] = old_config_parser["config"]
+
+        elif section_name == "profiles" and _is_updated(section_value):
+            new_config_parser["profiles"].update(section_value)
+
+        else:
+            new_config_parser["profiles"][section_name] = form_profile_value(**section_value)
+
+    write_config(new_config_parser, show_message=False)
+
+
+def _is_updated(profile_section: SectionProxy) -> bool:
+    return "\n" in profile_section.get("accesskey", "\n")
+
+
+def form_profile_value(accesskey: str, url: Optional[str] = None) -> str:
+    """Form the profile value with accesskey (and url).
+
+    Arguments:
+        accesskey: The accesskey to TensorBay.
+        url: The TensorBay url.
+
+    Returns:
+        The formed profile value.
+
+    """
+    values = ["", accesskey]
+    if url:
+        values.append(url)
+    return "\n".join(values)
+
+
+def read_config(config_filepath: Optional[str] = None) -> ConfigParser:
+    """Write the config from the config file.
+
+    Arguments:
+        config_filepath: The path of the config file to read.
+
+    Returns:
+        The config parser read from the config file.
+
+    """
+    if not config_filepath:
+        config_filepath = _get_config_filepath()
+    config_parser = ConfigParser(dict_type=OrderedDict)
+    config_parser.read(config_filepath)
+    return config_parser
+
+
+def write_config(config_parser: ConfigParser, show_message: bool = True) -> None:
+    """Write the config parser to the config file.
+
+    Arguments:
+        config_parser: The config parser to write to the file.
+        show_message: Whether to show the message.
+
+    """
+    # pylint: disable=protected-access
+    if config_parser.has_section("config"):
+        config_parser._sections.move_to_end("config", last=False)  # type: ignore[attr-defined]
+    if config_parser.has_section("profiles") and "default" in config_parser["profiles"]:
+        config_parser._sections["profiles"].move_to_end(  # type: ignore[attr-defined]
+            "default", last=False
+        )
+
+    config_file = _get_config_filepath()
+    with open(config_file, "w") as fp:
+        config_parser.write(fp)
+    if show_message:
+        click.echo(f"Success!\nConfiguration has been written into: {config_file}")
