@@ -5,7 +5,6 @@
 
 """Implementation of gas ls."""
 
-import sys
 from typing import Dict, Iterable, Optional
 
 import click
@@ -14,7 +13,7 @@ from ..client import GAS
 from ..client.dataset import FusionDatasetClient
 from ..client.gas import DatasetClientType
 from .tbrn import TBRN, TBRNType
-from .utility import get_dataset_client, get_gas
+from .utility import error, get_dataset_client, get_gas
 
 
 def _echo_data(
@@ -48,8 +47,7 @@ def _echo_data(
 
 def _validate_dataset_client(dataset_client: DatasetClientType) -> None:
     if not dataset_client.status.draft_number and not dataset_client.status.commit_id:
-        click.echo(f'"{dataset_client.name}" has no commit history.', err=True)
-        sys.exit(1)
+        error(f'"{dataset_client.name}" has no commit history.')
 
 
 def _ls_dataset(gas: GAS, info: TBRN, list_all_files: bool) -> None:
@@ -63,8 +61,7 @@ def _ls_dataset(gas: GAS, info: TBRN, list_all_files: bool) -> None:
         return
 
     if isinstance(dataset_client, FusionDatasetClient):
-        click.echo('"-a" flag is not supported for fusion dataset yet', err=True)
-        sys.exit(1)
+        error('"-a" flag is not supported for fusion dataset yet')
 
     for segment_name in segment_names:
         segment = dataset_client.get_segment(segment_name)
@@ -83,8 +80,7 @@ def _ls_segment(
     dataset_client = get_dataset_client(gas, info)
     _validate_dataset_client(dataset_client)
     if isinstance(dataset_client, FusionDatasetClient):
-        click.echo("List fusion segment is not supported yet", err=True)
-        sys.exit(1)
+        error("List fusion segment is not supported yet")
 
     segment = dataset_client.get_segment(info.segment_name)
     _echo_data(
@@ -99,8 +95,7 @@ def _ls_segment(
 def _ls_normal_file(
     gas: GAS, info: TBRN, list_all_files: bool  # pylint: disable=unused-argument
 ) -> None:
-    click.echo("List for specific file is not supported yet", err=True)
-    sys.exit(1)
+    error("List for specific file is not supported yet")
 
 
 _LS_FUNCS = {

@@ -5,13 +5,12 @@
 
 """Implementation of gas commit."""
 
-import sys
 from typing import Dict
 
 import click
 
 from .tbrn import TBRN, TBRNType
-from .utility import edit_input, get_dataset_client, get_gas
+from .utility import edit_input, error, get_dataset_client, get_gas
 
 _COMMIT_HINT = """{}
 # Please enter the commit message for your changes.
@@ -27,24 +26,20 @@ def _implement_commit(obj: Dict[str, str], tbrn: str, message: str) -> None:
     dataset_client = get_dataset_client(gas, info)
 
     if info.type != TBRNType.DATASET:
-        click.echo(f'To operate a commit, "{info}" must be a dataset', err=True)
-        sys.exit(1)
+        error(f'To operate a commit, "{info}" must be a dataset')
 
     if not info.is_draft:
-        click.echo(f'To commit, "{info}" must be in draft status, like "{info}#1"', err=True)
-        sys.exit(1)
+        error(f'To commit, "{info}" must be in draft status, like "{info}#1"')
 
     dataset_client.checkout(draft_number=info.draft_number)
     if not message:
         message, description = edit_input(_COMMIT_HINT.format(dataset_client.get_draft().title))
 
     if not message:
-        click.echo("Aborting commit due to empty commit message", err=True)
-        sys.exit(1)
+        error("Aborting commit due to empty commit message")
 
     if description:
-        click.echo('Commit with "description" is not supported yet', err=True)
-        sys.exit(1)
+        error('Commit with "description" is not supported yet')
 
     dataset_client.commit(message)
     commit_tbrn = TBRN(info.dataset_name, revision=dataset_client.status.commit_id).get_tbrn()

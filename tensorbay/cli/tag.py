@@ -4,22 +4,21 @@
 #
 
 """Implementation of gas tag."""
-import sys
+
 from typing import Dict
 
 import click
 
 from ..client.gas import DatasetClientType
 from .tbrn import TBRN, TBRNType
-from .utility import get_dataset_client, get_gas
+from .utility import error, get_dataset_client, get_gas
 
 
 def _implement_tag(obj: Dict[str, str], tbrn: str, name: str, is_delete: bool) -> None:
     info = TBRN(tbrn=tbrn)
 
     if info.type != TBRNType.DATASET:
-        click.echo(f'To operate a tag, "{info}" must be a dataset', err=True)
-        sys.exit(1)
+        error(f'To operate a tag, "{info}" must be a dataset')
 
     gas = get_gas(**obj)
     dataset_client = get_dataset_client(gas, info)
@@ -34,8 +33,7 @@ def _implement_tag(obj: Dict[str, str], tbrn: str, name: str, is_delete: bool) -
 
 def _delete_tag(dataset_client: DatasetClientType, info: TBRN) -> None:
     if not info.revision:
-        click.echo(f'To delete a tag, "{info}" must have a tag name', err=True)
-        sys.exit(1)
+        error(f'To delete a tag, "{info}" must have a tag name')
 
     dataset_client.delete_tag(info.revision)
     tag_tbrn = TBRN(dataset_client.name, revision=info.revision).get_tbrn()
@@ -44,12 +42,10 @@ def _delete_tag(dataset_client: DatasetClientType, info: TBRN) -> None:
 
 def _create_tag(dataset_client: DatasetClientType, name: str) -> None:
     if dataset_client.status.is_draft:
-        click.echo(f'To create a tag, "{dataset_client.name}" cannot be in draft status', err=True)
-        sys.exit(1)
+        error(f'To create a tag, "{dataset_client.name}" cannot be in draft status')
 
     if not dataset_client.status.commit_id:
-        click.echo(f'To create a tag, "{dataset_client.name}" should have commit history', err=True)
-        sys.exit(1)
+        error(f'To create a tag, "{dataset_client.name}" should have commit history')
 
     dataset_client.create_tag(name=name)
     tag_tbrn = TBRN(dataset_client.name, revision=name).get_tbrn()

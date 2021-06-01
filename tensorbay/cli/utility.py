@@ -9,7 +9,7 @@ import logging
 import os
 import sys
 from configparser import ConfigParser
-from typing import Optional, Tuple, overload
+from typing import NoReturn, Optional, Tuple, overload
 
 import click
 from typing_extensions import Literal
@@ -59,12 +59,10 @@ def read_config(config_filepath: str, profile_name: str) -> Tuple[str, str]:
 
     """
     if not os.path.exists(config_filepath):
-        click.echo(
+        error(
             f"{config_filepath} not exist"
-            "\n\nPlease use 'gas config <accessKey>' to create config file",
-            err=True,
+            "\n\nPlease use 'gas config <accessKey>' to create config file"
         )
-        sys.exit(1)
 
     config_parser = ConfigParser()
     config_parser.read(config_filepath)
@@ -91,8 +89,7 @@ def get_gas(access_key: str, url: str, profile_name: str) -> GAS:
         access_key, url = read_config(get_config_filepath(), profile_name)
 
     if not access_key:
-        click.echo("AccessKey should be appointed", err=True)
-        sys.exit(1)
+        error("AccessKey should be appointed")
 
     return GAS(access_key, url)
 
@@ -181,3 +178,14 @@ def _clean_up(editor_input: Optional[str]) -> Tuple[str, str]:
     if not cleaned_up_lines:
         return "", ""
     return cleaned_up_lines[0].lstrip(), "\n".join(cleaned_up_lines[1:])
+
+
+def error(message: str) -> NoReturn:
+    """Print the error message and exit the program.
+
+    Arguments:
+        message: The error message to echo.
+
+    """
+    click.echo(message, err=True)
+    sys.exit(1)

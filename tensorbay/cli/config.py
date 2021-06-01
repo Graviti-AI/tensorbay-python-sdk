@@ -5,13 +5,12 @@
 
 """Implementation of gas config."""
 
-import sys
 from configparser import ConfigParser
 from typing import Dict
 
 import click
 
-from .utility import get_config_filepath
+from .utility import error, get_config_filepath
 
 
 def _implement_config(obj: Dict[str, str], arg1: str, arg2: str) -> None:
@@ -29,8 +28,7 @@ def _implement_config(obj: Dict[str, str], arg1: str, arg2: str) -> None:
     if arg1.startswith(("Accesskey-", "ACCESSKEY-")):
         profile_name = obj["profile_name"]
         if profile_name == "config":
-            click.echo("Error: name 'config' is preserved for gas basic config", err=True)
-            sys.exit(1)
+            error("Error: name 'config' is preserved for gas basic config")
 
         if profile_name not in config_parser:
             config_parser.add_section(profile_name)
@@ -42,14 +40,13 @@ def _implement_config(obj: Dict[str, str], arg1: str, arg2: str) -> None:
             config_parser.remove_option(profile_name, "url")
     elif arg1 == "editor":
         if not arg2:
-            click.echo("Error: Missing editor name", err=True)
-            sys.exit(1)
+            error("Error: Missing editor name")
+
         if "config" not in config_parser:
             config_parser.add_section("config")
         config_parser["config"]["editor"] = arg2
     else:
-        click.echo("Error: Wrong accesskey format", err=True)
-        sys.exit(1)
+        error("Error: Wrong accesskey format")
 
     with open(config_file, "w") as fp:
         config_parser.write(fp)
