@@ -26,7 +26,13 @@ import logging
 from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Iterator, Optional, Tuple, Union
 
 from ..dataset import Data, Frame, FusionSegment, Notes, Segment
-from ..exception import FrameError, NameConflictError, OperationError, ResourceNotExistError
+from ..exception import (
+    FrameError,
+    NameConflictError,
+    OperationError,
+    ResourceNotExistError,
+    StatusError,
+)
 from ..label import Catalog
 from .log import UPLOAD_SEGMENT_RESUME_TEMPLATE
 from .requests import Client, PagingList, Tqdm, multithread_upload
@@ -81,11 +87,14 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         response = self._client.open_api_do("POST", "commits", self.dataset_id, json=post_data)
         return response.json()["commitId"]  # type: ignore[no-any-return]
 
-    def _create_draft(self, title: Optional[str] = None) -> int:
+    def _create_draft(self, title: Optional[str] = None, branch_name: Optional[str] = None) -> int:
         post_data: Dict[str, Any] = {}
 
         if title:
             post_data["title"] = title
+
+        if branch_name:
+            post_data["branchName"] = branch_name
 
         response = self._client.open_api_do("POST", "drafts", self.dataset_id, json=post_data)
         return response.json()["draftNumber"]  # type: ignore[no-any-return]
@@ -197,18 +206,28 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         """
         return self._status
 
-    def create_draft(self, title: Optional[str] = None) -> int:
+    def create_draft(self, title: Optional[str] = None, branch_name: Optional[str] = None) -> int:
         """Create the draft.
 
         Arguments:
             title: The draft title.
+            branch_name: The branch name.
 
         Returns:
             The draft number of the created draft.
 
+        Raises:
+            StatusError: When creating the draft without basing on a branch.
+
         """
-        self._status.check_authority_for_commit()
-        draft_number = self._create_draft(title)
+        if not branch_name:
+            if not self.status.branch_name:
+                raise StatusError(
+                    message="Creating the draft without basing on a branch is not allowed"
+                )
+            branch_name = self.status.branch_name
+            self._status.check_authority_for_commit()
+        draft_number = self._create_draft(title, branch_name)
         self._status.checkout(draft_number=draft_number)
         return draft_number
 
