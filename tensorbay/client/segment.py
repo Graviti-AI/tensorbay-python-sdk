@@ -37,8 +37,8 @@ from ..dataset import Data, Frame, RemoteData
 from ..exception import FrameError, InvalidParamsError, ResponseSystemError
 from ..sensor.sensor import Sensor, Sensors
 from ..utility import locked
-from .commit_status import CommitStatus
 from .requests import PagingList, config
+from .status import Status
 
 if TYPE_CHECKING:
     from .dataset import DatasetClient, FusionDatasetClient
@@ -213,7 +213,7 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
         return self._name
 
     @property
-    def status(self) -> CommitStatus:
+    def status(self) -> Status:
         """Return the status of the dataset client.
 
         Returns:

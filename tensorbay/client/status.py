@@ -3,7 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Class CommitStatus."""
+"""Class Status."""
 
 
 from typing import Any, Dict, Optional
@@ -11,10 +11,11 @@ from typing import Any, Dict, Optional
 from ..exception import CommitStatusError
 
 
-class CommitStatus:
-    """This class defines the basic concept of the commit status.
+class Status:
+    """This class defines the basic concept of the status.
 
     Arguments:
+        branch_name: The branch name.
         draft_number: The draft number (if the status is draft).
         commit_id: The commit ID (if the status is commit).
 
@@ -22,11 +23,13 @@ class CommitStatus:
 
     def __init__(
         self,
+        branch_name: Optional[str] = None,
         *,
         draft_number: Optional[int] = None,
         commit_id: Optional[str] = None,
     ) -> None:
 
+        self.branch_name = branch_name
         self._draft_number = draft_number
         self._commit_id = commit_id
 

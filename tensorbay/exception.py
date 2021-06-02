@@ -94,6 +94,22 @@ class FrameError(ClientError):
         return self._message
 
 
+class OperationError(ClientError):
+    """This class defines the exception for incorrect operation.
+
+    Arguments:
+       message: The error message.
+
+    """
+
+    def __init__(self, message: str) -> None:
+        super().__init__()
+        self._message = message
+
+    def __str__(self) -> str:
+        return self._message
+
+
 class ResponseError(ClientError):
     """This class defines the exception for post response error.
 

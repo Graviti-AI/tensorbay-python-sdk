@@ -6,8 +6,8 @@
 import pytest
 
 from tensorbay import GAS
+from tensorbay.client.gas import DEFAULT_BRANCH
 from tensorbay.exception import CommitStatusError, ResourceNotExistError, ResponseError
-from tensorbay.label import Catalog
 
 from .utility import get_dataset_name
 
@@ -21,6 +21,7 @@ class TestDataset:
         assert dataset_client.status.commit_id is None
         assert dataset_client.status.draft_number is None
         assert not dataset_client.status.is_draft
+        assert dataset_client.status.branch_name == DEFAULT_BRANCH
         assert dataset_client.name == dataset_name
         assert dataset_client.dataset_id is not None
         gas_client.get_dataset(dataset_name)
@@ -51,6 +52,7 @@ class TestDataset:
         assert dataset_client.status.commit_id is None
         assert dataset_client.status.draft_number is None
         assert not dataset_client.status.is_draft
+        assert dataset_client.status.branch_name == DEFAULT_BRANCH
         assert dataset_client._name == dataset_name
         assert dataset_client.dataset_id is not None
         gas_client.get_dataset(dataset_name, is_fusion=True)
@@ -76,7 +78,8 @@ class TestDataset:
         dataset_client_1 = gas_client.get_dataset(dataset_name)
         assert dataset_client_1.status.commit_id is None
         assert dataset_client_1.status.draft_number is None
-        assert dataset_client.status.is_draft
+        assert not dataset_client_1.status.is_draft
+        assert dataset_client.status.branch_name == DEFAULT_BRANCH
         assert dataset_client_1.name == dataset_name
         assert dataset_client.dataset_id is not None
 
@@ -95,6 +98,7 @@ class TestDataset:
         dataset_client = gas_client.get_dataset(dataset_name)
         assert dataset_client.status.commit_id == v2_commit_id
         assert dataset_client.status.draft_number is None
+        assert dataset_client.status.branch_name == DEFAULT_BRANCH
         assert dataset_client.name == dataset_name
         assert dataset_client.dataset_id is not None
 
@@ -113,6 +117,7 @@ class TestDataset:
         dataset_client = gas_client.get_dataset(dataset_name, is_fusion=True)
         assert dataset_client.status.commit_id == v2_commit_id
         assert dataset_client.status.draft_number is None
+        assert dataset_client.status.branch_name == DEFAULT_BRANCH
         assert dataset_client.name == dataset_name
         assert dataset_client.dataset_id is not None
 
@@ -160,21 +165,24 @@ class TestDataset:
         dataset_client.create_draft("draft-2")
         dataset_client.commit("commit-2")
         commit_2_id = dataset_client.status.commit_id
-        # Neither commit key nor draft number is given
+        # Neither revision nor draft number is given
         with pytest.raises(TypeError):
             dataset_client.checkout()
-        # Both commit key and draft number are given
+        # Both revision and draft number are given
         with pytest.raises(TypeError):
             dataset_client.checkout(revision=commit_1_id, draft_number=3)
         dataset_client.checkout(revision=commit_1_id)
+        assert dataset_client._status.branch_name is None
         assert dataset_client._status.commit_id == commit_1_id
-        # The commit does not exist.
+        # The revision does not exist.
         with pytest.raises(ResourceNotExistError):
             dataset_client.checkout(revision="123")
         assert dataset_client._status.commit_id == commit_1_id
         dataset_client.checkout(revision="V1")
+        assert dataset_client._status.branch_name is None
         assert dataset_client._status.commit_id == commit_1_id
-        dataset_client.checkout(revision="main")
+        dataset_client.checkout(revision=DEFAULT_BRANCH)
+        assert dataset_client._status.branch_name == DEFAULT_BRANCH
         assert dataset_client._status.commit_id == commit_2_id
 
         dataset_client.create_draft("draft-3")

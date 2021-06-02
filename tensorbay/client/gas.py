@@ -23,10 +23,13 @@ from ..exception import DatasetTypeError, ResourceNotExistError
 from .dataset import DatasetClient, FusionDatasetClient
 from .log import UPLOAD_DATASET_RESUME_TEMPLATE
 from .requests import Client, PagingList, Tqdm
+from .status import Status
 
 DatasetClientType = Union[DatasetClient, FusionDatasetClient]
 
 logger = logging.getLogger(__name__)
+
+DEFAULT_BRANCH = "main"
 
 
 class GAS:
@@ -62,8 +65,12 @@ class GAS:
         dataset_id = info["id"]
         is_fusion = info["type"]
         commit_id = info["commitId"]
+        default_branch = info["defaultBranch"]
+
+        status = Status(default_branch, commit_id=commit_id)
+
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
-        return ReturnType(name, dataset_id, self, commit_id=commit_id)
+        return ReturnType(name, dataset_id, self, status=status)
 
     def _get_dataset(self, name: str) -> Dict[str, Any]:
         """Get the information of the TensorBay dataset with the input name.
@@ -221,9 +228,11 @@ class GAS:
         if region:
             post_data["region"] = region
 
+        status = Status(DEFAULT_BRANCH)
+
         response = self._client.open_api_do("POST", "", json=post_data)
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
-        return ReturnType(name, response.json()["id"], self)
+        return ReturnType(name, response.json()["id"], self, status=status)
 
     def create_auth_dataset(
         self, name: str, config_name: str, path: str, is_fusion: bool = False
@@ -250,9 +259,12 @@ class GAS:
             "type": int(is_fusion),  # normal dataset: 0, fusion dataset: 1
             "storageConfig": {"name": config_name, "path": path},
         }
+
+        status = Status(DEFAULT_BRANCH)
+
         response = self._client.open_api_do("POST", "", json=post_data)
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
-        return ReturnType(name, response.json()["id"], self)
+        return ReturnType(name, response.json()["id"], self, status=status)
 
     @overload
     def get_dataset(self, name: str, is_fusion: Literal[False] = False) -> DatasetClient:
@@ -287,11 +299,14 @@ class GAS:
         dataset_id = info["id"]
         type_flag = info["type"]
         commit_id = info["commitId"]
+        default_branch = info["defaultBranch"]
+
+        status = Status(default_branch, commit_id=commit_id)
 
         if is_fusion != type_flag:
             raise DatasetTypeError(name, type_flag)
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
-        return ReturnType(name, dataset_id, self, commit_id=commit_id)
+        return ReturnType(name, dataset_id, self, status=status)
 
     def list_dataset_names(self) -> PagingList[str]:
         """List names of all TensorBay datasets.

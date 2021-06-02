@@ -26,12 +26,12 @@ import logging
 from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Iterator, Optional, Tuple, Union
 
 from ..dataset import Data, Frame, FusionSegment, Notes, Segment
-from ..exception import FrameError, NameConflictError, ResourceNotExistError
+from ..exception import FrameError, NameConflictError, OperationError, ResourceNotExistError
 from ..label import Catalog
-from .commit_status import CommitStatus
 from .log import UPLOAD_SEGMENT_RESUME_TEMPLATE
 from .requests import Client, PagingList, Tqdm, multithread_upload
 from .segment import FusionSegmentClient, SegmentClient
+from .status import Status
 from .struct import Branch, Commit, Draft, Tag
 
 if TYPE_CHECKING:
@@ -62,17 +62,12 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
 
     _client: Client
 
-    def __init__(
-        self, name: str, dataset_id: str, gas_client: "GAS", *, commit_id: Optional[str] = None
-    ) -> None:
+    def __init__(self, name: str, dataset_id: str, gas_client: "GAS", *, status: Status) -> None:
         self._name = name
         self._dataset_id = dataset_id
         self._gas_client = gas_client
         self._client = gas_client._client  # pylint: disable=protected-access
-
-        self._status = CommitStatus()
-        if commit_id:
-            self._status.checkout(commit_id=commit_id)
+        self._status = status
 
     def _commit(self, message: str, tag: Optional[str] = None) -> str:
         post_data: Dict[str, Any] = {
@@ -193,7 +188,7 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         return self._dataset_id
 
     @property
-    def status(self) -> CommitStatus:
+    def status(self) -> Status:
         """Return the status of the dataset client.
 
         Returns:
@@ -369,6 +364,8 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         post_data: Dict[str, Any] = {"name": name, "commit": revision}
         self._client.open_api_do("POST", "branches", self.dataset_id, json=post_data)
 
+        self._status.branch_name = name
+
     def get_branch(self, name: str) -> Branch:
         """Get the branch with the given name.
 
@@ -408,7 +405,13 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         Arguments:
             name: The name of the branch to be deleted.
 
+        Raises:
+            OperationError: When deleting the current branch.
+
         """
+        if name == self.status.branch_name:
+            raise OperationError("Deleting the current branch is not allowed")
+
         delete_data: Dict[str, Any] = {"name": name}
 
         self._client.open_api_do("DELETE", "branches", self.dataset_id, json=delete_data)
@@ -431,12 +434,18 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             raise TypeError("Both revision and draft number are given, please only give one")
 
         if revision:
-            commit_id = self.get_commit(revision).commit_id
-            self._status.checkout(commit_id=commit_id)
+            try:
+                branch = self.get_branch(revision)
+                self._status.checkout(commit_id=branch.commit_id)
+                self._status.branch_name = branch.name
+            except ResourceNotExistError:
+                self._status.checkout(commit_id=self.get_commit(revision).commit_id)
+                self._status.branch_name = None
 
         if draft_number:
             draft_number = self.get_draft(draft_number).number
             self._status.checkout(draft_number=draft_number)
+            self._status.branch_name = None
 
     def commit(self, message: str, *, tag: Optional[str] = None) -> None:
         """Commit the draft.
