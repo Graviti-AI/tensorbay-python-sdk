@@ -443,9 +443,9 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
                 self._status.branch_name = None
 
         if draft_number:
-            draft_number = self.get_draft(draft_number).number
-            self._status.checkout(draft_number=draft_number)
-            self._status.branch_name = None
+            draft = self.get_draft(draft_number)
+            self._status.checkout(draft_number=draft.number)
+            self._status.branch_name = draft.branch_name
 
     def commit(self, message: str, *, tag: Optional[str] = None) -> None:
         """Commit the draft.
