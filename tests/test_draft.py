@@ -6,6 +6,7 @@
 import pytest
 
 from tensorbay.client import GAS
+from tensorbay.client.gas import DEFAULT_BRANCH
 from tensorbay.client.struct import Draft
 from tensorbay.exception import CommitStatusError, ResponseError
 
@@ -44,7 +45,7 @@ class TestDraft:
 
         drafts = dataset_client.list_drafts()
         assert len(drafts) == 1
-        assert drafts[0] == Draft(draft_number_2, "draft-2")
+        assert drafts[0] == Draft(draft_number_2, "draft-2", DEFAULT_BRANCH)
 
         with pytest.raises(TypeError):
             get_draft_number_by_title(dataset_client.list_drafts(), "draft-3")

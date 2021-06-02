@@ -279,6 +279,7 @@ class Draft(ReprMixin, EqMixin):
     Arguments:
         number: The number of the draft.
         title: The title of the draft.
+        branch_name: The branch name.
 
     """
 
@@ -286,9 +287,10 @@ class Draft(ReprMixin, EqMixin):
 
     _repr_attrs = ("title",)
 
-    def __init__(self, number: int, title: str) -> None:
+    def __init__(self, number: int, title: str, branch_name: str) -> None:
         self.number = number
         self.title = title
+        self.branch_name = branch_name
 
     def _repr_head(self) -> str:
         return f"{self.__class__.__name__}({self.number})"
@@ -296,6 +298,7 @@ class Draft(ReprMixin, EqMixin):
     def _loads(self, contents: Dict[str, Any]) -> None:
         self.number = contents["number"]
         self.title = contents["title"]
+        self.branch_name = contents["branchName"]
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -307,6 +310,7 @@ class Draft(ReprMixin, EqMixin):
                     {
                         "number": <int>
                         "title": <str>
+                        "branchName": <str>
                     }
 
         Returns:
@@ -324,7 +328,8 @@ class Draft(ReprMixin, EqMixin):
                 {
                     "number": <int>
                     "title": <str>
+                    "branchName": <str>
                 }
 
         """
-        return {"number": self.number, "title": self.title}
+        return {"number": self.number, "title": self.title, "branchName": self.branch_name}
