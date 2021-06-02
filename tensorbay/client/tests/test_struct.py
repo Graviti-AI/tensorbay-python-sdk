@@ -26,7 +26,8 @@ _NAMED_COMMIT_DATA.update(_COMMIT_DATA)
 
 _DRAFT_NUMBER = 1
 _DRAFT_TITLE = "draft title"
-_DRAFT_DATA = {"number": _DRAFT_NUMBER, "title": _DRAFT_TITLE}
+_DRAFT_BRANCH_NAME = "main"
+_DRAFT_DATA = {"number": _DRAFT_NUMBER, "title": _DRAFT_TITLE, "branchName": _DRAFT_BRANCH_NAME}
 
 
 class TestUser:
@@ -93,7 +94,7 @@ class Test_NamedCommit:
 
 class TestDraft:
     def test_init(self):
-        draft = Draft(_DRAFT_NUMBER, _DRAFT_TITLE)
+        draft = Draft(_DRAFT_NUMBER, _DRAFT_TITLE, _DRAFT_BRANCH_NAME)
         assert draft.number == _DRAFT_NUMBER
         assert draft.title == _DRAFT_TITLE
 
@@ -101,7 +102,8 @@ class TestDraft:
         draft = Draft.loads(_DRAFT_DATA)
         assert draft.number == _DRAFT_DATA["number"]
         assert draft.title == _DRAFT_DATA["title"]
+        assert draft.branch_name == _DRAFT_DATA["branchName"]
 
     def test_dumps(self):
-        draft = Draft(_DRAFT_NUMBER, _DRAFT_TITLE)
+        draft = Draft(_DRAFT_NUMBER, _DRAFT_TITLE, _DRAFT_BRANCH_NAME)
         assert draft.dumps() == _DRAFT_DATA

@@ -190,6 +190,7 @@ class TestDataset:
         with pytest.raises(ResourceNotExistError):
             dataset_client.checkout(draft_number=2)
         dataset_client.checkout(draft_number=3)
+        assert dataset_client._status.branch_name == DEFAULT_BRANCH
         assert dataset_client._status.draft_number == 3
 
         gas_client.delete_dataset(dataset_name)
