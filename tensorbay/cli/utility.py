@@ -187,5 +187,5 @@ def error(message: str) -> NoReturn:
         message: The error message to echo.
 
     """
-    click.echo(message, err=True)
+    click.secho(f"ERROR: {message}", err=True, fg="red")
     sys.exit(1)
