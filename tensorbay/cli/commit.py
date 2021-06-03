@@ -35,11 +35,11 @@ def _implement_commit(obj: Dict[str, str], tbrn: str, message: str) -> None:
     if not message:
         message, description = edit_input(_COMMIT_HINT.format(dataset_client.get_draft().title))
 
+        if description:
+            error('Commit with "description" is not supported yet')
+
     if not message:
         error("Aborting commit due to empty commit message")
-
-    if description:
-        error('Commit with "description" is not supported yet')
 
     dataset_client.commit(message)
     commit_tbrn = TBRN(info.dataset_name, revision=dataset_client.status.commit_id).get_tbrn()

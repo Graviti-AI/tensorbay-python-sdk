@@ -46,11 +46,11 @@ def _create_draft(dataset_client: DatasetClientType, info: TBRN, title: str) -> 
     if not title:
         title, description = edit_input(_DRAFT_HINT)
 
+        if description:
+            error('Creating draft with "description" is not supported yet')
+
     if not title:
         error("Aborting creating draft due to empty draft title")
-
-    if description:
-        error('Creating draft with "description" is not supported yet')
 
     dataset_client.create_draft(title=title)
     draft_tbrn = TBRN(info.dataset_name, draft_number=dataset_client.status.draft_number).get_tbrn()
