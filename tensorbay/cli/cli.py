@@ -322,8 +322,9 @@ def rm(  # pylint: disable=invalid-name, too-many-arguments
 @click.argument("tbrn", type=str)
 @click.argument("name", type=str, default="")
 @click.option("-v", "--verbose", is_flag=True, help="Show short commit id and commit message.")
+@click.option("-d", "--delete", "is_delete", is_flag=True, help="Delete the branch")
 @click.pass_obj
-def branch(obj: Dict[str, str], tbrn: str, name: str, verbose: bool) -> None:
+def branch(obj: Dict[str, str], tbrn: str, name: str, verbose: bool, is_delete: bool) -> None:
     """Work with branch.\f
 
     Arguments:
@@ -331,11 +332,12 @@ def branch(obj: Dict[str, str], tbrn: str, name: str, verbose: bool) -> None:
         tbrn: The tbrn of the dataset.
         name: The name of the branch to be created.
         verbose: Whether to show the short commit id and commit message.
+        is_delete: Whether to delete the branch.
 
     """  # noqa: D301,D415
     from .branch import _implement_branch
 
-    _implement_branch(obj, tbrn, name, verbose)
+    _implement_branch(obj, tbrn, name, verbose, is_delete)
 
 
 @cli.command()
