@@ -5,11 +5,15 @@
 
 """TensorBay cutoms exceptions.
 
+CommitStatusError is deprecated since v1.6.0, and will be removed in v1.8.0.
+
+Please use :class:`StatusError` instead of :class:`CommitStatusError`.
+
 The class hierarchy for TensorBay custom exceptions is::
 
      +-- TensorBayException
          +-- ClientError
-             +-- CommitStatusError
+             +-- StatusError
              +-- DatasetTypeError
              +-- FrameError
              +-- ResponseError
@@ -42,20 +46,28 @@ class ClientError(TensorBayException):
     """This is the base class for custom exceptions in TensorBay client module."""
 
 
-class CommitStatusError(ClientError):
-    """This class defines the exception for illegal commit status.
+class StatusError(ClientError):
+    """This class defines the exception for illegal status.
 
     Arguments:
-        is_draft: Whether the commit status is draft.
+        is_draft: Whether the status is draft.
+        message: The error message.
 
     """
 
-    def __init__(self, is_draft: bool) -> None:
+    def __init__(self, is_draft: Optional[bool] = None, message: Optional[str] = None) -> None:
         super().__init__()
-        self._required_status = "commit" if is_draft else "draft"
+        if is_draft is None:
+            self._message = message
+        else:
+            required_status = "commit" if is_draft else "draft"
+            self._message = f"The status is not {required_status}"
 
     def __str__(self) -> str:
-        return f"The status is not {self._required_status}"
+        return self._message if self._message else ""
+
+
+CommitStatusError = StatusError
 
 
 class DatasetTypeError(ClientError):

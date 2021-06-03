@@ -6,7 +6,7 @@
 import pytest
 
 from tensorbay import GAS
-from tensorbay.exception import CommitStatusError
+from tensorbay.exception import StatusError
 from tensorbay.label import Catalog
 
 from .utility import get_dataset_name
@@ -49,7 +49,7 @@ class TestCatalog:
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
 
-        with pytest.raises(CommitStatusError):
+        with pytest.raises(StatusError):
             dataset_client.upload_catalog(Catalog.loads(CATALOG))
         dataset_client.create_draft("draft-1")
         dataset_client.upload_catalog(Catalog.loads(CATALOG))

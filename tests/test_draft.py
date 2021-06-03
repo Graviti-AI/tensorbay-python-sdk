@@ -8,7 +8,7 @@ import pytest
 from tensorbay.client import GAS
 from tensorbay.client.gas import DEFAULT_BRANCH
 from tensorbay.client.struct import Draft
-from tensorbay.exception import CommitStatusError, ResponseError
+from tensorbay.exception import ResponseError, StatusError
 
 from .utility import get_dataset_name, get_draft_number_by_title
 
@@ -24,7 +24,7 @@ class TestDraft:
         assert dataset_client.status.is_draft
         assert dataset_client.status.draft_number == draft_number_1
         assert dataset_client.status.commit_id is None
-        with pytest.raises(CommitStatusError):
+        with pytest.raises(StatusError):
             dataset_client.create_draft("draft-2")
         draft_number = get_draft_number_by_title(dataset_client.list_drafts(), "draft-1")
         assert draft_number_1 == draft_number
