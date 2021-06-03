@@ -6,7 +6,8 @@
 import pytest
 
 from tensorbay import GAS
-from tensorbay.exception import ResourceNotExistError, ResponseSystemError
+from tensorbay.client.gas import DEFAULT_BRANCH
+from tensorbay.exception import OperationError, ResourceNotExistError, ResponseSystemError
 
 from .utility import get_dataset_name
 
@@ -127,6 +128,11 @@ class TestBranch:
         dataset_client.commit("commit-1")
         dataset_client.create_branch("T123")
 
+        # Deleting the current branch is not allowed
+        with pytest.raises(OperationError):
+            dataset_client.delete_branch("T123")
+
+        dataset_client.checkout(revision=DEFAULT_BRANCH)
         dataset_client.delete_branch("T123")
 
         with pytest.raises(ResourceNotExistError):
