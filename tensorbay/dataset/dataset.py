@@ -29,6 +29,7 @@ from typing import (
     Dict,
     Iterable,
     KeysView,
+    List,
     Optional,
     Sequence,
     Tuple,
@@ -73,13 +74,15 @@ class Notes(AttrsMixin, ReprMixin):
     _repr_attrs = ("is_continuous", "bin_point_cloud_fields")
 
     is_continuous: bool = attr(key=camel, default=False)
-    bin_point_cloud_fields: Optional[Iterable[str]] = attr(key=camel, default=None)
+    bin_point_cloud_fields: Optional[List[str]] = attr(key=camel, default=None)
 
     def __init__(
         self, is_continuous: bool = False, bin_point_cloud_fields: Optional[Iterable[str]] = None
     ) -> None:
         self.is_continuous = is_continuous
-        self.bin_point_cloud_fields = bin_point_cloud_fields
+        self.bin_point_cloud_fields = (
+            list(bin_point_cloud_fields) if bin_point_cloud_fields else None
+        )
 
     def __getitem__(self, key: str) -> Any:
         try:
