@@ -387,5 +387,23 @@ def log(
     _implement_log(obj, tbrn, max_count, oneline)
 
 
+@cli.command()
+@click.argument("arg1", type=str, default="", metavar="accessKey")
+@click.argument("arg2", type=str, default="", metavar="")
+@click.pass_obj
+def auth(obj: Dict[str, str], arg1: str, arg2: str) -> None:
+    """Authenticate the accessKey of gas.\f
+
+    Arguments:
+        obj: A dict contains config information.
+        arg1: The accessKey or the url of gas for the authentication.
+        arg2: The accessKey of gas for the authentication if arg1 is url.
+
+    """  # noqa: D301,D415
+    from .auth import _implement_auth
+
+    _implement_auth(obj, arg1, arg2)
+
+
 if __name__ == "__main__":
     cli()  # pylint: disable=no-value-for-parameter
