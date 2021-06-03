@@ -6,7 +6,7 @@
 import pytest
 
 from tensorbay import GAS
-from tensorbay.exception import CommitStatusError, NameConflictError, ResourceNotExistError
+from tensorbay.exception import NameConflictError, ResourceNotExistError, StatusError
 
 from .utility import get_dataset_name
 
@@ -17,7 +17,7 @@ class TestSegment:
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
 
-        with pytest.raises(CommitStatusError):
+        with pytest.raises(StatusError):
             dataset_client.create_segment("segment")
         dataset_client.create_draft("draft-1")
         segment_client = dataset_client.create_segment("segment")
@@ -35,7 +35,7 @@ class TestSegment:
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
 
-        with pytest.raises(CommitStatusError):
+        with pytest.raises(StatusError):
             dataset_client.get_or_create_segment("segment")
         dataset_client.create_draft("draft-1")
         segment_client = dataset_client.get_or_create_segment("segment")
@@ -50,7 +50,7 @@ class TestSegment:
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name, is_fusion=True)
 
-        with pytest.raises(CommitStatusError):
+        with pytest.raises(StatusError):
             dataset_client.get_or_create_segment("segment")
         dataset_client.create_draft("draft-1")
         segment_client = dataset_client.get_or_create_segment("segment")

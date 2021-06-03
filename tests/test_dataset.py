@@ -7,7 +7,7 @@ import pytest
 
 from tensorbay import GAS
 from tensorbay.client.gas import DEFAULT_BRANCH
-from tensorbay.exception import CommitStatusError, ResourceNotExistError, ResponseError
+from tensorbay.exception import ResourceNotExistError, ResponseError, StatusError
 
 from .utility import get_dataset_name
 
@@ -200,7 +200,7 @@ class TestDataset:
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
 
-        with pytest.raises(CommitStatusError):
+        with pytest.raises(StatusError):
             dataset_client.update_notes(is_continuous=True)
         dataset_client.create_draft("draft-1")
         notes_1 = dataset_client.get_notes()

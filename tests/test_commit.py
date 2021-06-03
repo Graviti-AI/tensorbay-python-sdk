@@ -7,7 +7,7 @@ import pytest
 
 from tensorbay import GAS, __version__
 from tensorbay.dataset import Data, Segment
-from tensorbay.exception import CommitStatusError, ResourceNotExistError
+from tensorbay.exception import ResourceNotExistError, StatusError
 
 from .utility import get_dataset_name
 
@@ -48,7 +48,7 @@ class TestCommit:
 
         # Can not create the tag without giving commit in the draft
         dataset_client.create_draft("draft-3")
-        with pytest.raises(CommitStatusError):
+        with pytest.raises(StatusError):
             dataset_client.get_commit()
 
         gas_client.delete_dataset(dataset_name)

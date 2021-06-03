@@ -6,7 +6,7 @@
 import pytest
 
 from tensorbay import GAS
-from tensorbay.exception import CommitStatusError, ResourceNotExistError, ResponseError
+from tensorbay.exception import ResourceNotExistError, ResponseError, StatusError
 
 from .utility import get_dataset_name
 
@@ -29,7 +29,7 @@ class TestTag:
         commit_2_id = dataset_client.status.commit_id
         dataset_client.create_draft("draft-3")
         # Can not create the tag without giving commit in the draft
-        with pytest.raises(CommitStatusError):
+        with pytest.raises(StatusError):
             dataset_client.create_tag("V2")
         dataset_client.create_tag("V2", revision=commit_2_id)
         dataset_client.commit("commit-3")

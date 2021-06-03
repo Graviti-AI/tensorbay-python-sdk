@@ -15,8 +15,8 @@ TensorBay SDK defines a series of custom exceptions.
     ClientError
         :class:`~tensorbay.exception.ClientError` is the base class for custom exceptions in the client module.
 
-    CommitStatusError
-        :class:`~tensorbay.exception.CommitStatusError` defines the exception for illegal commit status in the client module.
+    StatusError
+        :class:`~tensorbay.exception.StatusError` defines the exception for illegal status in the client module.
         Raised when the status is draft or commit, while the required status is commit or draft.
 
     DatasetTypeError
@@ -76,7 +76,7 @@ The class hierarchy for TensorBay custom exceptions is::
 
  +-- TensorBayException
      +-- ClientError
-         +-- CommitStatusError
+         +-- StatusError
          +-- DatasetTypeError
          +-- FrameError
          +-- ResponseError

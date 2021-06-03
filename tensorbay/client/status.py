@@ -8,7 +8,7 @@
 
 from typing import Any, Dict, Optional
 
-from ..exception import CommitStatusError
+from ..exception import StatusError
 
 
 class Status:
@@ -78,21 +78,21 @@ class Status:
         """Check whether the status is a legal commit.
 
         Raises:
-            CommitStatusError: When the status is not a legal commit.
+            StatusError: When the status is not a legal commit.
 
         """
         if self._draft_number is not None:
-            raise CommitStatusError(self.is_draft)
+            raise StatusError(self.is_draft)
 
     def check_authority_for_draft(self) -> None:
         """Check whether the status is a legal draft.
 
         Raises:
-            CommitStatusError: When the status is not a legal draft.
+            StatusError: When the status is not a legal draft.
 
         """
         if self._draft_number is None or self._commit_id is not None:
-            raise CommitStatusError(self.is_draft)
+            raise StatusError(self.is_draft)
 
     def checkout(self, commit_id: Optional[str] = None, draft_number: Optional[int] = None) -> None:
         """Checkout to commit or draft.
