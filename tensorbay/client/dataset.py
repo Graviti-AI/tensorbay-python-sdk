@@ -378,7 +378,9 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         """
         if not revision:
             self._status.check_authority_for_commit()
-            revision = self._status.commit_id
+        else:
+            self.checkout(revision=revision)
+        revision = self._status.commit_id
 
         post_data: Dict[str, Any] = {"name": name, "commit": revision}
         self._client.open_api_do("POST", "branches", self.dataset_id, json=post_data)
