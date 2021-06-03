@@ -6,7 +6,15 @@
 """Utility classes."""
 
 from .attr import AttrsMixin, attr, attr_base, camel, upper
-from .common import Deprecated, EqMixin, KwargsDeprecated, MatrixType, common_loads, locked
+from .common import (
+    DefaultValueDeprecated,
+    Deprecated,
+    EqMixin,
+    KwargsDeprecated,
+    MatrixType,
+    common_loads,
+    locked,
+)
 from .name import NamedList, NameMixin, NameSortedDict, NameSortedList
 from .repr import ReprMixin, ReprType, repr_config
 from .type import SubcatalogTypeRegister, TypeEnum, TypeMixin, TypeRegister
@@ -14,6 +22,7 @@ from .user import UserMapping, UserMutableMapping, UserMutableSequence, UserSequ
 
 __all__ = [
     "AttrsMixin",
+    "DefaultValueDeprecated",
     "Deprecated",
     "EqMixin",
     "KwargsDeprecated",
