@@ -16,30 +16,33 @@ For the usage of accesskey via Tensorbay SDK or CLI,
 please see :ref:`SDK authorization <quick_start/getting_started_with_tensorbay:Authorize a Client Instance>`
 or :ref:`CLI configration <tensorbay_cli/getting_started_with_cli:Configuration>`.
 
-dataset
-=======
+branch
+======
 
-A uniform dataset format defined by TensorBay,
-which only contains one type of data collected from one sensor or without sensor information.
-According to the time continuity of data inside the dataset, a dataset can be a discontinuous dataset or a continuous dataset.
-:ref:`Notes <reference/dataset_structure:notes>` can be used to specify whether a dataset is continuous.
+Similar to git, a branch is a lightweight pointer to one of the commits.
 
-The corresponding class of dataset is :class:`~tensorbay.dataset.dataset.Dataset`.
+Currently, TensorBay only supports a single branch, which is the default "main" branch.
 
-See :ref:`reference/dataset_structure:Dataset Structure` for more details.
+Every time a :ref:`reference/glossary:commit` is submitted,
+the main branch pointer moves forward automatically to the latest commit.
 
-fusion dataset
-==============
+commit
+======
 
-A uniform dataset format defined by Tensorbay,
-which contains data collected from multiple sensors.
+Similar with Git, a commit is a version of a dataset,
+which contains the changes compared with the former commit.
 
-According to the time continuity of data inside the dataset, a fusion dataset can be a discontinuous fusion dataset or a continuous fusion dataset.
-:ref:`Notes <reference/dataset_structure:notes>` can be used to specify whether a fusion dataset is continuous.
+Each commit has a unique commit ID, which is a uuid in a 36-byte hexadecimal string.
+A certain commit of a dataset can be accessed by passing the corresponding commit ID
+or other forms of :ref:`reference/glossary:revision`.
 
-The corresponding class of fusion dataset is :class:`~tensorbay.dataset.dataset.FusionDataset`.
+A commit is readable, but is not writable.
+Thus, only read operations such as getting catalog, files and labels are allowed.
+To change a dataset, please create a new commit.
+See :ref:`reference/glossary:draft` for details.
 
-See :ref:`advanced_features/fusion_dataset/fusion_dataset_structure:Fusion Dataset Structure` for more details.
+On the other hand,
+"commit" also represents the action to save the changes inside a :ref:`reference/glossary:draft` into a commit.
 
 continuity
 ==========
@@ -52,16 +55,6 @@ and the collection order is indicated by the data paths or frame indexes.
 The continuity can be set in :ref:`reference/dataset_structure:notes`.
 
 Only continuous datasets can have :ref:`reference/glossary:tracking` labels.
-
-tracking
-========
-
-Tracking is a characteristic to describe the labels within a :ref:`reference/glossary:dataset` or a :ref:`reference/glossary:fusion dataset`.
-
-The labels of a dataset are tracking means the labels contain tracking information, such as tracking ID, which is used for tracking tasks.
-
-Tracking characteristic is stored in :ref:`reference/dataset_structure:catalog`,
-please see :ref:`reference/label_format:Label Format` for more details.
 
 dataloader
 ==========
@@ -120,6 +113,61 @@ Here are some dataloader examples of datasets with different label types and con
 
 See more dataloader examples in :ref:`api/opendataset/opendataset_module:tensorbay.opendataset`.
 
+dataset
+=======
+
+A uniform dataset format defined by TensorBay,
+which only contains one type of data collected from one sensor or without sensor information.
+According to the time continuity of data inside the dataset, a dataset can be a discontinuous dataset or a continuous dataset.
+:ref:`Notes <reference/dataset_structure:notes>` can be used to specify whether a dataset is continuous.
+
+The corresponding class of dataset is :class:`~tensorbay.dataset.dataset.Dataset`.
+
+See :ref:`reference/dataset_structure:Dataset Structure` for more details.
+
+draft
+=====
+
+Similar with Git, a draft is a workspace in which changing the dataset is allowed.
+
+A draft is created based on a :ref:`reference/glossary:commit`,
+and the changes inside it will be made into a commit.
+
+There are scenarios when modifications of a dataset are required,
+such as correcting errors, enlarging dataset, adding more types of labels, etc.
+Under these circumstances, create a draft, edit the dataset and commit the draft.
+
+fusion dataset
+==============
+
+A uniform dataset format defined by Tensorbay,
+which contains data collected from multiple sensors.
+
+According to the time continuity of data inside the dataset, a fusion dataset can be a discontinuous fusion dataset or a continuous fusion dataset.
+:ref:`Notes <reference/dataset_structure:notes>` can be used to specify whether a fusion dataset is continuous.
+
+The corresponding class of fusion dataset is :class:`~tensorbay.dataset.dataset.FusionDataset`.
+
+See :ref:`advanced_features/fusion_dataset/fusion_dataset_structure:Fusion Dataset Structure` for more details.
+
+revision
+========
+
+Similar to Git, a revision is a reference to a single :ref:`reference/glossary:commit`.
+And many methods in TensorBay SDK take revision as an argument.
+
+Currently, a revision can be in the following forms:
+
+1. A full :ref:`reference/glossary:commit` ID.
+2. A :ref:`reference/glossary:tag`.
+3. A :ref:`reference/glossary:branch`.
+
+tag
+===
+
+TensorBay SDK has the ability to tag the specific :ref:`reference/glossary:commit` in a dataset's history
+as being important. Typically, people use this functionality to mark release points (v1.0, v2.0 and so on).
+
 TBRN
 ====
 
@@ -146,64 +194,12 @@ then the TBRN of this image should be:
 
    Default segment is defined as ``""`` (empty string).
 
-
-commit
-======
-
-Similar with Git, a commit is a version of a dataset,
-which contains the changes compared with the former commit.
-
-Each commit has a unique commit ID, which is a uuid in a 36-byte hexadecimal string.
-A certain commit of a dataset can be accessed by passing the corresponding commit ID
-or other forms of :ref:`reference/glossary:revision`.
-
-A commit is readable, but is not writable.
-Thus, only read operations such as getting catalog, files and labels are allowed.
-To change a dataset, please create a new commit.
-See :ref:`reference/glossary:draft` for details.
-
-On the other hand,
-"commit" also represents the action to save the changes inside a :ref:`reference/glossary:draft` into a commit.
-
-draft
-=====
-
-Similar with Git, a draft is a workspace in which changing the dataset is allowed.
-
-A draft is created based on a :ref:`reference/glossary:commit`,
-and the changes inside it will be made into a commit.
-
-There are scenarios when modifications of a dataset are required,
-such as correcting errors, enlarging dataset, adding more types of labels, etc.
-Under these circumstances, create a draft, edit the dataset and commit the draft.
-
-
-tag
-===
-
-TensorBay SDK has the ability to tag the specific :ref:`reference/glossary:commit` in a dataset's history
-as being important. Typically, people use this functionality to mark release points (v1.0, v2.0 and so on).
-
-
-branch
-======
-
-Similar to git, a branch is a lightweight pointer to one of the commits.
-
-Currently, TensorBay only supports a single branch, which is the default "main" branch.
-
-Every time a :ref:`reference/glossary:commit` is submitted,
-the main branch pointer moves forward automatically to the latest commit.
-
-
-revision
+tracking
 ========
 
-Similar to Git, a revision is a reference to a single :ref:`reference/glossary:commit`.
-And many methods in TensorBay SDK take revision as an argument.
+Tracking is a characteristic to describe the labels within a :ref:`reference/glossary:dataset` or a :ref:`reference/glossary:fusion dataset`.
 
-Currently, a revision can be in the following forms:
+The labels of a dataset are tracking means the labels contain tracking information, such as tracking ID, which is used for tracking tasks.
 
-1. A full :ref:`reference/glossary:commit` ID.
-2. A :ref:`reference/glossary:tag`.
-3. A :ref:`reference/glossary:branch`.
+Tracking characteristic is stored in :ref:`reference/dataset_structure:catalog`,
+please see :ref:`reference/label_format:Label Format` for more details.
