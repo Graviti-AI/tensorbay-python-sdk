@@ -130,7 +130,7 @@ class TestDataset:
         dataset_client.create_draft("v_test")
         dataset_client.commit(message="Test", tag="V1")
 
-        new_dataset_name = get_dataset_name()
+        new_dataset_name = f"{get_dataset_name()}new"
         gas_client.rename_dataset(name=dataset_name, new_name=new_dataset_name)
         with pytest.raises(ResourceNotExistError):
             gas_client.get_dataset(dataset_name)
