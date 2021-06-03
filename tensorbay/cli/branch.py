@@ -14,14 +14,19 @@ from .tbrn import TBRN, TBRNType
 from .utility import error, get_dataset_client, get_gas
 
 
-def _implement_branch(obj: Dict[str, str], tbrn: str, name: str, verbose: bool) -> None:
+def _implement_branch(
+    obj: Dict[str, str], tbrn: str, name: str, verbose: bool, is_delete: bool
+) -> None:
     info = TBRN(tbrn=tbrn)
-
     if info.type != TBRNType.DATASET:
         error(f'To operate a branch, "{info}" must be a dataset')
 
     gas = get_gas(**obj)
     dataset_client = get_dataset_client(gas, info)
+
+    if is_delete:
+        _delete_branch(dataset_client, info)
+        return
 
     if name:
         _create_branch(dataset_client, name)
@@ -50,3 +55,11 @@ def _list_branches(dataset_client: DatasetClientType, verbose: bool) -> None:
         name_length = max(len(branch.name) for branch in branches)
         for branch in branches:
             click.echo(f"{branch.name:{name_length}} {branch.commit_id[:7]} {branch.message}")
+
+
+def _delete_branch(dataset_client: DatasetClientType, info: TBRN) -> None:
+    if not info.revision:
+        error(f'To delete a branch, "{info}" must have a branch name')
+
+    dataset_client._delete_branch(info.revision)  # pylint: disable=protected-access
+    click.echo(f"{info} has been successfully deleted")
