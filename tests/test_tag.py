@@ -18,9 +18,9 @@ class TestTag:
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
         dataset_client.commit("commit-1", tag="V1")
-        # Can not create more than one tag for one commit
-        with pytest.raises(ResponseError):
-            dataset_client.create_tag("V2")
+        # Can create more than one tag for one commit
+        dataset_client.create_tag("V2")
+
         dataset_client.create_draft("draft-2")
         dataset_client.commit("commit-2")
         # Can not create duplicated tag
