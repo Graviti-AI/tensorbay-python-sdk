@@ -21,6 +21,7 @@ The following table lists the currently supported CLI commands.(:numref:`Table. 
    :ref:`tensorbay_cli/cli_commands:gas commit`             commit operations.
    :ref:`tensorbay_cli/cli_commands:gas tag`                tag operations.
    :ref:`tensorbay_cli/cli_commands:gas log`                log operations.
+   :ref:`tensorbay_cli/cli_commands:gas branch`             branch operations
    =======================================================  ===========================================================
 
 *************
@@ -229,3 +230,35 @@ Show commit logs in oneline format.
 .. code:: console
 
    gas log --oneline tb:[dataset_name]
+
+
+*************
+ gas branch
+*************
+
+Work with :ref:`reference/glossary:branch` operations.
+
+Create a new branch from the default branch.
+
+.. code:: console
+
+   gas branch tb:[dataset_name] [branch_name]
+
+Create a new branch from a certain :ref:`reference/glossary:revision`.
+
+.. code:: console
+
+   gas branch tb:[dataset_name]@[revision] [branch_name]
+
+Show all branches.
+
+.. code:: console
+
+   gas branch tb:[dataset_name]
+
+Delete a branch.
+
+.. code:: console
+
+   gas branch --delete tb:[dataset_name]@[branch_name]
+
