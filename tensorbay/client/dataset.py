@@ -34,6 +34,7 @@ from ..exception import (
     StatusError,
 )
 from ..label import Catalog
+from ..utility import DefaultValueDeprecated
 from .log import UPLOAD_SEGMENT_RESUME_TEMPLATE
 from .requests import Client, PagingList, Tqdm, multithread_upload
 from .segment import FusionSegmentClient, SegmentClient
@@ -87,7 +88,7 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         response = self._client.open_api_do("POST", "commits", self.dataset_id, json=post_data)
         return response.json()["commitId"]  # type: ignore[no-any-return]
 
-    def _create_draft(self, title: Optional[str] = None, branch_name: Optional[str] = None) -> int:
+    def _create_draft(self, title: Optional[str], branch_name: Optional[str] = None) -> int:
         post_data: Dict[str, Any] = {}
 
         if title:
@@ -206,6 +207,7 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         """
         return self._status
 
+    @DefaultValueDeprecated("title", since="v1.6.0", removed_in="v1.9.0")
     def create_draft(self, title: Optional[str] = None, branch_name: Optional[str] = None) -> int:
         """Create the draft.
 
