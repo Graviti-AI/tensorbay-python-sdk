@@ -178,8 +178,8 @@ class Polyline2D(PointList2D[Vector2D]):
         insert_points1, insert_points2 = Polyline2D._insert_points(
             iter(polyline_info1), iter(polyline_info2)
         )
-        line1 = polyline1
-        line2 = polyline2
+        line1 = np.array(polyline1)
+        line2 = np.array(polyline2)
         for point in reversed(insert_points1):
             line1 = np.insert(line1, point["index"], point["point"], axis=0)
         for point in reversed(insert_points2):
@@ -190,11 +190,13 @@ class Polyline2D(PointList2D[Vector2D]):
         insert_points1, insert_points2 = Polyline2D._insert_points(
             iter(polyline_info1), iter(polyline_info2_reverse)
         )
+        line1_inserted = np.array(polyline1)
+        line2_inserted = np.array(line2_reverse)
         for point in reversed(insert_points1):
-            polyline1 = np.insert(polyline1, point["index"], point["point"], axis=0)
+            line1_inserted = np.insert(line1_inserted, point["index"], point["point"], axis=0)
         for point in reversed(insert_points2):
-            line2_reverse = np.insert(line2_reverse, point["index"], point["point"], axis=0)
-        distance_reverse = Polyline2D._max_distance_in_point_pairs(polyline1, line2_reverse)
+            line2_inserted = np.insert(line2_inserted, point["index"], point["point"], axis=0)
+        distance_reverse = Polyline2D._max_distance_in_point_pairs(line1_inserted, line2_inserted)
 
         return min(distance_forward, distance_reverse)
 
