@@ -5,6 +5,7 @@
 [![Documentation Status](https://readthedocs.org/projects/tensorbay-python-sdk/badge/?version=latest)](https://tensorbay-python-sdk.graviti.com/en/latest/?badge=latest)
 [![Coverage Status](https://coveralls.io/repos/github/Graviti-AI/tensorbay-python-sdk/badge.svg)](https://coveralls.io/github/Graviti-AI/tensorbay-python-sdk)
 [![GitHub](https://img.shields.io/github/license/Graviti-AI/tensorbay-python-sdk)](https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/LICENSE)
+[![Slack](https://img.shields.io/static/v1?label=slack&message=graviti&logo=slack&color=blueviolet)](https://join.slack.com/t/graviticommunity/shared_invite/zt-qivjowva-8RxtilBsHIf218sOsLTHOQ)
 [![PyPI](https://img.shields.io/pypi/v/tensorbay)](https://pypi.org/project/tensorbay/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/tensorbay)](https://pypi.org/project/tensorbay/)
 
