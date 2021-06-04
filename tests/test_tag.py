@@ -19,7 +19,7 @@ class TestTag:
         dataset_client.create_draft("draft-1")
         dataset_client.commit("commit-1", tag="V1")
         # Can create more than one tag for one commit
-        dataset_client.create_tag("V2")
+        dataset_client.create_tag("V11")
 
         dataset_client.create_draft("draft-2")
         dataset_client.commit("commit-2")
@@ -90,10 +90,13 @@ class TestTag:
         dataset_client.commit("commit-1", tag="V1")
         dataset_client.create_draft("draft-2")
         dataset_client.commit("commit-2", tag="V2")
+        dataset_client.create_tag("A1")
 
         tags = dataset_client.list_tags()
-        assert tags[0].name == "V2"
+        # list by tag name
+        assert tags[0].name == "A1"
         assert tags[1].name == "V1"
+        assert tags[2].name == "V2"
 
         gas_client.delete_dataset(dataset_name)
 
