@@ -11,14 +11,21 @@ and provides a series of methods to operate on polyline, such as
 
 """
 
-import math
-from typing import Any, Dict, Iterator, List, Sequence, Tuple, Type, TypeVar
-
-import numpy as np
+from itertools import accumulate, count, islice, product
+from sys import version_info
+from typing import Any, Dict, Iterable, List, Sequence, Tuple, Type, TypeVar
 
 from ..utility import common_loads
 from .polygon import PointList2D
 from .vector import Vector2D
+
+if version_info >= (3, 8):
+    from math import dist as _dist
+else:
+    from math import hypot
+
+    def _dist(point1: Iterable[float], point2: Iterable[float]) -> float:  # type: ignore[misc]
+        return hypot(*((p1 - p2) for p1, p2 in zip(point1, point2)))
 
 
 class Polyline2D(PointList2D[Vector2D]):
@@ -42,111 +49,62 @@ class Polyline2D(PointList2D[Vector2D]):
     _ElementType = Vector2D
 
     @staticmethod
-    def _distance(point1: Sequence[float], point2: Sequence[float]) -> float:
-        return math.sqrt((point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2)
+    def _get_polyline_info(polyline: "Polyline2D") -> Tuple[Dict[str, Any], ...]:
+        vectors = tuple(p1 - p2 for p1, p2 in zip(islice(polyline, 1, None), polyline))
+        distances = tuple(accumulate(abs(v) for v in vectors))
+        velocity = distances[-1]
+        time = [d / velocity for d in distances]
+        time.insert(0, 0)
 
-    @staticmethod
-    def _get_polyline_info(polyline: Sequence[Sequence[float]]) -> List[Dict[str, Any]]:
-        points = np.array(polyline, dtype=np.float32)
-        vector = [points[i] - points[i - 1] for i in range(1, len(points))]
-        length = [Polyline2D._distance(v, [0, 0]) for v in vector]
-        distance = np.cumsum(length)
-        time = distance / distance[-1]
-        info: List[Dict[str, Any]] = []
-
-        for index, v in enumerate(vector):  # pylint: disable=invalid-name
-            info.append(
-                {
-                    "vector": v,
-                    "last_time": time[index - 1] if index else 0,
-                    "time": time[index],
-                    "point": points[index],
-                    "index": index,
-                }
+        return tuple(
+            {
+                "index": index,
+                "point": point,
+                "vector": vector,
+                "time": current_time,
+                "last_time": last_time,
+            }
+            for index, vector, point, current_time, last_time in zip(
+                count(), vectors, polyline, islice(time, 1, None), time
             )
-        return info
+        )
 
     @staticmethod
-    def _insert_point(info1: Dict[str, Any], info2: Dict[str, Any]) -> Dict[str, Any]:
-        """Insert one point in info1 into the info2.
-
-        Arguments:
-            info1: Segment information of the insert point.
-            info2: The inserted segment information.
-
-        Returns:
-            A dict containing information of the inserted point.
-
-        """
-        ratio = (info1["time"] - info2["last_time"]) / (info2["time"] - info2["last_time"])
-        insert_point = info2["point"] + info2["vector"] * ratio
-        return {"index": info2["index"] + 1, "point": insert_point}
+    def _get_insert_arg(time: float, info: Dict[str, Any]) -> Tuple[int, Vector2D]:
+        ratio = (time - info["last_time"]) / (info["time"] - info["last_time"])
+        insert_point = info["point"] + info["vector"] * ratio
+        return (info["index"] + 1, insert_point)
 
     @staticmethod
-    def _insert_points(
-        polyline_info1: Iterator[Dict[str, Any]],
-        polyline_info2: Iterator[Dict[str, Any]],
-    ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
-        """Calculate insert points in polyline1 and polyline2.
+    def _get_insert_args(
+        polyline_info1: Iterable[Dict[str, Any]],
+        polyline_info2: Iterable[Dict[str, Any]],
+    ) -> Tuple[List[Tuple[int, Vector2D]], List[Tuple[int, Vector2D]]]:
+        insert_points1: List[Tuple[int, Vector2D]] = []
+        insert_points2: List[Tuple[int, Vector2D]] = []
 
-        Arguments:
-            polyline_info1: Segment information in polyline1.
-            polyline_info2: Segment information in polyline2.
-
-        Returns:
-            Insert points in polyline1.
-            insert points in polyline2.
-
-        """
-        insert_points1: List[Dict[str, Any]] = []
-        insert_points2: List[Dict[str, Any]] = []
-        info1 = next(polyline_info1)
-        info2 = next(polyline_info2)
+        iter1 = iter(polyline_info1)
+        iter2 = iter(polyline_info2)
+        info1 = next(iter1)
+        info2 = next(iter2)
 
         try:
             while True:
-                if info1["time"] < info2["time"]:
-                    insert_points2.append(Polyline2D._insert_point(info1, info2))
-                    info1 = next(polyline_info1)
-                    continue
-
-                if info1["time"] > info2["time"]:
-                    insert_points1.append(
-                        Polyline2D._insert_point(  # pylint: disable=arguments-out-of-order
-                            info2, info1
-                        )
-                    )
-                    info2 = next(polyline_info2)
-                    continue
-
-                if info1["time"] == info2["time"]:
-                    info1 = next(polyline_info1)
-                    info2 = next(polyline_info2)
+                time1 = info1["time"]
+                time2 = info2["time"]
+                if time1 < time2:
+                    insert_points2.append(Polyline2D._get_insert_arg(time1, info2))
+                    info1 = next(iter1)
+                elif time1 > time2:
+                    insert_points1.append(Polyline2D._get_insert_arg(time2, info1))
+                    info2 = next(iter2)
+                else:
+                    info1 = next(iter1)
+                    info2 = next(iter2)
         except StopIteration:
             pass
+
         return insert_points1, insert_points2
-
-    @staticmethod
-    def _max_distance_in_point_pairs(polyline1: np.ndarray, polyline2: np.ndarray) -> float:
-        """Calculate the maximum distance between point pairs in two polylines.
-
-        Arguments:
-            polyline1: The first inserted polyline.
-            polyline2: The second inserted polyline, which contains the same number of
-                points as the first one.
-
-        Returns:
-            The maximum distance between point pairs in two polylines.
-
-        """
-        assert len(polyline1) == len(polyline2)
-
-        max_distance = -1.0
-        for point1, point2 in zip(polyline1, polyline2):
-            distance = Polyline2D._distance(point1, point2)
-            if distance > max_distance:
-                max_distance = distance
-        return max_distance
 
     @staticmethod
     def uniform_frechet_distance(
@@ -169,32 +127,36 @@ class Polyline2D(PointList2D[Vector2D]):
             3.605551275463989
 
         """
-        polyline_info1 = Polyline2D._get_polyline_info(polyline1)
-        polyline_info2 = Polyline2D._get_polyline_info(polyline2)
-        line2_reverse = list(reversed(polyline2))
+        # forward:
+        line1 = Polyline2D(polyline1)
+        line2 = Polyline2D(polyline2)
+
+        polyline_info1 = Polyline2D._get_polyline_info(line1)
+        polyline_info2 = Polyline2D._get_polyline_info(line2)
+
+        insert_args1, insert_args2 = Polyline2D._get_insert_args(polyline_info1, polyline_info2)
+
+        for arg in reversed(insert_args1):
+            line1.insert(*arg)  # pylint: disable=no-member
+        for arg in reversed(insert_args2):
+            line2.insert(*arg)  # pylint: disable=no-member
+        distance_forward = max(_dist(*args) for args in zip(line1, line2))
+
+        # backward:
+        line1 = Polyline2D(polyline1)
+        line2_reverse = Polyline2D(reversed(polyline2))
+
         polyline_info2_reverse = Polyline2D._get_polyline_info(line2_reverse)
 
-        # forward
-        insert_points1, insert_points2 = Polyline2D._insert_points(
-            iter(polyline_info1), iter(polyline_info2)
+        insert_args1, insert_args2 = Polyline2D._get_insert_args(
+            polyline_info1, polyline_info2_reverse
         )
-        line1 = polyline1
-        line2 = polyline2
-        for point in reversed(insert_points1):
-            line1 = np.insert(line1, point["index"], point["point"], axis=0)
-        for point in reversed(insert_points2):
-            line2 = np.insert(line2, point["index"], point["point"], axis=0)
-        distance_forward = Polyline2D._max_distance_in_point_pairs(line1, line2)
 
-        # reverse
-        insert_points1, insert_points2 = Polyline2D._insert_points(
-            iter(polyline_info1), iter(polyline_info2_reverse)
-        )
-        for point in reversed(insert_points1):
-            polyline1 = np.insert(polyline1, point["index"], point["point"], axis=0)
-        for point in reversed(insert_points2):
-            line2_reverse = np.insert(line2_reverse, point["index"], point["point"], axis=0)
-        distance_reverse = Polyline2D._max_distance_in_point_pairs(polyline1, line2_reverse)
+        for arg in reversed(insert_args1):
+            line1.insert(*arg)  # pylint: disable=no-member
+        for arg in reversed(insert_args2):
+            line2_reverse.insert(*arg)  # pylint: disable=no-member
+        distance_reverse = max(_dist(*args) for args in zip(line1, line2_reverse))
 
         return min(distance_forward, distance_reverse)
 
@@ -221,12 +183,7 @@ class Polyline2D(PointList2D[Vector2D]):
 
         """
         min_distance = Polyline2D.uniform_frechet_distance(polyline1, polyline2)
-        max_distance = -1.0
-        for point1 in polyline1:
-            for point2 in polyline2:
-                distance = Polyline2D._distance(point1, point2)
-                if distance > max_distance:
-                    max_distance = distance
+        max_distance = max(_dist(*args) for args in product(polyline1, polyline2))
         return 1 - min_distance / max_distance
 
     @classmethod
