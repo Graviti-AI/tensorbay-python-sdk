@@ -120,6 +120,11 @@ class TestVector:
         assert Vector(3, 6, 9) // 2 == Vector(1, 3, 4)
         assert Vector(3, 6, 9) // 2.5 == Vector(1, 2, 3)
 
+    def test_abs(self):
+        assert abs(Vector(3, 4)) == 5
+        assert abs(Vector(1, 1)) == 1.4142135623730951
+        assert abs(Vector(1, 1, 1)) == 1.7320508075688772
+
     def test_repr_head(self):
         vector = Vector(1, 2)
         assert vector._repr_head() == "Vector2D(1, 2)"
