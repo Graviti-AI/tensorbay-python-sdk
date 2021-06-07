@@ -26,8 +26,9 @@ for more information.
 import os
 import time
 from copy import deepcopy
+from hashlib import sha1
 from itertools import islice
-from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Optional, Union
 
 import filetype
 from requests_toolbelt import MultipartEncoder
@@ -42,12 +43,6 @@ from .status import Status
 
 if TYPE_CHECKING:
     from .dataset import DatasetClient, FusionDatasetClient
-
-
-_SERVER_VERSION_MATCH: Dict[str, str] = {
-    "AmazonS3": "x-amz-version-id",
-    "AliyunOSS": "x-oss-version-id",
-}
 
 
 class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
@@ -67,6 +62,7 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
     """
 
     _EXPIRED_IN_SECOND = 240
+    _BUF_SIZE = 65536  # lets read stuff in 64kb chunks!
 
     def __init__(
         self, name: str, dataset_client: "Union[DatasetClient, FusionDatasetClient]"
@@ -124,11 +120,24 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
             "GET", "policies", self._dataset_id, params=params
         ).json()
 
+        del self._permission["result"]["multipleUploadLimit"]
+
     def _get_upload_permission(self) -> Dict[str, Any]:
         if int(time.time()) >= self._permission["expireAt"]:
             self._request_upload_permission()
 
         return deepcopy(self._permission)
+
+    def _calculate_file_sha1(self, local_path: str) -> str:
+        sha1_obj = sha1()
+        with open(local_path, "rb") as fp:
+            while True:
+                data = fp.read(self._BUF_SIZE)
+                if not data:
+                    break
+                sha1_obj.update(data)
+
+        return sha1_obj.hexdigest()
 
     def _post_multipart_formdata(
         self,
@@ -136,54 +145,50 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
         local_path: str,
         remote_path: str,
         data: Dict[str, Any],
-    ) -> Tuple[str, str]:
+    ) -> None:
         with open(local_path, "rb") as fp:
             file_type = filetype.guess_mime(local_path)
             if "x-amz-date" in data:
                 data["Content-Type"] = file_type
             data["file"] = (remote_path, fp, file_type)
             multipart = MultipartEncoder(data)
-            response_headers = self._client.do(
+
+            self._client.do(
                 "POST", url, data=multipart, headers={"Content-Type": multipart.content_type}
-            ).headers
-            version = _SERVER_VERSION_MATCH[response_headers["Server"]]
-            return response_headers[version], response_headers["ETag"].strip('"')
+            )
 
     def _put_binary_file_to_azure(
         self,
         url: str,
         local_path: str,
         data: Dict[str, Any],
-    ) -> Tuple[str, str]:
+    ) -> None:
         with open(local_path, "rb") as fp:
             file_type = filetype.guess_mime(local_path)
             request_headers = {
                 "x-ms-blob-content-type": file_type,
                 "x-ms-blob-type": data["x-ms-blob-type"],
             }
-            response_headers = self._client.do("PUT", url, data=fp, headers=request_headers).headers
-            return response_headers["x-ms-version-id"], response_headers["ETag"].strip('"')
+            self._client.do("PUT", url, data=fp, headers=request_headers)
 
     def _synchronize_upload_info(  # pylint: disable=too-many-arguments
         self,
-        key: str,
-        version_id: str,
-        etag: str,
+        remote_path: str,
+        checksum: str,
         frame_info: Optional[Dict[str, Any]] = None,
         skip_uploaded_files: bool = False,
     ) -> None:
         put_data: Dict[str, Any] = {
-            "key": key,
-            "versionId": version_id,
-            "etag": etag,
+            "segmentName": self.name,
+            "objects": [{"checksum": checksum, "remotePath": remote_path}],
         }
         put_data.update(self._status.get_status_info())
 
         if frame_info:
-            put_data.update(frame_info)
+            put_data["objects"][0].update(frame_info)
 
         try:
-            self._client.open_api_do("PUT", "callback", self._dataset_id, json=put_data)
+            self._client.open_api_do("PUT", "multi/callback", self._dataset_id, json=put_data)
         except ResponseSystemError:
             if not skip_uploaded_files:
                 raise
@@ -306,7 +311,10 @@ class SegmentClient(SegmentClientBase):
 
         permission = self._get_upload_permission()
         post_data = permission["result"]
-        post_data["key"] = permission["extra"]["objectPrefix"] + target_remote_path
+
+        checksum = self._calculate_file_sha1(local_path)
+
+        post_data["key"] = checksum
 
         backend_type = permission["extra"]["backendType"]
         if backend_type == "azure":
@@ -315,16 +323,16 @@ class SegmentClient(SegmentClientBase):
                 f'{target_remote_path}?{permission["result"]["token"]}'
             )
 
-            version_id, etag = self._put_binary_file_to_azure(url, local_path, post_data)
+            self._put_binary_file_to_azure(url, local_path, post_data)
         else:
-            version_id, etag = self._post_multipart_formdata(
+            self._post_multipart_formdata(
                 permission["extra"]["host"],
                 local_path,
                 target_remote_path,
                 post_data,
             )
 
-        self._synchronize_upload_info(post_data["key"], version_id, etag)
+        self._synchronize_upload_info(target_remote_path, checksum)
 
     def upload_label(self, data: Data) -> None:
         """Upload label with Data object to the draft.
@@ -484,7 +492,10 @@ class FusionSegmentClient(SegmentClientBase):
 
             permission = self._get_upload_permission()
             post_data = permission["result"]
-            post_data["key"] = permission["extra"]["objectPrefix"] + target_remote_path
+
+            checksum = self._calculate_file_sha1(data.path)
+
+            post_data["key"] = checksum
 
             backend_type = permission["extra"]["backendType"]
             if backend_type == "azure":
@@ -493,9 +504,9 @@ class FusionSegmentClient(SegmentClientBase):
                     f'{target_remote_path}?{permission["result"]["token"]}'
                 )
 
-                version_id, etag = self._put_binary_file_to_azure(url, data.path, post_data)
+                self._put_binary_file_to_azure(url, data.path, post_data)
             else:
-                version_id, etag = self._post_multipart_formdata(
+                self._post_multipart_formdata(
                     permission["extra"]["host"],
                     data.path,
                     target_remote_path,
@@ -511,7 +522,7 @@ class FusionSegmentClient(SegmentClientBase):
                 frame_info["timestamp"] = data.timestamp
 
             self._synchronize_upload_info(
-                post_data["key"], version_id, etag, frame_info, skip_uploaded_files
+                target_remote_path, checksum, frame_info, skip_uploaded_files
             )
 
             self._upload_label(data)
