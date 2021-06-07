@@ -61,6 +61,65 @@ class TestVector:
         vector = Vector(1, 2)
         assert [1, 1] + vector == Vector(2, 3)
 
+    def test_sub(self):
+        with pytest.raises(TypeError):
+            Vector(1, 2) - Vector(1, 2, 3)
+        with pytest.raises(TypeError):
+            Vector(1, 2) - (1, 2, 3)
+        with pytest.raises(TypeError):
+            Vector(1, 2) - 1
+        assert Vector(3, 3) - Vector(1, 1) == Vector(2, 2)
+        assert Vector(3, 3) - (1, 1) == Vector(2, 2)
+        assert Vector(3, 3, 3) - Vector(1, 1, 1) == Vector(2, 2, 2)
+        assert Vector(3, 3, 3) - (1, 1, 1) == Vector(2, 2, 2)
+
+    def test_rsub(self):
+        assert [3, 3] - Vector(1, 1) == Vector(2, 2)
+
+    def test_mul(self):
+        with pytest.raises(TypeError):
+            Vector(1, 2) * Vector(1, 2, 3)
+        with pytest.raises(TypeError):
+            Vector(1, 2) * (1, 2, 3)
+        with pytest.raises(TypeError):
+            Vector({}, {}) * 2
+        assert Vector(1, 2) * 3 == Vector(3, 6)
+        assert Vector(1, 2) * 1.5 == Vector(1.5, 3)
+        assert Vector(1, 2, 3) * 3 == Vector(3, 6, 9)
+        assert Vector(1, 2, 3) * 1.5 == Vector(1.5, 3, 4.5)
+
+    def test_rmul(self):
+        assert 3 * Vector(1, 2) == Vector(3, 6)
+        assert 3 * Vector(1, 2, 3) == Vector(3, 6, 9)
+
+    def test_truediv(self):
+        with pytest.raises(TypeError):
+            Vector(1, 2) / Vector(1, 2, 3)
+        with pytest.raises(TypeError):
+            Vector(1, 2) / (1, 2, 3)
+        with pytest.raises(TypeError):
+            3 / Vector(1, 2)
+        with pytest.raises(TypeError):
+            Vector({}, {}) / 2
+        assert Vector(3, 6) / 2 == Vector(1.5, 3)
+        assert Vector(3, 6) / 1.5 == Vector(2, 4)
+        assert Vector(3, 6, 9) / 2 == Vector(1.5, 3, 4.5)
+        assert Vector(3, 6, 9) / 1.5 == Vector(2, 4, 6)
+
+    def test_floordiv(self):
+        with pytest.raises(TypeError):
+            Vector(1, 2) // Vector(1, 2, 3)
+        with pytest.raises(TypeError):
+            Vector(1, 2) // (1, 2, 3)
+        with pytest.raises(TypeError):
+            3 // Vector(1, 2)
+        with pytest.raises(TypeError):
+            Vector({}, {}) // 2
+        assert Vector(3, 6) // 2 == Vector(1, 3)
+        assert Vector(3, 6) // 2.5 == Vector(1, 2)
+        assert Vector(3, 6, 9) // 2 == Vector(1, 3, 4)
+        assert Vector(3, 6, 9) // 2.5 == Vector(1, 2, 3)
+
     def test_repr_head(self):
         vector = Vector(1, 2)
         assert vector._repr_head() == "Vector2D(1, 2)"
