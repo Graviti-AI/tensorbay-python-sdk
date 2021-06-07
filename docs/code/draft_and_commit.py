@@ -31,6 +31,12 @@ is_draft = dataset_client.status.is_draft
 # is_draft = True (True for draft, False for commit)
 draft_number = dataset_client.status.draft_number
 # draft_number = 1
+branch_name = dataset_client.status.branch_name
+# branch_name = main
+""""""
+
+"""Create Draft on a Branch"""
+dataset_client.create_draft("draft-1", branch_name="main")
 """"""
 
 """List Drafts"""

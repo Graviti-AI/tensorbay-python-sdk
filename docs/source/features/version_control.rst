@@ -2,7 +2,7 @@
  Version Control
 #################
 
-TensorBay currently supports the linear version control.
+TensorBay supports version control.
 A new version of a dataset can be built upon the previous version.
 :numref:`Figure. %s <version_control>` demonstrates the relations
 between different versions of a dataset.
