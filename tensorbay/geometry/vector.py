@@ -15,9 +15,21 @@ coordinates of a 2D vector or a 3D vector.
 """
 
 from itertools import zip_longest
+from math import hypot, sqrt
+from sys import version_info
 from typing import Dict, Iterable, Optional, Sequence, Tuple, Type, TypeVar, Union
 
 from ..utility import ReprType, UserSequence
+
+if version_info >= (3, 8):
+    # math.hypot method supports n-dimensional points in Python3.8
+    # only the two dimensional case was supported before Python3.8
+    _hypot_for_n_dimension = hypot
+else:
+
+    def _hypot_for_n_dimension(*coordinates: float) -> float:  # type: ignore[misc]
+        return sqrt(sum(x * x for x in coordinates))
+
 
 _V = TypeVar("_V", bound="Vector")
 _V2 = TypeVar("_V2", bound="Vector2D")
@@ -168,6 +180,9 @@ class Vector(UserSequence[float]):
 
         return NotImplemented
 
+    def __abs__(self) -> float:
+        return _hypot_for_n_dimension(*self._data)
+
     def _repr_head(self) -> str:
         return f"{self.__class__.__name__}{self._data}"
 
@@ -231,6 +246,9 @@ class Vector2D(Vector):
 
     def __init__(self, x: float, y: float) -> None:
         self._data = (x, y)
+
+    def __abs__(self) -> float:
+        return hypot(*self._data)
 
     @classmethod
     def loads(cls: Type[_V2], contents: Dict[str, float]) -> _V2:
