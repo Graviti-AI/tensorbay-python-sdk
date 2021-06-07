@@ -21,8 +21,6 @@ branch
 
 Similar to git, a branch is a lightweight pointer to one of the commits.
 
-Currently, TensorBay only supports a single branch, which is the default "main" branch.
-
 Every time a :ref:`reference/glossary:commit` is submitted,
 the main branch pointer moves forward automatically to the latest commit.
 
@@ -130,7 +128,7 @@ draft
 
 Similar with Git, a draft is a workspace in which changing the dataset is allowed.
 
-A draft is created based on a :ref:`reference/glossary:commit`,
+A draft is created based on a :ref:`reference/glossary:branch`,
 and the changes inside it will be made into a commit.
 
 There are scenarios when modifications of a dataset are required,

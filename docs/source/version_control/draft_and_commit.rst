@@ -25,7 +25,8 @@ Authorization
 Create Draft
 *************
 
-TensorBay SDK supports creating the draft straightforwardly, which is based on the current commit.
+TensorBay SDK supports creating the draft straightforwardly, which is based on the current branch.
+Note that currently there can be only one open draft in each branch.
 
 .. literalinclude:: ../../../docs/code/draft_and_commit.py
       :language: python
@@ -38,6 +39,13 @@ The draft number will be auto-increasing every time a draft is created.
 .. literalinclude:: ../../../docs/code/draft_and_commit.py
       :language: python
       :start-after: """Draft Number Will Be Stored"""
+      :end-before: """"""
+
+Also, TensorBay SDK supports creating a draft based on a given branch.
+
+.. literalinclude:: ../../../docs/code/draft_and_commit.py
+      :language: python
+      :start-after: """Create Draft on a Branch"""
       :end-before: """"""
 
 ************
