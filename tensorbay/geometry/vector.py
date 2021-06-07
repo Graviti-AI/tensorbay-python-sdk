@@ -116,6 +116,58 @@ class Vector(UserSequence[float]):
         """
         return self.__add__(other)
 
+    def __sub__(self: _V, other: Iterable[float]) -> _V:
+        try:
+            result: _V = object.__new__(self.__class__)
+            result._data = tuple(i - j for i, j in zip_longest(self._data, other))
+            return result
+        except TypeError:
+            return NotImplemented
+
+    def __rsub__(self: _V, other: Iterable[float]) -> _V:
+        try:
+            result: _V = object.__new__(self.__class__)
+            result._data = tuple(i - j for i, j in zip_longest(other, self._data))
+            return result
+        except TypeError:
+            return NotImplemented
+
+    def __mul__(self: _V, other: float) -> _V:
+        try:
+            if isinstance(other, (int, float)):
+                result: _V = object.__new__(self.__class__)
+                result._data = tuple(i * other for i in self._data)
+                return result
+        except TypeError:
+            pass
+
+        return NotImplemented
+
+    def __rmul__(self: _V, other: float) -> _V:
+        return self.__mul__(other)
+
+    def __truediv__(self: _V, other: float) -> _V:
+        try:
+            if isinstance(other, (int, float)):
+                result: _V = object.__new__(self.__class__)
+                result._data = tuple(i / other for i in self._data)
+                return result
+        except TypeError:
+            pass
+
+        return NotImplemented
+
+    def __floordiv__(self: _V, other: float) -> _V:
+        try:
+            if isinstance(other, (int, float)):
+                result: _V = object.__new__(self.__class__)
+                result._data = tuple(i // other for i in self._data)
+                return result
+        except TypeError:
+            pass
+
+        return NotImplemented
+
     def _repr_head(self) -> str:
         return f"{self.__class__.__name__}{self._data}"
 
