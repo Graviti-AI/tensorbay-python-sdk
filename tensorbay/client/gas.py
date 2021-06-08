@@ -102,7 +102,6 @@ class GAS:
     def _list_datasets(
         self,
         name: Optional[str] = None,
-        need_team_dataset: bool = False,  # personal: False, all: True
         offset: int = 0,
         limit: int = 128,
     ) -> Dict[str, Any]:
@@ -112,8 +111,6 @@ class GAS:
         }
         if name:
             params["name"] = name
-        if need_team_dataset:
-            params["needTeamDataset"] = need_team_dataset
 
         response = self._client.open_api_do("GET", "", params=params)
         return response.json()  # type: ignore[no-any-return]
@@ -121,11 +118,10 @@ class GAS:
     def _generate_dataset_names(
         self,
         name: Optional[str] = None,
-        need_team_dataset: bool = False,  # personal: False, all: True
         offset: int = 0,
         limit: int = 128,
     ) -> Generator[str, None, int]:
-        response = self._list_datasets(name, need_team_dataset, offset, limit)
+        response = self._list_datasets(name, offset, limit)
 
         for item in response["datasets"]:
             yield item["name"]
@@ -316,7 +312,7 @@ class GAS:
 
         """
         return PagingList(
-            lambda offset, limit: self._generate_dataset_names(None, False, offset, limit), 128
+            lambda offset, limit: self._generate_dataset_names(None, offset, limit), 128
         )
 
     def rename_dataset(self, name: str, new_name: str) -> None:
