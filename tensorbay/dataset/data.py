@@ -12,7 +12,9 @@ It contains path information of a data sample and its corresponding labels.
 
 import os
 from http.client import HTTPResponse
+from string import printable
 from typing import Any, Callable, Dict, Optional, Type, TypeVar, Union
+from urllib.parse import quote
 from urllib.request import urlopen
 
 from _io import BufferedReader
@@ -304,7 +306,7 @@ class RemoteData(DataBase):
             The remote file pointer for this data.
 
         """
-        return urlopen(self.get_url())  # type: ignore[no-any-return]
+        return urlopen(quote(self.get_url(), safe=printable))  # type: ignore[no-any-return]
 
     def dumps(self) -> Dict[str, Any]:
         """Dumps the remote data into a dict.
