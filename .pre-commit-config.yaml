@@ -61,6 +61,7 @@ repos:
             "--cache-dir=/tmp/mypy_cache/",
             "--ignore-missing-imports",
             "--warn-unreachable",
+            "--show-error-code",
             "--strict-equality",
             "--strict",
           ]
