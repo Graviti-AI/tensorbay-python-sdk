@@ -33,7 +33,8 @@ class DataBase(AttrsMixin, ReprMixin):  # pylint: disable=too-few-public-methods
     Attributes:
         path: The file path.
         timestamp: The timestamp for the file.
-        labels: The :class:`Labels` that contains all the label information of the file.
+        label: The :class:`~tensorbay.label.label.Label` that contains
+            all the label information of the file.
 
     """
 
@@ -104,7 +105,8 @@ class Data(DataBase):
     Attributes:
         path: The file local path.
         timestamp: The timestamp for the file.
-        labels: The :class:`Labels` that contains all the label information of the file.
+        label: The :class:`~tensorbay.label.label.Label` that contains
+                all the label information of the file.
         target_remote_path: The target remote path of the data.
 
     """
@@ -222,7 +224,8 @@ class RemoteData(DataBase):
     Attributes:
         path: The file remote path.
         timestamp: The timestamp for the file.
-        labels: The :class:`Labels` that contains all the label information of the file.
+        label: The :class:`~tensorbay.label.label.Label` that contains
+                all the label information of the file.
 
     """
 

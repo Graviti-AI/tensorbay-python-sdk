@@ -7,6 +7,7 @@ tensorbay.label
    attributes
    basic
    catalog
+   label
    label_box
    label_classification
    label_keypoints
