@@ -390,19 +390,23 @@ def log(
 @cli.command()
 @click.argument("arg1", type=str, default="", metavar="accessKey")
 @click.argument("arg2", type=str, default="", metavar="")
+@click.option("-g", "--get", is_flag=True, help="Get the accesskey of the profile")
+@click.option("-a", "--all", "is_all", is_flag=True, help="All the auth info")
 @click.pass_obj
-def auth(obj: Dict[str, str], arg1: str, arg2: str) -> None:
+def auth(obj: Dict[str, str], arg1: str, arg2: str, get: bool, is_all: bool) -> None:
     """Authenticate the accessKey of gas.\f
 
     Arguments:
         obj: A dict contains config information.
         arg1: The accessKey or the url of gas for the authentication.
         arg2: The accessKey of gas for the authentication if arg1 is url.
+        get: Whether to get the accesskey of the profile.
+        is_all: All the auth info or not.
 
     """  # noqa: D301,D415
     from .auth import _implement_auth
 
-    _implement_auth(obj, arg1, arg2)
+    _implement_auth(obj, arg1, arg2, get, is_all)
 
 
 if __name__ == "__main__":

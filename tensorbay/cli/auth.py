@@ -14,10 +14,23 @@ import click
 
 from .utility import error, form_profile_value, read_config, update_config, write_config
 
+_INDENT = " " * 4
 
-def _implement_auth(obj: Dict[str, str], arg1: str, arg2: str) -> None:
+
+def _implement_auth(obj: Dict[str, str], arg1: str, arg2: str, get: bool, is_all: bool) -> None:
+    _check_args_and_options(arg1, arg2, get, is_all)
     update_config()
     config_parser = read_config()
+
+    if get:
+        if is_all:
+            for key, value in config_parser["profiles"].items():
+                _echo_formatted_profile(key, value)
+            return
+
+        profile_name = obj["profile_name"]
+        _echo_formatted_profile(profile_name, config_parser["profiles"][profile_name])
+        return
 
     if not arg1 and not arg2:
         arg1 = _interactive_auth()
@@ -80,3 +93,16 @@ def _update_profile(config_parser: ConfigParser, profile_name: str, arg1: str, a
     config_parser["profiles"][profile_name] = (
         form_profile_value(arg1) if not arg2 else form_profile_value(arg2, arg1)
     )
+
+
+def _check_args_and_options(arg1: str, arg2: str, get: bool, is_all: bool) -> None:
+    if is_all and not get:
+        error('Use "--all" option with "--get" option')
+
+    if get and (arg1 or arg2):
+        error("Option requires 0 arguments")
+
+
+def _echo_formatted_profile(name: str, value: str) -> None:
+    formatted_value = value.replace("\n", f"\n{_INDENT}")
+    click.echo(f"{name} = {formatted_value}\n")
