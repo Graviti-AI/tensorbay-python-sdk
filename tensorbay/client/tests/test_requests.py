@@ -8,7 +8,7 @@ import pytest
 
 from ..requests import InitPage, LazyPage, PagingList
 
-TOTAL_COUNT = 10000
+TOTAL_COUNT = 1000
 MIDDLE = TOTAL_COUNT // 2
 LIMIT = 128
 LIST = list(range(TOTAL_COUNT))
@@ -100,6 +100,38 @@ class TestPagingList:
             del target[slicing]
             assert list(paging_list) == target
 
+    def test_iter(self):
+        paging_list = PagingList(gen, LIMIT)
+        iterator = iter(paging_list)
+        for i in LIST:
+            assert next(iterator) == i
+
+        with pytest.raises(StopIteration):
+            next(iterator)
+
+    def test_reversed(self):
+        paging_list = PagingList(gen, LIMIT)
+        assert list(reversed(LIST)) == list(reversed(paging_list))
+
+    def test_contains(self):
+        paging_list = PagingList(gen, LIMIT)
+        for i in LIST[:: TOTAL_COUNT // 10]:
+            assert i in paging_list
+
+        assert LIST[-1] + 1 not in paging_list
+
+    def test_iadd(self):
+        paging_list = PagingList(gen, LIMIT)
+        target = LIST.copy()
+
+        paging_list += (1, 2, 3)
+        target += (1, 2, 3)
+        assert list(paging_list) == target
+
+        paging_list.extend([])
+        target.extend([])
+        assert list(paging_list) == target
+
     def test_range(self):
         assert list(PagingList._range(10, 3)) == [(0, 3), (3, 3), (6, 3), (9, 1)]
         assert list(PagingList._range(0, 3)) == []
@@ -162,4 +194,80 @@ class TestPagingList:
 
         paging_list.insert(index, -1)
         target.insert(index, -1)
+        assert list(paging_list) == target
+
+    def test_append(self):
+        paging_list = PagingList(gen, LIMIT)
+        target = LIST.copy()
+
+        for _ in range(10):
+            paging_list.append(-1)
+            target.append(-1)
+            assert list(paging_list) == target
+
+    def test_reverse(self):
+        paging_list = PagingList(gen, LIMIT)
+        target = LIST.copy()
+
+        paging_list.reverse()
+        target.reverse()
+
+        assert list(paging_list) == target
+
+    def test_pop(self):
+        paging_list = PagingList(gen, LIMIT)
+        target = LIST.copy()
+
+        for index in VALID_INDICES:
+            assert paging_list.pop(index) == target.pop(index)
+            assert list(paging_list) == target
+
+        with pytest.raises(IndexError):
+            paging_list.pop(TOTAL_COUNT)
+
+    def test_index(self):
+        paging_list = PagingList(gen, LIMIT)
+
+        for i in LIST[:: TOTAL_COUNT // 10]:
+            assert paging_list.index(i) == LIST.index(i)
+
+        for i in LIST[MIDDLE :: TOTAL_COUNT // 10]:
+            assert paging_list.index(i, MIDDLE) == LIST.index(i, MIDDLE)
+
+        for i in LIST[: MIDDLE : TOTAL_COUNT // 10]:
+            assert paging_list.index(i, 0, MIDDLE) == LIST.index(i, 0, MIDDLE)
+
+        for i in LIST[LIMIT : MIDDLE : TOTAL_COUNT // 10]:
+            assert paging_list.index(i, LIMIT, MIDDLE) == LIST.index(i, LIMIT, MIDDLE)
+
+        with pytest.raises(ValueError):
+            assert paging_list.index(-1)
+
+        with pytest.raises(ValueError):
+            assert paging_list.index(LIST[100], 1000)
+
+        with pytest.raises(ValueError):
+            assert paging_list.index(LIST[100], stop=90)
+
+        with pytest.raises(ValueError):
+            assert paging_list.index(LIST[100], 110, 200)
+
+    def test_count(self):
+        paging_list = PagingList(gen, LIMIT)
+
+        for i in LIST[:: TOTAL_COUNT // 10]:
+            assert paging_list.count(i) == LIST.count(i)
+
+        assert paging_list.count(-1) == LIST.count(-1)
+
+    def test_extend(self):
+        paging_list = PagingList(gen, LIMIT)
+        target = LIST.copy()
+
+        paging_list.extend([1, 2, 3])
+        target.extend([1, 2, 3])
+        assert list(paging_list) == target
+
+        paging_list.extend([])
+        target.extend([])
         assert list(paging_list) == target

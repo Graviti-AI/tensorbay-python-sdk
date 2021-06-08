@@ -583,6 +583,25 @@ class PagingList(MutableSequence[_T], ReprMixin):  # pylint: disable=too-many-an
     def __delitem__(self, index: Union[int, slice]) -> None:
         self._get_items().__delitem__(index)
 
+    def __iter__(self) -> Iterator[_T]:
+        for item in self._get_items():
+            yield item.get()
+
+    def __reversed__(self) -> Iterator[_T]:
+        for item in self._get_items().__reversed__():
+            yield item.get()
+
+    def __contains__(self, value: Any) -> bool:
+        for item in self._get_items():
+            if item.get() == value:
+                return True
+
+        return False
+
+    def __iadd__(self: _S, values: Iterable[_T]) -> _S:
+        self._get_items().__iadd__(LazyItem.from_data(value) for value in values)
+        return self
+
     @staticmethod
     def _range(total_count: int, limit: int) -> Iterator[Tuple[int, int]]:
         """A Generator which generates offset and limit for paging request.
@@ -645,3 +664,76 @@ class PagingList(MutableSequence[_T], ReprMixin):  # pylint: disable=too-many-an
 
         """
         self._get_items(index).insert(index, LazyItem.from_data(value))
+
+    def append(self, value: _T) -> None:
+        """Append object to the end of the PagingList.
+
+        Arguments:
+            value: Element to be appended to the PagingList.
+
+        """
+        self._get_items().append(LazyItem.from_data(value))
+
+    def reverse(self) -> None:
+        """Reverse the items of the PagingList in place."""
+        self._get_items().reverse()
+
+    def pop(self, index: int = -1) -> _T:
+        """Return the item at index (default last) and remove it from the PagingList.
+
+        Arguments:
+            index: Position of the PagingList.
+
+        Returns:
+            Element to be removed from the PagingList.
+
+        """
+        return self._get_items(index).pop(index).get()
+
+    def index(self, value: Any, start: int = 0, stop: Optional[int] = None) -> int:
+        """Return the first index of the value.
+
+        Arguments:
+            value: The value to be found.
+            start: The start index of the subsequence.
+            stop: The end index of the subsequence.
+
+        Raises:
+            ValueError: When the value is not in the PagingList
+
+        Returns:
+            The first index of the value.
+
+
+        """
+        items = self._get_items(start)
+        length = len(items)
+
+        stop = length if stop is None else min(stop, length)
+
+        for i in range(start, stop):
+            if items[i].get() == value:
+                return i
+
+        raise ValueError(f"{value} is not in PagingList")
+
+    def count(self, value: Any) -> int:
+        """Return the number of occurrences of value.
+
+        Arguments:
+            value: The value needs to be counted.
+
+        Returns:
+            The number of occurrences of value.
+
+        """
+        return sum(1 for item in self._get_items() if item.get() == value)
+
+    def extend(self, values: Iterable[_T]) -> None:
+        """Extend PagingList by appending elements from the iterable.
+
+        Arguments:
+            values: Elements to be extended into the PagingList.
+
+        """
+        self._get_items().extend(LazyItem.from_data(value) for value in values)
