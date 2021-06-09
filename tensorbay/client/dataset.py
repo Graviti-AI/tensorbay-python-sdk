@@ -35,8 +35,9 @@ from ..exception import (
 )
 from ..label import Catalog
 from ..utility import DefaultValueDeprecated
+from .lazy import PagingList
 from .log import UPLOAD_SEGMENT_RESUME_TEMPLATE
-from .requests import Client, PagingList, Tqdm, multithread_upload
+from .requests import Client, Tqdm, multithread_upload
 from .segment import FusionSegmentClient, SegmentClient
 from .status import Status
 from .struct import Branch, Commit, Draft, Tag

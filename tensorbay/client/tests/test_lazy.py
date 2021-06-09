@@ -6,7 +6,7 @@
 
 import pytest
 
-from ..requests import InitPage, LazyPage, PagingList
+from ..lazy import InitPage, LazyPage, PagingList
 
 TOTAL_COUNT = 1000
 MIDDLE = TOTAL_COUNT // 2

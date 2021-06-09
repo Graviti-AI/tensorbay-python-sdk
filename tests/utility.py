@@ -8,7 +8,7 @@
 from datetime import datetime
 from inspect import stack
 
-from tensorbay.client.requests import PagingList
+from tensorbay.client.lazy import PagingList
 from tensorbay.client.struct import Draft
 
 
