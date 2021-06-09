@@ -12,7 +12,14 @@ from urllib.parse import urljoin
 
 import click
 
-from .utility import error, form_profile_value, read_config, update_config, write_config
+from .utility import (
+    error,
+    form_profile_value,
+    is_accesskey,
+    read_config,
+    update_config,
+    write_config,
+)
 
 _INDENT = " " * 4
 
@@ -35,7 +42,7 @@ def _implement_auth(obj: Dict[str, str], arg1: str, arg2: str, get: bool, is_all
     if not arg1 and not arg2:
         arg1 = _interactive_auth()
 
-    elif _is_accesskey(arg1):
+    elif is_accesskey(arg1):
         if _is_gas_url(arg2):
             error('Please use "gas auth [url] [accessKey]" to specify the url and accessKey')
         if arg2:
@@ -44,7 +51,7 @@ def _implement_auth(obj: Dict[str, str], arg1: str, arg2: str, get: bool, is_all
     elif _is_gas_url(arg1):
         if not arg2:
             arg2 = _interactive_auth(arg1)
-        elif not _is_accesskey(arg2):
+        elif not is_accesskey(arg2):
             error("Wrong accesskey format")
     else:
         error(f'Invalid argument "{arg1}"')
@@ -73,13 +80,9 @@ def _interactive_auth(url: Optional[str] = None) -> str:
         click.echo(f" > {url_cn} (Chinese site)\n")
 
     access_key = click.prompt(click.style("Paste your AccessKey here", bold=True)).strip()
-    if not _is_accesskey(access_key):
+    if not is_accesskey(access_key):
         error("Wrong accesskey format")
     return access_key  # type: ignore[no-any-return]
-
-
-def _is_accesskey(arg: str) -> bool:
-    return arg.startswith(("Accesskey-", "ACCESSKEY-")) and len(arg) == 42
 
 
 def _is_gas_url(arg: str) -> bool:
