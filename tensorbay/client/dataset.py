@@ -654,11 +654,11 @@ class DatasetClient(DatasetClientBase):
 
         return segment_client
 
-    def get_or_create_segment(self, name: str = "") -> SegmentClient:
+    def get_or_create_segment(self, name: str = "default") -> SegmentClient:
         """Get or create a segment with the given name.
 
         Arguments:
-            name: Segment name, can not be "_default".
+            name: The name of the fusion segment.
 
         Returns:
             The created :class:`~tensorbay.client.segment.SegmentClient` with given name.
@@ -669,11 +669,11 @@ class DatasetClient(DatasetClientBase):
             self._create_segment(name)
         return SegmentClient(name, self)
 
-    def create_segment(self, name: str = "") -> SegmentClient:
+    def create_segment(self, name: str = "default") -> SegmentClient:
         """Create a segment with the given name.
 
         Arguments:
-            name: Segment name, can not be "_default".
+            name: The name of the fusion segment.
 
         Returns:
             The created :class:`~tensorbay.client.segment.SegmentClient` with given name.
@@ -689,7 +689,7 @@ class DatasetClient(DatasetClientBase):
             raise NameConflictError(resource="segment", identification=name)
         return SegmentClient(name, self)
 
-    def get_segment(self, name: str = "") -> SegmentClient:
+    def get_segment(self, name: str = "default") -> SegmentClient:
         """Get a segment in a certain commit according to given name.
 
         Arguments:
@@ -849,11 +849,11 @@ class FusionDatasetClient(DatasetClientBase):
 
         return segment_client
 
-    def get_or_create_segment(self, name: str = "") -> FusionSegmentClient:
+    def get_or_create_segment(self, name: str = "default") -> FusionSegmentClient:
         """Get or create a fusion segment with the given name.
 
         Arguments:
-            name: Segment name, can not be "_default".
+            name: The name of the fusion segment.
 
         Returns:
             The created :class:`~tensorbay.client.segment.FusionSegmentClient` with given name.
@@ -864,11 +864,11 @@ class FusionDatasetClient(DatasetClientBase):
             self._create_segment(name)
         return FusionSegmentClient(name, self)
 
-    def create_segment(self, name: str = "") -> FusionSegmentClient:
+    def create_segment(self, name: str = "default") -> FusionSegmentClient:
         """Create a fusion segment with the given name.
 
         Arguments:
-            name: Segment name, can not be "_default".
+            name: The name of the fusion segment.
 
         Returns:
             The created :class:`~tensorbay.client.segment.FusionSegmentClient` with given name.
@@ -884,7 +884,7 @@ class FusionDatasetClient(DatasetClientBase):
             raise NameConflictError(resource="segment", identification=name)
         return FusionSegmentClient(name, self)
 
-    def get_segment(self, name: str = "") -> FusionSegmentClient:
+    def get_segment(self, name: str = "default") -> FusionSegmentClient:
         """Get a fusion segment in a certain commit according to given name.
 
         Arguments:
