@@ -281,3 +281,16 @@ def write_config(config_parser: ConfigParser, show_message: bool = True) -> None
         config_parser.write(fp)
     if show_message:
         click.echo(f"Success!\nConfiguration has been written into: {config_file}")
+
+
+def is_accesskey(arg: str) -> bool:
+    """Determine whether the string is an AccessKey.
+
+    Arguments:
+        arg: The string needed to be judged.
+
+    Returns:
+        Whether the string is an AccessKey.
+
+    """
+    return arg.startswith(("Accesskey-", "ACCESSKEY-")) and len(arg) == 42

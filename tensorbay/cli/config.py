@@ -5,44 +5,30 @@
 
 """Implementation of gas config."""
 
-from typing import Dict
+import sys
 
 import click
 
-from .utility import error, form_profile_value, read_config, update_config, write_config
-
-_INDENT = " " * 4
+from .utility import is_accesskey, read_config, update_config, write_config
 
 
-def _implement_config(obj: Dict[str, str], arg1: str, arg2: str) -> None:
+def _implement_config(key: str, value: str) -> None:
     update_config()
     config_parser = read_config()
 
-    if not arg1:
-        for profile_name in config_parser.sections():
-            click.echo(f"[{profile_name}]")
-            for key, value in config_parser[profile_name].items():
-                formatted_value = value.replace("\n", f"\n{_INDENT * 2}")
-                click.echo(f"{_INDENT}{key} = {formatted_value}\n")
-        return
+    if is_accesskey(key):
+        click.secho(
+            "DeprecationWarning: Setting AccessKey in 'gas config'"
+            " is deprecated since version v1.7.0. "
+            "It will be removed in version v1.9.0. "
+            "Use 'gas auth Accesskey' instead.",
+            fg="red",
+            err=True,
+        )
+        sys.exit(1)
 
-    if arg1.startswith(("Accesskey-", "ACCESSKEY-")):
-        profile_name = obj["profile_name"]
-        if profile_name == "config":
-            error("Name 'config' is preserved for gas basic config")
-
-        if not config_parser.has_section("profiles"):
-            config_parser.add_section("profiles")
-        config_parser["profiles"][profile_name] = form_profile_value(arg1, arg2)
-
-    elif arg1 == "editor":
-        if not arg2:
-            error("Missing editor name")
-
+    if key == "editor" and value:
         if not config_parser.has_section("config"):
             config_parser.add_section("config")
-        config_parser["config"]["editor"] = arg2
-    else:
-        error("Wrong accesskey format")
-
-    write_config(config_parser)
+        config_parser["config"][key] = value
+        write_config(config_parser)
