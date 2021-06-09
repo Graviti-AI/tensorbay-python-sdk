@@ -7,37 +7,42 @@
 
 import click
 
+from ..exception import TensorBayException
 from .tbrn import TBRN, TBRNType
 from .utility import ContextInfo, error, get_gas
 
 
 def _implement_dataset(obj: ContextInfo, tbrn: str, is_delete: bool, yes: bool) -> None:
-    gas = get_gas(*obj)
-    if is_delete:
-        if not tbrn:
-            error("Missing argument TBRN")
+    try:
+        gas = get_gas(*obj)
+        if is_delete:
+            if not tbrn:
+                error("Missing argument TBRN")
 
-        info = TBRN(tbrn=tbrn)
-        if info.type != TBRNType.DATASET:
-            error(f'"{tbrn}" is not a dataset')
+            info = TBRN(tbrn=tbrn)
+            if info.type != TBRNType.DATASET:
+                error(f'"{tbrn}" is not a dataset')
 
-        if not yes:
-            click.confirm(
-                f'Dataset "{tbrn}" will be completely deleted.\nDo you want to continue?',
-                abort=True,
-            )
+            if not yes:
+                click.confirm(
+                    f'Dataset "{tbrn}" will be completely deleted.\nDo you want to continue?',
+                    abort=True,
+                )
 
-        gas.delete_dataset(info.dataset_name)
-        click.echo(f'Dataset "{tbrn}" is deleted successfully')
-        return
+            gas.delete_dataset(info.dataset_name)
+            click.echo(f'Dataset "{tbrn}" is deleted successfully')
+            return
 
-    if tbrn:
-        info = TBRN(tbrn=tbrn)
-        if info.type != TBRNType.DATASET:
-            error(f'"{tbrn}" is not a dataset')
+        if tbrn:
+            info = TBRN(tbrn=tbrn)
+            if info.type != TBRNType.DATASET:
+                error(f'"{tbrn}" is not a dataset')
 
-        gas.create_dataset(info.dataset_name)
-        click.echo(f'Dataset "{tbrn}" is created successfully')
-    else:
-        for dataset_name in gas.list_dataset_names():
-            click.echo(TBRN(dataset_name).get_tbrn())
+            gas.create_dataset(info.dataset_name)
+            click.echo(f'Dataset "{tbrn}" is created successfully')
+        else:
+            for dataset_name in gas.list_dataset_names():
+                click.echo(TBRN(dataset_name).get_tbrn())
+
+    except TensorBayException as err:
+        error(str(err))

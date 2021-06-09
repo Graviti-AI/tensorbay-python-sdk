@@ -19,6 +19,7 @@ from ..client import GAS
 from ..client import config as client_config
 from ..client.dataset import DatasetClient, FusionDatasetClient
 from ..client.gas import DatasetClientType
+from ..client.requests import logger
 from .tbrn import TBRN
 
 
@@ -39,6 +40,8 @@ def _implement_cli(
 
     if debug:
         logging.basicConfig(level=logging.DEBUG)
+    else:
+        logger.disabled = True
 
 
 def _get_config_filepath() -> str:

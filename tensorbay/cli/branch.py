@@ -8,6 +8,14 @@
 import click
 
 from ..client.gas import DatasetClientType
+from ..exception import (
+    AccessDeniedError,
+    NameConflictError,
+    ResourceNotExistError,
+    StatusError,
+    TBRNError,
+    UnauthorizedError,
+)
 from .tbrn import TBRN, TBRNType
 from .utility import ContextInfo, error, get_dataset_client, get_gas, shorten
 
@@ -15,26 +23,34 @@ from .utility import ContextInfo, error, get_dataset_client, get_gas, shorten
 def _implement_branch(
     obj: ContextInfo, tbrn: str, name: str, verbose: bool, is_delete: bool
 ) -> None:
-    info = TBRN(tbrn=tbrn)
-    if info.type != TBRNType.DATASET:
-        error(f'To operate a branch, "{info}" must be a dataset')
+    try:
+        info = TBRN(tbrn=tbrn)
+        if info.type != TBRNType.DATASET:
+            error(f'To operate a branch, "{info}" must be a dataset')
 
-    gas = get_gas(*obj)
-    dataset_client = get_dataset_client(gas, info)
+        gas = get_gas(*obj)
+        dataset_client = get_dataset_client(gas, info)
 
-    if is_delete:
-        _delete_branch(dataset_client, info)
-        return
+        if is_delete:
+            _delete_branch(dataset_client, info)
+            return
 
-    if name:
-        _create_branch(dataset_client, name)
-    else:
-        _list_branches(dataset_client, verbose)
+        if name:
+            _create_branch(dataset_client, name)
+        else:
+            _list_branches(dataset_client, verbose)
+
+    except (TBRNError, NameConflictError, ResourceNotExistError, UnauthorizedError) as err:
+        error(str(err))
+    except StatusError:
+        error("Branch cannot be created from a draft")
+    except AccessDeniedError:
+        error("You do not have permission to operate this dataset")
 
 
 def _create_branch(dataset_client: DatasetClientType, name: str) -> None:
-    if dataset_client.status.is_draft:
-        error("Branch cannot be created from a draft")
+    # if dataset_client.status.is_draft:
+    #     error("Branch cannot be created from a draft")
 
     if not dataset_client.status.commit_id:
         error(f'To create a branch, "{dataset_client.name}" must have commit history')
