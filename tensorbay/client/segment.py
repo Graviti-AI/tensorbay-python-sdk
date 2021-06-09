@@ -193,7 +193,7 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
             if not skip_uploaded_files:
                 raise
 
-    def _upload_label(self, data: Data) -> None:
+    def _upload_label(self, data: Data, frame_id: Optional[str] = None) -> None:
         label = data.label.dumps()
         if not label:
             return
@@ -203,6 +203,9 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
             "remotePath": data.target_remote_path,
             "label": label,
         }
+        if frame_id:
+            post_data["frameId"] = frame_id
+
         post_data.update(self._status.get_status_info())
 
         self._client.open_api_do("PUT", "labels", self._dataset_id, json=post_data)
@@ -470,14 +473,14 @@ class FusionSegmentClient(SegmentClientBase):
 
         if timestamp is None:
             try:
-                frame_id = frame.frame_id
+                frame_id = str(frame.frame_id)
             except AttributeError as error:
                 raise FrameError(
                     "Lack frame id, please add frame id in frame or "
                     "give timestamp to the function!"
                 ) from error
         elif not hasattr(frame, "frame_id"):
-            frame_id = from_timestamp(timestamp)
+            frame_id = str(from_timestamp(timestamp))
         else:
             raise FrameError("Frame id conflicts, please do not give timestamp to the function!.")
 
@@ -516,7 +519,7 @@ class FusionSegmentClient(SegmentClientBase):
             frame_info: Dict[str, Any] = {
                 "segmentName": self._name,
                 "sensorName": sensor_name,
-                "frameId": str(frame_id),
+                "frameId": frame_id,
             }
             if hasattr(data, "timestamp"):
                 frame_info["timestamp"] = data.timestamp
@@ -525,7 +528,7 @@ class FusionSegmentClient(SegmentClientBase):
                 target_remote_path, checksum, frame_info, skip_uploaded_files
             )
 
-            self._upload_label(data)
+            self._upload_label(data, frame_id)
 
     def list_frames(self) -> PagingList[Frame]:
         """List required frames in the segment in a certain commit.
