@@ -21,8 +21,9 @@ from typing_extensions import Literal
 from ..dataset import Dataset, FusionDataset
 from ..exception import DatasetTypeError, ResourceNotExistError
 from .dataset import DatasetClient, FusionDatasetClient
+from .lazy import PagingList
 from .log import UPLOAD_DATASET_RESUME_TEMPLATE
-from .requests import Client, PagingList, Tqdm
+from .requests import Client, Tqdm
 from .status import Status
 
 DatasetClientType = Union[DatasetClient, FusionDatasetClient]

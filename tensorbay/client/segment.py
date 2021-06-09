@@ -38,7 +38,8 @@ from ..dataset import Data, Frame, RemoteData
 from ..exception import FrameError, InvalidParamsError, ResponseSystemError
 from ..sensor.sensor import Sensor, Sensors
 from ..utility import locked
-from .requests import PagingList, config
+from .lazy import PagingList
+from .requests import config
 from .status import Status
 
 if TYPE_CHECKING:
