@@ -177,21 +177,19 @@ def ls(  # pylint: disable=invalid-name
 
 
 @cli.command()
-@click.argument("arg1", type=str, default="", metavar="[accessKey or 'editor']")
-@click.argument("arg2", type=str, default="", metavar="[editor name]")
-@click.pass_obj
-def config(obj: Dict[str, str], arg1: str, arg2: str) -> None:
-    """Configure the accessKey of gas or the editor to be launched when using gas.\f
+@click.argument("arg1", type=str, metavar="[option name]")
+@click.argument("arg2", type=str, metavar="[option value]")
+def config(arg1: str, arg2: str) -> None:
+    """Configure the options when using gas CLI.\f
 
     Arguments:
-        obj: A dict contains config information.
-        arg1: The accessKey of gas to write into config file or the keyword "editor".
-        arg2: The URL of gas to write into config file or the editor to be lanched.
+        arg1: The option name.
+        arg2: The option value.
 
     """  # noqa: D301,D415
     from .config import _implement_config
 
-    _implement_config(obj, arg1, arg2)
+    _implement_config(arg1, arg2)
 
 
 @cli.command()
