@@ -53,7 +53,7 @@ class TestDataset:
         assert dataset_client.status.draft_number is None
         assert not dataset_client.status.is_draft
         assert dataset_client.status.branch_name == DEFAULT_BRANCH
-        assert dataset_client._name == dataset_name
+        assert dataset_client.name == dataset_name
         assert dataset_client.dataset_id is not None
         gas_client.get_dataset(dataset_name, is_fusion=True)
 
