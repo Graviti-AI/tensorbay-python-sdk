@@ -13,6 +13,7 @@ The following table lists the currently supported CLI commands.(:numref:`Table. 
    =======================================================  ===========================================================
    Commands                                                 Description
    =======================================================  ===========================================================
+   :ref:`tensorbay_cli/cli_commands:gas auth`               authentication operations.
    :ref:`tensorbay_cli/cli_commands:gas dataset`            dataset operations.
    :ref:`tensorbay_cli/cli_commands:gas ls`                 list operations.
    :ref:`tensorbay_cli/cli_commands:gas cp`                 copy operations.
@@ -23,6 +24,32 @@ The following table lists the currently supported CLI commands.(:numref:`Table. 
    :ref:`tensorbay_cli/cli_commands:gas log`                log operations.
    :ref:`tensorbay_cli/cli_commands:gas branch`             branch operations
    =======================================================  ===========================================================
+
+**********
+ gas auth
+**********
+
+Work with authentication operations.
+
+Authenticate the accesskey of the TensorBay account.
+If the accesskey is not provided, interactive authentication will be launched.
+
+.. code:: console
+
+   gas auth [ACCESSKEY]
+
+Get the authentication information.
+
+.. code:: console
+
+   gas auth --get [--all]
+
+Unset the authentication information.
+
+.. code:: console
+
+   gas auth --unset [--all]
+
 
 *************
  gas dataset
