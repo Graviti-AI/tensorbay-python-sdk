@@ -7,6 +7,7 @@ import pytest
 import ulid
 
 from tensorbay import GAS, __version__
+from tensorbay.client.gas import DEFAULT_BRANCH
 from tensorbay.dataset import Data, Dataset, Frame, FusionSegment, Segment
 from tensorbay.exception import FrameError, ResourceNotExistError, ResponseError
 from tensorbay.label import Catalog, Label
@@ -93,7 +94,11 @@ class TestUploadDataset:
             segment.append(Data(local_path=str(local_path)))
 
         dataset_client = gas_client.upload_dataset(dataset)
-        assert dataset_client.get_notes().is_continuous == True
+        assert dataset_client.status.branch_name == DEFAULT_BRANCH
+        assert dataset_client.status.draft_number
+        assert not dataset_client.status.commit_id
+
+        assert dataset_client.get_notes().is_continuous is True
         assert not dataset_client.get_catalog()
         segment1 = Segment("Segment1", client=dataset_client)
         assert len(segment1) == 10
@@ -130,11 +135,13 @@ class TestUploadDataset:
 
         gas_client.delete_dataset(dataset_name)
 
-    def test_upload_dataset_to_given_draft(self, accesskey, url, tmp_path):
+    def test_upload_dataset_to_given_branch(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
         dataset_client_1 = gas_client.create_dataset(dataset_name)
-        draft_number = dataset_client_1.create_draft("test")
+        dataset_client_1.create_draft("test")
+        dataset_client_1.commit("test1")
+        dataset_client_1.create_branch("dev")
 
         dataset = Dataset(name=dataset_name)
         segment = dataset.create_segment("Segment1")
@@ -146,14 +153,31 @@ class TestUploadDataset:
             local_path.write_text("CONTENT")
             segment.append(Data(local_path=str(local_path)))
 
-        dataset_client_2 = gas_client.upload_dataset(dataset, draft_number=draft_number)
+        dataset_client_2 = gas_client.upload_dataset(dataset, branch_name="dev")
+        assert dataset_client_2.status.branch_name == "dev"
+        assert dataset_client_2.status.draft_number
+        assert not dataset_client_2.status.commit_id
+
         segment1 = Segment("Segment1", client=dataset_client_2)
         assert len(segment1) == 10
         assert segment1[0].path == "hello0.txt"
         assert not segment1[0].label
 
+        dataset_client_2.commit("test2")
+        draft_number = dataset_client_2.create_draft("test2")
+
+        for i in range(10):
+            local_path = path / f"goodbye{i}.txt"
+            local_path.write_text("CONTENT")
+            segment.append(Data(local_path=str(local_path)))
+
+        dataset_client_2 = gas_client.upload_dataset(dataset, branch_name="dev")
+        assert dataset_client_2.status.branch_name == "dev"
+        assert dataset_client_2.status.draft_number == draft_number
+        assert not dataset_client_2.status.commit_id
+
         with pytest.raises(ResourceNotExistError):
-            gas_client.upload_dataset(dataset, draft_number=draft_number + 1)
+            gas_client.upload_dataset(dataset, branch_name="wrong")
 
         gas_client.delete_dataset(dataset_name)
 
