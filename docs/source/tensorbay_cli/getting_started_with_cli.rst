@@ -33,13 +33,13 @@ Set the accessKey into configuration:
 
 .. code:: console
 
-   $ gas config <YOUR_ACCESSKEY>
+   $ gas auth [ACCESSKEY]
 
-To show configuration information:
+To show authentication information:
 
 .. code:: console
 
-   $ gas config
+   $ gas auth --get
 
 ******
  TBRN
