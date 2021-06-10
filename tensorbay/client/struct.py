@@ -19,10 +19,10 @@
 
 from typing import Any, Dict, Optional, Tuple, Type, TypeVar
 
-from ..utility import EqMixin, ReprMixin, common_loads
+from ..utility import AttrsMixin, ReprMixin, attr, camel, common_loads
 
 
-class User(ReprMixin, EqMixin):
+class User(AttrsMixin, ReprMixin):
     """This class defines the basic concept of a user with an action.
 
     Arguments:
@@ -35,16 +35,15 @@ class User(ReprMixin, EqMixin):
 
     _repr_attrs = ("date",)
 
+    name: str = attr(is_dynamic=False)
+    date: int = attr(is_dynamic=False)
+
     def __init__(self, name: str, date: int) -> None:
         self.name = name
         self.date = date
 
     def _repr_head(self) -> str:
         return f'{self.__class__.__name__}("{self.name}")'
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        self.name = contents["name"]
-        self.date = contents["date"]
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -76,10 +75,10 @@ class User(ReprMixin, EqMixin):
                 }
 
         """
-        return {"name": self.name, "date": self.date}
+        return self._dumps()
 
 
-class Commit(ReprMixin, EqMixin):
+class Commit(AttrsMixin, ReprMixin):
     """This class defines the structure of a commit.
 
     Arguments:
@@ -95,6 +94,11 @@ class Commit(ReprMixin, EqMixin):
     _repr_attrs: Tuple[str, ...] = ("parent_commit_id", "message", "committer")
     _repr_maxlevel = 2
 
+    commit_id: str = attr(is_dynamic=False, key=camel)
+    parent_commit_id: Optional[str] = attr(is_dynamic=False, key=camel)
+    message: str = attr(is_dynamic=False)
+    committer: User = attr(is_dynamic=False)
+
     def __init__(
         self,
         commit_id: str,
@@ -109,12 +113,6 @@ class Commit(ReprMixin, EqMixin):
 
     def _repr_head(self) -> str:
         return f'{self.__class__.__name__}("{self.commit_id}")'
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        self.commit_id = contents["commitId"]
-        self.parent_commit_id = contents["parentCommitId"]
-        self.message = contents["message"]
-        self.committer = User.loads(contents["committer"])
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -156,12 +154,7 @@ class Commit(ReprMixin, EqMixin):
                 }
 
         """
-        return {
-            "commitId": self.commit_id,
-            "parentCommitId": self.parent_commit_id,
-            "message": self.message,
-            "committer": self.committer.dumps(),
-        }
+        return self._dumps()
 
 
 class _NamedCommit(Commit):
@@ -182,6 +175,8 @@ class _NamedCommit(Commit):
 
     _repr_attrs = ("commit_id",) + Commit._repr_attrs
 
+    name: str = attr(is_dynamic=False)
+
     def __init__(  # pylint: disable=too-many-arguments
         self,
         name: str,
@@ -195,10 +190,6 @@ class _NamedCommit(Commit):
 
     def _repr_head(self) -> str:
         return f'{self.__class__.__name__}("{self.name}")'
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        super()._loads(contents)
-        self.name = contents["name"]
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -242,9 +233,7 @@ class _NamedCommit(Commit):
                 }
 
         """
-        contents = super().dumps()
-        contents["name"] = self.name
-        return contents
+        return self._dumps()
 
 
 class Tag(_NamedCommit):
@@ -273,7 +262,7 @@ class Branch(_NamedCommit):
     """
 
 
-class Draft(ReprMixin, EqMixin):
+class Draft(AttrsMixin, ReprMixin):
     """This class defines the basic structure of a draft.
 
     Arguments:
@@ -287,6 +276,10 @@ class Draft(ReprMixin, EqMixin):
 
     _repr_attrs = ("title",)
 
+    number: int = attr(is_dynamic=False)
+    title: str = attr(is_dynamic=False)
+    branch_name: str = attr(is_dynamic=False, key=camel)
+
     def __init__(self, number: int, title: str, branch_name: str) -> None:
         self.number = number
         self.title = title
@@ -294,11 +287,6 @@ class Draft(ReprMixin, EqMixin):
 
     def _repr_head(self) -> str:
         return f"{self.__class__.__name__}({self.number})"
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        self.number = contents["number"]
-        self.title = contents["title"]
-        self.branch_name = contents["branchName"]
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -332,4 +320,4 @@ class Draft(ReprMixin, EqMixin):
                 }
 
         """
-        return {"number": self.number, "title": self.title, "branchName": self.branch_name}
+        return self._dumps()
