@@ -271,7 +271,7 @@ def write_config(config_parser: ConfigParser, show_message: bool = True) -> None
     # pylint: disable=protected-access
     if config_parser.has_section("config"):
         config_parser._sections.move_to_end("config", last=False)  # type: ignore[attr-defined]
-    if config_parser.has_section("profiles") and "default" in config_parser["profiles"]:
+    if config_parser.has_section("profiles") and config_parser.has_option("profiles", "default"):
         config_parser._sections["profiles"].move_to_end(  # type: ignore[attr-defined]
             "default", last=False
         )
@@ -280,7 +280,7 @@ def write_config(config_parser: ConfigParser, show_message: bool = True) -> None
     with open(config_file, "w") as fp:
         config_parser.write(fp)
     if show_message:
-        click.echo(f"Success!\nConfiguration has been written into: {config_file}")
+        click.echo(f'Success!\nConfiguration has been written into: "{config_file}"')
 
 
 def is_accesskey(arg: str) -> bool:

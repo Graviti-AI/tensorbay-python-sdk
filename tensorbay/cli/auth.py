@@ -24,19 +24,19 @@ from .utility import (
 _INDENT = " " * 4
 
 
-def _implement_auth(obj: Dict[str, str], arg1: str, arg2: str, get: bool, is_all: bool) -> None:
-    _check_args_and_options(arg1, arg2, get, is_all)
+def _implement_auth(  # pylint: disable=too-many-arguments
+    obj: Dict[str, str], arg1: str, arg2: str, get: bool, unset: bool, is_all: bool
+) -> None:
+    _check_args_and_options(arg1, arg2, get, unset, is_all)
     update_config()
     config_parser = read_config()
 
     if get:
-        if is_all:
-            for key, value in config_parser["profiles"].items():
-                _echo_formatted_profile(key, value)
-            return
+        _get_auth(obj, config_parser, is_all)
+        return
 
-        profile_name = obj["profile_name"]
-        _echo_formatted_profile(profile_name, config_parser["profiles"][profile_name])
+    if unset:
+        _unset_auth(obj, config_parser, is_all)
         return
 
     if not arg1 and not arg2:
@@ -58,6 +58,25 @@ def _implement_auth(obj: Dict[str, str], arg1: str, arg2: str, get: bool, is_all
 
     _update_profile(config_parser, obj["profile_name"], arg1, arg2)
     write_config(config_parser)
+
+
+def _get_auth(obj: Dict[str, str], config_parser: ConfigParser, is_all: bool) -> None:
+    if is_all:
+        for key, value in config_parser["profiles"].items():
+            _echo_formatted_profile(key, value)
+        return
+
+    profile_name = obj["profile_name"]
+    _echo_formatted_profile(profile_name, config_parser["profiles"][profile_name])
+
+
+def _unset_auth(obj: Dict[str, str], config_parser: ConfigParser, is_all: bool) -> None:
+    if is_all:
+        config_parser.remove_section("profiles")
+    else:
+        config_parser.remove_option("profiles", obj["profile_name"])
+    write_config(config_parser, show_message=False)
+    click.echo("Unset successfully")
 
 
 def _interactive_auth(url: Optional[str] = None) -> str:
@@ -98,11 +117,14 @@ def _update_profile(config_parser: ConfigParser, profile_name: str, arg1: str, a
     )
 
 
-def _check_args_and_options(arg1: str, arg2: str, get: bool, is_all: bool) -> None:
-    if is_all and not get:
-        error('Use "--all" option with "--get" option')
+def _check_args_and_options(arg1: str, arg2: str, get: bool, unset: bool, is_all: bool) -> None:
+    if is_all and not (get or unset):
+        error('Use "--all" option with "--get" or "--unset" option')
 
-    if get and (arg1 or arg2):
+    if get and unset:
+        error('Use either "--get" or "--unset"')
+
+    if (get or unset) and (arg1 or arg2):
         error("Option requires 0 arguments")
 
 
