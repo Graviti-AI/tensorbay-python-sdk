@@ -30,6 +30,16 @@ class Status:
     ) -> None:
 
         self.branch_name = branch_name
+
+        if commit_id is None and draft_number is None:
+            raise StatusError(
+                message="Neither commit id nor draft number is given, please give one"
+            )
+        if commit_id is not None and draft_number is not None:
+            raise StatusError(
+                message="Both commit id and draft number are given, please only give one"
+            )
+
         self._draft_number = draft_number
         self._commit_id = commit_id
 
@@ -81,7 +91,7 @@ class Status:
             StatusError: When the status is not a legal commit.
 
         """
-        if self._draft_number is not None:
+        if self._commit_id is None or self._draft_number is not None:
             raise StatusError(self.is_draft)
 
     def check_authority_for_draft(self) -> None:
