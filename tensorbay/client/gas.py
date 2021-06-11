@@ -31,6 +31,7 @@ DatasetClientType = Union[DatasetClient, FusionDatasetClient]
 logger = logging.getLogger(__name__)
 
 DEFAULT_BRANCH = "main"
+ROOT_COMMIT_ID = "00000000000000000000000000000000"
 
 
 class GAS:
@@ -225,7 +226,7 @@ class GAS:
         if region:
             post_data["region"] = region
 
-        status = Status(DEFAULT_BRANCH)
+        status = Status(DEFAULT_BRANCH, commit_id=ROOT_COMMIT_ID)
 
         response = self._client.open_api_do("POST", "", json=post_data)
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
@@ -257,7 +258,7 @@ class GAS:
             "storageConfig": {"name": config_name, "path": path},
         }
 
-        status = Status(DEFAULT_BRANCH)
+        status = Status(DEFAULT_BRANCH, commit_id=ROOT_COMMIT_ID)
 
         response = self._client.open_api_do("POST", "", json=post_data)
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
@@ -295,7 +296,7 @@ class GAS:
 
         dataset_id = info["id"]
         type_flag = info["type"]
-        commit_id = info["commitId"]
+        commit_id = info["commitId"] if info["commitId"] else ROOT_COMMIT_ID
         default_branch = info["defaultBranch"]
 
         status = Status(default_branch, commit_id=commit_id)
