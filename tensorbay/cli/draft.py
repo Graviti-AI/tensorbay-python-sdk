@@ -5,11 +5,12 @@
 
 """Implementation of gas draft."""
 
-from typing import Dict
+from typing import Dict, Optional
 
 import click
 
 from ..client.gas import DatasetClientType
+from ..client.struct import ROOT_COMMIT_ID
 from ..exception import ResourceNotExistError
 from .tbrn import TBRN, TBRNType
 from .utility import edit_input, error, get_dataset_client, get_gas
@@ -32,16 +33,12 @@ def _implement_draft(obj: Dict[str, str], tbrn: str, is_list: bool, title: str) 
     if is_list:
         _list_drafts(dataset_client, info)
     else:
-        # todo: create draft base on revision
         _create_draft(dataset_client, info, title)
 
 
 def _create_draft(dataset_client: DatasetClientType, info: TBRN, title: str) -> None:
     if info.is_draft:
         error(f'Create a draft in draft status "{info}" is not permitted')
-
-    if info.revision:
-        error(f'Create a draft based on given revision "{info}" is not supported')
 
     if not title:
         title, description = edit_input(_DRAFT_HINT)
@@ -53,9 +50,10 @@ def _create_draft(dataset_client: DatasetClientType, info: TBRN, title: str) -> 
         error("Aborting creating draft due to empty draft title")
 
     dataset_client.create_draft(title=title)
-    draft_tbrn = TBRN(info.dataset_name, draft_number=dataset_client.status.draft_number).get_tbrn()
+    status = dataset_client.status
+    draft_tbrn = TBRN(info.dataset_name, draft_number=status.draft_number).get_tbrn()
     click.echo(f"{draft_tbrn} is created successfully")
-    _echo_draft(dataset_client, title)
+    _echo_draft(dataset_client, title, status.branch_name)
 
 
 def _list_drafts(dataset_client: DatasetClientType, info: TBRN) -> None:
@@ -64,20 +62,30 @@ def _list_drafts(dataset_client: DatasetClientType, info: TBRN) -> None:
 
     if info.is_draft:
         draft = dataset_client.get_draft(info.draft_number)
-        click.echo(f"Draft: {TBRN(info.dataset_name, draft_number=draft.number).get_tbrn()}")
-        _echo_draft(dataset_client, title=draft.title)
+        click.echo(f"Draft: {info.get_tbrn()}")
+        _echo_draft(dataset_client, draft.title, draft.branch_name)
     else:
         for draft in dataset_client.list_drafts():
             click.echo(f"Draft: {TBRN(info.dataset_name, draft_number=draft.number).get_tbrn()}")
-            _echo_draft(dataset_client, title=draft.title)
+            _echo_draft(dataset_client, draft.title, draft.branch_name)
 
 
-def _echo_draft(dataset_client: DatasetClientType, title: str = "") -> None:
+def _echo_draft(
+    dataset_client: DatasetClientType, title: str = "", branch_name: Optional[str] = None
+) -> None:
+    if not branch_name:
+        error("Draft should be created based on a branch.")
+
     try:
-        click.echo(f"Branch: main({dataset_client.get_commit('main').commit_id}) -> main")
+        branch = dataset_client.get_branch(branch_name)
     except ResourceNotExistError:
-        click.echo("Branch: main -> main\n")
+        error('The branch "{branch_name}" does not exist')
+
+    if branch.commit_id != ROOT_COMMIT_ID:
+        click.echo(f"Branch: {branch_name}({branch.commit_id})")
+    else:
+        click.echo(f"Branch: {branch_name}")
 
     if not title:
         title = "<no title>"
-    click.echo(f"    {title}\n")
+    click.echo(f"\n    {title}\n")
