@@ -179,17 +179,19 @@ def ls(  # pylint: disable=invalid-name
 @cli.command()
 @click.argument("key", type=str, default="")
 @click.argument("value", type=str, default="")
-def config(key: str, value: str) -> None:
+@click.option("-u", "--unset", is_flag=True, help="Unset the config option")
+def config(key: str, value: str, unset: bool) -> None:
     """Configure the options when using gas CLI.\f
 
     Arguments:
         key: The option key.
         value: The option value.
+        unset: Whether to unset the option.
 
     """  # noqa: D301,D415
     from .config import _implement_config
 
-    _implement_config(key, value)
+    _implement_config(key, value, unset)
 
 
 @cli.command()
