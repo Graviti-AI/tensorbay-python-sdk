@@ -39,7 +39,7 @@ dataset_client.commit("update labels")
 """"""
 
 """Updata data/ upload dataset"""
-gas.upload_dataset(dataset, jobs=8)
+gas.upload_dataset(dataset, jobs=8, skip_uploaded_files=True)
 """"""
 
 """Updata data/ overwrite dataset"""
