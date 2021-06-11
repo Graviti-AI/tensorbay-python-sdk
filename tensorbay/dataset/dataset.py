@@ -42,7 +42,6 @@ from typing import (
 from ..label import Catalog
 from ..utility import (
     AttrsMixin,
-    Deprecated,
     NameMixin,
     NameSortedList,
     ReprMixin,
@@ -265,19 +264,6 @@ class DatasetBase(Sequence[_T], NameMixin):  # pylint: disable=too-many-ancestor
         with open(filepath, "r") as fp:
             contents = json.load(fp)
         self._catalog = Catalog.loads(contents)
-
-    @Deprecated(since="v1.4.0", removed_in="v1.7.0", substitute=__getitem__)
-    def get_segment_by_name(self, name: str) -> _T:
-        """Return the segment corresponding to the given name.
-
-        Arguments:
-            name: The name of the request segment.
-
-        Returns:
-            The segment which matches the input name.
-
-        """
-        return self._get_segments().get_from_name(name)
 
     def add_segment(self, segment: _T) -> None:
         """Add a segment to the dataset.
