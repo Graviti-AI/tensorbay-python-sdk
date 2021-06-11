@@ -14,6 +14,7 @@ The following table lists the currently supported CLI commands.(:numref:`Table. 
    Commands                                                 Description
    =======================================================  ===========================================================
    :ref:`tensorbay_cli/cli_commands:gas auth`               authentication operations.
+   :ref:`tensorbay_cli/cli_commands:gas config`             config operations
    :ref:`tensorbay_cli/cli_commands:gas dataset`            dataset operations.
    :ref:`tensorbay_cli/cli_commands:gas ls`                 list operations.
    :ref:`tensorbay_cli/cli_commands:gas cp`                 copy operations.
@@ -49,6 +50,55 @@ Unset the authentication information.
 .. code:: console
 
    gas auth --unset [--all]
+
+
+*************
+ gas config
+*************
+
+Work with configuration operations.
+
+Add a single configuration.
+
+.. code:: console
+
+   gas config [key] [value]
+
+For example:
+
+.. code:: console
+
+   gas config editor vim
+
+Show all the configurations.
+
+.. code:: console
+
+   gas config
+
+Show a single configuration.
+
+.. code:: console
+
+   gas config [key]
+
+For example:
+
+.. code:: console
+
+   gas config editor
+
+Unset a single configuration.
+
+.. code:: console
+
+   gas config --unset [key]
+
+For example:
+
+.. code:: console
+
+   gas config --unset editor
 
 
 *************
@@ -288,4 +338,3 @@ Delete a branch.
 .. code:: console
 
    gas branch --delete tb:[dataset_name]@[branch_name]
-
