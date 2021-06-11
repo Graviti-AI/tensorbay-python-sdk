@@ -6,7 +6,7 @@
 import pytest
 
 from tensorbay import GAS
-from tensorbay.client.gas import DEFAULT_BRANCH
+from tensorbay.client.gas import DEFAULT_BRANCH, FIRST_VOID_COMMIT_ID
 from tensorbay.exception import ResourceNotExistError, ResponseError, StatusError
 
 from .utility import get_dataset_name
@@ -18,7 +18,7 @@ class TestDataset:
         dataset_name = get_dataset_name()
 
         dataset_client = gas_client.create_dataset(dataset_name)
-        assert dataset_client.status.commit_id is None
+        assert dataset_client.status.commit_id == FIRST_VOID_COMMIT_ID
         assert dataset_client.status.draft_number is None
         assert not dataset_client.status.is_draft
         assert dataset_client.status.branch_name == DEFAULT_BRANCH
@@ -49,7 +49,7 @@ class TestDataset:
         dataset_name = get_dataset_name()
 
         dataset_client = gas_client.create_dataset(dataset_name, is_fusion=True)
-        assert dataset_client.status.commit_id is None
+        assert dataset_client.status.commit_id == FIRST_VOID_COMMIT_ID
         assert dataset_client.status.draft_number is None
         assert not dataset_client.status.is_draft
         assert dataset_client.status.branch_name == DEFAULT_BRANCH
@@ -76,7 +76,7 @@ class TestDataset:
         dataset_client.create_draft("v_test")
 
         dataset_client_1 = gas_client.get_dataset(dataset_name)
-        assert dataset_client_1.status.commit_id is None
+        assert dataset_client_1.status.commit_id == FIRST_VOID_COMMIT_ID
         assert dataset_client_1.status.draft_number is None
         assert not dataset_client_1.status.is_draft
         assert dataset_client.status.branch_name == DEFAULT_BRANCH

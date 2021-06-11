@@ -6,6 +6,7 @@
 import pytest
 
 from tensorbay import GAS, __version__
+from tensorbay.client.gas import DEFAULT_BRANCH, FIRST_VOID_COMMIT_ID
 from tensorbay.dataset import Data, Segment
 from tensorbay.exception import ResourceNotExistError, StatusError
 
@@ -24,17 +25,19 @@ class TestCommit:
         dataset_client.commit("commit-2")
         commit_2_id = dataset_client.status.commit_id
 
-        commit = dataset_client.get_commit(commit_1_id)
-        assert commit.commit_id == commit_1_id
-        assert commit.parent_commit_id is None
-        assert commit.message == "commit-1"
-        assert commit.committer.name
-        assert commit.committer.date
-
+        # Get top commit
         commit = dataset_client.get_commit(commit_2_id)
         assert commit.commit_id == commit_2_id
         assert commit.parent_commit_id == commit_1_id
         assert commit.message == "commit-2"
+        assert commit.committer.name
+        assert commit.committer.date
+
+        # Get one commit before the top one
+        commit = dataset_client.get_commit(commit_1_id)
+        assert commit.commit_id == commit_1_id
+        assert commit.parent_commit_id == FIRST_VOID_COMMIT_ID
+        assert commit.message == "commit-1"
         assert commit.committer.name
         assert commit.committer.date
 
@@ -64,14 +67,16 @@ class TestCommit:
         dataset_client.commit("commit-2")
         commit_2_id = dataset_client.status.commit_id
 
+        # Get top commit by tag
         commit = dataset_client.get_commit("V1")
         assert commit.commit_id == commit_1_id
-        assert commit.parent_commit_id is None
+        assert commit.parent_commit_id == FIRST_VOID_COMMIT_ID
         assert commit.message == "commit-1"
         assert commit.committer.name
         assert commit.committer.date
 
-        commit = dataset_client.get_commit("main")
+        # Get top commit by branch
+        commit = dataset_client.get_commit(DEFAULT_BRANCH)
         assert commit.commit_id == commit_2_id
         assert commit.parent_commit_id == commit_1_id
         assert commit.message == "commit-2"
@@ -100,21 +105,25 @@ class TestCommit:
         dataset_client.commit("commit-3")
         commit_3_id = dataset_client.status.commit_id
 
+        # List commits(based on default branch)
         commits = dataset_client.list_commits()
         assert len(commits) == 3
         assert commits[0].commit_id == commit_3_id
         assert commits[1].commit_id == commit_2_id
 
+        # List commits based on one commit before the top one
         commits = dataset_client.list_commits(commit_2_id)
         assert len(commits) == 2
         assert commits[0].commit_id == commit_2_id
         assert commits[1].commit_id == commit_1_id
 
+        # List commits based on tag
         commits = dataset_client.list_commits("V1")
         assert len(commits) == 1
         assert commits[0].commit_id == commit_1_id
 
-        commits = dataset_client.list_commits("main")
+        # List commits based on default branch
+        commits = dataset_client.list_commits(DEFAULT_BRANCH)
         assert len(commits) == 3
 
         gas_client.delete_dataset(dataset_name)

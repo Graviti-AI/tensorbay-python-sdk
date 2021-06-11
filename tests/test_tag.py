@@ -6,6 +6,7 @@
 import pytest
 
 from tensorbay import GAS
+from tensorbay.client.gas import DEFAULT_BRANCH, FIRST_VOID_COMMIT_ID
 from tensorbay.exception import ResourceNotExistError, ResponseError, StatusError
 
 from .utility import get_dataset_name
@@ -18,30 +19,40 @@ class TestTag:
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
         dataset_client.commit("commit-1", tag="V1")
+
         # Can create more than one tag for one commit
         dataset_client.create_tag("V11")
 
-        dataset_client.create_draft("draft-2")
-        dataset_client.commit("commit-2")
         # Can not create duplicated tag
         with pytest.raises(ResponseError):
-            dataset_client.create_tag("V1")
+            dataset_client.create_tag("V11")
+
+        dataset_client.create_draft("draft-2")
+        dataset_client.commit("commit-2")
         commit_2_id = dataset_client.status.commit_id
         dataset_client.create_draft("draft-3")
-        # Can not create the tag without giving commit in the draft
+
+        # Can not create the tag without giving commit in the draft status
         with pytest.raises(StatusError):
             dataset_client.create_tag("V2")
+        # Create the tag with giving commit in the draft status
         dataset_client.create_tag("V2", revision=commit_2_id)
+
         dataset_client.commit("commit-3")
         commit_3_id = dataset_client.status.commit_id
         dataset_client.create_tag("V3")
 
+        # V1 points to commit 1
         tag1 = dataset_client.get_tag("V1")
         assert tag1.name == "V1"
-        assert not tag1.parent_commit_id
+        assert tag1.parent_commit_id == FIRST_VOID_COMMIT_ID
+
+        # V2 points to commit 2
         tag2 = dataset_client.get_tag("V2")
         assert tag2.name == "V2"
         assert tag2.commit_id == commit_2_id
+
+        # V3 points to commit 2
         tag3 = dataset_client.get_tag("V3")
         assert tag3.name == "V3"
         assert tag3.commit_id == commit_3_id
@@ -60,7 +71,7 @@ class TestTag:
         tag = dataset_client.get_tag("V1")
         assert tag.name == "V1"
         assert tag.commit_id == commit_1_id
-        assert not tag.parent_commit_id
+        assert tag.parent_commit_id == FIRST_VOID_COMMIT_ID
         assert tag.message == "commit-1"
         assert tag.committer.name
         assert tag.committer.date
@@ -72,6 +83,7 @@ class TestTag:
         dataset_client.create_draft("draft-2")
         dataset_client.commit("commit-2", tag="V2")
         commit_2_id = dataset_client.status.commit_id
+
         tag = dataset_client.get_tag("V2")
         assert tag.name == "V2"
         assert tag.commit_id == commit_2_id
