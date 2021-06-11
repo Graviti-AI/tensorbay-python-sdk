@@ -11,7 +11,7 @@ from ...dataset import Dataset
 from ...exception import DatasetTypeError, ResourceNotExistError
 from .. import gas
 from ..dataset import DatasetClient, FusionDatasetClient
-from ..gas import DEFAULT_BRANCH, GAS
+from ..gas import DEFAULT_BRANCH, GAS, ROOT_COMMIT_ID
 from ..status import Status
 from ..struct import Draft
 from .utility import mock_response
@@ -214,7 +214,7 @@ class TestGAS:
         assert dataset_client._name == params["name"]
         assert dataset_client._dataset_id == response_data["id"]
         assert dataset_client.status.branch_name == DEFAULT_BRANCH
-        assert dataset_client.status.commit_id is None
+        assert dataset_client.status.commit_id == ROOT_COMMIT_ID
         open_api_do.assert_called_once_with("POST", "", json=params)
 
     @pytest.mark.parametrize("is_fusion", [True, False])
@@ -236,6 +236,8 @@ class TestGAS:
         assert isinstance(dataset_client, dataset_type)
         assert dataset_client._name == params["name"]
         assert dataset_client._dataset_id == response_data["id"]
+        assert dataset_client.status.branch_name == DEFAULT_BRANCH
+        assert dataset_client.status.commit_id == ROOT_COMMIT_ID
         open_api_do.assert_called_once_with("POST", "", json=params)
 
     @pytest.mark.parametrize("is_fusion", [True, False])
@@ -336,7 +338,10 @@ class TestGAS:
         get_dataset = mocker.patch(
             f"{gas.__name__}.GAS.get_dataset",
             return_value=DatasetClient(
-                "test", "12345", self.gas_client, status=Status(DEFAULT_BRANCH)
+                "test",
+                "12345",
+                self.gas_client,
+                status=Status(DEFAULT_BRANCH, commit_id=ROOT_COMMIT_ID),
             ),
         )
         checkout = mocker.patch(f"{gas.__name__}.DatasetClient.checkout")
