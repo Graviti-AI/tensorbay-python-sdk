@@ -16,7 +16,7 @@ it finds errors in fields such as 'type', 'enum', 'range' and 'parent categories
 from typing import Iterator, Optional, Tuple
 
 from ..label import AttributeInfo, Catalog, CategoryInfo, LabelType
-from ..utility import NamedList
+from ..utility import NameList
 from .pipeline import PipelineForIterable
 from .report import Error
 
@@ -324,7 +324,7 @@ class CheckParentCategories:  # pylint: disable=too-few-public-methods
 
     """
 
-    def __init__(self, categories: Optional[NamedList[CategoryInfo]]) -> None:
+    def __init__(self, categories: Optional[NameList[CategoryInfo]]) -> None:
         self._keys = set(categories.keys()) if categories else set()
 
     def __call__(self, attribute_info: AttributeInfo) -> Iterator[InvalidParentCategories]:

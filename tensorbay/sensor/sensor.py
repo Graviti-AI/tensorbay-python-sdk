@@ -36,8 +36,8 @@ from ..geometry import Transform3D
 from ..utility import (
     MatrixType,
     NameMixin,
-    NameSortedList,
     ReprType,
+    SortedNameList,
     TypeEnum,
     TypeMixin,
     TypeRegister,
@@ -530,7 +530,7 @@ class FisheyeCamera(Camera):  # pylint: disable=too-many-ancestors
     """
 
 
-class Sensors(NameSortedList[Sensor._Type]):  # pylint: disable=protected-access
+class Sensors(SortedNameList[Sensor._Type]):  # pylint: disable=protected-access
     """This class represents all sensors in a :class:`~tensorbay.dataset.segment.FusionSegment`."""
 
     _T = TypeVar("_T", bound="Sensors")

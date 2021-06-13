@@ -3,14 +3,14 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""NameMixin, NameSortedList and NamedList.
+"""NameMixin, SortedNameList and NameList.
 
 :class:`NameMixin` is a mixin class for instance which has immutable name and mutable description.
 
-:class:`NameSortedList` is a sorted sequence class which contains :class:`NameMixin`.
+:class:`SortedNameList` is a sorted sequence class which contains :class:`NameMixin`.
 It is maintained in sorted order according to the 'name' of :class:`NameMixin`.
 
-:class:`NamedList` is a list of named elements, supports searching the element by its name.
+:class:`NameList` is a list of named elements, supports searching the element by its name.
 
 """
 
@@ -94,8 +94,64 @@ class NameMixin(AttrsMixin, ReprMixin):
 _T = TypeVar("_T", bound=NameMixin)
 
 
-class NameSortedList(UserSequence[_T]):
-    """NameSortedList is a sorted sequence which contains element with name.
+class NameList(UserSequence[_T]):
+    """NameList is a list of named elements, supports searching the element by its name."""
+
+    def __init__(self, values: Iterable[_T] = ()) -> None:
+        self._data: List[_T] = []
+        self._mapping: Dict[str, _T] = {}
+
+        for value in values:
+            self.append(value)
+
+    @overload
+    def __getitem__(self, index: Union[int, str]) -> _T:
+        ...
+
+    @overload
+    def __getitem__(self, index: slice) -> List[_T]:
+        ...
+
+    def __getitem__(self, index: Union[int, str, slice]) -> Union[_T, List[_T]]:
+        if isinstance(index, str):
+            return self._mapping.__getitem__(index)
+
+        return self._data.__getitem__(index)
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, self.__class__):
+            return False
+
+        return self._data.__eq__(other._data)
+
+    def keys(self) -> Tuple[str, ...]:
+        """Get all element names.
+
+        Returns:
+            A tuple containing all elements names.
+
+        """
+        return tuple(item.name for item in self._data)
+
+    def append(self, value: _T) -> None:
+        """Append element to the end of the NameList.
+
+        Arguments:
+            value: Element to be appended to the NameList.
+
+        Raises:
+            KeyError: When the name of the appending object already exists in the NameList.
+
+        """
+        if value.name in self._mapping:
+            raise KeyError(f'name "{value.name}" is duplicated')
+
+        self._data.append(value)
+        self._mapping[value.name] = value
+
+
+class SortedNameList(UserSequence[_T]):
+    """SortedNameList is a sorted sequence which contains element with name.
 
     It is maintained in sorted order according to the 'name' attr of the element.
 
@@ -152,59 +208,3 @@ class NameSortedList(UserSequence[_T]):
 
         """
         return tuple(self._names)
-
-
-class NamedList(UserSequence[_T]):
-    """NamedList is a list of named elements, supports searching the element by its name."""
-
-    def __init__(self, values: Iterable[_T] = ()) -> None:
-        self._data: List[_T] = []
-        self._mapping: Dict[str, _T] = {}
-
-        for value in values:
-            self.append(value)
-
-    @overload
-    def __getitem__(self, index: Union[int, str]) -> _T:
-        ...
-
-    @overload
-    def __getitem__(self, index: slice) -> List[_T]:
-        ...
-
-    def __getitem__(self, index: Union[int, str, slice]) -> Union[_T, List[_T]]:
-        if isinstance(index, str):
-            return self._mapping.__getitem__(index)
-
-        return self._data.__getitem__(index)
-
-    def __eq__(self, other: Any) -> bool:
-        if not isinstance(other, self.__class__):
-            return False
-
-        return self._data.__eq__(other._data)
-
-    def keys(self) -> Tuple[str, ...]:
-        """Get all element names.
-
-        Returns:
-            A tuple containing all elements names.
-
-        """
-        return tuple(item.name for item in self._data)
-
-    def append(self, value: _T) -> None:
-        """Append element to the end of the NamedList.
-
-        Arguments:
-            value: Element to be appended to the NamedList.
-
-        Raises:
-            KeyError: When the name of the appending object already exists in the NamedList.
-
-        """
-        if value.name in self._mapping:
-            raise KeyError(f'name "{value.name}" is duplicated')
-
-        self._data.append(value)
-        self._mapping[value.name] = value

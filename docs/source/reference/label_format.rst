@@ -123,7 +123,7 @@ Category information can be added to the subcatalog.
 
     >>> box2d_subcatalog.add_category(name="cat", description="The Flerken")
     >>> box2d_subcatalog.categories
-    NamedList [
+    NameList [
       CategoryInfo("cat")
     ]
 
@@ -150,7 +150,7 @@ Attribute information ca be added to the subcatalog.
     ... description="attribute description"
     ... )
     >>> box2d_subcatalog.attributes
-    NamedList [
+    NameList [
       AttributeInfo("attribute_name")(...)
     ]
 

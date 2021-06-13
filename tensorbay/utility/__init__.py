@@ -15,7 +15,7 @@ from .common import (
     common_loads,
     locked,
 )
-from .name import NamedList, NameMixin, NameSortedList
+from .name import NameList, NameMixin, SortedNameList
 from .repr import ReprMixin, ReprType, repr_config
 from .type import SubcatalogTypeRegister, TypeEnum, TypeMixin, TypeRegister
 from .user import UserMapping, UserMutableMapping, UserMutableSequence, UserSequence
@@ -27,11 +27,11 @@ __all__ = [
     "EqMixin",
     "KwargsDeprecated",
     "MatrixType",
+    "NameList",
     "NameMixin",
-    "NameSortedList",
-    "NamedList",
     "ReprMixin",
     "ReprType",
+    "SortedNameList",
     "SubcatalogTypeRegister",
     "TypeEnum",
     "TypeMixin",

@@ -33,12 +33,12 @@ class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
     Attributes:
         description: The description of the entire 2D keypoints subcatalog.
         categories: All the possible categories in the corresponding dataset
-            stored in a :class:`~tensorbay.utility.name.NamedList`
+            stored in a :class:`~tensorbay.utility.name.NameList`
             with the category names as keys
             and the :class:`~tensorbay.label.supports.CategoryInfo` as values.
         category_delimiter: The delimiter in category values indicating parent-child relationship.
         attributes: All the possible attributes in the corresponding dataset
-            stored in a :class:`~tensorbay.utility.name.NamedList`
+            stored in a :class:`~tensorbay.utility.name.NameList`
             with the attribute names as keys
             and the :class:`~tensorbay.label.attribute.AttributeInfo` as values.
         is_tracking: Whether the Subcatalog contains tracking information.
@@ -64,17 +64,17 @@ class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
         Keypoints2DSubcatalog(
           (is_tracking): True,
           (keypoints): [...],
-          (categories): NamedList [...],
-          (attributes): NamedList [...]
+          (categories): NameList [...],
+          (attributes): NameList [...]
         )
 
         *Initialization Method 2:* Init an empty Keypoints2DSubcatalog and then add the attributes.
 
         >>> from tensorbay.label import CategoryInfo, AttributeInfo, KeypointsInfo
-        >>> from tensorbay.utility import NamedList
-        >>> categories = NamedList()
+        >>> from tensorbay.utility import NameList
+        >>> categories = NameList()
         >>> categories.append(CategoryInfo("a"))
-        >>> attributes = NamedList()
+        >>> attributes = NameList()
         >>> attributes.append(AttributeInfo("gender", enum=["female", "male"]))
         >>> keypoints2d_subcatalog = Keypoints2DSubcatalog()
         >>> keypoints2d_subcatalog.is_tracking = True
@@ -92,8 +92,8 @@ class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
         Keypoints2DSubcatalog(
           (is_tracking): True,
           (keypoints): [...],
-          (categories): NamedList [...],
-          (attributes): NamedList [...]
+          (categories): NameList [...],
+          (attributes): NameList [...]
         )
 
     """

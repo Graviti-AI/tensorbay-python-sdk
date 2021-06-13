@@ -297,7 +297,7 @@ def _get_operators(annotation: Any) -> Tuple[_Callable, _Callable]:
      AttrsMixin has three operating types which are classified by attr annotation.
         1. builtin types, like str, int, None
         2. tensorbay custom class, like tensorbay.label.Classification
-        3. tensorbay custom class list or NamedList, like List[tensorbay.label.LabeledBox2D]
+        3. tensorbay custom class list or NameList, like List[tensorbay.label.LabeledBox2D]
 
     Arguments:
         annotation: Type of the attr.
