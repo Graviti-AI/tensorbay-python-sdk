@@ -123,6 +123,18 @@ class TestDatasetBase:
         with pytest.raises(KeyError):
             del dataset["100"]
 
+    def test_contains(self):
+        dataset = DatasetBase("test_name")
+        keys = ("test", "train")
+        for key in keys:
+            dataset.add_segment(Segment(key))
+
+        for key in keys:
+            assert key in dataset
+
+        assert "val" not in dataset
+        assert 100 not in dataset
+
     def test_keys(self):
         dataset = DatasetBase("test_name")
         keys = ("test", "train")

@@ -194,6 +194,9 @@ class DatasetBase(Sequence[_T], NameMixin):  # pylint: disable=too-many-ancestor
     def __delitem__(self, index: Union[int, str, slice]) -> None:
         return self._get_segments().__delitem__(index)
 
+    def __contains__(self, key: Any) -> bool:
+        return self._get_segments().__contains__(key)
+
     @locked
     def _init_segments(self) -> None:
         self._segments = SortedNameList()
