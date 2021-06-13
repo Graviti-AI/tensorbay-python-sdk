@@ -6,10 +6,11 @@
 # pylint: disable=missing-module-docstring
 
 import os
+from glob import glob
+from typing import Iterable, List
 
 from ...dataset import Data, Dataset
 from ...label import Classification
-from .._utility import glob
 
 DATASET_NAME = "RP2K"
 
@@ -51,12 +52,23 @@ def RP2K(path: str) -> Dataset:
         catagories = os.listdir(segment_path)
         catagories.sort()
         for catagory in catagories:
-            if not os.path.isdir(catagory):
+            catagory_path = os.path.join(segment_path, catagory)
+            if not os.path.isdir(catagory_path):
                 continue
-            image_paths = glob(os.path.join(segment_path, catagory, "*.jpg"))
+            image_paths = _glob(catagory_path, ("*.jpg", "*.png"))
             for image_path in image_paths:
                 data = Data(image_path)
                 data.label.classification = Classification(catagory)
                 segment.append(data)
 
     return dataset
+
+
+def _glob(directory: str, patterns: Iterable[str]) -> List[str]:
+    file_paths = []
+
+    for pattern in patterns:
+        file_paths.extend(glob(os.path.join(directory, pattern)))
+
+    file_paths.sort()
+    return file_paths
