@@ -811,7 +811,7 @@ class FusionDatasetClient(DatasetClientBase):
         pbar: Tqdm,
     ) -> FusionSegmentClient:
         segment_client = self.get_or_create_segment(segment.name)
-        for sensor in segment.sensors.values():
+        for sensor in segment.sensors:
             segment_client.upload_sensor(sensor)
 
         segment_filter: Iterator[Tuple[Frame, Optional[float], bool]]

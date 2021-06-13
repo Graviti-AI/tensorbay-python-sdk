@@ -60,7 +60,7 @@ frame = fusion_segment[0]
 """"""
 
 """Read Fusion Dataset / get data"""
-for sensor_name in sensors:
+for sensor_name in sensors.keys():
     data = frame[sensor_name]
 """"""
 

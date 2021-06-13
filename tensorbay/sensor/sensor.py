@@ -32,13 +32,11 @@ produces strong visual distortion intended to create a wide panoramic or hemisph
 
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Union
 
-from sortedcontainers import SortedDict
-
 from ..geometry import Transform3D
 from ..utility import (
     MatrixType,
     NameMixin,
-    NameSortedDict,
+    NameSortedList,
     ReprType,
     TypeEnum,
     TypeMixin,
@@ -532,13 +530,14 @@ class FisheyeCamera(Camera):  # pylint: disable=too-many-ancestors
     """
 
 
-class Sensors(NameSortedDict[Sensor._Type]):  # pylint: disable=protected-access
+class Sensors(NameSortedList[Sensor._Type]):  # pylint: disable=protected-access
     """This class represents all sensors in a :class:`~tensorbay.dataset.segment.FusionSegment`."""
 
     _T = TypeVar("_T", bound="Sensors")
 
     def _loads(self, contents: List[Dict[str, Any]]) -> None:
-        self._data = SortedDict()
+        self._data = []
+        self._names = []
         for sensor_info in contents:
             self.add(Sensor.loads(sensor_info))
 
@@ -639,4 +638,4 @@ class Sensors(NameSortedDict[Sensor._Type]):  # pylint: disable=protected-access
                 ]
 
         """
-        return [sensor.dumps() for sensor in self._data.values()]
+        return [sensor.dumps() for sensor in self._data]

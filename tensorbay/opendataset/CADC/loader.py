@@ -103,7 +103,7 @@ def CADC(path: str) -> FusionDataset:
 
 def _load_timestamps(sensors: Sensors, data_path: str) -> Dict[str, List[str]]:
     timestamps = {}
-    for sensor_name in sensors:
+    for sensor_name in sensors.keys():
         data_folder = f"image_{sensor_name[-2:]}" if sensor_name != "LIDAR" else "lidar_points"
         timestamp_file = os.path.join(data_path, data_folder, "timestamps.txt")
         with open(timestamp_file, "r") as fp:
@@ -120,7 +120,7 @@ def _load_frame(
     timestamps: Dict[str, List[str]],
 ) -> Frame:
     frame = Frame()
-    for sensor_name in sensors:
+    for sensor_name in sensors.keys():
         # The data file name is a string of length 10 with each digit being a number:
         # 0000000000.jpg
         # 0000000001.bin
