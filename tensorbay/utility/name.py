@@ -17,15 +17,14 @@ It is maintained in sorted order according to the 'name' of :class:`NameMixin`.
 
 """
 
+from bisect import bisect_left, bisect_right
 from typing import (
     Any,
     Dict,
     Iterable,
-    Iterator,
     List,
     Mapping,
     Optional,
-    Sequence,
     Tuple,
     Type,
     TypeVar,
@@ -137,53 +136,64 @@ class NameSortedDict(UserMapping[str, _T]):
         self._data[value.name] = value
 
 
-class NameSortedList(Sequence[_T]):  # pylint: disable=too-many-ancestors
-    """Name sorted list is a sorted sequence which contains NameMixin.
+class NameSortedList(UserSequence[_T]):
+    """NameSortedList is a sorted sequence which contains element with name.
 
-    It is maintained in sorted order according to the 'name' of :class:`NameMixin`.
+    It is maintained in sorted order according to the 'name' attr of the element.
 
     """
 
     def __init__(self) -> None:
-        self._data = SortedDict()
-
-    def __len__(self) -> int:
-        return self._data.__len__()  # type: ignore[no-any-return]
+        self._data: List[_T] = []
+        self._names: List[str] = []
 
     @overload
-    def __getitem__(self, index: int) -> _T:
+    def __getitem__(self, index: Union[int, str]) -> _T:
         ...
 
     @overload
     def __getitem__(self, index: slice) -> List[_T]:
         ...
 
-    def __getitem__(self, index: Union[int, slice]) -> Union[_T, List[_T]]:
-        return self._data.values()[index]  # type: ignore[no-any-return]
+    def __getitem__(self, index: Union[int, str, slice]) -> Union[_T, List[_T]]:
+        if isinstance(index, str):
+            index = self._search(index)
 
-    def __iter__(self) -> Iterator[_T]:
-        return self._data.values().__iter__()  # type: ignore[no-any-return]
+        return self._data.__getitem__(index)
+
+    def __delitem__(self, index: Union[int, str, slice]) -> None:
+        if isinstance(index, str):
+            index = self._search(index)
+
+        self._data.__delitem__(index)
+        self._names.__delitem__(index)
+
+    def _search(self, key: str) -> int:
+        index = bisect_left(self._names, key)
+        if index == len(self._names) or self._names[index] != key:
+            raise KeyError(key)
+
+        return index
 
     def add(self, value: _T) -> None:
         """Store element in name sorted list.
 
         Arguments:
-            value: :class:`NameMixin` instance.
+            value: The element needs to be added to the list.
 
         """
-        self._data[value.name] = value
+        index = bisect_right(self._names, value.name)
+        self._data.insert(index, value)
+        self._names.insert(index, value.name)
 
-    def get_from_name(self, name: str) -> _T:
-        """Get element in name sorted list from name of NameMixin.
-
-        Arguments:
-            name: Name of :class:`NameMixin` instance.
+    def keys(self) -> Tuple[str, ...]:
+        """Get all element names.
 
         Returns:
-            The element to be get.
+            A tuple containing all elements names.
 
         """
-        return self._data[name]  # type: ignore[no-any-return]
+        return tuple(self._names)
 
 
 class NamedList(UserSequence[_T]):

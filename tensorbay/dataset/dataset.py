@@ -189,27 +189,16 @@ class DatasetBase(Sequence[_T], NameMixin):  # pylint: disable=too-many-ancestor
         ...
 
     def __getitem__(self, index: Union[int, str, slice]) -> Union[Sequence[_T], _T]:
-        if isinstance(index, str):
-            return self._get_segments().get_from_name(index)
-
         return self._get_segments().__getitem__(index)
 
     def __delitem__(self, index: Union[int, str, slice]) -> None:
-        if isinstance(index, slice):
-            for key in self._get_segments()._data.keys()[index]:
-                self._get_segments()._data.__delitem__(key)
-            return
-
-        if isinstance(index, int):
-            index = self._get_segments()._data.keys()[index]
-
-        self._get_segments()._data.__delitem__(index)
+        return self._get_segments().__delitem__(index)
 
     @locked
     def _init_segments(self) -> None:
         self._segments = NameSortedList()
-        # pylint: disable=protected-access
-        for segment in self._client._list_segment_instances():
+
+        for segment in self._client._list_segment_instances():  # pylint: disable=protected-access
             self._segments.add(segment)  # type: ignore[arg-type]
 
     def _get_segments(self) -> NameSortedList[_T]:
@@ -251,8 +240,7 @@ class DatasetBase(Sequence[_T], NameMixin):  # pylint: disable=too-many-ancestor
             A tuple containing all segment names.
 
         """
-        # pylint: disable=protected-access
-        return tuple(self._get_segments()._data)
+        return self._get_segments().keys()
 
     def load_catalog(self, filepath: str) -> None:
         """Load catalog from a json file.
