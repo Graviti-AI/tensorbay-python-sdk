@@ -3,12 +3,9 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""NameMixin, NameSortedDict, NameSortedList and NamedList.
+"""NameMixin, NameSortedList and NamedList.
 
 :class:`NameMixin` is a mixin class for instance which has immutable name and mutable description.
-
-:class:`NameSortedDict` is a sorted mapping class which contains :class:`NameMixin`.
-The corrsponding key is the 'name' of :class:`NameMixin`.
 
 :class:`NameSortedList` is a sorted sequence class which contains :class:`NameMixin`.
 It is maintained in sorted order according to the 'name' of :class:`NameMixin`.
@@ -18,26 +15,12 @@ It is maintained in sorted order according to the 'name' of :class:`NameMixin`.
 """
 
 from bisect import bisect_left, bisect_right
-from typing import (
-    Any,
-    Dict,
-    Iterable,
-    List,
-    Mapping,
-    Optional,
-    Tuple,
-    Type,
-    TypeVar,
-    Union,
-    overload,
-)
-
-from sortedcontainers import SortedDict
+from typing import Any, Dict, Iterable, List, Tuple, Type, TypeVar, Union, overload
 
 from .attr import AttrsMixin, attr
 from .common import common_loads
 from .repr import ReprMixin
-from .user import UserMapping, UserSequence
+from .user import UserSequence
 
 
 class NameMixin(AttrsMixin, ReprMixin):
@@ -109,31 +92,6 @@ class NameMixin(AttrsMixin, ReprMixin):
 
 
 _T = TypeVar("_T", bound=NameMixin)
-
-
-class NameSortedDict(UserMapping[str, _T]):
-    """Name sorted dict keys are maintained in sorted order.
-
-    Name sorted dict is a sorted mapping which contains :class:`NameMixin`.
-    The corrsponding key is the 'name' of :class:`NameMixin`.
-
-    Arguments:
-        data: A mapping from str to :class:`NameMixin` which needs to be
-            transferred to :class:`NameSortedDict`.
-
-    """
-
-    def __init__(self, data: Optional[Mapping[str, _T]] = None) -> None:
-        self._data: SortedDict = SortedDict(data)
-
-    def add(self, value: _T) -> None:
-        """Store element in name sorted dict.
-
-        Arguments:
-            value: :class:`NameMixin` instance.
-
-        """
-        self._data[value.name] = value
 
 
 class NameSortedList(UserSequence[_T]):
