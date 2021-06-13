@@ -118,6 +118,9 @@ class NameList(UserSequence[_T]):
 
         return self._data.__getitem__(index)
 
+    def __contains__(self, key: Any) -> bool:
+        return self._mapping.__contains__(key)
+
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, self.__class__):
             return False
@@ -181,6 +184,13 @@ class SortedNameList(UserSequence[_T]):
 
         self._data.__delitem__(index)
         self._names.__delitem__(index)
+
+    def __contains__(self, key: Any) -> bool:
+        try:
+            self._search(key)
+            return True
+        except (KeyError, TypeError):
+            return False
 
     def _search(self, key: str) -> int:
         index = bisect_left(self._names, key)

@@ -61,6 +61,9 @@ class UserSequence(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancesto
     def __getitem__(self, index: Union[int, slice]) -> Union[Sequence[_T], _T]:
         return self._data.__getitem__(index)
 
+    def __contains__(self, value: Any) -> bool:
+        return self._data.__contains__(value)
+
     def __iter__(self) -> Iterator[_T]:
         return self._data.__iter__()
 
