@@ -308,6 +308,12 @@ Show commit logs in oneline format.
 
    gas log --oneline tb:[dataset_name]
 
+Show a text-based graphical representaion of commit history
+
+.. code:: console
+
+   gas log --graph tb:[dataset_name]
+
 
 *************
  gas branch
