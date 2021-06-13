@@ -43,9 +43,9 @@ from ..label import Catalog
 from ..utility import (
     AttrsMixin,
     NameMixin,
-    NameSortedList,
     ReprMixin,
     ReprType,
+    SortedNameList,
     attr,
     camel,
     common_loads,
@@ -173,7 +173,7 @@ class DatasetBase(Sequence[_T], NameMixin):  # pylint: disable=too-many-ancestor
             if revision:
                 self._client.checkout(revision)
         else:
-            self._segments: NameSortedList[_T] = NameSortedList()
+            self._segments: SortedNameList[_T] = SortedNameList()
             self._catalog = Catalog()
             self._notes = Notes()
 
@@ -196,12 +196,12 @@ class DatasetBase(Sequence[_T], NameMixin):  # pylint: disable=too-many-ancestor
 
     @locked
     def _init_segments(self) -> None:
-        self._segments = NameSortedList()
+        self._segments = SortedNameList()
 
         for segment in self._client._list_segment_instances():  # pylint: disable=protected-access
             self._segments.add(segment)  # type: ignore[arg-type]
 
-    def _get_segments(self) -> NameSortedList[_T]:
+    def _get_segments(self) -> SortedNameList[_T]:
         if not hasattr(self, "_segments"):
             self._init_segments()
 

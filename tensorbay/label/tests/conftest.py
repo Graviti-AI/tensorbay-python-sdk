@@ -9,7 +9,7 @@
 
 import pytest
 
-from ...utility import NamedList
+from ...utility import NameList
 from ..attributes import AttributeInfo
 from ..supports import CategoryInfo, KeypointsInfo
 
@@ -84,15 +84,15 @@ def keypoints_info_data():
 
 @pytest.fixture
 def categories(categories_catalog_data):
-    """Load CategoryInfo into a NamedList.
+    """Load CategoryInfo into a NameList.
 
     Arguments:
         categories_catalog_data: A list containing categories info.
 
     Returns:
-        A NamedList containing multiple CategoryInfo.
+        A NameList containing multiple CategoryInfo.
     """
-    category_dict = NamedList()
+    category_dict = NameList()
     for category in categories_catalog_data:
         category_dict.append(CategoryInfo.loads(category))
     return category_dict
@@ -100,15 +100,15 @@ def categories(categories_catalog_data):
 
 @pytest.fixture
 def attributes(attributes_catalog_data):
-    """Load AttributeInfo into a NamedList.
+    """Load AttributeInfo into a NameList.
 
     Arguments:
         attributes_catalog_data: A list containing attributes info.
 
     Returns:
-        A NamedList containing multiple AttributeInfo.
+        A NameList containing multiple AttributeInfo.
     """
-    attribute_dict = NamedList()
+    attribute_dict = NameList()
     for attribute in attributes_catalog_data:
         attribute_dict.append(AttributeInfo.loads(attribute))
     return attribute_dict

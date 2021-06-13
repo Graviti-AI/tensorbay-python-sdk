@@ -27,7 +27,7 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Un
 
 from ..utility import (
     AttrsMixin,
-    NamedList,
+    NameList,
     NameMixin,
     ReprMixin,
     ReprType,
@@ -293,7 +293,7 @@ class CategoriesMixin(AttrsMixin):  # pylint: disable=too-few-public-methods
 
     Attributes:
         categories: All the possible categories in the corresponding dataset
-            stored in a :class:`~tensorbay.utility.name.NamedList`
+            stored in a :class:`~tensorbay.utility.name.NameList`
             with the category names as keys
             and the :class:`~tensorbay.label.supports.CategoryInfo` as values.
         category_delimiter: The delimiter in category values indicating parent-child relationship.
@@ -301,7 +301,7 @@ class CategoriesMixin(AttrsMixin):  # pylint: disable=too-few-public-methods
     """
 
     category_delimiter: str = attr(is_dynamic=True, key=camel)
-    categories: NamedList[CategoryInfo] = attr(is_dynamic=True)
+    categories: NameList[CategoryInfo] = attr(is_dynamic=True)
 
     def get_category_to_index(self) -> Dict[str, int]:
         """Return the dict containing the conversion from category to index.
@@ -336,7 +336,7 @@ class CategoriesMixin(AttrsMixin):  # pylint: disable=too-few-public-methods
 
         """
         if not hasattr(self, "categories"):
-            self.categories = NamedList()
+            self.categories = NameList()
 
         self.categories.append(CategoryInfo(name, description))
 
@@ -346,13 +346,13 @@ class AttributesMixin(AttrsMixin):  # pylint: disable=too-few-public-methods
 
     Attributes:
         attributes: All the possible attributes in the corresponding dataset
-            stored in a :class:`~tensorbay.utility.name.NamedList`
+            stored in a :class:`~tensorbay.utility.name.NameList`
             with the attribute names as keys
             and the :class:`~tensorbay.label.attribute.AttributeInfo` as values.
 
     """
 
-    attributes: NamedList[AttributeInfo] = attr(is_dynamic=True)
+    attributes: NameList[AttributeInfo] = attr(is_dynamic=True)
 
     def add_attribute(
         self,
@@ -399,6 +399,6 @@ class AttributesMixin(AttrsMixin):  # pylint: disable=too-few-public-methods
         )
 
         if not hasattr(self, "attributes"):
-            self.attributes = NamedList()
+            self.attributes = NameList()
 
         self.attributes.append(attribute_info)

@@ -64,10 +64,10 @@ class Catalog(ReprMixin, AttrsMixin):
     contains the features, fields and the specific definitions of the labels.
 
     Examples:
-        >>> from tensorbay.utility import NamedList
+        >>> from tensorbay.utility import NameList
         >>> from tensorbay.label import ClassificationSubcatalog, CategoryInfo
         >>> classification_subcatalog = ClassificationSubcatalog()
-        >>> categories = NamedList()
+        >>> categories = NameList()
         >>> categories.append(CategoryInfo("example"))
         >>> classification_subcatalog.categories = categories
         >>> catalog = Catalog()
@@ -75,7 +75,7 @@ class Catalog(ReprMixin, AttrsMixin):
         >>> catalog
         Catalog(
           (classification): ClassificationSubcatalog(
-            (categories): NamedList [...]
+            (categories): NameList [...]
           )
         )
 
@@ -131,7 +131,7 @@ class Catalog(ReprMixin, AttrsMixin):
             >>> Catalog.loads(contents)
             Catalog(
               (classification): ClassificationSubcatalog(
-                (categories): NamedList [...]
+                (categories): NameList [...]
               ),
               (keypoints2d): Keypoints2DSubcatalog(
                 (is_tracking): False,

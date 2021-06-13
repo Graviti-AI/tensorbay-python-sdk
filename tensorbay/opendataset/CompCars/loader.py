@@ -10,7 +10,7 @@ from typing import Any, Dict, List
 
 from ...dataset import Data, Dataset
 from ...label import AttributeInfo, Classification, LabeledBox2D
-from ...utility import NamedList
+from ...utility import NameList
 
 DATASET_NAME = "CompCars"
 
@@ -101,7 +101,7 @@ def CompCars(path: str) -> Dataset:
 
 
 def _get_model_to_attributes(
-    path: str, classification_attributes: NamedList[AttributeInfo]
+    path: str, classification_attributes: NameList[AttributeInfo]
 ) -> Dict[str, Dict[str, Any]]:
     attributes = {}
 
