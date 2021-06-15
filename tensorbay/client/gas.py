@@ -295,7 +295,7 @@ class GAS:
 
         dataset_id = info["id"]
         type_flag = info["type"]
-        commit_id = info["commitId"] if info["commitId"] else ROOT_COMMIT_ID
+        commit_id = info["commitId"]
         default_branch = info["defaultBranch"]
 
         status = Status(default_branch, commit_id=commit_id)
