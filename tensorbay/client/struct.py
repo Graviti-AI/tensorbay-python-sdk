@@ -85,30 +85,34 @@ class Commit(AttrsMixin, ReprMixin):
         commit_id: The commit id.
         parent_commit_id: The parent commit id.
         message: The commit message.
+        description: The commit description.
         committer: The commit user.
 
     """
 
     _T = TypeVar("_T", bound="Commit")
 
-    _repr_attrs: Tuple[str, ...] = ("parent_commit_id", "message", "committer")
+    _repr_attrs: Tuple[str, ...] = ("parent_commit_id", "message", "description", "committer")
     _repr_maxlevel = 2
 
     commit_id: str = attr(is_dynamic=False, key=camel)
     parent_commit_id: Optional[str] = attr(is_dynamic=False, key=camel)
     message: str = attr(is_dynamic=False)
+    description: str = attr(is_dynamic=False, default="")
     committer: User = attr(is_dynamic=False)
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         commit_id: str,
         parent_commit_id: Optional[str],
         message: str,
+        description: str,
         committer: User,
     ) -> None:
         self.commit_id = commit_id
         self.parent_commit_id = parent_commit_id
         self.message = message
+        self.description = description
         self.committer = committer
 
     def _repr_head(self) -> str:
@@ -125,6 +129,7 @@ class Commit(AttrsMixin, ReprMixin):
                         "commitId": <str>
                         "parentCommitId": <str> or None
                         "message": <str>
+                        "description": <str>
                         "committer": {
                             "name": <str>
                             "date": <int>
@@ -147,6 +152,7 @@ class Commit(AttrsMixin, ReprMixin):
                     "commitId": <str>
                     "parentCommitId": <str> or None
                     "message": <str>
+                    "description": <str>
                     "committer": {
                         "name": <str>
                         "date": <int>
@@ -167,6 +173,7 @@ class _NamedCommit(Commit):
         commit_id: The commit id.
         parent_commit_id: The parent commit id.
         message: The commit message.
+        description: The commit description.
         committer: The commit user.
 
     """
@@ -183,9 +190,10 @@ class _NamedCommit(Commit):
         commit_id: str,
         parent_commit_id: Optional[str],
         message: str,
+        description: str,
         committer: User,
     ) -> None:
-        super().__init__(commit_id, parent_commit_id, message, committer)
+        super().__init__(commit_id, parent_commit_id, message, description, committer)
         self.name = name
 
     def _repr_head(self) -> str:
@@ -203,6 +211,7 @@ class _NamedCommit(Commit):
                         "commitId": <str>
                         "parentCommitId": <str> or None
                         "message": <str>
+                        "description": <str>
                         "committer": {
                             "name": <str>
                             "date": <int>
@@ -226,6 +235,7 @@ class _NamedCommit(Commit):
                     "commitId": <str>
                     "parentCommitId": <str> or None
                     "message": <str>
+                    "description": <str>
                     "committer": {
                         "name": <str>
                         "date": <int>
@@ -244,6 +254,7 @@ class Tag(_NamedCommit):
         commit_id: The commit id.
         parent_commit_id: The parent commit id.
         message: The commit message.
+        description: The commit description.
         committer: The commit user.
 
     """
@@ -257,6 +268,7 @@ class Branch(_NamedCommit):
         commit_id: The commit id.
         parent_commit_id: The parent commit id.
         message: The commit message.
+        description: The commit description.
         committer: The commit user.
 
     """

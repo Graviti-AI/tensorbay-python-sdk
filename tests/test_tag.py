@@ -6,7 +6,7 @@
 import pytest
 
 from tensorbay import GAS
-from tensorbay.client.gas import DEFAULT_BRANCH, ROOT_COMMIT_ID
+from tensorbay.client.gas import ROOT_COMMIT_ID
 from tensorbay.exception import ResourceNotExistError, ResponseError, StatusError
 
 from .utility import get_dataset_name
@@ -18,7 +18,7 @@ class TestTag:
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
-        dataset_client.commit("commit-1", tag="V1")
+        dataset_client.commit("commit-1", "test", tag="V1")
 
         # Can create more than one tag for one commit
         dataset_client.create_tag("V11")
@@ -65,7 +65,7 @@ class TestTag:
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
-        dataset_client.commit("commit-1", tag="V1")
+        dataset_client.commit("commit-1", "test", tag="V1")
         commit_1_id = dataset_client.status.commit_id
 
         tag = dataset_client.get_tag("V1")
@@ -73,6 +73,7 @@ class TestTag:
         assert tag.commit_id == commit_1_id
         assert tag.parent_commit_id == ROOT_COMMIT_ID
         assert tag.message == "commit-1"
+        assert tag.description == "test"
         assert tag.committer.name
         assert tag.committer.date
 
@@ -81,7 +82,7 @@ class TestTag:
             dataset_client.get_tag("V2")
 
         dataset_client.create_draft("draft-2")
-        dataset_client.commit("commit-2", tag="V2")
+        dataset_client.commit("commit-2", "test", tag="V2")
         commit_2_id = dataset_client.status.commit_id
 
         tag = dataset_client.get_tag("V2")
@@ -89,6 +90,7 @@ class TestTag:
         assert tag.commit_id == commit_2_id
         assert tag.parent_commit_id == commit_1_id
         assert tag.message == "commit-2"
+        assert tag.description == "test"
         assert tag.committer.name
         assert tag.committer.date
 

@@ -76,11 +76,12 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         self._client = gas_client._client  # pylint: disable=protected-access
         self._status = status
 
-    def _commit(self, message: str, tag: Optional[str] = None) -> str:
-        post_data: Dict[str, Any] = {
-            "message": message,
-        }
+    def _commit(self, message: str, description: str, tag: Optional[str] = None) -> str:
+        post_data: Dict[str, Any] = {"message": message}
         post_data.update(self._status.get_status_info())
+
+        if description:
+            post_data["description"] = description
 
         if tag:
             post_data["tag"] = tag
@@ -479,16 +480,17 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             self._status.checkout(draft_number=draft.number)
             self._status.branch_name = draft.branch_name
 
-    def commit(self, message: str, *, tag: Optional[str] = None) -> None:
+    def commit(self, message: str, description: str = "", *, tag: Optional[str] = None) -> None:
         """Commit the draft.
 
         Arguments:
             message: The commit message.
+            description: The commit description.
             tag: A tag for current commit.
 
         """
         self._status.check_authority_for_draft()
-        self._status.checkout(commit_id=self._commit(message, tag))
+        self._status.checkout(commit_id=self._commit(message, description, tag))
 
     def update_notes(
         self,
