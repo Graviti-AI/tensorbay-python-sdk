@@ -19,7 +19,7 @@ class TestCommit:
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
-        dataset_client.commit("commit-1", tag="V1")
+        dataset_client.commit("commit-1", "test", tag="V1")
         commit_1_id = dataset_client.status.commit_id
         dataset_client.create_draft("draft-2")
         dataset_client.commit("commit-2")
@@ -30,6 +30,7 @@ class TestCommit:
         assert commit.commit_id == commit_2_id
         assert commit.parent_commit_id == commit_1_id
         assert commit.message == "commit-2"
+        assert commit.description == ""
         assert commit.committer.name
         assert commit.committer.date
 
@@ -38,6 +39,7 @@ class TestCommit:
         assert commit.commit_id == commit_1_id
         assert commit.parent_commit_id == ROOT_COMMIT_ID
         assert commit.message == "commit-1"
+        assert commit.description == "test"
         assert commit.committer.name
         assert commit.committer.date
 
@@ -46,6 +48,7 @@ class TestCommit:
         assert commit.commit_id == commit_2_id
         assert commit.parent_commit_id == commit_1_id
         assert commit.message == "commit-2"
+        assert commit.description == ""
         assert commit.committer.name
         assert commit.committer.date
 
@@ -61,7 +64,7 @@ class TestCommit:
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
-        dataset_client.commit("commit-1", tag="V1")
+        dataset_client.commit("commit-1", "test", tag="V1")
         commit_1_id = dataset_client.status.commit_id
         dataset_client.create_draft("draft-2")
         dataset_client.commit("commit-2")
@@ -72,6 +75,7 @@ class TestCommit:
         assert commit.commit_id == commit_1_id
         assert commit.parent_commit_id == ROOT_COMMIT_ID
         assert commit.message == "commit-1"
+        assert commit.description == "test"
         assert commit.committer.name
         assert commit.committer.date
 
@@ -80,6 +84,7 @@ class TestCommit:
         assert commit.commit_id == commit_2_id
         assert commit.parent_commit_id == commit_1_id
         assert commit.message == "commit-2"
+        assert commit.description == ""
         assert commit.committer.name
         assert commit.committer.date
 

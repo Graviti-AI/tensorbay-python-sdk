@@ -36,7 +36,7 @@ class TestDraft:
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
-        dataset_client.commit(message="commit-draft-1")
+        dataset_client.commit("commit-draft-1")
         draft_number_2 = dataset_client.create_draft("draft-2")
 
         # After committing, the draft will be deleted

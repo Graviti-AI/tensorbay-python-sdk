@@ -23,7 +23,7 @@ class TestBranch:
             dataset_client.create_branch("T123")
 
         dataset_client.create_draft("draft-1")
-        dataset_client.commit("commit-1", tag="V1")
+        dataset_client.commit("commit-1", "test", tag="V1")
         commit_id = dataset_client.status.commit_id
         dataset_client.create_branch("T123")
 
@@ -38,6 +38,7 @@ class TestBranch:
         assert branch.commit_id == dataset_client.status.commit_id
         assert branch.parent_commit_id == ROOT_COMMIT_ID
         assert branch.message == "commit-1"
+        assert branch.description == "test"
         assert branch.committer.name
         assert branch.committer.date
 
@@ -91,7 +92,7 @@ class TestBranch:
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
-        dataset_client.commit("commit-1", tag="V1")
+        dataset_client.commit("commit-1", "test", tag="V1")
         commit_1_id = dataset_client.status.commit_id
         dataset_client.create_draft("draft-2")
         dataset_client.commit("commit-2")
@@ -104,6 +105,7 @@ class TestBranch:
         assert branch.commit_id == commit_2_id
         assert branch.parent_commit_id == commit_1_id
         assert branch.message == "commit-2"
+        assert branch.description == ""
         assert branch.committer.name
         assert branch.committer.date
         with pytest.raises(ResourceNotExistError):
@@ -114,6 +116,7 @@ class TestBranch:
         assert branch1.commit_id == commit_2_id
         assert branch1.parent_commit_id == commit_1_id
         assert branch1.message == "commit-2"
+        assert branch.description == ""
         assert branch1.committer.name
         assert branch1.committer.date
 
