@@ -35,8 +35,8 @@ class User(AttrsMixin, ReprMixin):
 
     _repr_attrs = ("date",)
 
-    name: str = attr(is_dynamic=False)
-    date: int = attr(is_dynamic=False)
+    name: str = attr()
+    date: int = attr()
 
     def __init__(self, name: str, date: int) -> None:
         self.name = name
@@ -95,11 +95,11 @@ class Commit(AttrsMixin, ReprMixin):
     _repr_attrs: Tuple[str, ...] = ("parent_commit_id", "message", "description", "committer")
     _repr_maxlevel = 2
 
-    commit_id: str = attr(is_dynamic=False, key=camel)
-    parent_commit_id: Optional[str] = attr(is_dynamic=False, key=camel)
-    message: str = attr(is_dynamic=False)
-    description: str = attr(is_dynamic=False, default="")
-    committer: User = attr(is_dynamic=False)
+    commit_id: str = attr(key=camel)
+    parent_commit_id: Optional[str] = attr(key=camel)
+    message: str = attr()
+    description: str = attr(default="")
+    committer: User = attr()
 
     def __init__(  # pylint: disable=too-many-arguments
         self,
@@ -182,7 +182,7 @@ class _NamedCommit(Commit):
 
     _repr_attrs = ("commit_id",) + Commit._repr_attrs
 
-    name: str = attr(is_dynamic=False)
+    name: str = attr()
 
     def __init__(  # pylint: disable=too-many-arguments
         self,
@@ -288,9 +288,9 @@ class Draft(AttrsMixin, ReprMixin):
 
     _repr_attrs = ("title",)
 
-    number: int = attr(is_dynamic=False)
-    title: str = attr(is_dynamic=False)
-    branch_name: str = attr(is_dynamic=False, key=camel)
+    number: int = attr()
+    title: str = attr()
+    branch_name: str = attr(key=camel)
 
     def __init__(self, number: int, title: str, branch_name: str) -> None:
         self.number = number
