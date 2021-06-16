@@ -64,6 +64,12 @@ class UserSequence(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancesto
     def __contains__(self, value: Any) -> bool:
         return self._data.__contains__(value)
 
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, self.__class__):
+            return False
+
+        return self._data.__eq__(other._data)
+
     def __iter__(self) -> Iterator[_T]:
         return self._data.__iter__()
 

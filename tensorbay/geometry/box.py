@@ -70,12 +70,6 @@ class Box2D(UserSequence[float]):
     def __len__(self) -> int:
         return Box2D._LENGTH
 
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, self.__class__):
-            return False
-
-        return self._data.__eq__(other._data)
-
     def __and__(self, other: "Box2D") -> "Box2D":
         """Calculate the intersect box of two boxes.
 
