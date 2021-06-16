@@ -37,7 +37,7 @@ class TestBranch:
         assert branch.name == "T123"
         assert branch.commit_id == dataset_client.status.commit_id
         assert branch.parent_commit_id == ROOT_COMMIT_ID
-        assert branch.message == "commit-1"
+        assert branch.title == "commit-1"
         assert branch.description == "test"
         assert branch.committer.name
         assert branch.committer.date
@@ -68,7 +68,7 @@ class TestBranch:
         assert branch.name == "Test_Commit_Id"
         assert branch.commit_id == commit_id_1
         assert branch.parent_commit_id == ROOT_COMMIT_ID
-        assert branch.message == "commit-1"
+        assert branch.title == "commit-1"
 
         # Create a branch based on branch
         dataset_client.create_branch("Test_Tag", revision="V1")
@@ -76,14 +76,14 @@ class TestBranch:
         assert branch.name == "Test_Tag"
         assert branch.commit_id == commit_id_1
         assert branch.parent_commit_id == ROOT_COMMIT_ID
-        assert branch.message == "commit-1"
+        assert branch.title == "commit-1"
 
         dataset_client.create_branch("Test_Branch", revision=DEFAULT_BRANCH)
         branch = dataset_client.get_branch("Test_Branch")
         assert branch.name == "Test_Branch"
         assert branch.commit_id == commit_id_2
         assert branch.parent_commit_id == commit_id_1
-        assert branch.message == "commit-2"
+        assert branch.title == "commit-2"
 
         gas_client.delete_dataset(dataset_name)
 
@@ -104,7 +104,7 @@ class TestBranch:
         assert branch.name == DEFAULT_BRANCH
         assert branch.commit_id == commit_2_id
         assert branch.parent_commit_id == commit_1_id
-        assert branch.message == "commit-2"
+        assert branch.title == "commit-2"
         assert branch.description == ""
         assert branch.committer.name
         assert branch.committer.date
@@ -115,7 +115,7 @@ class TestBranch:
         assert branch1.name == "T123"
         assert branch1.commit_id == commit_2_id
         assert branch1.parent_commit_id == commit_1_id
-        assert branch1.message == "commit-2"
+        assert branch1.title == "commit-2"
         assert branch.description == ""
         assert branch1.committer.name
         assert branch1.committer.date
