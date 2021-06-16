@@ -6,18 +6,33 @@
 
 """Command-line interface.
 
-Use 'gas' + COMMAND in terminal to operate on datasets.
+Use ``gas <command>`` in terminal to operate on datasets.
 
-Use 'gas config' to  configure environment.
+Use ``gas auth`` to authenticate the accessKey of gas.
 
-Use 'gas ls' to list data.
+Use ``gas branch`` to list, create or delete branches.
 
-Use 'gas draft' to operate a draft.
+Use ``gas commit`` to commit drafts.
 
-Use 'gas branch' to operate a branch.
+Use ``gas config`` to configure the options when using gas CLI.
+
+Use ``gas cp`` to copy local data to a remote path.
+
+Use ``gas dataset`` to list, create or delete datasets.
+
+Use ``gas draft`` to list or create drafts.
+
+Use ``gas log`` to show commit logs.
+
+Use ``gas ls`` to list data under the path.
+
+Use ``gas rm`` to remove the remote data.
+
+Use ``gas tag`` to list, create or delete tags.
 
 """
 
+from functools import partial
 from typing import Any, Dict, Iterable, Optional, Tuple
 
 import click
@@ -25,7 +40,52 @@ import click
 from .. import __version__
 
 
-class DeprecatedCommand(click.Command):
+class CustomCommand(click.Command):
+    """Wrapper class of ``click.Command`` for CLI commands with custom help.
+
+    Arguments:
+        kwargs: The keyword arguments pass to ``click.Command``.
+
+    """
+
+    def __init__(self, **kwargs: Any) -> None:
+        self.synopsis = kwargs.pop("synopsis", [])
+        super().__init__(**kwargs)
+
+    def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
+        """Writes the custom help into the formatter if it exists.
+
+        Override the original ``click.Command.format_help`` method by
+        adding :meth:`CustomCommand.format_synopsis` to form custom help message.
+
+        Arguments:
+            ctx: The context of the command.
+            formatter: The help formatter of the command.
+
+        """
+        formatter.width = 100
+        self.format_usage(ctx, formatter)
+        self.format_help_text(ctx, formatter)
+        self.format_synopsis(formatter)  # Add synopsis in command help.
+        self.format_options(ctx, formatter)
+        self.format_epilog(ctx, formatter)
+
+    def format_synopsis(self, formatter: click.HelpFormatter) -> None:
+        """Wirte the synopsis to the formatter if exist.
+
+        Arguments:
+            formatter: The help formatter of the command.
+
+        """
+        if not self.synopsis:
+            return
+
+        with formatter.section("Synopsis"):
+            for example in self.synopsis:
+                formatter.write_text(example)
+
+
+class DeprecatedCommand(CustomCommand):
     """Customized ``click.Command`` wrapper class for deprecated CLI commands.
 
     Arguments:
@@ -34,7 +94,6 @@ class DeprecatedCommand(click.Command):
         removed_in: The version the function will be removed in.
         substitute: The substitute command.
         kwargs: The keyword arguments pass to ``click.Command``.
-
     """
 
     def __init__(
@@ -93,7 +152,7 @@ class DeprecatedCommand(click.Command):
 @click.option("-d", "--debug", is_flag=True, help="Debug mode.")
 @click.pass_context
 def cli(ctx: click.Context, access_key: str, url: str, profile_name: str, debug: bool) -> None:
-    """You can use 'gas' + COMMAND to operate on your dataset.\f
+    """You can use ``gas <command>`` to operate on your datasets.\f
 
     Arguments:
         ctx: The context to be passed as the first argument.
@@ -108,7 +167,10 @@ def cli(ctx: click.Context, access_key: str, url: str, profile_name: str, debug:
     _implement_cli(ctx, access_key, url, profile_name, debug)
 
 
-@cli.command(
+command = partial(cli.command, cls=CustomCommand)
+
+
+@command(
     cls=DeprecatedCommand,
     hidden=True,
     since="v1.5.0",
@@ -130,7 +192,7 @@ def create(obj: Dict[str, str], name: str) -> None:
     _implement_dataset(obj, name, is_delete=False, yes=False)
 
 
-@cli.command(
+@command(
     cls=DeprecatedCommand,
     hidden=True,
     since="v1.5.0",
@@ -154,7 +216,13 @@ def delete(obj: Dict[str, str], name: str, yes: bool) -> None:
     _implement_dataset(obj, name, is_delete=True, yes=yes)
 
 
-@cli.command()
+@command(
+    synopsis=(
+        "$ gas ls                                       # List all the datasets.",
+        "$ gas ls tb:<dataset_name>                     # List segments of a dataset.",
+        "$ gas ls tb:<dataset_name>:<segment_name>      # List files of a segment.",
+    )
+)
 @click.argument("tbrn", type=str, default="")
 @click.option(
     "-a", "--all", "list_all_files", is_flag=True, help="List all files under the segment."
@@ -176,7 +244,13 @@ def ls(  # pylint: disable=invalid-name
     _implement_ls(obj, tbrn, list_all_files)
 
 
-@cli.command()
+@command(
+    synopsis=(
+        "$ gas config [key]                # Show the config.",
+        "$ gas config <key> <value>        # Set the config.",
+        "$ gas config -u [key]             # Unset the config.",
+    )
+)
 @click.argument("key", type=str, default="")
 @click.argument("value", type=str, default="")
 @click.option("-u", "--unset", is_flag=True, help="Unset the config option")
@@ -194,13 +268,19 @@ def config(key: str, value: str, unset: bool) -> None:
     _implement_config(key, value, unset)
 
 
-@cli.command()
+@command(
+    synopsis=(
+        "$ gas dataset                                  # List all the datasets.",
+        "$ gas dataset tb:<dataset_name>                # Create a dataset.",
+        "$ gas dataset -d [-y] tb:<dataset_name>        # Delete a dataset.",
+    )
+)
 @click.argument("tbrn", type=str, default="")
 @click.option("-d", "--delete", "is_delete", is_flag=True, help="Delete TensorBay dataset")
 @click.option("-y", "--yes", is_flag=True, help="Confirm to delete the dataset completely.")
 @click.pass_obj
 def dataset(obj: Dict[str, str], tbrn: str, is_delete: bool, yes: bool) -> None:
-    """Work with TensorBay datasets\f
+    """List, create or delete datasets.\f
 
     Arguments:
         obj: A dict including config information.
@@ -214,7 +294,12 @@ def dataset(obj: Dict[str, str], tbrn: str, is_delete: bool, yes: bool) -> None:
     _implement_dataset(obj, tbrn, is_delete, yes)
 
 
-@cli.command()
+@command(
+    synopsis=(
+        "$ gas draft -l tb:<dataset_name>                                # List drafts.",
+        "$ gas draft tb:<dataset_name>[@<branch_name>] [-t <title>]      # Create a draft.",
+    )
+)
 @click.argument("tbrn", type=str)
 @click.option("-l", "--list", "is_list", is_flag=True, help="List the drafts.")
 @click.option("-t", "--title", type=str, default="", help="The title of the draft.")
@@ -225,7 +310,7 @@ def draft(
     is_list: bool,
     title: str,
 ) -> None:
-    """Work with draft.\f
+    """List or create drafts.\f
 
     Arguments:
         obj: A dict contains config information.
@@ -239,14 +324,16 @@ def draft(
     _implement_draft(obj, tbrn, is_list, title)
 
 
-@cli.command()
+@command(
+    synopsis=("$ gas commit tb:<dataset_name>#<draft_number> [-m <message>]      # Commit a draft.")
+)
 @click.argument("tbrn", type=str)
 @click.option(
     "-m", "--message", type=str, multiple=True, default=(), help="The message of the commit."
 )
 @click.pass_obj
 def commit(obj: Dict[str, str], tbrn: str, message: Tuple[str, ...]) -> None:
-    """Work with commit.\f
+    """Commit drafts.\f
 
     Arguments:
         obj: A dict contains config information.
@@ -259,7 +346,18 @@ def commit(obj: Dict[str, str], tbrn: str, message: Tuple[str, ...]) -> None:
     _implement_commit(obj, tbrn, message)
 
 
-@cli.command()
+@command(
+    synopsis=(
+        "# Upload a file.",
+        "$ gas cp <local_path> tb:<dataset_name>#<draft_number>:<segment_name>[://<remote_path]",
+        "",
+        "# Upload files.",
+        "$ gas cp <local_path1> [local_path2 ...] tb:<dataset_name>#<draft_number>:<segment_name>",
+        "",
+        "# Upload files in a folder.",
+        "$ gas cp -r <local_folder> tb:<dataset_name>#<draft_number>:<segment_name>",
+    )
+)
 @click.argument("local_paths", type=str, nargs=-1)
 @click.argument("tbrn", type=str, nargs=1)
 @click.option(
@@ -298,7 +396,15 @@ def cp(  # pylint: disable=invalid-name, too-many-arguments
     _implement_cp(obj, local_paths, tbrn, is_recursive, jobs, skip_uploaded_files)
 
 
-@cli.command()
+@command(
+    synopsis=(
+        "# Remove a segment.",
+        "$ gas rm -r tb:<dataset_name>#<draft_number>:<segment_name>",
+        "",
+        "# Remove a file.",
+        "$ gas rm tb:<dataset_name>#<draft_number>:<segment_name>://<remote_path>",
+    )
+)
 @click.argument("tbrn", type=str)
 @click.option(
     "-r", "--recursive", "is_recursive", is_flag=True, help="Remove directories recursively."
@@ -320,14 +426,20 @@ def rm(  # pylint: disable=invalid-name, too-many-arguments
     _implement_rm(obj, tbrn, is_recursive)
 
 
-@cli.command()
+@command(
+    synopsis=(
+        "$ gas branch tb:<dataset_name> [--verbose]                      # List branches.",
+        "$ gas branch tb:<dataset_name>[@<revision>] <branch_name>       # Create a branch.",
+        "$ gas branch -d tb:<dataset_name>@<branch_name>                 # Delete a branch.",
+    )
+)
 @click.argument("tbrn", type=str)
 @click.argument("name", type=str, default="")
 @click.option("-v", "--verbose", is_flag=True, help="Show short commit id and commit message.")
 @click.option("-d", "--delete", "is_delete", is_flag=True, help="Delete the branch")
 @click.pass_obj
 def branch(obj: Dict[str, str], tbrn: str, name: str, verbose: bool, is_delete: bool) -> None:
-    """Work with branch.\f
+    """List, create or delete branches.\f
 
     Arguments:
         obj: A dict contains config information.
@@ -342,13 +454,19 @@ def branch(obj: Dict[str, str], tbrn: str, name: str, verbose: bool, is_delete: 
     _implement_branch(obj, tbrn, name, verbose, is_delete)
 
 
-@cli.command()
+@command(
+    synopsis=(
+        "$ gas tag tb:<dataset_name>                            # List tags.",
+        "$ gas tag tb:<dataset_name>[@<revision>] <tag_name>    # Create a tag.",
+        "$ gas tag -d tb:<dataset_name>@<tag_name>              # Delete a tag.",
+    )
+)
 @click.argument("tbrn", type=str)
 @click.argument("name", type=str, default="")
 @click.option("-d", "--delete", "is_delete", is_flag=True, help="Delete the tag.")
 @click.pass_obj
 def tag(obj: Dict[str, str], tbrn: str, name: str, is_delete: bool) -> None:
-    """Work with tag.\f
+    """List, create or delete tags.\f
 
     Arguments:
         obj: A dict contains config information.
@@ -362,7 +480,13 @@ def tag(obj: Dict[str, str], tbrn: str, name: str, is_delete: bool) -> None:
     _implement_tag(obj, tbrn, name, is_delete)
 
 
-@cli.command()
+@command(
+    synopsis=(
+        "$ gas log tb:<dataset_name>[@<revision>]               # Show commit logs.",
+        "$ gas log -n <number> tb:<dataset_name>[@<revision>]   # Show up to <number> commit logs.",
+        "$ gas log --oneline tb:<dataset_name>[@<revision>]     # Show oneline commit logs.",
+    )
+)
 @click.argument("tbrn", type=str)
 @click.option(
     "-n", "--max-count", type=int, default=None, help="Limit the max number of commits to be showed"
@@ -389,7 +513,14 @@ def log(
     _implement_log(obj, tbrn, max_count, oneline)
 
 
-@cli.command()
+@command(
+    synopsis=(
+        "$ gas auth                      # Interactive authentication.",
+        "$ gas auth <AccessKey>          # Authenticate with AccessKey.",
+        "$ gas auth -g [-a]              # Get the authentication info.",
+        "$ gas auth -u [-a]              # Unset the authentication info.",
+    )
+)
 @click.argument("arg1", type=str, default="", metavar="accessKey")
 @click.argument("arg2", type=str, default="", metavar="")
 @click.option("-g", "--get", is_flag=True, help="Get the accesskey of the profile")
