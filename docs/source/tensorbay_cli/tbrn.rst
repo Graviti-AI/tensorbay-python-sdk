@@ -9,7 +9,7 @@ All TBRN begins with ``tb:``.
 
 .. code:: console
 
-    tb:[dataset_name]
+    tb:<dataset_name>
 
 For example, the following TBRN means the dataset "VOC2012".
 
@@ -22,7 +22,7 @@ For example, the following TBRN means the dataset "VOC2012".
 
 .. code:: console
 
-    tb:[dataset_name]:[segment_name]
+    tb:<dataset_name>:<segment_name>
 
 For example, the following TBRN means the "train" segment of dataset "VOC2012".
 
@@ -35,7 +35,7 @@ For example, the following TBRN means the "train" segment of dataset "VOC2012".
 
 .. code:: console
 
-    tb:[dataset_name]:[segment_name]://[remote_path]
+    tb:<dataset_name>:<segment_name>://<remote_path>
 
 For example, the following TBRN means the file "2012_004330.jpg" under "train" segment in dataset "VOC2012".
 
@@ -57,7 +57,7 @@ A TBRN can include revision info in the following format:
 
 .. code:: console
 
-   tb:[dataset_name]@[revision]:[segment_name]://[remote_path]
+   tb:<dataset_name>@<revision>[:<segment_name>][://<remote_path>]
 
 For example, the following TBRN means the main branch of dataset "VOC2012".
 
@@ -72,7 +72,7 @@ A TBRN can include draft info in the following format:
 
 .. code:: console
 
-   tb:[dataset_name]#[draft_number]:[segment_name]://[remote_path]
+   tb:<dataset_name>#<draft_number>[:<segment_name>][://<remote_path>]
 
 For example, the following TBRN means the 1st draft of dataset "VOC2012".
 

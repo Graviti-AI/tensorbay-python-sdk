@@ -52,7 +52,7 @@ The following is the general format for TBRN:
 
 .. code:: console
 
-   tb:[dataset_name]:[segment_name]://[remote_path]
+   tb:<dataset_name>[:<segment_name>][://<remote_path>]
 
 
 *******
@@ -64,7 +64,7 @@ CLI: Create a Dataset
 
 .. code:: console
 
-   gas dataset tb:[dataset_name]
+   gas dataset tb:<dataset_name>
 
 
 CLI: List Dataset Names
@@ -80,7 +80,7 @@ CLI: Create a Draft
 
 .. code:: console
 
-   gas draft tb:[dataset_name] -t [title]
+   gas draft tb:<dataset_name> [-t <title>]
 
 
 CLI: List Drafts
@@ -88,7 +88,7 @@ CLI: List Drafts
 
 .. code:: console
 
-   gas draft -l tb:[dataset_name]
+   gas draft -l tb:<dataset_name>
 
 
 CLI: Upload a File To the Dataset
@@ -96,7 +96,7 @@ CLI: Upload a File To the Dataset
 
 .. code:: console
 
-   gas cp [local_path] tb:[dataset_name]#[draft_number]:[segment_name]
+   gas cp <local_path> tb:<dataset_name>#<draft_number>:<segment_name>
 
 
 CLI: Commit the Draft
@@ -104,4 +104,4 @@ CLI: Commit the Draft
 
 .. code:: console
 
-   gas commit tb:[dataset_name]#[draft_number] -m [message]
+   gas commit tb:<dataset_name>#<draft_number> [-m <message>]

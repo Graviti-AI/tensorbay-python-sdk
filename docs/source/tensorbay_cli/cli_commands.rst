@@ -92,7 +92,7 @@ Unset a single configuration.
 
 .. code:: console
 
-   gas config --unset [key]
+   gas config --unset <key>
 
 For example:
 
@@ -111,7 +111,7 @@ Create a dataset.
 
 .. code:: console
 
-   gas dataset tb:[dataset_name]
+   gas dataset tb:<dataset_name>
 
 List all datasets.
 
@@ -123,7 +123,7 @@ Delete a dataset.
 
 .. code:: console
 
-   gas dataset -d tb:[dataset_name]
+   gas dataset -d tb:<dataset_name>
 
 
 *********
@@ -136,13 +136,13 @@ List the segments of a dataset.(default branch)
 
 .. code:: console
 
-    gas ls tb:[dataset_name]
+    gas ls tb:<dataset_name>
 
 List the segments of a specific dataset :ref:`revision<reference/glossary:revision>`.
 
 .. code:: console
 
-   gas ls tb:[dataset_name]@[revision]
+   gas ls tb:<dataset_name>@<revision>
 
 List the segments of a specific dataset draft.
 
@@ -150,23 +150,23 @@ See :ref:`tensorbay_cli/cli_commands:gas draft` for more information.
 
 .. code:: console
 
-    gas ls tb:[dataset_name]#[draft_number]
+    gas ls tb:<dataset_name>#<draft_number>
 
 List all files of a segment.
 
 .. code:: console
 
-    gas ls tb:[dataset_name]:[segment_name]
-    gas ls tb:[dataset_name]@[revision]:[segment_name]
-    gas ls tb:[dataset_name]#[draft_number]:[segment_name
+    gas ls tb:<dataset_name>:<segment_name>
+    gas ls tb:<dataset_name>@<revision>:<segment_name>
+    gas ls tb:<dataset_name>#<draft_number>:<segment_name>
 
 Get a certain file.
 
 .. code:: console
 
-    gas ls tb:[dataset_name]:[segment_name]://[remote_path]
-    gas ls tb:[dataset_name]@[revision]:[segment_name]://[remote_path]
-    gas ls tb:[dataset_name]#[draft_number]:[segment_name]://[remote_path]
+    gas ls tb:<dataset_name>:<segment_name>://<remote_path>
+    gas ls tb:<dataset_name>@<revision>:<segment_name>://<remote_path>
+    gas ls tb:<dataset_name>#<draft_number>:<segment_name>://<remote_path>
 
 
 ********
@@ -183,19 +183,19 @@ see :ref:`tensorbay_cli/cli_commands:gas draft` for more information.
 
 .. code:: console
 
-    gas cp [local_path] tb:[dataset_name]#[draft_number]:[segment_name]
+    gas cp <local_path> tb:<dataset_name>#<draft_number>:<segment_name>
 
 Upload files to a segment. The ``local_path`` refers to a directory.
 
 .. code:: console
 
-    gas cp -r [local_path] tb:[dataset_name]#[draft_number]:[segment_name]
+    gas cp -r <local_path> tb:<dataset_name>#<draft_number>:<segment_name>
 
 Upload a file to a segment with a given ``remote_path``. The ``local_path`` can only refer to a file.
 
 .. code:: console
 
-    gas cp [local_path] tb:[dataset_name]#[draft_number]:[segment_name]://[remote_path]
+    gas cp <local_path> tb:<dataset_name>#<draft_number>:<segment_name>://<remote_path>
 
 
 ********
@@ -211,13 +211,13 @@ see :ref:`tensorbay_cli/cli_commands:gas draft` for more information.
 
 .. code:: console
 
-    gas rm -r tb:[dataset_name]#[draft_number]:[segment_name]
+    gas rm -r tb:<dataset_name>#<draft_number>:<segment_name>
 
 Remove a file.
 
 .. code:: console
 
-    gas rm tb:[dataset_name]@[revision]:[segment_name]://[remote_path]
+    gas rm tb:<dataset_name>@<revision>:<segment_name>://<remote_path>
 
 ***********
  gas draft
@@ -229,13 +229,13 @@ Create a draft with a title.
 
 .. code:: console
 
-   gas draft tb:[dataset_name] -t [title]
+   gas draft tb:<dataset_name> [-t <title>]
 
 List the drafts of a dataset.
 
 .. code:: console
 
-   gas draft -l tb:[dataset_name]
+   gas draft -l tb:<dataset_name>
 
 
 ***********
@@ -248,7 +248,7 @@ Commit a :ref:`reference/glossary:draft` with a message.
 
 .. code:: console
 
-   gas commit tb:[dataset_name]#[draft_number] -m [message]
+   gas commit tb:<dataset_name>#<draft_number> [-m <message>]
 
 
 ***********
@@ -261,20 +261,20 @@ Create a tag on the current commit or a specific :ref:`revision<reference/glossa
 
 .. code:: console
 
-   gas tag tb:[dataset_name] [tag_name]
-   gas tag tb:[dataset_name]@[revision] [tag_name]
+   gas tag tb:<dataset_name> <tag_name>
+   gas tag tb:<dataset_name>@<revision> <tag_name>
 
 List all tags.
 
 .. code:: console
 
-   gas tag tb:[dataset_name]
+   gas tag tb:<dataset_name>
 
 Delete a tag.
 
 .. code:: console
 
-   gas tag -d tb:[dataset_name]@[tag_name]
+   gas tag -d tb:<dataset_name>@<tag_name>
 
 
 *********
@@ -287,26 +287,26 @@ Show the commit logs.
 
 .. code:: console
 
-   gas log tb:[dataset_name]
+   gas log tb:<dataset_name>
 
 Show commit logs from a certain :ref:`reference/glossary:revision`.
 
 .. code:: console
 
-   gas log tb:[dataset_name]@[revision]
+   gas log tb:<dataset_name>@<revision>
 
 Limit the number of commit logs to show.
 
 .. code:: console
 
-   gas log -n <number> tb:[dataset_name]
-   gas log --max-count <number> tb:[dataset_name]
+   gas log -n <number> tb:<dataset_name>
+   gas log --max-count <number> tb:<dataset_name>
 
 Show commit logs in oneline format.
 
 .. code:: console
 
-   gas log --oneline tb:[dataset_name]
+   gas log --oneline tb:<dataset_name>
 
 
 *************
@@ -319,22 +319,22 @@ Create a new branch from the default branch.
 
 .. code:: console
 
-   gas branch tb:[dataset_name] [branch_name]
+   gas branch tb:<dataset_name> <branch_name>
 
 Create a new branch from a certain :ref:`reference/glossary:revision`.
 
 .. code:: console
 
-   gas branch tb:[dataset_name]@[revision] [branch_name]
+   gas branch tb:<dataset_name>@<revision> <branch_name>
 
 Show all branches.
 
 .. code:: console
 
-   gas branch tb:[dataset_name]
+   gas branch tb:<dataset_name>
 
 Delete a branch.
 
 .. code:: console
 
-   gas branch --delete tb:[dataset_name]@[branch_name]
+   gas branch --delete tb:<dataset_name>@<branch_name>
