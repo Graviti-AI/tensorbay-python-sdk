@@ -67,6 +67,9 @@ class UserSequence(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancesto
     def __iter__(self) -> Iterator[_T]:
         return self._data.__iter__()
 
+    def __reversed__(self) -> Iterator[_T]:
+        return self._data.__reversed__()
+
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, self.__class__):
             return False
