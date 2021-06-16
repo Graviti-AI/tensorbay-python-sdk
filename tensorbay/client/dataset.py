@@ -222,7 +222,12 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
 
     @DefaultValueDeprecated("title", since="v1.6.0", removed_in="v1.9.0")
     def create_draft(self, title: Optional[str] = None, branch_name: Optional[str] = None) -> int:
-        """Create the draft.
+        """Create a draft.
+
+        Create a draft with the branch name. If the branch name is not given,
+        create a draft based on the branch name stored in the dataset client.
+        Then the dataset client will change the status to "draft"
+        and store the branch name and draft number.
 
         Arguments:
             title: The draft title.
@@ -248,6 +253,9 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
 
     def get_draft(self, draft_number: Optional[int] = None) -> Draft:
         """Get the certain draft with the given draft number.
+
+        Get the certain draft with the given draft number. If the draft number is not given,
+        get the draft based on the draft number stored in the dataset client.
 
         Arguments:
             draft_number: The required draft number.
@@ -285,6 +293,9 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
 
     def get_commit(self, revision: Optional[str] = None) -> Commit:
         """Get the certain commit with the given revision.
+
+        Get the certain commit with the given revision. If the revision is not given,
+        get the commit based on the commit id stored in the dataset client.
 
         Arguments:
             revision: The information to locate the specific commit, which can be the commit id,
@@ -331,7 +342,10 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         )
 
     def create_tag(self, name: str, revision: Optional[str] = None) -> None:
-        """Create the tag for a commit.
+        """Create a tag for a commit.
+
+        Create a tag for a commit with the given revision. If the revision is not given,
+        create a tag based on the commit id stored in the dataset client.
 
         Arguments:
             name: The tag name to be created for the specific commit.
@@ -382,7 +396,12 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
         return PagingList(lambda offset, limit: self._generate_tags(None, offset, limit), 128)
 
     def create_branch(self, name: str, revision: Optional[str] = None) -> None:
-        """Create the branch.
+        """Create a branch.
+
+        Create a branch based on a commit with the given revision. If the revision is not given,
+        create a branch based on the commit id stored in the dataset client.
+        Then the dataset client will change the status to "commit"
+        and store the branch name and the commit id.
 
         Arguments:
             name: The branch name.
@@ -438,6 +457,9 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
     def delete_branch(self, name: str) -> None:
         """Delete a branch.
 
+        Delete the branch with the given branch name. Note that deleting the branch with the name
+        which is stored in the current dataset client is not allowed.
+
         Arguments:
             name: The name of the branch to be deleted.
 
@@ -483,6 +505,10 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
 
     def commit(self, title: str, description: str = "", *, tag: Optional[str] = None) -> None:
         """Commit the draft.
+
+        Commit the draft based on the draft number stored in the dataset client.
+        Then the dataset client will change the status to "commit"
+        and store the branch name and commit id.
 
         Arguments:
             title: The commit title.
