@@ -64,14 +64,14 @@ class UserSequence(Sequence[_T], ReprMixin):  # pylint: disable=too-many-ancesto
     def __contains__(self, value: Any) -> bool:
         return self._data.__contains__(value)
 
+    def __iter__(self) -> Iterator[_T]:
+        return self._data.__iter__()
+
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, self.__class__):
             return False
 
         return self._data.__eq__(other._data)
-
-    def __iter__(self) -> Iterator[_T]:
-        return self._data.__iter__()
 
     def index(self, value: _T, start: int = 0, stop: int = maxsize) -> int:
         """Return the first index of the value.
@@ -214,6 +214,12 @@ class UserMapping(Mapping[_K, _V], ReprMixin):  # pylint: disable=too-many-ances
 
     def __iter__(self) -> Iterator[_K]:
         return self._data.__iter__()
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, self.__class__):
+            return False
+
+        return self._data.__eq__(other._data)
 
     @overload
     def get(self, key: _K) -> Optional[_V]:  # pylint: disable=arguments-differ
