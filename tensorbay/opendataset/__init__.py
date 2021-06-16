@@ -10,6 +10,7 @@ from .AnimalsWithAttributes2 import AnimalsWithAttributes2
 from .BDD100K import BDD100K
 from .BioIDFace import BioIDFace
 from .BSTLD import BSTLD
+from .CACD import CACD
 from .CADC import CADC
 from .CarConnection import CarConnection
 from .CoinImage import CoinImage
@@ -51,6 +52,7 @@ __all__ = [
     "BioIDFace",
     "BDD100K",
     "BSTLD",
+    "CACD",
     "CADC",
     "CarConnection",
     "CoinImage",
