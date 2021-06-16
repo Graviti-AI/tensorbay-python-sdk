@@ -12,12 +12,12 @@ _USER_DATA = {"name": _USER_NAME, "date": _DATE}
 
 _COMMIT_ID = "b8946338-76dc-4d8b-be4c-0171ed4aad79"
 _PARENT_COMMIT_ID = "a8946e39-75fc-4d8b-be4c-0171ed4aad79"
-_MESSAGE = "commit message"
+_TITLE = "commit title"
 _DESCRIPTION = "commit description"
 _COMMIT_DATA = {
     "commitId": _COMMIT_ID,
     "parentCommitId": _PARENT_COMMIT_ID,
-    "message": _MESSAGE,
+    "title": _TITLE,
     "description": _DESCRIPTION,
     "committer": _USER_DATA,
 }
@@ -51,9 +51,9 @@ class TestUser:
 class TestCommit:
     def test_init(self):
         user = User.loads(_USER_DATA)
-        commit = Commit(_COMMIT_ID, _PARENT_COMMIT_ID, _MESSAGE, _DESCRIPTION, user)
+        commit = Commit(_COMMIT_ID, _PARENT_COMMIT_ID, _TITLE, _DESCRIPTION, user)
         assert commit.commit_id == _COMMIT_ID
-        assert commit.message == _MESSAGE
+        assert commit.title == _TITLE
         assert commit.description == _DESCRIPTION
         assert commit.committer == user
         assert commit.parent_commit_id == _PARENT_COMMIT_ID
@@ -61,14 +61,14 @@ class TestCommit:
     def test_loads(self):
         commit = Commit.loads(_COMMIT_DATA)
         assert commit.commit_id == _COMMIT_DATA["commitId"]
-        assert commit.message == _COMMIT_DATA["message"]
+        assert commit.title == _COMMIT_DATA["title"]
         assert commit.description == _COMMIT_DATA["description"]
         assert commit.committer == User.loads(_COMMIT_DATA["committer"])
         assert commit.parent_commit_id == _COMMIT_DATA["parentCommitId"]
 
     def test_dumps(self):
         user = User.loads(_USER_DATA)
-        commit = Commit(_COMMIT_ID, _PARENT_COMMIT_ID, _MESSAGE, _DESCRIPTION, user)
+        commit = Commit(_COMMIT_ID, _PARENT_COMMIT_ID, _TITLE, _DESCRIPTION, user)
         assert commit.dumps() == _COMMIT_DATA
 
 
@@ -76,11 +76,11 @@ class Test_NamedCommit:
     def test_init(self):
         user = User.loads(_USER_DATA)
         named_commit = _NamedCommit(
-            _COMMIT_NAME, _COMMIT_ID, _PARENT_COMMIT_ID, _MESSAGE, _DESCRIPTION, user
+            _COMMIT_NAME, _COMMIT_ID, _PARENT_COMMIT_ID, _TITLE, _DESCRIPTION, user
         )
         assert named_commit.name == _COMMIT_NAME
         assert named_commit.commit_id == _COMMIT_ID
-        assert named_commit.message == _MESSAGE
+        assert named_commit.title == _TITLE
         assert named_commit.description == _DESCRIPTION
         assert named_commit.committer == user
         assert named_commit.parent_commit_id == _PARENT_COMMIT_ID
@@ -89,7 +89,7 @@ class Test_NamedCommit:
         named_commit = _NamedCommit.loads(_NAMED_COMMIT_DATA)
         assert named_commit.name == _NAMED_COMMIT_DATA["name"]
         assert named_commit.commit_id == _NAMED_COMMIT_DATA["commitId"]
-        assert named_commit.message == _NAMED_COMMIT_DATA["message"]
+        assert named_commit.title == _NAMED_COMMIT_DATA["title"]
         assert named_commit.description == _NAMED_COMMIT_DATA["description"]
         assert named_commit.committer == User.loads(_NAMED_COMMIT_DATA["committer"])
         assert named_commit.parent_commit_id == _NAMED_COMMIT_DATA["parentCommitId"]
@@ -97,7 +97,7 @@ class Test_NamedCommit:
     def test_dumps(self):
         user = User.loads(_USER_DATA)
         named_commit = _NamedCommit(
-            _COMMIT_NAME, _COMMIT_ID, _PARENT_COMMIT_ID, _MESSAGE, _DESCRIPTION, user
+            _COMMIT_NAME, _COMMIT_ID, _PARENT_COMMIT_ID, _TITLE, _DESCRIPTION, user
         )
         assert named_commit.dumps() == _NAMED_COMMIT_DATA
 

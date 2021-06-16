@@ -84,7 +84,7 @@ class Commit(AttrsMixin, ReprMixin):
     Arguments:
         commit_id: The commit id.
         parent_commit_id: The parent commit id.
-        message: The commit message.
+        title: The commit title.
         description: The commit description.
         committer: The commit user.
 
@@ -92,12 +92,12 @@ class Commit(AttrsMixin, ReprMixin):
 
     _T = TypeVar("_T", bound="Commit")
 
-    _repr_attrs: Tuple[str, ...] = ("parent_commit_id", "message", "description", "committer")
+    _repr_attrs: Tuple[str, ...] = ("parent_commit_id", "title", "description", "committer")
     _repr_maxlevel = 2
 
     commit_id: str = attr(key=camel)
     parent_commit_id: Optional[str] = attr(key=camel)
-    message: str = attr()
+    title: str = attr()
     description: str = attr(default="")
     committer: User = attr()
 
@@ -105,13 +105,13 @@ class Commit(AttrsMixin, ReprMixin):
         self,
         commit_id: str,
         parent_commit_id: Optional[str],
-        message: str,
+        title: str,
         description: str,
         committer: User,
     ) -> None:
         self.commit_id = commit_id
         self.parent_commit_id = parent_commit_id
-        self.message = message
+        self.title = title
         self.description = description
         self.committer = committer
 
@@ -128,7 +128,7 @@ class Commit(AttrsMixin, ReprMixin):
                     {
                         "commitId": <str>
                         "parentCommitId": <str> or None
-                        "message": <str>
+                        "title": <str>
                         "description": <str>
                         "committer": {
                             "name": <str>
@@ -151,7 +151,7 @@ class Commit(AttrsMixin, ReprMixin):
                 {
                     "commitId": <str>
                     "parentCommitId": <str> or None
-                    "message": <str>
+                    "title": <str>
                     "description": <str>
                     "committer": {
                         "name": <str>
@@ -172,7 +172,7 @@ class _NamedCommit(Commit):
         name: The name of the named commit.
         commit_id: The commit id.
         parent_commit_id: The parent commit id.
-        message: The commit message.
+        title: The commit title.
         description: The commit description.
         committer: The commit user.
 
@@ -189,11 +189,11 @@ class _NamedCommit(Commit):
         name: str,
         commit_id: str,
         parent_commit_id: Optional[str],
-        message: str,
+        title: str,
         description: str,
         committer: User,
     ) -> None:
-        super().__init__(commit_id, parent_commit_id, message, description, committer)
+        super().__init__(commit_id, parent_commit_id, title, description, committer)
         self.name = name
 
     def _repr_head(self) -> str:
@@ -210,7 +210,7 @@ class _NamedCommit(Commit):
                         "name": <str>
                         "commitId": <str>
                         "parentCommitId": <str> or None
-                        "message": <str>
+                        "title": <str>
                         "description": <str>
                         "committer": {
                             "name": <str>
@@ -234,7 +234,7 @@ class _NamedCommit(Commit):
                     "name": <str>
                     "commitId": <str>
                     "parentCommitId": <str> or None
-                    "message": <str>
+                    "title": <str>
                     "description": <str>
                     "committer": {
                         "name": <str>
@@ -253,7 +253,7 @@ class Tag(_NamedCommit):
         name: The name of the tag.
         commit_id: The commit id.
         parent_commit_id: The parent commit id.
-        message: The commit message.
+        title: The commit title.
         description: The commit description.
         committer: The commit user.
 
@@ -267,7 +267,7 @@ class Branch(_NamedCommit):
         name: The name of the branch.
         commit_id: The commit id.
         parent_commit_id: The parent commit id.
-        message: The commit message.
+        title: The commit title.
         description: The commit description.
         committer: The commit user.
 

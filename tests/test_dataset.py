@@ -90,9 +90,9 @@ class TestDataset:
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("v_test_1")
-        dataset_client.commit(message="Test", tag="V1")
+        dataset_client.commit("Test", tag="V1")
         dataset_client.create_draft("v_test_2")
-        dataset_client.commit(message="Test", tag="V2")
+        dataset_client.commit("Test", tag="V2")
         v2_commit_id = dataset_client.status.commit_id
 
         dataset_client = gas_client.get_dataset(dataset_name)
@@ -109,9 +109,9 @@ class TestDataset:
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name, is_fusion=True)
         dataset_client.create_draft("v_test_1")
-        dataset_client.commit(message="Test", tag="V1")
+        dataset_client.commit("Test", tag="V1")
         dataset_client.create_draft("v_test_2")
-        dataset_client.commit(message="Test", tag="V2")
+        dataset_client.commit("Test", tag="V2")
         v2_commit_id = dataset_client.status.commit_id
 
         dataset_client = gas_client.get_dataset(dataset_name, is_fusion=True)
@@ -128,7 +128,7 @@ class TestDataset:
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("v_test")
-        dataset_client.commit(message="Test", tag="V1")
+        dataset_client.commit("Test", tag="V1")
 
         new_dataset_name = f"{get_dataset_name()}new"
         gas_client.rename_dataset(name=dataset_name, new_name=new_dataset_name)
@@ -150,7 +150,7 @@ class TestDataset:
         dataset_name_2 = get_dataset_name()
         dataset_client_2 = gas_client.create_dataset(dataset_name_2)
         dataset_client_2.create_draft("v_test")
-        dataset_client_2.commit(message="Test", tag="V1")
+        dataset_client_2.commit("Test", tag="V1")
         gas_client.delete_dataset(dataset_name_2)
         with pytest.raises(ResourceNotExistError):
             gas_client.get_dataset(dataset_name_2)
