@@ -241,20 +241,20 @@ def draft(
 
 @cli.command()
 @click.argument("tbrn", type=str)
-@click.option("-m", "--message", type=str, default="", help="The message of the commit.")
+@click.option("-m", "--message", "title", type=str, default="", help="The title of the commit.")
 @click.pass_obj
-def commit(obj: Dict[str, str], tbrn: str, message: str) -> None:
+def commit(obj: Dict[str, str], tbrn: str, title: str) -> None:
     """Work with commit.\f
 
     Arguments:
         obj: A dict contains config information.
         tbrn: The path to commit a draft, like "tb:KITTI#1".
-        message: The message of the commit.
+        title: The title of the commit.
 
     """  # noqa: D301,D415
     from .commit import _implement_commit
 
-    _implement_commit(obj, tbrn, message)
+    _implement_commit(obj, tbrn, title)
 
 
 @cli.command()
