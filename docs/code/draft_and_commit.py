@@ -48,7 +48,7 @@ draft = dataset_client.get_draft(draft_number=1)
 """"""
 
 """Commit Draft"""
-dataset_client.commit("commit-1")
+dataset_client.commit("commit-1", "commit description")
 is_draft = dataset_client.status.is_draft
 # is_draft = False (True for draft, False for commit)
 commit_id = dataset_client.status.commit_id
