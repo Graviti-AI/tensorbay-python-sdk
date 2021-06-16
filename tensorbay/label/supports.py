@@ -153,7 +153,7 @@ class KeypointsInfo(ReprMixin, AttrsMixin):
     )
     _number: int = attr(key="number")
     names: List[str] = attr(is_dynamic=True)
-    skeleton: List[Tuple[int]] = attr(is_dynamic=True)
+    skeleton: List[Tuple[int, int]] = attr(is_dynamic=True)
     visible: str = attr(is_dynamic=True)
     parent_categories: List[str] = attr(is_dynamic=True, key=camel)
     description: str = attr(default="")
