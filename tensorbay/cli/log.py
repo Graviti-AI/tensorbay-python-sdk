@@ -20,6 +20,8 @@ Date: {}
 
     {}
 
+    {}
+
 """
 
 
@@ -39,7 +41,7 @@ def _implement_log(
 
 
 def _get_oneline_log(commit: Commit) -> str:
-    return f"{commit.commit_id[:7]} {commit.message}"
+    return f"{commit.commit_id[:7]} {commit.title}"
 
 
 def _get_full_log(commit: Commit) -> str:
@@ -47,5 +49,6 @@ def _get_full_log(commit: Commit) -> str:
         commit.commit_id,
         commit.committer.name,
         datetime.fromtimestamp(commit.committer.date).strftime("%a %b %d %H:%M:%S %y"),
-        commit.message,
+        commit.title,
+        commit.description,
     )

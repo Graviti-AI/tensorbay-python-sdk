@@ -20,7 +20,7 @@ _COMMIT_HINT = """{}
 """
 
 
-def _implement_commit(obj: Dict[str, str], tbrn: str, message: str) -> None:
+def _implement_commit(obj: Dict[str, str], tbrn: str, title: str) -> None:
     gas = get_gas(**obj)
     info = TBRN(tbrn=tbrn)
     dataset_client = get_dataset_client(gas, info)
@@ -32,15 +32,15 @@ def _implement_commit(obj: Dict[str, str], tbrn: str, message: str) -> None:
         error(f'To commit, "{info}" must be in draft status, like "{info}#1"')
 
     dataset_client.checkout(draft_number=info.draft_number)
-    if not message:
-        message, description = edit_input(_COMMIT_HINT.format(dataset_client.get_draft().title))
+    if not title:
+        title, description = edit_input(_COMMIT_HINT.format(dataset_client.get_draft().title))
 
         if description:
             error('Commit with "description" is not supported yet')
 
-    if not message:
-        error("Aborting commit due to empty commit message")
+    if not title:
+        error("Aborting commit due to empty commit title")
 
-    dataset_client.commit(message)
+    dataset_client.commit(title)
     commit_tbrn = TBRN(info.dataset_name, revision=dataset_client.status.commit_id).get_tbrn()
     click.echo(f"Committed successfully: {tbrn} -> {commit_tbrn}")
