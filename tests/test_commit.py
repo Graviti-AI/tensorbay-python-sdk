@@ -29,7 +29,7 @@ class TestCommit:
         commit = dataset_client.get_commit(commit_2_id)
         assert commit.commit_id == commit_2_id
         assert commit.parent_commit_id == commit_1_id
-        assert commit.message == "commit-2"
+        assert commit.title == "commit-2"
         assert commit.description == ""
         assert commit.committer.name
         assert commit.committer.date
@@ -38,7 +38,7 @@ class TestCommit:
         commit = dataset_client.get_commit(commit_1_id)
         assert commit.commit_id == commit_1_id
         assert commit.parent_commit_id == ROOT_COMMIT_ID
-        assert commit.message == "commit-1"
+        assert commit.title == "commit-1"
         assert commit.description == "test"
         assert commit.committer.name
         assert commit.committer.date
@@ -47,7 +47,7 @@ class TestCommit:
         commit = dataset_client.get_commit()
         assert commit.commit_id == commit_2_id
         assert commit.parent_commit_id == commit_1_id
-        assert commit.message == "commit-2"
+        assert commit.title == "commit-2"
         assert commit.description == ""
         assert commit.committer.name
         assert commit.committer.date
@@ -74,7 +74,7 @@ class TestCommit:
         commit = dataset_client.get_commit("V1")
         assert commit.commit_id == commit_1_id
         assert commit.parent_commit_id == ROOT_COMMIT_ID
-        assert commit.message == "commit-1"
+        assert commit.title == "commit-1"
         assert commit.description == "test"
         assert commit.committer.name
         assert commit.committer.date
@@ -83,7 +83,7 @@ class TestCommit:
         commit = dataset_client.get_commit(DEFAULT_BRANCH)
         assert commit.commit_id == commit_2_id
         assert commit.parent_commit_id == commit_1_id
-        assert commit.message == "commit-2"
+        assert commit.title == "commit-2"
         assert commit.description == ""
         assert commit.committer.name
         assert commit.committer.date
