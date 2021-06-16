@@ -72,7 +72,7 @@ class TestTag:
         assert tag.name == "V1"
         assert tag.commit_id == commit_1_id
         assert tag.parent_commit_id == ROOT_COMMIT_ID
-        assert tag.message == "commit-1"
+        assert tag.title == "commit-1"
         assert tag.description == "test"
         assert tag.committer.name
         assert tag.committer.date
@@ -89,7 +89,7 @@ class TestTag:
         assert tag.name == "V2"
         assert tag.commit_id == commit_2_id
         assert tag.parent_commit_id == commit_1_id
-        assert tag.message == "commit-2"
+        assert tag.title == "commit-2"
         assert tag.description == "test"
         assert tag.committer.name
         assert tag.committer.date
