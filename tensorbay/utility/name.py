@@ -121,12 +121,6 @@ class NameList(UserSequence[_T]):
     def __contains__(self, key: Any) -> bool:
         return self._mapping.__contains__(key)
 
-    def __eq__(self, other: Any) -> bool:
-        if not isinstance(other, self.__class__):
-            return False
-
-        return self._data.__eq__(other._data)
-
     def keys(self) -> Tuple[str, ...]:
         """Get all element names.
 
