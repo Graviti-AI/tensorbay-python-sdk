@@ -217,7 +217,7 @@ Remove a file.
 
 .. code:: html
 
-    $ gas rm tb:<dataset_name>@<revision>:<segment_name>://<remote_path>
+    $ gas rm tb:<dataset_name>#<draft_number>:<segment_name>://<remote_path>
 
 ***********
  gas draft
