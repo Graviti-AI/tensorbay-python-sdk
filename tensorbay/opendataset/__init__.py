@@ -5,6 +5,7 @@
 
 """OpenDataset dataloader collections."""
 
+from .AADB import AADB
 from .AnimalPose import AnimalPose5, AnimalPose7
 from .AnimalsWithAttributes2 import AnimalsWithAttributes2
 from .BDD100K import BDD100K
@@ -46,6 +47,7 @@ from .WIDER_FACE import WIDER_FACE
 
 __all__ = [
     "nuScenes",
+    "AADB",
     "AnimalPose5",
     "AnimalPose7",
     "AnimalsWithAttributes2",
