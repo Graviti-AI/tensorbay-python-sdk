@@ -443,15 +443,17 @@ def tag(obj: Dict[str, str], tbrn: str, name: str, is_delete: bool) -> None:
 )
 @click.argument("tbrn", type=str)
 @click.option(
-    "-n", "--max-count", type=int, default=None, help="Limit the max number of commits to be showed"
+    "-n", "--max-count", type=int, default=None, help="Limit the max number of commits to show"
 )
 @click.option("--oneline", is_flag=True, help="Limit commit message to oneline")
+@click.option("--all", "is_all", is_flag=True, help="Show all the commits of each branch")
 @click.pass_obj
 def log(
     obj: Dict[str, str],
     tbrn: str,
     max_count: Optional[int],
     oneline: bool,
+    is_all: bool,
 ) -> None:
     """Show commit logs.\f
 
@@ -460,11 +462,12 @@ def log(
         tbrn: The tbrn of a dataset.
         max_count: Max number of commits to show.
         oneline: Whether to show a commit message in oneline.
+        is_all: Whether to show all commits of each branch
 
     """  # noqa: D301,D415
     from .log import _implement_log
 
-    _implement_log(obj, tbrn, max_count, oneline)
+    _implement_log(obj, tbrn, max_count, oneline, is_all)
 
 
 @command(
