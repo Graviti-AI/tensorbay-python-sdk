@@ -1,0 +1,78 @@
+{
+    "CLASSIFICATION": {
+        "attributes": [
+            {
+                "name": "score",
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+            },
+            {
+                "name": "BalacingElements",
+                "type": "number",
+                "minimum": -1.0,
+                "maximum": 1.0
+            },
+            {
+                "name": "ColorHarmony",
+                "type": "number",
+                "minimum": -1.0,
+                "maximum": 1.0
+            },
+            {
+                "name": "Content",
+                "type": "number",
+                "minimum": -1.0,
+                "maximum": 1.0
+            },
+            {
+                "name": "DoF",
+                "type": "number",
+                "minimum": -1.0,
+                "maximum": 1.0
+            },
+            {
+                "name": "Light",
+                "type": "number",
+                "minimum": -1.0,
+                "maximum": 1.0
+            },
+            {
+                "name": "MotionBlur",
+                "type": "number",
+                "minimum": -1.0,
+                "maximum": 1.0
+            },
+            {
+                "name": "Object",
+                "type": "number",
+                "minimum": -1.0,
+                "maximum": 1.0
+            },
+            {
+                "name": "Repetition",
+                "type": "number",
+                "minimum": -1.0,
+                "maximum": 1.0
+            },
+            {
+                "name": "RuleOfThirds",
+                "type": "number",
+                "minimum": -1.0,
+                "maximum": 1.0
+            },
+            {
+                "name": "Symmetry",
+                "type": "number",
+                "minimum": -1.0,
+                "maximum": 1.0
+            },
+            {
+                "name": "VividColor",
+                "type": "number",
+                "minimum": -1.0,
+                "maximum": 1.0
+            }
+        ]
+    }
+}
