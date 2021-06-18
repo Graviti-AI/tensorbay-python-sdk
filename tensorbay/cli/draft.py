@@ -5,7 +5,7 @@
 
 """Implementation of gas draft."""
 
-from typing import Dict, Optional
+from typing import Dict, Optional, Tuple
 
 import click
 
@@ -22,7 +22,9 @@ _DRAFT_HINT = """
 """
 
 
-def _implement_draft(obj: Dict[str, str], tbrn: str, is_list: bool, title: str) -> None:
+def _implement_draft(
+    obj: Dict[str, str], tbrn: str, is_list: bool, message: Tuple[str, ...]
+) -> None:
     gas = get_gas(**obj)
     info = TBRN(tbrn=tbrn)
     dataset_client = get_dataset_client(gas, info)
@@ -33,18 +35,20 @@ def _implement_draft(obj: Dict[str, str], tbrn: str, is_list: bool, title: str) 
     if is_list:
         _list_drafts(dataset_client, info)
     else:
-        _create_draft(dataset_client, info, title)
+        _create_draft(dataset_client, info, message)
 
 
-def _create_draft(dataset_client: DatasetClientType, info: TBRN, title: str) -> None:
+def _create_draft(dataset_client: DatasetClientType, info: TBRN, message: Tuple[str, ...]) -> None:
     if info.is_draft:
         error(f'Create a draft in draft status "{info}" is not permitted')
 
-    if not title:
+    if message:
+        title, description = message[0], "\n".join(message[1:])
+    else:
         title, description = edit_input(_DRAFT_HINT)
 
-        if description:
-            error('Creating draft with "description" is not supported yet')
+    if description:
+        error('Creating draft with "description" is not supported yet')
 
     if not title:
         error("Aborting creating draft due to empty draft title")
