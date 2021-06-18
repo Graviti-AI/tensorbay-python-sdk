@@ -24,13 +24,13 @@ from .dataset import DatasetClient, FusionDatasetClient
 from .log import UPLOAD_DATASET_RESUME_TEMPLATE
 from .requests import Client, PagingList, Tqdm
 from .status import Status
+from .struct import ROOT_COMMIT_ID
 
 DatasetClientType = Union[DatasetClient, FusionDatasetClient]
 
 logger = logging.getLogger(__name__)
 
 DEFAULT_BRANCH = "main"
-ROOT_COMMIT_ID = "00000000000000000000000000000000"
 
 
 class GAS:
