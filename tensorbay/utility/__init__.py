@@ -9,6 +9,7 @@ from .attr import AttrsMixin, attr, attr_base, camel, upper
 from .common import (
     DefaultValueDeprecated,
     Deprecated,
+    Disable,
     EqMixin,
     KwargsDeprecated,
     MatrixType,
@@ -25,6 +26,7 @@ __all__ = [
     "DefaultValueDeprecated",
     "Deprecated",
     "EqMixin",
+    "Disable",
     "KwargsDeprecated",
     "MatrixType",
     "NameMixin",
