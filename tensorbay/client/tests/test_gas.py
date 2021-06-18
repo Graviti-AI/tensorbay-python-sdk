@@ -11,9 +11,9 @@ from ...dataset import Dataset
 from ...exception import DatasetTypeError, ResourceNotExistError
 from .. import gas
 from ..dataset import DatasetClient, FusionDatasetClient
-from ..gas import DEFAULT_BRANCH, GAS, ROOT_COMMIT_ID
+from ..gas import DEFAULT_BRANCH, GAS
 from ..status import Status
-from ..struct import Draft
+from ..struct import ROOT_COMMIT_ID, Draft
 from .utility import mock_response
 
 

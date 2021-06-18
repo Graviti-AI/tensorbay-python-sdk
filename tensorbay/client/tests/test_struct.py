@@ -4,7 +4,9 @@
 #
 
 
-from ..struct import Commit, Draft, User, _NamedCommit
+import pytest
+
+from ..struct import ROOT_COMMIT_ID, Branch, Commit, Draft, User, _NamedCommit
 
 _DATE = 1617183289
 _USER_NAME = "user_name@graviti.cn"
@@ -25,6 +27,15 @@ _COMMIT_DATA = {
 _COMMIT_NAME = "commit name"
 _NAMED_COMMIT_DATA = {"name": _COMMIT_NAME}
 _NAMED_COMMIT_DATA.update(_COMMIT_DATA)
+
+_BRANCH_DATA = {
+    "name": "main",
+    "commitId": ROOT_COMMIT_ID,
+    "parentCommitId": ROOT_COMMIT_ID,
+    "title": None,
+    "description": "",
+    "committer": None,
+}
 
 _DRAFT_NUMBER = 1
 _DRAFT_TITLE = "draft title"
@@ -100,6 +111,22 @@ class Test_NamedCommit:
             _COMMIT_NAME, _COMMIT_ID, _PARENT_COMMIT_ID, _TITLE, _DESCRIPTION, user
         )
         assert named_commit.dumps() == _NAMED_COMMIT_DATA
+
+
+class TestBranch:
+    def test_loads(self):
+        branch = Branch.loads(_BRANCH_DATA)
+        assert branch.commit_id == ROOT_COMMIT_ID
+        assert branch.name == _BRANCH_DATA["name"]
+
+        with pytest.raises(AttributeError):
+            branch.parent_commit_id
+        with pytest.raises(AttributeError):
+            branch.title
+        with pytest.raises(AttributeError):
+            branch.description
+        with pytest.raises(AttributeError):
+            branch.committer
 
 
 class TestDraft:
