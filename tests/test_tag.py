@@ -6,7 +6,7 @@
 import pytest
 
 from tensorbay import GAS
-from tensorbay.client.gas import ROOT_COMMIT_ID
+from tensorbay.client.struct import ROOT_COMMIT_ID
 from tensorbay.exception import ResourceNotExistError, ResponseError, StatusError
 
 from .utility import get_dataset_name

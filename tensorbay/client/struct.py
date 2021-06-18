@@ -17,9 +17,12 @@
 
 """
 
+from functools import partial
 from typing import Any, Dict, Optional, Tuple, Type, TypeVar
 
 from ..utility import AttrsMixin, ReprMixin, attr, camel, common_loads
+
+ROOT_COMMIT_ID = "00000000000000000000000000000000"
 
 
 class User(AttrsMixin, ReprMixin):
@@ -260,6 +263,10 @@ class Tag(_NamedCommit):
     """
 
 
+_ERROR_MESSAGE = "The '{attr_name}' is not available due to this branch has no commit history."
+_attr = partial(attr, is_dynamic=True, error_message=_ERROR_MESSAGE)
+
+
 class Branch(_NamedCommit):
     """This class defines the structure of a branch.
 
@@ -272,6 +279,23 @@ class Branch(_NamedCommit):
         committer: The commit user.
 
     """
+
+    parent_commit_id: Optional[str] = _attr(key=camel)
+    title: str = _attr()
+    description: str = _attr()
+    committer: User = _attr()
+
+    def _loads(self, contents: Dict[str, Any]) -> None:
+        self.name = contents["name"]
+        self.commit_id = contents["commitId"]
+
+        if self.commit_id == ROOT_COMMIT_ID:
+            return
+
+        self.parent_commit_id = contents["parentCommitId"]
+        self.title = contents["title"]
+        self.description = contents["description"]
+        self.committer = User.loads(contents["committer"])
 
 
 class Draft(AttrsMixin, ReprMixin):
