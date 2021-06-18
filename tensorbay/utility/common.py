@@ -300,3 +300,50 @@ class DefaultValueDeprecated:  # pylint: disable=too-few-public-methods
             return func(*arg, **kwargs)
 
         return wrapper  # type: ignore[return-value]
+
+
+class Disable:  # pylint: disable=too-few-public-methods
+    """A decorator for the function which is disabled temporarily.
+
+    Arguments:
+        since: The version the function is disabled temporarily.
+        enabled_in: The version the function will be enabled again.
+        reason: The reason that the function is disabled temporarily.
+
+    """
+
+    def __init__(
+        self,
+        *,
+        since: str,
+        enabled_in: Optional[str],
+        reason: Optional[str],
+    ) -> None:
+        self._since = since
+        self._enabled_in = enabled_in
+        self._reason = reason
+
+    def __call__(self, func: _Callable) -> _Callable:
+        """Wrap the disabled function by adding the message.
+
+        Arguments:
+            func: The disabled function.
+
+        Returns:
+            The wrapped function which shows the message when calling.
+
+        """
+        messages = [f'The function "{func.__name__}" will be disabled since version {self._since}.']
+        if self._reason:
+            messages.append(f"The reason is {self._reason}.")
+
+        if self._enabled_in:
+            messages.append(f"Will be enabled again in version {self._enabled_in}.")
+
+        message = " ".join(messages)
+
+        @wraps(func)
+        def wrapper(*arg: Any, **kwargs: Any) -> Any:
+            raise NotImplementedError(message)
+
+        return wrapper  # type: ignore[return-value]

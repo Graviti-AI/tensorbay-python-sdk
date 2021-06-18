@@ -37,7 +37,7 @@ from ulid import from_timestamp
 from ..dataset import Data, Frame, RemoteData
 from ..exception import FrameError, InvalidParamsError, ResponseSystemError
 from ..sensor.sensor import Sensor, Sensors
-from ..utility import locked
+from ..utility import Disable, locked
 from .lazy import PagingList
 from .requests import config
 from .status import Status
@@ -231,6 +231,7 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
         """
         return self._status
 
+    @Disable(since="v1.6.0", enabled_in="v1.7.0", reason="TensorBay server refactor")
     def delete_data(self, remote_paths: Union[str, Iterable[str]]) -> None:
         """Delete data of a segment in a certain commit with the given remote paths.
 

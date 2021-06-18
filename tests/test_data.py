@@ -2,6 +2,7 @@
 #
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
+import pytest
 
 from tensorbay import GAS
 from tensorbay.dataset import Data
@@ -77,11 +78,13 @@ class TestData:
             data.label = Label.loads(LABEL)
             segment_client.upload_data(data)
 
-        segment_client.delete_data("hello0.txt")
+        with pytest.raises(NotImplementedError):
+            segment_client.delete_data("hello0.txt")
         data_paths = segment_client.list_data_paths()
         assert "hello0.txt" not in data_paths
 
-        segment_client.delete_data(segment_client.list_data_paths())
+        with pytest.raises(NotImplementedError):
+            segment_client.delete_data(segment_client.list_data_paths())
         data = segment_client.list_data()
         assert len(data) == 0
 
