@@ -249,6 +249,7 @@ class DatasetClientBase:  # pylint: disable=too-many-public-methods
             self._status.check_authority_for_commit()
         draft_number = self._create_draft(title, branch_name)
         self._status.checkout(draft_number=draft_number)
+        self._status.branch_name = branch_name
         return draft_number
 
     def get_draft(self, draft_number: Optional[int] = None) -> Draft:
