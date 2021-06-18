@@ -29,6 +29,7 @@ corresponding to different types of labels.
 
 """
 
+from functools import partial
 from typing import Any, Dict, Type, TypeVar, Union
 
 from ..label import LabelType
@@ -49,6 +50,10 @@ Subcatalogs = Union[
     Keypoints2DSubcatalog,
     SentenceSubcatalog,
 ]
+
+
+_ERROR_MESSAGE = "The '{attr_name}' subcatalog is not provided in this dataset"
+_attr = partial(attr, is_dynamic=True, key=upper, error_message=_ERROR_MESSAGE)
 
 
 class Catalog(ReprMixin, AttrsMixin):
@@ -87,13 +92,13 @@ class Catalog(ReprMixin, AttrsMixin):
     _repr_attrs = tuple(label_type.value for label_type in LabelType)
     _repr_maxlevel = 2
 
-    classification: ClassificationSubcatalog = attr(is_dynamic=True, key=upper)
-    box2d: Box2DSubcatalog = attr(is_dynamic=True, key=upper)
-    box3d: Box3DSubcatalog = attr(is_dynamic=True, key=upper)
-    polygon2d: Polygon2DSubcatalog = attr(is_dynamic=True, key=upper)
-    polyline2d: Polyline2DSubcatalog = attr(is_dynamic=True, key=upper)
-    keypoints2d: Keypoints2DSubcatalog = attr(is_dynamic=True, key=upper)
-    sentence: SentenceSubcatalog = attr(is_dynamic=True, key=upper)
+    classification: ClassificationSubcatalog = _attr()
+    box2d: Box2DSubcatalog = _attr()
+    box3d: Box3DSubcatalog = _attr()
+    polygon2d: Polygon2DSubcatalog = _attr()
+    polyline2d: Polyline2DSubcatalog = _attr()
+    keypoints2d: Keypoints2DSubcatalog = _attr()
+    sentence: SentenceSubcatalog = _attr()
 
     def __bool__(self) -> bool:
         for label_type in LabelType:

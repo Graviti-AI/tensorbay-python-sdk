@@ -27,6 +27,7 @@ Different label types correspond to different label classes classes.
 
 """
 
+from functools import partial
 from typing import Any, Dict, List, Type, TypeVar
 
 from ..utility import AttrsMixin, ReprMixin, ReprType, attr, common_loads, upper
@@ -37,6 +38,9 @@ from .label_keypoints import LabeledKeypoints2D
 from .label_polygon import LabeledPolygon2D
 from .label_polyline import LabeledPolyline2D
 from .label_sentence import LabeledSentence
+
+_ERROR_MESSAGE = "The '{attr_name}' label is not provided in this data"
+_attr = partial(attr, is_dynamic=True, key=upper, error_message=_ERROR_MESSAGE)
 
 
 class Label(ReprMixin, AttrsMixin):
@@ -64,13 +68,13 @@ class Label(ReprMixin, AttrsMixin):
     _repr_attrs = tuple(label_type.value for label_type in LabelType)
     _repr_maxlevel = 2
 
-    classification: Classification = attr(is_dynamic=True, key=upper)
-    box2d: List[LabeledBox2D] = attr(is_dynamic=True, key=upper)
-    box3d: List[LabeledBox3D] = attr(is_dynamic=True, key=upper)
-    polygon2d: List[LabeledPolygon2D] = attr(is_dynamic=True, key=upper)
-    polyline2d: List[LabeledPolyline2D] = attr(is_dynamic=True, key=upper)
-    keypoints2d: List[LabeledKeypoints2D] = attr(is_dynamic=True, key=upper)
-    sentence: List[LabeledSentence] = attr(is_dynamic=True, key=upper)
+    classification: Classification = _attr()
+    box2d: List[LabeledBox2D] = _attr()
+    box3d: List[LabeledBox3D] = _attr()
+    polygon2d: List[LabeledPolygon2D] = _attr()
+    polyline2d: List[LabeledPolyline2D] = _attr()
+    keypoints2d: List[LabeledKeypoints2D] = _attr()
+    sentence: List[LabeledSentence] = _attr()
 
     def __bool__(self) -> bool:
         for label_type in LabelType:
