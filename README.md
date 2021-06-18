@@ -9,6 +9,14 @@
 [![PyPI](https://img.shields.io/pypi/v/tensorbay)](https://pypi.org/project/tensorbay/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/tensorbay)](https://pypi.org/project/tensorbay/)
 
+---
+
+**IMPORTANT**: TensorBay system underwent a huge refactoring, which broke the downward compatibility
+of OpenAPI and SDK. As a result, the SDK under version v1.6.0 does not work anymore.  
+**Please update tensorbay SDK to v1.6.0 or a higher version.**
+
+---
+
 TensorBay Python SDK is a python library to access [TensorBay](https://www.graviti.cn/tensorBay)
 and manage your datasets.  
 It provides:
