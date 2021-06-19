@@ -15,15 +15,14 @@ It is maintained in sorted order according to the 'name' of :class:`NameMixin`.
 """
 
 from bisect import bisect_left, bisect_right
-from typing import Any, Dict, Iterable, List, Tuple, Type, TypeVar, Union, overload
+from typing import Any, Dict, Iterable, List, Tuple, TypeVar, Union, overload
 
 from .attr import AttrsMixin, attr
-from .common import common_loads
 from .repr import ReprMixin
 from .user import UserSequence
 
 
-class NameMixin(AttrsMixin, ReprMixin):
+class NameMixin(AttrsMixin, ReprMixin):  # pylint: disable=too-few-public-methods
     """A mixin class for instance which has immutable name and mutable description.
 
     Arguments:
@@ -46,39 +45,6 @@ class NameMixin(AttrsMixin, ReprMixin):
 
     def _repr_head(self) -> str:
         return f'{self.__class__.__name__}("{self._name}")'
-
-    def dumps(self) -> Dict[str, str]:
-        """Dumps the instance into a dict.
-
-        Returns:
-            A dict containing the name and the description,
-            whose format is like::
-
-                {
-                    "name": <str>
-                    "description": <str>
-                }
-
-        """
-        return self._dumps()
-
-    @classmethod
-    def loads(cls: Type[_P], contents: Dict[str, str]) -> _P:
-        """Loads a NameMixin from a dict containing the information of the NameMixin.
-
-        Arguments:
-            contents: A dict containing the information of the :class:`NameMixin`::
-
-                    {
-                        "name": <str>
-                        "description": <str>
-                    }
-
-        Returns:
-            A :class:`NameMixin` instance containing the information from the contents dict.
-
-        """
-        return common_loads(cls, contents)
 
     @property
     def name(self) -> str:
