@@ -112,7 +112,7 @@ class UserSession(Session):  # pylint: disable=too-few-public-methods
         retry_strategy = Retry(
             total=config.max_retries,
             status_forcelist=config.allowed_retry_status,
-            method_whitelist=config.allowed_retry_methods,
+            allowed_methods=config.allowed_retry_methods,
             raise_on_status=False,
         )
 
