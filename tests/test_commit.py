@@ -134,7 +134,6 @@ class TestCommit:
 
         gas_client.delete_dataset(dataset_name)
 
-    @pytest.mark.xfail(__version__ < "1.7.0", reason="not supported at least until v1.7.0")
     def test_data_in_draft(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
