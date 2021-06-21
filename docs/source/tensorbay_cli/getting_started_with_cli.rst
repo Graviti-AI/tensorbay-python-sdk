@@ -17,9 +17,9 @@ TensorBay CLI can:
 
 To use TensorBay CLI, please install TensorBay SDK first.
 
-.. code:: console
+.. code:: html
 
-   $ pip3 install tensorbay
+   pip3 install tensorbay
 
 ***************
  Configuration
@@ -31,15 +31,15 @@ An accessKey_ is used for identification when using TensorBay to operate dataset
 
 Set the accessKey into configuration:
 
-.. code:: console
+.. code:: html
 
-   $ gas auth [ACCESSKEY]
+   gas auth [ACCESSKEY]
 
 To show authentication information:
 
-.. code:: console
+.. code:: html
 
-   $ gas auth --get
+   gas auth --get
 
 ******
  TBRN
@@ -50,7 +50,7 @@ TBRN begins with ``tb:``. Default segment can be defined as ``""`` (empty string
 See more details in :ref:`TBRN <tensorbay_cli/tbrn:TensorBay Resource Name>`.
 The following is the general format for TBRN:
 
-.. code:: console
+.. code:: html
 
    tb:<dataset_name>[:<segment_name>][://<remote_path>]
 
@@ -62,7 +62,7 @@ The following is the general format for TBRN:
 CLI: Create a Dataset
 ======================
 
-.. code:: console
+.. code:: html
 
    gas dataset tb:<dataset_name>
 
@@ -70,7 +70,7 @@ CLI: Create a Dataset
 CLI: List Dataset Names
 ========================
 
-.. code:: console
+.. code:: html
 
    gas dataset
 
@@ -78,7 +78,7 @@ CLI: List Dataset Names
 CLI: Create a Draft
 ====================
 
-.. code:: console
+.. code:: html
 
    gas draft tb:<dataset_name> [-t <title>]
 
@@ -86,7 +86,7 @@ CLI: Create a Draft
 CLI: List Drafts
 =================
 
-.. code:: console
+.. code:: html
 
    gas draft -l tb:<dataset_name>
 
@@ -94,7 +94,7 @@ CLI: List Drafts
 CLI: Upload a File To the Dataset
 ==================================
 
-.. code:: console
+.. code:: html
 
    gas cp <local_path> tb:<dataset_name>#<draft_number>:<segment_name>
 
@@ -102,6 +102,6 @@ CLI: Upload a File To the Dataset
 CLI: Commit the Draft
 ======================
 
-.. code:: console
+.. code:: html
 
    gas commit tb:<dataset_name>#<draft_number> [-m <message>]

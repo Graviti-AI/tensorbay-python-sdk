@@ -35,19 +35,19 @@ Work with authentication operations.
 Authenticate the accesskey of the TensorBay account.
 If the accesskey is not provided, interactive authentication will be launched.
 
-.. code:: console
+.. code:: html
 
    gas auth [ACCESSKEY]
 
 Get the authentication information.
 
-.. code:: console
+.. code:: html
 
    gas auth --get [--all]
 
 Unset the authentication information.
 
-.. code:: console
+.. code:: html
 
    gas auth --unset [--all]
 
@@ -60,43 +60,43 @@ Work with configuration operations.
 
 Add a single configuration.
 
-.. code:: console
+.. code:: html
 
    gas config [key] [value]
 
 For example:
 
-.. code:: console
+.. code:: html
 
    gas config editor vim
 
 Show all the configurations.
 
-.. code:: console
+.. code:: html
 
    gas config
 
 Show a single configuration.
 
-.. code:: console
+.. code:: html
 
    gas config [key]
 
 For example:
 
-.. code:: console
+.. code:: html
 
    gas config editor
 
 Unset a single configuration.
 
-.. code:: console
+.. code:: html
 
    gas config --unset <key>
 
 For example:
 
-.. code:: console
+.. code:: html
 
    gas config --unset editor
 
@@ -109,19 +109,19 @@ Work with dataset operations.
 
 Create a dataset.
 
-.. code:: console
+.. code:: html
 
    gas dataset tb:<dataset_name>
 
 List all datasets.
 
-.. code:: console
+.. code:: html
 
    gas dataset
 
 Delete a dataset.
 
-.. code:: console
+.. code:: html
 
    gas dataset -d tb:<dataset_name>
 
@@ -134,27 +134,27 @@ Work with list operations.
 
 List the segments of a dataset.(default branch)
 
-.. code:: console
+.. code:: html
 
     gas ls tb:<dataset_name>
 
 List the segments of a specific dataset :ref:`revision<reference/glossary:revision>`.
 
-.. code:: console
+.. code:: html
 
-   gas ls tb:<dataset_name>@<revision>
+    gas ls tb:<dataset_name>@<revision>
 
 List the segments of a specific dataset draft.
 
 See :ref:`tensorbay_cli/cli_commands:gas draft` for more information.
 
-.. code:: console
+.. code:: html
 
     gas ls tb:<dataset_name>#<draft_number>
 
 List all files of a segment.
 
-.. code:: console
+.. code:: html
 
     gas ls tb:<dataset_name>:<segment_name>
     gas ls tb:<dataset_name>@<revision>:<segment_name>
@@ -162,7 +162,7 @@ List all files of a segment.
 
 Get a certain file.
 
-.. code:: console
+.. code:: html
 
     gas ls tb:<dataset_name>:<segment_name>://<remote_path>
     gas ls tb:<dataset_name>@<revision>:<segment_name>://<remote_path>
@@ -181,19 +181,19 @@ Upload a file to a segment. The ``local_path`` refers to a file.
 The target dataset must be in draft status,
 see :ref:`tensorbay_cli/cli_commands:gas draft` for more information.
 
-.. code:: console
+.. code:: html
 
     gas cp <local_path> tb:<dataset_name>#<draft_number>:<segment_name>
 
 Upload files to a segment. The ``local_path`` refers to a directory.
 
-.. code:: console
+.. code:: html
 
     gas cp -r <local_path> tb:<dataset_name>#<draft_number>:<segment_name>
 
 Upload a file to a segment with a given ``remote_path``. The ``local_path`` can only refer to a file.
 
-.. code:: console
+.. code:: html
 
     gas cp <local_path> tb:<dataset_name>#<draft_number>:<segment_name>://<remote_path>
 
@@ -209,13 +209,13 @@ Remove a segment.
 The target dataset must be in draft status,
 see :ref:`tensorbay_cli/cli_commands:gas draft` for more information.
 
-.. code:: console
+.. code:: html
 
     gas rm -r tb:<dataset_name>#<draft_number>:<segment_name>
 
 Remove a file.
 
-.. code:: console
+.. code:: html
 
     gas rm tb:<dataset_name>@<revision>:<segment_name>://<remote_path>
 
@@ -227,13 +227,13 @@ Work with :ref:`reference/glossary:draft` operations.
 
 Create a draft with a title.
 
-.. code:: console
+.. code:: html
 
    gas draft tb:<dataset_name> [-t <title>]
 
 List the drafts of a dataset.
 
-.. code:: console
+.. code:: html
 
    gas draft -l tb:<dataset_name>
 
@@ -246,7 +246,7 @@ Work with commit operations.
 
 Commit a :ref:`reference/glossary:draft` with a message.
 
-.. code:: console
+.. code:: html
 
    gas commit tb:<dataset_name>#<draft_number> [-m <message>]
 
@@ -259,20 +259,20 @@ Work with :ref:`reference/glossary:tag` operations.
 
 Create a tag on the current commit or a specific :ref:`revision<reference/glossary:revision>`.
 
-.. code:: console
+.. code:: html
 
    gas tag tb:<dataset_name> <tag_name>
    gas tag tb:<dataset_name>@<revision> <tag_name>
 
 List all tags.
 
-.. code:: console
+.. code:: html
 
    gas tag tb:<dataset_name>
 
 Delete a tag.
 
-.. code:: console
+.. code:: html
 
    gas tag -d tb:<dataset_name>@<tag_name>
 
@@ -285,26 +285,26 @@ Work with log operations.
 
 Show the commit logs.
 
-.. code:: console
+.. code:: html
 
    gas log tb:<dataset_name>
 
 Show commit logs from a certain :ref:`reference/glossary:revision`.
 
-.. code:: console
+.. code:: html
 
    gas log tb:<dataset_name>@<revision>
 
 Limit the number of commit logs to show.
 
-.. code:: console
+.. code:: html
 
    gas log -n <number> tb:<dataset_name>
    gas log --max-count <number> tb:<dataset_name>
 
 Show commit logs in oneline format.
 
-.. code:: console
+.. code:: html
 
    gas log --oneline tb:<dataset_name>
 
@@ -317,24 +317,24 @@ Work with :ref:`reference/glossary:branch` operations.
 
 Create a new branch from the default branch.
 
-.. code:: console
+.. code:: html
 
    gas branch tb:<dataset_name> <branch_name>
 
 Create a new branch from a certain :ref:`reference/glossary:revision`.
 
-.. code:: console
+.. code:: html
 
    gas branch tb:<dataset_name>@<revision> <branch_name>
 
 Show all branches.
 
-.. code:: console
+.. code:: html
 
    gas branch tb:<dataset_name>
 
 Delete a branch.
 
-.. code:: console
+.. code:: html
 
    gas branch --delete tb:<dataset_name>@<branch_name>
