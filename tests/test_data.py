@@ -81,12 +81,12 @@ class TestData:
         with pytest.raises(NotImplementedError):
             segment_client.delete_data("hello0.txt")
         data_paths = segment_client.list_data_paths()
-        assert "hello0.txt" not in data_paths
+        # assert "hello0.txt" not in data_paths
 
         with pytest.raises(NotImplementedError):
             segment_client.delete_data(segment_client.list_data_paths())
         data = segment_client.list_data()
-        assert len(data) == 0
+        # assert len(data) == 0
 
         gas_client.delete_dataset(dataset_name)
 
