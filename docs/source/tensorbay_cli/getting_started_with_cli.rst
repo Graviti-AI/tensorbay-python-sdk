@@ -19,7 +19,7 @@ To use TensorBay CLI, please install TensorBay SDK first.
 
 .. code:: html
 
-   pip3 install tensorbay
+   $ pip3 install tensorbay
 
 ***************
  Configuration
@@ -33,13 +33,13 @@ Set the accessKey into configuration:
 
 .. code:: html
 
-   gas auth [ACCESSKEY]
+   $ gas auth [ACCESSKEY]
 
 To show authentication information:
 
 .. code:: html
 
-   gas auth --get
+   $ gas auth --get
 
 ******
  TBRN
@@ -64,7 +64,7 @@ CLI: Create a Dataset
 
 .. code:: html
 
-   gas dataset tb:<dataset_name>
+   $ gas dataset tb:<dataset_name>
 
 
 CLI: List Dataset Names
@@ -72,7 +72,7 @@ CLI: List Dataset Names
 
 .. code:: html
 
-   gas dataset
+   $ gas dataset
 
 
 CLI: Create a Draft
@@ -80,7 +80,7 @@ CLI: Create a Draft
 
 .. code:: html
 
-   gas draft tb:<dataset_name> [-t <title>]
+   $ gas draft tb:<dataset_name> [-t <title>]
 
 
 CLI: List Drafts
@@ -88,7 +88,7 @@ CLI: List Drafts
 
 .. code:: html
 
-   gas draft -l tb:<dataset_name>
+   $ gas draft -l tb:<dataset_name>
 
 
 CLI: Upload a File To the Dataset
@@ -96,7 +96,7 @@ CLI: Upload a File To the Dataset
 
 .. code:: html
 
-   gas cp <local_path> tb:<dataset_name>#<draft_number>:<segment_name>
+   $ gas cp <local_path> tb:<dataset_name>#<draft_number>:<segment_name>
 
 
 CLI: Commit the Draft
@@ -104,4 +104,4 @@ CLI: Commit the Draft
 
 .. code:: html
 
-   gas commit tb:<dataset_name>#<draft_number> [-m <message>]
+   $ gas commit tb:<dataset_name>#<draft_number> [-m <message>]
