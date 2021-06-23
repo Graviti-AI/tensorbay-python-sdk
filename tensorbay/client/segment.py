@@ -359,6 +359,60 @@ class SegmentClient(SegmentClientBase):
         self.upload_file(data.path, data.target_remote_path)
         self._upload_label(data)
 
+    def copy_data(
+        self,
+        source_remote_paths: Union[str, Iterable[str]],
+        target_remote_paths: Union[None, str, Iterable[str]] = None,
+        *,
+        source_client: Optional["SegmentClient"] = None,
+        strategy: str = "abort",
+    ) -> None:
+        """Copy data to this segment.
+
+        Arguments:
+            source_remote_paths: The source remote paths of the copied data.
+            target_remote_paths: The target remote paths of the copied data.
+                This argument is used to specify new remote paths of the copied data.
+                If None, the remote path of the copied data will not be changed after copy.
+            source_client: The source segment client of the copied data.
+                This argument is used to specifies where the copied data comes from when the copied
+                data is from another commit, draft, segment or even another dataset.
+                If None, the copied data comes from this segment.
+            strategy: The strategy of handling the name conflict. There are three options:
+
+                1. "abort": stop copying and raise exception;
+                2. "override": the source data will override the origin data;
+                3. "skip": keep the origin data.
+
+        """
+
+    def move_data(
+        self,
+        source_remote_paths: Union[str, Iterable[str]],
+        target_remote_paths: Union[None, str, Iterable[str]] = None,
+        *,
+        source_client: Optional["SegmentClient"] = None,
+        strategy: str = "abort",
+    ) -> None:
+        """Move data to this segment, also used to rename data.
+
+        Arguments:
+            source_remote_paths: The source remote paths of the moved data.
+            target_remote_paths: The target remote paths of the moved data.
+                This argument is used to specify new remote paths of the moved data.
+                If None, the remote path of the moved data will not be changed after copy.
+            source_client: The source segment client of the moved data.
+                This argument is used to specifies where the moved data comes from when the moved
+                data is from another segment.
+                If None, the moved data comes from this segment.
+            strategy: The strategy of handling the name conflict. There are three options:
+
+                1. "abort": stop moving and raise exception;
+                2. "override": the source data will override the origin data;
+                3. "skip": keep the origin data.
+
+        """
+
     def list_data_paths(self) -> PagingList[str]:
         """List required data path in a segment in a certain commit.
 
