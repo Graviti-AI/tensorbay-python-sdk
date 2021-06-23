@@ -288,6 +288,59 @@ class DatasetClient(DatasetClientBase):
             raise NameConflictError(resource="segment", identification=name)
         return SegmentClient(name, self)
 
+    def copy_segment(
+        self,
+        source_name: str,
+        target_name: Optional[str] = None,
+        *,
+        source_client: Optional["DatasetClient"] = None,
+        strategy: str = "abort",
+    ) -> SegmentClient:
+        """Copy segment to this dataset.
+
+        Arguments:
+            source_name: The source name of the copied segment.
+            target_name: The target name of the copied segment.
+                This argument is used to specify a new name of the copied segment.
+                If None, the name of the copied segment will not be changed after copy.
+            source_client: The source dataset client of the copied segment.
+                This argument is used to specify where the copied segment comes from when the
+                copied segment is from another commit, draft or even another dataset.
+                If None, the copied segment comes from this dataset.
+            strategy: The strategy of handling the name conflict. There are three options:
+
+                1. "abort": stop copying and raise exception;
+                2. "override": the source segment will override the origin segment;
+                3. "skip": keep the origin segment.
+
+        Returns:  #noqa: DAR202
+            The client of the copied target segment.
+
+        """
+
+    def move_segment(
+        self,
+        source_name: str,
+        target_name: str,
+        *,
+        strategy: str = "abort",
+    ) -> SegmentClient:
+        """Move/Rename segment in this dataset.
+
+        Arguments:
+            source_name: The source name of the moved segment.
+            target_name: The target name of the moved segment.
+            strategy: The strategy of handling the name conflict. There are three options:
+
+                1. "abort": stop moving and raise exception;
+                2. "override": the source segment will override the origin segment;
+                3. "skip": keep the origin segment.
+
+        Returns:  #noqa: DAR202
+            The client of the moved target segment.
+
+        """
+
     def get_segment(self, name: str = "default") -> SegmentClient:
         """Get a segment in a certain commit according to given name.
 
@@ -482,6 +535,59 @@ class FusionDatasetClient(DatasetClientBase):
         else:
             raise NameConflictError(resource="segment", identification=name)
         return FusionSegmentClient(name, self)
+
+    def copy_segment(
+        self,
+        source_name: str,
+        target_name: Optional[str] = None,
+        *,
+        source_client: Optional["FusionDatasetClient"] = None,
+        strategy: str = "abort",
+    ) -> FusionSegmentClient:
+        """Copy segment to this dataset.
+
+        Arguments:
+            source_name: The source name of the copied segment.
+            target_name: The target name of the copied segment.
+                This argument is used to specify a new name of the copied segment.
+                If None, the name of the copied segment will not be changed after copy.
+            source_client: The source dataset client of the copied segment.
+                This argument is used to specify where the copied segment comes from when the
+                copied segment is from another commit, draft or even another dataset.
+                If None, the copied segment comes from this dataset.
+            strategy: The strategy of handling the name conflict. There are three options:
+
+                1. "abort": stop copying and raise exception;
+                2. "override": the source segment will override the origin segment;
+                3. "skip": keep the origin segment.
+
+        Returns:  #noqa: DAR202
+            The client of the copied target segment.
+
+        """
+
+    def move_segment(
+        self,
+        source_name: str,
+        target_name: str,
+        *,
+        strategy: str = "abort",
+    ) -> FusionSegmentClient:
+        """Move/Rename segment in this dataset.
+
+        Arguments:
+            source_name: The source name of the moved segment.
+            target_name: The target name of the moved segment.
+            strategy: The strategy of handling the name conflict. There are three options:
+
+                1. "abort": stop moving and raise exception;
+                2. "override": the source segment will override the origin segment;
+                3. "skip": keep the origin segment.
+
+        Returns:  #noqa: DAR202
+            The client of the moved target segment.
+
+        """
 
     def get_segment(self, name: str = "default") -> FusionSegmentClient:
         """Get a fusion segment in a certain commit according to given name.
