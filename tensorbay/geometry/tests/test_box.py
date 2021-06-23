@@ -6,7 +6,7 @@
 import pytest
 from quaternion import quaternion
 
-from ...utility import UserSequence
+from ...utility import UserSequence, allclose
 from .. import Box2D, Box3D, Transform3D, Vector2D, Vector3D
 
 _DATA_2D = {"xmin": 1.0, "ymin": 2.0, "xmax": 3.0, "ymax": 4.0}
@@ -116,10 +116,13 @@ class TestBox3D:
         assert box3d.__rmul__(transform) == Box3D(
             size=(1, 1, 1), translation=[2, 0, 0], rotation=quaternion(-1, 0, 0, 0)
         )
-        assert box3d.__rmul__(quaternion_1) == Box3D(
-            size=(1, 1, 1),
-            translation=[1.7999999999999996, 2, 2.6],
-            rotation=quaternion(-2, 1, 4, -3),
+        assert allclose(
+            box3d.__rmul__(quaternion_1),
+            Box3D(
+                size=(1, 1, 1),
+                translation=[1.7999999999999996, 2, 2.6],
+                rotation=quaternion(-2, 1, 4, -3),
+            ),
         )
         assert box3d.__rmul__(1) == NotImplemented
 

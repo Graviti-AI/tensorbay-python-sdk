@@ -15,7 +15,9 @@ coordinates of a 2D vector or a 3D vector.
 """
 
 from itertools import zip_longest
-from math import hypot, sqrt
+from math import hypot
+from math import isclose as math_isclose
+from math import sqrt
 from sys import version_info
 from typing import Dict, Iterable, Optional, Sequence, Tuple, Type, TypeVar, Union
 
@@ -179,6 +181,35 @@ class Vector(UserSequence[float]):
 
     def _repr_head(self) -> str:
         return f"{self.__class__.__name__}{self._data}"
+
+    def _allclose(
+        self, other: Iterable[float], *, rel_tol: float = 1e-09, abs_tol: float = 0.0
+    ) -> bool:
+        """Determine whether this vector is close to another in value.
+
+        Arguments:
+            other: The other object to compare.
+            rel_tol: Maximum difference for being considered "close", relative to the
+                     magnitude of the input values
+            abs_tol: Maximum difference for being considered "close", regardless of the
+                     magnitude of the input values
+
+        Raises:
+            TypeError: When other have inconsistent dimension.
+
+        Returns:
+            A bool value indicating whether this vector is close to another.
+
+        """
+        try:
+            return all(
+                math_isclose(i, j, rel_tol=rel_tol, abs_tol=abs_tol)
+                for i, j in zip_longest(self._data, other)
+            )
+        except TypeError as error:
+            raise TypeError(
+                f"The other object must have the dimension of {self._DIMENSION}"
+            ) from error
 
     @staticmethod
     def loads(contents: Dict[str, float]) -> _T:

@@ -13,6 +13,7 @@ from .common import (
     EqMixin,
     KwargsDeprecated,
     MatrixType,
+    allclose,
     common_loads,
     locked,
 )
@@ -42,6 +43,7 @@ __all__ = [
     "UserMutableMapping",
     "UserMutableSequence",
     "UserSequence",
+    "allclose",
     "attr",
     "attr_base",
     "camel",

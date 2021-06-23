@@ -20,6 +20,7 @@ from threading import Lock
 from typing import Any, Callable, DefaultDict, Optional, Sequence, Tuple, Type, TypeVar, Union
 
 import numpy as np
+from typing_extensions import Protocol
 
 _T = TypeVar("_T")
 _Callable = TypeVar("_Callable", bound=Callable[..., Any])
@@ -43,6 +44,53 @@ def common_loads(object_class: Type[_T], contents: Any) -> _T:
     obj: _T = object.__new__(object_class)
     obj._loads(contents)  # type: ignore[attr-defined]  # pylint: disable=protected-access
     return obj
+
+
+class _A(Protocol):  # pylint: disable=too-few-public-methods
+    def _allclose(self, other: "_A", *, rel_tol: float = 1e-09, abs_tol: float = 0.0) -> bool:
+        """Tell if all the data is close to the other object.
+
+        Arguments:
+            other: The other object.
+            rel_tol: Maximum difference for being considered "close", relative to the
+                     magnitude of the input values
+            abs_tol: Maximum difference for being considered "close", regardless of the
+                     magnitude of the input values
+        """
+
+
+def allclose(object_1: _A, object_2: _A, *, rel_tol: float = 1e-09, abs_tol: float = 0.0) -> bool:
+    """Determine whether object_1 is close to object_2 in value.
+
+    Arguments:
+        object_1: The first object to compare.
+        object_2: The second object to compare.
+        rel_tol: Maximum difference for being considered "close", relative to the
+                 magnitude of the input values
+        abs_tol: Maximum difference for being considered "close", regardless of the
+                 magnitude of the input values
+
+    Returns:
+        A bool value indicating whether object_1 is close to object_2.
+
+    """
+    try:
+        # pylint: disable=protected-access
+        if issubclass(object_1.__class__, object_2.__class__) and hasattr(object_1, "_allclose"):
+            print(1)
+            return object_1._allclose(object_2, rel_tol=rel_tol, abs_tol=abs_tol)
+        if issubclass(object_2.__class__, object_1.__class__) and hasattr(object_2, "_allclose"):
+            print(2)
+            return object_2._allclose(object_1, rel_tol=rel_tol, abs_tol=abs_tol)
+
+        if hasattr(object_1, "_allclose"):
+            print(3)
+            return object_1._allclose(object_2, rel_tol=rel_tol, abs_tol=abs_tol)
+        print(4)
+        return object_2._allclose(object_1, rel_tol=rel_tol, abs_tol=abs_tol)
+    except Exception:  # pylint: disable=broad-except
+        print(5)
+        return False
 
 
 class EqMixin:  # pylint: disable=too-few-public-methods
