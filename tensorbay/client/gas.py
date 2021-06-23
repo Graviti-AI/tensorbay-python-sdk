@@ -20,6 +20,7 @@ from typing_extensions import Literal
 
 from ..dataset import Dataset, FusionDataset
 from ..exception import DatasetTypeError, OperationError, ResourceNotExistError
+from .cloud_storage import CloudClient
 from .dataset import DatasetClient, FusionDatasetClient
 from .lazy import PagingList
 from .log import UPLOAD_DATASET_RESUME_TEMPLATE
@@ -167,6 +168,17 @@ class GAS:
             lambda offset, limit: self._generate_auth_storage_configs(None, offset, limit),
             128,
         )
+
+    def get_cloud_client(self, name: str) -> CloudClient:
+        """Get a cloud client used for interacting with cloud platform.
+
+        Arguments:
+            name: The required auth storage config name.
+
+        Returns:
+            The cloud client of this dataset.
+        """
+        return CloudClient(name, self._client)
 
     @overload
     def create_dataset(
