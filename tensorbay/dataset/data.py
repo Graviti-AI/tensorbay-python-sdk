@@ -33,13 +33,13 @@ class DataBase(AttrsMixin, ReprMixin):  # pylint: disable=too-few-public-methods
     Attributes:
         path: The file path.
         timestamp: The timestamp for the file.
-        label: The :class:`~tensorbay.label.label.Label` that contains
+        label: The :class:`~tensorbay.label.label.Label` instance that contains
             all the label information of the file.
 
     """
 
     _T = TypeVar("_T", bound="DataBase")
-    _Type = Union["Data", "RemoteData"]
+    _Type = Union["Data", "RemoteData", "AuthData"]
 
     _repr_type = ReprType.INSTANCE
     _repr_attrs = ("timestamp", "label")
@@ -62,13 +62,13 @@ class DataBase(AttrsMixin, ReprMixin):  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def loads(contents: Dict[str, Any]) -> "_Type":
-        """Loads :class:`Data` or :class:`RemoteData` from a dict containing data information.
+        """Loads data subclass from a dict containing data information.
 
         Arguments:
             contents: A dict containing the information of the data, which looks like::
 
                     {
-                        "localPath" or "remotePath": <str>,
+                        "localPath", "remotePath" or "authPath": <str>,
                         "timestamp": <float>,
                         "label": {
                             "CLASSIFICATION": {...},
@@ -82,11 +82,26 @@ class DataBase(AttrsMixin, ReprMixin):  # pylint: disable=too-few-public-methods
                     }
 
         Returns:
-            A :class:`Data` or :class:`RemoteData` instance containing the given dict information.
+            A :class:`Data`, :class:`RemoteData` or class`AuthData` instance containing
+            information from the given dict.
+
+        Raises:
+            KeyError: When the "localPath", "remotePath" or "authPath" not in contents.
 
         """
-        cls = Data if Data._PATH_KEY in contents else RemoteData  # pylint: disable=protected-access
-        return common_loads(cls, contents)
+        for key, value in _DATA_SUBCLASS:
+            if key in contents:
+                return common_loads(value, contents)
+        raise KeyError("Must contain 'localPath', 'remotePath' or 'authPath' in contents.")
+
+    def open(self) -> Union[HTTPResponse, BufferedReader]:
+        """Return the binary file pointer of this file.
+
+        Raises:
+            NotImplementedError: The open method for DataBase and AuthData is not supported yet.
+
+        """
+        raise NotImplementedError
 
 
 class Data(DataBase):
@@ -105,7 +120,7 @@ class Data(DataBase):
     Attributes:
         path: The file local path.
         timestamp: The timestamp for the file.
-        label: The :class:`~tensorbay.label.label.Label` that contains
+        label: The :class:`~tensorbay.label.label.Label` instance that contains
                 all the label information of the file.
         target_remote_path: The target remote path of the data.
 
@@ -224,7 +239,7 @@ class RemoteData(DataBase):
     Attributes:
         path: The file remote path.
         timestamp: The timestamp for the file.
-        label: The :class:`~tensorbay.label.label.Label` that contains
+        label: The :class:`~tensorbay.label.label.Label` instance that contains
                 all the label information of the file.
 
     """
@@ -321,3 +336,93 @@ class RemoteData(DataBase):
 
         """
         return super()._dumps()
+
+
+class AuthData(DataBase):  # pylint: disable=abstract-method
+    """AuthData is a combination of a specific cloud storaged file and its label.
+
+    It contains the cloud storage file path, label information of the file
+    and the file metadata, such as timestamp.
+
+    An AuthData instance contains one or several types of labels.
+
+    Arguments:
+        cloud_path: The cloud file path.
+        target_remote_path: The file remote path after uploading to tensorbay.
+        timestamp: The timestamp for the file.
+
+    Attributes:
+        path: The cloud file path.
+        timestamp: The timestamp for the file.
+        label: The :class:`~tensorbay.label.label.Label` instance that contains
+                all the label information of the file.
+
+    """
+
+    _T = TypeVar("_T", bound="AuthData")
+
+    _PATH_KEY = "cloudPath"
+    path: str = attr(key=_PATH_KEY)
+
+    def __init__(
+        self,
+        cloud_path: str,
+        *,
+        target_remote_path: Optional[str] = None,
+        timestamp: Optional[float] = None,
+    ) -> None:
+        super().__init__(cloud_path, timestamp=timestamp)
+        self._target_remote_path = target_remote_path
+
+    @classmethod
+    def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
+        """Loads :class:`AuthData` from a dict containing remote data information.
+
+        Arguments:
+            contents: A dict containing the information of the data, which looks like::
+
+                    {
+                        "cloudPath": <str>,
+                        "timestamp": <float>,
+                        "label": {
+                            "CLASSIFICATION": {...},
+                            "BOX2D": {...},
+                            "BOX3D": {...},
+                            "POLYGON2D": {...},
+                            "POLYLINE2D": {...},
+                            "KEYPOINTS2D": {...},
+                            "SENTENCE": {...}
+                        }
+                    }
+
+        Returns:
+            An :class:`AuthData` instance containing information from the given dict.
+
+        """
+        return common_loads(cls, contents)
+
+    def dumps(self) -> Dict[str, Any]:
+        """Dumps the auth data into a dict.
+
+        Returns:
+            Dumped data dict, which looks like::
+
+                    {
+                        "cloudPath": <str>,
+                        "timestamp": <float>,
+                        "label": {
+                            "CLASSIFICATION": {...},
+                            "BOX2D": {...},
+                            "BOX3D": {...},
+                            "POLYGON2D": {...},
+                            "POLYLINE2D": {...},
+                            "KEYPOINTS2D": {...},
+                            "SENTENCE": {...}
+                        }
+                    }
+
+        """
+        return super()._dumps()
+
+
+_DATA_SUBCLASS = (("remotePath", RemoteData), ("localPath", Data), ("cloudPath", AuthData))

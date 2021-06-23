@@ -10,6 +10,7 @@ import pytest
 from ...dataset import Dataset
 from ...exception import DatasetTypeError, ResourceNotExistError
 from .. import gas
+from ..cloud_storage import CloudClient
 from ..dataset import DatasetClient, FusionDatasetClient
 from ..gas import DEFAULT_BRANCH, GAS
 from ..status import Status
@@ -199,6 +200,13 @@ class TestGAS:
         configs = self.gas_client.list_auth_storage_configs()
 
         assert list(configs) == response_data["configs"]
+
+    def test_get_cloud_client(self):
+        config_name = "cloud_train"
+        cloud_client = self.gas_client.get_cloud_client(config_name)
+        cloud_client_1 = CloudClient(config_name, self.gas_client._client)
+        assert cloud_client._name == cloud_client_1._name
+        assert cloud_client._client == cloud_client_1._client
 
     @pytest.mark.parametrize("is_fusion", [True, False])
     def test_create_dataset(self, mocker, is_fusion):
