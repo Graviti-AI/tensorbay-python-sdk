@@ -310,7 +310,8 @@ class Label(ReprMixin, EqMixin):
             )
 
         """
-        return common_loads(cls, contents)
+        convert_contents = {key: value for key, value in contents.items() if value is not None}
+        return common_loads(cls, convert_contents)
 
     def dumps(self) -> Dict[str, Any]:
         """Dumps all labels into a dict.
