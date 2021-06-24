@@ -465,7 +465,7 @@ class TestUploadFrame:
         gas_client.delete_dataset(dataset_name)
 
 
-class TeatUploadData:
+class TestUploadData:
     def test_add_file(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
