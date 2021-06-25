@@ -12,7 +12,7 @@ import click
 
 from ..client.struct import Commit
 from .tbrn import TBRN
-from .utility import get_dataset_client, get_gas
+from .utility import get_dataset_client, get_gas, shorten
 
 _FULL_LOG = """commit {}
 Author: {}
@@ -41,7 +41,7 @@ def _implement_log(
 
 
 def _get_oneline_log(commit: Commit) -> str:
-    return f"{commit.commit_id[:7]} {commit.title}"
+    return f"{shorten(commit.commit_id)} {commit.title}"
 
 
 def _get_full_log(commit: Commit) -> str:

@@ -294,3 +294,16 @@ def is_accesskey(arg: str) -> bool:
 
     """
     return arg.startswith(("Accesskey-", "ACCESSKEY-")) and len(arg) == 42
+
+
+def shorten(origin: str) -> str:
+    """Return the first 7 characters of the original string.
+
+    Arguments:
+        origin: The string needed to be shortened.
+
+    Returns:
+        A string of length 7.
+
+    """
+    return origin[:7]
