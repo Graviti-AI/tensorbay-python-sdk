@@ -26,7 +26,13 @@ import logging
 from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Iterator, Optional, Tuple, Union
 
 from ..dataset import Data, Frame, FusionSegment, Notes, Segment
-from ..exception import FrameError, InvalidParamsError, NameConflictError, ResourceNotExistError
+from ..exception import (
+    FrameError,
+    InvalidParamsError,
+    NameConflictError,
+    OperationError,
+    ResourceNotExistError,
+)
 from ..label import Catalog
 from .lazy import PagingList
 from .log import UPLOAD_SEGMENT_RESUME_TEMPLATE
@@ -90,6 +96,37 @@ class DatasetClientBase(VersionControlClient):
             yield item["name"]
 
         return response["totalCount"]  # type: ignore[no-any-return]
+
+    def _copy_segment(
+        self,
+        source_name: str,
+        target_name: str,
+        *,
+        source_client: Union[None, "DatasetClient", "FusionDatasetClient"],
+        strategy: str = "abort",
+    ) -> None:
+        if strategy not in _STRATEGIES:
+            raise InvalidParamsError(param_name="strategy", param_value=strategy)
+
+        source = {"segmentName": source_name}
+
+        if not source_client:
+            if source_name == target_name:
+                raise OperationError("Copying the segment to the same location is not allowed")
+        else:
+            source["id"] = source_client.dataset_id
+            source.update(source_client.status.get_status_info())
+
+        self._status.check_authority_for_draft()
+
+        post_data: Dict[str, Any] = {
+            "strategy": strategy,
+            "source": source,
+            "segmentName": target_name,
+        }
+        post_data.update(self._status.get_status_info())
+
+        self._client.open_api_do("POST", "segments?copy", self._dataset_id, json=post_data)
 
     @property
     def name(self) -> str:
@@ -322,10 +359,15 @@ class DatasetClient(DatasetClientBase):
                 2. "override": the source segment will override the origin segment;
                 3. "skip": keep the origin segment.
 
-        Returns:  #noqa: DAR202
+        Returns:
             The client of the copied target segment.
 
         """
+        if not target_name:
+            target_name = source_name
+        self._copy_segment(source_name, target_name, source_client=source_client, strategy=strategy)
+
+        return SegmentClient(target_name, self)
 
     def move_segment(
         self,
@@ -585,10 +627,15 @@ class FusionDatasetClient(DatasetClientBase):
                 2. "override": the source segment will override the origin segment;
                 3. "skip": keep the origin segment.
 
-        Returns:  #noqa: DAR202
+        Returns:
             The client of the copied target segment.
 
         """
+        if not target_name:
+            target_name = source_name
+        self._copy_segment(source_name, target_name, source_client=source_client, strategy=strategy)
+
+        return FusionSegmentClient(target_name, self)
 
     def move_segment(
         self,
