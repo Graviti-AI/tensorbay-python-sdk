@@ -170,3 +170,185 @@ class TestMove:
             dataset_client.move_segment("Segment1", "Segment2")
 
         gas_client.delete_dataset(dataset_name)
+
+
+class TestCopy:
+    def test_copy_segment(self, accesskey, url, tmp_path):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_dataset_name()
+        gas_client.create_dataset(dataset_name)
+        dataset = Dataset(name=dataset_name)
+        segment = dataset.create_segment("Segment1")
+        dataset._catalog = Catalog.loads(CATALOG)
+        path = tmp_path / "sub"
+        path.mkdir()
+        for i in range(10):
+            local_path = path / f"hello{i}.txt"
+            local_path.write_text("CONTENT")
+            data = Data(local_path=str(local_path))
+            data.label = Label.loads(LABEL)
+            segment.append(data)
+
+        dataset_client = gas_client.upload_dataset(dataset)
+        segment_client = dataset_client.copy_segment("Segment1", "Segment2")
+        assert segment_client.name == "Segment2"
+
+        with pytest.raises(InvalidParamsError):
+            dataset_client.copy_segment("Segment1", "Segment3", strategy="push")
+
+        segment2 = Segment("Segment2", client=dataset_client)
+        assert segment2[0].path == "hello0.txt"
+        assert segment2[0].path == segment[0].target_remote_path
+        assert segment2[0].label
+
+        gas_client.delete_dataset(dataset_name)
+
+    def test_copy_segment_from_client(self, accesskey, url, tmp_path):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_dataset_name()
+        gas_client.create_dataset(dataset_name)
+        dataset = Dataset(name=dataset_name)
+        segment = dataset.create_segment("Segment1")
+        dataset._catalog = Catalog.loads(CATALOG)
+        path = tmp_path / "sub"
+        path.mkdir()
+        for i in range(10):
+            local_path = path / f"hello{i}.txt"
+            local_path.write_text("CONTENT")
+            data = Data(local_path=str(local_path))
+            data.label = Label.loads(LABEL)
+            segment.append(data)
+
+        dataset_client = gas_client.upload_dataset(dataset)
+        dataset_client.commit("commit_1")
+
+        dataset_client.create_draft("draft_2")
+        dataset_client.commit("commit_2")
+
+        dataset_client.create_draft("draft_3")
+        dataset_client_1 = gas_client.get_dataset(dataset_name)
+        segment_client = dataset_client.copy_segment(
+            "Segment1", "Segment2", source_client=dataset_client_1
+        )
+        assert segment_client.name == "Segment2"
+
+        with pytest.raises(InvalidParamsError):
+            dataset_client.copy_segment("Segment1", "Segment3", strategy="push")
+
+        segment2 = Segment("Segment2", client=dataset_client)
+        assert segment2[0].path == "hello0.txt"
+        assert segment2[0].path == segment[0].target_remote_path
+        assert segment2[0].label
+
+        gas_client.delete_dataset(dataset_name)
+
+    def test_copy_fusion_segment(self, accesskey, url, tmp_path):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_dataset_name()
+        gas_client.create_dataset(dataset_name, is_fusion=True)
+        dataset = FusionDataset(name=dataset_name)
+        segment = dataset.create_segment("Segment1")
+        segment.sensors.add(Sensor.loads(LIDAR_DATA))
+        dataset._catalog = Catalog.loads(CATALOG)
+        path = tmp_path / "sub"
+        path.mkdir()
+        for i in range(10):
+            frame = Frame()
+            local_path = path / f"hello{i}.txt"
+            local_path.write_text("CONTENT")
+            data = Data(local_path=str(local_path))
+            data.label = Label.loads(LABEL)
+            frame[LIDAR_DATA["name"]] = data
+            segment.append(frame)
+
+        dataset_client = gas_client.upload_dataset(dataset)
+        segment_client = dataset_client.copy_segment("Segment1", "Segment2")
+        assert segment_client.name == "Segment2"
+
+        with pytest.raises(InvalidParamsError):
+            dataset_client.copy_segment("Segment1", "Segment3", strategy="push")
+
+        segment2 = FusionSegment("Segment2", client=dataset_client)
+        assert segment2[0][LIDAR_DATA["name"]].path == "hello0.txt"
+        assert (
+            segment2[0][LIDAR_DATA["name"]].path
+            == segment[0][LIDAR_DATA["name"]].target_remote_path
+        )
+        assert segment2[0][LIDAR_DATA["name"]].label
+
+        gas_client.delete_dataset(dataset_name)
+
+    def test_copy_fusion_segment_from_client(self, accesskey, url, tmp_path):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_dataset_name()
+        gas_client.create_dataset(dataset_name, is_fusion=True)
+        dataset = FusionDataset(name=dataset_name)
+        segment = dataset.create_segment("Segment1")
+        segment.sensors.add(Sensor.loads(LIDAR_DATA))
+        dataset._catalog = Catalog.loads(CATALOG)
+        path = tmp_path / "sub"
+        path.mkdir()
+        for i in range(10):
+            frame = Frame()
+            local_path = path / f"hello{i}.txt"
+            local_path.write_text("CONTENT")
+            data = Data(local_path=str(local_path))
+            data.label = Label.loads(LABEL)
+            frame[LIDAR_DATA["name"]] = data
+            segment.append(frame)
+
+        dataset_client = gas_client.upload_dataset(dataset)
+        dataset_client.commit("commit_1")
+
+        dataset_client.create_draft("draft_2")
+        dataset_client.commit("commit_2")
+
+        dataset_client.create_draft("draft_3")
+        dataset_client_1 = gas_client.get_dataset(dataset_name, is_fusion=True)
+        segment_client = dataset_client.copy_segment(
+            "Segment1", "Segment2", source_client=dataset_client_1
+        )
+        assert segment_client.name == "Segment2"
+
+        with pytest.raises(InvalidParamsError):
+            dataset_client.copy_segment("Segment1", "Segment3", strategy="push")
+
+        segment2 = FusionSegment("Segment2", client=dataset_client)
+        assert segment2[0][LIDAR_DATA["name"]].path == "hello0.txt"
+        assert (
+            segment2[0][LIDAR_DATA["name"]].path
+            == segment[0][LIDAR_DATA["name"]].target_remote_path
+        )
+        assert segment2[0][LIDAR_DATA["name"]].label
+
+        gas_client.delete_dataset(dataset_name)
+
+    def test_copy_segment_abort(self, accesskey, url, tmp_path):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_dataset_name()
+        gas_client.create_dataset(dataset_name)
+        dataset = Dataset(name=dataset_name)
+        segment1 = dataset.create_segment("Segment1")
+        dataset._catalog = Catalog.loads(CATALOG)
+        path = tmp_path / "sub"
+        path.mkdir()
+        for i in range(10):
+            local_path = path / f"hello{i}.txt"
+            local_path.write_text("CONTENT")
+            data = Data(local_path=str(local_path))
+            data.label = Label.loads(LABEL)
+            segment1.append(data)
+
+        segment2 = dataset.create_segment("Segment2")
+        for i in range(10):
+            local_path = path / f"hello{i}.txt"
+            local_path.write_text("CONTENT")
+            data = Data(local_path=str(local_path))
+            data.label = Label.loads(LABEL)
+            segment2.append(data)
+
+        dataset_client = gas_client.upload_dataset(dataset)
+        with pytest.raises(ResponseSystemError):
+            dataset_client.copy_segment("Segment1", "Segment2")
+
+        gas_client.delete_dataset(dataset_name)
