@@ -11,7 +11,7 @@ import click
 
 from ..client.gas import DatasetClientType
 from .tbrn import TBRN, TBRNType
-from .utility import error, get_dataset_client, get_gas
+from .utility import error, get_dataset_client, get_gas, shorten
 
 
 def _implement_branch(
@@ -54,7 +54,7 @@ def _list_branches(dataset_client: DatasetClientType, verbose: bool) -> None:
     else:
         name_length = max(len(branch.name) for branch in branches)
         for branch in branches:
-            click.echo(f"{branch.name:{name_length}} {branch.commit_id[:7]} {branch.title}")
+            click.echo(f"{branch.name:{name_length}} {shorten(branch.commit_id)} {branch.title}")
 
 
 def _delete_branch(dataset_client: DatasetClientType, info: TBRN) -> None:
