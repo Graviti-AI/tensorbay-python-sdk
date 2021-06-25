@@ -191,7 +191,8 @@ Upload files to a segment. The ``local_path`` refers to a directory.
 
     $ gas cp -r <local_path> tb:<dataset_name>#<draft_number>:<segment_name>
 
-Upload a file to a segment with a given ``remote_path``. The ``local_path`` can only refer to a file.
+Upload a file to a segment with a given ``remote_path``, which is the target path on TensorBay.
+The ``local_path`` can refer to only one file.
 
 .. code:: html
 
