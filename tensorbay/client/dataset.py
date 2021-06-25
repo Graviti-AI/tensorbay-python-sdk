@@ -26,7 +26,7 @@ import logging
 from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Iterator, Optional, Tuple, Union
 
 from ..dataset import Data, Frame, FusionSegment, Notes, Segment
-from ..exception import FrameError, NameConflictError, ResourceNotExistError
+from ..exception import FrameError, InvalidParamsError, NameConflictError, ResourceNotExistError
 from ..label import Catalog
 from .lazy import PagingList
 from .log import UPLOAD_SEGMENT_RESUME_TEMPLATE
@@ -39,6 +39,7 @@ if TYPE_CHECKING:
     from .gas import GAS
 
 logger = logging.getLogger(__name__)
+_STRATEGIES = {"abort", "override", "skip"}
 
 
 class DatasetClientBase(VersionControlClient):
@@ -344,10 +345,25 @@ class DatasetClient(DatasetClientBase):
                 2. "override": the source segment will override the origin segment;
                 3. "skip": keep the origin segment.
 
-        Returns:  #noqa: DAR202
+        Returns:
             The client of the moved target segment.
 
+        Raises:
+            InvalidParamsError: When the strategy is invalid.
+
         """
+        self._status.check_authority_for_draft()
+        if strategy not in _STRATEGIES:
+            raise InvalidParamsError(param_name="strategy", param_value=strategy)
+        post_data: Dict[str, Any] = {
+            "strategy": strategy,
+            "source": {"segmentName": source_name},
+            "segmentName": target_name,
+        }
+        post_data.update(self._status.get_status_info())
+
+        self._client.open_api_do("POST", "segments?move", self._dataset_id, json=post_data)
+        return SegmentClient(target_name, self)
 
     def get_segment(self, name: str = "default") -> SegmentClient:
         """Get a segment in a certain commit according to given name.
@@ -592,10 +608,25 @@ class FusionDatasetClient(DatasetClientBase):
                 2. "override": the source segment will override the origin segment;
                 3. "skip": keep the origin segment.
 
-        Returns:  #noqa: DAR202
+        Returns:
             The client of the moved target segment.
 
+        Raises:
+            InvalidParamsError: When the strategy is invalid.
+
         """
+        self._status.check_authority_for_draft()
+        if strategy not in _STRATEGIES:
+            raise InvalidParamsError(param_name="strategy", param_value=strategy)
+        post_data: Dict[str, Any] = {
+            "strategy": strategy,
+            "source": {"segmentName": source_name},
+            "segmentName": target_name,
+        }
+        post_data.update(self._status.get_status_info())
+
+        self._client.open_api_do("POST", "segments?move", self._dataset_id, json=post_data)
+        return FusionSegmentClient(target_name, self)
 
     def get_segment(self, name: str = "default") -> FusionSegmentClient:
         """Get a fusion segment in a certain commit according to given name.
