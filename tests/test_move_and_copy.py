@@ -385,6 +385,85 @@ class TestCopy:
 
         gas_client.delete_dataset(dataset_name)
 
+    def test_copy_segment_between_datasets(self, accesskey, url, tmp_path):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name_1 = get_dataset_name()
+        gas_client.create_dataset(dataset_name_1)
+        dataset_1 = Dataset(name=dataset_name_1)
+        segment_1 = dataset_1.create_segment("Segment1")
+        dataset_1._catalog = Catalog.loads(CATALOG)
+        path = tmp_path / "sub"
+        path.mkdir()
+        for i in range(10):
+            local_path = path / f"hello{i}.txt"
+            local_path.write_text("CONTENT")
+            data = Data(local_path=str(local_path))
+            data.label = Label.loads(LABEL)
+            segment_1.append(data)
+        dataset_client_1 = gas_client.upload_dataset(dataset_1)
+
+        dataset_name_2 = dataset_name_1 + "_2"
+        dataset_client_2 = gas_client.create_dataset(dataset_name_2)
+        dataset_client_2.create_draft("draft_2")
+
+        segment_client = dataset_client_2.copy_segment(
+            "Segment1", "Segment2", source_client=dataset_client_1
+        )
+        assert segment_client.name == "Segment2"
+
+        segment2 = Segment("Segment2", client=dataset_client_2)
+        assert segment2[0].path == "hello0.txt"
+        assert segment2[0].path == segment_1[0].target_remote_path
+        assert segment2[0].label
+
+        gas_client.delete_dataset(dataset_name_1)
+        gas_client.delete_dataset(dataset_name_2)
+
+    def test_copy_segment_from_commits(self, accesskey, url, tmp_path):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_dataset_name()
+        gas_client.create_dataset(dataset_name)
+        dataset = Dataset(name=dataset_name)
+        segment = dataset.create_segment("Segment1")
+        dataset._catalog = Catalog.loads(CATALOG)
+        path = tmp_path / "sub"
+        path.mkdir()
+        for i in range(10):
+            local_path = path / f"hello{i}.txt"
+            local_path.write_text("CONTENT")
+            data = Data(local_path=str(local_path))
+            data.label = Label.loads(LABEL)
+            segment.append(data)
+
+        dataset_client = gas_client.upload_dataset(dataset)
+        dataset_client.commit("commit_1")
+
+        for i in range(10, 20):
+            local_path = path / f"hello{i}.txt"
+            local_path.write_text("CONTENT")
+            data = Data(local_path=str(local_path))
+            data.label = Label.loads(LABEL)
+            segment.append(data)
+        dataset_client = gas_client.upload_dataset(dataset)
+        dataset_client.commit("commit_2")
+
+        dataset_client_1 = gas_client.get_dataset(dataset_name)
+        commit_id = dataset_client_1.list_commits()[-1].commit_id
+        dataset_client_1.checkout(revision=commit_id)
+        dataset_client.create_draft("draft_3")
+        segment_client = dataset_client.copy_segment(
+            "Segment1", "Segment2", source_client=dataset_client_1
+        )
+        assert segment_client.name == "Segment2"
+
+        segment2 = Segment("Segment2", client=dataset_client)
+        assert segment2[0].path == "hello0.txt"
+        assert segment2[0].path == segment[0].target_remote_path
+        assert segment2[0].label
+        assert len(segment2) == 10
+
+        gas_client.delete_dataset(dataset_name)
+
     def test_copy_data(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
@@ -403,12 +482,15 @@ class TestCopy:
 
         dataset_client = gas_client.upload_dataset(dataset)
         segment_client = dataset_client.get_segment("Segment1")
-        segment_client.copy_data("hello1.txt", "hello6.txt")
+        segment_client.copy_data("hello0.txt", "goodbye0.txt")
+        segment_client.copy_data("hello1.txt", "hello10.txt")
 
         with pytest.raises(InvalidParamsError):
-            segment_client.copy_data("hello1.txt", "hello7.txt", strategy="push")
+            segment_client.copy_data("hello2.txt", "see_you.txt", strategy="push")
+
         segment2 = Segment("Segment1", client=dataset_client)
-        assert segment2[6].path == "hello6.txt"
-        assert segment2[6].label
+        assert segment2[0].path == "goodbye0.txt"
+        assert segment2[3].path == "hello10.txt"
+        assert segment2[1].label
 
         gas_client.delete_dataset(dataset_name)
