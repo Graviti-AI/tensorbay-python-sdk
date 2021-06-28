@@ -424,5 +424,25 @@ class AuthData(DataBase):  # pylint: disable=abstract-method
         """
         return super()._dumps()
 
+    @property
+    def target_remote_path(self) -> str:
+        """Return the target remote path of the auth data.
+
+        Target remote path will be used when this data is uploaded to tensorbay, and the target
+        remote path will be the uploaded file's remote path.
+
+        Returns:
+            The target remote path of the auth data.
+
+        """
+        if not self._target_remote_path:
+            self._target_remote_path = self.path.split("/")[-1]
+
+        return self._target_remote_path
+
+    @target_remote_path.setter
+    def target_remote_path(self, target_remote_path: str) -> None:
+        self._target_remote_path = target_remote_path
+
 
 _DATA_SUBCLASS = (("remotePath", RemoteData), ("localPath", Data), ("cloudPath", AuthData))
