@@ -35,7 +35,7 @@ from requests_toolbelt import MultipartEncoder
 from ulid import from_timestamp
 
 from ..dataset import Data, Frame, RemoteData
-from ..exception import FrameError, InvalidParamsError, ResponseSystemError
+from ..exception import FrameError, InvalidParamsError, OperationError, ResponseSystemError
 from ..sensor.sensor import Sensor, Sensors
 from ..utility import Disable, locked
 from .lazy import PagingList
@@ -44,6 +44,8 @@ from .status import Status
 
 if TYPE_CHECKING:
     from .dataset import DatasetClient, FusionDatasetClient
+
+_STRATEGIES = {"abort", "override", "skip"}
 
 
 class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
@@ -384,7 +386,67 @@ class SegmentClient(SegmentClientBase):
                 2. "override": the source data will override the origin data;
                 3. "skip": keep the origin data.
 
+        Raises:
+            InvalidParamsError: When strategy is invalid.
+            OperationError: When the type of target_remote_paths is not equal
+                with source_remote_paths.
+
         """
+        self._status.check_authority_for_draft()
+
+        if strategy not in _STRATEGIES:
+            raise InvalidParamsError(param_name="strategy", param_value=strategy)
+
+        if not target_remote_paths:
+            all_target_remote_paths = []
+            all_source_remote_paths = (
+                [source_remote_paths]
+                if isinstance(source_remote_paths, str)
+                else list(source_remote_paths)
+            )
+
+        elif isinstance(source_remote_paths, str) and isinstance(target_remote_paths, str):
+            all_target_remote_paths = [target_remote_paths]
+            all_source_remote_paths = [source_remote_paths]
+
+        elif not isinstance(source_remote_paths, str) and not isinstance(target_remote_paths, str):
+            all_target_remote_paths = list(target_remote_paths)
+            all_source_remote_paths = list(source_remote_paths)
+            if len(all_target_remote_paths) != len(all_source_remote_paths):
+                raise OperationError(
+                    "To copy the data, the length of target_remote_paths "
+                    "must be equal with source_remote_paths"
+                )
+        else:
+            raise OperationError(
+                "To copy the data, the type of target_remote_paths "
+                "must be equal with source_remote_paths"
+            )
+
+        source = {}
+        if source_client:
+            source["segmentName"] = source_client.name
+            source["id"] = source_client._dataset_id  # pylint: disable=protected-access
+            source.update(source_client.status.get_status_info())
+        else:
+            source["segmentName"] = self.name
+
+        post_data: Dict[str, Any] = {
+            "strategy": strategy,
+            "source": source,
+            "segmentName": self.name,
+        }
+        post_data.update(self._status.get_status_info())
+
+        for start in range(0, len(all_source_remote_paths), 128):
+            request_target_remote_paths = all_target_remote_paths[start : start + 128]
+            request_source_remote_paths = all_source_remote_paths[start : start + 128]
+
+            if request_target_remote_paths:
+                post_data["remotePaths"] = request_target_remote_paths
+            post_data["source"]["remotePaths"] = request_source_remote_paths
+
+            self._client.open_api_do("POST", "data?multipleCopy", self._dataset_id, json=post_data)
 
     def move_data(
         self,
