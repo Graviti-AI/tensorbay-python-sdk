@@ -5,12 +5,13 @@
 
 """Dataset related classes."""
 
-from .data import Data, RemoteData
+from .data import AuthData, Data, RemoteData
 from .dataset import Dataset, FusionDataset, Notes
 from .frame import Frame
 from .segment import FusionSegment, Segment
 
 __all__ = [
+    "AuthData",
     "Data",
     "Dataset",
     "Frame",
