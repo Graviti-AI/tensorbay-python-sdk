@@ -34,7 +34,7 @@ import filetype
 from requests_toolbelt import MultipartEncoder
 from ulid import from_timestamp
 
-from ..dataset import Data, Frame, RemoteData
+from ..dataset import AuthData, Data, Frame, RemoteData
 from ..exception import FrameError, InvalidParamsError, OperationError, ResponseSystemError
 from ..sensor.sensor import Sensor, Sensors
 from ..utility import Disable, locked
@@ -196,7 +196,22 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
             if not skip_uploaded_files:
                 raise
 
-    def _upload_label(self, data: Data) -> None:
+    def _import_cloud_file(
+        self,
+        cloud_path: str,
+        remote_path: str,
+        delete_source: bool = False,
+    ) -> None:
+
+        put_data: Dict[str, Any] = {
+            "segmentName": self.name,
+            "objects": [{"cloudPath": cloud_path, "remotePath": remote_path}],
+            "deleteSource": delete_source,
+        }
+        put_data.update(self._status.get_status_info())
+        self._client.open_api_do("PUT", "multi/cloud-callback", self._dataset_id, json=put_data)
+
+    def _upload_label(self, data: Union[AuthData, Data]) -> None:
         label = data.label.dumps()
         if not label:
             return
@@ -358,6 +373,19 @@ class SegmentClient(SegmentClientBase):
         self._status.check_authority_for_draft()
 
         self.upload_file(data.path, data.target_remote_path)
+        self._upload_label(data)
+
+    def import_auth_data(self, data: AuthData, delete_source: bool = False) -> None:
+        """Import AuthData object to the draft.
+
+        Arguments:
+            data: The :class:`~tensorbay.dataset.data.Data`.
+            delete_source: Set it to True to delete source cloud file.
+
+        """
+        self._status.check_authority_for_draft()
+
+        self._import_cloud_file(data.path, data.target_remote_path, delete_source)
         self._upload_label(data)
 
     def copy_data(
