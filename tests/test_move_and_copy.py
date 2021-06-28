@@ -352,3 +352,32 @@ class TestCopy:
             dataset_client.copy_segment("Segment1", "Segment2")
 
         gas_client.delete_dataset(dataset_name)
+
+    def test_copy_data(self, accesskey, url, tmp_path):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_dataset_name()
+        gas_client.create_dataset(dataset_name)
+        dataset = Dataset(name=dataset_name)
+        segment = dataset.create_segment("Segment1")
+        dataset._catalog = Catalog.loads(CATALOG)
+        path = tmp_path / "sub"
+        path.mkdir()
+        for i in range(10):
+            local_path = path / f"hello{i}.txt"
+            local_path.write_text("CONTENT")
+            data = Data(local_path=str(local_path))
+            data.label = Label.loads(LABEL)
+            segment.append(data)
+
+        dataset_client = gas_client.upload_dataset(dataset)
+        segment_client = dataset_client.get_segment("Segment1")
+        segment_client.copy_data("hello1.txt", "hello6.txt")
+
+        with pytest.raises(InvalidParamsError):
+            segment_client.copy_data("hello1.txt", "hello7.txt", strategy="push")
+
+        segment2 = Segment("Segment1", client=dataset_client)
+        assert segment2[6].path == "hello6.txt"
+        assert segment2[6].label
+
+        gas_client.delete_dataset(dataset_name)

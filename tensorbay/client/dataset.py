@@ -37,7 +37,7 @@ from ..label import Catalog
 from .lazy import PagingList
 from .log import UPLOAD_SEGMENT_RESUME_TEMPLATE
 from .requests import Tqdm, multithread_upload
-from .segment import FusionSegmentClient, SegmentClient
+from .segment import _STRATEGIES, FusionSegmentClient, SegmentClient
 from .status import Status
 from .version import VersionControlClient
 
@@ -45,7 +45,6 @@ if TYPE_CHECKING:
     from .gas import GAS
 
 logger = logging.getLogger(__name__)
-_STRATEGIES = {"abort", "override", "skip"}
 
 
 class DatasetClientBase(VersionControlClient):
