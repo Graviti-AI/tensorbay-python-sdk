@@ -10,7 +10,10 @@ The :class:`CloudClient` defines the initial client to interact between local an
 """
 
 from http.client import HTTPResponse
+from string import printable
 from typing import Any, Dict, Iterator, List
+from urllib.parse import quote
+from urllib.request import urlopen
 
 from .requests import Client
 
@@ -30,6 +33,12 @@ class CloudClient:
 
     def _make_section(self, section: str) -> str:
         return f"cloud/{self._name}/{section}"
+
+    def _get_url(self, file_path: str) -> str:
+        params: Dict[str, Any] = {"filePath": file_path}
+
+        response = self._client.open_api_do("GET", self._make_section("files/urls"), params=params)
+        return response.json()["url"]  # type: ignore[no-any-return]
 
     def _list_files(self, path: str, limit: int = 128) -> Iterator[str]:
         params: Dict[str, Any] = {"prefix": path, "limit": limit}
@@ -62,7 +71,10 @@ class CloudClient:
         Arguments:
             file_path: The path of the file on the cloud platform.
 
-        Returns: #noqa: DAR202
+        Returns:
             The cloud file pointer of this file path.
 
         """
+        return urlopen(  # type: ignore[no-any-return]
+            quote(self._get_url(file_path), safe=printable)
+        )
