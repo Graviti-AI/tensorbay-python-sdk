@@ -1,5 +1,5 @@
 ####################
- Dataset Management 
+ Dataset Management
 ####################
 
 This topic describes dataset management, including:
@@ -8,6 +8,7 @@ This topic describes dataset management, including:
 - :ref:`features/dataset_management:Upload Dataset`
 - :ref:`features/dataset_management:Read Dataset`
 - :ref:`features/dataset_management:Update Dataset`
+- :ref:`features/dataset_management:Move and Copy`
 
 
 ******************
@@ -27,7 +28,7 @@ The typical steps to organize a local dataset:
 .. note::
 
    A catalog is needed only if there is label information inside the dataset.
-   
+
 Take the :ref:`Organization of BSTLD <examples/bstld:Organize Dataset>` as an example.
 
 
@@ -36,7 +37,7 @@ Take the :ref:`Organization of BSTLD <examples/bstld:Organize Dataset>` as an ex
 ****************
 
 For an organized local dataset (i.e. the initialized :class:`~tensorbay.dataset.dataset.Dataset`
-instance), users can: 
+instance), users can:
 
 - Upload it to TensorBay.
 - Read it directly.
@@ -84,3 +85,24 @@ Since TensorBay supports version control, users can update data and labels to a 
 Thus, different versions of data and labels can coexist in one dataset, which greatly facilitates the datasets' maintenance.
 
 Please see :ref:`Update dataset<examples/update_dataset:Update Dataset>` example for more details.
+
+***************
+ Move and Copy
+***************
+
+TensorBay supports four methods to copy or move data in datasets:
+
+- copy segments
+- copy data
+- move segments
+- move data
+
+Copy is supported within a dataset or between datasets.
+
+Moving is only supported within one dataset.
+
+.. note::
+
+   The target dataset of copying and moving must be in :ref:`reference/glossary:draft` status.
+
+Please see :ref:`move and copy<examples/move_and_copy:Move And Copy>` example for more details.
