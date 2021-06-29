@@ -177,13 +177,13 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
     def _synchronize_upload_info(  # pylint: disable=too-many-arguments
         self,
         remote_path: str,
-        key: str,
+        checksum: str,
         frame_info: Optional[Dict[str, Any]] = None,
         skip_uploaded_files: bool = False,
     ) -> None:
         put_data: Dict[str, Any] = {
             "segmentName": self.name,
-            "objects": [{"key": key, "remotePath": remote_path}],
+            "objects": [{"checksum": checksum, "remotePath": remote_path}],
         }
         put_data.update(self._status.get_status_info())
 
@@ -316,8 +316,8 @@ class SegmentClient(SegmentClientBase):
         permission = self._get_upload_permission()
         post_data = permission["result"]
 
-        key = permission["extra"]["objectPrefix"] + self._calculate_file_sha1(local_path)
-        post_data["key"] = key
+        checksum = self._calculate_file_sha1(local_path)
+        post_data["key"] = permission["extra"]["objectPrefix"] + checksum
 
         backend_type = permission["extra"]["backendType"]
         if backend_type == "azure":
@@ -335,7 +335,7 @@ class SegmentClient(SegmentClientBase):
                 post_data,
             )
 
-        self._synchronize_upload_info(target_remote_path, key)
+        self._synchronize_upload_info(target_remote_path, checksum)
 
     def upload_label(self, data: Data) -> None:
         """Upload label with Data object to the draft.
@@ -680,8 +680,8 @@ class FusionSegmentClient(SegmentClientBase):
             permission = self._get_upload_permission()
             post_data = permission["result"]
 
-            key = permission["extra"]["objectPrefix"] + self._calculate_file_sha1(data.path)
-            post_data["key"] = key
+            checksum = self._calculate_file_sha1(data.path)
+            post_data["key"] = permission["extra"]["objectPrefix"] + checksum
 
             backend_type = permission["extra"]["backendType"]
             if backend_type == "azure":
@@ -707,7 +707,9 @@ class FusionSegmentClient(SegmentClientBase):
             if hasattr(data, "timestamp"):
                 frame_info["timestamp"] = data.timestamp
 
-            self._synchronize_upload_info(target_remote_path, key, frame_info, skip_uploaded_files)
+            self._synchronize_upload_info(
+                target_remote_path, checksum, frame_info, skip_uploaded_files
+            )
 
             self._upload_label(data)
 
