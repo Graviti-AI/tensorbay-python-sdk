@@ -3,19 +3,12 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-import os
+from itertools import zip_longest
 
-import pytest
-
-from ...dataset import Dataset
-from ...exception import DatasetTypeError, ResourceNotExistError
+from ...dataset import AuthData
 from .. import gas
 from ..cloud_storage import CloudClient
-from ..dataset import DatasetClient, FusionDatasetClient
-from ..gas import DEFAULT_BRANCH, GAS
 from ..requests import Client
-from ..status import Status
-from ..struct import ROOT_COMMIT_ID, Draft
 from .utility import mock_response
 
 
@@ -23,7 +16,7 @@ class TestCloudClient:
     client = Client("Accesskey-********************************")
     cloud_client = CloudClient("auth_config", client)
 
-    def test_list_files(self, mocker):
+    def test_list_auth_data(self, mocker):
         params = {
             "prefix": "cloud_path",
             "limit": 128,
@@ -40,7 +33,11 @@ class TestCloudClient:
             f"{gas.__name__}.Client.open_api_do",
             return_value=mock_response(data=response_data),
         )
-        assert self.cloud_client.list_files(params["prefix"]) == response_data["cloudFiles"]
+        for auth_data, cloud_path in zip_longest(
+            self.cloud_client.list_auth_data(params["prefix"]), response_data["cloudFiles"]
+        ):
+            assert isinstance(auth_data, AuthData)
+            assert auth_data.path == cloud_path
         open_api_do.assert_called_once_with(
             "GET", f"cloud/{self.cloud_client._name}/files", params=params
         )

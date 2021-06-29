@@ -9,16 +9,13 @@ The :class:`CloudClient` defines the initial client to interact between local an
 
 """
 
-from http.client import HTTPResponse
-from string import printable
 from typing import Any, Dict, Iterator, List
-from urllib.parse import quote
-from urllib.request import urlopen
 
+from ..dataset import AuthData
 from .requests import Client
 
 
-class CloudClient:
+class CloudClient:  # pylint: disable=too-few-public-methods
     """:class:`CloudClient` defines the client to interact between local and cloud platform.
 
     Arguments:
@@ -53,28 +50,16 @@ class CloudClient:
                 break
             params["marker"] = response["nextMarker"]
 
-    def list_files(self, path: str) -> List[str]:
-        """List all cloud files in the given directory.
+    def list_auth_data(self, path: str) -> List[AuthData]:
+        """List all cloud files in the given directory as :class:`~tensorbay.dataset.data.AuthData`.
 
         Arguments:
             path: The directory path on the cloud platform.
 
         Returns:
-            The list of all the cloud files.
+            The list of :class:`~tensorbay.dataset.data.AuthData` of all the cloud files.
 
         """
-        return list(self._list_files(path))
-
-    def open(self, file_path: str) -> HTTPResponse:
-        """Return the binary file pointer of this file.
-
-        Arguments:
-            file_path: The path of the file on the cloud platform.
-
-        Returns:
-            The cloud file pointer of this file path.
-
-        """
-        return urlopen(  # type: ignore[no-any-return]
-            quote(self._get_url(file_path), safe=printable)
-        )
+        return [
+            AuthData(cloud_path, url_getter=self._get_url) for cloud_path in self._list_files(path)
+        ]
