@@ -5,19 +5,14 @@
 # pylint: disable=invalid-name
 # pylint: disable=missing-module-docstring
 
+import csv
 import os
-from typing import Any, Dict, List
+from typing import Dict, List, Union
 
 from ...dataset import Data, Dataset
-from ...label import AttributeInfo, Classification, LabeledBox2D
-from ...utility import NameList
+from ...label import Box2DSubcatalog, LabeledBox2D
 
 DATASET_NAME = "CompCars"
-
-_SEGMENT_SPLIT_FILES = (
-    ("test", os.path.join("data", "train_test_split", "classification", "test.txt")),
-    ("train", os.path.join("data", "train_test_split", "classification", "train.txt")),
-)
 
 
 def CompCars(path: str) -> Dataset:
@@ -68,96 +63,91 @@ def CompCars(path: str) -> Dataset:
     dataset = Dataset(DATASET_NAME)
     dataset.load_catalog(os.path.join(os.path.dirname(__file__), "catalog.json"))
 
-    model_to_attributes = _get_model_to_attributes(
+    model_to_attributes = _extract_attributes(
         os.path.join(root_path, "misc", "attributes.txt"),
-        dataset.catalog.classification.attributes,
+        dataset.catalog.box2d,
     )
 
-    classification_index_to_category = dataset.catalog.classification.get_index_to_category()
-    box_index_to_category = dataset.catalog.box2d.get_index_to_category()
-
-    for mode, segment_split_file in _SEGMENT_SPLIT_FILES:
+    for mode in ("test", "train"):
         segment = dataset.create_segment(mode)
-        with open(os.path.join(root_path, segment_split_file), encoding="utf-8") as fp:
+        segment_split_file = os.path.join(
+            root_path, "train_test_split", "classification", f"{mode}.txt"
+        )
+
+        with open(segment_split_file, encoding="utf-8") as fp:
             # one line of segment split file looks like:
             # "78/1/2014/3ac218c0c6c378.jpg\n"
             # 78 is make name id, 1 is model name id, 2014 is release year
-            for image_file_name in fp:
-                image_path = os.path.join(root_path, "image", *image_file_name.strip().split("/"))
+            for line in fp:
+                image_path = os.path.join(root_path, "image", line.strip())
+
                 # some image file names in segment split file do not exist in image folder
                 if not os.path.exists(image_path):
                     continue
-                label_path = os.path.join(
-                    root_path, "label", *(os.path.splitext(image_file_name)[0] + ".txt").split("/")
-                )
+
                 data = Data(image_path)
-                data.label.classification = _create_classification_label(
-                    image_path, model_to_attributes, classification_index_to_category
+
+                label_path = os.path.join(root_path, "label", f"{os.path.splitext(line)[0]}.txt")
+                data.label.box2d = _create_box_label(
+                    label_path, dataset.catalog.box2d, model_to_attributes
                 )
-                data.label.box2d = _create_box_label(label_path, box_index_to_category)
+
                 segment.append(data)
 
     return dataset
 
 
-def _get_model_to_attributes(
-    path: str, classification_attributes: NameList[AttributeInfo]
-) -> Dict[str, Dict[str, Any]]:
+def _extract_attributes(
+    path: str, box2d_subcatalog: Box2DSubcatalog
+) -> Dict[str, Dict[str, Union[int, float, str, None]]]:
     attributes = {}
 
-    model_names = classification_attributes["model_name"].enum
-    car_types = classification_attributes["car_type"].enum
+    model_names = box2d_subcatalog.attributes["model_name"].enum
+    car_types = box2d_subcatalog.attributes["car_type"].enum
 
-    with open(path, encoding="utf-8") as fp:
+    with open(path, encoding="utf-8", newline="") as fp:
         # attributes file looks like:
         # model_id maximum_speed displacement door_number seat_number type
         #     1         235          1.8          5           5        4
         # ...
-        fp.readline()
-        for line in fp:
-            line_split = line.strip().split()
-            attributes_values = (
-                model_names[int(line_split[0]) - 1],
-                int(line_split[1]),
-                float(line_split[2]),
-                int(line_split[3]),
-                int(line_split[4]),
-                car_types[int(line_split[5])],
-            )
-            attributes[line_split[0]] = dict(
-                zip(classification_attributes.keys(), attributes_values)
-            )
+        reader = csv.DictReader(fp, delimiter=" ")
+        for row in reader:
+            attributes[row["model_id"]] = {
+                "model_name": model_names[int(row["model_id"]) - 1],
+                "maximum_speed": int(row["maximum_speed"]),
+                "displacement": float(row["displacement"]),
+                "door_number": int(row["door_number"]),
+                "seat_number": int(row["seat_number"]),
+                "car_type": car_types[int(row["type"])],
+            }
 
     return attributes
 
 
-def _create_box_label(label_path: str, index_to_category: Dict[int, str]) -> List[LabeledBox2D]:
+def _create_box_label(
+    label_path: str,
+    box2d_subcatalog: Box2DSubcatalog,
+    model_to_attributes: Dict[str, Dict[str, Union[int, float, str, None]]],
+) -> List[LabeledBox2D]:
+    # label_path looks like:
+    # <root_path>/<make_name_id>/<model_name_id>/<release_year>/<file_name>.txt
+    _, make_id, model_id, release_year, _ = label_path.rsplit(os.sep, 4)
+
     with open(label_path, encoding="utf-8") as fp:
         viewpoint_id = int(fp.readline().strip())
         viewpoint_index = viewpoint_id if viewpoint_id == -1 else viewpoint_id - 1
 
+        attributes = model_to_attributes[model_id].copy()
+
+        attributes["released_year"] = int(release_year) if release_year != "unknown" else None
+        attributes["viewpoint"] = box2d_subcatalog.attributes["viewpoint"].enum[viewpoint_index]
+
         fp.readline()
 
-        category = index_to_category[viewpoint_index]
-        box2d = [LabeledBox2D(*map(int, line.strip().split()), category=category) for line in fp]
+        category = box2d_subcatalog.categories[int(make_id) - 1].name
+        box2d_label = [
+            LabeledBox2D(*map(int, line.strip().split()), category=category, attributes=attributes)
+            for line in fp
+        ]
 
-    return box2d
-
-
-def _create_classification_label(
-    image_path: str,
-    model_to_attributes: Dict[str, Dict[str, Any]],
-    index_to_category: Dict[int, str],
-) -> Classification:
-    # image_path looks like:
-    # <root_path>/<make_name_id>/<model_name_id>/<release_year>/<file_name>.jpg"
-    image_path_split = image_path.rsplit(os.sep, 4)
-
-    value = model_to_attributes[image_path_split[-3]]
-    attributes = value.copy()
-    released_year = image_path_split[-2]
-    attributes["released_year"] = int(released_year) if released_year != "unknown" else None
-
-    return Classification(
-        category=index_to_category[int(image_path_split[-4]) - 1], attributes=attributes
-    )
+    return box2d_label
