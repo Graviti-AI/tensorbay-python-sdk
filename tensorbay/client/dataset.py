@@ -25,7 +25,7 @@ Please refer to :class:`~tensorbay.dataset.dataset.FusionDataset` for more infor
 import logging
 from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Iterator, Optional, Tuple, Union
 
-from ..dataset import Data, Frame, FusionSegment, Notes, Segment
+from ..dataset import AuthData, Data, Frame, FusionSegment, Notes, RemoteData, Segment
 from ..exception import (
     FrameError,
     InvalidParamsError,
@@ -281,20 +281,25 @@ class DatasetClient(DatasetClientBase):
         pbar: Tqdm,
     ) -> SegmentClient:
         segment_client = self.get_or_create_segment(segment.name)
-        local_data: Iterator[Data] = filter(
-            lambda data: pbar.update_for_skip(isinstance(data, Data)),
+        all_data: Iterator[Union[AuthData, Data]] = filter(
+            lambda data: pbar.update_for_skip(not isinstance(data, RemoteData)),
             segment,  # type: ignore[arg-type]
         )
         if skip_uploaded_files:
             done_set = set(segment_client.list_data_paths())
             segment_filter = filter(
                 lambda data: pbar.update_for_skip(data.target_remote_path not in done_set),
-                local_data,
+                all_data,
             )
         else:
-            segment_filter = local_data
+            segment_filter = all_data
 
-        multithread_upload(segment_client.upload_data, segment_filter, jobs=jobs, pbar=pbar)
+        multithread_upload(
+            segment_client._upload_or_import_data,  # pylint: disable=protected-access
+            segment_filter,
+            jobs=jobs,
+            pbar=pbar,
+        )
 
         return segment_client
 
@@ -459,7 +464,10 @@ class DatasetClient(DatasetClientBase):
         try:
             with Tqdm(len(segment), disable=quiet) as pbar:
                 return self._upload_segment(
-                    segment, jobs=jobs, skip_uploaded_files=skip_uploaded_files, pbar=pbar
+                    segment,
+                    jobs=jobs,
+                    skip_uploaded_files=skip_uploaded_files,
+                    pbar=pbar,
                 )
         except Exception:
             logger.error(

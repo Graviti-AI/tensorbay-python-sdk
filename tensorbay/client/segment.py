@@ -200,13 +200,12 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
         self,
         cloud_path: str,
         remote_path: str,
-        delete_source: bool = False,
     ) -> None:
 
         put_data: Dict[str, Any] = {
             "segmentName": self.name,
             "objects": [{"cloudPath": cloud_path, "remotePath": remote_path}],
-            "deleteSource": delete_source,
+            "deleteSource": False,
         }
         put_data.update(self._status.get_status_info())
         self._client.open_api_do("PUT", "multi/cloud-callback", self._dataset_id, json=put_data)
@@ -309,6 +308,12 @@ class SegmentClient(SegmentClientBase):
 
         return response["totalCount"]  # type: ignore[no-any-return]
 
+    def _upload_or_import_data(self, data: Union[Data, AuthData]) -> None:
+        if isinstance(data, Data):
+            self.upload_data(data)
+        else:
+            self.import_auth_data(data)
+
     def upload_file(self, local_path: str, target_remote_path: str = "") -> None:
         """Upload data with local path to the draft.
 
@@ -375,17 +380,16 @@ class SegmentClient(SegmentClientBase):
         self.upload_file(data.path, data.target_remote_path)
         self._upload_label(data)
 
-    def import_auth_data(self, data: AuthData, delete_source: bool = False) -> None:
+    def import_auth_data(self, data: AuthData) -> None:
         """Import AuthData object to the draft.
 
         Arguments:
             data: The :class:`~tensorbay.dataset.data.Data`.
-            delete_source: Set it to True to delete source cloud file.
 
         """
         self._status.check_authority_for_draft()
 
-        self._import_cloud_file(data.path, data.target_remote_path, delete_source)
+        self._import_cloud_file(data.path, data.target_remote_path)
         self._upload_label(data)
 
     def copy_data(
