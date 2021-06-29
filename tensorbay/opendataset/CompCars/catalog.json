@@ -1,5 +1,5 @@
 {
-    "CLASSIFICATION": {
+    "BOX2D": {
         "categories": [
             { "name": "ABT" },
             { "name": "BAC" },
@@ -141,7 +141,6 @@
             { "name": "Qoros" },
             { "name": "Acura" },
             { "name": "KIA" },
-            { "name": "Lotus" },
             { "name": "LAND-ROVER" },
             { "name": "McLaren" },
             { "name": "Maybach" },
@@ -2221,17 +2220,11 @@
                 "name": "released_year",
                 "type": ["integer", null],
                 "minimum": 1926
+            },
+            {
+                "name": "viewpoint",
+                "enum": ["front", "rear", "side", "front-side", "rear-side", "uncertain"]
             }
-        ]
-    },
-    "BOX2D": {
-        "categories": [
-            { "name": "front" },
-            { "name": "rear" },
-            { "name": "side" },
-            { "name": "front-side" },
-            { "name": "rear-side" },
-            { "name": "uncertain" }
         ]
     }
 }
