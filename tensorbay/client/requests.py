@@ -25,7 +25,7 @@ from requests.models import PreparedRequest, Response
 from tqdm import tqdm
 from urllib3.util.retry import Retry
 
-from ..__verison__ import __version__
+from ..__version__ import __version__
 from ..exception import ResponseError, ResponseErrorDistributor
 from .log import RequestLogging, ResponseLogging
 
