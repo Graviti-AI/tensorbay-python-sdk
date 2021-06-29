@@ -485,7 +485,6 @@ class SegmentClient(SegmentClientBase):
         target_remote_paths: Union[None, str, Iterable[str]] = None,
         *,
         source_client: Optional["SegmentClient"] = None,
-        strategy: str = "abort",
     ) -> None:
         """Move data to this segment, also used to rename data.
 
@@ -498,14 +497,8 @@ class SegmentClient(SegmentClientBase):
                 This argument is used to specifies where the moved data comes from when the moved
                 data is from another segment.
                 If None, the moved data comes from this segment.
-            strategy: The strategy of handling the name conflict. There are three options:
-
-                1. "abort": stop moving and raise exception;
-                2. "override": the source data will override the origin data;
-                3. "skip": keep the origin data.
 
         Raises:
-            InvalidParamsError: When strategy is invalid.
             OperationError: When the type or the length of target_remote_paths is not equal
                 with source_remote_paths.
                 Or when the dataset_id and drafter_number of source_client
@@ -513,9 +506,6 @@ class SegmentClient(SegmentClientBase):
 
         """
         self._status.check_authority_for_draft()
-
-        if strategy not in _STRATEGIES:
-            raise InvalidParamsError(param_name="strategy", param_value=strategy)
 
         if not target_remote_paths:
             all_target_remote_paths = []
@@ -560,7 +550,6 @@ class SegmentClient(SegmentClientBase):
             source["segmentName"] = self.name
 
         post_data: Dict[str, Any] = {
-            "strategy": strategy,
             "source": source,
             "segmentName": self.name,
         }
