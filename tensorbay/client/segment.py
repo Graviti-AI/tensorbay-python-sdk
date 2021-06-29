@@ -323,7 +323,7 @@ class SegmentClient(SegmentClientBase):
         if backend_type == "azure":
             url = (
                 f'{permission["extra"]["host"]}{permission["extra"]["objectPrefix"]}'
-                f'{target_remote_path}?{permission["result"]["token"]}'
+                f'{checksum}?{permission["result"]["token"]}'
             )
 
             self._put_binary_file_to_azure(url, local_path, post_data)
@@ -687,7 +687,7 @@ class FusionSegmentClient(SegmentClientBase):
             if backend_type == "azure":
                 url = (
                     f'{permission["extra"]["host"]}{permission["extra"]["objectPrefix"]}'
-                    f'{target_remote_path}?{permission["result"]["token"]}'
+                    f'{checksum}?{permission["result"]["token"]}'
                 )
 
                 self._put_binary_file_to_azure(url, data.path, post_data)
