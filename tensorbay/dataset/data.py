@@ -94,15 +94,6 @@ class DataBase(AttrsMixin, ReprMixin):  # pylint: disable=too-few-public-methods
                 return common_loads(value, contents)
         raise KeyError("Must contain 'localPath', 'remotePath' or 'authPath' in contents.")
 
-    def open(self) -> Union[HTTPResponse, BufferedReader]:
-        """Return the binary file pointer of this file.
-
-        Raises:
-            NotImplementedError: The open method for DataBase and AuthData is not supported yet.
-
-        """
-        raise NotImplementedError
-
 
 class Data(DataBase):
     """Data is a combination of a specific local file and its label.
@@ -338,7 +329,7 @@ class RemoteData(DataBase):
         return super()._dumps()
 
 
-class AuthData(DataBase):  # pylint: disable=abstract-method
+class AuthData(DataBase):
     """AuthData is a combination of a specific cloud storaged file and its label.
 
     It contains the cloud storage file path, label information of the file
@@ -350,6 +341,7 @@ class AuthData(DataBase):  # pylint: disable=abstract-method
         cloud_path: The cloud file path.
         target_remote_path: The file remote path after uploading to tensorbay.
         timestamp: The timestamp for the file.
+        url_getter: The url getter of the remote file.
 
     Attributes:
         path: The cloud file path.
@@ -370,9 +362,11 @@ class AuthData(DataBase):  # pylint: disable=abstract-method
         *,
         target_remote_path: Optional[str] = None,
         timestamp: Optional[float] = None,
+        url_getter: Optional[Callable[[str], str]] = None,
     ) -> None:
         super().__init__(cloud_path, timestamp=timestamp)
         self._target_remote_path = target_remote_path
+        self._url_getter = url_getter
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -443,6 +437,32 @@ class AuthData(DataBase):  # pylint: disable=abstract-method
     @target_remote_path.setter
     def target_remote_path(self, target_remote_path: str) -> None:
         self._target_remote_path = target_remote_path
+
+    def get_url(self) -> str:
+        """Return the url of the auth data.
+
+        Returns:
+            The url of the auth data.
+
+        Raises:
+            ValueError: When the url_getter is missing.
+
+        """
+        if not self._url_getter:
+            raise ValueError(
+                f"The file URL cannot be got because {self._repr_head()} has no url_getter"
+            )
+
+        return self._url_getter(self.path)
+
+    def open(self) -> HTTPResponse:
+        """Return the binary file pointer of this file.
+
+        Returns:
+            The cloud file pointer of this file path.
+
+        """
+        return urlopen(quote(self.get_url(), safe=printable))  # type: ignore[no-any-return]
 
 
 _DATA_SUBCLASS = (("remotePath", RemoteData), ("localPath", Data), ("cloudPath", AuthData))
