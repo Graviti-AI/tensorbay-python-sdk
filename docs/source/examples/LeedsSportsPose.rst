@@ -130,8 +130,8 @@ Now "Leeds Sports Pose" dataset can be read from TensorBay.
    :start-after: """Read Dataset / get dataset"""
    :end-before: """"""
 
-In :ref:`reference/dataset_structure:dataset` "Leeds Sports Pose", there is one default
-:ref:`reference/dataset_structure:segment` ``""`` (empty string). Get it by passing the segment name.
+In :ref:`reference/dataset_structure:dataset` "Leeds Sports Pose", there is one
+:ref:`reference/dataset_structure:segment` named ``default``. Get it by passing the segment name or the index.
 
 .. literalinclude:: ../../../docs/code/LeedsSportsPose.py
    :language: python
