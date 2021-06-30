@@ -3,8 +3,6 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-import pytest
-
 from .. import Data, Segment
 
 

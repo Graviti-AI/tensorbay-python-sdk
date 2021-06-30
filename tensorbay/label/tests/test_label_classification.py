@@ -6,7 +6,6 @@
 import pytest
 
 from .. import Classification, ClassificationSubcatalog
-from ..supports import AttributesMixin, CategoriesMixin
 
 
 @pytest.fixture

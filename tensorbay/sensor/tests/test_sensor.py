@@ -3,8 +3,6 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-from typing import Type
-
 import pytest
 from quaternion import quaternion
 

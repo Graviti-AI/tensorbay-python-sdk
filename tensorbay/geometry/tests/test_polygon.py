@@ -3,8 +3,6 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-import pytest
-
 from .. import Box2D, Polygon2D, Vector2D
 
 _DATA_POLYGON2D = [{"x": 1.0, "y": 1.0}, {"x": 2.0, "y": 2.0}, {"x": 2.0, "y": 3.0}]

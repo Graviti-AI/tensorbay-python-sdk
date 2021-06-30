@@ -8,8 +8,6 @@ from quaternion import quaternion
 
 from ...geometry import Transform3D, Vector3D
 from .. import Box2DSubcatalog, Box3DSubcatalog, LabeledBox2D, LabeledBox3D
-from ..basic import SubcatalogBase
-from ..supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
 
 
 @pytest.fixture

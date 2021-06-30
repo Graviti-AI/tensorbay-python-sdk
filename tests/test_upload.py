@@ -6,7 +6,7 @@
 import pytest
 import ulid
 
-from tensorbay import GAS, __version__
+from tensorbay import GAS
 from tensorbay.client.gas import DEFAULT_BRANCH
 from tensorbay.dataset import Data, Dataset, Frame, FusionSegment, Segment
 from tensorbay.exception import FrameError, ResourceNotExistError, ResponseError
