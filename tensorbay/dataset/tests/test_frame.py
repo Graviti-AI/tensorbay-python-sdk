@@ -3,7 +3,6 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-import pytest
 import ulid
 
 from .. import Data, Frame

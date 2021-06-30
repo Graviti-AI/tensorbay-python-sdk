@@ -6,7 +6,6 @@ import pytest
 
 from ...geometry import Vector2D
 from .. import LabeledPolyline2D, Polyline2DSubcatalog
-from ..supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
 
 _LABELEDPOLYLINE2D_DATA = {
     "polyline2d": [{"x": 1, "y": 2}],

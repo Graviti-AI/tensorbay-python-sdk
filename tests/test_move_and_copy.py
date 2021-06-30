@@ -5,7 +5,7 @@
 
 import pytest
 
-from tensorbay import GAS, __version__
+from tensorbay import GAS
 from tensorbay.dataset import Data, Dataset, Frame, FusionDataset, FusionSegment, Segment
 from tensorbay.exception import InvalidParamsError, ResourceNotExistError, ResponseSystemError
 from tensorbay.label import Catalog, Label

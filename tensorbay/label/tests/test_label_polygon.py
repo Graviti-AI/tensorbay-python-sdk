@@ -7,7 +7,6 @@ import pytest
 
 from ...geometry import Vector2D
 from .. import LabeledPolygon2D, Polygon2DSubcatalog
-from ..supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
 
 
 @pytest.fixture

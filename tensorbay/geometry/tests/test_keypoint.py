@@ -3,8 +3,6 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-import pytest
-
 from .. import Box2D, Keypoint2D, Keypoints2D, Vector2D
 
 _DATA_KEYPOINT = {"x": 1.0, "y": 1.0, "v": 1}

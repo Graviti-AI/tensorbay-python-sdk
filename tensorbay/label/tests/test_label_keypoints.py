@@ -7,7 +7,6 @@ import pytest
 
 from ...geometry import Keypoint2D
 from .. import Keypoints2DSubcatalog, LabeledKeypoints2D
-from ..supports import AttributesMixin, CategoriesMixin, IsTrackingMixin, KeypointsInfo
 
 
 @pytest.fixture

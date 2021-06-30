@@ -6,7 +6,6 @@
 import pytest
 
 from .. import LabeledSentence, SentenceSubcatalog, Word
-from ..supports import AttributesMixin
 
 _LEXICON = ["mean", "m", "iy", "n"]
 

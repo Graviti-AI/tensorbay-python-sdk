@@ -5,7 +5,7 @@
 
 import pytest
 
-from tensorbay import GAS, __version__
+from tensorbay import GAS
 from tensorbay.client.gas import DEFAULT_BRANCH
 from tensorbay.client.struct import ROOT_COMMIT_ID
 from tensorbay.dataset import Data, Segment
