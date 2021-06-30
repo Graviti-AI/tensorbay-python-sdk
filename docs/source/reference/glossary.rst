@@ -14,7 +14,7 @@ visit the `developer page <https://gas.graviti.cn/tensorbay/developer>`_ to crea
 
 For the usage of accesskey via Tensorbay SDK or CLI,
 please see :ref:`SDK authorization <quick_start/getting_started_with_tensorbay:Authorize a Client Instance>`
-or :ref:`CLI configration <tensorbay_cli/getting_started_with_cli:Configuration>`.
+or :ref:`CLI configration <tensorbay_cli/getting_started_with_cli:Authentication>`.
 
 branch
 ======
