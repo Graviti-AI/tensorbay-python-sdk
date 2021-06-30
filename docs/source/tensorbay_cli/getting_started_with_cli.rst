@@ -21,9 +21,9 @@ To use TensorBay CLI, please install TensorBay SDK first.
 
    $ pip3 install tensorbay
 
-***************
- Configuration
-***************
+****************
+ Authentication
+****************
 
 An accessKey_ is used for identification when using TensorBay to operate datasets.
 
@@ -105,3 +105,44 @@ CLI: Commit the Draft
 .. code:: html
 
    $ gas commit tb:<dataset_name>#<draft_number> [-m <message>]
+
+*********
+ Profile
+*********
+
+For users with multiple TensorBay accounts or different workspaces,
+CLI provides profiles to easily authenticate and use different accessKeys.
+
+Set the accessKey into the specific profile, and
+show the specific profile's authentication information:
+
+.. code:: html
+
+   $ gas -p <profile_name> auth [ACCESSKEY]
+   $ gas -p <profile_name> auth -g
+
+After authentication, the profiles can be used to execute other commands:
+
+.. code:: html
+
+   $ gas -p <profile_name> <command>
+
+For example, list all the datasets with the given profile's accessKey:
+
+.. code:: html
+
+   $ gas -p <profile_name> ls
+
+For users who want to use a temporary accessKey,
+CLI provides ``-k`` option to override the authentication:
+
+.. code:: html
+
+   $ gas -k <Accesskey> <command>
+
+For example, list all the datasets with the given accessKey:
+
+.. code:: html
+
+   $ gas -k <AccessKey> ls
+
