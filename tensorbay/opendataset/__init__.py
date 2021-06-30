@@ -16,6 +16,7 @@ from .CADC import CADC
 from .CarConnection import CarConnection
 from .CoinImage import CoinImage
 from .CompCars import CompCars
+from .COVID_CT import COVID_CT
 from .COVIDChestXRay import COVIDChestXRay
 from .DeepRoute import DeepRoute
 from .DogsVsCats import DogsVsCats
@@ -89,4 +90,5 @@ __all__ = [
     "TLR",
     "UAVDT",
     "WIDER_FACE",
+    "COVID_CT",
 ]

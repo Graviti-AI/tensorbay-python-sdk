@@ -1,0 +1,5 @@
+{
+    "CLASSIFICATION": {
+        "categories": [{ "name": "COVID" }, { "name": "NonCOVID" }]
+    }
+}
