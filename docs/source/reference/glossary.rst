@@ -181,16 +181,12 @@ The following is the general format for TBRN:
 
     tb:[dataset_name]:[segment_name]://[remote_path]
 
-Suppose there is an image ``000000.jpg`` under the default segment of a dataset named ``example``,
+Suppose there is an image ``000000.jpg`` under the ``train`` segment of a dataset named ``example``,
 then the TBRN of this image should be:
 
 .. code::
 
-    tb:example:://000000.jpg
-
-.. note::
-
-   Default segment is defined as ``""`` (empty string).
+    tb:example:train://000000.jpg
 
 tracking
 ========

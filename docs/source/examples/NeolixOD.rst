@@ -135,9 +135,9 @@ Now "Neolix OD" dataset can be read from TensorBay.
    :start-after: """Read Dataset / get dataset"""
    :end-before: """"""
 
-In :ref:`reference/dataset_structure:Dataset` "Neolix OD", there is only one default
-:ref:`Segment <reference/dataset_structure:Segment>`: ``""`` (empty string).
-Get a segment by passing the required segment name.
+In :ref:`reference/dataset_structure:Dataset` "Neolix OD", there is only one
+:ref:`segment <reference/dataset_structure:Segment>`: ``default``.
+Get a segment by passing the required segment name or the index.
 
 .. literalinclude:: ../../../docs/code/NeolixOD.py
    :language: python
