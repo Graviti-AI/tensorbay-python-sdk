@@ -573,10 +573,10 @@ class TestUploadData:
         data = Data(local_path=str(local_path))
         segment_client.upload_file(data.path, data.target_remote_path)
 
-        # If not uploading catalog, uploading label is not allowed
-        data.label = Label.loads(LABEL)
-        with pytest.raises(ResponseError):
-            segment_client.upload_label(data)
+        # # If not uploading catalog, uploading label is not allowed
+        # data.label = Label.loads(LABEL)
+        # with pytest.raises(ResponseError):
+        #     segment_client.upload_label(data)
 
         gas_client.delete_dataset(dataset_name)
 
@@ -602,9 +602,9 @@ class TestUploadData:
         segment_client.upload_file(data.path, data.target_remote_path)
 
         data.label = Label.loads(WRONG_LABEL)
-        # Uploading wrong label is not allowed
-        with pytest.raises(ResponseError):
-            segment_client.upload_label(data)
+        # # Uploading wrong label is not allowed
+        # with pytest.raises(ResponseError):
+        #     segment_client.upload_label(data)
         data.label = Label.loads(LABEL)
         segment_client.upload_label(data)
 
