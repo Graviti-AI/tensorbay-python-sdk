@@ -5,10 +5,6 @@
 
 """TensorBay cutoms exceptions.
 
-CommitStatusError is deprecated since v1.6.0, and will be removed in v1.8.0.
-
-Please use :class:`StatusError` instead of :class:`CommitStatusError`.
-
 The class hierarchy for TensorBay custom exceptions is::
 
      +-- TensorBayException
@@ -65,9 +61,6 @@ class StatusError(ClientError):
 
     def __str__(self) -> str:
         return self._message if self._message else ""
-
-
-CommitStatusError = StatusError
 
 
 class DatasetTypeError(ClientError):
