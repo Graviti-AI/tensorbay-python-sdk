@@ -287,12 +287,13 @@ class DatasetClient(DatasetClientBase):
             segment_filter = all_data
 
         multithread_upload(
-            segment_client._upload_or_import_data,  # pylint: disable=protected-access
+            # pylint: disable=protected-access
+            segment_client._upload_or_import_data,
             segment_filter,
+            callback=segment_client._synchronize_upload_info,
             jobs=jobs,
             pbar=pbar,
         )
-
         return segment_client
 
     def get_or_create_segment(self, name: str = "default") -> SegmentClient:
