@@ -14,8 +14,8 @@ import os
 from http.client import HTTPResponse
 from string import printable
 from typing import Any, Callable, Dict, Optional, Type, TypeVar, Union
-from urllib.parse import quote
-from urllib.request import urlopen
+from urllib.parse import quote, urljoin
+from urllib.request import pathname2url, urlopen
 
 from _io import BufferedReader
 
@@ -212,6 +212,15 @@ class Data(DataBase):
 
         """
         return super()._dumps()
+
+    def get_url(self) -> str:
+        """Return the url of the local data file.
+
+        Returns:
+            The url of the local data.
+
+        """
+        return urljoin("file:", pathname2url(os.path.abspath(self.path)))
 
 
 class RemoteData(DataBase):
