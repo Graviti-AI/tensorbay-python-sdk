@@ -15,7 +15,9 @@ import logging
 import os
 from collections import defaultdict
 from concurrent.futures import FIRST_EXCEPTION, ThreadPoolExecutor, wait
-from typing import Any, Callable, DefaultDict, Iterable, Optional, TypeVar
+from queue import Queue
+from threading import Lock
+from typing import Any, Callable, DefaultDict, Generic, Iterable, List, Optional, TypeVar
 from urllib.parse import urljoin
 
 from requests import Session
@@ -305,10 +307,14 @@ class Tqdm(tqdm):  # type: ignore[misc]
         return condition
 
 
+_R = TypeVar("_R")
+
+
 def multithread_upload(
-    function: Callable[[_T], None],
+    function: Callable[[_T], Optional[_R]],
     arguments: Iterable[_T],
     *,
+    callback: Optional[Callable[[List[_R]], None]] = None,
     jobs: int = 1,
     pbar: Tqdm,
 ) -> None:
@@ -317,17 +323,75 @@ def multithread_upload(
     Arguments:
         function: The upload function.
         arguments: The arguments of the upload function.
+        callback: The callback function.
         jobs: The number of the max workers in multi-thread uploading procession.
         pbar: The :class:`Tqdm` instance for showing the upload process bar.
 
     """
     with ThreadPoolExecutor(jobs) as executor:
+        if callback is not None:
+            multi_callback = MultiCallbackTask(function=function, callback=callback)
+            function = multi_callback.work
         futures = [executor.submit(function, argument) for argument in arguments]
+
         for future in futures:
             future.add_done_callback(pbar.update_callback)
 
         done, not_done = wait(futures, return_when=FIRST_EXCEPTION)
+
+        if callback is not None:
+            multi_callback.last_callback()
+
         for future in not_done:
             future.cancel()
         for future in done:
             future.result()
+
+
+class MultiCallbackTask(Generic[_T, _R]):
+    """A class for callbacking in multi-thread work.
+
+    Arguments:
+        function: The function of a single thread.
+        callback: The callback function.
+        size: The size of the task queue to send a callback.
+
+    """
+
+    def __init__(
+        self,
+        *,
+        function: Callable[[_T], Optional[_R]],
+        callback: Callable[[List[_R]], None],
+        size: int = 10,
+    ) -> None:
+        self._lock = Lock()
+        self._function = function
+        self._callback = callback
+        self._size = size
+        self._arguments: Queue[_R] = Queue()  # pylint: disable=unsubscriptable-object
+
+    def work(self, argument: _T) -> None:
+        """Do the work of a single thread.
+
+        Arguments:
+            argument: The argument of the function.
+
+        """
+        callback_info = self._function(argument)
+        if callback_info is not None:
+            self._arguments.put(callback_info)
+        with self._lock:
+            if self._arguments.qsize() >= self._size:
+                callback_arguments = [self._arguments.get() for _ in range(self._size)]
+            else:
+                callback_arguments = []
+
+        if callback_arguments:
+            self._callback(callback_arguments)
+
+    def last_callback(self) -> None:
+        """Send the last callback when all works have been done."""
+        callback_arguments = [self._arguments.get() for _ in range(self._arguments.qsize())]
+        if callback_arguments:
+            self._callback(callback_arguments)
