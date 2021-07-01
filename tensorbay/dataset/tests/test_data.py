@@ -3,6 +3,8 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
+from pathlib import Path
+
 import pytest
 
 from ..data import Data, RemoteData
@@ -36,6 +38,13 @@ class TestData:
         data_object = Data("test.json")
         data_object.target_remote_path = target_remote_path
         assert data_object.target_remote_path == target_remote_path
+
+    def test_get_url(self):
+        local_relative_path = Path(__file__).relative_to(Path.cwd())
+        data = Data(str(local_relative_path))
+        assert data.get_url() == local_relative_path.resolve().as_uri()
+        data = Data(__file__)
+        assert data.get_url() == Path(__file__).resolve().as_uri()
 
 
 class TestRemoteData:
