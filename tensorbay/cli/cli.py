@@ -171,52 +171,6 @@ command = partial(cli.command, cls=CustomCommand)
 
 
 @command(
-    cls=DeprecatedCommand,
-    hidden=True,
-    since="v1.5.0",
-    removed_in="v1.8.0",
-    substitute="gas dataset tb:[dataset_name]",
-)
-@click.argument("name", type=str)
-@click.pass_obj
-def create(obj: Dict[str, str], name: str) -> None:
-    """Create a dataset.\f
-
-    Arguments:
-        obj: A dict including config information.
-        name: The name of the dataset to be created, like "tb:KITTI".
-
-    """  # noqa: D301,D415
-    from .dataset import _implement_dataset
-
-    _implement_dataset(obj, name, is_delete=False, yes=False)
-
-
-@command(
-    cls=DeprecatedCommand,
-    hidden=True,
-    since="v1.5.0",
-    removed_in="v1.8.0",
-    substitute="gas dataset -d tb:[dataset_name]",
-)
-@click.argument("name", type=str)
-@click.option("-y", "--yes", is_flag=True, help="Confirm to delete the dataset completely.")
-@click.pass_obj
-def delete(obj: Dict[str, str], name: str, yes: bool) -> None:
-    """Delete a dataset.\f
-
-    Arguments:
-        obj: A dict including config info.
-        name: The name of the dataset to be deleted, like "tb:KITTI".
-        yes: Confirm to delete the dataset completely.
-
-    """  # noqa: D301,D415
-    from .dataset import _implement_dataset
-
-    _implement_dataset(obj, name, is_delete=True, yes=yes)
-
-
-@command(
     synopsis=(
         "$ gas ls                                       # List all the datasets.",
         "$ gas ls tb:<dataset_name>                     # List segments of a dataset.",
