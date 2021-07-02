@@ -119,7 +119,7 @@ def _generate_segments(root_path: str, subset: str) -> Iterator[FusionSegment]:
     annotation_info = _get_annotation_info(os.path.join(subset_path, subset), is_test)
 
     for scene in annotation_info["scenes"]:
-        segment = FusionSegment(f"{subset}/{scene['name']}")
+        segment = FusionSegment(f"{subset}-{scene['name']}")
         segment.description = scene["description"]
         current_frame_token = scene["first_sample_token"]
         while current_frame_token:

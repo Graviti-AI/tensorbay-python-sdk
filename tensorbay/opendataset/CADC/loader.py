@@ -86,7 +86,7 @@ def CADC(path: str) -> FusionDataset:
             if index == "calib":
                 continue
 
-            segment = dataset.create_segment(f"{date}/{index}")
+            segment = dataset.create_segment(f"{date}-{index}")
             segment.sensors = sensors
             segment_path = os.path.join(root_path, date, index)
             data_path = os.path.join(segment_path, "labeled")
