@@ -262,6 +262,53 @@ class VersionControlClient:
         """
         return PagingList(self._generate_drafts, 128)
 
+    def update_draft(
+        self,
+        draft_number: Optional[int] = None,
+        *,
+        title: Optional[str] = None,
+        description: Optional[str] = None,
+    ) -> None:
+        """Update the draft.
+
+        Arguments:
+            draft_number: The updated draft number.
+                If is not given, update the current draft.
+            title: The title of the draft.
+            description: The description of the draft.
+
+        """
+        if draft_number is None:
+            self._status.check_authority_for_draft()
+            draft_number = self.status.draft_number
+
+        patch_data: Dict[str, Any] = {}
+        if title is not None:
+            patch_data["title"] = title
+
+        if description is not None:
+            patch_data["description"] = description
+
+        self._client.open_api_do(
+            "PATCH", f"drafts/{draft_number}", self._dataset_id, json=patch_data
+        )
+
+    def close_draft(self, draft_number: Optional[int] = None) -> None:
+        """Close the draft.
+
+        Arguments:
+            draft_number: The closed draft number.
+                If is not given, close the current draft.
+        """
+        if draft_number is None:
+            self._status.check_authority_for_draft()
+            draft_number = self.status.draft_number
+
+        patch_data = {"status": "CLOSED"}
+        self._client.open_api_do(
+            "PATCH", f"drafts/{draft_number}", self._dataset_id, json=patch_data
+        )
+
     def get_commit(self, revision: Optional[str] = None) -> Commit:
         """Get the certain commit with the given revision.
 
