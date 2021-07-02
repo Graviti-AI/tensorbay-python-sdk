@@ -137,14 +137,6 @@ class DatasetClientBase(VersionControlClient):
         """
         return self._name
 
-    def import_all_files(self, path: str, segment_name: str) -> None:
-        """Import all cloud files in the given directory to a specific segment.
-
-        Arguments:
-            path: The directory path on the cloud platform.
-            segment_name: The target segment name.
-        """
-
     def update_notes(
         self,
         *,
