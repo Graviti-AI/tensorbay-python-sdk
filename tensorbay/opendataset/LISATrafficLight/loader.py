@@ -119,7 +119,7 @@ def _get_segment_name(csv_path: str) -> str:
     with open(csv_path, "r", encoding="utf-8") as fp:
         reader = csv.DictReader(fp, delimiter=";")
         first_filename = next(reader)["Filename"]
-        header = first_filename[: first_filename.index("-")]
+        header = first_filename[: first_filename.index("-")].replace("/", "-")
         return re.sub(r"\d+", lambda match: f"{int(match.group(0)):02}", header, 1)
 
 
