@@ -41,7 +41,7 @@ TensorBay SDK supports a method to list a user's all previous configurations.
 
     from tensorbay import GAS
 
-    gas = GAS("<YOUR_ACCESSKEY>")
+    gas = GAS("Accesskey-*****")
     gas.list_auth_storage_configs()
 
 
@@ -57,12 +57,6 @@ Create a dataset with authorized cloud storage:
 Import Cloud Files into Authorized Storage Dataset
 ==================================================
 
-..
-    There are two methods to import cloud files into an authorized storage dataset.
-
-        - OUT-OF-THE-BOX: Import all files under a directory into a dataset.
-        - CUSTOMIZED: Use AuthData to organize cloud files into a dataset.
-
 Take the following cloud directory as an example::
 
    data/
@@ -75,22 +69,6 @@ Take the following cloud directory as an example::
    │   ├── 00002.json
    │   └── ...
    └── ...
-
-..
-    Out-of-the-box Method
-    *********************
-
-    Import all files in ``data/images`` directory into ``train`` segment.
-
-    .. code:: python
-
-       dataset_client.import_all_files("data/images", "train")
-
-    Customized method support more features, such as uploading labels
-    and selecting specific files.
-
-    Customized Method
-    *****************
 
 Get a cloud client.
 
