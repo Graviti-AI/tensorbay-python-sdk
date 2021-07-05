@@ -45,7 +45,7 @@ class TestDraft:
 
         drafts = dataset_client.list_drafts()
         assert len(drafts) == 1
-        assert drafts[0] == Draft(draft_number_2, "draft-2", DEFAULT_BRANCH)
+        assert drafts[0] == Draft(draft_number_2, "draft-2", DEFAULT_BRANCH, "OPEN", "")
 
         with pytest.raises(TypeError):
             get_draft_number_by_title(dataset_client.list_drafts(), "draft-3")
@@ -89,10 +89,12 @@ class TestDraft:
 
         draft = dataset_client.get_draft(3)
         assert draft.title == "draft-4"
+        assert draft.description == "description01"
 
-        dataset_client.update_draft(2, title="draft-4", description="description")
+        dataset_client.update_draft(2, title="draft-4", description="description02")
         draft = dataset_client.get_draft(2)
         assert draft.title == "draft-4"
+        assert draft.description == "description02"
 
         gas_client.delete_dataset(dataset_name)
 

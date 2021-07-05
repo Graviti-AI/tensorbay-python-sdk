@@ -40,7 +40,14 @@ _BRANCH_DATA = {
 _DRAFT_NUMBER = 1
 _DRAFT_TITLE = "draft title"
 _DRAFT_BRANCH_NAME = "main"
-_DRAFT_DATA = {"number": _DRAFT_NUMBER, "title": _DRAFT_TITLE, "branchName": _DRAFT_BRANCH_NAME}
+_DRAFT_STATUS = "OPEN"
+_DRAFT_DESCRIPTION = "description"
+_DRAFT_DATA = {
+    "number": _DRAFT_NUMBER,
+    "title": _DRAFT_TITLE,
+    "branchName": _DRAFT_BRANCH_NAME,
+    "status": _DRAFT_STATUS,
+}
 
 
 class TestUser:
@@ -131,16 +138,21 @@ class TestBranch:
 
 class TestDraft:
     def test_init(self):
-        draft = Draft(_DRAFT_NUMBER, _DRAFT_TITLE, _DRAFT_BRANCH_NAME)
+        draft = Draft(
+            _DRAFT_NUMBER, _DRAFT_TITLE, _DRAFT_BRANCH_NAME, _DRAFT_STATUS, _DRAFT_DESCRIPTION
+        )
         assert draft.number == _DRAFT_NUMBER
         assert draft.title == _DRAFT_TITLE
+        assert draft.status == _DRAFT_STATUS
+        assert draft.description == _DRAFT_DESCRIPTION
 
     def test_loads(self):
         draft = Draft.loads(_DRAFT_DATA)
         assert draft.number == _DRAFT_DATA["number"]
         assert draft.title == _DRAFT_DATA["title"]
         assert draft.branch_name == _DRAFT_DATA["branchName"]
+        assert draft.status == _DRAFT_DATA["status"]
 
     def test_dumps(self):
-        draft = Draft(_DRAFT_NUMBER, _DRAFT_TITLE, _DRAFT_BRANCH_NAME)
+        draft = Draft(_DRAFT_NUMBER, _DRAFT_TITLE, _DRAFT_BRANCH_NAME, _DRAFT_STATUS)
         assert draft.dumps() == _DRAFT_DATA
