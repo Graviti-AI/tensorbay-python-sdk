@@ -12,7 +12,7 @@ and provides :meth:`Polygon2D.area` to calculate the area of the polygon.
 
 """
 
-from typing import Dict, Iterable, List, Optional, Type, TypeVar
+from typing import Any, Dict, Iterable, List, Optional, Type, TypeVar
 
 from ..utility import UserMutableSequence, common_loads
 from .box import Box2D
@@ -46,12 +46,6 @@ class PointList2D(UserMutableSequence[_T]):
         for point in points:
             self._data.append(self._ElementType(*point))
 
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, self.__class__):
-            return False
-
-        return self._data.__eq__(other._data)
-
     def _loads(self: _P, contents: List[Dict[str, float]]) -> None:
         self._data = []
         for point in contents:
@@ -63,7 +57,7 @@ class PointList2D(UserMutableSequence[_T]):
 
         Arguments:
             contents: A list of dictionaries containing the coordinates of the vertexes
-                of the polygon::
+                of the point list::
 
                     [
                         {
@@ -113,6 +107,93 @@ class PointList2D(UserMutableSequence[_T]):
         return Box2D(x_min, y_min, x_max, y_max)
 
 
+_L = TypeVar("_L", bound=PointList2D[Any])
+
+
+class MultiPointList2D(UserMutableSequence[_L]):
+    """This class defines the concept of MultiPointList2D.
+
+    :class:`MultiPointList2D` contains multiple 2D point lists.
+
+    Arguments:
+        point_lists: A list of 2D point list.
+
+    """
+
+    _P = TypeVar("_P", bound="MultiPointList2D[_L]")
+
+    _ElementType: Type[_L]
+
+    def __init__(self, point_lists: Optional[Iterable[Iterable[Iterable[float]]]] = None) -> None:
+        self._data = (
+            [self._ElementType(point_list) for point_list in point_lists] if point_lists else []
+        )
+
+    def _loads(self: _P, contents: List[List[Dict[str, float]]]) -> None:
+        self._data = [self._ElementType.loads(point_list) for point_list in contents]
+
+    def _dumps(self) -> List[List[Dict[str, float]]]:
+        return [point_list.dumps() for point_list in self._data]
+
+    @classmethod
+    def loads(cls: Type[_P], contents: List[List[Dict[str, float]]]) -> _P:
+        """Loads a :class:`MultiPointList2D` from the given contents.
+
+        Arguments:
+            contents: A list of dictionary lists containing the coordinates of the vertexes
+                of the multiple point lists::
+
+                    [
+                        [
+                            {
+                                "x": ...
+                                "y": ...
+                            },
+                            ...
+                        ]
+                        ...
+                    ]
+
+        Returns:
+            The loaded :class:`MultiPointList2D` object.
+
+        """
+        return common_loads(cls, contents)
+
+    def dumps(self) -> List[List[Dict[str, float]]]:
+        """Dumps all the information of the :class:`MultiPointList2D`.
+
+        Returns:
+            All the information of the :class:`MultiPointList2D`.
+
+        """
+        return self._dumps()
+
+    def bounds(self) -> Box2D:
+        """Calculate the bounds of multiple point lists.
+
+        Returns:
+            The bounds of multiple point lists.
+
+        """
+        x_min = x_max = self._data[0][0].x
+        y_min = y_max = self._data[0][0].y
+
+        for points in self._data:
+            box = points.bounds()
+            if box.xmin < x_min:
+                x_min = box.xmin
+            elif box.xmax > x_max:
+                x_max = box.xmax
+
+            if box.ymin < y_min:
+                y_min = box.ymin
+            elif box.ymax > y_max:
+                y_max = box.ymax
+
+        return Box2D(x_min, y_min, x_max, y_max)
+
+
 class Polygon2D(PointList2D[Vector2D]):
     """This class defines the concept of Polygon2D.
 
@@ -135,10 +216,10 @@ class Polygon2D(PointList2D[Vector2D]):
 
     @classmethod
     def loads(cls: Type[_P], contents: List[Dict[str, float]]) -> _P:
-        """Load a :class:`Polygon2D` from a list of dictionaries.
+        """Loads the information of :class:`Polygon2D`.
 
         Arguments:
-            contents: A list of dictionaries containing the coordinates
+            contents: A list of dictionary lists containing the coordinates
                 of the vertexes of the polygon.
 
         Returns:
