@@ -3,6 +3,7 @@
 [![Pre-commit](https://github.com/Graviti-AI/tensorbay-python-sdk/actions/workflows/pre-commit.yaml/badge.svg)](https://github.com/Graviti-AI/tensorbay-python-sdk/actions/workflows/pre-commit.yaml)
 [![Unit Test](https://github.com/Graviti-AI/tensorbay-python-sdk/actions/workflows/unit_test.yaml/badge.svg)](https://github.com/Graviti-AI/tensorbay-python-sdk/actions/workflows/unit_test.yaml)
 [![Documentation Status](https://readthedocs.org/projects/tensorbay-python-sdk/badge/?version=latest)](https://tensorbay-python-sdk.graviti.com/en/latest/?badge=latest)
+[![Downloads](https://pepy.tech/badge/tensorbay/month)](https://pepy.tech/project/tensorbay)
 [![Coverage Status](https://coveralls.io/repos/github/Graviti-AI/tensorbay-python-sdk/badge.svg)](https://coveralls.io/github/Graviti-AI/tensorbay-python-sdk)
 [![GitHub](https://img.shields.io/github/license/Graviti-AI/tensorbay-python-sdk)](https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/LICENSE)
 [![Slack](https://img.shields.io/static/v1?label=slack&message=graviti&logo=slack&color=blueviolet)](https://join.slack.com/t/graviticommunity/shared_invite/zt-qivjowva-8RxtilBsHIf218sOsLTHOQ)
