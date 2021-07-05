@@ -373,7 +373,7 @@ class TestGAS:
         # upload the dataset in main branch containing a draft
         list_drafts = mocker.patch(
             f"{gas.__name__}.DatasetClient.list_drafts",
-            return_value=[Draft(1, "title", DEFAULT_BRANCH)],
+            return_value=[Draft(1, "title", DEFAULT_BRANCH, "OPEN")],
         )
         checkout = mocker.patch(f"{gas.__name__}.DatasetClient.checkout")
         self.gas_client.upload_dataset(dataset)
@@ -383,7 +383,7 @@ class TestGAS:
         # upload the dataset in dev branch containing no draft
         list_drafts = mocker.patch(
             f"{gas.__name__}.DatasetClient.list_drafts",
-            return_value=[Draft(1, "title", DEFAULT_BRANCH)],
+            return_value=[Draft(1, "title", DEFAULT_BRANCH, "OPEN")],
         )
         checkout = mocker.patch(f"{gas.__name__}.DatasetClient.checkout")
         create_draft = mocker.patch(f"{gas.__name__}.DatasetClient.create_draft")
@@ -396,7 +396,8 @@ class TestGAS:
 
         # upload the dataset in dev branch containing a draft
         list_drafts = mocker.patch(
-            f"{gas.__name__}.DatasetClient.list_drafts", return_value=[Draft(1, "title", "dev")]
+            f"{gas.__name__}.DatasetClient.list_drafts",
+            return_value=[Draft(1, "title", "dev", "OPEN")],
         )
         checkout = mocker.patch(f"{gas.__name__}.DatasetClient.checkout")
         self.gas_client.upload_dataset(dataset, branch_name="dev")

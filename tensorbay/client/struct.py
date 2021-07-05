@@ -305,6 +305,8 @@ class Draft(AttrsMixin, ReprMixin):
         number: The number of the draft.
         title: The title of the draft.
         branch_name: The branch name.
+        status: The status of the draft.
+        description: The draft description.
 
     """
 
@@ -315,11 +317,17 @@ class Draft(AttrsMixin, ReprMixin):
     number: int = attr()
     title: str = attr()
     branch_name: str = attr(key=camel)
+    status: str = attr()
+    description: str = attr(default="")
 
-    def __init__(self, number: int, title: str, branch_name: str) -> None:
+    def __init__(  # pylint: disable=too-many-arguments
+        self, number: int, title: str, branch_name: str, status: str, description: str = ""
+    ) -> None:
         self.number = number
         self.title = title
         self.branch_name = branch_name
+        self.status = status
+        self.description = description
 
     def _repr_head(self) -> str:
         return f"{self.__class__.__name__}({self.number})"
@@ -335,6 +343,8 @@ class Draft(AttrsMixin, ReprMixin):
                         "number": <int>
                         "title": <str>
                         "branchName": <str>
+                        "status": "OPEN", "CLOSED" or "COMMITTED"
+                        "description": <str>
                     }
 
         Returns:
@@ -353,6 +363,8 @@ class Draft(AttrsMixin, ReprMixin):
                     "number": <int>
                     "title": <str>
                     "branchName": <str>
+                    "status": "OPEN", "CLOSED" or "COMMITTED"
+                    "description": <str>
                 }
 
         """
