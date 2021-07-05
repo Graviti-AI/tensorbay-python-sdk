@@ -95,7 +95,7 @@ class Commit(AttrsMixin, ReprMixin):
 
     _T = TypeVar("_T", bound="Commit")
 
-    _repr_attrs: Tuple[str, ...] = ("parent_commit_id", "title", "description", "committer")
+    _repr_attrs: Tuple[str, ...] = ("parent_commit_id", "title", "committer")
     _repr_maxlevel = 2
 
     commit_id: str = attr(key=camel)
