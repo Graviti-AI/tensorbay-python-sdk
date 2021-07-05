@@ -19,7 +19,7 @@ class TestDraft:
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
 
-        draft_number_1 = dataset_client.create_draft("draft-1")
+        draft_number_1 = dataset_client.create_draft("draft-1", "description")
         assert draft_number_1 == 1
         assert dataset_client.status.is_draft
         assert dataset_client.status.draft_number == draft_number_1
@@ -35,9 +35,9 @@ class TestDraft:
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
-        dataset_client.create_draft("draft-1")
+        dataset_client.create_draft("draft-1", "description for draft 1")
         dataset_client.commit("commit-draft-1")
-        draft_number_2 = dataset_client.create_draft("draft-2")
+        draft_number_2 = dataset_client.create_draft("draft-2", "description for draft 2")
 
         # After committing, the draft will be deleted
         with pytest.raises(TypeError):
@@ -45,7 +45,9 @@ class TestDraft:
 
         drafts = dataset_client.list_drafts()
         assert len(drafts) == 1
-        assert drafts[0] == Draft(draft_number_2, "draft-2", DEFAULT_BRANCH, "OPEN", "")
+        assert drafts[0] == Draft(
+            draft_number_2, "draft-2", DEFAULT_BRANCH, "OPEN", "description for draft 2"
+        )
 
         with pytest.raises(TypeError):
             get_draft_number_by_title(dataset_client.list_drafts(), "draft-3")
@@ -84,7 +86,7 @@ class TestDraft:
 
         dataset_client.checkout("V1")
         dataset_client.create_branch("T123")
-        dataset_client.create_draft("draft-3")
+        dataset_client.create_draft("draft-3", "description00")
         dataset_client.update_draft(title="draft-4", description="description01")
 
         draft = dataset_client.get_draft(3)

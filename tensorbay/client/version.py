@@ -183,7 +183,9 @@ class VersionControlClient:
         self._status.checkout(commit_id=self._commit(title, description, tag))
 
     @DefaultValueDeprecated("title", since="v1.6.0", removed_in="v1.9.0")
-    def create_draft(self, title: Optional[str] = None, branch_name: Optional[str] = None) -> int:
+    def create_draft(
+        self, title: Optional[str] = None, description: str = "", branch_name: Optional[str] = None
+    ) -> int:
         """Create a draft.
 
         Create a draft with the branch name. If the branch name is not given,
@@ -193,6 +195,7 @@ class VersionControlClient:
 
         Arguments:
             title: The draft title.
+            description: The draft description.
             branch_name: The branch name.
 
         Returns:
@@ -214,6 +217,8 @@ class VersionControlClient:
 
         if title:
             post_data["title"] = title
+        if description:
+            post_data["description"] = description
 
         response = self._client.open_api_do("POST", "drafts", self._dataset_id, json=post_data)
         draft_number: int = response.json()["draftNumber"]

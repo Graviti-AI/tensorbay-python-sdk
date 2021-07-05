@@ -312,7 +312,7 @@ class Draft(AttrsMixin, ReprMixin):
 
     _T = TypeVar("_T", bound="Draft")
 
-    _repr_attrs = ("title",)
+    _repr_attrs = ("title", "status", "branch_name")
 
     number: int = attr()
     title: str = attr()
