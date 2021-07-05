@@ -9,14 +9,15 @@
 and provides a series of methods to operate on polyline, such as
 :meth:`Polyline2D.uniform_frechet_distance` and :meth:`Polyline2D.similarity`.
 
+:class:`MultiPolyline2D` contains a list of polyline.
 """
 
 from itertools import accumulate, count, islice, product
 from sys import version_info
-from typing import Any, Dict, Iterable, List, Sequence, Tuple, Type, TypeVar
+from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Type, TypeVar
 
 from ..utility import common_loads
-from .polygon import PointList2D
+from .polygon import MultiPointList2D, PointList2D
 from .vector import Vector2D
 
 if version_info >= (3, 8):
@@ -204,3 +205,71 @@ class Polyline2D(PointList2D[Vector2D]):
 
         """
         return common_loads(cls, contents)
+
+
+class MultiPolyline2D(MultiPointList2D[Polyline2D]):
+    """This class defines the concept of MultiPolyline2D.
+
+    :class:`MultiPolyline2D` contains a list of polylines.
+
+    Arguments:
+        polylines: A list of polylines.
+
+    Examples:
+        >>> MultiPolyline2D([[[1, 2], [2, 3]], [[3, 4], [6, 8]]])
+        MultiPolyline2D [
+            Polyline2D [...]
+            Polyline2D [...]
+            ...
+        ]
+
+    """
+
+    _P = TypeVar("_P", bound="MultiPolyline2D")
+
+    _ElementType = Polyline2D
+
+    def __init__(self, polylines: Optional[Iterable[Iterable[Iterable[float]]]] = None) -> None:
+        super().__init__(polylines)
+
+    @classmethod
+    def loads(cls: Type[_P], contents: List[List[Dict[str, float]]]) -> _P:
+        """Loads a :class:`MultiPolyline2D` from the given contents.
+
+        Arguments:
+            contents: A list of dict lists containing
+                the coordinates of the vertexes of the polyline list.
+
+        Returns:
+            The loaded :class:`MultiPolyline2D` object.
+
+        Examples:
+            >>> contents = [[{'x': 1, 'y': 1}, {'x': 1, 'y': 2}, {'x': 2, 'y': 2}],
+                            [{'x': 2, 'y': 3}, {'x': 3, 'y': 5}]]
+            >>> multipolyline = MultiPolyline2D.loads(contents)
+            >>> multipolyline
+            MultiPolyline2D [
+                Polyline2D [...]
+                Polyline2D [...]
+                ...
+            ]
+
+        """
+        return common_loads(cls, contents)
+
+    def dumps(self) -> List[List[Dict[str, float]]]:
+        """Dumps a :class:`MultiPolyline2D` into a polyline list.
+
+        Returns:
+            All the information of the :class:`MultiPolyline2D`.
+
+        Examples:
+            >>> multipolyline = MultiPolyline2D([[[1, 1], [1, 2], [2, 2]], [[2, 3], [3, 5]]])
+            >>> multipolyline.dumps()
+            [
+                [{'x': 1, 'y': 1}, {'x': 1, 'y': 2}, {'x': 2, 'y': 2}],
+                [{'x': 2, 'y': 3}, {'x': 3, 'y': 5}
+            ]
+
+        """
+        return self._dumps()

@@ -8,7 +8,7 @@
 from .box import Box2D, Box3D
 from .keypoint import Keypoint2D, Keypoints2D
 from .polygon import Polygon2D
-from .polyline import Polyline2D
+from .polyline import MultiPolyline2D, Polyline2D
 from .transform import Transform3D
 from .vector import Vector, Vector2D, Vector3D
 
@@ -19,6 +19,7 @@ __all__ = [
     "Keypoints2D",
     "Polygon2D",
     "Polyline2D",
+    "MultiPolyline2D",
     "Transform3D",
     "Vector",
     "Vector2D",

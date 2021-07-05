@@ -5,13 +5,16 @@
 
 from math import isclose
 
-from .. import Box2D, Polyline2D, Vector2D
+from .. import Box2D, MultiPolyline2D, Polyline2D, Vector2D
 
 _POLYLINE_SEQUENCE_1 = [[1, 1], [2, 2], [4, 4], [5, 5]]
 _POLYLINE_SEQUENCE_2 = [[2, 1], [4, 3], [6, 5]]
 
 _POLYLINE_1 = Polyline2D(_POLYLINE_SEQUENCE_1)
 _POLYLINE_2 = Polyline2D(_POLYLINE_SEQUENCE_2)
+
+_MULTI_POLYLINE_SEQUENCE = [_POLYLINE_SEQUENCE_1, _POLYLINE_SEQUENCE_2]
+_MULTI_POLYLINE = MultiPolyline2D([_POLYLINE_SEQUENCE_1, _POLYLINE_SEQUENCE_2])
 
 _POLYLINE_INFO_1 = (
     {
@@ -55,6 +58,7 @@ _POLYLINE_INFO_2 = (
 
 _POLYLINE_CONTENT_1 = [{"x": 1, "y": 1}, {"x": 2, "y": 2}, {"x": 4, "y": 4}, {"x": 5, "y": 5}]
 _POLYLINE_CONTENT_2 = [{"x": 2, "y": 1}, {"x": 4, "y": 3}, {"x": 6, "y": 5}]
+_MULTI_POLYLINE_CONTENT = [_POLYLINE_CONTENT_1, _POLYLINE_CONTENT_2]
 
 
 class TestPolyline2D:
@@ -109,3 +113,23 @@ class TestPolyline2D:
     def test_bounds(self):
         assert _POLYLINE_1.bounds() == Box2D(1, 1, 5, 5)
         assert _POLYLINE_2.bounds() == Box2D(2, 1, 6, 5)
+
+
+class TestMultiPolyline2D:
+    def test_init(self):
+        assert MultiPolyline2D() == MultiPolyline2D([])
+        assert MultiPolyline2D(_MULTI_POLYLINE_SEQUENCE) == MultiPolyline2D(
+            [
+                [Vector2D(1, 1), Vector2D(2, 2), Vector2D(4, 4), Vector2D(5, 5)],
+                [Vector2D(2, 1), Vector2D(4, 3), Vector2D(6, 5)],
+            ]
+        )
+
+    def test_loads(self):
+        assert MultiPolyline2D.loads(_MULTI_POLYLINE_CONTENT) == _MULTI_POLYLINE
+
+    def test_dumps(self):
+        assert _MULTI_POLYLINE.dumps() == _MULTI_POLYLINE_CONTENT
+
+    def test_bounds(self):
+        assert _MULTI_POLYLINE.bounds() == Box2D(1, 1, 6, 5)
