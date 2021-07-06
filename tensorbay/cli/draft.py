@@ -47,17 +47,14 @@ def _create_draft(dataset_client: DatasetClientType, info: TBRN, message: Tuple[
     else:
         title, description = edit_input(_DRAFT_HINT)
 
-    if description:
-        error('Creating draft with "description" is not supported yet')
-
     if not title:
         error("Aborting creating draft due to empty draft title")
 
-    dataset_client.create_draft(title=title)
+    dataset_client.create_draft(title=title, description=description)
     status = dataset_client.status
     draft_tbrn = TBRN(info.dataset_name, draft_number=status.draft_number).get_tbrn()
     click.echo(f"{draft_tbrn} is created successfully")
-    _echo_draft(dataset_client, title, status.branch_name)
+    _echo_draft(dataset_client, title, description, status.branch_name)
 
 
 def _list_drafts(dataset_client: DatasetClientType, info: TBRN) -> None:
@@ -67,15 +64,18 @@ def _list_drafts(dataset_client: DatasetClientType, info: TBRN) -> None:
     if info.is_draft:
         draft = dataset_client.get_draft(info.draft_number)
         click.echo(f"Draft: {info.get_tbrn()}")
-        _echo_draft(dataset_client, draft.title, draft.branch_name)
+        _echo_draft(dataset_client, draft.title, draft.description, draft.branch_name)
     else:
         for draft in dataset_client.list_drafts():
             click.echo(f"Draft: {TBRN(info.dataset_name, draft_number=draft.number).get_tbrn()}")
-            _echo_draft(dataset_client, draft.title, draft.branch_name)
+            _echo_draft(dataset_client, draft.title, draft.description, draft.branch_name)
 
 
 def _echo_draft(
-    dataset_client: DatasetClientType, title: str = "", branch_name: Optional[str] = None
+    dataset_client: DatasetClientType,
+    title: str = "",
+    description: str = "",
+    branch_name: Optional[str] = None,
 ) -> None:
     if not branch_name:
         error("Draft should be created based on a branch.")
@@ -93,3 +93,5 @@ def _echo_draft(
     if not title:
         title = "<no title>"
     click.echo(f"\n    {title}\n")
+    if description:
+        click.echo(f"    {description}\n")
