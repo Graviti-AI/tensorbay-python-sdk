@@ -411,7 +411,7 @@ class DatasetClient(DatasetClientBase):
             name: The name of the required segment.
 
         Returns:
-            The required class:`~tensorbay.client.segment.SegmentClient`.
+            The required :class:`~tensorbay.client.segment.SegmentClient`.
 
         Raises:
             ResourceNotExistError: When the required segment does not exist.
@@ -682,7 +682,7 @@ class FusionDatasetClient(DatasetClientBase):
             name: The name of the required fusion segment.
 
         Returns:
-            The required class:`~tensorbay.client.segment.FusionSegmentClient`.
+            The required :class:`~tensorbay.client.segment.FusionSegmentClient`.
 
         Raises:
             ResourceNotExistError: When the required fusion segment does not exist.
