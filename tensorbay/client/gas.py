@@ -448,7 +448,14 @@ class GAS:
 
             dataset_client.update_notes(**dataset.notes)  # type: ignore[arg-type]
 
-            with Tqdm(sum(len(segment) for segment in dataset), disable=quiet) as pbar:
+            if isinstance(dataset, Dataset):
+                data_count = sum(len(segment) for segment in dataset)
+            else:
+                data_count = sum(
+                    sum(len(frame) for frame in fusion_segment) for fusion_segment in dataset
+                )
+
+            with Tqdm(data_count, disable=quiet) as pbar:
                 for segment in dataset:
                     dataset_client._upload_segment(  # pylint: disable=protected-access
                         segment,  # type: ignore[arg-type]

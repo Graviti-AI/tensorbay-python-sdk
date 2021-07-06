@@ -25,6 +25,8 @@ Please refer to :class:`~tensorbay.dataset.dataset.FusionDataset` for more infor
 import logging
 from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Iterator, Optional, Tuple, Union
 
+from ulid import ULID, from_timestamp
+
 from ..dataset import AuthData, Data, Frame, FusionSegment, Notes, RemoteData, Segment
 from ..exception import (
     FrameError,
@@ -471,6 +473,9 @@ class DatasetClient(DatasetClientBase):
             raise
 
 
+FrameDataGenerator = Iterator[Tuple[Union[Data, AuthData], str, str]]
+
+
 class FusionDatasetClient(DatasetClientBase):
     """This class defines :class:`FusionDatasetClient`.
 
@@ -485,22 +490,40 @@ class FusionDatasetClient(DatasetClientBase):
     """
 
     @staticmethod
-    def _skip_upload_frame(
-        segment_filter: Iterator[Tuple[Frame, Optional[float], bool]],
-        done_set: Dict[float, Frame],
+    def _extract_all_data(
+        source_frames: Iterator[Tuple[Frame, ULID]],
         pbar: Tqdm,
-    ) -> Iterator[Tuple[Frame, Optional[float], bool]]:
-        for frame, timestamp, _ in segment_filter:
-            if timestamp is None:
-                timestamp = frame.frame_id.timestamp().timestamp
-            remote_frame = done_set.get(timestamp)
-            if remote_frame is None:
-                yield frame, timestamp, False
-            elif len(frame) != len(remote_frame):
-                frame.frame_id = remote_frame.frame_id
-                yield frame, None, True
-            else:
-                pbar.update()
+    ) -> FrameDataGenerator:
+        for frame, frame_id in source_frames:
+            for sensor_name, data in frame.items():
+                if isinstance(data, RemoteData):
+                    pbar.update()
+                    continue
+
+                yield data, sensor_name, frame_id.str
+
+    @staticmethod
+    def _extract_unuploaded_data(
+        source_frames: Iterator[Tuple[Frame, ULID]], pbar: Tqdm, *, done_frames: Dict[float, Frame]
+    ) -> FrameDataGenerator:
+        for frame, frame_id in source_frames:
+            done_frame = done_frames.get(frame_id.timestamp().timestamp)
+            if done_frame:
+                frame_id = done_frame.frame_id
+            for sensor_name, data in frame.items():
+                if isinstance(data, RemoteData):
+                    pbar.update()
+                    continue
+
+                if (
+                    done_frame
+                    and sensor_name in done_frame
+                    and done_frame[sensor_name].path == data.target_remote_path
+                ):
+                    pbar.update()
+                    continue
+
+                yield data, sensor_name, frame_id.str
 
     def _generate_segments(
         self, offset: int = 0, limit: int = 128
@@ -531,36 +554,40 @@ class FusionDatasetClient(DatasetClientBase):
         for sensor in segment.sensors:
             segment_client.upload_sensor(sensor)
 
-        segment_filter: Iterator[Tuple[Frame, Optional[float], bool]]
-
         if not segment:
             return segment_client
 
         have_frame_id = hasattr(segment[0], "frame_id")
 
         for frame in segment:
-            if not hasattr(frame, "frame_id") == have_frame_id:
+            if hasattr(frame, "frame_id") != have_frame_id:
                 raise FrameError(
                     "All the frames should have the same patterns(all have frame id or not)."
                 )
 
         if have_frame_id:
-            segment_filter = ((frame, None, False) for frame in segment)
+            source_frames = ((frame, frame.frame_id) for frame in segment)
         else:
-            segment_filter = (
-                (frame, 10 * index + 10, False) for index, frame in enumerate(segment)
+            source_frames = (
+                (frame, from_timestamp(10 * index + 10)) for index, frame in enumerate(segment)
             )
 
-        if skip_uploaded_files:
-            done_set = {
-                frame.frame_id.timestamp().timestamp: frame
-                for frame in segment_client.list_frames()
-            }
-            segment_filter = self._skip_upload_frame(segment_filter, done_set, pbar)
+        done_frames: Dict[float, Frame] = {
+            frame.frame_id.timestamp().timestamp: frame for frame in segment_client.list_frames()
+        }
+
+        if not skip_uploaded_files:
+            data_to_upload = FusionDatasetClient._extract_all_data(source_frames, pbar)
+        else:
+            data_to_upload = FusionDatasetClient._extract_unuploaded_data(
+                source_frames, pbar, done_frames=done_frames
+            )
 
         multithread_upload(
-            lambda args: segment_client.upload_frame(*args),
-            segment_filter,
+            # pylint: disable=protected-access
+            lambda args: segment_client._upload_or_import_data(*args),
+            data_to_upload,
+            callback=segment_client._synchronize_upload_info,
             jobs=jobs,
             pbar=pbar,
         )
@@ -725,7 +752,7 @@ class FusionDatasetClient(DatasetClientBase):
         """
         self._status.check_authority_for_draft()
         try:
-            with Tqdm(len(segment), disable=quiet) as pbar:
+            with Tqdm(sum(len(frame) for frame in segment), disable=quiet) as pbar:
                 return self._upload_segment(
                     segment, jobs=jobs, skip_uploaded_files=skip_uploaded_files, pbar=pbar
                 )
