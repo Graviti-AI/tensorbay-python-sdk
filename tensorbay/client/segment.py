@@ -35,7 +35,7 @@ from requests_toolbelt import MultipartEncoder
 from ulid import from_timestamp
 
 from ..dataset import AuthData, Data, Frame, RemoteData
-from ..exception import FrameError, InvalidParamsError, OperationError, ResponseSystemError
+from ..exception import FrameError, InvalidParamsError, OperationError
 from ..sensor.sensor import Sensor, Sensors
 from ..utility import Disable, locked
 from .lazy import PagingList
@@ -156,6 +156,50 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
 
         return sha1_obj.hexdigest()
 
+    def _upload_file(self, local_path: str, target_remote_path: str = "") -> Dict[str, Any]:
+        """Upload data with local path to the draft.
+
+        Arguments:
+            local_path: The local path of the data to upload.
+            target_remote_path: The path to save the data in segment client.
+
+        Returns:
+            The sha1 and target remote path of the file.
+
+        Raises:
+            InvalidParamsError: When target_remote_path does not follow linux style.
+
+        """
+        if not target_remote_path:
+            target_remote_path = os.path.basename(local_path)
+
+        if "\\" in target_remote_path:
+            raise InvalidParamsError(param_name="path", param_value=target_remote_path)
+
+        permission = self._get_upload_permission()
+        post_data = permission["result"]
+
+        checksum = self._calculate_file_sha1(local_path)
+        post_data["key"] = permission["extra"]["objectPrefix"] + checksum
+
+        backend_type = permission["extra"]["backendType"]
+        if backend_type == "azure":
+            url = (
+                f'{permission["extra"]["host"]}{permission["extra"]["objectPrefix"]}'
+                f'{checksum}?{permission["result"]["token"]}'
+            )
+
+            self._put_binary_file_to_azure(url, local_path, post_data)
+        else:
+            self._post_multipart_formdata(
+                permission["extra"]["host"],
+                local_path,
+                target_remote_path,
+                post_data,
+            )
+
+        return {"checksum": checksum, "remotePath": target_remote_path}
+
     def _post_multipart_formdata(
         self,
         url: str,
@@ -191,7 +235,6 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
     def _synchronize_upload_info(
         self,
         callback_info: List[Dict[str, Any]],
-        skip_uploaded_files: bool = False,
     ) -> None:
         put_data: Dict[str, Any] = {
             "segmentName": self.name,
@@ -199,11 +242,7 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
         }
         put_data.update(self._status.get_status_info())
 
-        try:
-            self._client.open_api_do("PUT", "multi/callback", self._dataset_id, json=put_data)
-        except ResponseSystemError:
-            if not skip_uploaded_files:
-                raise
+        self._client.open_api_do("PUT", "multi/callback", self._dataset_id, json=put_data)
 
     def _import_cloud_file(
         self,
@@ -336,50 +375,6 @@ class SegmentClient(SegmentClientBase):
             return callback_info
         self.import_auth_data(data)
         return None
-
-    def _upload_file(self, local_path: str, target_remote_path: str = "") -> Dict[str, Any]:
-        """Upload data with local path to the draft.
-
-        Arguments:
-            local_path: The local path of the data to upload.
-            target_remote_path: The path to save the data in segment client.
-
-        Returns:
-            The sha1 and target remote path of the file.
-
-        Raises:
-            InvalidParamsError: When target_remote_path does not follow linux style.
-
-        """
-        if not target_remote_path:
-            target_remote_path = os.path.basename(local_path)
-
-        if "\\" in target_remote_path:
-            raise InvalidParamsError(param_name="path", param_value=target_remote_path)
-
-        permission = self._get_upload_permission()
-        post_data = permission["result"]
-
-        checksum = self._calculate_file_sha1(local_path)
-        post_data["key"] = permission["extra"]["objectPrefix"] + checksum
-
-        backend_type = permission["extra"]["backendType"]
-        if backend_type == "azure":
-            url = (
-                f'{permission["extra"]["host"]}{permission["extra"]["objectPrefix"]}'
-                f'{checksum}?{permission["result"]["token"]}'
-            )
-
-            self._put_binary_file_to_azure(url, local_path, post_data)
-        else:
-            self._post_multipart_formdata(
-                permission["extra"]["host"],
-                local_path,
-                target_remote_path,
-                post_data,
-            )
-
-        return {"checksum": checksum, "remotePath": target_remote_path}
 
     def upload_file(self, local_path: str, target_remote_path: str = "") -> None:
         """Upload data with local path to the draft.
@@ -652,6 +647,19 @@ class FusionSegmentClient(SegmentClientBase):
     def __init__(self, name: str, data_client: "FusionDatasetClient") -> None:
         super().__init__(name, data_client)
 
+    @staticmethod
+    def _wrap_callback_info(
+        callback_info: Dict[str, Any], sensor_name: str, frame_id: str, data: Data
+    ) -> None:
+        callback_info["sensorName"] = sensor_name
+        callback_info["frameId"] = frame_id
+
+        if hasattr(data, "timestamp"):
+            callback_info["timestamp"] = data.timestamp
+
+        if data.label:
+            callback_info["label"] = data.label.dumps()
+
     def _generate_frames(
         self, urls: PagingList[Dict[str, str]], offset: int = 0, limit: int = 128
     ) -> Generator[Frame, None, int]:
@@ -677,6 +685,18 @@ class FusionSegmentClient(SegmentClientBase):
             yield {item["sensorName"]: item["url"] for item in frame["urls"]}
 
         return response["totalCount"]  # type: ignore[no-any-return]
+
+    def _upload_or_import_data(
+        self,
+        data: Union[Data, AuthData],
+        sensor_name: str,
+        frame_id: str,
+    ) -> Optional[Dict[str, Any]]:
+        if isinstance(data, Data):
+            callback_info = self._upload_file(data.path, data.target_remote_path)
+            self._wrap_callback_info(callback_info, sensor_name, frame_id, data)
+            return callback_info
+        return None
 
     def get_sensors(self) -> Sensors:
         """Return the sensors in a fusion segment client.
@@ -723,19 +743,15 @@ class FusionSegmentClient(SegmentClientBase):
 
         self._client.open_api_do("DELETE", "sensors", self._dataset_id, json=delete_data)
 
-    def upload_frame(  # pylint: disable=too-many-locals
-        self, frame: Frame, timestamp: Optional[float] = None, skip_uploaded_files: bool = False
-    ) -> None:
+    def upload_frame(self, frame: Frame, timestamp: Optional[float] = None) -> None:
         """Upload frame to the draft.
 
         Arguments:
             frame: The :class:`~tensorbay.dataset.frame.Frame` to upload.
             timestamp: The mark to sort frames, supporting timestamp and float.
-            skip_uploaded_files: Set it to True to skip the uploaded files.
 
         Raises:
             FrameError: When lacking frame id or frame id conflicts.
-            InvalidParamsError: When remote_path does not follow linux style.
 
         """
         self._status.check_authority_for_draft()
@@ -753,51 +769,17 @@ class FusionSegmentClient(SegmentClientBase):
         else:
             raise FrameError("Frame id conflicts, please do not give timestamp to the function!.")
 
+        callback_info_list = []
         for sensor_name, data in frame.items():
             if not isinstance(data, Data):
                 continue
 
-            target_remote_path = data.target_remote_path
+            callback_info = self._upload_file(data.path, data.target_remote_path)
+            self._wrap_callback_info(callback_info, sensor_name, frame_id.str, data)
+            callback_info_list.append(callback_info)
 
-            if "\\" in target_remote_path:
-                raise InvalidParamsError(param_name="path", param_value=target_remote_path)
-
-            permission = self._get_upload_permission()
-            post_data = permission["result"]
-
-            checksum = self._calculate_file_sha1(data.path)
-            post_data["key"] = permission["extra"]["objectPrefix"] + checksum
-
-            backend_type = permission["extra"]["backendType"]
-            if backend_type == "azure":
-                url = (
-                    f'{permission["extra"]["host"]}{permission["extra"]["objectPrefix"]}'
-                    f'{checksum}?{permission["result"]["token"]}'
-                )
-
-                self._put_binary_file_to_azure(url, data.path, post_data)
-            else:
-                self._post_multipart_formdata(
-                    permission["extra"]["host"],
-                    data.path,
-                    target_remote_path,
-                    post_data,
-                )
-
-            frame_info: Dict[str, Any] = {
-                "sensorName": sensor_name,
-                "frameId": str(frame_id),
-            }
-            if hasattr(data, "timestamp"):
-                frame_info["timestamp"] = data.timestamp
-
-            callback_info = {
-                "checksum": checksum,
-                "remotePath": target_remote_path,
-                "label": data.label.dumps(),
-            }
-            callback_info.update(frame_info)
-            self._synchronize_upload_info([callback_info], skip_uploaded_files)
+        for i in range(0, len(callback_info_list), 10):
+            self._synchronize_upload_info(callback_info_list[i : i + 10])
 
     def list_frames(self) -> PagingList[Frame]:
         """List required frames in the segment in a certain commit.
