@@ -152,7 +152,7 @@ def edit_input(hint: str) -> Tuple[str, str]:
     config_parser = read_config()
 
     editor = config_parser["config"].get("editor") if config_parser.has_section("config") else None
-    input_info = click.edit(hint, editor=editor)
+    input_info = click.edit(hint, editor=editor, require_save=False)
     return _clean_up(input_info)
 
 
