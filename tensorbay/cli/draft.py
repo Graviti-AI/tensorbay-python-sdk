@@ -23,7 +23,7 @@ _DRAFT_HINT = """
 
 
 def _implement_draft(
-    obj: Dict[str, str], tbrn: str, is_list: bool, message: Tuple[str, ...]
+    obj: Dict[str, str], tbrn: str, is_list: bool, edit: bool, message: Tuple[str, ...]
 ) -> None:
     gas = get_gas(**obj)
     info = TBRN(tbrn=tbrn)
@@ -34,6 +34,8 @@ def _implement_draft(
 
     if is_list:
         _list_drafts(dataset_client, info)
+    elif edit:
+        _edit_draft(dataset_client, info, message)
     else:
         _create_draft(dataset_client, info, message)
 
@@ -83,7 +85,7 @@ def _echo_draft(
     try:
         branch = dataset_client.get_branch(branch_name)
     except ResourceNotExistError:
-        error('The branch "{branch_name}" does not exist')
+        error(f'The branch "{branch_name}" does not exist')
 
     if branch.commit_id != ROOT_COMMIT_ID:
         click.echo(f"Branch: {branch_name}({branch.commit_id})")
@@ -95,3 +97,26 @@ def _echo_draft(
     click.echo(f"\n    {title}\n")
     if description:
         click.echo(f"    {description}\n")
+
+
+def _edit_draft(dataset_client: DatasetClientType, info: TBRN, message: Tuple[str, ...]) -> None:
+    if not info.is_draft:
+        error("Draft number is required when editing draft")
+
+    if message:
+        title, description = message[0], "\n".join(message[1:])
+    else:
+        draft = dataset_client.get_draft()
+        hint = [draft.title]
+        original_description = draft.description
+        if original_description:
+            hint.extend(["", original_description])
+        hint.append(_DRAFT_HINT)
+        title, description = edit_input("\n".join(hint))
+
+    if not title:
+        error("Aborting updating draft due to empty draft title")
+
+    dataset_client.update_draft(title=title, description=description)
+    click.echo(f"{info.get_tbrn()} is updated successfully!")
+    _echo_draft(dataset_client, title, description, dataset_client.status.branch_name)
