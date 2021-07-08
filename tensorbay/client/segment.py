@@ -100,6 +100,20 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
         response = self._client.open_api_do("GET", "data/urls", self._dataset_id, params=params)
         return response.json()["urls"][0]["url"]  # type: ignore[no-any-return]
 
+    def _list_urls(self, offset: int = 0, limit: int = 128) -> Dict[str, Any]:
+        params: Dict[str, Any] = {
+            "segmentName": self._name,
+            "offset": offset,
+            "limit": limit,
+        }
+        params.update(self._status.get_status_info())
+
+        if config.is_internal:
+            params["isInternal"] = True
+
+        response = self._client.open_api_do("GET", "data/urls", self._dataset_id, params=params)
+        return response.json()  # type: ignore[no-any-return]
+
     def _list_labels(self, offset: int = 0, limit: int = 128) -> Dict[str, Any]:
         params: Dict[str, Any] = {
             "segmentName": self._name,
@@ -300,6 +314,14 @@ class SegmentClient(SegmentClientBase):
             data = RemoteData.loads(item)
             data._url_getter = self._get_url  # pylint: disable=protected-access
             yield data
+
+        return response["totalCount"]  # type: ignore[no-any-return]
+
+    def _generate_urls(self, offset: int = 0, limit: int = 128) -> Generator[str, None, int]:
+        response = self._list_urls(offset, limit)
+
+        for item in response["urls"]:
+            yield item["url"]
 
         return response["totalCount"]  # type: ignore[no-any-return]
 
@@ -598,6 +620,15 @@ class SegmentClient(SegmentClientBase):
         """
         return PagingList(self._generate_data, 128)
 
+    def list_urls(self) -> PagingList[str]:
+        """List the data urls in this segment.
+
+        Returns:
+            The PagingList of urls.
+
+        """
+        return PagingList(self._generate_urls, 128)
+
 
 class FusionSegmentClient(SegmentClientBase):
     """This class defines :class:`FusionSegmentClient`.
@@ -626,6 +657,16 @@ class FusionSegmentClient(SegmentClientBase):
                 # pylint: disable=protected-access
                 data._url_getter = self._get_url  # type: ignore[union-attr]
             yield frame
+
+        return response["totalCount"]  # type: ignore[no-any-return]
+
+    def _generate_urls(
+        self, offset: int = 0, limit: int = 128
+    ) -> Generator[Dict[str, str], None, int]:
+        response = self._list_urls(offset, limit)
+
+        for frame in response["urls"]:
+            yield {item["sensorName"]: item["url"] for item in frame["urls"]}
 
         return response["totalCount"]  # type: ignore[no-any-return]
 
@@ -758,3 +799,14 @@ class FusionSegmentClient(SegmentClientBase):
 
         """
         return PagingList(self._generate_frames, 128)
+
+    def list_urls(self) -> PagingList[Dict[str, str]]:
+        """List the data urls in this segment.
+
+        Returns:
+            The PagingList of url dict, which key is the sensor name, value is the url.
+
+        """
+        urls = PagingList(self._generate_urls, 128)
+        urls._repr_maxlevel = 2  # pylint: disable=protected-access
+        return urls
