@@ -307,12 +307,15 @@ class SegmentClient(SegmentClientBase):
 
         return response["totalCount"]  # type: ignore[no-any-return]
 
-    def _generate_data(self, offset: int = 0, limit: int = 128) -> Generator[RemoteData, None, int]:
+    def _generate_data(
+        self, urls: PagingList[str], offset: int = 0, limit: int = 128
+    ) -> Generator[RemoteData, None, int]:
         response = self._list_labels(offset, limit)
 
-        for item in response["labels"]:
+        for i, item in enumerate(response["labels"], offset):
             data = RemoteData.loads(item)
-            data._url_getter = self._get_url  # pylint: disable=protected-access
+            # pylint: disable=protected-access
+            data._url_getter = lambda _, i=i: urls[i]  # type: ignore[misc]
             yield data
 
         return response["totalCount"]  # type: ignore[no-any-return]
@@ -618,7 +621,8 @@ class SegmentClient(SegmentClientBase):
             The PagingList of :class:`~tensorbay.dataset.data.RemoteData`.
 
         """
-        return PagingList(self._generate_data, 128)
+        urls = self.list_urls()
+        return PagingList(lambda offset, limit: self._generate_data(urls, offset, limit), 128)
 
     def list_urls(self) -> PagingList[str]:
         """List the data urls in this segment.
@@ -648,14 +652,18 @@ class FusionSegmentClient(SegmentClientBase):
     def __init__(self, name: str, data_client: "FusionDatasetClient") -> None:
         super().__init__(name, data_client)
 
-    def _generate_frames(self, offset: int = 0, limit: int = 128) -> Generator[Frame, None, int]:
+    def _generate_frames(
+        self, urls: PagingList[Dict[str, str]], offset: int = 0, limit: int = 128
+    ) -> Generator[Frame, None, int]:
         response = self._list_labels(offset, limit)
 
-        for item in response["labels"]:
+        data: RemoteData
+        for i, item in enumerate(response["labels"], offset):
             frame = Frame.loads(item)
-            for data in frame.values():  # pylint: disable=no-member # pylint issue: #3131
+            # pylint: disable=no-member # pylint issue: #3131
+            for sensor_name, data in frame.items():  # type: ignore[assignment]
                 # pylint: disable=protected-access
-                data._url_getter = self._get_url  # type: ignore[union-attr]
+                data._url_getter = lambda _, i=i, s=sensor_name: urls[i][s]  # type: ignore[misc]
             yield frame
 
         return response["totalCount"]  # type: ignore[no-any-return]
@@ -798,7 +806,8 @@ class FusionSegmentClient(SegmentClientBase):
             The PagingList of :class:`~tensorbay.dataset.frame.Frame`.
 
         """
-        return PagingList(self._generate_frames, 128)
+        urls = self.list_urls()
+        return PagingList(lambda offset, limit: self._generate_frames(urls, offset, limit), 128)
 
     def list_urls(self) -> PagingList[Dict[str, str]]:
         """List the data urls in this segment.
