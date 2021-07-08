@@ -26,7 +26,7 @@ from .lazy import PagingList
 from .log import UPLOAD_DATASET_RESUME_TEMPLATE
 from .requests import Client, Tqdm
 from .status import Status
-from .struct import ROOT_COMMIT_ID
+from .struct import ROOT_COMMIT_ID, UserInfo
 
 DatasetClientType = Union[DatasetClient, FusionDatasetClient]
 
@@ -131,6 +131,16 @@ class GAS:
             yield item["name"]
 
         return response["totalCount"]  # type: ignore[no-any-return]
+
+    def get_user(self) -> UserInfo:
+        """Get the user information with the current accesskey.
+
+        Returns:
+            The :class:`.struct.UserInfo` with the current accesskey.
+
+        """
+        response = self._client.open_api_do("GET", "users").json()
+        return UserInfo.loads(response)
 
     def get_auth_storage_config(self, name: str) -> Dict[str, Any]:
         """Get the auth storage config with the given name.

@@ -20,9 +20,146 @@
 from functools import partial
 from typing import Any, Dict, Optional, Tuple, Type, TypeVar
 
-from ..utility import AttrsMixin, ReprMixin, attr, camel, common_loads
+from ..utility import AttrsMixin, NameMixin, ReprMixin, attr, camel, common_loads
 
 ROOT_COMMIT_ID = "00000000000000000000000000000000"
+
+
+class TeamInfo(NameMixin):
+    """This class defines the basic concept of a TensorBay team.
+
+    Arguments:
+        name: The name of the team.
+        email: The email of the team.
+        description: The description of the team.
+
+    """
+
+    _T = TypeVar("_T", bound="TeamInfo")
+
+    _repr_attrs = ("email",)
+
+    email: Optional[str] = attr(default=None)
+
+    def __init__(self, name: str, *, email: Optional[str] = None, description: str = "") -> None:
+        super().__init__(name, description)
+        self.email = email
+
+    @classmethod
+    def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
+        """Loads a :class:`TeamInfo` instance from the given contents.
+
+        Arguments:
+            contents: A dict containing all the information of the commit::
+
+                    {
+                        "name": <str>
+                        "email": <str>
+                        "description": <str>
+                    }
+
+        Returns:
+            A :class:`TeamInfo` instance containing all the information in the given contents.
+
+        """
+        return common_loads(cls, contents)
+
+    def dumps(self) -> Dict[str, Any]:
+        """Dumps all the information into a dict.
+
+        Returns:
+            A dict containing all the information of the team::
+
+                {
+                        "name": <str>
+                        "email": <str>
+                        "description": <str>
+                }
+
+        """
+        return self._dumps()
+
+
+class UserInfo(NameMixin):
+    """This class defines the basic concept of a TensorBay user.
+
+    Arguments:
+        name: The nickname of the user.
+        email: The email of the user.
+        mobile: The mobile of the user.
+        description: The description of the user.
+        team: The team of the user.
+
+    """
+
+    _T = TypeVar("_T", bound="UserInfo")
+
+    _repr_attrs = ("email", "mobile", "team")
+
+    _name: str = attr(key="nickname")
+    email: Optional[str] = attr(default=None)
+    mobile: Optional[str] = attr(default=None)
+    team: Optional[TeamInfo] = attr(default=None)
+
+    def __init__(
+        self,
+        name: str,
+        *,
+        email: Optional[str] = None,
+        mobile: Optional[str] = None,
+        description: str = "",
+        team: Optional[TeamInfo] = None,
+    ) -> None:
+        super().__init__(name, description=description)
+        self.email = email
+        self.mobile = mobile
+        self.team = team
+
+    @classmethod
+    def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
+        """Loads a :class:`UserInfo` instance from the given contents.
+
+        Arguments:
+            contents: A dict containing all the information of the commit::
+
+                    {
+                        "name": <str>
+                        "email": <str>
+                        "mobile": <str>
+                        "description": <str>
+                        "team": {  <dict>
+                            "name": <str>
+                            "email": <str>
+                            "description": <str>
+                        }
+                    }
+
+        Returns:
+            A :class:`UserInfo` instance containing all the information in the given contents.
+
+        """
+        return common_loads(cls, contents)
+
+    def dumps(self) -> Dict[str, Any]:
+        """Dumps all the information into a dict.
+
+        Returns:
+            A dict containing all the information of the user::
+
+                {
+                        "name": <str>
+                        "email": <str>
+                        "mobile": <str>
+                        "description": <str>
+                        "team": {  <dict>
+                            "name": <str>
+                            "email": <str>
+                            "description": <str>
+                        }
+                }
+
+        """
+        return self._dumps()
 
 
 class User(AttrsMixin, ReprMixin):
