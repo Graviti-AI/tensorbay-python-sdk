@@ -282,7 +282,9 @@ def _get_origin_in_3_7(annotation: Any) -> Any:
 def _get_origin_in_3_6(annotation: Any) -> Any:
     module = getattr(annotation, "__module__", None)
     if module in _BUILTINS:
-        return getattr(annotation, "__extra__", None)
+        extra = getattr(annotation, "__extra__", None)
+        if extra is not None:
+            return extra
 
     return getattr(annotation, "__origin__", None)
 
@@ -306,22 +308,29 @@ def _get_operators(annotation: Any) -> Tuple[_Callable, _Callable]:
 
     """
     origin = _get_origin(annotation)
-    sequence: Any
+    annotation_args = getattr(annotation, "__args__", ())
     if isinstance(origin, type) and issubclass(origin, Sequence):
-        sequence = origin
-        type_ = annotation.__args__[0]
+        type_ = annotation_args[0]
+    elif origin is Union and len(annotation_args) == 2 and type(None) in annotation_args:
+        type_ = annotation_args[0] if isinstance(None, annotation_args[1]) else annotation_args[1]
     else:
-        sequence = None
+        origin = None
         type_ = annotation
 
-    if {getattr(sequence, "__module__", None), getattr(type_, "__module__", None)} < _BUILTINS:
+    if {getattr(origin, "__module__", None), getattr(type_, "__module__", None)} < _BUILTINS:
         return _builtin_operator, _builtin_operator
 
-    if sequence is None:
+    if origin is None:
         return type_.loads, _attr_dumper
 
+    if origin is Union:
+        return (
+            lambda contents: type_.loads(contents) if contents is not None else None,
+            _attr_optional_dumper,
+        )
+
     return (
-        lambda contents: sequence(type_.loads(content) for content in contents),
+        lambda contents: origin(type_.loads(content) for content in contents),
         _attr_list_dumper,
     )
 
@@ -332,6 +341,12 @@ def _builtin_operator(contents: _T) -> _T:
 
 def _attr_dumper(attr_: _A) -> Any:
     return attr_.dumps()
+
+
+def _attr_optional_dumper(attr_: Optional[_A]) -> Any:
+    if attr_ is not None:
+        return attr_.dumps()
+    return None
 
 
 def _attr_list_dumper(attrs: List[_A]) -> List[Any]:

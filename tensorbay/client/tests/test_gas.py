@@ -148,6 +148,29 @@ class TestGAS:
         assert self.gas_client._list_datasets(params["name"]) == response_data
         open_api_do.assert_called_once_with("GET", "", params=params)
 
+    def test_get_user(self, mocker):
+        response_data = {
+            "nickname": "user_name",
+            "email": "user_email",
+            "mobile": "11111111111",
+            "description": "",
+            "team": {"name": "TensorbaySDKTest", "email": None, "description": ""},
+        }
+        dump_data = {
+            "nickname": "user_name",
+            "email": "user_email",
+            "mobile": "11111111111",
+            "team": {
+                "name": "TensorbaySDKTest",
+            },
+        }
+        open_api_do = mocker.patch(
+            f"{gas.__name__}.Client.open_api_do",
+            return_value=mock_response(data=response_data),
+        )
+        assert self.gas_client.get_user().dumps() == dump_data
+        open_api_do.assert_called_once_with("GET", "users")
+
     def test_get_auth_storage_config(self, mocker):
         with pytest.raises(TypeError):
             self.gas_client.get_auth_storage_config("")
