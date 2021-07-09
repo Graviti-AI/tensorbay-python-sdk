@@ -344,6 +344,22 @@ class TestGAS:
         assert list(datasets) == [data["name"] for data in response_data["datasets"]]
         open_api_do.assert_called_once_with("GET", "", params=params)
 
+    def test_update_dataset(self, mocker):
+        response_data = {
+            "id": "123456",
+            "type": 1,
+            "commitId": "4",
+            "defaultBranch": DEFAULT_BRANCH,
+        }
+        open_api_do = mocker.patch(f"{gas.__name__}.Client.open_api_do")
+        mocker.patch(
+            f"{gas.__name__}.GAS._get_dataset",
+            return_value=response_data,
+        )
+        patch_data = {"alias": "new_alias"}
+        self.gas_client.update_dataset("test", alias="new_alias")
+        open_api_do.assert_called_once_with("PATCH", "", response_data["id"], json=patch_data)
+
     def test_rename_dataset(self, mocker):
         response_data = {
             "id": "123456",
@@ -357,7 +373,7 @@ class TestGAS:
             return_value=response_data,
         )
         patch_data = {"name": "new_test"}
-        self.gas_client.rename_dataset("test", "new_test")
+        self.gas_client.rename_dataset("test", new_name="new_test")
         open_api_do.assert_called_once_with("PATCH", "", response_data["id"], json=patch_data)
 
     def test_upload_dataset(self, mocker):
