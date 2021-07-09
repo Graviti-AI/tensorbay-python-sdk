@@ -22,8 +22,8 @@ _DRAFT_HINT = """
 """
 
 
-def _implement_draft(
-    obj: Dict[str, str], tbrn: str, is_list: bool, edit: bool, message: Tuple[str, ...]
+def _implement_draft(  # pylint: disable=too-many-arguments
+    obj: Dict[str, str], tbrn: str, is_list: bool, edit: bool, close: bool, message: Tuple[str, ...]
 ) -> None:
     gas = get_gas(**obj)
     info = TBRN(tbrn=tbrn)
@@ -36,6 +36,8 @@ def _implement_draft(
         _list_drafts(dataset_client, info)
     elif edit:
         _edit_draft(dataset_client, info, message)
+    elif close:
+        _close_draft(dataset_client, info)
     else:
         _create_draft(dataset_client, info, message)
 
@@ -120,3 +122,11 @@ def _edit_draft(dataset_client: DatasetClientType, info: TBRN, message: Tuple[st
     dataset_client.update_draft(title=title, description=description)
     click.echo(f"{info.get_tbrn()} is updated successfully!")
     _echo_draft(dataset_client, title, description, dataset_client.status.branch_name)
+
+
+def _close_draft(dataset_client: DatasetClientType, info: TBRN) -> None:
+    if not info.is_draft:
+        error("Draft number is required when editing draft")
+
+    dataset_client.close_draft()
+    click.echo(f"{info.get_tbrn()} is closed.")

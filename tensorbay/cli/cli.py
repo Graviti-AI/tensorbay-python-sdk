@@ -169,6 +169,7 @@ def dataset(obj: Dict[str, str], tbrn: str, is_delete: bool, yes: bool) -> None:
 @click.argument("tbrn", type=str)
 @click.option("-l", "--list", "is_list", is_flag=True, help="List the drafts.")
 @click.option("-e", "--edit", is_flag=True, help="Edit the draft's title and description.")
+@click.option("-c", "--close", is_flag=True, help="Close the draft.")
 @click.option(
     "-m",
     "--message",
@@ -185,11 +186,12 @@ def dataset(obj: Dict[str, str], tbrn: str, is_delete: bool, yes: bool) -> None:
     cls=DeprecatedOption,
 )
 @click.pass_obj
-def draft(
+def draft(  # pylint: disable=too-many-arguments
     obj: Dict[str, str],
     tbrn: str,
     is_list: bool,
     edit: bool,
+    close: bool,
     message: Tuple[str, ...],
 ) -> None:
     """List or create drafts.\f
@@ -199,12 +201,13 @@ def draft(
         tbrn: The tbrn of the dataset.
         is_list: Whether to list the drafts.
         edit: Whether to edit the draft's title and description.
+        close: Whether to close the draft.
         message: The message of the draft.
 
     """  # noqa: D301,D415
     from .draft import _implement_draft
 
-    _implement_draft(obj, tbrn, is_list, edit, message)
+    _implement_draft(obj, tbrn, is_list, edit, close, message)
 
 
 @command(
