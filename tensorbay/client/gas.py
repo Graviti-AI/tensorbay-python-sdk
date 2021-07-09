@@ -69,11 +69,12 @@ class GAS:
         is_fusion = info["type"]
         commit_id = info["commitId"]
         default_branch = info["defaultBranch"]
+        dataset_alias = info["alias"]
 
         status = Status(default_branch, commit_id=commit_id)
 
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
-        return ReturnType(name, dataset_id, self, status=status)
+        return ReturnType(name, dataset_id, self, status=status, alias=dataset_alias)
 
     def _get_dataset(self, name: str) -> Dict[str, Any]:
         """Get the information of the TensorBay dataset with the input name.
@@ -310,13 +311,14 @@ class GAS:
         type_flag = info["type"]
         commit_id = info["commitId"]
         default_branch = info["defaultBranch"]
+        dataset_alias = info["alias"]
 
         status = Status(default_branch, commit_id=commit_id)
 
         if is_fusion != type_flag:
             raise DatasetTypeError(name, type_flag)
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
-        return ReturnType(name, dataset_id, self, status=status)
+        return ReturnType(name, dataset_id, self, status=status, alias=dataset_alias)
 
     def list_dataset_names(self) -> PagingList[str]:
         """List names of all TensorBay datasets.

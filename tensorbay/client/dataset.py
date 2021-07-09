@@ -62,17 +62,22 @@ class DatasetClientBase(VersionControlClient):
         dataset_id: Dataset ID.
         gas: The initial client to interact between local and TensorBay.
         status: The version control status of the dataset.
+        alias: Dataset alias.
 
     Attributes:
         name: Dataset name.
         dataset_id: Dataset ID.
         status: The version control status of the dataset.
+        alias: Dataset alias.
 
     """
 
-    def __init__(self, name: str, dataset_id: str, gas: "GAS", *, status: Status) -> None:
+    def __init__(
+        self, name: str, dataset_id: str, gas: "GAS", *, status: Status, alias: str = ""
+    ) -> None:
         super().__init__(dataset_id, gas, status=status)
         self._name = name
+        self._alias = alias
 
     def _create_segment(self, name: str) -> None:
         post_data: Dict[str, Any] = {"name": name}
@@ -138,6 +143,16 @@ class DatasetClientBase(VersionControlClient):
 
         """
         return self._name
+
+    @property
+    def alias(self) -> str:
+        """Return the TensorBay dataset alias.
+
+        Returns:
+            The TensorBay dataset alias.
+
+        """
+        return self._alias
 
     def update_notes(
         self,
