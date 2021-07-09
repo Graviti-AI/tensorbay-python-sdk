@@ -148,6 +148,24 @@ class TestDataset:
 
         gas_client.delete_dataset(dataset_name)
 
+    def test_update_dataset(self, accesskey, url):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_dataset_name()
+        gas_client.create_dataset(dataset_name)
+
+        new_dataset_alias = f"{get_dataset_name()}alias"
+        gas_client.update_dataset(name=dataset_name, alias=new_dataset_alias)
+        dataset_client = gas_client.get_dataset(dataset_name)
+        assert dataset_client.alias == new_dataset_alias
+        gas_client.delete_dataset(dataset_name)
+
+        dataset_name = get_dataset_name()
+        gas_client.create_dataset(dataset_name, alias="alias")
+        gas_client.update_dataset(name=dataset_name)
+        dataset_client = gas_client.get_dataset(dataset_name)
+        assert dataset_client.alias == "alias"
+        gas_client.delete_dataset(dataset_name)
+
     def test_rename_dataset(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
