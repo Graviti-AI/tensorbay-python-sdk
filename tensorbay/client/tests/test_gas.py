@@ -57,6 +57,7 @@ class TestGAS:
             "updateTime": 1622693494,
             "owner": "",
             "id": "123456",
+            "alias": "alias",
         }
         get_dataset = mocker.patch(
             f"{gas.__name__}.GAS._get_dataset",
@@ -69,6 +70,7 @@ class TestGAS:
         assert dataset_client._dataset_id == response_data["id"]
         assert dataset_client._status.commit_id == response_data["commitId"]
         assert dataset_client._status.branch_name == response_data["defaultBranch"]
+        assert dataset_client._alias == response_data["alias"]
         get_dataset.assert_called_once_with(response_data["name"])
 
     def test__get_dataset(self, mocker):
@@ -257,6 +259,7 @@ class TestGAS:
                 "type": 1,
                 "commitId": "4",
                 "defaultBranch": DEFAULT_BRANCH,
+                "alias": "alias",
             },
         )
         with pytest.raises(DatasetTypeError):
@@ -267,6 +270,7 @@ class TestGAS:
             "type": int(is_fusion),
             "commitId": "4",
             "defaultBranch": DEFAULT_BRANCH,
+            "alias": "alias",
         }
         dataset_name = "test"
         get_dataset = mocker.patch(
@@ -280,6 +284,7 @@ class TestGAS:
         assert dataset_client._dataset_id == response_data["id"]
         assert dataset_client._status.commit_id == response_data["commitId"]
         assert dataset_client._status.branch_name == response_data["defaultBranch"]
+        assert dataset_client._alias == response_data["alias"]
         get_dataset.assert_called_once_with(dataset_name)
 
     def test_list_dataset_names(self, mocker):
