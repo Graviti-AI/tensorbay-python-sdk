@@ -212,19 +212,22 @@ class TestGAS:
 
     @pytest.mark.parametrize("is_fusion", [True, False])
     def test_create_dataset(self, mocker, is_fusion):
-        params = {"name": "test", "type": int(is_fusion), "region": "beijing"}
+        params = {"name": "test", "type": int(is_fusion), "region": "beijing", "alias": "alias"}
         response_data = {"id": "12345"}
         open_api_do = mocker.patch(
             f"{gas.__name__}.Client.open_api_do",
             return_value=mock_response(data=response_data),
         )
-        dataset_client = self.gas_client.create_dataset("test", is_fusion, region="beijing")
+        dataset_client = self.gas_client.create_dataset(
+            "test", is_fusion, region="beijing", alias="alias"
+        )
         dataset_type = FusionDatasetClient if is_fusion else DatasetClient
         assert isinstance(dataset_client, dataset_type)
         assert dataset_client._name == params["name"]
         assert dataset_client._dataset_id == response_data["id"]
         assert dataset_client.status.branch_name == DEFAULT_BRANCH
         assert dataset_client.status.commit_id == ROOT_COMMIT_ID
+        assert dataset_client._alias == params["alias"]
         open_api_do.assert_called_once_with("POST", "", json=params)
 
     @pytest.mark.parametrize("is_fusion", [True, False])
@@ -233,6 +236,7 @@ class TestGAS:
             "name": "test",
             "type": int(is_fusion),
             "storageConfig": {"name": "cloud_config", "path": "path/to/dataset"},
+            "alias": "alias",
         }
         response_data = {"id": "12345"}
         open_api_do = mocker.patch(
@@ -240,7 +244,7 @@ class TestGAS:
             return_value=mock_response(data=response_data),
         )
         dataset_client = self.gas_client.create_auth_dataset(
-            "test", "cloud_config", "path/to/dataset", is_fusion
+            "test", "cloud_config", "path/to/dataset", is_fusion=is_fusion, alias="alias"
         )
         dataset_type = FusionDatasetClient if is_fusion else DatasetClient
         assert isinstance(dataset_client, dataset_type)
@@ -248,6 +252,7 @@ class TestGAS:
         assert dataset_client._dataset_id == response_data["id"]
         assert dataset_client.status.branch_name == DEFAULT_BRANCH
         assert dataset_client.status.commit_id == ROOT_COMMIT_ID
+        assert dataset_client._alias == params["alias"]
         open_api_do.assert_called_once_with("POST", "", json=params)
 
     @pytest.mark.parametrize("is_fusion", [True, False])

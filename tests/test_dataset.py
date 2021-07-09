@@ -25,6 +25,7 @@ class TestDataset:
         assert dataset_client.status.branch_name == DEFAULT_BRANCH
         assert dataset_client.name == dataset_name
         assert dataset_client.dataset_id is not None
+        assert dataset_client.alias == ""
         gas_client.get_dataset(dataset_name)
 
         gas_client.delete_dataset(dataset_name)
@@ -56,7 +57,25 @@ class TestDataset:
         assert dataset_client.status.branch_name == DEFAULT_BRANCH
         assert dataset_client.name == dataset_name
         assert dataset_client.dataset_id is not None
+        assert dataset_client.alias == ""
         gas_client.get_dataset(dataset_name, is_fusion=True)
+
+        gas_client.delete_dataset(dataset_name)
+
+    def test_create_dataset_with_alias(self, accesskey, url):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_dataset_name()
+        alias = "alias"
+
+        dataset_client = gas_client.create_dataset(dataset_name, alias=alias)
+        assert dataset_client.status.commit_id == ROOT_COMMIT_ID
+        assert dataset_client.status.draft_number is None
+        assert not dataset_client.status.is_draft
+        assert dataset_client.status.branch_name == DEFAULT_BRANCH
+        assert dataset_client.name == dataset_name
+        assert dataset_client.alias == alias
+        assert dataset_client.dataset_id is not None
+        gas_client.get_dataset(dataset_name)
 
         gas_client.delete_dataset(dataset_name)
 
@@ -73,7 +92,7 @@ class TestDataset:
     def test_get_new_dataset(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
-        dataset_client = gas_client.create_dataset(dataset_name)
+        dataset_client = gas_client.create_dataset(dataset_name, alias="alias")
         dataset_client.create_draft("v_test")
 
         dataset_client_1 = gas_client.get_dataset(dataset_name)
@@ -83,9 +102,11 @@ class TestDataset:
         assert dataset_client.status.branch_name == DEFAULT_BRANCH
         assert dataset_client_1.name == dataset_name
         assert dataset_client.dataset_id is not None
+        assert dataset_client.alias == "alias"
 
         gas_client.delete_dataset(dataset_name)
 
+    @pytest.mark.xfail(reason="backend alias processing")
     def test_get_dataset_to_latest_commit(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
@@ -102,9 +123,11 @@ class TestDataset:
         assert dataset_client.status.branch_name == DEFAULT_BRANCH
         assert dataset_client.name == dataset_name
         assert dataset_client.dataset_id is not None
+        assert dataset_client.alias == ""
 
         gas_client.delete_dataset(dataset_name)
 
+    @pytest.mark.xfail(reason="backend alias processing")
     def test_get_fusion_dataset_to_latest_commit(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
@@ -121,6 +144,7 @@ class TestDataset:
         assert dataset_client.status.branch_name == DEFAULT_BRANCH
         assert dataset_client.name == dataset_name
         assert dataset_client.dataset_id is not None
+        assert dataset_client.alias == ""
 
         gas_client.delete_dataset(dataset_name)
 
