@@ -188,6 +188,7 @@ class GAS:
         is_fusion: Literal[False] = False,
         *,
         region: Optional[str] = None,
+        alias: str = "",
     ) -> DatasetClient:
         ...
 
@@ -198,6 +199,7 @@ class GAS:
         is_fusion: Literal[True],
         *,
         region: Optional[str] = None,
+        alias: str = "",
     ) -> FusionDatasetClient:
         ...
 
@@ -208,6 +210,7 @@ class GAS:
         is_fusion: bool = False,
         *,
         region: Optional[str] = None,
+        alias: str = "",
     ) -> DatasetClientType:
         ...
 
@@ -217,6 +220,7 @@ class GAS:
         is_fusion: bool = False,
         *,
         region: Optional[str] = None,  # beijing, hangzhou, shanghai
+        alias: str = "",
     ) -> DatasetClientType:
         """Create a TensorBay dataset with given name.
 
@@ -225,6 +229,7 @@ class GAS:
             is_fusion: Whether the dataset is a fusion dataset, True for fusion dataset.
             region: Region of the dataset to be stored,
                 only support "beijing", "hangzhou", "shanghai", default is "shanghai".
+            alias: Alias of the dataset, default is "".
 
         Returns:
             The created :class:`~tensorbay.client.dataset.DatasetClient` instance or
@@ -235,6 +240,7 @@ class GAS:
         post_data = {
             "name": name,
             "type": int(is_fusion),  # normal dataset: 0, fusion dataset: 1
+            "alias": alias,
         }
         if region:
             post_data["region"] = region
@@ -243,10 +249,16 @@ class GAS:
 
         response = self._client.open_api_do("POST", "", json=post_data)
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
-        return ReturnType(name, response.json()["id"], self, status=status)
+        return ReturnType(name, response.json()["id"], self, status=status, alias=alias)
 
     def create_auth_dataset(
-        self, name: str, config_name: str, path: str, is_fusion: bool = False
+        self,
+        name: str,
+        config_name: str,
+        path: str,
+        *,
+        is_fusion: bool = False,
+        alias: str = "",
     ) -> DatasetClientType:
         """Create a TensorBay dataset with given name in auth cloud storage.
 
@@ -258,6 +270,7 @@ class GAS:
             config_name: The auth storage config name.
             path: The path of the dataset to create in auth cloud storage.
             is_fusion: Whether the dataset is a fusion dataset, True for fusion dataset.
+            alias: Alias of the dataset, default is "".
 
         Returns:
             The created :class:`~tensorbay.client.dataset.DatasetClient` instance or
@@ -269,13 +282,14 @@ class GAS:
             "name": name,
             "type": int(is_fusion),  # normal dataset: 0, fusion dataset: 1
             "storageConfig": {"name": config_name, "path": path},
+            "alias": alias,
         }
 
         status = Status(DEFAULT_BRANCH, commit_id=ROOT_COMMIT_ID)
 
         response = self._client.open_api_do("POST", "", json=post_data)
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
-        return ReturnType(name, response.json()["id"], self, status=status)
+        return ReturnType(name, response.json()["id"], self, status=status, alias=alias)
 
     @overload
     def get_dataset(self, name: str, is_fusion: Literal[False] = False) -> DatasetClient:
