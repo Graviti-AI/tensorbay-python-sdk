@@ -16,7 +16,6 @@ from typing import (
     Callable,
     Dict,
     List,
-    NoReturn,
     Optional,
     Sequence,
     Tuple,
@@ -25,7 +24,7 @@ from typing import (
     no_type_check,
 )
 
-from typing_extensions import Protocol
+from typing_extensions import NoReturn, Protocol
 
 from ..exception import AttrError
 
