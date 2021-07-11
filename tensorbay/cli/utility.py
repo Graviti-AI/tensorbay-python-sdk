@@ -10,10 +10,10 @@ import os
 import sys
 from collections import OrderedDict
 from configparser import ConfigParser, SectionProxy
-from typing import NoReturn, Optional, Tuple, overload
+from typing import Optional, Tuple, overload
 
 import click
-from typing_extensions import Literal
+from typing_extensions import Literal, NoReturn
 
 from ..client import GAS
 from ..client import config as client_config
