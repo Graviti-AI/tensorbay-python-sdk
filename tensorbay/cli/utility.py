@@ -139,7 +139,7 @@ def get_dataset_client(gas: GAS, info: TBRN, is_fusion: Optional[bool] = None) -
     return dataset_client
 
 
-def edit_input(hint: str) -> Tuple[str, str]:
+def _edit_input(hint: str) -> Tuple[str, str]:
     """Edit information input from the editor.
 
     Arguments:
@@ -307,3 +307,41 @@ def shorten(origin: str) -> str:
 
     """
     return origin[:7]
+
+
+def format_hint(title: str, description: str, original_hint: str) -> str:
+    """Generate complete hint message.
+
+    Arguments:
+        title: The title of the draft to edit or commit.
+        description: The description of the draft to edit or commit.
+        original_hint: The original hint message.
+
+    Returns:
+        The complete hint message.
+
+    """
+    hint: Tuple[str, ...] = (title,)
+    if description:
+        hint += ("", description)
+    hint += (original_hint,)
+    return "\n".join(hint)
+
+
+def edit_message(message: Tuple[str, ...], hint_message: str) -> Tuple[str, str]:
+    """Edit draft information.
+
+    Arguments:
+        message: The message given in the CLI.
+        hint_message: The hint message to show on the pop-up editor.
+
+    Returns:
+        The extracted title and the description.
+
+    """
+    if message:
+        title, description = message[0], "\n".join(message[1:])
+    else:
+        title, description = _edit_input(hint_message)
+
+    return title, description
