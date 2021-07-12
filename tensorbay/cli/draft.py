@@ -5,6 +5,7 @@
 
 """Implementation of gas draft."""
 
+from textwrap import indent
 from typing import Dict, Optional, Tuple
 
 import click
@@ -12,6 +13,7 @@ import click
 from ..client.gas import DatasetClientType
 from ..client.struct import ROOT_COMMIT_ID
 from ..exception import ResourceNotExistError
+from .auth import INDENT
 from .tbrn import TBRN, TBRNType
 from .utility import edit_message, error, format_hint, get_dataset_client, get_gas
 
@@ -19,6 +21,11 @@ _DRAFT_HINT = """
 # Please enter the message for your draft.
 # Lines starting with '#' will be ignored.
 # And an empty draft message aborts the creation.
+"""
+
+_FULL_DRAFT_MESSAGE = """Branch:{}{}
+
+    {}
 """
 
 
@@ -86,15 +93,22 @@ def _echo_draft(
         error(f'The branch "{branch_name}" does not exist')
 
     if branch.commit_id != ROOT_COMMIT_ID:
-        click.echo(f"Branch: {branch_name}({branch.commit_id})")
+        commit_id = f"({branch.commit_id})"
     else:
-        click.echo(f"Branch: {branch_name}")
+        commit_id = ""
 
     if not title:
         title = "<no title>"
-    click.echo(f"\n    {title}\n")
     if description:
-        click.echo(f"    {description}\n")
+        description = f"\n\n{indent(description, INDENT)}"
+    draft_message = f"{title}{description}"
+    click.echo(
+        _FULL_DRAFT_MESSAGE.format(
+            branch_name,
+            commit_id,
+            draft_message,
+        )
+    )
 
 
 def _edit_draft(dataset_client: DatasetClientType, info: TBRN, message: Tuple[str, ...]) -> None:
