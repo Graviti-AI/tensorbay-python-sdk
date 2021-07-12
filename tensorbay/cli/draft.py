@@ -13,12 +13,12 @@ from ..client.gas import DatasetClientType
 from ..client.struct import ROOT_COMMIT_ID
 from ..exception import ResourceNotExistError
 from .tbrn import TBRN, TBRNType
-from .utility import edit_input, error, get_dataset_client, get_gas
+from .utility import edit_message, error, format_hint, get_dataset_client, get_gas
 
 _DRAFT_HINT = """
-# Please enter the title for your draft.
+# Please enter the message for your draft.
 # Lines starting with '#' will be ignored.
-# And an empty draft title aborts the creation.
+# And an empty draft message aborts the creation.
 """
 
 
@@ -46,13 +46,9 @@ def _create_draft(dataset_client: DatasetClientType, info: TBRN, message: Tuple[
     if info.is_draft:
         error(f'Create a draft in draft status "{info}" is not permitted')
 
-    if message:
-        title, description = message[0], "\n".join(message[1:])
-    else:
-        title, description = edit_input(_DRAFT_HINT)
-
+    title, description = edit_message(message, _DRAFT_HINT)
     if not title:
-        error("Aborting creating draft due to empty draft title")
+        error("Aborting creating draft due to empty draft message")
 
     dataset_client.create_draft(title=title, description=description)
     status = dataset_client.status
@@ -105,19 +101,11 @@ def _edit_draft(dataset_client: DatasetClientType, info: TBRN, message: Tuple[st
     if not info.is_draft:
         error("Draft number is required when editing draft")
 
-    if message:
-        title, description = message[0], "\n".join(message[1:])
-    else:
-        draft = dataset_client.get_draft()
-        hint = [draft.title]
-        original_description = draft.description
-        if original_description:
-            hint.extend(["", original_description])
-        hint.append(_DRAFT_HINT)
-        title, description = edit_input("\n".join(hint))
-
+    draft = dataset_client.get_draft()
+    hint_message = format_hint(draft.title, draft.description, _DRAFT_HINT)
+    title, description = edit_message(message, hint_message)
     if not title:
-        error("Aborting updating draft due to empty draft title")
+        error("Aborting updating draft due to empty draft message")
 
     dataset_client.update_draft(title=title, description=description)
     click.echo(f"{info.get_tbrn()} is updated successfully!")

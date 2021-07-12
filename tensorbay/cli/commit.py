@@ -10,9 +10,9 @@ from typing import Dict, Tuple
 import click
 
 from .tbrn import TBRN, TBRNType
-from .utility import edit_input, error, get_dataset_client, get_gas
+from .utility import edit_message, error, format_hint, get_dataset_client, get_gas
 
-_COMMIT_HINT = """{}
+_COMMIT_HINT = """
 # Please enter the commit message for your changes.
 # The Default commit message is set as the draft title.
 # Lines starting with '#' will be ignored.
@@ -32,11 +32,10 @@ def _implement_commit(obj: Dict[str, str], tbrn: str, message: Tuple[str, ...]) 
         error(f'To commit, "{info}" must be in draft status, like "{info}#1"')
 
     dataset_client.checkout(draft_number=info.draft_number)
-    if message:
-        title, description = message[0], "\n".join(message[1:])
-    else:
-        title, description = edit_input(_COMMIT_HINT.format(dataset_client.get_draft().title))
 
+    draft = dataset_client.get_draft()
+    hint_message = format_hint(draft.title, draft.description, _COMMIT_HINT)
+    title, description = edit_message(message, hint_message)
     if not title:
         error("Aborting commit due to empty commit message")
 
