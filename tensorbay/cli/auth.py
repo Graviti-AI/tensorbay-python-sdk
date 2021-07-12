@@ -7,6 +7,7 @@
 
 
 from configparser import ConfigParser
+from textwrap import indent
 from typing import Dict, Optional
 from urllib.parse import urljoin
 
@@ -21,7 +22,7 @@ from .utility import (
     write_config,
 )
 
-_INDENT = " " * 4
+INDENT = " " * 4
 
 
 def _implement_auth(  # pylint: disable=too-many-arguments
@@ -129,5 +130,5 @@ def _check_args_and_options(arg1: str, arg2: str, get: bool, unset: bool, is_all
 
 
 def _echo_formatted_profile(name: str, value: str) -> None:
-    formatted_value = value.replace("\n", f"\n{_INDENT}")
+    formatted_value = indent(value, INDENT)
     click.echo(f"{name} = {formatted_value}\n")

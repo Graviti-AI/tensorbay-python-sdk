@@ -6,11 +6,13 @@
 """Implementation of gas log."""
 
 from datetime import datetime
+from textwrap import indent
 from typing import Dict, Optional
 
 import click
 
 from ..client.struct import Commit
+from .auth import INDENT
 from .tbrn import TBRN
 from .utility import get_dataset_client, get_gas, shorten
 
@@ -19,9 +21,6 @@ Author: {}
 Date: {}
 
     {}
-
-    {}
-
 """
 
 
@@ -45,10 +44,13 @@ def _get_oneline_log(commit: Commit) -> str:
 
 
 def _get_full_log(commit: Commit) -> str:
+    description = commit.description
+    if description:
+        description = f"\n\n{indent(description, INDENT)}"
+    commit_message = f"{commit.title}{description}\n"
     return _FULL_LOG.format(
         commit.commit_id,
         commit.committer.name,
         datetime.fromtimestamp(commit.committer.date).strftime("%a %b %d %H:%M:%S %y"),
-        commit.title,
-        commit.description,
+        commit_message,
     )
