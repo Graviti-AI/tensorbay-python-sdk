@@ -98,6 +98,7 @@ def _echo_draft(
         title = "<no title>"
     click.echo(f"\n    {title}\n")
     if description:
+        description = description.replace("\n", "\n    ")
         click.echo(f"    {description}\n")
 
 

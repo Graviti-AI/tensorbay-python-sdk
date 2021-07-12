@@ -50,5 +50,5 @@ def _get_full_log(commit: Commit) -> str:
         commit.committer.name,
         datetime.fromtimestamp(commit.committer.date).strftime("%a %b %d %H:%M:%S %y"),
         commit.title,
-        commit.description,
+        commit.description.replace("\n", "\n    "),
     )
