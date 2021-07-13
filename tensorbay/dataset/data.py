@@ -82,7 +82,7 @@ class DataBase(AttrsMixin, ReprMixin):  # pylint: disable=too-few-public-methods
                     }
 
         Returns:
-            A :class:`Data`, :class:`RemoteData` or class`AuthData` instance containing
+            A :class:`Data`, :class:`RemoteData` or :class:`AuthData` instance containing
             information from the given dict.
 
         Raises:
