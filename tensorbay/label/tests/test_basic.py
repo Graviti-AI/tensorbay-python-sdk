@@ -11,7 +11,7 @@ class TestLabelType:
         assert LabelType.CLASSIFICATION == LabelType("classification")
         assert LabelType.BOX2D == LabelType("box2d")
         assert LabelType.BOX3D == LabelType("box3d")
-        assert LabelType.POLYGON2D == LabelType("polygon2d")
+        assert LabelType.POLYGON == LabelType("polygon")
         assert LabelType.POLYLINE2D == LabelType("polyline2d")
         assert LabelType.KEYPOINTS2D == LabelType("keypoints2d")
         assert LabelType.SENTENCE == LabelType("sentence")

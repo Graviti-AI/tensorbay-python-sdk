@@ -3,12 +3,12 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""PointList2D, Polygon2D.
+"""PointList2D, Polygon.
 
 :class:`PointList2D` contains a list of 2D points.
 
 :class:`Polygon` contains the coordinates of the vertexes of the polygon
-and provides :meth:`Polygon2D.area` to calculate the area of the polygon.
+and provides :meth:`Polygon.area` to calculate the area of the polygon.
 
 """
 
@@ -21,7 +21,7 @@ from .vector import Vector2D
 _T = TypeVar("_T", bound=Vector2D)
 
 
-class PointList2D(UserMutableSequence[_T]):
+class PointList2D(UserMutableSequence[_T]):  # pylint: disable=too-many-ancestors
     """This class defines the concept of PointList2D.
 
     :class:`PointList2D` contains a list of 2D points.
@@ -110,7 +110,7 @@ class PointList2D(UserMutableSequence[_T]):
 _L = TypeVar("_L", bound=PointList2D[Any])
 
 
-class MultiPointList2D(UserMutableSequence[_L]):
+class MultiPointList2D(UserMutableSequence[_L]):  # pylint: disable=too-many-ancestors
     """This class defines the concept of MultiPointList2D.
 
     :class:`MultiPointList2D` contains multiple 2D point lists.
@@ -194,15 +194,15 @@ class MultiPointList2D(UserMutableSequence[_L]):
         return Box2D(x_min, y_min, x_max, y_max)
 
 
-class Polygon2D(PointList2D[Vector2D]):
-    """This class defines the concept of Polygon2D.
+class Polygon(PointList2D[Vector2D]):  # pylint: disable=too-many-ancestors
+    """This class defines the concept of Polygon.
 
-    :class:`Polygon2D` contains the coordinates of the vertexes of the polygon and provides
-    :meth:`Polygon2D.area` to calculate the area of the polygon.
+    :class:`Polygon` contains the coordinates of the vertexes of the polygon and provides
+    :meth:`Polygon.area` to calculate the area of the polygon.
 
     Examples:
-        >>> Polygon2D([[1, 2], [2, 3], [2, 2]])
-        Polygon2D [
+        >>> Polygon([[1, 2], [2, 3], [2, 2]])
+        Polygon [
           Vector2D(1, 2),
           Vector2D(2, 3),
           Vector2D(2, 2)
@@ -210,25 +210,25 @@ class Polygon2D(PointList2D[Vector2D]):
 
     """
 
-    _P = TypeVar("_P", bound="Polygon2D")
+    _P = TypeVar("_P", bound="Polygon")
 
     _ElementType = Vector2D
 
     @classmethod
     def loads(cls: Type[_P], contents: List[Dict[str, float]]) -> _P:
-        """Loads the information of :class:`Polygon2D`.
+        """Loads the information of :class:`Polygon`.
 
         Arguments:
             contents: A list of dictionary lists containing the coordinates
                 of the vertexes of the polygon.
 
         Returns:
-            The loaded :class:`Polygon2D` object.
+            The loaded :class:`Polygon` object.
 
         Examples:
             >>> contents = [{"x": 1.0, "y": 1.0}, {"x": 2.0, "y": 2.0}, {"x": 2.0, "y": 3.0}]
-            >>> Polygon2D.loads(contents)
-            Polygon2D [
+            >>> Polygon.loads(contents)
+            Polygon [
               Vector2D(1.0, 1.0),
               Vector2D(2.0, 2.0),
               Vector2D(2.0, 3.0)
@@ -247,7 +247,7 @@ class Polygon2D(PointList2D[Vector2D]):
             The area of the polygon.
 
         Examples:
-            >>> polygon = Polygon2D([[1, 2], [2, 2], [2, 3]])
+            >>> polygon = Polygon([[1, 2], [2, 2], [2, 3]])
             >>> polygon.area()
             0.5
 

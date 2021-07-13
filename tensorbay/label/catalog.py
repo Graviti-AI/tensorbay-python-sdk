@@ -21,9 +21,9 @@ corresponding to different types of labels.
    :class:`.ClassificationSubcatalog`   subcatalog for classification type of label
    :class:`.Box2DSubcatalog`            subcatalog for 2D bounding box type of label
    :class:`.Box3DSubcatalog`            subcatalog for 3D bounding box type of label
-   :class:`.Keypoints2DSubcatalog`      subcatalog for 2D polygon type of label
-   :class:`.Polygon2DSubcatalog`        subcatalog for 2D polyline type of label
-   :class:`.Polyline2DSubcatalog`       subcatalog for 2D keypoints type of label
+   :class:`.Keypoints2DSubcatalog`      subcatalog for 2D keypoints type of label
+   :class:`.PolygonSubcatalog`          subcatalog for polygon type of label
+   :class:`.Polyline2DSubcatalog`       subcatalog for 2D polyline type of label
    :class:`.SentenceSubcatalog`         subcatalog for transcripted sentence type of label
    ==================================   ==================================================
 
@@ -37,7 +37,7 @@ from ..utility import AttrsMixin, ReprMixin, ReprType, attr, common_loads, upper
 from .label_box import Box2DSubcatalog, Box3DSubcatalog
 from .label_classification import ClassificationSubcatalog
 from .label_keypoints import Keypoints2DSubcatalog
-from .label_polygon import Polygon2DSubcatalog
+from .label_polygon import PolygonSubcatalog
 from .label_polyline import Polyline2DSubcatalog
 from .label_sentence import SentenceSubcatalog
 
@@ -45,7 +45,7 @@ Subcatalogs = Union[
     ClassificationSubcatalog,
     Box2DSubcatalog,
     Box3DSubcatalog,
-    Polygon2DSubcatalog,
+    PolygonSubcatalog,
     Polyline2DSubcatalog,
     Keypoints2DSubcatalog,
     SentenceSubcatalog,
@@ -95,7 +95,7 @@ class Catalog(ReprMixin, AttrsMixin):
     classification: ClassificationSubcatalog = _attr()
     box2d: Box2DSubcatalog = _attr()
     box3d: Box3DSubcatalog = _attr()
-    polygon2d: Polygon2DSubcatalog = _attr()
+    polygon: PolygonSubcatalog = _attr()
     polyline2d: Polyline2DSubcatalog = _attr()
     keypoints2d: Keypoints2DSubcatalog = _attr()
     sentence: SentenceSubcatalog = _attr()

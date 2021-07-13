@@ -19,7 +19,7 @@ Different label types correspond to different label classes classes.
    :class:`~tensorbay.label.label_classification.Classification` classification type of label
    :class:`~tensorbay.label.label_box.LabeledBox2D`              2D bounding box type of label
    :class:`~tensorbay.label.label_box.LabeledBox3D`              3D bounding box type of label
-   :class:`~tensorbay.label.label_polygon.LabeledPolygon2D`      2D polygon type of label
+   :class:`~tensorbay.label.label_polygon.LabeledPolygon`        polygon type of label
    :class:`~tensorbay.label.label_polyline.LabeledPolyline2D`    2D polyline type of label
    :class:`~tensorbay.label.label_keypoints.LabeledKeypoints2D`  2D keypoints type of label
    :class:`~tensorbay.label.label_sentence.LabeledSentence`      transcripted sentence type of label
@@ -35,7 +35,7 @@ from .basic import LabelType
 from .label_box import LabeledBox2D, LabeledBox3D
 from .label_classification import Classification
 from .label_keypoints import LabeledKeypoints2D
-from .label_polygon import LabeledPolygon2D
+from .label_polygon import LabeledPolygon
 from .label_polyline import LabeledPolyline2D
 from .label_sentence import LabeledSentence
 
@@ -71,7 +71,7 @@ class Label(ReprMixin, AttrsMixin):
     classification: Classification = _attr()
     box2d: List[LabeledBox2D] = _attr()
     box3d: List[LabeledBox3D] = _attr()
-    polygon2d: List[LabeledPolygon2D] = _attr()
+    polygon: List[LabeledPolygon] = _attr()
     polyline2d: List[LabeledPolyline2D] = _attr()
     keypoints2d: List[LabeledKeypoints2D] = _attr()
     sentence: List[LabeledSentence] = _attr()

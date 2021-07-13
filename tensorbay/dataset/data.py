@@ -74,7 +74,7 @@ class DataBase(AttrsMixin, ReprMixin):  # pylint: disable=too-few-public-methods
                             "CLASSIFICATION": {...},
                             "BOX2D": {...},
                             "BOX3D": {...},
-                            "POLYGON2D": {...},
+                            "POLYGON": {...},
                             "POLYLINE2D": {...},
                             "KEYPOINTS2D": {...},
                             "SENTENCE": {...}
@@ -146,7 +146,7 @@ class Data(DataBase):
                             "CLASSIFICATION": {...},
                             "BOX2D": {...},
                             "BOX3D": {...},
-                            "POLYGON2D": {...},
+                            "POLYGON": {...},
                             "POLYLINE2D": {...},
                             "KEYPOINTS2D": {...},
                             "SENTENCE": {...}
@@ -203,7 +203,7 @@ class Data(DataBase):
                             "CLASSIFICATION": {...},
                             "BOX2D": {...},
                             "BOX3D": {...},
-                            "POLYGON2D": {...},
+                            "POLYGON": {...},
                             "POLYLINE2D": {...},
                             "KEYPOINTS2D": {...},
                             "SENTENCE": {...}
@@ -273,7 +273,7 @@ class RemoteData(DataBase):
                             "CLASSIFICATION": {...},
                             "BOX2D": {...},
                             "BOX3D": {...},
-                            "POLYGON2D": {...},
+                            "POLYGON": {...},
                             "POLYLINE2D": {...},
                             "KEYPOINTS2D": {...},
                             "SENTENCE": {...}
@@ -327,7 +327,7 @@ class RemoteData(DataBase):
                             "CLASSIFICATION": {...},
                             "BOX2D": {...},
                             "BOX3D": {...},
-                            "POLYGON2D": {...},
+                            "POLYGON": {...},
                             "POLYLINE2D": {...},
                             "KEYPOINTS2D": {...},
                             "SENTENCE": {...}
@@ -391,7 +391,7 @@ class AuthData(DataBase):
                             "CLASSIFICATION": {...},
                             "BOX2D": {...},
                             "BOX3D": {...},
-                            "POLYGON2D": {...},
+                            "POLYGON": {...},
                             "POLYLINE2D": {...},
                             "KEYPOINTS2D": {...},
                             "SENTENCE": {...}
@@ -417,7 +417,7 @@ class AuthData(DataBase):
                             "CLASSIFICATION": {...},
                             "BOX2D": {...},
                             "BOX3D": {...},
-                            "POLYGON2D": {...},
+                            "POLYGON": {...},
                             "POLYLINE2D": {...},
                             "KEYPOINTS2D": {...},
                             "SENTENCE": {...}
