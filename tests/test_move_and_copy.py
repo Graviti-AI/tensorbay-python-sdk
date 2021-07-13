@@ -276,66 +276,62 @@ class TestMove:
 
         gas_client.delete_dataset(dataset_name)
 
-    # @pytest.mark.xfail(__version__ < "1.9.0", reason="not supported until 1.9.0")
-    # def test_move_data_override(self, accesskey, url, tmp_path):
-    #     gas_client = GAS(access_key=accesskey, url=url)
-    #     dataset_name = get_dataset_name()
-    #     gas_client.create_dataset(dataset_name)
-    #     dataset = Dataset(name=dataset_name)
-    #     segment = dataset.create_segment("Segment1")
-    #     dataset._catalog = Catalog.loads(CATALOG)
-    #     path = tmp_path / "sub"
-    #     path.mkdir()
-    #     for i in range(10):
-    #         local_path = path / f"hello{i}.txt"
-    #         local_path.write_text(f"CONTENT_{i}")
-    #         data = Data(local_path=str(local_path))
-    #         data.label = Label.loads(LABEL)
-    #         segment.append(data)
+    def test_move_data_override(self, accesskey, url, tmp_path):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_dataset_name()
+        gas_client.create_dataset(dataset_name)
+        dataset = Dataset(name=dataset_name)
+        segment = dataset.create_segment("Segment1")
+        dataset._catalog = Catalog.loads(CATALOG)
+        path = tmp_path / "sub"
+        path.mkdir()
+        for i in range(10):
+            local_path = path / f"hello{i}.txt"
+            local_path.write_text(f"CONTENT_{i}")
+            data = Data(local_path=str(local_path))
+            data.label = Label.loads(LABEL)
+            segment.append(data)
 
-    #     dataset_client = gas_client.upload_dataset(dataset)
-    #     segment_client = dataset_client.get_segment("Segment1")
+        dataset_client = gas_client.upload_dataset(dataset)
+        segment_client = dataset_client.get_segment("Segment1")
 
-    #     segment_client.move_data("hello0.txt", "hello1.txt", strategy="override")
+        segment_client.move_data("hello0.txt", "hello1.txt", strategy="override")
 
-    #     segment_moved = Segment("Segment1", client=dataset_client)
-    #     for data in segment_moved:
-    #         assert data.path != "hello0.txt"
-    #         assert data.label
-    #         if data.path == "hello1.txt":
-    #             assert data.open().read() == b"CONTENT_0"
+        segment_moved = Segment("Segment1", client=dataset_client)
+        for data in segment_moved:
+            assert data.path != "hello0.txt"
+            assert data.label
+            if data.path == "hello1.txt":
+                assert data.open().read() == b"CONTENT_0"
 
-    #     gas_client.delete_dataset(dataset_name)
+        gas_client.delete_dataset(dataset_name)
 
-    # @pytest.mark.xfail(__version__ < "1.9.0", reason="not supported until 1.9.0")
-    # def test_move_data_skip(self, accesskey, url, tmp_path):
-    #     gas_client = GAS(access_key=accesskey, url=url)
-    #     dataset_name = get_dataset_name()
-    #     gas_client.create_dataset(dataset_name)
-    #     dataset = Dataset(name=dataset_name)
-    #     segment = dataset.create_segment("Segment1")
-    #     dataset._catalog = Catalog.loads(CATALOG)
-    #     path = tmp_path / "sub"
-    #     path.mkdir()
-    #     for i in range(10):
-    #         local_path = path / f"hello{i}.txt"
-    #         local_path.write_text(f"CONTENT_{i}")
-    #         data = Data(local_path=str(local_path))
-    #         data.label = Label.loads(LABEL)
-    #         segment.append(data)
+    def test_move_data_skip(self, accesskey, url, tmp_path):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_dataset_name()
+        gas_client.create_dataset(dataset_name)
+        dataset = Dataset(name=dataset_name)
+        segment = dataset.create_segment("Segment1")
+        dataset._catalog = Catalog.loads(CATALOG)
+        path = tmp_path / "sub"
+        path.mkdir()
+        for i in range(10):
+            local_path = path / f"hello{i}.txt"
+            local_path.write_text(f"CONTENT_{i}")
+            data = Data(local_path=str(local_path))
+            data.label = Label.loads(LABEL)
+            segment.append(data)
 
-    #     dataset_client = gas_client.upload_dataset(dataset)
-    #     segment_client = dataset_client.get_segment("Segment1")
+        dataset_client = gas_client.upload_dataset(dataset)
+        segment_client = dataset_client.get_segment("Segment1")
 
-    #     segment_client.move_data("hello0.txt", "hello1.txt", strategy="skip")
+        segment_client.move_data("hello0.txt", "hello1.txt", strategy="skip")
 
-    #     segment_moved = Segment("Segment1", client=dataset_client)
-    #     assert segment_moved[0].path == "hello0.txt"
-    #     assert segment_moved[1].path == "hello1.txt"
-    #     assert segment_moved[0].open().read() == "CONTENT_0"
-    #     assert segment_moved[1].open().read() == "CONTENT_1"
+        segment_moved = Segment("Segment1", client=dataset_client)
+        assert segment_moved[0].path == "hello1.txt"
+        assert segment_moved[0].open().read() == b"CONTENT_1"
 
-    #     gas_client.delete_dataset(dataset_name)
+        gas_client.delete_dataset(dataset_name)
 
 
 class TestCopy:
