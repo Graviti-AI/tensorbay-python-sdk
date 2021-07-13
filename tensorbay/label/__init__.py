@@ -13,7 +13,12 @@ from .label_box import Box2DSubcatalog, Box3DSubcatalog, LabeledBox2D, LabeledBo
 from .label_classification import Classification, ClassificationSubcatalog
 from .label_keypoints import Keypoints2DSubcatalog, LabeledKeypoints2D
 from .label_polygon import LabeledPolygon, PolygonSubcatalog
-from .label_polyline import LabeledPolyline2D, Polyline2DSubcatalog
+from .label_polyline import (
+    LabeledMultiPolyline2D,
+    LabeledPolyline2D,
+    MultiPolyline2DSubcatalog,
+    Polyline2DSubcatalog,
+)
 from .label_sentence import LabeledSentence, SentenceSubcatalog, Word
 from .supports import CategoryInfo, KeypointsInfo
 
@@ -25,17 +30,19 @@ __all__ = [
     "CategoryInfo",
     "Classification",
     "ClassificationSubcatalog",
-    "KeypointsInfo",
+    "Items",
     "Keypoints2DSubcatalog",
+    "KeypointsInfo",
     "Label",
     "LabelType",
     "LabeledBox2D",
     "LabeledBox3D",
     "LabeledKeypoints2D",
+    "LabeledMultiPolyline2D",
     "LabeledPolygon",
     "LabeledPolyline2D",
     "LabeledSentence",
-    "Items",
+    "MultiPolyline2DSubcatalog",
     "PolygonSubcatalog",
     "Polyline2DSubcatalog",
     "SentenceSubcatalog",

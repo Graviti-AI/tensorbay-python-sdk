@@ -42,6 +42,7 @@ class LabelType(TypeEnum):
     BOX3D = "box3d"
     POLYGON = "polygon"
     POLYLINE2D = "polyline2d"
+    MULTI_POLYLINE2D = "multi_polyline2d"
     KEYPOINTS2D = "keypoints2d"
     SENTENCE = "sentence"
 

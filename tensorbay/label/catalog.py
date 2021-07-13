@@ -15,17 +15,18 @@ corresponding to different types of labels.
 .. table:: subcatalog classes
    :widths: auto
 
-   ==================================   ==================================================
-   subcatalog classes                   explaination
-   ==================================   ==================================================
-   :class:`.ClassificationSubcatalog`   subcatalog for classification type of label
-   :class:`.Box2DSubcatalog`            subcatalog for 2D bounding box type of label
-   :class:`.Box3DSubcatalog`            subcatalog for 3D bounding box type of label
-   :class:`.Keypoints2DSubcatalog`      subcatalog for 2D keypoints type of label
-   :class:`.PolygonSubcatalog`          subcatalog for polygon type of label
-   :class:`.Polyline2DSubcatalog`       subcatalog for 2D polyline type of label
-   :class:`.SentenceSubcatalog`         subcatalog for transcripted sentence type of label
-   ==================================   ==================================================
+   ===================================   ==================================================
+   subcatalog classes                    explaination
+   ===================================   ==================================================
+   :class:`.ClassificationSubcatalog`    subcatalog for classification type of label
+   :class:`.Box2DSubcatalog`             subcatalog for 2D bounding box type of label
+   :class:`.Box3DSubcatalog`             subcatalog for 3D bounding box type of label
+   :class:`.Keypoints2DSubcatalog`       subcatalog for 2D keypoints type of label
+   :class:`.PolygonSubcatalog`           subcatalog for polygon type of label
+   :class:`.Polyline2DSubcatalog`        subcatalog for 2D polyline type of label
+   :class:`.MultiPolyline2DSubcatalog`   subcatalog for 2D multiple polyline type of label
+   :class:`.SentenceSubcatalog`          subcatalog for transcripted sentence type of label
+   ===================================   ==================================================
 
 """
 
@@ -38,7 +39,7 @@ from .label_box import Box2DSubcatalog, Box3DSubcatalog
 from .label_classification import ClassificationSubcatalog
 from .label_keypoints import Keypoints2DSubcatalog
 from .label_polygon import PolygonSubcatalog
-from .label_polyline import Polyline2DSubcatalog
+from .label_polyline import MultiPolyline2DSubcatalog, Polyline2DSubcatalog
 from .label_sentence import SentenceSubcatalog
 
 Subcatalogs = Union[
@@ -47,6 +48,7 @@ Subcatalogs = Union[
     Box3DSubcatalog,
     PolygonSubcatalog,
     Polyline2DSubcatalog,
+    MultiPolyline2DSubcatalog,
     Keypoints2DSubcatalog,
     SentenceSubcatalog,
 ]
@@ -97,6 +99,7 @@ class Catalog(ReprMixin, AttrsMixin):
     box3d: Box3DSubcatalog = _attr()
     polygon: PolygonSubcatalog = _attr()
     polyline2d: Polyline2DSubcatalog = _attr()
+    multi_polyline2d: MultiPolyline2DSubcatalog = _attr()
     keypoints2d: Keypoints2DSubcatalog = _attr()
     sentence: SentenceSubcatalog = _attr()
 
