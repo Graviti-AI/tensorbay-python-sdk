@@ -8,7 +8,6 @@
 from typing import TYPE_CHECKING, Any, Dict, Generator, Optional
 
 from ..exception import OperationError, ResourceNotExistError, StatusError
-from ..utility import DefaultValueDeprecated
 from .lazy import PagingList
 from .status import Status
 from .struct import Branch, Commit, Draft, Tag
@@ -182,9 +181,8 @@ class VersionControlClient:
         self._status.check_authority_for_draft()
         self._status.checkout(commit_id=self._commit(title, description, tag))
 
-    @DefaultValueDeprecated("title", since="v1.6.0", removed_in="v1.9.0")
     def create_draft(
-        self, title: Optional[str] = None, description: str = "", branch_name: Optional[str] = None
+        self, title: str, description: str = "", branch_name: Optional[str] = None
     ) -> int:
         """Create a draft.
 
@@ -213,10 +211,8 @@ class VersionControlClient:
                 )
             self._status.check_authority_for_commit()
 
-        post_data: Dict[str, Any] = {"branchName": branch_name}
+        post_data: Dict[str, Any] = {"branchName": branch_name, "title": title}
 
-        if title:
-            post_data["title"] = title
         if description:
             post_data["description"] = description
 
