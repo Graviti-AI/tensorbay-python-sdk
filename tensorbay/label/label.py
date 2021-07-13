@@ -36,7 +36,7 @@ from .label_box import LabeledBox2D, LabeledBox3D
 from .label_classification import Classification
 from .label_keypoints import LabeledKeypoints2D
 from .label_polygon import LabeledPolygon
-from .label_polyline import LabeledPolyline2D
+from .label_polyline import LabeledMultiPolyline2D, LabeledPolyline2D
 from .label_sentence import LabeledSentence
 
 _ERROR_MESSAGE = "The '{attr_name}' label is not provided in this data"
@@ -73,6 +73,7 @@ class Label(ReprMixin, AttrsMixin):
     box3d: List[LabeledBox3D] = _attr()
     polygon: List[LabeledPolygon] = _attr()
     polyline2d: List[LabeledPolyline2D] = _attr()
+    multi_polyline2d: List[LabeledMultiPolyline2D] = _attr()
     keypoints2d: List[LabeledKeypoints2D] = _attr()
     sentence: List[LabeledSentence] = _attr()
 

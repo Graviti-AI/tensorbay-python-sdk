@@ -111,7 +111,7 @@ class AttrsMixin:
         type_ = cls.__annotations__.pop(_ATTRS_BASE, None)
         if type_:
             cls._attrs_base.loader = type_._loads  # pylint: disable=protected-access
-            cls._attrs_base.dumper = type_.dumps
+            cls._attrs_base.dumper = getattr(type_, "_dumps", type_.dumps)
 
         attrs_fields = {}
         for base_class in cls.__bases__:
