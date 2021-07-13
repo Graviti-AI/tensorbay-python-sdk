@@ -29,7 +29,7 @@ else:
         return hypot(*((p1 - p2) for p1, p2 in zip(point1, point2)))
 
 
-class Polyline2D(PointList2D[Vector2D]):
+class Polyline2D(PointList2D[Vector2D]):  # pylint: disable=too-many-ancestors
     """This class defines the concept of Polyline2D.
 
     :class:`Polyline2D` contains the coordinates of the vertexes of the polyline
@@ -207,7 +207,7 @@ class Polyline2D(PointList2D[Vector2D]):
         return common_loads(cls, contents)
 
 
-class MultiPolyline2D(MultiPointList2D[Polyline2D]):
+class MultiPolyline2D(MultiPointList2D[Polyline2D]):  # pylint: disable=too-many-ancestors
     """This class defines the concept of MultiPolyline2D.
 
     :class:`MultiPolyline2D` contains a list of polylines.
@@ -268,7 +268,7 @@ class MultiPolyline2D(MultiPointList2D[Polyline2D]):
             >>> multipolyline.dumps()
             [
                 [{'x': 1, 'y': 1}, {'x': 1, 'y': 2}, {'x': 2, 'y': 2}],
-                [{'x': 2, 'y': 3}, {'x': 3, 'y': 5}
+                [{'x': 2, 'y': 3}, {'x': 3, 'y': 5}]
             ]
 
         """

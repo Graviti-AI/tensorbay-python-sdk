@@ -40,7 +40,7 @@ class LabelType(TypeEnum):
     CLASSIFICATION = "classification"
     BOX2D = "box2d"
     BOX3D = "box3d"
-    POLYGON2D = "polygon2d"
+    POLYGON = "polygon"
     POLYLINE2D = "polyline2d"
     KEYPOINTS2D = "keypoints2d"
     SENTENCE = "sentence"

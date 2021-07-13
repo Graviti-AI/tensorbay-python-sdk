@@ -12,7 +12,7 @@ from .. import (
     Catalog,
     ClassificationSubcatalog,
     Keypoints2DSubcatalog,
-    Polygon2DSubcatalog,
+    PolygonSubcatalog,
     Polyline2DSubcatalog,
     SentenceSubcatalog,
 )
@@ -21,7 +21,7 @@ _CATALOG_DICT = {
     "classification": ClassificationSubcatalog,
     "box2d": Box2DSubcatalog,
     "box3d": Box3DSubcatalog,
-    "polygon2d": Polygon2DSubcatalog,
+    "polygon": PolygonSubcatalog,
     "polyline2d": Polyline2DSubcatalog,
     "keypoints2d": Keypoints2DSubcatalog,
     "sentence": SentenceSubcatalog,
@@ -33,7 +33,7 @@ def catalog_contents(categories_catalog_data, keypoints_info_data):
     return {
         "BOX2D": {},
         "BOX3D": {},
-        "POLYGON2D": {},
+        "POLYGON": {},
         "POLYLINE2D": {},
         "SENTENCE": {},
         "CLASSIFICATION": {"categories": categories_catalog_data},
@@ -69,7 +69,7 @@ class TestCatalog:
         catalog = Catalog()
         catalog.box2d = Box2DSubcatalog()
         catalog.box3d = Box3DSubcatalog()
-        catalog.polygon2d = Polygon2DSubcatalog()
+        catalog.polygon = PolygonSubcatalog()
         catalog.polyline2d = Polyline2DSubcatalog()
         catalog.sentence = SentenceSubcatalog()
 
