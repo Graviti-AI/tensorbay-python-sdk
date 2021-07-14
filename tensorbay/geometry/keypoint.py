@@ -16,7 +16,7 @@ such as the coordinates and visible status(optional).
 from typing import Dict, Iterable, List, Optional, Type, TypeVar
 
 from ..utility import common_loads
-from .polygon import PointList2D
+from .point_list import PointList2D
 from .vector import Vector2D
 
 _T = TypeVar("_T", bound=Vector2D)
