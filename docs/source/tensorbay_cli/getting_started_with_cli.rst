@@ -5,11 +5,12 @@
 The TensorBay Command Line Interface is a tool to operate on datasets.
 It supports Windows, Linux, and Mac platforms.
 
-TensorBay CLI can:
+TensorBay CLI supports:
 
- - Create and delete dataset.
- - List data, segments and datasets on TensorBay.
- - Upload data to TensorBay.
+ - list, create and delete operations for dataset, segment and data.
+ - uploading data to TensorBay.
+ - version control operations with branch, tag, draft and commit.
+ - showing commit logs of dataset on TensorBay.
 
 **************
  Installation
