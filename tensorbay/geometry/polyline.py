@@ -17,7 +17,7 @@ from sys import version_info
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Type, TypeVar
 
 from ..utility import common_loads
-from .polygon import MultiPointList2D, PointList2D
+from .point_list import MultiPointList2D, PointList2D
 from .vector import Vector2D
 
 if version_info >= (3, 8):
