@@ -10,10 +10,10 @@ and provides :meth:`Polygon.area` to calculate the area of the polygon.
 
 """
 
-from typing import Dict, List, Type, TypeVar
+from typing import Dict, Iterable, List, Optional, Type, TypeVar
 
 from ..utility import common_loads
-from .point_list import PointList2D
+from .point_list import MultiPointList2D, PointList2D
 from .vector import Vector2D
 
 
@@ -82,3 +82,72 @@ class Polygon(PointList2D[Vector2D]):  # pylint: disable=too-many-ancestors
             x2, y2 = self._data[i]
             area += x1 * y2 - x2 * y1
         return area / 2
+
+
+class MultiPolygon(MultiPointList2D[Polygon]):  # pylint: disable=too-many-ancestors
+    """This class defines the concept of MultiPolygon.
+
+    :class:`MultiPolygon` contains a list of polygons.
+
+    Arguments:
+        polygons: A list of polygons.
+
+    Examples:
+        >>> MultiPolygon([[[1.0, 4.0], [2.0, 3.7], [7.0, 4.0]],
+                          [[5.0, 7.0], [6.0, 7.0], [9.0, 8.0]]])
+        MultiPolygon [
+            Polygon [...]
+            Polygon [...]
+            ...
+        ]
+
+    """
+
+    _P = TypeVar("_P", bound="MultiPolygon")
+    _ElementType = Polygon
+
+    def __init__(self, polygons: Optional[Iterable[Iterable[Iterable[float]]]]):
+        super().__init__(polygons)
+
+    @classmethod
+    def loads(cls: Type[_P], contents: List[List[Dict[str, float]]]) -> _P:
+        """Loads a :class:`MultiPolygon` from the given contents.
+
+        Arguments:
+            contents: A list of dict lists containing
+                the coordinates of the vertices of the polygon list.
+
+        Returns:
+            The loaded :class:`MultiPolyline2D` object.
+
+        Examples:
+            >>> contents = [[{'x': 1.0, 'y': 4.0}, {'x': 2.0, 'y': 3.7}, {'x': 7.0, 'y': 4.0}],
+                            [{'x': 5.0, 'y': 7.0}, {'x': 6.0, 'y': 7.0}, {'x': 9.0, 'y': 8.0}]]
+            >>> multipolygon = MultiPolygon.loads(contents)
+            >>> multipolygon
+            MultiPolygon [
+                Polygon [...]
+                Polygon [...]
+                ...
+            ]
+
+        """
+        return common_loads(cls, contents)
+
+    def dumps(self) -> List[List[Dict[str, float]]]:
+        """Dumps a :class:`MultiPolygon` into a polygon list.
+
+        Returns:
+            All the information of the :class:`MultiPolygon`.
+
+        Examples:
+            >>> multipolygon = MultiPolygon([[[1.0, 4.0], [2.0, 3.7], [7.0, 4.0]],
+            >>>                             [[5.0, 7.0], [6.0, 7.0], [9.0, 8.0]]])
+            >>> multipolygon.dumps()
+            [
+                [{'x': 1.0, 'y': 4.0}, {'x': 2.0, 'y': 3.7}, {'x': 7.0, 'y': 4.0}],
+                [{'x': 5,0, 'y': 7.0}, {'x': 6.0, 'y': 7.0}, {'x': 9.0, 'y': 8.0}]
+            ]
+
+        """
+        return self._dumps()
