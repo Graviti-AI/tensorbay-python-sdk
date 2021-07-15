@@ -14,7 +14,7 @@ which is often used for CV tasks such as semantic segmentation.
 
 from typing import Any, Dict, Iterable, Optional, Type, TypeVar
 
-from ..geometry import Polygon
+from ..geometry import MultiPolygon, Polygon
 from ..utility import ReprType, SubcatalogTypeRegister, TypeRegister, attr_base, common_loads
 from .basic import LabelType, SubcatalogBase, _LabelBase
 from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
@@ -74,6 +74,68 @@ class PolygonSubcatalog(  # pylint: disable=too-many-ancestors
         >>> polygon_subcatalog.attributes = attributes
         >>> polygon_subcatalog
         PolygonSubcatalog(
+          (is_tracking): True,
+          (categories): NameList [...],
+          (attributes): NameList [...]
+        )
+
+    """
+
+    def __init__(self, is_tracking: bool = False) -> None:
+        SubcatalogBase.__init__(self)
+        IsTrackingMixin.__init__(self, is_tracking)
+
+
+@SubcatalogTypeRegister(LabelType.MULTI_POLYGON)
+class MultiPolygonSubcatalog(  # pylint: disable=too-many-ancestors
+    SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin
+):
+    """This class defines the subcatalog for multiple polygon type of labels.
+
+    Arguments:
+        is_tracking: A boolean value indicates whether the corresponding
+            subcatalog contains tracking information.
+
+    Attributes:
+        description: The description of the entire multiple polygon subcatalog.
+        categories: All the possible categories in the corresponding dataset
+            stored in a :class:`~tensorbay.utility.name.NameList`
+            with the category names as keys
+            and the :class:`~tensorbay.label.supports.CategoryInfo` as values.
+        category_delimiter: The delimiter in category values indicating parent-child relationship.
+        attributes: All the possible attributes in the corresponding dataset
+            stored in a :class:`~tensorbay.utility.name.NameList`
+            with the attribute names as keys
+            and the :class:`~tensorbay.label.attribute.AttributeInfo` as values.
+        is_tracking: Whether the Subcatalog contains tracking information.
+
+    Examples:
+        *Initialization Method 1:* Init from ``MultiPolygonSubcatalog.loads()`` method.
+
+        >>> catalog = {
+        ...     "MULTI_POLYGON": {
+        ...         "isTracking": True,
+        ...         "categories": [{"name": "0"}, {"name": "1"}],
+        ...         "attributes": [{"name": "gender", "enum": ["male", "female"]}],
+        ...     }
+        ... }
+        >>> MultiPolygonSubcatalog.loads(catalog["MULTI_POLYGON"])
+        MultiPolygonSubcatalog(
+          (is_tracking): True,
+          (categories): NameList [...],
+          (attributes): NameList [...]
+        )
+
+        *Initialization Method 2:* Init an empty MultiPolygonSubcatalog
+        and then add the attributes.
+
+        >>> from tensorbay.label import CategoryInfo, AttributeInfo
+        >>> multi_polygon_subcatalog = MultiPolygonSubcatalog()
+        >>> multi_polygon_subcatalog.is_tracking = True
+        >>> multi_polygon_subcatalog.add_category("a")
+        >>> multi_polygon_subcatalog.add_attribute("gender", enum=["female", "male"])
+        >>> multi_polygon_subcatalog
+        MultiPolyline2DSubcatalog(
           (is_tracking): True,
           (categories): NameList [...],
           (attributes): NameList [...]
@@ -194,6 +256,125 @@ class LabeledPolygon(_LabelBase, Polygon):  # pylint: disable=too-many-ancestors
                 'attributes': {'key': 'value'},
                 'instance': '123',
                 'polygon': [{'x': 1, 'y': 2}, {'x': 2, 'y': 3}, {'x': 1, 'y': 3}],
+            }
+
+        """
+        return self._dumps()
+
+
+@TypeRegister(LabelType.MULTI_POLYGON)
+class LabeledMultiPolygon(  # type: ignore[misc]
+    _LabelBase, MultiPolygon
+):  # pylint: disable=too-many-ancestors
+    """This class defines the concept of multiple polygon label.
+
+    :class:`LabeledMultiPolygon` is the multipolygon type of label,
+    which is often used for CV tasks such as semantic segmentation.
+
+    Arguments:
+        points: A list of 2D points representing the vertices of the polygon.
+        category: The category of the label.
+        attributes: The attributs of the label.
+        instance: The instance id of the label.
+
+    Attributes:
+        category: The category of the label.
+        attributes: The attributes of the label.
+        instance: The instance id of the label.
+
+    Examples:
+        >>> LabeledMultiPolygon(
+        ...     [[(1.0, 2.0), (2.0, 3.0), (1.0, 3.0)], [(1.0, 4.0), (2.0, 3.0), (1.0, 8.0)]],
+        ...     category = "example",
+        ...     attributes = {"key": "value"},
+        ...     instance = "12345",
+        ... )
+        LabeledMultiPolygon [
+            Polygon [...],
+            Polygon [...]
+            ](
+              (category): 'example',
+              (attributes): {...},
+              (instance): '12345'
+            )
+
+    """
+
+    _T = TypeVar("_T", bound="LabeledMultiPolygon")
+    _repr_type = ReprType.SEQUENCE
+    _repr_attrs = _LabelBase._repr_attrs
+    _attrs_base: MultiPolygon = attr_base(key="multiPolygon")
+
+    def __init__(
+        self,
+        polygons: Optional[Iterable[Iterable[Iterable[float]]]] = None,
+        *,
+        category: Optional[str] = None,
+        attributes: Optional[Dict[str, Any]] = None,
+        instance: Optional[str] = None,
+    ):
+        MultiPolygon.__init__(self, polygons=polygons)
+        _LabelBase.__init__(self, category, attributes, instance)
+
+    @classmethod
+    def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:  # type: ignore[override]
+        """Loads a LabeledMultiPolygon from a list of dict containing the information of the label.
+
+        Arguments:
+            contents: A dict containing the information of the multipolygon label.
+
+        Returns:
+            The loaded :class:`LabeledMultiPolygon` object.
+
+        Examples:
+            >>> contents = {
+            ...     "multiPolygon": [
+            ...         [
+            ...             {"x": 1.0, "y": 2.0},
+            ...             {"x": 2.0, "y": 3.0},
+            ...             {"x": 1.0, "y": 3.0},
+            ...        ],
+            ...         [{"x": 1.0, "y": 4.0}, {"x": 2.0, "y": 3.0}, {"x": 1.0, "y": 8.0}],
+            ...     ],
+            ...     "category": "example",
+            ...     "attributes": {"key": "value"},
+            ...     "instance": "12345",
+            ... }
+            >>> LabeledMultiPolygon.loads(contents)
+            LabeledMultiPolygon [
+              Polygon [...],
+              Polygon [...]
+            ](
+              (category): 'example',
+              (attributes): {...},
+              (instance): '12345'
+            )
+
+        """
+        return common_loads(cls, contents)
+
+    def dumps(self) -> Dict[str, Any]:  # type: ignore[override]
+        """Dumps the current multipolygon label into a dict.
+
+        Returns:
+            A dict containing all the information of the multipolygon label.
+
+        Examples:
+            >>> labeledmultipolygon = LabeledMultiPolygon(
+            ...     [[(1, 2), (2, 3), (1, 3)],[(1, 2), (2, 3), (1, 3)]],
+            ...     category = "example",
+            ...     attributes = {"key": "value"},
+            ...     instance = "123",
+            ... )
+            >>> labeledmultipolygon.dumps()
+            {
+                'category': 'example',
+                'attributes': {'key': 'value'},
+                'instance': '123',
+                'multiPolygon': [
+                    [{'x': 1, 'y': 2}, {'x': 2, 'y': 3}, {'x': 1, 'y': 3}],
+                    [{"x": 1.0, "y": 4.0}, {"x": 2.0, "y": 3.0}, {"x": 1.0, "y": 8.0}]
+                ]
             }
 
         """

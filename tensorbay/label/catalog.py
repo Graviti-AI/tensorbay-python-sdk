@@ -24,6 +24,7 @@ corresponding to different types of labels.
    :class:`.Keypoints2DSubcatalog`       subcatalog for 2D keypoints type of label
    :class:`.PolygonSubcatalog`           subcatalog for polygon type of label
    :class:`.Polyline2DSubcatalog`        subcatalog for 2D polyline type of label
+   :class:`.MultiPolygonSubcatalog`      subcatalog for multiple polygon type of label
    :class:`.MultiPolyline2DSubcatalog`   subcatalog for 2D multiple polyline type of label
    :class:`.SentenceSubcatalog`          subcatalog for transcripted sentence type of label
    ===================================   ==================================================
@@ -38,7 +39,7 @@ from ..utility import AttrsMixin, ReprMixin, ReprType, attr, common_loads, upper
 from .label_box import Box2DSubcatalog, Box3DSubcatalog
 from .label_classification import ClassificationSubcatalog
 from .label_keypoints import Keypoints2DSubcatalog
-from .label_polygon import PolygonSubcatalog
+from .label_polygon import MultiPolygonSubcatalog, PolygonSubcatalog
 from .label_polyline import MultiPolyline2DSubcatalog, Polyline2DSubcatalog
 from .label_sentence import SentenceSubcatalog
 
@@ -50,6 +51,7 @@ Subcatalogs = Union[
     Polyline2DSubcatalog,
     MultiPolyline2DSubcatalog,
     Keypoints2DSubcatalog,
+    MultiPolygonSubcatalog,
     SentenceSubcatalog,
 ]
 
@@ -101,6 +103,7 @@ class Catalog(ReprMixin, AttrsMixin):
     polyline2d: Polyline2DSubcatalog = _attr()
     multi_polyline2d: MultiPolyline2DSubcatalog = _attr()
     keypoints2d: Keypoints2DSubcatalog = _attr()
+    multi_polygon: MultiPolygonSubcatalog = _attr()
     sentence: SentenceSubcatalog = _attr()
 
     def __bool__(self) -> bool:

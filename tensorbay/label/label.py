@@ -35,7 +35,7 @@ from .basic import LabelType
 from .label_box import LabeledBox2D, LabeledBox3D
 from .label_classification import Classification
 from .label_keypoints import LabeledKeypoints2D
-from .label_polygon import LabeledPolygon
+from .label_polygon import LabeledMultiPolygon, LabeledPolygon
 from .label_polyline import LabeledMultiPolyline2D, LabeledPolyline2D
 from .label_sentence import LabeledSentence
 
@@ -75,6 +75,7 @@ class Label(ReprMixin, AttrsMixin):
     polyline2d: List[LabeledPolyline2D] = _attr()
     multi_polyline2d: List[LabeledMultiPolyline2D] = _attr()
     keypoints2d: List[LabeledKeypoints2D] = _attr()
+    multi_polygon: List[LabeledMultiPolygon] = _attr()
     sentence: List[LabeledSentence] = _attr()
 
     def __bool__(self) -> bool:

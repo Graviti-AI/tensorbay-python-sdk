@@ -44,6 +44,7 @@ class LabelType(TypeEnum):
     POLYLINE2D = "polyline2d"
     MULTI_POLYLINE2D = "multi_polyline2d"
     KEYPOINTS2D = "keypoints2d"
+    MULTI_POLYGON = "multi_polygon"
     SENTENCE = "sentence"
 
     @property
