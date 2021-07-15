@@ -205,7 +205,9 @@ def draft(
 
 
 @command(
-    synopsis=("$ gas commit tb:<dataset_name>#<draft_number> [-m <message>]      # Commit a draft.")
+    synopsis=(
+        "$ gas commit tb:<dataset_name>#<draft_number> [-m <message>]      # Commit a draft.",
+    )
 )
 @click.argument("tbrn", type=str)
 @click.option(
