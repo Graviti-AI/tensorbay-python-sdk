@@ -1,0 +1,32 @@
+{
+    "BOX2D": {
+        "categories": [
+            { "name": "aeroplane" },
+            { "name": "bicycle" },
+            { "name": "bird" },
+            { "name": "boat" },
+            { "name": "bottle" },
+            { "name": "bus" },
+            { "name": "car" },
+            { "name": "cat" },
+            { "name": "chair" },
+            { "name": "cow" },
+            { "name": "diningtable" },
+            { "name": "dog" },
+            { "name": "horse" },
+            { "name": "motorbike" },
+            { "name": "person" },
+            { "name": "pottedplant" },
+            { "name": "sheep" },
+            { "name": "sofa" },
+            { "name": "train" },
+            { "name": "tvmonitor" }
+        ],
+        "attributes": [
+            { "name": "difficult", "type": "boolean" },
+            { "name": "occluded", "type": "boolean" },
+            { "name": "pose", "enum": ["Frontal", "Left", "Rear", "Right", "Unspecified"] },
+            { "name": "truncated", "type": "boolean" }
+        ]
+    }
+}
