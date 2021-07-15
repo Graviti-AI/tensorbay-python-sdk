@@ -80,7 +80,7 @@ CLI: Create a Draft
 
 .. code:: html
 
-   $ gas draft tb:<dataset_name> [-t <title>]
+   $ gas draft tb:<dataset_name> [-m <message>]
 
 
 CLI: List Drafts
