@@ -86,3 +86,11 @@ Split ``trainval`` segment into ``train`` and ``val``:
 
    The data storage space will only be calculated once when a segment is copied.
 
+.. note::
+
+  TensorBay SDK supports three strategies to solve the conflict when the target segment/data already exists,
+  which can be set as an keyword argument in the above-mentioned functions.
+
+    - abort(default): abort the process by raising ResponseSystemError.
+    - skip: skip moving or copying segment/data.
+    - override: override the whole target segment/data with the source segment/data.
