@@ -230,7 +230,7 @@ Create a draft with a title.
 
 .. code:: html
 
-   $ gas draft tb:<dataset_name> [-t <title>]
+   $ gas draft tb:<dataset_name> [-m <message>]
 
 List the drafts of a dataset.
 
