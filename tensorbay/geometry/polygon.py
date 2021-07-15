@@ -94,7 +94,7 @@ class MultiPolygon(MultiPointList2D[Polygon]):  # pylint: disable=too-many-ances
 
     Examples:
         >>> MultiPolygon([[[1.0, 4.0], [2.0, 3.7], [7.0, 4.0]],
-                          [[5.0, 7.0], [6.0, 7.0], [9.0, 8.0]]])
+        ...               [[5.0, 7.0], [6.0, 7.0], [9.0, 8.0]]])
         MultiPolygon [
             Polygon [...]
             Polygon [...]
@@ -122,7 +122,7 @@ class MultiPolygon(MultiPointList2D[Polygon]):  # pylint: disable=too-many-ances
 
         Examples:
             >>> contents = [[{'x': 1.0, 'y': 4.0}, {'x': 2.0, 'y': 3.7}, {'x': 7.0, 'y': 4.0}],
-                            [{'x': 5.0, 'y': 7.0}, {'x': 6.0, 'y': 7.0}, {'x': 9.0, 'y': 8.0}]]
+            ...             [{'x': 5.0, 'y': 7.0}, {'x': 6.0, 'y': 7.0}, {'x': 9.0, 'y': 8.0}]]
             >>> multipolygon = MultiPolygon.loads(contents)
             >>> multipolygon
             MultiPolygon [
@@ -142,7 +142,7 @@ class MultiPolygon(MultiPointList2D[Polygon]):  # pylint: disable=too-many-ances
 
         Examples:
             >>> multipolygon = MultiPolygon([[[1.0, 4.0], [2.0, 3.7], [7.0, 4.0]],
-            >>>                             [[5.0, 7.0], [6.0, 7.0], [9.0, 8.0]]])
+            ...                             [[5.0, 7.0], [6.0, 7.0], [9.0, 8.0]]])
             >>> multipolygon.dumps()
             [
                 [{'x': 1.0, 'y': 4.0}, {'x': 2.0, 'y': 3.7}, {'x': 7.0, 'y': 4.0}],

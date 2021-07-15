@@ -14,11 +14,11 @@ MULTI_POLYLINE2D_CATALOG = {
     "categories": [
         {
             "name": "0",
-            "description": "This is an exmaple of test",
+            "description": "This is an example of test",
         },
         {
             "name": "1",
-            "description": "This is an exmaple of test",
+            "description": "This is an example of test",
         },
     ],
     "attributes": [
@@ -26,8 +26,26 @@ MULTI_POLYLINE2D_CATALOG = {
         {"name": "occluded", "type": "integer", "minimum": 1, "maximum": 5},
     ],
 }
+MULTI_POLYGON_CATALOG = {
+    "isTracking": True,
+    "categories": [
+        {
+            "name": "123",
+            "description": "This is another example of test",
+        },
+        {
+            "name": "234",
+            "description": "This is another example of test",
+        },
+    ],
+    "attributes": [
+        {"name": "gender", "enum": ["male", "female"]},
+        {"name": "occluded", "type": "integer", "minimum": 2, "maximum": 8},
+    ],
+}
 CATALOG_CONTENTS = {
     "MULTI_POLYLINE2D": MULTI_POLYLINE2D_CATALOG,
+    "MULTI_POLYGON": MULTI_POLYGON_CATALOG,
 }
 
 MULTI_POLYLINE2D_LABEL = [
@@ -41,8 +59,24 @@ MULTI_POLYLINE2D_LABEL = [
         ],
     }
 ]
+MULTI_POLYGON_LABEL = [
+    {
+        "multiPolygon": [
+            [
+                {"x": 1.0, "y": 2.0},
+                {"x": 2.0, "y": 3.0},
+                {"x": 1.0, "y": 3.0},
+            ],
+            [{"x": 1.0, "y": 4.0}, {"x": 2.0, "y": 3.0}, {"x": 1.0, "y": 8.0}],
+        ],
+        "category": "example",
+        "attributes": {"key": "value"},
+        "instance": "123",
+    }
+]
 LABEL = {
     "MULTI_POLYLINE2D": MULTI_POLYLINE2D_LABEL,
+    "MULTI_POLYGON": MULTI_POLYGON_LABEL,
 }
 
 

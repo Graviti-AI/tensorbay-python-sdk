@@ -5,8 +5,22 @@
 
 import pytest
 
-from ...geometry import Vector2D
-from .. import LabeledPolygon, PolygonSubcatalog
+from ...geometry import Polygon, Vector2D
+from .. import LabeledMultiPolygon, LabeledPolygon, MultiPolygonSubcatalog, PolygonSubcatalog
+
+_DATA_LABELEDMULTIPOLYGON = {
+    "multiPolygon": [
+        [
+            {"x": 1.0, "y": 2.0},
+            {"x": 2.0, "y": 3.0},
+            {"x": 1.0, "y": 3.0},
+        ],
+        [{"x": 1.0, "y": 4.0}, {"x": 2.0, "y": 3.0}, {"x": 1.0, "y": 8.0}],
+    ],
+    "category": "example",
+    "attributes": {"key": "value"},
+    "instance": "123",
+}
 
 
 @pytest.fixture
@@ -105,6 +119,81 @@ class TestPolygonSubcatalog:
         subcatalog.attributes = attributes
 
         # isTracking will not dumps out when isTracking is false
+        if not subcatalog_polygon["isTracking"]:
+            del subcatalog_polygon["isTracking"]
+
+        assert subcatalog.dumps() == subcatalog_polygon
+
+
+class TestLabeledMultiPolygon:
+    def test_init(self):
+        labeledmultipolygon = LabeledMultiPolygon(
+            [[(1.0, 2.0), (2.0, 3.0), (1.0, 3.0)], [(1.0, 4.0), (2.0, 3.0), (1.0, 8.0)]],
+            category="example",
+            attributes={"key": "value"},
+            instance="123",
+        )
+        assert labeledmultipolygon[0] == Polygon([(1.0, 2.0), (2.0, 3.0), (1.0, 3.0)])
+        assert labeledmultipolygon.category == "example"
+        assert labeledmultipolygon.attributes == {"key": "value"}
+        assert labeledmultipolygon.instance == "123"
+
+    def test_loads(self):
+        labeledmultipolygon = LabeledMultiPolygon.loads(_DATA_LABELEDMULTIPOLYGON)
+        assert labeledmultipolygon == LabeledMultiPolygon(
+            [[(1.0, 2.0), (2.0, 3.0), (1.0, 3.0)], [(1.0, 4.0), (2.0, 3.0), (1.0, 8.0)]],
+            category="example",
+            attributes={"key": "value"},
+            instance="123",
+        )
+
+    def test_dumps(self):
+        labeledmultipolygon = LabeledMultiPolygon(
+            [[(1.0, 2.0), (2.0, 3.0), (1.0, 3.0)], [(1.0, 4.0), (2.0, 3.0), (1.0, 8.0)]],
+            category="example",
+            attributes={"key": "value"},
+            instance="123",
+        )
+        assert labeledmultipolygon.dumps() == _DATA_LABELEDMULTIPOLYGON
+
+
+class TestMultiPolygonSubcatalog:
+    def test_init(self, is_tracking_data):
+        multi_polygon_subcatalog = MultiPolygonSubcatalog(is_tracking_data)
+        assert multi_polygon_subcatalog.is_tracking == is_tracking_data
+
+    def test_eq(self):
+        contents1 = {
+            "isTracking": True,
+            "categories": [{"name": "0"}, {"name": "1"}],
+            "attributes": [{"name": "gender", "enum": ["male", "female"]}],
+        }
+        contents2 = {
+            "isTracking": False,
+            "categories": [{"name": "0"}, {"name": "1"}],
+            "attributes": [{"name": "gender", "enum": ["male", "female"]}],
+        }
+        multi_polygon_subcatalog1 = MultiPolygonSubcatalog.loads(contents1)
+        multi_polygon_subcatalog2 = MultiPolygonSubcatalog.loads(contents1)
+        multi_polygon_subcatalog3 = MultiPolygonSubcatalog.loads(contents2)
+
+        assert multi_polygon_subcatalog1 == multi_polygon_subcatalog2
+        assert multi_polygon_subcatalog1 != multi_polygon_subcatalog3
+
+    def test_loads(self, categories, attributes, subcatalog_polygon):
+        subcatalog = MultiPolygonSubcatalog.loads(subcatalog_polygon)
+
+        assert subcatalog.is_tracking == subcatalog_polygon["isTracking"]
+        assert subcatalog.categories == categories
+        assert subcatalog.attributes == attributes
+
+    def test_dumps(self, categories, attributes, subcatalog_polygon):
+        subcatalog = MultiPolygonSubcatalog()
+        subcatalog.is_tracking = subcatalog_polygon["isTracking"]
+        subcatalog.categories = categories
+        subcatalog.attributes = attributes
+
+        # isTracking will not dump out when isTracking is false
         if not subcatalog_polygon["isTracking"]:
             del subcatalog_polygon["isTracking"]
 
