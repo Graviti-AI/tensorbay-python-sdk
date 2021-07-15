@@ -44,6 +44,7 @@ from .THCHS30 import THCHS30
 from .THUCNews import THUCNews
 from .TLR import TLR
 from .UAVDT import UAVDT
+from .VOC2012Detection import VOC2012Detection
 from .WIDER_FACE import WIDER_FACE
 
 __all__ = [
@@ -91,4 +92,5 @@ __all__ = [
     "UAVDT",
     "WIDER_FACE",
     "COVID_CT",
+    "VOC2012Detection",
 ]
