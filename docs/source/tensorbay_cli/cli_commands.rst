@@ -220,6 +220,7 @@ Remove a file.
 
     $ gas rm tb:<dataset_name>#<draft_number>:<segment_name>://<remote_path>
 
+
 ***********
  gas draft
 ***********
@@ -237,6 +238,18 @@ List the drafts of a dataset.
 .. code:: html
 
    $ gas draft -l tb:<dataset_name>
+
+Edit the draft of a dataset.
+
+.. code:: html
+
+   $ gas draft -e tb:<dataset_name>#<draft_number> [-m <message>]
+
+Close the draft of a dataset.
+
+.. code:: html
+
+   $ gas draft -c tb:<dataset_name>#<draft_number>
 
 
 ***********
