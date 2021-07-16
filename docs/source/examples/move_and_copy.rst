@@ -75,7 +75,7 @@ segments to ``abyssinian`` segment.
 Split ``trainval`` segment into ``train`` and ``val``:
 
 #. Extract 500 data from ``trainval`` to ``val`` segment.
-#. move ``trainval`` to ``train``.
+#. Move ``trainval`` to ``train``.
 
 .. literalinclude:: ../../../docs/code/move_and_copy.py
    :language: python
