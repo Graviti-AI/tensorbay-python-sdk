@@ -7,6 +7,7 @@ import pytest
 from quaternion import quaternion
 
 from ...geometry import Transform3D, Vector3D
+from ...utility import allclose
 from .. import Box2DSubcatalog, Box3DSubcatalog, LabeledBox2D, LabeledBox3D
 
 
@@ -156,13 +157,16 @@ class TestLabeledBox3D:
             instance="12345",
         )
 
-        assert labeledbox3d.__rmul__(quaternion_1) == LabeledBox3D(
-            size=size,
-            translation=[1.7999999999999996, 2, 2.6],
-            rotation=[-2, 1, 4, -3],
-            category="cat",
-            attributes={"gender": "male"},
-            instance="12345",
+        assert allclose(
+            labeledbox3d.__rmul__(quaternion_1),
+            LabeledBox3D(
+                size=size,
+                translation=[1.7999999999999996, 2, 2.6],
+                rotation=[-2, 1, 4, -3],
+                category="cat",
+                attributes={"gender": "male"},
+                instance="12345",
+            ),
         )
 
         assert labeledbox3d.__rmul__(1) == NotImplemented

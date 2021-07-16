@@ -10,6 +10,7 @@
 :class:`Field` is a class describing the attr related fields.
 
 """
+from math import isclose as math_isclose
 from sys import version_info
 from typing import (
     Any,
@@ -64,6 +65,7 @@ class Field:  # pylint: disable=too-few-public-methods, too-many-instance-attrib
     ) -> None:
         self.loader: _Callable
         self.dumper: _Callable
+        self.allclose: Callable[[Any, Any, float, float], bool]
 
         self.is_dynamic = is_dynamic
         self.default = default
@@ -94,6 +96,7 @@ class BaseField:  # pylint: disable=too-few-public-methods
         self.loader: _Callable
         self.dumper: _Callable
         self.key = key
+        self.allclose: Callable[[Any, Any, float, float], bool]
 
 
 class AttrsMixin:
@@ -109,6 +112,7 @@ class AttrsMixin:
 
     def __init_subclass__(cls) -> None:
         type_ = cls.__annotations__.pop(_ATTRS_BASE, None)
+        support_allclose = getattr(cls, "_support_allclose", False)
         if type_:
             cls._attrs_base.loader = type_._loads  # pylint: disable=protected-access
             cls._attrs_base.dumper = getattr(type_, "_dumps", type_.dumps)
@@ -122,6 +126,8 @@ class AttrsMixin:
             field = getattr(cls, name, None)
             if isinstance(field, Field):
                 field.loader, field.dumper = _get_operators(type_)
+                if support_allclose:
+                    field.allclose = _get_allclose(type_)
                 if hasattr(field, "key_converter"):
                     field.key = field.key_converter(name)
                 attrs_fields[name] = field
@@ -199,6 +205,32 @@ class AttrsMixin:
 
             _key_dumper(field.key, contents, field.dumper(value))
         return contents
+
+    def _allclose(self, other: object, *, rel_tol: float = 1e-09, abs_tol: float = 0.0) -> bool:
+        """Determine whether this instance is close to another in value.
+
+        Arguments:
+            other: The other instance to compare.
+            rel_tol: Maximum difference for being considered "close", relative to the
+                     magnitude of the input values
+            abs_tol: Maximum difference for being considered "close", regardless of the
+                     magnitude of the input values
+
+        Returns:
+            A bool value indicating whether this instance is close to another.
+
+        """
+        result = True
+
+        for name, field in self._attrs_fields.items():
+            if not hasattr(self, name):
+                continue
+
+            result = result and field.allclose(  # type: ignore[call-arg]
+                getattr(self, name), getattr(other, name), rel_tol=rel_tol, abs_tol=abs_tol
+            )
+
+        return result
 
 
 def attr(
@@ -290,6 +322,43 @@ def _get_origin_in_3_6(annotation: Any) -> Any:
 
 
 _get_origin = _get_origin_in_3_6 if version_info < (3, 7) else _get_origin_in_3_7
+
+
+def _get_allclose(annotation: Any) -> Callable[[Any, Any, float, float], bool]:
+    """Get attr allclose methods by annotations.
+
+     AttrsMixin has three operating types which are classified by attr annotation.
+        1. builtin types, like str, int, None
+        2. tensorbay custom class, like tensorbay.label.Classification
+        3. tensorbay custom class list or NameList, like List[tensorbay.label.LabeledBox2D]
+
+    Arguments:
+        annotation: Type of the attr.
+
+    Returns:
+        The ``_allclose`` methods of the annotation.
+
+    """
+    origin = _get_origin(annotation)
+    if isinstance(origin, type) and issubclass(origin, Sequence):
+        type_ = annotation.__args__[0]
+        return lambda self, other, rel_tol=1e-09, abs_tol=0.0: all(  # type: ignore[misc]
+            _get_allclose(type_)(i, j, rel_tol=rel_tol, abs_tol=abs_tol)  # type: ignore[call-arg]
+            for i, j in zip(self, other)
+        )
+
+    type_ = annotation
+
+    mod = getattr(type_, "__module__", None)
+    if mod in _BUILTINS:
+        if type_ in (int, float):
+            return math_isclose  # type: ignore[return-value]
+        return _eq_allclose  # type: ignore[return-value]
+    return type_._allclose  # type: ignore[no-any-return]  # pylint: disable=protected-access
+
+
+def _eq_allclose(object_1: object, object_2: object, **_: float) -> bool:
+    return object_1 == object_2
 
 
 def _get_operators(annotation: Any) -> Tuple[_Callable, _Callable]:

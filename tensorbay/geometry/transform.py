@@ -23,7 +23,9 @@ from .vector import Vector3D
 
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
-    from quaternion import as_rotation_matrix, from_rotation_matrix, quaternion, rotate_vectors
+    from quaternion import as_rotation_matrix, from_rotation_matrix
+    from quaternion import isclose as quaternion_isclose
+    from quaternion import quaternion, rotate_vectors
 
 _T = TypeVar("_T", bound="Transform3D")
 
@@ -153,6 +155,27 @@ class Transform3D(ReprMixin):
         # Multiplication with point list is not supported currently.
         # __radd__ is used to ensure the shape of the input object.
         return self._translation.__radd__(rotate_vectors(self._rotation, other))
+
+    def _allclose(self, other: object, *, rel_tol: float = 1e-09, abs_tol: float = 0.0) -> bool:
+        """Determine whether this 3D transform is close to another in value.
+
+        Arguments:
+            other: The other object to compare.
+            rel_tol: Maximum difference for being considered "close", relative to the
+                     magnitude of the input values
+            abs_tol: Maximum difference for being considered "close", regardless of the
+                     magnitude of the input values
+
+        Returns:
+            A bool value indicating whether this vector is close to another.
+
+        """
+        if not isinstance(other, self.__class__):
+            return False
+
+        return self._translation._allclose(  # pylint: disable=protected-access
+            other.translation, rel_tol=rel_tol, abs_tol=abs_tol
+        ) and all(quaternion_isclose(self._rotation, other.rotation))
 
     def _loads(self, contents: Dict[str, Dict[str, float]]) -> None:
         self._translation = Vector3D.loads(contents["translation"])

@@ -144,6 +144,7 @@ class _LabelBase(AttrsMixin, TypeMixin[LabelType], ReprMixin):
     _label_attrs: Tuple[str, ...] = ("category", "attributes", "instance")
 
     _repr_attrs = _label_attrs
+    _support_allclose = True
 
     _AttributeType = Dict[str, Union[str, int, float, bool, List[Union[str, int, float, bool]]]]
 

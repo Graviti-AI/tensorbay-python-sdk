@@ -407,6 +407,25 @@ class Box3D(ReprMixin):
         intersect_length = min(line1_max, line2_max) - max(line1_min, line2_min)
         return intersect_length if intersect_length > 0 else 0
 
+    def _allclose(self, other: _B3, *, rel_tol: float = 1e-09, abs_tol: float = 0.0) -> bool:
+        """Determine whether this 3D box is close to another in value.
+
+        Arguments:
+            other: The other object to compare.
+            rel_tol: Maximum difference for being considered "close", relative to the
+                     magnitude of the input values
+            abs_tol: Maximum difference for being considered "close", regardless of the
+                     magnitude of the input values
+
+        Returns:
+            A bool value indicating whether this vector is close to another.
+
+        """
+        # pylint: disable=protected-access
+        return self._size._allclose(
+            other.size, rel_tol=rel_tol, abs_tol=abs_tol
+        ) and self._transform._allclose(other.transform, rel_tol=rel_tol, abs_tol=abs_tol)
+
     def _loads(self, contents: Dict[str, Dict[str, float]]) -> None:
         self._size = Vector3D.loads(contents["size"])
         self._transform = Transform3D.loads(contents)

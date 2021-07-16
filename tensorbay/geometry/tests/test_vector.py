@@ -125,6 +125,11 @@ class TestVector:
         assert abs(Vector(1, 1)) == 1.4142135623730951
         assert abs(Vector(1, 1, 1)) == 1.7320508075688772
 
+    def test__allclose(self):
+        assert Vector(1, 2)._allclose(Vector2D(1.000000000001, 2))
+        assert Vector(1, 2, 3)._allclose(Vector3D(1.000000000001, 2, 2.999999999996))
+        assert not Vector(1, 2, 3)._allclose(Vector3D(1.100000000001, 2, 2.999999999996))
+
     def test_repr_head(self):
         vector = Vector(1, 2)
         assert vector._repr_head() == "Vector2D(1, 2)"
