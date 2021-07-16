@@ -41,7 +41,7 @@ def _implement_log(
 
 
 def _get_oneline_log(commit: Commit) -> str:
-    return f"{shorten(commit.commit_id)} {commit.title}"
+    return f"{shorten(commit.commit_id)} {commit.title}\n"
 
 
 def _get_full_log(commit: Commit) -> str:
