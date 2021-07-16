@@ -69,10 +69,13 @@ trainval_segment_client = dataset_client.get_segment("trainval")
 data_paths = list(trainval_segment_client.list_data_paths())
 
 # Generate 500 random numbers.
-val_randomlist = random.sample(range(0, len(data_paths)), 500)
-for index in val_randomlist:
-    file_name = data_paths[index]
-    val_segment_client.move_data(file_name, file_name, source_client=trainval_segment_client)
+val_random_numbers = random.sample(range(0, len(data_paths)), 500)
+
+# Get the data path list by random index list.
+val_ramdom_paths = [data_paths[index] for index in val_random_numbers]
+
+# Move all data of the val random path list from trainval to train segment
+val_segment_client.move_data(val_ramdom_paths, source_client=trainval_segment_client)
 dataset_client.move_segment("trainval", "train")
 
 dataset_client.list_segment_names()
