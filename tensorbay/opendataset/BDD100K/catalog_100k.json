@@ -1,0 +1,110 @@
+{
+    "CLASSIFICATION": {
+        "attributes": [
+            {
+                "name": "weather",
+                "enum": [
+                    "clear",
+                    "foggy",
+                    "overcast",
+                    "partly cloudy",
+                    "rainy",
+                    "snowy",
+                    "undefined"
+                ]
+            },
+            {
+                "name": "scene",
+                "enum": [
+                    "city street",
+                    "gas stations",
+                    "highway",
+                    "parking lot",
+                    "residential",
+                    "tunnel",
+                    "undefined"
+                ]
+            },
+            {
+                "name": "timeofday",
+                "enum": ["daytime", "night", "dawn/dusk", "undefined"]
+            }
+        ]
+    },
+    "BOX2D": {
+        "categories": [
+            { "name": "bicycle" },
+            { "name": "bus" },
+            { "name": "car" },
+            { "name": "motorcycle" },
+            { "name": "other person" },
+            { "name": "other vehicle" },
+            { "name": "pedestrian" },
+            { "name": "rider" },
+            { "name": "traffic light" },
+            { "name": "traffic sign" },
+            { "name": "trailer" },
+            { "name": "train" },
+            { "name": "truck" }
+        ],
+        "attributes": [
+            {
+                "name": "occluded",
+                "type": "boolean"
+            },
+            {
+                "name": "truncated",
+                "type": "boolean"
+            },
+            {
+                "name": "trafficLightColor",
+                "enum": ["red", "green", "yellow", null],
+                "parentCategories": ["traffic light"]
+            }
+        ]
+    },
+    "POLYGON": {
+        "categories": [{ "name": "direct" }, { "name": "alternative" }, { "name": "unknown" }],
+        "attributes": [
+            {
+                "name": "areaType",
+                "enum": ["direct", "alternative"]
+            }
+        ]
+    },
+    "POLYLINE2D": {
+        "categories": [
+            { "name": "crosswalk" },
+            { "name": "double other" },
+            { "name": "double white" },
+            { "name": "double yellow" },
+            { "name": "road curb" },
+            { "name": "single other" },
+            { "name": "single white" },
+            { "name": "single yellow" }
+        ],
+        "attributes": [
+            {
+                "name": "laneDirection",
+                "enum": ["vertical", "parallel"]
+            },
+            {
+                "name": "laneStyle",
+                "enum": ["solid", "dashed"]
+            },
+            {
+                "name": "laneTypes",
+                "enum": [
+                    "crosswalk",
+                    "double other",
+                    "double white",
+                    "double yellow",
+                    "road curb",
+                    "single other",
+                    "single white",
+                    "single yellow"
+                ]
+            }
+        ]
+    }
+}
