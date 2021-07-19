@@ -30,7 +30,6 @@ def _implement_cli(
         "url": url,
         "profile_name": profile_name,
     }
-    client_config._x_source = "PYTHON-CLI"  # pylint: disable=protected-access
 
     if debug:
         logging.basicConfig(level=logging.DEBUG)
@@ -47,25 +46,22 @@ def _get_config_filepath() -> str:
     return os.path.join(os.environ[home], ".gasconfig")
 
 
-def _read_profile(profile_name: str) -> Tuple[str, str]:
+def _read_profile(profile_name: str, config_parser: ConfigParser) -> Tuple[str, str]:
     """Read accessKey and URL from the config file.
 
     Arguments:
         profile_name: The environment to login.
+        config_parser: The config parser read from the config file.
 
     Returns:
         A tuple containing the accessKey and the url of profile_name read from the config file.
 
     """
-    config_filepath = _get_config_filepath()
-    if not os.path.exists(config_filepath):
+    if not config_parser.has_option("profiles", profile_name):
         error(
-            f"{config_filepath} not exist"
-            "\n\nPlease use 'gas config <accessKey>' to create config file"
+            f"{profile_name} does not exist"
+            f"\n\nPlease use 'gas -p {profile_name} auth [accessKey]' to create profile"
         )
-
-    update_config()
-    config_parser = read_config(config_filepath)
     values = config_parser["profiles"][profile_name].split("\n")
     if len(values) == 2:
         return values[1], ""
@@ -86,8 +82,11 @@ def get_gas(access_key: str, url: str, profile_name: str) -> GAS:
         Gas client logged in with accessKey and URL.
 
     """
+    update_config()
+    config_parser = read_config()
+    _set_request_config(config_parser)
     if not access_key and not url:
-        access_key, url = _read_profile(profile_name)
+        access_key, url = _read_profile(profile_name, config_parser)
 
     if not access_key:
         error("AccessKey should be appointed")
@@ -255,6 +254,7 @@ def read_config(config_filepath: Optional[str] = None) -> ConfigParser:
     """
     if not config_filepath:
         config_filepath = _get_config_filepath()
+
     config_parser = ConfigParser(dict_type=OrderedDict)
     config_parser.read(config_filepath)
     return config_parser
@@ -345,3 +345,21 @@ def edit_message(message: Tuple[str, ...], hint_message: str) -> Tuple[str, str]
         title, description = _edit_input(hint_message)
 
     return title, description
+
+
+def _set_request_config(config_parser: ConfigParser) -> None:
+    """Configure request related parameters.
+
+    Arguments:
+        config_parser: The config parser read from the config file.
+
+    """
+    client_config._x_source = "PYTHON-CLI"  # pylint: disable=protected-access
+    if config_parser.has_section("config"):
+        config_section = config_parser["config"]
+        if "timeout" in config_section:
+            client_config.timeout = config_section.getint("timeout")
+        if "is_internal" in config_section:
+            client_config.is_internal = config_section.getboolean("is_internal")
+        if "max_retries" in config_section:
+            client_config.max_retries = config_section.getint("max_retries")

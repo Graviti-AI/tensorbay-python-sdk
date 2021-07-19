@@ -36,6 +36,7 @@ def _implement_config(key: str, value: str, unset: bool) -> None:
 
         click.echo(f"{key} = {config_section[key]}\n")
     else:
+        _check_key_and_value(key, value)
         config_section[key] = value
         write_config(config_parser)
 
@@ -46,6 +47,14 @@ def _check_args_and_options(key: str, value: str, unset: bool) -> None:
             error('Use "--unset" option to unset config or use "key" and "value" to set config')
         if not key:
             error('Use "--unset" option with "key"')
+    if key not in {"editor", "timeout", "is_internal", "max_retries", ""}:
+        error(f'The option "{key}" is not supported to configure currently.')
 
-    if key and key != "editor":
-        error(f'The option "{key}" is not supported to configure currently.\n')
+
+def _check_key_and_value(key: str, value: str) -> None:
+    if key in {"timeout", "max_retries"}:
+        if not value.isdigit():
+            error(f'The option "{key}" need integer value.')
+    elif key == "is_internal":
+        if value.lower() not in {"true", "false", "0", "1"}:
+            error('The option "is_internal" need True(1) or False(0) value.')
