@@ -5,11 +5,9 @@
 
 """Implementation of gas config."""
 
-import sys
-
 import click
 
-from .utility import error, is_accesskey, read_config, update_config, write_config
+from .utility import error, read_config, update_config, write_config
 
 
 def _implement_config(key: str, value: str, unset: bool) -> None:
@@ -17,17 +15,6 @@ def _implement_config(key: str, value: str, unset: bool) -> None:
 
     update_config()
     config_parser = read_config()
-
-    if is_accesskey(key):
-        click.secho(
-            "DeprecationWarning: Setting AccessKey in 'gas config'"
-            " is deprecated since version v1.7.0. "
-            "It will be removed in version v1.9.0. "
-            "Use 'gas auth Accesskey' instead.",
-            fg="red",
-            err=True,
-        )
-        sys.exit(1)
 
     if not config_parser.has_section("config"):
         config_parser.add_section("config")
