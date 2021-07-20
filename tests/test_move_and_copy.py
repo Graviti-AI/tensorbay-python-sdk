@@ -670,6 +670,7 @@ class TestCopy:
             data.label = Label.loads(LABEL)
             segment_1.append(data)
         dataset_client_1 = gas_client.upload_dataset(dataset_1)
+        dataset_client_1.commit("upload data")
         segment_client_1 = dataset_client_1.get_segment("Segment1")
 
         dataset_name_2 = dataset_name_1 + "_2"
