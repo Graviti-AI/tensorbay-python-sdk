@@ -1,0 +1,18 @@
+{
+    "BOX2D": {
+        "categories": [{ "name": "person" }],
+        "attributes": [
+            { "name": "jumping", "type": "boolean" },
+            { "name": "other", "type": "boolean" },
+            { "name": "phoning", "type": "boolean" },
+            { "name": "playinginstrument", "type": "boolean" },
+            { "name": "reading", "type": "boolean" },
+            { "name": "ridingbike", "type": "boolean" },
+            { "name": "ridinghorse", "type": "boolean" },
+            { "name": "running", "type": "boolean" },
+            { "name": "takingphoto", "type": "boolean" },
+            { "name": "usingcomputer", "type": "boolean" },
+            { "name": "walking", "type": "boolean" }
+        ]
+    }
+}
