@@ -3,13 +3,16 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-from .. import Box2D, MultiPolygon, Polygon, Vector2D
+from ..box import Box2D
+from ..polygon import RLE, MultiPolygon, Polygon
+from ..vector import Vector2D
 
 _DATA_POLYGON = [{"x": 1.0, "y": 1.0}, {"x": 2.0, "y": 2.0}, {"x": 2.0, "y": 3.0}]
 _DATA_MULTIPOLYGON = [
     [{"x": 1.0, "y": 4.0}, {"x": 2.0, "y": 3.7}, {"x": 7.0, "y": 4.0}],
     [{"x": 5.0, "y": 7.0}, {"x": 6.0, "y": 7.0}, {"x": 9.0, "y": 8.0}],
 ]
+_DATA_RLE = [272, 2, 4, 4, 2, 9]
 
 
 class TestPolygon:
@@ -63,3 +66,16 @@ class TestMultiPolygon:
             [[[1.0, 4.0], [2.0, 3.7], [7.0, 4.0]], [[5.0, 7.0], [6.0, 7.0], [9.0, 8.0]]]
         )
         assert multipolygon.dumps() == _DATA_MULTIPOLYGON
+
+
+class TestRLE:
+    def test_init(self):
+        assert RLE([272, 2, 4, 4, 2, 9])._data == [272, 2, 4, 4, 2, 9]
+
+    def test_loads(self):
+        rle = RLE.loads(_DATA_RLE)
+        assert rle._data == _DATA_RLE
+
+    def test_dumps(self):
+        rle = RLE(_DATA_RLE)
+        assert rle.dumps() == _DATA_RLE

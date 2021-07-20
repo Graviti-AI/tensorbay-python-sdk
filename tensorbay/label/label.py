@@ -13,17 +13,20 @@ Different label types correspond to different label classes classes.
 .. table:: label classes
    :widths: auto
 
-   ============================================================= ===================================
-   label classes                                                 explaination
-   ============================================================= ===================================
-   :class:`~tensorbay.label.label_classification.Classification` classification type of label
-   :class:`~tensorbay.label.label_box.LabeledBox2D`              2D bounding box type of label
-   :class:`~tensorbay.label.label_box.LabeledBox3D`              3D bounding box type of label
-   :class:`~tensorbay.label.label_polygon.LabeledPolygon`        polygon type of label
-   :class:`~tensorbay.label.label_polyline.LabeledPolyline2D`    2D polyline type of label
-   :class:`~tensorbay.label.label_keypoints.LabeledKeypoints2D`  2D keypoints type of label
-   :class:`~tensorbay.label.label_sentence.LabeledSentence`      transcripted sentence type of label
-   ============================================================= ===================================
+   ================================ ===================================
+   label classes                    explaination
+   ================================ ===================================
+   :class:`.Classification`         classification type of label
+   :class:`.LabeledBox2D`           2D bounding box type of label
+   :class:`.LabeledBox3D`           3D bounding box type of label
+   :class:`.LabeledPolygon`         polygon type of label
+   :class:`.LabeledMultiPolygon`    polygon lists type of label
+   :class:`.LabeledRLE`             rle mask type of label
+   :class:`.LabeledPolyline2D`      2D polyline type of label
+   :class:`.LabeledMultiPolyline2D` 2D polyline lists type of label
+   :class:`.LabeledKeypoints2D`     2D keypoints type of label
+   :class:`.LabeledSentence`        transcripted sentence type of label
+   ================================ ===================================
 
 """
 
@@ -35,7 +38,7 @@ from .basic import LabelType
 from .label_box import LabeledBox2D, LabeledBox3D
 from .label_classification import Classification
 from .label_keypoints import LabeledKeypoints2D
-from .label_polygon import LabeledMultiPolygon, LabeledPolygon
+from .label_polygon import LabeledMultiPolygon, LabeledPolygon, LabeledRLE
 from .label_polyline import LabeledMultiPolyline2D, LabeledPolyline2D
 from .label_sentence import LabeledSentence
 
@@ -74,6 +77,7 @@ class Label(ReprMixin, AttrsMixin):
     polygon: List[LabeledPolygon] = _attr()
     polyline2d: List[LabeledPolyline2D] = _attr()
     multi_polyline2d: List[LabeledMultiPolyline2D] = _attr()
+    rle: List[LabeledRLE] = _attr()
     keypoints2d: List[LabeledKeypoints2D] = _attr()
     multi_polygon: List[LabeledMultiPolygon] = _attr()
     sentence: List[LabeledSentence] = _attr()

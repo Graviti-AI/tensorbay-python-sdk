@@ -9,7 +9,7 @@ from tensorbay.label import Catalog, Label
 
 from .utility import get_dataset_name
 
-MULTI_POLYLINE2D_CATALOG = {
+GEOMETRY_CATALOG = {
     "isTracking": True,
     "categories": [
         {
@@ -26,33 +26,21 @@ MULTI_POLYLINE2D_CATALOG = {
         {"name": "occluded", "type": "integer", "minimum": 1, "maximum": 5},
     ],
 }
-MULTI_POLYGON_CATALOG = {
-    "isTracking": True,
-    "categories": [
-        {
-            "name": "123",
-            "description": "This is another example of test",
-        },
-        {
-            "name": "234",
-            "description": "This is another example of test",
-        },
-    ],
-    "attributes": [
-        {"name": "gender", "enum": ["male", "female"]},
-        {"name": "occluded", "type": "integer", "minimum": 2, "maximum": 8},
-    ],
-}
+
 CATALOG_CONTENTS = {
-    "MULTI_POLYLINE2D": MULTI_POLYLINE2D_CATALOG,
-    "MULTI_POLYGON": MULTI_POLYGON_CATALOG,
+    "MULTI_POLYLINE2D": GEOMETRY_CATALOG,
+    "MULTI_POLYGON": GEOMETRY_CATALOG,
+    "RLE": GEOMETRY_CATALOG,
 }
 
+COMMON_LABEL = {
+    "category": "cat",
+    "attributes": {"gender": "male"},
+    "instance": "12345",
+}
 MULTI_POLYLINE2D_LABEL = [
     {
-        "category": "cat",
-        "attributes": {"gender": "male"},
-        "instance": "12345",
+        **COMMON_LABEL,
         "multiPolyline2d": [
             [{"x": 1, "y": 1}, {"x": 1, "y": 2}, {"x": 2, "y": 2}],
             [{"x": 2, "y": 3}, {"x": 3, "y": 5}],
@@ -61,6 +49,7 @@ MULTI_POLYLINE2D_LABEL = [
 ]
 MULTI_POLYGON_LABEL = [
     {
+        **COMMON_LABEL,
         "multiPolygon": [
             [
                 {"x": 1.0, "y": 2.0},
@@ -69,14 +58,18 @@ MULTI_POLYGON_LABEL = [
             ],
             [{"x": 1.0, "y": 4.0}, {"x": 2.0, "y": 3.0}, {"x": 1.0, "y": 8.0}],
         ],
-        "category": "example",
-        "attributes": {"key": "value"},
-        "instance": "123",
+    }
+]
+RLE_LABEL = [
+    {
+        **COMMON_LABEL,
+        "rle": [272, 2, 4, 4, 2, 9],
     }
 ]
 LABEL = {
     "MULTI_POLYLINE2D": MULTI_POLYLINE2D_LABEL,
     "MULTI_POLYGON": MULTI_POLYGON_LABEL,
+    "RLE": RLE_LABEL,
 }
 
 
