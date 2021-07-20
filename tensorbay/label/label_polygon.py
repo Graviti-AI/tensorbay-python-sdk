@@ -14,7 +14,7 @@ which is often used for CV tasks such as semantic segmentation.
 
 from typing import Any, Dict, Iterable, Optional, Type, TypeVar
 
-from ..geometry import MultiPolygon, Polygon
+from ..geometry import RLE, MultiPolygon, Polygon
 from ..utility import ReprType, SubcatalogTypeRegister, TypeRegister, attr_base, common_loads
 from .basic import LabelType, SubcatalogBase, _LabelBase
 from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
@@ -136,6 +136,68 @@ class MultiPolygonSubcatalog(  # pylint: disable=too-many-ancestors
         >>> multi_polygon_subcatalog.add_attribute("gender", enum=["female", "male"])
         >>> multi_polygon_subcatalog
         MultiPolyline2DSubcatalog(
+          (is_tracking): True,
+          (categories): NameList [...],
+          (attributes): NameList [...]
+        )
+
+    """
+
+    def __init__(self, is_tracking: bool = False) -> None:
+        SubcatalogBase.__init__(self)
+        IsTrackingMixin.__init__(self, is_tracking)
+
+
+@SubcatalogTypeRegister(LabelType.RLE)
+class RLESubcatalog(  # pylint: disable=too-many-ancestors
+    SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin
+):
+    """This class defines the subcatalog for rle type of labels.
+
+    Arguments:
+        is_tracking: A boolean value indicating whether the corresponding
+            subcatalog contains tracking information.
+
+    Attributes:
+        description: The description of the rle subcatalog.
+        categories: All the possible categories in the corresponding dataset
+            stored in a :class:`~tensorbay.utility.name.NameList`
+            with the category names as keys
+            and the :class:`~tensorbay.label.supports.CategoryInfo` as values.
+        category_delimiter: The delimiter in category values indicating parent-child relationship.
+        attributes: All the possible attributes in the corresponding dataset
+            stored in a :class:`~tensorbay.utility.name.NameList`
+            with the attribute names as keys
+            and the :class:`~tensorbay.label.attribute.AttributeInfo` as values.
+        is_tracking: Whether the Subcatalog contains tracking information.
+
+    Examples:
+        *Initialization Method 1:* Init from ``RLESubcatalog.loads()`` method.
+
+        >>> catalog = {
+        ...     "RLE": {
+        ...         "isTracking": True,
+        ...         "categories": [{"name": "0"}, {"name": "1"}],
+        ...         "attributes": [{"name": "gender", "enum": ["male", "female"]}],
+        ...     }
+        ... }
+        >>> RLESubcatalog.loads(catalog["RLESubcatalog"])
+        RLESubcatalog(
+          (is_tracking): True,
+          (categories): NameList [...],
+          (attributes): NameList [...]
+        )
+
+        *Initialization Method 2:* Init an empty RLESubcatalog
+        and then add the attributes.
+
+        >>> from tensorbay.label import CategoryInfo, AttributeInfo
+        >>> rle_subcatalog = RLESubcatalog()
+        >>> rle_subcatalog.is_tracking = True
+        >>> rle_subcatalog.add_category("a")
+        >>> rle_subcatalog.add_attribute("gender", enum=["female", "male"])
+        >>> rle_subcatalog
+        RLESubcatalog(
           (is_tracking): True,
           (categories): NameList [...],
           (attributes): NameList [...]
@@ -375,6 +437,115 @@ class LabeledMultiPolygon(  # type: ignore[misc]
                     [{'x': 1, 'y': 2}, {'x': 2, 'y': 3}, {'x': 1, 'y': 3}],
                     [{"x": 1.0, "y": 4.0}, {"x": 2.0, "y": 3.0}, {"x": 1.0, "y": 8.0}]
                 ]
+            }
+
+        """
+        return self._dumps()
+
+
+@TypeRegister(LabelType.RLE)
+class LabeledRLE(_LabelBase, RLE):  # type: ignore[misc]  # pylint: disable=too-many-ancestors
+    """This class defines the concept of rle label.
+
+    :class:`LabeledRLE` is the rle type of label,
+    which is often used for CV tasks such as semantic segmentation.
+
+    Arguments:
+        rle: A rle format mask.
+        category: The category of the label.
+        attributes: The attributs of the label.
+        instance: The instance id of the label.
+
+    Attributes:
+        category: The category of the label.
+        attributes: The attributes of the label.
+        instance: The instance id of the label.
+
+    Examples:
+        >>> LabeledRLE(
+        ...     [272, 2, 4, 4, 2, 9],
+        ...     category = "example",
+        ...     attributes = {"key": "value"},
+        ...     instance = "12345",
+        ... )
+        LabeledRLE [
+          272,
+          2,
+          ...
+        ](
+            (category): 'example',
+            (attributes): {...},
+            (instance): '12345'
+        )
+
+    """
+
+    _T = TypeVar("_T", bound="LabeledRLE")
+    _repr_type = ReprType.SEQUENCE
+    _repr_attrs = _LabelBase._repr_attrs
+    _attrs_base: RLE = attr_base(key="rle")
+
+    def __init__(
+        self,
+        rle: Optional[Iterable[int]] = None,
+        *,
+        category: Optional[str] = None,
+        attributes: Optional[Dict[str, Any]] = None,
+        instance: Optional[str] = None,
+    ):
+        RLE.__init__(self, rle)
+        _LabelBase.__init__(self, category, attributes, instance)
+
+    @classmethod
+    def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:  # type: ignore[override]
+        """Loads a LabeledRLE from a dict containing the information of the label.
+
+        Arguments:
+            contents: A dict containing the information of the rle label.
+
+        Returns:
+            The loaded :class:`LabeledRLE` object.
+
+        Examples:
+            >>> contents = {
+            ...     "rle": [272, 2, 4, 4, 2, 9],
+            ...     "category": "example",
+            ...     "attributes": {"key": "value"},
+            ...     "instance": "12345",
+            ... }
+            >>> LabeledRLE.loads(contents)
+            LabeledRLE [
+              272,
+              2,
+              ...
+            ](
+              (category): 'example',
+              (attributes): {...},
+              (instance): '12345'
+            )
+
+        """
+        return common_loads(cls, contents)
+
+    def dumps(self) -> Dict[str, Any]:  # type: ignore[override]
+        """Dumps the current rle label into a dict.
+
+        Returns:
+            A dict containing all the information of the rle label.
+
+        Examples:
+            >>> labeled_rle = LabeledRLE(
+            ...     [272, 2, 4, 4, 2, 9],
+            ...     category = "example",
+            ...     attributes = {"key": "value"},
+            ...     instance = "123",
+            ... )
+            >>> labeled_rle.dumps()
+            {
+                'category': 'example',
+                'attributes': {'key': 'value'},
+                'instance': '123',
+                'rle': [272, 2, 4, 4, 2, 9]
             }
 
         """

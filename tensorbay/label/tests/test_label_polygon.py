@@ -6,7 +6,14 @@
 import pytest
 
 from ...geometry import Polygon, Vector2D
-from .. import LabeledMultiPolygon, LabeledPolygon, MultiPolygonSubcatalog, PolygonSubcatalog
+from .. import (
+    LabeledMultiPolygon,
+    LabeledPolygon,
+    LabeledRLE,
+    MultiPolygonSubcatalog,
+    PolygonSubcatalog,
+    RLESubcatalog,
+)
 
 _DATA_LABELEDMULTIPOLYGON = {
     "multiPolygon": [
@@ -17,6 +24,12 @@ _DATA_LABELEDMULTIPOLYGON = {
         ],
         [{"x": 1.0, "y": 4.0}, {"x": 2.0, "y": 3.0}, {"x": 1.0, "y": 8.0}],
     ],
+    "category": "example",
+    "attributes": {"key": "value"},
+    "instance": "123",
+}
+_DATA_LABELEDRLE = {
+    "rle": [272, 2, 4, 4, 2, 9],
     "category": "example",
     "attributes": {"key": "value"},
     "instance": "123",
@@ -198,3 +211,35 @@ class TestMultiPolygonSubcatalog:
             del subcatalog_polygon["isTracking"]
 
         assert subcatalog.dumps() == subcatalog_polygon
+
+
+class TestLabeledRLE:
+    def test_init(self):
+        labeled_rle = LabeledRLE(
+            [272, 2, 4, 4, 2, 9],
+            category="example",
+            attributes={"key": "value"},
+            instance="123",
+        )
+        assert labeled_rle._data == [272, 2, 4, 4, 2, 9]
+        assert labeled_rle.category == "example"
+        assert labeled_rle.attributes == {"key": "value"}
+        assert labeled_rle.instance == "123"
+
+    def test_loads(self):
+        labeled_rle = LabeledRLE.loads(_DATA_LABELEDRLE)
+        assert labeled_rle == LabeledRLE(
+            [272, 2, 4, 4, 2, 9],
+            category="example",
+            attributes={"key": "value"},
+            instance="123",
+        )
+
+    def test_dumps(self):
+        labeled_rle = LabeledRLE(
+            [272, 2, 4, 4, 2, 9],
+            category="example",
+            attributes={"key": "value"},
+            instance="123",
+        )
+        assert labeled_rle.dumps() == _DATA_LABELEDRLE

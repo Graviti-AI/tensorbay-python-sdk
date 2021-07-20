@@ -12,7 +12,7 @@ and provides :meth:`Polygon.area` to calculate the area of the polygon.
 
 from typing import Dict, Iterable, List, Optional, Type, TypeVar
 
-from ..utility import common_loads
+from ..utility import UserMutableSequence, common_loads
 from .point_list import MultiPointList2D, PointList2D
 from .vector import Vector2D
 
@@ -148,6 +148,73 @@ class MultiPolygon(MultiPointList2D[Polygon]):  # pylint: disable=too-many-ances
                 [{'x': 1.0, 'y': 4.0}, {'x': 2.0, 'y': 3.7}, {'x': 7.0, 'y': 4.0}],
                 [{'x': 5,0, 'y': 7.0}, {'x': 6.0, 'y': 7.0}, {'x': 9.0, 'y': 8.0}]
             ]
+
+        """
+        return self._dumps()
+
+
+class RLE(UserMutableSequence[int]):
+    """This class defines the concept of RLE.
+
+    :class:`RLE` contains an rle format mask.
+
+    Arguments:
+        rle: A rle format mask.
+
+    Examples:
+        >>> RLE([272, 2, 4, 4, 2, 9])
+        RLE [
+          272,
+          2,
+          ...
+        ]
+
+    """
+
+    _data: List[int]
+
+    def __init__(self, rle: Optional[Iterable[int]]):
+        self._data = list(rle) if rle else []
+
+    def _dumps(self) -> List[int]:
+        return self._data
+
+    def _loads(self, contents: List[int]) -> None:
+        self._data = contents
+
+    @classmethod
+    def loads(cls: Type["RLE"], contents: List[int]) -> "RLE":
+        """Loads a :class:RLE` from the given contents.
+
+        Arguments:
+            contents: One rle mask.
+
+        Returns:
+            The loaded :class:`RLE` object.
+
+        Examples:
+            >>> contents = [272, 2, 4, 4, 2, 9]
+            >>> rle = RLE.loads(contents)
+            >>> rle
+            RLE [
+              272,
+              2,
+              ...
+            ]
+
+        """
+        return common_loads(cls, contents)
+
+    def dumps(self) -> List[int]:
+        """Dumps a :class:`RLE` into one rle mask.
+
+        Returns:
+            All the information of the :class:`RLE`.
+
+        Examples:
+            >>> rle = RLE([272, 2, 4, 4, 2, 9])
+            >>> rle.dumps()
+            [272, 2, 4, 4, 2, 9]
 
         """
         return self._dumps()
