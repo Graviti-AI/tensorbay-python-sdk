@@ -38,12 +38,7 @@ class PointList2D(UserMutableSequence[_T]):  # pylint: disable=too-many-ancestor
         self,
         points: Optional[Iterable[Iterable[float]]] = None,
     ) -> None:
-        self._data = []
-        if points is None:
-            return
-
-        for point in points:
-            self._data.append(self._ElementType(*point))
+        self._data = [self._ElementType(*point) for point in points] if points else []
 
     def _loads(self: _P, contents: List[Dict[str, float]]) -> None:
         self._data = []
