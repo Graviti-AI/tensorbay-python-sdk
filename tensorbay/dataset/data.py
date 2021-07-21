@@ -68,7 +68,7 @@ class DataBase(AttrsMixin, ReprMixin):  # pylint: disable=too-few-public-methods
             contents: A dict containing the information of the data, which looks like::
 
                     {
-                        "localPath", "remotePath" or "authPath": <str>,
+                        "localPath", "remotePath" or "cloudPath": <str>,
                         "timestamp": <float>,
                         "label": {
                             "CLASSIFICATION": {...},
@@ -86,13 +86,13 @@ class DataBase(AttrsMixin, ReprMixin):  # pylint: disable=too-few-public-methods
             information from the given dict.
 
         Raises:
-            KeyError: When the "localPath", "remotePath" or "authPath" not in contents.
+            KeyError: When the "localPath", "remotePath" or "cloudPath" not in contents.
 
         """
         for key, value in _DATA_SUBCLASS:
             if key in contents:
                 return common_loads(value, contents)
-        raise KeyError("Must contain 'localPath', 'remotePath' or 'authPath' in contents.")
+        raise KeyError("Must contain 'localPath', 'remotePath' or 'cloudPath' in contents.")
 
 
 class Data(DataBase):
