@@ -5,7 +5,6 @@
 # pylint: disable=invalid-name, missing-module-docstring
 
 import os
-import typing
 from xml.etree import ElementTree
 
 from ...dataset import Data, Dataset
@@ -50,38 +49,37 @@ def VOC2012Detection(path: str) -> Dataset:
         Loaded :class: `~tensorbay.dataset.dataset.Dataset` instance.
 
     """
-    paths = {
-        "Annotations": os.path.join(path, "Annotations"),
-        "Image": os.path.join(path, "JPEGImages"),
-        "Main": os.path.join(path, "ImageSets", "Main"),
-    }
+    annotation_path = os.path.join(path, "Annotations")
+    image_path = os.path.join(path, "JPEGImages")
+    main_path = os.path.join(path, "ImageSets", "Main")
 
     dataset = Dataset(DATASET_NAME)
     dataset.load_catalog("catalog.json")
 
     for segment_name in _SEGMENT_NAMES:
         segment = dataset.create_segment(segment_name)
-        with open(os.path.join(paths["Main"], f"{segment_name}.txt")) as fp:
+        with open(os.path.join(main_path, f"{segment_name}.txt")) as fp:
             for filename in fp:
                 filename = filename.strip()
-                segment.append(_get_data(filename, paths))
+                segment.append(_get_data(filename, image_path, annotation_path))
     return dataset
 
 
-def _get_data(filename: str, paths: typing.Dict[str, str]) -> Data:
+def _get_data(filename: str, image_path: str, annotation_path: str) -> Data:
     """Get all information of the datum corresponding to filename.
 
     Arguments:
         filename: The filename of the data.
-        paths: The dictionary includes paths.
+        image_path: The path of the image directory.
+        annotation_path: The path of the annotation directory.
 
     Returns:
         Data: class: `~tensorbay.dataset.data.Data` instance.
 
     """
-    data = Data(os.path.join(paths["Image"], f"{filename}.jpg"))
+    data = Data(os.path.join(image_path, f"{filename}.jpg"))
     data.label.box2d = []
-    tree = ElementTree.parse(os.path.join(paths["Annotations"], f"{filename}.xml"))
+    tree = ElementTree.parse(os.path.join(annotation_path, f"{filename}.xml"))
     for obj in tree.findall("object"):
         attributes = {}
         for child in obj:
@@ -89,10 +87,10 @@ def _get_data(filename: str, paths: typing.Dict[str, str]) -> Data:
                 category = child.text
             elif child.tag == "bndbox":
                 box = (
-                    int(child.find("xmin").text),  # type:ignore[arg-type, union-attr]
-                    int(child.find("ymin").text),  # type:ignore[arg-type, union-attr]
-                    int(child.find("xmax").text),  # type:ignore[arg-type, union-attr]
-                    int(child.find("ymax").text),  # type:ignore[arg-type, union-attr]
+                    float(child.find("xmin").text),  # type:ignore[arg-type, union-attr]
+                    float(child.find("ymin").text),  # type:ignore[arg-type, union-attr]
+                    float(child.find("xmax").text),  # type:ignore[arg-type, union-attr]
+                    float(child.find("ymax").text),  # type:ignore[arg-type, union-attr]
                 )
             elif child.tag == "pose":
                 attributes[child.tag] = child.text
