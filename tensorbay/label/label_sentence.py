@@ -278,9 +278,7 @@ class LabeledSentence(_LabelBase):
 
     _T = TypeVar("_T", bound="LabeledSentence")
 
-    _label_attrs = ("attributes",)
-
-    _repr_attrs = ("sentence", "spell", "phone") + _label_attrs
+    _repr_attrs = ("sentence", "spell", "phone", "attributes")
     _repr_maxlevel = 3
 
     sentence: List[Word] = attr(is_dynamic=True)

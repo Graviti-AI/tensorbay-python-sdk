@@ -106,9 +106,7 @@ class Classification(_LabelBase):
 
     _T = TypeVar("_T", bound="Classification")
 
-    _label_attrs = ("category", "attributes")
-
-    _repr_attrs = _label_attrs
+    _repr_attrs = ("category", "attributes")
 
     def __init__(
         self,
