@@ -25,19 +25,11 @@ with warnings.catch_warnings():
     from quaternion import quaternion
 
 from ..geometry import Box2D, Box3D, Transform3D
-from ..utility import (
-    MatrixType,
-    ReprType,
-    SubcatalogTypeRegister,
-    TypeRegister,
-    attr_base,
-    common_loads,
-)
+from ..utility import MatrixType, ReprType, TypeRegister, attr_base, common_loads
 from .basic import LabelType, SubcatalogBase, _LabelBase
 from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
 
 
-@SubcatalogTypeRegister(LabelType.BOX2D)
 class Box2DSubcatalog(  # pylint: disable=too-many-ancestors
     SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin
 ):
@@ -272,7 +264,6 @@ class LabeledBox2D(_LabelBase, Box2D):  # pylint: disable=too-many-ancestors
         return self._dumps()
 
 
-@SubcatalogTypeRegister(LabelType.BOX3D)
 class Box3DSubcatalog(  # pylint: disable=too-many-ancestors
     SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin
 ):

@@ -15,12 +15,11 @@ which is often used for CV tasks such as lane detection.
 from typing import Any, Dict, Iterable, Optional, Type, TypeVar
 
 from ..geometry import MultiPolyline2D, Polyline2D
-from ..utility import ReprType, SubcatalogTypeRegister, TypeRegister, attr_base, common_loads
+from ..utility import ReprType, TypeRegister, attr_base, common_loads
 from .basic import LabelType, SubcatalogBase, _LabelBase
 from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
 
 
-@SubcatalogTypeRegister(LabelType.POLYLINE2D)
 class Polyline2DSubcatalog(  # pylint: disable=too-many-ancestors
     SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin
 ):
@@ -196,7 +195,6 @@ class LabeledPolyline2D(_LabelBase, Polyline2D):  # pylint: disable=too-many-anc
         return self._dumps()
 
 
-@SubcatalogTypeRegister(LabelType.MULTI_POLYLINE2D)
 class MultiPolyline2DSubcatalog(  # pylint: disable=too-many-ancestors
     SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin
 ):

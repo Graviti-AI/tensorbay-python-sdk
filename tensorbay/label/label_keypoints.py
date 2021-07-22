@@ -15,12 +15,11 @@ which is often used for CV tasks such as human body pose estimation.
 from typing import Any, Dict, Iterable, List, Optional, Type, TypeVar, Union
 
 from ..geometry import Keypoints2D
-from ..utility import ReprType, SubcatalogTypeRegister, TypeRegister, attr, attr_base, common_loads
+from ..utility import ReprType, TypeRegister, attr, attr_base, common_loads
 from .basic import LabelType, SubcatalogBase, _LabelBase
 from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin, KeypointsInfo
 
 
-@SubcatalogTypeRegister(LabelType.KEYPOINTS2D)
 class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
     SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin
 ):

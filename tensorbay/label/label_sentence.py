@@ -17,20 +17,11 @@ which is often used for tasks such as automatic speech recognition.
 
 from typing import Any, Dict, Iterable, List, Optional, Type, TypeVar, Union
 
-from ..utility import (
-    AttrsMixin,
-    ReprMixin,
-    SubcatalogTypeRegister,
-    TypeRegister,
-    attr,
-    camel,
-    common_loads,
-)
+from ..utility import AttrsMixin, ReprMixin, TypeRegister, attr, camel, common_loads
 from .basic import LabelType, SubcatalogBase, _LabelBase
 from .supports import AttributesMixin
 
 
-@SubcatalogTypeRegister(LabelType.SENTENCE)
 class SentenceSubcatalog(SubcatalogBase, AttributesMixin):  # pylint: disable=too-many-ancestors
     """This class defines the subcatalog for audio transcripted sentence type of labels.
 
