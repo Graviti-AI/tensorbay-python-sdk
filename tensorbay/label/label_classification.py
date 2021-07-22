@@ -19,9 +19,7 @@ from .basic import SubcatalogBase, _LabelBase
 from .supports import AttributesMixin, CategoriesMixin
 
 
-class ClassificationSubcatalog(  # pylint: disable=too-many-ancestors
-    SubcatalogBase, CategoriesMixin, AttributesMixin
-):
+class ClassificationSubcatalog(SubcatalogBase, CategoriesMixin, AttributesMixin):
     """This class defines the subcatalog for classification type of labels.
 
     Attributes:
