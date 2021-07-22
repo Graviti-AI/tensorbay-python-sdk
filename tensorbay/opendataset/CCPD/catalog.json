@@ -1,0 +1,32 @@
+{
+    "POLYGON": {
+        "attributes": [
+            {
+                "name": "blurriness",
+                "type": "integer",
+                "minimum": 0
+            },
+            {
+                "name": "brightness",
+                "type": "integer",
+                "minimum": 0
+            },
+            {
+                "name": "horizontal_tilt",
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 360
+            },
+            {
+                "name": "vertical_tilt",
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 360
+            },
+            {
+                "name": "license_plate",
+                "type": "string"
+            }
+        ]
+    }
+}

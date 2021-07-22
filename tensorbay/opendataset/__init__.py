@@ -14,6 +14,7 @@ from .BSTLD import BSTLD
 from .CACD import CACD
 from .CADC import CADC
 from .CarConnection import CarConnection
+from .CCPD import CCPD, CCPDGreen
 from .CoinImage import CoinImage
 from .CompCars import CompCars
 from .COVID_CT import COVID_CT
@@ -60,6 +61,8 @@ __all__ = [
     "CACD",
     "CADC",
     "CarConnection",
+    "CCPD",
+    "CCPDGreen",
     "CoinImage",
     "COVIDChestXRay",
     "CompCars",
