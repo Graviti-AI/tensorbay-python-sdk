@@ -39,6 +39,7 @@ from ..utility import AttrsMixin, ReprMixin, ReprType, attr, common_loads, upper
 from .label_box import Box2DSubcatalog, Box3DSubcatalog
 from .label_classification import ClassificationSubcatalog
 from .label_keypoints import Keypoints2DSubcatalog
+from .label_mask import InstanceMaskSubcatalog, PanopticMaskSubcatalog, SemanticMaskSubcatalog
 from .label_polygon import MultiPolygonSubcatalog, PolygonSubcatalog, RLESubcatalog
 from .label_polyline import MultiPolyline2DSubcatalog, Polyline2DSubcatalog
 from .label_sentence import SentenceSubcatalog
@@ -92,6 +93,9 @@ class Catalog(ReprMixin, AttrsMixin):
     multi_polygon: MultiPolygonSubcatalog = _attr()
     rle: RLESubcatalog = _attr()
     sentence: SentenceSubcatalog = _attr()
+    semantic_mask: SemanticMaskSubcatalog = _attr()
+    instance_mask: InstanceMaskSubcatalog = _attr()
+    panoptic_mask: PanopticMaskSubcatalog = _attr()
 
     def __bool__(self) -> bool:
         return any(hasattr(self, key) for key in self._attrs_fields)

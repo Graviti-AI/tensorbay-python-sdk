@@ -74,6 +74,9 @@ class SubcatalogBase(ReprMixin, AttrsMixin):
         return self._dumps()
 
 
+AttributeType = Dict[str, Union[str, int, float, bool, List[Union[str, int, float, bool]]]]
+
+
 class _LabelBase(AttrsMixin, ReprMixin):  # pylint: disable=too-few-public-methods
     """This class defines the basic concept of label.
 
@@ -97,16 +100,14 @@ class _LabelBase(AttrsMixin, ReprMixin):  # pylint: disable=too-few-public-metho
 
     _repr_attrs: Tuple[str, ...] = ("category", "attributes", "instance")
 
-    _AttributeType = Dict[str, Union[str, int, float, bool, List[Union[str, int, float, bool]]]]
-
     category: str = attr(is_dynamic=True)
-    attributes: _AttributeType = attr(is_dynamic=True)
+    attributes: AttributeType = attr(is_dynamic=True)
     instance: str = attr(is_dynamic=True)
 
     def __init__(
         self,
         category: Optional[str] = None,
-        attributes: Optional[_AttributeType] = None,
+        attributes: Optional[AttributeType] = None,
         instance: Optional[str] = None,
     ):
         if category:
