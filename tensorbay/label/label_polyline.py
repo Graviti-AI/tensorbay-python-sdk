@@ -15,8 +15,8 @@ which is often used for CV tasks such as lane detection.
 from typing import Any, Dict, Iterable, Optional, Type, TypeVar
 
 from ..geometry import MultiPolyline2D, Polyline2D
-from ..utility import ReprType, TypeRegister, attr_base, common_loads
-from .basic import LabelType, SubcatalogBase, _LabelBase
+from ..utility import ReprType, attr_base, common_loads
+from .basic import SubcatalogBase, _LabelBase
 from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
 
 
@@ -85,7 +85,6 @@ class Polyline2DSubcatalog(  # pylint: disable=too-many-ancestors
         IsTrackingMixin.__init__(self, is_tracking)
 
 
-@TypeRegister(LabelType.POLYLINE2D)
 class LabeledPolyline2D(_LabelBase, Polyline2D):  # pylint: disable=too-many-ancestors
     """This class defines the concept of polyline2D label.
 
@@ -257,7 +256,6 @@ class MultiPolyline2DSubcatalog(  # pylint: disable=too-many-ancestors
         IsTrackingMixin.__init__(self, is_tracking)
 
 
-@TypeRegister(LabelType.MULTI_POLYLINE2D)
 class LabeledMultiPolyline2D(  # type: ignore[misc]
     _LabelBase, MultiPolyline2D
 ):  # pylint: disable=too-many-ancestors

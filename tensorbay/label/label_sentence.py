@@ -17,8 +17,8 @@ which is often used for tasks such as automatic speech recognition.
 
 from typing import Any, Dict, Iterable, List, Optional, Type, TypeVar, Union
 
-from ..utility import AttrsMixin, ReprMixin, TypeRegister, attr, camel, common_loads
-from .basic import LabelType, SubcatalogBase, _LabelBase
+from ..utility import AttrsMixin, ReprMixin, attr, camel, common_loads
+from .basic import SubcatalogBase, _LabelBase
 from .supports import AttributesMixin
 
 
@@ -209,7 +209,6 @@ class Word(ReprMixin, AttrsMixin):
         return self._dumps()
 
 
-@TypeRegister(LabelType.SENTENCE)  # pylint: disable=too-few-public-methods
 class LabeledSentence(_LabelBase):
     """This class defines the concept of phonetic transcription lable.
 

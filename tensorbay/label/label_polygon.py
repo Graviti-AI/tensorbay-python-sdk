@@ -15,8 +15,8 @@ which is often used for CV tasks such as semantic segmentation.
 from typing import Any, Dict, Iterable, Optional, Type, TypeVar
 
 from ..geometry import RLE, MultiPolygon, Polygon
-from ..utility import ReprType, TypeRegister, attr_base, common_loads
-from .basic import LabelType, SubcatalogBase, _LabelBase
+from ..utility import ReprType, attr_base, common_loads
+from .basic import SubcatalogBase, _LabelBase
 from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
 
 
@@ -207,7 +207,6 @@ class RLESubcatalog(  # pylint: disable=too-many-ancestors
         IsTrackingMixin.__init__(self, is_tracking)
 
 
-@TypeRegister(LabelType.POLYGON)
 class LabeledPolygon(_LabelBase, Polygon):  # pylint: disable=too-many-ancestors
     """This class defines the concept of polygon label.
 
@@ -321,7 +320,6 @@ class LabeledPolygon(_LabelBase, Polygon):  # pylint: disable=too-many-ancestors
         return self._dumps()
 
 
-@TypeRegister(LabelType.MULTI_POLYGON)
 class LabeledMultiPolygon(  # type: ignore[misc]
     _LabelBase, MultiPolygon
 ):  # pylint: disable=too-many-ancestors
@@ -440,7 +438,6 @@ class LabeledMultiPolygon(  # type: ignore[misc]
         return self._dumps()
 
 
-@TypeRegister(LabelType.RLE)
 class LabeledRLE(_LabelBase, RLE):  # type: ignore[misc]  # pylint: disable=too-many-ancestors
     """This class defines the concept of rle label.
 

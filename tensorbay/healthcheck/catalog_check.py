@@ -15,7 +15,7 @@ it finds errors in fields such as 'type', 'enum', 'range' and 'parent categories
 
 from typing import Iterator, Optional, Tuple
 
-from ..label import AttributeInfo, Catalog, CategoryInfo, LabelType
+from ..label import AttributeInfo, Catalog, CategoryInfo
 from ..utility import NameList
 from .pipeline import PipelineForIterable
 from .report import Error
@@ -38,7 +38,7 @@ ATTRIBUTE_INFO_PIPELINE: PipelineForIterable[
 ] = PipelineForIterable()
 
 
-def check_catalog(catalog: Catalog) -> Iterator[Tuple[LabelType, AttributeInfoError]]:
+def check_catalog(catalog: Catalog) -> Iterator[Tuple[str, AttributeInfoError]]:
     """The health check method for :class:`~tensorbay.label.catalog.Catalog`.
 
     Arguments:
@@ -50,8 +50,8 @@ def check_catalog(catalog: Catalog) -> Iterator[Tuple[LabelType, AttributeInfoEr
         or 'parent categories' field.
 
     """
-    for label_type in LabelType:
-        subcatalog = getattr(catalog, label_type.value, None)
+    for key in catalog._attrs_fields:  # pylint: disable=protected-access
+        subcatalog = getattr(catalog, key, None)
         if not subcatalog:
             continue
         categories = getattr(subcatalog, "categories", None)
@@ -59,7 +59,7 @@ def check_catalog(catalog: Catalog) -> Iterator[Tuple[LabelType, AttributeInfoEr
             attribute_info_pipeline = ATTRIBUTE_INFO_PIPELINE.copy()
             attribute_info_pipeline.register(CheckParentCategories(categories))
             for error in attribute_info_pipeline(subcatalog.attributes.values()):
-                yield label_type, error
+                yield key, error
 
 
 class InvalidTypeError(AttributeInfoError):  # pylint: disable=too-few-public-methods

@@ -31,10 +31,9 @@ Different label types correspond to different label classes classes.
 """
 
 from functools import partial
-from typing import Any, Dict, List, Type, TypeVar
+from typing import Any, Dict, Iterator, List, Type, TypeVar
 
 from ..utility import AttrsMixin, ReprMixin, ReprType, attr, common_loads, upper
-from .basic import LabelType
 from .label_box import LabeledBox2D, LabeledBox3D
 from .label_classification import Classification
 from .label_keypoints import LabeledKeypoints2D
@@ -68,7 +67,6 @@ class Label(ReprMixin, AttrsMixin):
     _T = TypeVar("_T", bound="Label")
 
     _repr_type = ReprType.INSTANCE
-    _repr_attrs = tuple(label_type.value for label_type in LabelType)
     _repr_maxlevel = 2
 
     classification: Classification = _attr()
@@ -83,10 +81,11 @@ class Label(ReprMixin, AttrsMixin):
     sentence: List[LabeledSentence] = _attr()
 
     def __bool__(self) -> bool:
-        for label_type in LabelType:
-            if hasattr(self, label_type.value):
-                return True
-        return False
+        return any(hasattr(self, key) for key in self._attrs_fields)
+
+    @property
+    def _repr_attrs(self) -> Iterator[str]:  # type: ignore[override]
+        yield from self._attrs_fields
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
