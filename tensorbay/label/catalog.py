@@ -33,9 +33,8 @@ corresponding to different types of labels.
 """
 
 from functools import partial
-from typing import Any, Dict, Type, TypeVar, Union
+from typing import Any, Dict, Iterator, Type, TypeVar, Union
 
-from ..label import LabelType
 from ..utility import AttrsMixin, ReprMixin, ReprType, attr, common_loads, upper
 from .label_box import Box2DSubcatalog, Box3DSubcatalog
 from .label_classification import ClassificationSubcatalog
@@ -95,7 +94,6 @@ class Catalog(ReprMixin, AttrsMixin):
     _T = TypeVar("_T", bound="Catalog")
 
     _repr_type = ReprType.INSTANCE
-    _repr_attrs = tuple(label_type.value for label_type in LabelType)
     _repr_maxlevel = 2
 
     classification: ClassificationSubcatalog = _attr()
@@ -110,10 +108,11 @@ class Catalog(ReprMixin, AttrsMixin):
     sentence: SentenceSubcatalog = _attr()
 
     def __bool__(self) -> bool:
-        for label_type in LabelType:
-            if hasattr(self, label_type.value):
-                return True
-        return False
+        return any(hasattr(self, key) for key in self._attrs_fields)
+
+    @property
+    def _repr_attrs(self) -> Iterator[str]:  # type: ignore[override]
+        yield from self._attrs_fields
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:

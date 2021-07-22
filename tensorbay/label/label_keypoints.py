@@ -15,8 +15,8 @@ which is often used for CV tasks such as human body pose estimation.
 from typing import Any, Dict, Iterable, List, Optional, Type, TypeVar, Union
 
 from ..geometry import Keypoints2D
-from ..utility import ReprType, TypeRegister, attr, attr_base, common_loads
-from .basic import LabelType, SubcatalogBase, _LabelBase
+from ..utility import ReprType, attr, attr_base, common_loads
+from .basic import SubcatalogBase, _LabelBase
 from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin, KeypointsInfo
 
 
@@ -202,7 +202,6 @@ class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
         return self._dumps()
 
 
-@TypeRegister(LabelType.KEYPOINTS2D)
 class LabeledKeypoints2D(_LabelBase, Keypoints2D):  # pylint: disable=too-many-ancestors
     """This class defines the concept of 2D keypoints label.
 

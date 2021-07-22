@@ -3,10 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""LabelType, SubcatalogBase.
-
-:class:`LabelType` is an enumeration type
-which includes all the supported label types within :class:`Label`.
+"""SubcatalogBase.
 
 :class:`Subcatalogbase` is the base class for different types of subcatalogs,
 which defines the basic concept of Subcatalog.
@@ -17,37 +14,10 @@ A subcatalog class extends :class:`SubcatalogBase` and needed :class:`Subcatalog
 
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
 
-from ..utility import AttrsMixin, ReprMixin, ReprType, TypeEnum, TypeMixin, attr, common_loads
+from ..utility import AttrsMixin, ReprMixin, ReprType, attr, common_loads
 
 
-class LabelType(TypeEnum):
-    """This class defines all the supported types within :class:`Label`.
-
-    Examples:
-        >>> LabelType.BOX3D
-        <LabelType.BOX3D: 'box3d'>
-        >>> LabelType["BOX3D"]
-        <LabelType.BOX3D: 'box3d'>
-        >>> LabelType.BOX3D.name
-        'BOX3D'
-        >>> LabelType.BOX3D.value
-        'box3d'
-
-    """
-
-    CLASSIFICATION = "classification"
-    BOX2D = "box2d"
-    BOX3D = "box3d"
-    POLYGON = "polygon"
-    POLYLINE2D = "polyline2d"
-    MULTI_POLYLINE2D = "multi_polyline2d"
-    RLE = "rle"
-    KEYPOINTS2D = "keypoints2d"
-    MULTI_POLYGON = "multi_polygon"
-    SENTENCE = "sentence"
-
-
-class SubcatalogBase(TypeMixin[LabelType], ReprMixin, AttrsMixin):
+class SubcatalogBase(ReprMixin, AttrsMixin):
     """This is the base class for different types of subcatalogs.
 
     It defines the basic concept of Subcatalog, which is the collection of the labels information.
@@ -104,7 +74,7 @@ class SubcatalogBase(TypeMixin[LabelType], ReprMixin, AttrsMixin):
         return self._dumps()
 
 
-class _LabelBase(AttrsMixin, TypeMixin[LabelType], ReprMixin):
+class _LabelBase(AttrsMixin, ReprMixin):  # pylint: disable=too-few-public-methods
     """This class defines the basic concept of label.
 
     :class:`_LabelBase` is the most basic label level in the TensorBay dataset structure,

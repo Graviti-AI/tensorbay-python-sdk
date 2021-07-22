@@ -14,8 +14,8 @@ which can apply to different types of data, such as images and texts.
 
 from typing import Any, Dict, Optional, Type, TypeVar
 
-from ..utility import TypeRegister, common_loads
-from .basic import LabelType, SubcatalogBase, _LabelBase
+from ..utility import common_loads
+from .basic import SubcatalogBase, _LabelBase
 from .supports import AttributesMixin, CategoriesMixin
 
 
@@ -79,7 +79,6 @@ class ClassificationSubcatalog(  # pylint: disable=too-many-ancestors
     """
 
 
-@TypeRegister(LabelType.CLASSIFICATION)
 class Classification(_LabelBase):
     """This class defines the concept of classification label.
 

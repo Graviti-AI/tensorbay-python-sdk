@@ -6,7 +6,6 @@
 """Label related classes."""
 
 from .attributes import AttributeInfo, Items
-from .basic import LabelType
 from .catalog import Catalog, Subcatalogs
 from .label import Label
 from .label_box import Box2DSubcatalog, Box3DSubcatalog, LabeledBox2D, LabeledBox3D
@@ -41,7 +40,6 @@ __all__ = [
     "Keypoints2DSubcatalog",
     "KeypointsInfo",
     "Label",
-    "LabelType",
     "LabeledBox2D",
     "LabeledBox3D",
     "LabeledKeypoints2D",

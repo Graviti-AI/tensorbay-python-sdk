@@ -16,7 +16,6 @@ basic checking and catalog checking.
 from collections import OrderedDict
 from typing import Any, Callable, List, TypeVar
 
-from ..label import LabelType
 from ..utility import UserMutableMapping, UserSequence
 
 
@@ -106,6 +105,6 @@ class HealthReport:  # pylint: disable=too-few-public-methods
 
     def __init__(self) -> None:
         self.basic_reports = _ErrorList("Basic checking:")
-        self.subcatalog_reports: _ErrorDict[LabelType] = _ErrorDict(
-            "Subcatalog checking:", lambda key: key.name
+        self.subcatalog_reports: _ErrorDict[str] = _ErrorDict(
+            "Subcatalog checking:", lambda key: key
         )
