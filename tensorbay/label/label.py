@@ -37,6 +37,7 @@ from ..utility import AttrsMixin, ReprMixin, ReprType, attr, common_loads, upper
 from .label_box import LabeledBox2D, LabeledBox3D
 from .label_classification import Classification
 from .label_keypoints import LabeledKeypoints2D
+from .label_mask import InstanceMaskBase, PanopticMaskBase, SemanticMaskBase
 from .label_polygon import LabeledMultiPolygon, LabeledPolygon, LabeledRLE
 from .label_polyline import LabeledMultiPolyline2D, LabeledPolyline2D
 from .label_sentence import LabeledSentence
@@ -79,6 +80,9 @@ class Label(ReprMixin, AttrsMixin):
     keypoints2d: List[LabeledKeypoints2D] = _attr()
     multi_polygon: List[LabeledMultiPolygon] = _attr()
     sentence: List[LabeledSentence] = _attr()
+    semantic_mask: SemanticMaskBase = _attr()
+    instance_mask: InstanceMaskBase = _attr()
+    panoptic_mask: PanopticMaskBase = _attr()
 
     def __bool__(self) -> bool:
         return any(hasattr(self, key) for key in self._attrs_fields)
