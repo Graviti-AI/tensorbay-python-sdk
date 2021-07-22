@@ -5,7 +5,6 @@
 
 """Implementation of gas auth."""
 
-
 from configparser import ConfigParser
 from textwrap import indent
 from typing import Dict, Optional
@@ -13,9 +12,11 @@ from urllib.parse import urljoin
 
 import click
 
+from ..exception import UnauthorizedError
 from .utility import (
     error,
     form_profile_value,
+    get_gas,
     is_accesskey,
     read_config,
     update_config,
@@ -58,7 +59,6 @@ def _implement_auth(  # pylint: disable=too-many-arguments
         error(f'Invalid argument "{arg1}"')
 
     _update_profile(config_parser, obj["profile_name"], arg1, arg2)
-    write_config(config_parser)
 
 
 def _get_auth(obj: Dict[str, str], config_parser: ConfigParser, is_all: bool) -> None:
@@ -110,12 +110,26 @@ def _is_gas_url(arg: str) -> bool:
 
 
 def _update_profile(config_parser: ConfigParser, profile_name: str, arg1: str, arg2: str) -> None:
+    access_key, url = (arg2, arg1) if arg2 else (arg1, arg2)
+    gas_client = get_gas(access_key, url, profile_name)
+    try:
+        user_info = gas_client.get_user()
+    except UnauthorizedError:
+        error(f"{access_key} is not a valid AccessKey")
+
     if not config_parser.has_section("profiles"):
         config_parser.add_section("profiles")
+    config_parser["profiles"][profile_name] = form_profile_value(access_key, url)
+    write_config(config_parser, show_message=False)
 
-    config_parser["profiles"][profile_name] = (
-        form_profile_value(arg1) if not arg2 else form_profile_value(arg2, arg1)
-    )
+    messages = [
+        f"Successfully set authentication info of '{click.style(user_info.name, bold=True)}'"
+    ]
+    if user_info.team:
+        messages.append(f" in '{click.style(user_info.team.name, bold=True)}' team")
+    if profile_name != "default":
+        messages.append(f" into profile '{click.style(profile_name, bold=True)}'")
+    click.echo("".join(messages))
 
 
 def _check_args_and_options(arg1: str, arg2: str, get: bool, unset: bool, is_all: bool) -> None:
