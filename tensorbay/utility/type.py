@@ -3,16 +3,13 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""TypeEnum, TypeMixin, TypeRegister and SubcatalogTypeRegister.
+"""TypeEnum, TypeMixin and TypeRegister.
 
 :class:`TypeEnum` is a superclass for enumeration classes that need to create a mapping with class.
 
 :class:`TypeMixin` is a superclass for the class which needs to link with :class:`TypeEnum`.
 
 :class:`TypeRegister` is a decorator, which is used for registering
-:class:`TypeMixin` to :class:`TypeEnum`.
-
-:class:`SubcatalogTypeRegister` is a decorator, which is used for registering
 :class:`TypeMixin` to :class:`TypeEnum`.
 
 """
@@ -29,7 +26,6 @@ class TypeEnum(Enum):
     """
 
     __registry__: Dict["TypeEnum", Type[Any]] = {}
-    __subcatalog_registry__: Dict["TypeEnum", Type[Any]]
 
     def __init_subclass__(cls) -> None:
         cls.__registry__ = {}
@@ -94,30 +90,4 @@ class TypeRegister(Generic[_T]):  # pylint: disable=too-few-public-methods
         """
         class_._enum = self._enum
         self._enum.__registry__[self._enum] = class_
-        return class_
-
-
-class SubcatalogTypeRegister(Generic[_T]):  # pylint: disable=too-few-public-methods
-    """SubcatalogTypeRegister is a decorator, which is used for registering TypeMixin to TypeEnum.
-
-    Arguments:
-        enum: The corresponding :class:`TypeEnum` of the :class:`TypeMixin`.
-
-    """
-
-    def __init__(self, enum: _T) -> None:
-        self._enum = enum
-
-    def __call__(self, class_: Type[_S]) -> Type[_S]:
-        """Call the SubcatalogTypeRegister as a function.
-
-        Arguments:
-            class_: The :class:`TypeEnum` of the :class:`TypeMixin` to be registered.
-
-        Returns:
-            The :class:`TypeEnum` of the :class:`TypeMixin`.
-
-        """
-        class_._enum = self._enum
-        self._enum.__subcatalog_registry__[self._enum] = class_
         return class_

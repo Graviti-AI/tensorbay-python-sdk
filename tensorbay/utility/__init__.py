@@ -18,7 +18,7 @@ from .common import (
 )
 from .name import NameList, NameMixin, SortedNameList
 from .repr import ReprMixin, ReprType, repr_config
-from .type import SubcatalogTypeRegister, TypeEnum, TypeMixin, TypeRegister
+from .type import TypeEnum, TypeMixin, TypeRegister
 from .user import UserMapping, UserMutableMapping, UserMutableSequence, UserSequence
 
 __all__ = [
@@ -34,7 +34,6 @@ __all__ = [
     "ReprMixin",
     "ReprType",
     "SortedNameList",
-    "SubcatalogTypeRegister",
     "TypeEnum",
     "TypeMixin",
     "TypeRegister",

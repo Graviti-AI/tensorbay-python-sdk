@@ -14,12 +14,11 @@ which can apply to different types of data, such as images and texts.
 
 from typing import Any, Dict, Optional, Type, TypeVar
 
-from ..utility import SubcatalogTypeRegister, TypeRegister, common_loads
+from ..utility import TypeRegister, common_loads
 from .basic import LabelType, SubcatalogBase, _LabelBase
 from .supports import AttributesMixin, CategoriesMixin
 
 
-@SubcatalogTypeRegister(LabelType.CLASSIFICATION)
 class ClassificationSubcatalog(  # pylint: disable=too-many-ancestors
     SubcatalogBase, CategoriesMixin, AttributesMixin
 ):

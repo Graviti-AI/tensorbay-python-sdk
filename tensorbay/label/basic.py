@@ -35,8 +35,6 @@ class LabelType(TypeEnum):
 
     """
 
-    __subcatalog_registry__: Dict[TypeEnum, Type[Any]] = {}
-
     CLASSIFICATION = "classification"
     BOX2D = "box2d"
     BOX3D = "box3d"
@@ -47,22 +45,6 @@ class LabelType(TypeEnum):
     KEYPOINTS2D = "keypoints2d"
     MULTI_POLYGON = "multi_polygon"
     SENTENCE = "sentence"
-
-    @property
-    def subcatalog_type(self) -> Type[Any]:
-        """Return the corresponding subcatalog class.
-
-        Each label type has a corresponding Subcatalog class.
-
-        Returns:
-            The corresponding subcatalog type.
-
-        Examples:
-            >>> LabelType.BOX3D.subcatalog_type
-            <class 'tensorbay.label.label_box.Box3DSubcatalog'>
-
-        """
-        return self.__subcatalog_registry__[self]
 
 
 class SubcatalogBase(TypeMixin[LabelType], ReprMixin, AttrsMixin):

@@ -15,12 +15,11 @@ which is often used for CV tasks such as semantic segmentation.
 from typing import Any, Dict, Iterable, Optional, Type, TypeVar
 
 from ..geometry import RLE, MultiPolygon, Polygon
-from ..utility import ReprType, SubcatalogTypeRegister, TypeRegister, attr_base, common_loads
+from ..utility import ReprType, TypeRegister, attr_base, common_loads
 from .basic import LabelType, SubcatalogBase, _LabelBase
 from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
 
 
-@SubcatalogTypeRegister(LabelType.POLYGON)
 class PolygonSubcatalog(  # pylint: disable=too-many-ancestors
     SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin
 ):
@@ -86,7 +85,6 @@ class PolygonSubcatalog(  # pylint: disable=too-many-ancestors
         IsTrackingMixin.__init__(self, is_tracking)
 
 
-@SubcatalogTypeRegister(LabelType.MULTI_POLYGON)
 class MultiPolygonSubcatalog(  # pylint: disable=too-many-ancestors
     SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin
 ):
@@ -148,7 +146,6 @@ class MultiPolygonSubcatalog(  # pylint: disable=too-many-ancestors
         IsTrackingMixin.__init__(self, is_tracking)
 
 
-@SubcatalogTypeRegister(LabelType.RLE)
 class RLESubcatalog(  # pylint: disable=too-many-ancestors
     SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin
 ):
