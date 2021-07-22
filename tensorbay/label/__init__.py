@@ -6,7 +6,7 @@
 """Label related classes."""
 
 from .attributes import AttributeInfo, Items
-from .catalog import Catalog, Subcatalogs
+from .catalog import Catalog
 from .label import Label
 from .label_box import Box2DSubcatalog, Box3DSubcatalog, LabeledBox2D, LabeledBox3D
 from .label_classification import Classification, ClassificationSubcatalog
@@ -55,6 +55,5 @@ __all__ = [
     "Polyline2DSubcatalog",
     "RLESubcatalog",
     "SentenceSubcatalog",
-    "Subcatalogs",
     "Word",
 ]

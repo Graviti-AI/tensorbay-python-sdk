@@ -33,7 +33,7 @@ corresponding to different types of labels.
 """
 
 from functools import partial
-from typing import Any, Dict, Iterator, Type, TypeVar, Union
+from typing import Any, Dict, Iterator, Type, TypeVar
 
 from ..utility import AttrsMixin, ReprMixin, ReprType, attr, common_loads, upper
 from .label_box import Box2DSubcatalog, Box3DSubcatalog
@@ -42,20 +42,6 @@ from .label_keypoints import Keypoints2DSubcatalog
 from .label_polygon import MultiPolygonSubcatalog, PolygonSubcatalog, RLESubcatalog
 from .label_polyline import MultiPolyline2DSubcatalog, Polyline2DSubcatalog
 from .label_sentence import SentenceSubcatalog
-
-Subcatalogs = Union[
-    ClassificationSubcatalog,
-    Box2DSubcatalog,
-    Box3DSubcatalog,
-    PolygonSubcatalog,
-    Polyline2DSubcatalog,
-    MultiPolyline2DSubcatalog,
-    Keypoints2DSubcatalog,
-    MultiPolygonSubcatalog,
-    RLESubcatalog,
-    SentenceSubcatalog,
-]
-
 
 _ERROR_MESSAGE = "The '{attr_name}' subcatalog is not provided in this dataset"
 _attr = partial(attr, is_dynamic=True, key=upper, error_message=_ERROR_MESSAGE)
