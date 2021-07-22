@@ -20,9 +20,7 @@ from .basic import SubcatalogBase, _LabelBase
 from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin, KeypointsInfo
 
 
-class Keypoints2DSubcatalog(  # pylint: disable=too-many-ancestors
-    SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin
-):
+class Keypoints2DSubcatalog(SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin):
     """This class defines the subcatalog for 2D keypoints type of labels.
 
     Arguments:

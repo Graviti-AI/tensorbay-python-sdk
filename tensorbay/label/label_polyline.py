@@ -20,9 +20,7 @@ from .basic import SubcatalogBase, _LabelBase
 from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
 
 
-class Polyline2DSubcatalog(  # pylint: disable=too-many-ancestors
-    SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin
-):
+class Polyline2DSubcatalog(SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin):
     """This class defines the subcatalog for 2D polyline type of labels.
 
     Arguments:
@@ -194,9 +192,7 @@ class LabeledPolyline2D(_LabelBase, Polyline2D):  # pylint: disable=too-many-anc
         return self._dumps()
 
 
-class MultiPolyline2DSubcatalog(  # pylint: disable=too-many-ancestors
-    SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin
-):
+class MultiPolyline2DSubcatalog(SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin):
     """This class defines the subcatalog for 2D multiple polyline type of labels.
 
     Arguments:

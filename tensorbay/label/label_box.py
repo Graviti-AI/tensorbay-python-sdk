@@ -30,9 +30,7 @@ from .basic import SubcatalogBase, _LabelBase
 from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
 
 
-class Box2DSubcatalog(  # pylint: disable=too-many-ancestors
-    SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin
-):
+class Box2DSubcatalog(SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin):
     """This class defines the subcatalog for 2D box type of labels.
 
     Arguments:
@@ -263,9 +261,7 @@ class LabeledBox2D(_LabelBase, Box2D):  # pylint: disable=too-many-ancestors
         return self._dumps()
 
 
-class Box3DSubcatalog(  # pylint: disable=too-many-ancestors
-    SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin
-):
+class Box3DSubcatalog(SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin):
     """This class defines the subcatalog for 3D box type of labels.
 
     Arguments:

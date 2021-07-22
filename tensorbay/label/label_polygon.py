@@ -20,9 +20,7 @@ from .basic import SubcatalogBase, _LabelBase
 from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
 
 
-class PolygonSubcatalog(  # pylint: disable=too-many-ancestors
-    SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin
-):
+class PolygonSubcatalog(SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin):
     """This class defines the subcatalog for polygon type of labels.
 
     Arguments:
@@ -85,9 +83,7 @@ class PolygonSubcatalog(  # pylint: disable=too-many-ancestors
         IsTrackingMixin.__init__(self, is_tracking)
 
 
-class MultiPolygonSubcatalog(  # pylint: disable=too-many-ancestors
-    SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin
-):
+class MultiPolygonSubcatalog(SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin):
     """This class defines the subcatalog for multiple polygon type of labels.
 
     Arguments:
@@ -146,9 +142,7 @@ class MultiPolygonSubcatalog(  # pylint: disable=too-many-ancestors
         IsTrackingMixin.__init__(self, is_tracking)
 
 
-class RLESubcatalog(  # pylint: disable=too-many-ancestors
-    SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin
-):
+class RLESubcatalog(SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin):
     """This class defines the subcatalog for rle type of labels.
 
     Arguments:
