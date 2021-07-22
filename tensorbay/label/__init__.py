@@ -11,6 +11,14 @@ from .label import Label
 from .label_box import Box2DSubcatalog, Box3DSubcatalog, LabeledBox2D, LabeledBox3D
 from .label_classification import Classification, ClassificationSubcatalog
 from .label_keypoints import Keypoints2DSubcatalog, LabeledKeypoints2D
+from .label_mask import (
+    InstanceMask,
+    InstanceMaskSubcatalog,
+    PanopticMask,
+    PanopticMaskSubcatalog,
+    SemanticMask,
+    SemanticMaskSubcatalog,
+)
 from .label_polygon import (
     LabeledMultiPolygon,
     LabeledPolygon,
@@ -36,6 +44,8 @@ __all__ = [
     "CategoryInfo",
     "Classification",
     "ClassificationSubcatalog",
+    "InstanceMask",
+    "InstanceMaskSubcatalog",
     "Items",
     "Keypoints2DSubcatalog",
     "KeypointsInfo",
@@ -51,9 +61,13 @@ __all__ = [
     "LabeledSentence",
     "MultiPolygonSubcatalog",
     "MultiPolyline2DSubcatalog",
+    "PanopticMask",
+    "PanopticMaskSubcatalog",
     "PolygonSubcatalog",
     "Polyline2DSubcatalog",
     "RLESubcatalog",
+    "SemanticMask",
+    "SemanticMaskSubcatalog",
     "SentenceSubcatalog",
     "Word",
 ]
