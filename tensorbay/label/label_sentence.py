@@ -22,7 +22,7 @@ from .basic import SubcatalogBase, _LabelBase
 from .supports import AttributesMixin
 
 
-class SentenceSubcatalog(SubcatalogBase, AttributesMixin):  # pylint: disable=too-many-ancestors
+class SentenceSubcatalog(SubcatalogBase, AttributesMixin):
     """This class defines the subcatalog for audio transcripted sentence type of labels.
 
     Arguments:
