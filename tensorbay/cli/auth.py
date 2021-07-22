@@ -4,7 +4,6 @@
 #
 
 """Implementation of gas auth."""
-
 from configparser import ConfigParser
 from textwrap import indent
 from typing import Dict, Optional
@@ -19,6 +18,7 @@ from .utility import (
     get_gas,
     is_accesskey,
     read_config,
+    read_profile,
     update_config,
     write_config,
 )
@@ -27,14 +27,18 @@ INDENT = " " * 4
 
 
 def _implement_auth(  # pylint: disable=too-many-arguments
-    obj: Dict[str, str], arg1: str, arg2: str, get: bool, unset: bool, is_all: bool
+    obj: Dict[str, str], arg1: str, arg2: str, get: bool, status: bool, unset: bool, is_all: bool
 ) -> None:
-    _check_args_and_options(arg1, arg2, get, unset, is_all)
+    _check_args_and_options(arg1, arg2, get, status, unset, is_all)
     update_config()
     config_parser = read_config()
 
     if get:
         _get_auth(obj, config_parser, is_all)
+        return
+
+    if status:
+        _status_auth(obj, config_parser, is_all)
         return
 
     if unset:
@@ -132,17 +136,49 @@ def _update_profile(config_parser: ConfigParser, profile_name: str, arg1: str, a
     click.echo("".join(messages))
 
 
-def _check_args_and_options(arg1: str, arg2: str, get: bool, unset: bool, is_all: bool) -> None:
-    if is_all and not (get or unset):
-        error('Use "--all" option with "--get" or "--unset" option')
+def _check_args_and_options(  # pylint: disable=too-many-arguments
+    arg1: str, arg2: str, get: bool, status: bool, unset: bool, is_all: bool
+) -> None:
+    if is_all and not (get or unset or status):
+        error('Use "--all" option with "--get", "--unset" or "--status" option')
 
-    if get and unset:
-        error('Use either "--get" or "--unset"')
+    if get + unset + status > 1:
+        error('Use at most one of "--get", "--unset" and "--status"')
 
-    if (get or unset) and (arg1 or arg2):
+    if (get or unset or status) and (arg1 or arg2):
         error("Option requires 0 arguments")
 
 
 def _echo_formatted_profile(name: str, value: str) -> None:
     formatted_value = indent(value, INDENT)
     click.echo(f"{name} = {formatted_value}\n")
+
+
+def _status_auth(obj: Dict[str, str], config_parser: ConfigParser, is_all: bool) -> None:
+    if is_all:
+        try:
+            profiles = config_parser["profiles"]
+        except KeyError:
+            return
+        for key in profiles:
+            _echo_user_info(key, config_parser)
+        return
+
+    _echo_user_info(obj["profile_name"], config_parser)
+
+
+def _echo_user_info(profile_name: str, config_parser: ConfigParser) -> None:
+    access_key, url = read_profile(profile_name, config_parser)
+    gas_client = get_gas(access_key, url, profile_name)
+    try:
+        user_info = gas_client.get_user()
+    except UnauthorizedError:
+        error(f"{access_key} is not a valid AccessKey")
+
+    click.echo(f"{profile_name}\n{INDENT}USER: {user_info.name}")
+    team = user_info.team
+    if team:
+        click.echo(f"{INDENT}TEAM: {team.name}")
+    click.echo(f"{INDENT}{access_key}")
+    if url:
+        click.echo(f"{INDENT}{url}\n")

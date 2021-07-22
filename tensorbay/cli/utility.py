@@ -46,7 +46,7 @@ def _get_config_filepath() -> str:
     return os.path.join(os.environ[home], ".gasconfig")
 
 
-def _read_profile(profile_name: str, config_parser: ConfigParser) -> Tuple[str, str]:
+def read_profile(profile_name: str, config_parser: ConfigParser) -> Tuple[str, str]:
     """Read accessKey and URL from the config file.
 
     Arguments:
@@ -86,7 +86,7 @@ def get_gas(access_key: str, url: str, profile_name: str) -> GAS:
     config_parser = read_config()
     _set_request_config(config_parser)
     if not access_key and not url:
-        access_key, url = _read_profile(profile_name, config_parser)
+        access_key, url = read_profile(profile_name, config_parser)
 
     if not access_key:
         error("AccessKey should be appointed")
