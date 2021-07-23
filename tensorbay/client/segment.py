@@ -194,7 +194,6 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
             self._post_multipart_formdata(
                 permission["extra"]["host"],
                 local_path,
-                target_remote_path,
                 post_data,
             )
 
@@ -204,14 +203,13 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
         self,
         url: str,
         local_path: str,
-        remote_path: str,
         data: Dict[str, Any],
     ) -> None:
         with open(local_path, "rb") as fp:
             file_type = filetype.guess_mime(local_path)
             if "x-amz-date" in data:
                 data["Content-Type"] = file_type
-            data["file"] = (remote_path, fp, file_type)
+            data["file"] = ("", fp, file_type)
             multipart = MultipartEncoder(data)
 
             self._client.do(
