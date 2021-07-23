@@ -4,7 +4,8 @@
 #
 
 """Implementation of gas auth."""
-from configparser import ConfigParser
+
+from configparser import ConfigParser, NoSectionError
 from textwrap import indent
 from typing import Dict, Optional
 from urllib.parse import urljoin
@@ -67,19 +68,32 @@ def _implement_auth(  # pylint: disable=too-many-arguments
 
 def _get_auth(obj: Dict[str, str], config_parser: ConfigParser, is_all: bool) -> None:
     if is_all:
-        for key, value in config_parser["profiles"].items():
+        try:
+            profiles = config_parser["profiles"]
+        except KeyError:
+            return
+        for key, value in profiles.items():
             _echo_formatted_profile(key, value)
         return
 
     profile_name = obj["profile_name"]
-    _echo_formatted_profile(profile_name, config_parser["profiles"][profile_name])
+    try:
+        profile = config_parser["profiles"][profile_name]
+    except KeyError:
+        error(f"Profile '{profile_name}' does not exist.")
+    _echo_formatted_profile(profile_name, profile)
 
 
 def _unset_auth(obj: Dict[str, str], config_parser: ConfigParser, is_all: bool) -> None:
     if is_all:
         config_parser.remove_section("profiles")
     else:
-        config_parser.remove_option("profiles", obj["profile_name"])
+        try:
+            removed = config_parser.remove_option("profiles", obj["profile_name"])
+        except NoSectionError:
+            removed = False
+        if not removed:
+            error(f"Profile '{obj['profile_name']}' does not exist.")
     write_config(config_parser, show_message=False)
     click.echo("Unset successfully")
 
