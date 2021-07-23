@@ -54,7 +54,7 @@ def VOC2012Detection(path: str) -> Dataset:
     main_path = os.path.join(path, "ImageSets", "Main")
 
     dataset = Dataset(DATASET_NAME)
-    dataset.load_catalog("catalog.json")
+    dataset.load_catalog(os.path.join(os.path.dirname(__file__), "catalog.json"))
 
     for segment_name in _SEGMENT_NAMES:
         segment = dataset.create_segment(segment_name)
