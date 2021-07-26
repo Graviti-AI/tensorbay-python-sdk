@@ -1,0 +1,31 @@
+{
+    "MULTI_POLYGON": {
+        "isTracking": true,
+        "categories": [
+            { "name": "bicycle" },
+            { "name": "bus" },
+            { "name": "car" },
+            { "name": "motorcycle" },
+            { "name": "other person" },
+            { "name": "other vehicle" },
+            { "name": "pedestrian" },
+            { "name": "rider" },
+            { "name": "trailer" },
+            { "name": "truck" }
+        ],
+        "attributes": [
+            {
+                "name": "crowd",
+                "type": "boolean"
+            },
+            {
+                "name": "occluded",
+                "type": "boolean"
+            },
+            {
+                "name": "truncated",
+                "type": "boolean"
+            }
+        ]
+    }
+}
