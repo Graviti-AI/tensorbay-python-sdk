@@ -7,6 +7,8 @@
 
 from typing import Dict
 
+import click
+
 from .tbrn import TBRN, TBRNType
 from .utility import error, get_dataset_client, get_gas
 
@@ -27,7 +29,8 @@ def _implement_rm(obj: Dict[str, str], tbrn: str, is_recursive: bool) -> None:
             error("Please use -r option to remove the whole segment")
 
         dataset_client.delete_segment(info.segment_name)
-        return
+    else:
+        segment = dataset_client.get_segment(info.segment_name)
+        segment.delete_data(info.remote_path)
 
-    segment = dataset_client.get_segment(info.segment_name)
-    segment.delete_data(info.remote_path)
+    click.echo(f"{tbrn} is deleted successfully")
