@@ -12,11 +12,17 @@ from glob import glob
 from typing import Any, Dict, List
 from warnings import warn
 
-from ...dataset import Data, Dataset
-from ...label import Classification, LabeledBox2D, LabeledPolygon, LabeledPolyline2D
+from ...dataset import Data, Dataset, Segment
+from ...label import (
+    Classification,
+    LabeledBox2D,
+    LabeledMultiPolygon,
+    LabeledPolygon,
+    LabeledPolyline2D,
+)
 from ...opendataset import _utility
 
-DATASET_NAMES = {"100k": "BDD100K", "10k": "BDD100K_10K"}
+DATASET_NAMES = {"100k": "BDD100K", "10k": "BDD100K_10K", "mots": "BDD100K_MOTS2020"}
 
 _SEGMENT_NAMES = ("test", "train", "val")
 _LABEL_TYPE_INFO = {
@@ -249,3 +255,116 @@ def _merge_label(source_label_contents: List[List[Dict[str, Any]]]) -> Dict[str,
             image_label.setdefault("attributes", {}).update(image_info.get("attributes", {}))
 
     return label_contents
+
+
+def _BDD100K_MOTS2020(path: str) -> Dataset:
+    """Load a sub-dataset MOTS2020 of BDD100K Dataset to Tensorbay.
+
+    The dataset is named as 'BDD100K_MOTS2020'
+
+    The file structure should be like::
+
+        <path>
+            bdd100k_seg_track_20/
+                images/
+                    seg_track_20/
+                        test/
+                            cabc30fc-e7726578/
+                                cabc30fc-e7726578-0000001.jpg
+                                ...
+                            ...
+                        train/
+                            000d4f89-3bcbe37a/
+                                000d4f89-3bcbe37a-0000001.jpg
+                                ...
+                            ...
+                        val/
+                            b1c9c847-3bda4659/
+                                b1c9c847-3bda4659-0000001.jpg
+                                ...
+                            ...
+                labels/
+                    seg_track_20/
+                        polygons/
+                            train/
+                                000d4f89-3bcbe37a.json
+                                ...
+                            val/
+                                b1c9c847-3bda4659.json
+                                ...
+
+    Arguments:
+        path: The root directory of the dataset.
+
+    Returns:
+        Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
+
+    """
+    return _mots_loader(path)
+
+
+def _mots_loader(path: str) -> Dataset:
+    root_path = os.path.join(os.path.abspath(os.path.expanduser(path)), "bdd100k_seg_track_20")
+    dataset = Dataset(DATASET_NAMES["mots"])
+    dataset.load_catalog(os.path.join(os.path.dirname(__file__), "catalog_mots.json"))
+    _load_mots_segment(dataset, root_path)
+
+    return dataset
+
+
+def _load_mots_segment(dataset: Dataset, root_path: str) -> None:
+    images_directory = os.path.join(root_path, "images", "seg_track_20")
+    labels_directory = os.path.join(root_path, "labels", "seg_track_20", "polygons")
+    unlabeled_segment = dataset.create_segment("unlabeled")
+    for segment_name in _SEGMENT_NAMES:
+        segment = dataset.create_segment(segment_name)
+
+        if segment_name == "test":
+            image_paths = _utility.glob(
+                os.path.join(images_directory, segment_name, "**", "*.jpg"), recursive=True
+            )
+            segment.extend(Data(image_path) for image_path in image_paths)
+        else:
+            image_directory = glob(os.path.join(images_directory, segment_name, "*"))
+            labels_directory_segment = os.path.join(labels_directory, segment_name)
+            for image_subdir in image_directory:
+                label_filename = f"{os.path.basename(image_subdir)}.json"
+                _load_mots_data(
+                    image_subdir,
+                    os.path.join(labels_directory_segment, label_filename),
+                    unlabeled_segment,
+                    segment,
+                )
+
+
+def _load_mots_data(
+    image_subdir: str, label_path: str, unlabeled_segment: Segment, target_segment: Segment
+) -> None:
+    with open(label_path, "r") as fp:
+        label_contents = json.load(fp)
+    image_paths = set(_utility.glob(os.path.join(image_subdir, "*.jpg")))
+    for label_content in label_contents:
+        label_content_name = label_content["name"]
+        if "/" in label_content_name:
+            label_content_name = label_content_name[len(label_content["videoName"]) + 1 :]
+        image_path = os.path.join(image_subdir, label_content_name)
+        image_paths.remove(image_path)
+        data = Data(image_path)
+        labeled_multipolygons = []
+        for label_info in label_content.get("labels", ()):
+            if "poly2d" not in label_info:
+                continue
+            polygons = (poly2d_info["vertices"] for poly2d_info in label_info["poly2d"])
+            labeled_multipolygon = LabeledMultiPolygon(
+                polygons=polygons,
+                category=label_info["category"],
+                attributes=label_info["attributes"],
+                instance=str(label_info["id"]),
+            )
+            labeled_multipolygons.append(labeled_multipolygon)
+        data.label.multi_polygon = labeled_multipolygons
+
+        target_segment.append(data)
+
+    for image_path in image_paths:
+        unlabeled_segment.append(Data(image_path))
