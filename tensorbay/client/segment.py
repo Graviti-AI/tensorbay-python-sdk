@@ -197,7 +197,11 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
                 post_data,
             )
 
-        return {"checksum": checksum, "remotePath": target_remote_path}
+        return {
+            "checksum": checksum,
+            "remotePath": target_remote_path,
+            "fileSize": os.path.getsize(local_path),
+        }
 
     def _post_multipart_formdata(
         self,
