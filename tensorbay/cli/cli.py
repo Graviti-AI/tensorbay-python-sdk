@@ -163,7 +163,7 @@ def dataset(obj: Dict[str, str], tbrn: str, is_delete: bool, yes: bool) -> None:
     cls=DeprecatedOptionsCommand,
     synopsis=(
         "$ gas draft -l tb:<dataset_name>                                # List drafts.",
-        "$ gas draft tb:<dataset_name>[@<branch_name>] [-m <message>]    # Create a draft.",
+        "$ gas draft tb:<dataset_name>[@<branch_name>] [-m <title>]      # Create a draft.",
     ),
 )
 @click.argument("tbrn", type=str)
@@ -178,7 +178,7 @@ def dataset(obj: Dict[str, str], tbrn: str, is_delete: bool, yes: bool) -> None:
     type=str,
     multiple=True,
     default=(),
-    help="The message of the draft.",
+    help="The title of the draft.",
     deprecated=("-t", "--title"),
     preferred="-m",
     since="v1.8.0",
@@ -211,13 +211,11 @@ def draft(  # pylint: disable=too-many-arguments
 
 
 @command(
-    synopsis=(
-        "$ gas commit tb:<dataset_name>#<draft_number> [-m <message>]      # Commit a draft.",
-    )
+    synopsis=("$ gas commit tb:<dataset_name>#<draft_number> [-m <title>]      # Commit a draft.",)
 )
 @click.argument("tbrn", type=str)
 @click.option(
-    "-m", "--message", type=str, multiple=True, default=(), help="The message of the commit."
+    "-m", "--message", type=str, multiple=True, default=(), help="The title of the commit."
 )
 @click.pass_obj
 def commit(obj: Dict[str, str], tbrn: str, message: Tuple[str, ...]) -> None:

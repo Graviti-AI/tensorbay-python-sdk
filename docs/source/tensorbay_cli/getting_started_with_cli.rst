@@ -80,7 +80,7 @@ CLI: Create a Draft
 
 .. code:: html
 
-   $ gas draft tb:<dataset_name> [-m <message>]
+   $ gas draft tb:<dataset_name> [-m <title>]
 
 
 CLI: List Drafts
@@ -104,7 +104,7 @@ CLI: Commit the Draft
 
 .. code:: html
 
-   $ gas commit tb:<dataset_name>#<draft_number> [-m <message>]
+   $ gas commit tb:<dataset_name>#<draft_number> [-m <title>]
 
 *********
  Profile
