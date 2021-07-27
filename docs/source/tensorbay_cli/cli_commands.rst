@@ -231,7 +231,7 @@ Create a draft with a title.
 
 .. code:: html
 
-   $ gas draft tb:<dataset_name> [-m <message>]
+   $ gas draft tb:<dataset_name> [-m <title>]
 
 List the drafts of a dataset.
 
@@ -243,7 +243,7 @@ Edit the draft of a dataset.
 
 .. code:: html
 
-   $ gas draft -e tb:<dataset_name>#<draft_number> [-m <message>]
+   $ gas draft -e tb:<dataset_name>#<draft_number> [-m <title>]
 
 Close the draft of a dataset.
 
@@ -258,11 +258,11 @@ Close the draft of a dataset.
 
 Work with commit operations.
 
-Commit a :ref:`reference/glossary:draft` with a message.
+Commit a :ref:`reference/glossary:draft` with a title.
 
 .. code:: html
 
-   $ gas commit tb:<dataset_name>#<draft_number> [-m <message>]
+   $ gas commit tb:<dataset_name>#<draft_number> [-m <title>]
 
 
 ***********
