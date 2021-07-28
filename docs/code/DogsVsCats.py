@@ -29,6 +29,7 @@ gas.create_dataset("DogsVsCats")
 """Organize Dataset / regular import"""
 from tensorbay.dataset import Data, Dataset
 from tensorbay.label import Classification
+from tensorbay.opendataset._utility import glob
 
 """"""
 

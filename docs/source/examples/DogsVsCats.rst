@@ -71,7 +71,7 @@ See :ref:`Classification annotation <reference/label_format:Classification>` for
 .. literalinclude:: ../../../docs/code/DogsVsCats.py
    :language: python
    :start-after: """Organize Dataset / regular import"""
-   :end-at: from tensorbay.label import Classification
+   :end-at: from tensorbay.opendataset._utility import glob
 
 There are already a number of dataloaders in TensorBay SDK provided by the community.
 Thus, instead of writing, importing an available dataloadert is also feasible.

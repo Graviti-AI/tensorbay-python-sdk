@@ -29,6 +29,7 @@ gas.create_dataset("THCHS-30")
 """Organize Dataset / regular import"""
 from tensorbay.dataset import Data, Dataset
 from tensorbay.label import LabeledSentence, SentenceSubcatalog, Word
+from tensorbay.opendataset._utility import glob
 
 """"""
 

@@ -28,6 +28,7 @@ gas.create_dataset("BSTLD")
 
 """Organize Dataset / regular import"""
 from tensorbay.dataset import Data, Dataset
+from tensorbay.exception import ModuleImportError
 from tensorbay.label import LabeledBox2D
 
 """"""
