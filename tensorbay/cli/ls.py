@@ -50,12 +50,14 @@ def _validate_dataset_client(dataset_client: DatasetClientType) -> None:
         error(f'"{dataset_client.name}" has no commit history.')
 
 
-def _ls_dataset(gas: GAS, info: TBRN, list_all_files: bool) -> None:
+def _ls_dataset(gas: GAS, info: TBRN, list_all_files: bool, show_total_num: bool) -> None:
     dataset_client = get_dataset_client(gas, info)
     _validate_dataset_client(dataset_client)
 
     segment_names = dataset_client.list_segment_names()
     if not list_all_files:
+        if show_total_num:
+            click.echo(f"total {len(segment_names)}")
         for segment_name in segment_names:
             click.echo(TBRN(info.dataset_name, segment_name).get_tbrn())
         return
@@ -63,37 +65,51 @@ def _ls_dataset(gas: GAS, info: TBRN, list_all_files: bool) -> None:
     if isinstance(dataset_client, FusionDatasetClient):
         error('"-a" flag is not supported for fusion dataset yet')
 
-    for segment_name in segment_names:
-        segment = dataset_client.get_segment(segment_name)
+    segment_paths = [
+        dataset_client.get_segment(segment_name).list_data_paths() for segment_name in segment_names
+    ]
+    if show_total_num:
+        total = sum(len(segment_path) for segment_path in segment_paths)
+        click.echo(f"total {total}")
+
+    for segment_name, segment_path in zip(segment_names, segment_paths):
         _echo_data(
             info.dataset_name,
             info.draft_number,
             info.revision,
             segment_name,
-            segment.list_data_paths(),
+            segment_path,
         )
 
 
 def _ls_segment(
-    gas: GAS, info: TBRN, list_all_files: bool  # pylint: disable=unused-argument
+    gas: GAS,
+    info: TBRN,
+    list_all_files: bool,  # pylint: disable=unused-argument
+    show_total_num: bool,
 ) -> None:
     dataset_client = get_dataset_client(gas, info)
     _validate_dataset_client(dataset_client)
     if isinstance(dataset_client, FusionDatasetClient):
         error("List fusion segment is not supported yet")
 
-    segment = dataset_client.get_segment(info.segment_name)
+    segment_path = dataset_client.get_segment(info.segment_name).list_data_paths()
+    if show_total_num:
+        click.echo(f"total {len(segment_path)}")
     _echo_data(
         info.dataset_name,
         info.draft_number,
         info.revision,
         info.segment_name,
-        segment.list_data_paths(),
+        segment_path,
     )
 
 
 def _ls_normal_file(
-    gas: GAS, info: TBRN, list_all_files: bool  # pylint: disable=unused-argument
+    gas: GAS,  # pylint: disable=unused-argument
+    info: TBRN,  # pylint: disable=unused-argument
+    list_all_files: bool,  # pylint: disable=unused-argument
+    show_total_num: bool,  # pylint: disable=unused-argument
 ) -> None:
     error("List for specific file is not supported yet")
 
@@ -105,13 +121,17 @@ _LS_FUNCS = {
 }
 
 
-def _implement_ls(obj: Dict[str, str], tbrn: str, list_all_files: bool) -> None:
+def _implement_ls(
+    obj: Dict[str, str], tbrn: str, list_all_files: bool, show_total_num: bool
+) -> None:
     gas = get_gas(**obj)
-
     if not tbrn:
-        for dataset_name in gas.list_dataset_names():
+        dataset_names = gas.list_dataset_names()
+        if show_total_num:
+            click.echo(f"total {len(dataset_names)}")
+        for dataset_name in dataset_names:
             click.echo(TBRN(dataset_name).get_tbrn())
         return
 
     info = TBRN(tbrn=tbrn)
-    _LS_FUNCS[info.type](gas, info, list_all_files)
+    _LS_FUNCS[info.type](gas, info, list_all_files, show_total_num)
