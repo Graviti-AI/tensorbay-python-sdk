@@ -67,7 +67,7 @@ See :ref:`Sentence annotation <reference/label_format:Sentence>` for more detail
 .. literalinclude:: ../../../docs/code/THCHS30.py
    :language: python
    :start-after: """Organize Dataset / regular import"""
-   :end-at: from tensorbay.label import LabeledSentence, SentenceSubcatalog, Word
+   :end-at: from tensorbay.opendataset._utility import glob
 
 There are already a number of dataloaders in TensorBay SDK provided by the community.
 Thus, instead of writing, importing an available dataloadert is also feasible.

@@ -85,7 +85,7 @@ See :ref:`Classification annotation <reference/label_format:Classification>` for
 .. literalinclude:: ../../../docs/code/Newsgroups20.py
    :language: python
    :start-after: """Organize Dataset / regular import"""
-   :end-at: from tensorbay.label import LabeledBox2D
+   :end-at: from tensorbay.opendataset._utility import glob
 
 There are already a number of dataloaders in TensorBay SDK provided by the community.
 Thus, instead of writing, importing an available dataloader is also feasible.

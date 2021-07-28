@@ -83,7 +83,7 @@ See :ref:`Box3D annotation <reference/label_format:Box3D>` for more details.
 .. literalinclude:: ../../../docs/code/NeolixOD.py
    :language: python
    :start-after: """Organize Dataset / regular import"""
-   :end-at: from tensorbay.label import LabeledBox3D
+   :end-at: from tensorbay.opendataset._utility import glob
 
 There are already a number of dataloaders in TensorBay SDK provided by the community.
 Thus, instead of writing, importing an available dataloader is also feasible.
