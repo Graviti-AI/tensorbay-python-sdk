@@ -73,7 +73,7 @@ class DatasetClientBase(VersionControlClient):
     """
 
     def __init__(
-        self, name: str, dataset_id: str, gas: "GAS", *, status: Status, alias: str = ""
+        self, name: str, dataset_id: str, gas: "GAS", *, status: Status, alias: Optional[str] = None
     ) -> None:
         super().__init__(dataset_id, gas, status=status)
         self._name = name
@@ -145,7 +145,7 @@ class DatasetClientBase(VersionControlClient):
         return self._name
 
     @property
-    def alias(self) -> str:
+    def alias(self) -> Optional[str]:
         """Return the TensorBay dataset alias.
 
         Returns:

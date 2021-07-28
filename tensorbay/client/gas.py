@@ -198,7 +198,7 @@ class GAS:
         is_fusion: Literal[False] = False,
         *,
         region: Optional[str] = None,
-        alias: str = "",
+        alias: Optional[str] = None,
     ) -> DatasetClient:
         ...
 
@@ -209,7 +209,7 @@ class GAS:
         is_fusion: Literal[True],
         *,
         region: Optional[str] = None,
-        alias: str = "",
+        alias: Optional[str] = None,
     ) -> FusionDatasetClient:
         ...
 
@@ -220,7 +220,7 @@ class GAS:
         is_fusion: bool = False,
         *,
         region: Optional[str] = None,
-        alias: str = "",
+        alias: Optional[str] = None,
     ) -> DatasetClientType:
         ...
 
@@ -230,7 +230,7 @@ class GAS:
         is_fusion: bool = False,
         *,
         region: Optional[str] = None,  # beijing, hangzhou, shanghai
-        alias: str = "",
+        alias: Optional[str] = None,
     ) -> DatasetClientType:
         """Create a TensorBay dataset with given name.
 
@@ -268,7 +268,7 @@ class GAS:
         path: str,
         *,
         is_fusion: bool = False,
-        alias: str = "",
+        alias: Optional[str] = None,
     ) -> DatasetClientType:
         """Create a TensorBay dataset with given name in auth cloud storage.
 
