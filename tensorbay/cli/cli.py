@@ -92,9 +92,10 @@ command = partial(cli.command, cls=CustomCommand)
 @click.option(
     "-a", "--all", "list_all_files", is_flag=True, help="List all files under the segment."
 )
+@click.option("-l", "show_total_num", is_flag=True, help="Show the total number of resources")
 @click.pass_obj
 def ls(  # pylint: disable=invalid-name
-    obj: Dict[str, str], tbrn: str, list_all_files: bool
+    obj: Dict[str, str], tbrn: str, list_all_files: bool, show_total_num: bool
 ) -> None:
     """List data under the path. If path is empty, list the names of all datasets.\f
 
@@ -102,11 +103,12 @@ def ls(  # pylint: disable=invalid-name
         obj: A dict contains config information.
         tbrn: Path to be listed, like "tb:KITTI:seg1". If empty, list names of all datasets.
         list_all_files: If true, list all files under the segment.
+        show_total_num: If true, show the total number of resources.
 
     """  # noqa: D301,D415
     from .ls import _implement_ls
 
-    _implement_ls(obj, tbrn, list_all_files)
+    _implement_ls(obj, tbrn, list_all_files, show_total_num)
 
 
 @command(
