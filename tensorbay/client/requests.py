@@ -20,6 +20,7 @@ from threading import Lock
 from typing import Any, Callable, DefaultDict, Generic, Iterable, List, Optional, TypeVar
 from urllib.parse import urljoin
 
+import urllib3
 from requests import Session
 from requests.adapters import HTTPAdapter
 from requests.exceptions import RequestException
@@ -32,6 +33,17 @@ from ..exception import ResponseError, ResponseErrorDistributor
 from .log import RequestLogging, ResponseLogging
 
 logger = logging.getLogger(__name__)
+
+
+def _get_allowed_methods_keyword() -> str:
+    splits = urllib3.__version__.split(".", 2)
+    major = int(splits[0])
+    minor = int(splits[1])
+    return "allowed_methods" if (major, minor) >= (1, 26) else "method_whitelist"
+
+
+# check the version of urllib3 and choose the correct keyword for "allowed_methods" in "Retry"
+_ALLOWED_METHODS = _get_allowed_methods_keyword()
 
 
 class Config:  # pylint: disable=too-few-public-methods
@@ -114,8 +126,8 @@ class UserSession(Session):  # pylint: disable=too-few-public-methods
         retry_strategy = Retry(
             total=config.max_retries,
             status_forcelist=config.allowed_retry_status,
-            allowed_methods=config.allowed_retry_methods,
             raise_on_status=False,
+            **{_ALLOWED_METHODS: config.allowed_retry_methods},
         )
 
         self.mount("http://", TimeoutHTTPAdapter(20, 20, retry_strategy))
