@@ -355,12 +355,7 @@ class GAS:
             lambda offset, limit: self._generate_dataset_names(None, offset, limit), 128
         )
 
-    def update_dataset(
-        self,
-        name: str,
-        *,
-        alias: str = ...,  # type: ignore[assignment]
-    ) -> None:
+    def update_dataset(self, name: str, *, alias: Optional[str] = None) -> None:
         """Update a TensorBay Dataset.
 
         Arguments:
@@ -370,10 +365,11 @@ class GAS:
         """
         dataset_id = self._get_dataset(name)["id"]
         patch_data = {}
-        if alias is not ...:  # type: ignore[comparison-overlap]
+        if alias is not None:
             patch_data["alias"] = alias
 
-        self._client.open_api_do("PATCH", "", dataset_id, json=patch_data)
+        if patch_data:
+            self._client.open_api_do("PATCH", "", dataset_id, json=patch_data)
 
     def rename_dataset(self, name: str, new_name: str) -> None:
         """Rename a TensorBay Dataset with given name.
