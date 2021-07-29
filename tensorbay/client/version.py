@@ -5,7 +5,7 @@
 
 """TensorBay dataset version control related classes."""
 
-from typing import TYPE_CHECKING, Any, Dict, Generator, Optional
+from typing import TYPE_CHECKING, Any, Dict, Generator, Optional, Union
 
 from ..exception import OperationError, ResourceNotExistError, StatusError
 from .lazy import PagingList
@@ -501,3 +501,64 @@ class VersionControlClient:
         delete_data: Dict[str, Any] = {"name": name}
 
         self._client.open_api_do("DELETE", "tags", self._dataset_id, json=delete_data)
+
+    def _get_diff(
+        self, *, source: Optional[Union[str, int]] = None, target: Optional[Union[str, int]] = None
+    ) -> Dict[str, Any]:
+        """Get a brief diff between two versions.
+
+        Arguments:
+            source: Source version identification. Type int for draft number, type str for revision.
+                If is not given, use the current version.
+            target: Target version identification. Type int for draft number, type str for revision.
+                If is not given, use the parent commit id.
+
+        Examples:
+            >>> self._get_diff(source="b382450220a64ca9b514dcef27c82d9a", target=1)
+            {
+                "action": "add",
+                "segments": {
+                    "stats": {
+                        "total": 128,
+                        "additions": 64,
+                        "deletions": 64,
+                        "modifications": 0
+                    }
+                }.
+                "notes": {
+                    "action": "modify"
+                }.
+                "catalog": {
+                    "action": "modify"
+                },
+                "data": {
+                    "stats": {
+                        "total": 128,
+                        "additions": 64,
+                        "deletions": 64,
+                        "modifications": 0
+                    }
+                }.
+            }
+
+        Returns:
+            Diff info.
+
+        """
+        if source:
+            source = f"draft-{source}" if isinstance(source, int) else f"commit-{source}"
+        else:
+            if self.status.is_draft:
+                source = f"draft-{self.status.draft_number}"
+            else:
+                source = f"commit-{self.status.commit_id}"
+
+        if target:
+            target = f"draft-{target}" if isinstance(target, int) else f"commit-{target}"
+            basehead = f"{source}...{target}"
+        else:
+            basehead = source
+
+        response = self._client.open_api_do("GET", f"diffs/{basehead}", self._dataset_id).json()
+
+        return response  # type: ignore[no-any-return]
