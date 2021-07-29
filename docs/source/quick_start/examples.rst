@@ -33,6 +33,7 @@ The following table lists a series of examples to help developers to use TensorB
                                                             | Label Type: :ref:`reference/label_format:Sentence`
    :ref:`examples/update_dataset:Update Dataset`            | Topic: Update Dataset
    :ref:`examples/move_and_copy:Move And Copy`              | Topic: Move And Copy
+   :ref:`examples/merge_datasets:Merge Datasets`             | Topic: Merge Datasets
    =======================================================  ===========================================================
 
 .. toctree::
@@ -47,3 +48,4 @@ The following table lists a series of examples to help developers to use TensorB
    ../examples/Newsgroups20
    ../examples/update_dataset
    ../examples/move_and_copy
+   ../examples/merge_datasets
