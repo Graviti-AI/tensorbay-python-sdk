@@ -105,4 +105,12 @@ Moving is only supported within one dataset.
 
    The target dataset of copying and moving must be in :ref:`reference/glossary:draft` status.
 
-Please see :ref:`move and copy<examples/move_and_copy:Move And Copy>` example for more details.
+Please see :ref:`Move and copy<examples/move_and_copy:Move And Copy>` example for more details.
+
+****************
+ Merge Datasets
+****************
+
+Since TensorBay supports copy operation between different datasets, users can use it to merge datasets.
+
+Please see :ref:`examples/merge_datasets:Merge Datasets` example for more details.
