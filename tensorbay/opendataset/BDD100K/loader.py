@@ -306,6 +306,7 @@ def _BDD100K_MOTS2020(path: str) -> Dataset:
 def _mots_loader(path: str) -> Dataset:
     root_path = os.path.join(os.path.abspath(os.path.expanduser(path)), "bdd100k_seg_track_20")
     dataset = Dataset(DATASET_NAMES["mots"])
+    dataset.notes.is_continuous = True
     dataset.load_catalog(os.path.join(os.path.dirname(__file__), "catalog_mots.json"))
     _load_mots_segment(dataset, root_path)
 
@@ -315,48 +316,46 @@ def _mots_loader(path: str) -> Dataset:
 def _load_mots_segment(dataset: Dataset, root_path: str) -> None:
     images_directory = os.path.join(root_path, "images", "seg_track_20")
     labels_directory = os.path.join(root_path, "labels", "seg_track_20", "polygons")
-    unlabeled_segment = dataset.create_segment("unlabeled")
-    for segment_name in _SEGMENT_NAMES:
-        segment = dataset.create_segment(segment_name)
+    for segment_prefix in _SEGMENT_NAMES:
+        image_directory = _utility.glob(os.path.join(images_directory, segment_prefix, "*"))
 
-        if segment_name == "test":
-            image_paths = _utility.glob(
-                os.path.join(images_directory, segment_name, "**", "*.jpg"), recursive=True
-            )
-            segment.extend(Data(image_path) for image_path in image_paths)
-        else:
-            image_directory = glob(os.path.join(images_directory, segment_name, "*"))
-            labels_directory_segment = os.path.join(labels_directory, segment_name)
+        if segment_prefix == "test":
             for image_subdir in image_directory:
+                segment = dataset.create_segment(
+                    f"{segment_prefix}_{os.path.basename(image_subdir)}"
+                )
+                for image_path in _utility.glob(os.path.join(image_subdir, "*.jpg")):
+                    segment.append(Data(image_path))
+        else:
+            labels_directory_segment = os.path.join(labels_directory, segment_prefix)
+            for image_subdir in image_directory:
+                segment = dataset.create_segment(
+                    f"{segment_prefix}_{os.path.basename(image_subdir)}"
+                )
                 label_filename = f"{os.path.basename(image_subdir)}.json"
                 _load_mots_data(
                     image_subdir,
                     os.path.join(labels_directory_segment, label_filename),
-                    unlabeled_segment,
                     segment,
                 )
 
 
-def _load_mots_data(
-    image_subdir: str, label_path: str, unlabeled_segment: Segment, target_segment: Segment
-) -> None:
+def _load_mots_data(image_subdir: str, label_path: str, target_segment: Segment) -> None:
     with open(label_path, "r") as fp:
         label_contents = json.load(fp)
-    image_paths = set(_utility.glob(os.path.join(image_subdir, "*.jpg")))
     for label_content in label_contents:
         label_content_name = label_content["name"]
         if "/" in label_content_name:
             label_content_name = label_content_name[len(label_content["videoName"]) + 1 :]
         image_path = os.path.join(image_subdir, label_content_name)
-        image_paths.remove(image_path)
+
         data = Data(image_path)
         labeled_multipolygons = []
         for label_info in label_content.get("labels", ()):
             if "poly2d" not in label_info:
                 continue
-            polygons = (poly2d_info["vertices"] for poly2d_info in label_info["poly2d"])
             labeled_multipolygon = LabeledMultiPolygon(
-                polygons=polygons,
+                polygons=(poly2d_info["vertices"] for poly2d_info in label_info["poly2d"]),
                 category=label_info["category"],
                 attributes=label_info["attributes"],
                 instance=str(label_info["id"]),
@@ -365,6 +364,3 @@ def _load_mots_data(
         data.label.multi_polygon = labeled_multipolygons
 
         target_segment.append(data)
-
-    for image_path in image_paths:
-        unlabeled_segment.append(Data(image_path))
