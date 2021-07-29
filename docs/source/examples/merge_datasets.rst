@@ -1,0 +1,69 @@
+################
+ Merge Datasets
+################
+
+This topic describes the merge dataset operation.
+
+Take the `Oxford-IIIT Pet <https://gas.graviti.cn/dataset/data-decorators/OxfordIIITPet>`_
+and `Dogs vs Cats <https://gas.graviti.cn/dataset/data-decorators/DogsVsCats>`_
+as examples. Their structures looks like::
+
+    Oxford-IIIT Pet/
+        test/
+            Abyssinian_002.jpg
+            ...
+        trainval/
+            Abyssinian_001.jpg
+            ...
+
+    Dogs vs Cats/
+        test/
+            1.jpg
+            10.jpg
+            ...
+        train/
+            cat.0.jpg
+            cat.1.jpg
+            ...
+
+There are lots of pictures of cats and dogs in these two datasets,
+merge them to get a more diverse dataset.
+
+.. note::
+
+   Before merging datasets, fork both of the open datasets first.
+
+Create a dataset which is named ``mergedDataset``.
+
+.. literalinclude:: ../../../docs/code/merge_datasets.py
+   :language: python
+   :start-after: """Create Target Dataset"""
+   :end-before: """"""
+
+Copy all segments in ``OxfordIIITPetDog`` to ``mergedDataset``.
+
+.. literalinclude:: ../../../docs/code/merge_datasets.py
+   :language: python
+   :start-after: """Copy Segment from Pet"""
+   :end-before: """"""
+
+
+Unify categories of ``train`` segment.
+
+.. literalinclude:: ../../../docs/code/merge_datasets.py
+   :language: python
+   :start-after: """Unify category"""
+   :end-before: """"""
+
+.. note::
+
+    The category in ``OxfordIIITPet`` is of two-level formats, like ``cat.Abyssinian``,
+    but in ``Dogs vs Cats`` it only has one level, like ``cat``.
+    Thus it is important to unify the categories, for example, rename ``cat.Abyssinian`` to ``cat``.
+
+Copy data from ``Dogs vs Cats`` to ``mergedDataset``.
+
+.. literalinclude:: ../../../docs/code/merge_datasets.py
+   :language: python
+   :start-after: """Copy Data from Dog vs Cat"""
+   :end-before: """"""
