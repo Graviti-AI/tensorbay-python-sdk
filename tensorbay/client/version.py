@@ -35,6 +35,25 @@ class VersionControlClient:
         self._client = gas._client  # pylint: disable=protected-access
         self._status = status
 
+    def _get_basehead(
+        self, source: Optional[Union[str, int]] = None, target: Optional[Union[str, int]] = None
+    ) -> str:
+        if source:
+            source = f"draft-{source}" if isinstance(source, int) else f"commit-{source}"
+        else:
+            if self._status.is_draft:
+                source = f"draft-{self.status.draft_number}"
+            else:
+                source = f"commit-{self.status.commit_id}"
+
+        if target:
+            target = f"draft-{target}" if isinstance(target, int) else f"commit-{target}"
+            basehead = f"{source}...{target}"
+        else:
+            basehead = source
+
+        return basehead
+
     def _commit(self, title: str, description: str, tag: Optional[str] = None) -> str:
         post_data: Dict[str, Any] = {"title": title}
         post_data.update(self._status.get_status_info())
@@ -545,19 +564,7 @@ class VersionControlClient:
             Diff info.
 
         """
-        if source:
-            source = f"draft-{source}" if isinstance(source, int) else f"commit-{source}"
-        else:
-            if self.status.is_draft:
-                source = f"draft-{self.status.draft_number}"
-            else:
-                source = f"commit-{self.status.commit_id}"
-
-        if target:
-            target = f"draft-{target}" if isinstance(target, int) else f"commit-{target}"
-            basehead = f"{source}...{target}"
-        else:
-            basehead = source
+        basehead = self._get_basehead(source, target)
 
         response = self._client.open_api_do("GET", f"diffs/{basehead}", self._dataset_id).json()
 
