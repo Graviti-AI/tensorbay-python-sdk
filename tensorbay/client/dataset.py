@@ -278,6 +278,18 @@ class DatasetClient(DatasetClientBase):
 
         return response["totalCount"]  # type: ignore[no-any-return]
 
+    def _generate_diff_segments(
+        self, basehead: str, offset: int = 0, limit: int = 128
+    ) -> Generator[Dict[str, Any], None, int]:
+        params: Dict[str, Any] = {"offset": offset, "limit": limit}
+
+        response = self._client.open_api_do(
+            "GET", f"diffs/{basehead}/segments", self._dataset_id, param=params
+        ).json()
+
+        yield from response["segments"]
+        return response["totalCount"]  # type: ignore[no-any-return]
+
     def _list_segment_instances(self) -> PagingList[Segment]:
         return PagingList(self._generate_segments, 128)
 
@@ -486,6 +498,68 @@ class DatasetClient(DatasetClientBase):
                 self._status.draft_number,
             )
             raise
+
+    def _list_diff_segments(
+        self, *, source: Optional[Union[str, int]] = None, target: Optional[Union[str, int]] = None
+    ) -> PagingList[Dict[str, Any]]:
+        """List diffs of each segment between two versions.
+
+        Arguments:
+            source: Source version identification. Type int for draft number, type str for revision.
+                If is not given, use the current version.
+            target: Target version identification. Type int for draft number, type str for revision.
+                If is not given, use the parent commit id.
+
+        Examples:
+            >>> self._list_diff_segments(source="b382450220a64ca9b514dcef27c82d9a", target=1)
+            {
+                "segments": [
+                    {
+                        "name": "Segment1",
+                        "action": "add",
+                        "data": {
+                            "stats": {
+                                "total": 3,
+                                "additions": 3,
+                                "deletions": 0,
+                                "modifications": 0
+                            },
+                        },
+                        "sensors": {
+                            "action": "modify"
+                        }
+                    },
+                    {
+                        "name": "Segment2",
+                        "action": "add",
+                        "data": {
+                            "stats": {
+                                "total": 3,
+                                "additions": 3,
+                                "deletions": 0,
+                               "modifications": 0
+                            },
+                        },
+                        "sensors": {
+                            "action": "modify"
+                        }
+                    },
+                ]
+                ...
+                "offset": 0,
+                "recordSize": 2,
+                "totalCount": 2
+            }
+
+        Returns:
+            The PagingList of diffs of each segment.
+
+        """
+        basehead = self._get_basehead(source, target)
+
+        return PagingList(
+            lambda offset, limit: self._generate_diff_segments(basehead, offset, limit), 128
+        )
 
 
 FrameDataGenerator = Iterator[Tuple[Union[Data, AuthData], str, str]]
