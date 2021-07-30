@@ -6,16 +6,8 @@
 """Utility classes."""
 
 from .attr import AttrsMixin, attr, attr_base, camel, upper
-from .common import (
-    DefaultValueDeprecated,
-    Deprecated,
-    Disable,
-    EqMixin,
-    KwargsDeprecated,
-    MatrixType,
-    common_loads,
-    locked,
-)
+from .common import EqMixin, MatrixType, common_loads, locked
+from .deprecated import DefaultValueDeprecated, Deprecated, Disable, KwargsDeprecated
 from .itertools import chunked
 from .name import NameList, NameMixin, SortedNameList
 from .repr import ReprMixin, ReprType, repr_config
