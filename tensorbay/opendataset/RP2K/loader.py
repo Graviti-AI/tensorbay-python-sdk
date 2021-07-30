@@ -57,7 +57,8 @@ def RP2K(path: str) -> Dataset:
                 continue
             image_paths = _glob(catagory_path, ("*.jpg", "*.png"))
             for image_path in image_paths:
-                data = Data(image_path)
+                remote_path = os.path.basename(image_path).replace(" ", "_")
+                data = Data(local_path=image_path, target_remote_path=remote_path)
                 data.label.classification = Classification(catagory)
                 segment.append(data)
 
