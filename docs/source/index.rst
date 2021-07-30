@@ -68,6 +68,7 @@ It provides:
    tensorbay_cli/getting_started_with_cli
    tensorbay_cli/tbrn
    tensorbay_cli/cli_commands
+   tensorbay_cli/completion
 
 .. toctree::
    :maxdepth: 1
