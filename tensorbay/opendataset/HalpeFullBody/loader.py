@@ -13,6 +13,7 @@ from typing import Any, Dict
 from ...dataset import Data, Dataset
 from ...geometry import Keypoint2D
 from ...label import LabeledKeypoints2D
+from ...utility import chunked
 
 DATASET_NAME = "HalpeFullBody"
 
@@ -76,9 +77,8 @@ def HalpeFullBody(path: str) -> Dataset:
 def _get_data(image_path: str, annotation: Dict[str, Any]) -> Data:
     data = Data(image_path)
 
-    keypoints_iter = iter(annotation["keypoints"])
     keypoints = LabeledKeypoints2D()
-    for x, y, v in zip(keypoints_iter, keypoints_iter, keypoints_iter):
+    for x, y, v in chunked(annotation["keypoints"], 3):
         keypoints.append(Keypoint2D(x, y, v if v in (0, 1, 2) else 2))  # pylint: disable=no-member
 
     data.label.keypoints2d = [keypoints]

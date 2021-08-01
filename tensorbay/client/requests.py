@@ -17,7 +17,7 @@ from collections import defaultdict
 from concurrent.futures import FIRST_EXCEPTION, ThreadPoolExecutor, wait
 from queue import Queue
 from threading import Lock
-from typing import Any, Callable, DefaultDict, Generic, Iterable, List, Optional, TypeVar
+from typing import Any, Callable, DefaultDict, Generic, Iterable, Optional, Tuple, TypeVar
 from urllib.parse import urljoin
 
 import urllib3
@@ -326,7 +326,7 @@ def multithread_upload(
     function: Callable[[_T], Optional[_R]],
     arguments: Iterable[_T],
     *,
-    callback: Optional[Callable[[List[_R]], None]] = None,
+    callback: Optional[Callable[[Tuple[_R, ...]], None]] = None,
     jobs: int = 1,
     pbar: Tqdm,
 ) -> None:
@@ -374,7 +374,7 @@ class MultiCallbackTask(Generic[_T, _R]):
         self,
         *,
         function: Callable[[_T], Optional[_R]],
-        callback: Callable[[List[_R]], None],
+        callback: Callable[[Tuple[_R, ...]], None],
         size: int = 10,
     ) -> None:
         self._lock = Lock()
@@ -395,15 +395,15 @@ class MultiCallbackTask(Generic[_T, _R]):
             self._arguments.put(callback_info)
         with self._lock:
             if self._arguments.qsize() >= self._size:
-                callback_arguments = [self._arguments.get() for _ in range(self._size)]
+                callback_arguments = tuple(self._arguments.get() for _ in range(self._size))
             else:
-                callback_arguments = []
+                callback_arguments = ()
 
         if callback_arguments:
             self._callback(callback_arguments)
 
     def last_callback(self) -> None:
         """Send the last callback when all works have been done."""
-        callback_arguments = [self._arguments.get() for _ in range(self._arguments.qsize())]
+        callback_arguments = tuple(self._arguments.get() for _ in range(self._arguments.qsize()))
         if callback_arguments:
             self._callback(callback_arguments)
