@@ -27,8 +27,8 @@ import os
 import time
 from copy import deepcopy
 from hashlib import sha1
-from itertools import islice
-from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, List, Optional, Union
+from itertools import zip_longest
+from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Optional, Tuple, Union
 
 import filetype
 from requests_toolbelt import MultipartEncoder
@@ -37,7 +37,7 @@ from ulid import from_timestamp
 from ..dataset import AuthData, Data, Frame, RemoteData
 from ..exception import FrameError, InvalidParamsError, OperationError
 from ..sensor.sensor import Sensor, Sensors
-from ..utility import Disable, locked
+from ..utility import Disable, chunked, locked
 from .lazy import PagingList
 from .requests import config
 from .status import Status
@@ -236,7 +236,7 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
 
     def _synchronize_upload_info(
         self,
-        callback_info: List[Dict[str, Any]],
+        callback_info: Tuple[Dict[str, Any], ...],
     ) -> None:
         put_data: Dict[str, Any] = {
             "segmentName": self.name,
@@ -306,10 +306,7 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
 
         all_paths = iter((remote_paths,)) if isinstance(remote_paths, str) else iter(remote_paths)
 
-        while True:
-            request_remote_paths = list(islice(all_paths, 128))
-            if not request_remote_paths:
-                return
+        for request_remote_paths in chunked(all_paths, 128):
             delete_data: Dict[str, Any] = {
                 "segmentName": self.name,
                 "remotePaths": request_remote_paths,
@@ -390,7 +387,7 @@ class SegmentClient(SegmentClientBase):
 
         callback_info = self._upload_file(local_path, target_remote_path)
 
-        self._synchronize_upload_info([callback_info])
+        self._synchronize_upload_info((callback_info,))
 
     def upload_label(self, data: Data) -> None:
         """Upload label with Data object to the draft.
@@ -415,7 +412,7 @@ class SegmentClient(SegmentClientBase):
         callback_info = self._upload_file(data.path, data.target_remote_path)
         if data.label:
             callback_info["label"] = data.label.dumps()
-        self._synchronize_upload_info([callback_info])
+        self._synchronize_upload_info((callback_info,))
 
     def import_auth_data(self, data: AuthData) -> None:
         """Import AuthData object to the draft.
@@ -506,13 +503,12 @@ class SegmentClient(SegmentClientBase):
         }
         post_data.update(self._status.get_status_info())
 
-        for start in range(0, len(all_source_remote_paths), 128):
-            request_target_remote_paths = all_target_remote_paths[start : start + 128]
-            request_source_remote_paths = all_source_remote_paths[start : start + 128]
-
-            if request_target_remote_paths:
-                post_data["remotePaths"] = request_target_remote_paths
-            post_data["source"]["remotePaths"] = request_source_remote_paths
+        for targets, sources in zip_longest(
+            chunked(all_target_remote_paths, 128), chunked(all_source_remote_paths, 128)
+        ):
+            if targets:
+                post_data["remotePaths"] = targets
+            post_data["source"]["remotePaths"] = sources
 
             self._client.open_api_do("POST", "data?multipleCopy", self._dataset_id, json=post_data)
 
@@ -603,13 +599,12 @@ class SegmentClient(SegmentClientBase):
         }
         post_data.update(self._status.get_status_info())
 
-        for start in range(0, len(all_source_remote_paths), 128):
-            request_target_remote_paths = all_target_remote_paths[start : start + 128]
-            request_source_remote_paths = all_source_remote_paths[start : start + 128]
-
-            if request_target_remote_paths:
-                post_data["remotePaths"] = request_target_remote_paths
-            post_data["source"]["remotePaths"] = request_source_remote_paths
+        for targets, sources in zip_longest(
+            chunked(all_target_remote_paths, 128), chunked(all_source_remote_paths, 128)
+        ):
+            if targets:
+                post_data["remotePaths"] = targets
+            post_data["source"]["remotePaths"] = sources
 
             self._client.open_api_do("POST", "data?multipleMove", self._dataset_id, json=post_data)
 
@@ -782,17 +777,17 @@ class FusionSegmentClient(SegmentClientBase):
         else:
             raise FrameError("Frame id conflicts, please do not give timestamp to the function!.")
 
-        callback_info_list = []
+        all_callback_info = []
         for sensor_name, data in frame.items():
             if not isinstance(data, Data):
                 continue
 
             callback_info = self._upload_file(data.path, data.target_remote_path)
             self._wrap_callback_info(callback_info, sensor_name, frame_id.str, data)
-            callback_info_list.append(callback_info)
+            all_callback_info.append(callback_info)
 
-        for i in range(0, len(callback_info_list), 10):
-            self._synchronize_upload_info(callback_info_list[i : i + 10])
+        for chunked_callback_info in chunked(all_callback_info, 10):
+            self._synchronize_upload_info(chunked_callback_info)
 
     def list_frames(self) -> PagingList[Frame]:
         """List required frames in the segment in a certain commit.
