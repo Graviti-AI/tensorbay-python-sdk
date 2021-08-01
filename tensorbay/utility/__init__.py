@@ -16,6 +16,7 @@ from .common import (
     common_loads,
     locked,
 )
+from .itertools import chunked
 from .name import NameList, NameMixin, SortedNameList
 from .repr import ReprMixin, ReprType, repr_config
 from .type import SubcatalogTypeRegister, TypeEnum, TypeMixin, TypeRegister
@@ -25,8 +26,8 @@ __all__ = [
     "AttrsMixin",
     "DefaultValueDeprecated",
     "Deprecated",
-    "EqMixin",
     "Disable",
+    "EqMixin",
     "KwargsDeprecated",
     "MatrixType",
     "NameList",
@@ -45,6 +46,7 @@ __all__ = [
     "attr",
     "attr_base",
     "camel",
+    "chunked",
     "common_loads",
     "locked",
     "repr_config",

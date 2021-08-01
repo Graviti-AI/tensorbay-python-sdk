@@ -12,6 +12,7 @@ import re
 from ...dataset import Data, Dataset, Segment
 from ...exception import FileStructureError
 from ...label import Classification, LabeledBox2D
+from ...utility import chunked
 from .._utility import glob
 
 DATASET_NAME = "LISATrafficLight"
@@ -79,7 +80,7 @@ def LISATrafficLight(path: str) -> Dataset:
 
     csv_paths = glob(os.path.join(annotation_path, "**", "*.csv"), recursive=True)
 
-    for box_csv_path, bulb_csv_path in zip(csv_paths[0::2], csv_paths[1::2]):
+    for box_csv_path, bulb_csv_path in chunked(csv_paths, 2):
         segment = dataset.create_segment(_get_segment_name(box_csv_path))
 
         prefix = _get_path_prefix(annotation_path, box_csv_path)
