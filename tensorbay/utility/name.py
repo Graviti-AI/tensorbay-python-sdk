@@ -165,10 +165,17 @@ class SortedNameList(UserSequence[_T]):
         Arguments:
             value: The element needs to be added to the list.
 
+        Raises:
+            KeyError: If the name of the added value exists in the list.
+
         """
-        index = bisect_right(self._names, value.name)
+        name = value.name
+        index = bisect_right(self._names, name)
+        if index != 0 and self._names[index - 1] == name:
+            raise KeyError(f'Name "{name}" already exists!')
+
         self._data.insert(index, value)
-        self._names.insert(index, value.name)
+        self._names.insert(index, name)
 
     def keys(self) -> Tuple[str, ...]:
         """Get all element names.
