@@ -134,6 +134,25 @@ class DatasetClientBase(VersionControlClient):
 
         self._client.open_api_do("POST", "segments?copy", self._dataset_id, json=post_data)
 
+    def _move_segment(
+        self,
+        source_name: str,
+        target_name: str,
+        *,
+        strategy: str = "abort",
+    ) -> None:
+        self._status.check_authority_for_draft()
+        if strategy not in _STRATEGIES:
+            raise InvalidParamsError(param_name="strategy", param_value=strategy)
+        post_data: Dict[str, Any] = {
+            "strategy": strategy,
+            "source": {"segmentName": source_name},
+            "segmentName": target_name,
+        }
+        post_data.update(self._status.get_status_info())
+
+        self._client.open_api_do("POST", "segments?move", self._dataset_id, json=post_data)
+
     @property
     def name(self) -> str:
         """Return the TensorBay dataset name.
@@ -416,21 +435,8 @@ class DatasetClient(DatasetClientBase):
         Returns:
             The client of the moved target segment.
 
-        Raises:
-            InvalidParamsError: When the strategy is invalid.
-
         """
-        self._status.check_authority_for_draft()
-        if strategy not in _STRATEGIES:
-            raise InvalidParamsError(param_name="strategy", param_value=strategy)
-        post_data: Dict[str, Any] = {
-            "strategy": strategy,
-            "source": {"segmentName": source_name},
-            "segmentName": target_name,
-        }
-        post_data.update(self._status.get_status_info())
-
-        self._client.open_api_do("POST", "segments?move", self._dataset_id, json=post_data)
+        self._move_segment(source_name, target_name, strategy=strategy)
         return SegmentClient(target_name, self)
 
     def get_segment(self, name: str = "default") -> SegmentClient:
@@ -774,21 +780,8 @@ class FusionDatasetClient(DatasetClientBase):
         Returns:
             The client of the moved target segment.
 
-        Raises:
-            InvalidParamsError: When the strategy is invalid.
-
         """
-        self._status.check_authority_for_draft()
-        if strategy not in _STRATEGIES:
-            raise InvalidParamsError(param_name="strategy", param_value=strategy)
-        post_data: Dict[str, Any] = {
-            "strategy": strategy,
-            "source": {"segmentName": source_name},
-            "segmentName": target_name,
-        }
-        post_data.update(self._status.get_status_info())
-
-        self._client.open_api_do("POST", "segments?move", self._dataset_id, json=post_data)
+        self._move_segment(source_name, target_name, strategy=strategy)
         return FusionSegmentClient(target_name, self)
 
     def get_segment(self, name: str = "default") -> FusionSegmentClient:
