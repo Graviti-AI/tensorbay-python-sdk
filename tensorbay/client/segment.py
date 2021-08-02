@@ -786,7 +786,7 @@ class FusionSegmentClient(SegmentClientBase):
             self._wrap_callback_info(callback_info, sensor_name, frame_id.str, data)
             all_callback_info.append(callback_info)
 
-        for chunked_callback_info in chunked(all_callback_info, 10):
+        for chunked_callback_info in chunked(all_callback_info, 50):
             self._synchronize_upload_info(chunked_callback_info)
 
     def list_frames(self) -> PagingList[Frame]:
