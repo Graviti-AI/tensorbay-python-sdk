@@ -23,7 +23,9 @@ from .vector import Vector3D
 
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
-    from quaternion import as_rotation_matrix, from_rotation_matrix, quaternion, rotate_vectors
+    from quaternion import as_rotation_matrix, from_rotation_matrix
+    from quaternion import quaternion as Quaternion
+    from quaternion import rotate_vectors
 
 _T = TypeVar("_T", bound="Transform3D")
 
@@ -72,7 +74,7 @@ class Transform3D(ReprMixin):
     _repr_type = ReprType.INSTANCE
     _repr_attrs = ("translation", "rotation")
 
-    RotationType = Union[Iterable[float], quaternion]
+    RotationType = Union[Iterable[float], Quaternion]
 
     def __init__(
         self,
@@ -92,10 +94,10 @@ class Transform3D(ReprMixin):
                 ) from error
 
         self._translation = Vector3D(*translation)
-        if isinstance(rotation, quaternion):
-            self._rotation = quaternion(rotation)
+        if isinstance(rotation, Quaternion):
+            self._rotation = Quaternion(rotation)
         else:
-            self._rotation = quaternion(*rotation)
+            self._rotation = Quaternion(*rotation)
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, self.__class__):
@@ -120,7 +122,7 @@ class Transform3D(ReprMixin):
 
             # mypy does not recognize quaternion type, and will infer it as Any.
             # This typing problem to be resolved.
-            if isinstance(other, quaternion):
+            if isinstance(other, Quaternion):
                 return self._create(self._translation, self._rotation * other)
 
             return self._mul_vector(other)  # type: ignore[arg-type]
@@ -130,9 +132,9 @@ class Transform3D(ReprMixin):
 
         return NotImplemented
 
-    def __rmul__(self: _T, other: quaternion) -> _T:
+    def __rmul__(self: _T, other: Quaternion) -> _T:
         try:
-            if isinstance(other, quaternion):
+            if isinstance(other, Quaternion):
                 return self._create(
                     Vector3D(*rotate_vectors(other, self._translation)),
                     other * self._rotation,
@@ -143,7 +145,7 @@ class Transform3D(ReprMixin):
         return NotImplemented
 
     @classmethod
-    def _create(cls: Type[_T], translation: Vector3D, rotation: quaternion) -> _T:
+    def _create(cls: Type[_T], translation: Vector3D, rotation: Quaternion) -> _T:
         transform: _T = object.__new__(cls)
         transform._translation = translation  # pylint: disable=protected-access
         transform._rotation = rotation  # pylint: disable=protected-access
@@ -157,7 +159,7 @@ class Transform3D(ReprMixin):
     def _loads(self, contents: Dict[str, Dict[str, float]]) -> None:
         self._translation = Vector3D.loads(contents["translation"])
         rotation_contents = contents["rotation"]
-        self._rotation = quaternion(
+        self._rotation = Quaternion(
             rotation_contents["w"],
             rotation_contents["x"],
             rotation_contents["y"],
@@ -204,7 +206,7 @@ class Transform3D(ReprMixin):
         return self._translation
 
     @property
-    def rotation(self) -> quaternion:
+    def rotation(self) -> Quaternion:
         """Return the rotation of the 3D transform.
 
         Returns:
@@ -264,15 +266,27 @@ class Transform3D(ReprMixin):
         """
         self._translation = Vector3D(x, y, z)
 
-    def set_rotation(self, rotation: RotationType) -> None:
+    def set_rotation(
+        self,
+        w: Optional[float] = None,
+        x: Optional[float] = None,
+        y: Optional[float] = None,
+        z: Optional[float] = None,
+        *,
+        quaternion: Optional[Quaternion] = None,
+    ) -> None:
         """Set the rotation of the transform.
 
         Arguments:
-            rotation: Rotation in a sequence of [w, x, y, z] or numpy quaternion.
+            w: The w componet of the roation quaternion.
+            x: The x componet of the roation quaternion.
+            y: The y componet of the roation quaternion.
+            z: The z componet of the roation quaternion.
+            quaternion: Numpy quaternion representing the rotation.
 
         Examples:
             >>> transform = Transform3D([1, 1, 1], [1, 0, 0, 0])
-            >>> transform.set_rotation([0, 1, 0, 0])
+            >>> transform.set_rotation(0, 1, 0, 0)
             >>> transform
             Transform3D(
               (translation): Vector3D(1, 1, 1),
@@ -280,10 +294,10 @@ class Transform3D(ReprMixin):
             )
 
         """
-        if isinstance(rotation, quaternion):
-            self._rotation = quaternion(rotation)
-        else:
-            self._rotation = quaternion(*rotation)
+        if quaternion:
+            self._rotation = Quaternion(quaternion)
+            return
+        self._rotation = Quaternion(w, x, y, z)
 
     def as_matrix(self) -> np.ndarray:
         """Return the transform as a 4x4 transform matrix.
