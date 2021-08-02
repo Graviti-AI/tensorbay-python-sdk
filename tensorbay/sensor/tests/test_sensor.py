@@ -110,7 +110,7 @@ class TestLidar:
 
     def test_set_rotation(self):
         lidar = Lidar("test")
-        lidar.set_rotation([1, 2, 3, 4])
+        lidar.set_rotation(1, 2, 3, 4)
         assert lidar.extrinsics.rotation == _ROTATION
 
     def test_dumps(self):
@@ -141,7 +141,7 @@ class TestRadar:
 
     def test_set_rotation(self):
         radar = Radar("test")
-        radar.set_rotation([1, 2, 3, 4])
+        radar.set_rotation(1, 2, 3, 4)
         assert radar.extrinsics.rotation == _ROTATION
 
     def test_dumps(self):
@@ -172,7 +172,7 @@ class TestCamera:
 
     def test_set_rotation(self):
         camera = Camera("test")
-        camera.set_rotation([1, 2, 3, 4])
+        camera.set_rotation(1, 2, 3, 4)
         assert camera.extrinsics.rotation == _ROTATION
 
     def test_set_camera_matrix(self):
@@ -221,7 +221,7 @@ class TestFisheyeCamera:
 
     def test_set_rotation(self):
         fisheye_camera = FisheyeCamera("test")
-        fisheye_camera.set_rotation([1, 2, 3, 4])
+        fisheye_camera.set_rotation(1, 2, 3, 4)
         assert fisheye_camera.extrinsics.rotation == _ROTATION
 
     def test_dumps(self):

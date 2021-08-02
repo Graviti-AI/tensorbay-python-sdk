@@ -30,6 +30,7 @@ produces strong visual distortion intended to create a wide panoramic or hemisph
 
 """
 
+import warnings
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Union
 
 from ..geometry import Transform3D
@@ -44,6 +45,10 @@ from ..utility import (
     common_loads,
 )
 from .intrinsics import CameraIntrinsics
+
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    from quaternion import quaternion as Quaternion
 
 _T = TypeVar("_T", bound="Sensor")
 
@@ -234,14 +239,26 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
             self.extrinsics = Transform3D()
         self.extrinsics.set_translation(x, y, z)
 
-    def set_rotation(self, rotation: Transform3D.RotationType) -> None:
+    def set_rotation(
+        self,
+        w: Optional[float] = None,
+        x: Optional[float] = None,
+        y: Optional[float] = None,
+        z: Optional[float] = None,
+        *,
+        quaternion: Optional[Quaternion] = None,
+    ) -> None:
         """Set the rotation of the sensor.
 
         Arguments:
-            rotation: Rotation in a sequence of [w, x, y, z] or numpy quaternion.
+            w: The w componet of the roation quaternion.
+            x: The x componet of the roation quaternion.
+            y: The y componet of the roation quaternion.
+            z: The z componet of the roation quaternion.
+            quaternion: Numpy quaternion representing the rotation.
 
         Examples:
-            >>> sensor.set_rotation([2, 3, 4, 5])
+            >>> sensor.set_rotation(2, 3, 4, 5)
             >>> sensor
             Lidar("Lidar1")(
                 (extrinsics): Transform3D(
@@ -253,7 +270,7 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
         """
         if not hasattr(self, "extrinsics"):
             self.extrinsics = Transform3D()
-        self.extrinsics.set_rotation(rotation)
+        self.extrinsics.set_rotation(w, x, y, z, quaternion=quaternion)
 
 
 @TypeRegister(SensorType.LIDAR)

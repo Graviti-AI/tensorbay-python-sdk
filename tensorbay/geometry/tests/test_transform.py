@@ -115,12 +115,15 @@ class TestTransform3D:
     def test_set_rotation(self):
         transform = Transform3D()
 
-        transform.set_rotation([0, 1, 0, 0])
+        transform.set_rotation(0, 1, 0, 0)
         assert transform.rotation == quaternion(0, 1, 0, 0)
 
         quaternion_1 = quaternion(0, 1, 0, 0)
-        transform.set_rotation(quaternion_1)
+        transform.set_rotation(quaternion=quaternion_1)
         assert transform.rotation == quaternion_1
+
+        with pytest.raises(TypeError):
+            transform.set_rotation([0, 1, 0, 0])
 
     def test_as_matrix(self):
         matrix = np.array([[1, 0, 0, 1], [0, -1, 0, 2], [0, 0, -1, 3], [0, 0, 0, 1]])
