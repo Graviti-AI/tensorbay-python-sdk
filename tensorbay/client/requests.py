@@ -375,7 +375,7 @@ class MultiCallbackTask(Generic[_T, _R]):
         *,
         function: Callable[[_T], Optional[_R]],
         callback: Callable[[Tuple[_R, ...]], None],
-        size: int = 10,
+        size: int = 50,
     ) -> None:
         self._lock = Lock()
         self._function = function
