@@ -14,21 +14,26 @@ and has a corresponding :ref:`subcatalog <reference/dataset_structure:Catalog>` 
 .. table:: supported label types
    :widths: auto
 
-   ============================================  =============================================================  =======================================================================
-   supported label types                           label classes                                                  subcatalog classes
-   ============================================  =============================================================  =======================================================================
-   :ref:`reference/label_format:Classification`  :class:`~tensorbay.label.label_classification.Classification`  :class:`~tensorbay.label.label_classification.ClassificationSubcatalog`
-   :ref:`reference/label_format:Box2D`           :class:`~tensorbay.label.label_box.LabeledBox2D`               :class:`~tensorbay.label.label_box.Box2DSubcatalog`
-   :ref:`reference/label_format:Box3D`           :class:`~tensorbay.label.label_box.LabeledBox3D`               :class:`~tensorbay.label.label_box.Box3DSubcatalog`
-   :ref:`reference/label_format:Keypoints2D`     :class:`~tensorbay.label.label_keypoints.LabeledKeypoints2D`   :class:`~tensorbay.label.label_keypoints.Keypoints2DSubcatalog`
-   :ref:`reference/label_format:Sentence`        :class:`~tensorbay.label.label_sentence.LabeledSentence`       :class:`~tensorbay.label.label_sentence.SentenceSubcatalog`
-   ============================================  =============================================================  =======================================================================
+   =============================================  ===============================================================  =======================================================================
+   supported label types                          label classes                                                    subcatalog classes
+   =============================================  ===============================================================  =======================================================================
+   :ref:`reference/label_format:Classification`   :class:`~tensorbay.label.label_classification.Classification`    :class:`~tensorbay.label.label_classification.ClassificationSubcatalog`
+   :ref:`reference/label_format:Box2D`            :class:`~tensorbay.label.label_box.LabeledBox2D`                 :class:`~tensorbay.label.label_box.Box2DSubcatalog`
+   :ref:`reference/label_format:Box3D`            :class:`~tensorbay.label.label_box.LabeledBox3D`                 :class:`~tensorbay.label.label_box.Box3DSubcatalog`
+   :ref:`reference/label_format:Keypoints2D`      :class:`~tensorbay.label.label_keypoints.LabeledKeypoints2D`     :class:`~tensorbay.label.label_keypoints.Keypoints2DSubcatalog`
+   :ref:`reference/label_format:Polygon`          :class:`~tensorbay.label.label_polygon.LabeledPolygon`           :class:`~tensorbay.label.label_polygon.PolygonSubcatalog`
+   :ref:`reference/label_format:MultiPolygon`     :class:`~tensorbay.label.label_polygon.LabeledMultiPolygon`      :class:`~tensorbay.label.label_polygon.MultiPolygonSubcatalog`
+   :ref:`reference/label_format:RLE`              :class:`~tensorbay.label.label_polygon.LabeledRLE`               :class:`~tensorbay.label.label_polygon.RLESubcatalog`
+   :ref:`reference/label_format:Polyline2D`       :class:`~tensorbay.label.label_polyline.LabeledPolyline2D`       :class:`~tensorbay.label.label_polyline.Polyline2DSubcatalog`
+   :ref:`reference/label_format:MultiPolyline2D`  :class:`~tensorbay.label.label_polyline.LabeledMultiPolyline2D`  :class:`~tensorbay.label.label_polyline.MultiPolyline2DSubcatalog`
+   :ref:`reference/label_format:Sentence`         :class:`~tensorbay.label.label_sentence.LabeledSentence`         :class:`~tensorbay.label.label_sentence.SentenceSubcatalog`
+   =============================================  ===============================================================  =======================================================================
 
 *************************
  Common Label Properties
 *************************
 
-Different types of labels contain differenct aspects of annotation information about the data.
+Different types of labels contain different aspects of annotation information about the data.
 Some are more general, and some are unique to a specific label type.
 
 Three common properties of a label will be introduced first,
@@ -245,7 +250,7 @@ To add a :class:`~tensorbay.label.label_classification.Classification` label to 
 Box2D is a type of label with a 2D bounding box on an image.
 It's usually used for object detection task.
 
-Each data can be assigned with multiple Box2D label.
+Each data can be assigned with multiple Box2D labels.
 
 The structure of one Box2D label is like::
 
@@ -677,6 +682,559 @@ To add a :class:`~tensorbay.label.label_keypoints.LabeledKeypoints2D` label to o
    must be a list.
 
 
+*********
+ Polygon
+*********
+
+Polygon is a type of label with a polygonal region on an image which contains some semantic information.
+It's often used for CV tasks such as semantic segmentation.
+
+Each data can be assigned with multiple Polygon labels.
+
+The structure of one Polygon label is like::
+
+    {
+        "polygon": [
+            {
+                "x": <float>
+                "y": <float>
+            },
+            ...
+            ...
+        ],
+        "category": <str>
+        "attributes": {
+            <key>: <value>
+            ...
+            ...
+        },
+        "instance": <str>
+    }
+
+To create a :class:`~tensorbay.label.label_polygon.LabeledPolygon` label:
+
+    >>> from tensorbay.label import LabeledPolygon
+    >>> polygon_label = LabeledPolygon(
+    ... [(1, 2), (2, 3), (1, 3)],
+    ... category="category",
+    ... attributes={"attribute_name": "attribute_value"},
+    ... instance="instance_ID"
+    ... )
+    >>> polygon_label
+    LabeledPolygon [
+      Vector2D(1, 2),
+      Vector2D(2, 3),
+      Vector2D(1, 3)
+    ](
+      (category): 'category',
+      (attributes): {...},
+      (instance): 'instance_ID'
+    )
+
+Polygon.polygon
+===============
+
+:class:`~tensorbay.label.label_polygon.LabeledPolygon` extends :class:`~tensorbay.geometry.polygon.Polygon`.
+
+To construct a :class:`~tensorbay.label.label_polygon.LabeledPolygon` instance with only the geometry
+information, use the coordinates of the vertexes of the polygonal region.
+
+    >>> LabeledPolygon([(1, 2), (2, 3), (1, 3)])
+    LabeledPolygon [
+      Vector2D(1, 2),
+      Vector2D(2, 3),
+      Vector2D(1, 3)
+    ]()
+
+It contains the basic geometry information of the polygonal region.
+
+    >>> polygon_label.area()
+    0.5
+
+Polygon.category
+================
+
+The category of the object inside the polygonal region.
+See :ref:`reference/label_format:category` for details.
+
+Polygon.attributes
+==================
+
+Attributes are the additional information about this object, which are stored in key-value pairs.
+See :ref:`reference/label_format:attributes` for details.
+
+Polygon.instance
+================
+
+Instance is the unique id for the object inside of the polygonal region,
+which is mostly used for tracking tasks.
+See :ref:`reference/label_format:instance` for details.
+
+PolygonSubcatalog
+=================
+
+Before adding the Polygon labels to data,
+:class:`~tensorbay.label.label_polygon.PolygonSubcatalog` should be defined.
+
+:class:`~tensorbay.label.label_polygon.PolygonSubcatalog`
+has categories, attributes and tracking information,
+see :ref:`reference/label_format:category information`,
+:ref:`reference/label_format:attributes information` and
+:ref:`reference/label_format:tracking information` for details.
+
+To add a :class:`~tensorbay.label.label_polygon.LabeledPolygon` label to one data:
+
+    >>> from tensorbay.dataset import Data
+    >>> data = Data("local_path")
+    >>> data.label.polygon = []
+    >>> data.label.polygon.append(polygon_label)
+
+.. note::
+
+   One data may contain multiple Polygon labels,
+   so the :attr:`Data.label.polygon<tensorbay.dataset.data.Data.label.polygon>` must be a list.
+
+**************
+ MultiPolygon
+**************
+
+MultiPolygon is a type of label with several polygonal regions which contain same semantic information on an image.
+It's often used for CV tasks such as semantic segmentation.
+
+Each data can be assigned with multiple MultiPolygon labels.
+
+The structure of one MultiPolygon label is like::
+
+    {
+        "multiPolygon": [
+            [
+                {
+                    "x": <float>
+                    "y": <float>
+                },
+                ...
+                ...
+            ],
+            ...
+            ...
+        ],
+        "category": <str>
+        "attributes": {
+            <key>: <value>
+            ...
+            ...
+        }
+        "instance": <str>
+    }
+
+To create a :class:`~tensorbay.label.label_polygon.LabeledMultiPolygon` label:
+
+    >>> from tensorbay.label import LabeledMultiPolygon
+    >>> multipolygon_label = LabeledMultiPolygon(
+    ... [[(1.0, 2.0), (2.0, 3.0), (1.0, 3.0)], [(1.0, 4.0), (2.0, 3.0), (1.0, 8.0)]],
+    ... category="category",
+    ... attributes={"attribute_name": "attribute_value"},
+    ... instance="instance_ID"
+    ... )
+    >>> multipolygon_label
+    LabeledMultiPolygon [
+      Polygon [...],
+      Polygon [...]
+    ](
+      (category): 'category',
+      (attributes): {...},
+      (instance): 'instance_ID'
+    )
+
+MultiPolygon.multi_polygon
+==========================
+
+:class:`~tensorbay.label.label_polygon.LabeledMultiPolygon` extends :class:`~tensorbay.geometry.polygon.MultiPolygon`.
+
+To construct a :class:`~tensorbay.label.label_polygon.LabeledMultiPolygon` instance with only the geometry
+information, use the coordinates of the vertexes of polygonal regions.
+
+    >>> LabeledMultiPolygon([[[1.0, 4.0], [2.0, 3.7], [7.0, 4.0]],
+    ... [[5.0, 7.0], [6.0, 7.0], [9.0, 8.0]]])
+    LabeledMultiPolygon [
+      Polygon [...],
+      Polygon [...]
+    ]()
+
+MultiPolygon.category
+=====================
+
+The category of the object inside polygonal regions.
+See :ref:`reference/label_format:category` for details.
+
+MultiPolygon.attributes
+=======================
+
+Attributes are the additional information about this object, which are stored in key-value pairs.
+See :ref:`reference/label_format:attributes` for details.
+
+MultiPolygon.instance
+=====================
+
+Instance is the unique id for the object inside of polygonal regions,
+which is mostly used for tracking tasks.
+See :ref:`reference/label_format:instance` for details.
+
+MultiPolygonSubcatalog
+======================
+
+Before adding the MultiPolygon labels to data,
+:class:`~tensorbay.label.label_polygon.MultiPolygonSubcatalog` should be defined.
+
+:class:`~tensorbay.label.label_polygon.MultiPolygonSubcatalog`
+has categories, attributes and tracking information,
+see :ref:`reference/label_format:category information`,
+:ref:`reference/label_format:attributes information` and
+:ref:`reference/label_format:tracking information` for details.
+
+To add a :class:`~tensorbay.label.label_polygon.LabeledMultiPolygon` label to one data:
+
+    >>> from tensorbay.dataset import Data
+    >>> data = Data("local_path")
+    >>> data.label.multi_polygon = []
+    >>> data.label.multi_polygon.append(multipolygon_label)
+
+.. note::
+
+   One data may contain multiple MultiPolygon labels,
+   so the :attr:`Data.label.multi_polygon<tensorbay.dataset.data.Data.label.multi_polygon>` must be a list.
+
+*****
+ RLE
+*****
+
+RLE, Run-Length Encoding, is a type of label with a list of numbers to indicate whether the pixels are in
+the target region. It's often used for CV tasks such as semantic segmentation.
+
+Each data can be assigned with multiple RLE labels.
+
+The structure of one RLE label is like::
+
+    {
+        "rle": [
+            int,
+            ...
+        ]
+        "category": <str>
+        "attributes": {
+            <key>: <value>
+            ...
+            ...
+        }
+        "instance": <str>
+    }
+
+To create a :class:`~tensorbay.label.label_polygon.LabeledRLE` label:
+
+    >>> from tensorbay.label import LabeledRLE
+    >>> rle_label = LabeledRLE(
+    ... [8, 4, 1, 3, 12, 7, 16, 2, 9, 2],
+    ... category="category",
+    ... attributes={"attribute_name": "attribute_value"},
+    ... instance="instance_ID"
+    ... )
+    >>> rle_label
+    LabeledRLE [
+      8,
+      4,
+      1,
+      ...
+    ](
+      (category): 'category',
+      (attributes): {...},
+      (instance): 'instance_ID'
+    )
+
+RLE.rle
+=======
+
+:class:`~tensorbay.label.label_polygon.LabeledRLE` extends :class:`~tensorbay.geometry.polygon.RLE`.
+
+To construct a :class:`~tensorbay.label.label_polygon.LabeledRLE` instance with only the rle format mask.
+
+    >>> LabeledRLE([8, 4, 1, 3, 12, 7, 16, 2, 9, 2])
+    LabeledRLE [
+      8,
+      4,
+      1,
+      ...
+    ]()
+
+RLE.category
+============
+
+The category of the object inside the region represented by rle format mask.
+See :ref:`reference/label_format:category` for details.
+
+RLE.attributes
+==============
+
+Attributes are the additional information about this object, which are stored in key-value pairs.
+See :ref:`reference/label_format:attributes` for details.
+
+RLE.instance
+============
+
+Instance is the unique id for the object inside the region represented by rle format mask,
+which is mostly used for tracking tasks.
+See :ref:`reference/label_format:instance` for details.
+
+RLESubcatalog
+=============
+
+Before adding the RLE labels to data,
+:class:`~tensorbay.label.label_polygon.RLESubcatalog` should be defined.
+
+:class:`~tensorbay.label.label_polygon.RLESubcatalog`
+has categories, attributes and tracking information,
+see :ref:`reference/label_format:category information`,
+:ref:`reference/label_format:attributes information` and
+:ref:`reference/label_format:tracking information` for details.
+
+To add a :class:`~tensorbay.label.label_polygon.LabeledRLE` label to one data:
+
+    >>> from tensorbay.dataset import Data
+    >>> data = Data("local_path")
+    >>> data.label.rle = []
+    >>> data.label.rle.append(rle_label)
+
+.. note::
+
+   One data may contain multiple RLE labels,
+   so the :attr:`Data.label.rle<tensorbay.dataset.data.Data.label.rle>` must be a list.
+
+************
+ Polyline2D
+************
+
+Polyline2D is a type of label with a 2D polyline on an image.
+It's often used for CV tasks such as lane detection.
+
+Each data can be assigned with multiple Polyline2D labels.
+
+The structure of one Polyline2D label is like::
+
+    {
+        "polyline2d": [
+            {
+                "x": <float>
+                "y": <float>
+            },
+            ...
+            ...
+        ],
+        "category": <str>
+        "attributes": {
+            <key>: <value>
+            ...
+            ...
+        }
+        "instance": <str>
+    }
+
+To create a :class:`~tensorbay.label.label_polyline.LabeledPolyline2D` label:
+
+    >>> from tensorbay.label import LabeledPolyline2D
+    >>> polyline2d_label = LabeledPolyline2D(
+    ... [(1, 2), (2, 3)],
+    ... category="category",
+    ... attributes={"attribute_name": "attribute_value"},
+    ... instance="instance_ID"
+    ... )
+    >>> polyline2d_label
+    LabeledPolyline2D [
+      Vector2D(1, 2),
+      Vector2D(2, 3)
+    ](
+      (category): 'category',
+      (attributes): {...},
+      (instance): 'instance_ID'
+    )
+
+Polyline2D.polyline2d
+=====================
+
+:class:`~tensorbay.label.label_polyline.LabeledPolyline2D` extends :class:`~tensorbay.geometry.polyline.Polyline2D`.
+
+To construct a :class:`~tensorbay.label.label_polyline.LabeledPolyline2D` instance with only the geometry
+information, use the coordinates of the vertexes of the polyline.
+
+    >>> LabeledPolyline2D([[1, 2], [2, 3]])
+    LabeledPolyline2D [
+      Vector2D(1, 2),
+      Vector2D(2, 3)
+    ]()
+
+
+It contains a series of methods to operate on polyline.
+
+    >>> polyline_1 = LabeledPolyline2D([[1, 1], [1, 2], [2, 2]])
+    >>> polyline_2 = LabeledPolyline2D([[4, 5], [2, 1], [3, 3]])
+    >>> LabeledPolyline2D.uniform_frechet_distance(polyline_1, polyline_2)
+    3.6055512754639896
+    >>> LabeledPolyline2D.similarity(polyline_1, polyline_2)
+    0.2788897449072021
+
+
+Polyline2D.category
+===================
+
+The category of the 2D polyline.
+See :ref:`reference/label_format:category` for details.
+
+Polyline2D.attributes
+=====================
+
+Attributes are the additional information about this object, which are stored in key-value pairs.
+See :ref:`reference/label_format:attributes` for details.
+
+Polyline2D.instance
+===================
+
+Instance is the unique ID for the 2D polyline,
+which is mostly used for tracking tasks.
+See :ref:`reference/label_format:instance` for details.
+
+Polyline2DSubcatalog
+====================
+
+Before adding the Polyline2D labels to data,
+:class:`~tensorbay.label.label_polyline.Polyline2DSubcatalog` should be defined.
+
+:class:`~tensorbay.label.label_polyline.Polyline2DSubcatalog`
+has categories, attributes and tracking information,
+see :ref:`reference/label_format:category information`,
+:ref:`reference/label_format:attributes information` and
+:ref:`reference/label_format:tracking information` for details.
+
+To add a :class:`~tensorbay.label.label_polyline.LabeledPolyline2D` label to one data:
+
+    >>> from tensorbay.dataset import Data
+    >>> data = Data("local_path")
+    >>> data.label.polyline2d = []
+    >>> data.label.polyline2d.append(polyline2d_label)
+
+.. note::
+
+   One data may contain multiple Polyline2D labels,
+   so the :attr:`Data.label.polyline2d<tensorbay.dataset.data.Data.label.polyline2d>` must be a list.
+
+*****************
+ MultiPolyline2D
+*****************
+
+MultiPolyline2D is a type of label with several 2D polylines which belong to the same category on an image.
+It's often used for CV tasks such as lane detection.
+
+Each data can be assigned with multiple MultiPolyline2D labels.
+
+The structure of one MultiPolyline2D label is like::
+
+    {
+        "multiPolyline2d": [
+            [
+                {
+                    "x": <float>
+                    "y": <float>
+                },
+                ...
+                ...
+            ],
+            ...
+            ...
+        ],
+        "category": <str>
+        "attributes": {
+            <key>: <value>
+            ...
+            ...
+        }
+        "instance": <str>
+    }
+
+To create a :class:`~tensorbay.label.label_polyline.LabeledMultiPolyline2D` label:
+
+    >>> from tensorbay.label import LabeledMultiPolyline2D
+    >>> multipolyline2d_label = LabeledMultiPolyline2D(
+    ... [[[1, 2], [2, 3]], [[3, 4], [6, 8]]],
+    ... category="category",
+    ... attributes={"attribute_name": "attribute_value"},
+    ... instance="instance_ID"
+    ... )
+    >>> multipolyline2d_label
+    LabeledMultiPolyline2D [
+      Polyline2D [...],
+      Polyline2D [...]
+    ](
+      (category): 'category',
+      (attributes): {...},
+      (instance): 'instance_ID'
+    )
+
+MultiPolyline2D.multi_polyline2d
+================================
+
+:class:`~tensorbay.label.label_polyline.LabeledMultiPolyline2D` extends :class:`~tensorbay.geometry.polyline.MultiPolyline2D`.
+
+To construct a :class:`~tensorbay.label.label_polyline.LabeledMultiPolyline2D` instance with only the geometry
+information, use the coordinates of the vertexes of polylines.
+
+    >>> LabeledMultiPolyline2D([[[1, 2], [2, 3]], [[3, 4], [6, 8]]])
+    LabeledMultiPolyline2D [
+      Polyline2D [...],
+      Polyline2D [...]
+    ]()
+
+
+MultiPolyline2D.category
+========================
+
+The category of the multiple 2D polylines.
+See :ref:`reference/label_format:category` for details.
+
+MultiPolyline2D.attributes
+==========================
+
+Attributes are the additional information about this object, which are stored in key-value pairs.
+See :ref:`reference/label_format:attributes` for details.
+
+MultiPolyline2D.instance
+========================
+
+Instance is the unique ID for the multiple 2D polylines,
+which is mostly used for tracking tasks.
+See :ref:`reference/label_format:instance` for details.
+
+MultiPolyline2DSubcatalog
+=========================
+
+Before adding the MultiPolyline2D labels to data,
+:class:`~tensorbay.label.label_polyline.MultiPolyline2DSubcatalog` should be defined.
+
+:class:`~tensorbay.label.label_polyline.MultiPolyline2DSubcatalog`
+has categories, attributes and tracking information,
+see :ref:`reference/label_format:category information`,
+:ref:`reference/label_format:attributes information` and
+:ref:`reference/label_format:tracking information` for details.
+
+To add a :class:`~tensorbay.label.label_polyline.LabeledMultiPolyline2D` label to one data:
+
+    >>> from tensorbay.dataset import Data
+    >>> data = Data("local_path")
+    >>> data.label.multi_polyline2d = []
+    >>> data.label.multi_polyline2d.append(multipolyline2d_label)
+
+.. note::
+
+   One data may contain multiple MultiPolyline2D labels,
+   so the :attr:`Data.label.multi_polyline2d<tensorbay.dataset.data.Data.label.multi_polyline2d>` must be a list.
+
+
 **********
  Sentence
 **********
@@ -717,7 +1275,7 @@ The structure of one sentence label is like::
             ...
         ],
         "attributes": {
-            <key>: <value>,
+            <key>: <value>
             ...
             ...
         }
