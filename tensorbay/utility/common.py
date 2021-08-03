@@ -20,7 +20,6 @@ from typing import Any, Callable, DefaultDict, Sequence, Type, TypeVar, Union
 import numpy as np
 
 _T = TypeVar("_T")
-_Callable = TypeVar("_Callable", bound=Callable[..., Any])
 _CallableWithoutReturnValue = TypeVar("_CallableWithoutReturnValue", bound=Callable[..., None])
 
 

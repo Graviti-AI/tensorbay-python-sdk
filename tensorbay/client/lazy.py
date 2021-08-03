@@ -139,7 +139,7 @@ class LazyPage(Generic[_T]):  # pylint: disable=too-few-public-methods
 
     """
 
-    __slots__ = ("_offset", "_limit", "_func", "items")
+    __slots__: Tuple[str, ...] = ("_offset", "_limit", "_func", "items")
 
     def __init__(self, offset: int, limit: int, func: PagingGenerator[_T]) -> None:
         self.items: Tuple[LazyItem[_T], ...] = tuple(LazyItem.from_page(self) for _ in range(limit))
@@ -326,7 +326,7 @@ class PagingList(MutableSequence[_T], ReprMixin):  # pylint: disable=too-many-an
         if hasattr(self, "_items"):
             paging_list._items = self._items[slicing]
         else:
-            paging_list._init_items = lambda index: paging_list._init_sliced_items(self, slicing)
+            paging_list._init_items = lambda _: paging_list._init_sliced_items(self, slicing)
 
         return paging_list
 

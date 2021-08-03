@@ -40,7 +40,7 @@ class PointList2D(UserMutableSequence[_T]):  # pylint: disable=too-many-ancestor
     ) -> None:
         self._data = [self._ElementType(*point) for point in points] if points else []
 
-    def _loads(self: _P, contents: List[Dict[str, float]]) -> None:
+    def _loads(self, contents: List[Dict[str, float]]) -> None:
         self._data = []
         for point in contents:
             self._data.append(self._ElementType.loads(point))
@@ -123,7 +123,7 @@ class MultiPointList2D(UserMutableSequence[_L]):  # pylint: disable=too-many-anc
             [self._ElementType(point_list) for point_list in point_lists] if point_lists else []
         )
 
-    def _loads(self: _P, contents: List[List[Dict[str, float]]]) -> None:
+    def _loads(self, contents: List[List[Dict[str, float]]]) -> None:
         self._data = [self._ElementType.loads(point_list) for point_list in contents]
 
     def _dumps(self) -> List[List[Dict[str, float]]]:

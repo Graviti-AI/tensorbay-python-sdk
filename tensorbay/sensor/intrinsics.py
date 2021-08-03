@@ -320,8 +320,8 @@ class DistortionCoefficients(ReprMixin, AttrsMixin):
         if is_fisheye:
             return (0, 0)
 
-        p1 = self.p1  # type: ignore[attr-defined]  # pylint: disable=no-member
-        p2 = self.p2  # type: ignore[attr-defined]  # pylint: disable=no-member
+        p1: float = self.p1  # type: ignore[attr-defined]  # pylint: disable=no-member
+        p2: float = self.p2  # type: ignore[attr-defined]  # pylint: disable=no-member
         return (p1 * xy2 + p2 * (r2 + 2 * x2), p1 * (r2 + 2 * y2) + p2 * xy2)
 
     def _loads(self, contents: Dict[str, float]) -> None:
