@@ -307,7 +307,7 @@ def _get_operators(annotation: Any) -> Tuple[_Callable, _Callable]:
         Operating methods of the annotation.
 
     """
-    origin = _get_origin(annotation)
+    origin: Any = _get_origin(annotation)
     annotation_args = getattr(annotation, "__args__", ())
     if isinstance(origin, type) and issubclass(origin, Sequence):
         type_ = annotation_args[0]
