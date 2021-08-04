@@ -21,7 +21,7 @@ and has a corresponding :ref:`subcatalog <reference/dataset_structure:Catalog>` 
    :ref:`reference/label_format:Box2D`           :class:`~tensorbay.label.label_box.LabeledBox2D`               :class:`~tensorbay.label.label_box.Box2DSubcatalog`
    :ref:`reference/label_format:Box3D`           :class:`~tensorbay.label.label_box.LabeledBox3D`               :class:`~tensorbay.label.label_box.Box3DSubcatalog`
    :ref:`reference/label_format:Keypoints2D`     :class:`~tensorbay.label.label_keypoints.LabeledKeypoints2D`   :class:`~tensorbay.label.label_keypoints.Keypoints2DSubcatalog`
-   :ref:`reference/label_format:Sentence`        :class:`~tensorbay.label.label_sentence.LabeledSentence`       :class:`~tensorbay.label.label_sentence.SetenceSubcatalog`
+   :ref:`reference/label_format:Sentence`        :class:`~tensorbay.label.label_sentence.LabeledSentence`       :class:`~tensorbay.label.label_sentence.SentenceSubcatalog`
    ============================================  =============================================================  =======================================================================
 
 *************************
@@ -819,13 +819,13 @@ SentenceSubcatalog
 ==================
 
 Before adding sentence labels to the dataset,
-:class:`~tensorbay.label.label_sentence.SetenceSubcatalog` should be defined.
+:class:`~tensorbay.label.label_sentence.SentenceSubcatalog` should be defined.
 
 Besides :ref:`reference/label_format:attributes information` in
-:class:`~tensorbay.label.label_sentence.SetenceSubcatalog`,
-it also has :attr:`~tensorbay.label.label_sentence.SetenceSubcatalog.is_sample`,
-:attr:`~tensorbay.label.label_sentence.SetenceSubcatalog.sample_rate`
-and :attr:`~tensorbay.label.label_sentence.SetenceSubcatalog.lexicon`.
+:class:`~tensorbay.label.label_sentence.SentenceSubcatalog`,
+it also has :attr:`~tensorbay.label.label_sentence.SentenceSubcatalog.is_sample`,
+:attr:`~tensorbay.label.label_sentence.SentenceSubcatalog.sample_rate`
+and :attr:`~tensorbay.label.label_sentence.SentenceSubcatalog.lexicon`.
 to describe the transcripted sentences of the audio.
 
    >>> from tensorbay.label import SentenceSubcatalog
@@ -851,7 +851,7 @@ If ``is_sample`` is Ture, then ``sample_rate`` must be provided.
 The ``lexicon`` is a list consists all of text and phone.
 
 Besides giving the parameters while initialing
-:class:`~tensorbay.label.label_sentence.SetenceSubcatalog`,
+:class:`~tensorbay.label.label_sentence.SentenceSubcatalog`,
 it's also feasible to set them after initialization.
 
    >>> from tensorbay.label import SentenceSubcatalog
