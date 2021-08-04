@@ -10,7 +10,7 @@ import os
 import sys
 from collections import OrderedDict
 from configparser import ConfigParser, SectionProxy
-from typing import Optional, Tuple, overload
+from typing import NamedTuple, Optional, Tuple, overload
 
 import click
 from typing_extensions import Literal, NoReturn
@@ -22,14 +22,20 @@ from ..client.gas import DatasetClientType
 from .tbrn import TBRN
 
 
+class ContextInfo(NamedTuple):
+    """This class contains command context."""
+
+    access_key: str
+    url: str
+    profile_name: str
+    config_parser: ConfigParser
+
+
 def _implement_cli(
     ctx: click.Context, access_key: str, url: str, profile_name: str, debug: bool
 ) -> None:
-    ctx.obj = {
-        "access_key": access_key,
-        "url": url,
-        "profile_name": profile_name,
-    }
+    config_parser = update_config(read_config())
+    ctx.obj = ContextInfo(access_key, url, profile_name, config_parser)
 
     if debug:
         logging.basicConfig(level=logging.DEBUG)
@@ -51,7 +57,7 @@ def read_profile(profile_name: str, config_parser: ConfigParser) -> Tuple[str, s
 
     Arguments:
         profile_name: The environment to login.
-        config_parser: The config parser read from the config file.
+        config_parser: The config parser read from the context object.
 
     Returns:
         A tuple containing the accessKey and the url of profile_name read from the config file.
@@ -68,7 +74,7 @@ def read_profile(profile_name: str, config_parser: ConfigParser) -> Tuple[str, s
     return values[1], values[2]
 
 
-def get_gas(access_key: str, url: str, profile_name: str) -> GAS:
+def get_gas(access_key: str, url: str, profile_name: str, config_parser: ConfigParser) -> GAS:
     """Load an object of :class:`~tensorbay.client.gas.GAS`.
 
     We will read accessKey and URL from the appointed profile_name and login gas.
@@ -77,13 +83,12 @@ def get_gas(access_key: str, url: str, profile_name: str) -> GAS:
         access_key: The accessKey of gas.
         url: The login URL.
         profile_name: The environment to login.
+        config_parser: The config parser read from the context object.
 
     Returns:
         Gas client logged in with accessKey and URL.
 
     """
-    update_config()
-    config_parser = read_config()
     _set_request_config(config_parser)
     if not access_key and not url:
         access_key, url = read_profile(profile_name, config_parser)
@@ -138,18 +143,17 @@ def get_dataset_client(gas: GAS, info: TBRN, is_fusion: Optional[bool] = None) -
     return dataset_client
 
 
-def _edit_input(hint: str) -> Tuple[str, str]:
+def _edit_input(hint: str, config_parser: ConfigParser) -> Tuple[str, str]:
     """Edit information input from the editor.
 
     Arguments:
         hint: The hint to be added in the temp file opened by the editor.
+        config_parser: The config parser read from the context object.
 
     Returns:
         The extracted title and the description.
 
     """
-    config_parser = read_config()
-
     editor = config_parser["config"].get("editor") if config_parser.has_section("config") else None
     input_info = click.edit(hint, editor=editor, require_save=False)
     return _clean_up(input_info)
@@ -189,36 +193,43 @@ def error(message: str) -> NoReturn:
     sys.exit(1)
 
 
-def update_config() -> None:
-    """Update the config file to the new format."""
-    old_config_parser = read_config()
-    old_sections = old_config_parser.sections()
+def update_config(config_parser: ConfigParser) -> ConfigParser:
+    """Update the config parser to the new format.
+
+    Arguments:
+        config_parser: The config parser read from the context object.
+
+    Returns:
+        The updated config parser with new format.
+
+    """
+    old_sections = config_parser.sections()
 
     if not old_sections or old_sections == ["config"]:
-        return
+        return config_parser
 
     if (old_sections in (["config", "profiles"], ["profiles"])) and _is_updated(
-        old_config_parser["profiles"]
+        config_parser["profiles"]
     ):
-        return
+        return config_parser
 
     new_config_parser = ConfigParser(dict_type=OrderedDict)
     new_config_parser.add_section("profiles")
-    for section_name, section_value in old_config_parser.items():
+    for section_name, section_value in config_parser.items():
         if section_name == "DEFAULT":
             continue
 
         if section_name == "config":
             new_config_parser.add_section("config")
-            new_config_parser["config"] = old_config_parser["config"]
+            new_config_parser["config"] = config_parser["config"]
 
         elif section_name == "profiles" and _is_updated(section_value):
             new_config_parser["profiles"].update(section_value)
 
         else:
             new_config_parser["profiles"][section_name] = form_profile_value(**section_value)
-
     write_config(new_config_parser, show_message=False)
+    return new_config_parser
 
 
 def _is_updated(profile_section: SectionProxy) -> bool:
@@ -328,12 +339,15 @@ def format_hint(title: str, description: str, original_hint: str) -> str:
     return "\n".join(hint)
 
 
-def edit_message(message: Tuple[str, ...], hint_message: str) -> Tuple[str, str]:
+def edit_message(
+    message: Tuple[str, ...], hint_message: str, config_parser: ConfigParser
+) -> Tuple[str, str]:
     """Edit draft information.
 
     Arguments:
         message: The message given in the CLI.
         hint_message: The hint message to show on the pop-up editor.
+        config_parser: The config parser read from the context object.
 
     Returns:
         The extracted title and the description.
@@ -342,7 +356,7 @@ def edit_message(message: Tuple[str, ...], hint_message: str) -> Tuple[str, str]
     if message:
         title, description = message[0], "\n".join(message[1:])
     else:
-        title, description = _edit_input(hint_message)
+        title, description = _edit_input(hint_message, config_parser)
 
     return title, description
 
@@ -351,7 +365,7 @@ def _set_request_config(config_parser: ConfigParser) -> None:
     """Configure request related parameters.
 
     Arguments:
-        config_parser: The config parser read from the config file.
+        config_parser: The config parser read from the context object.
 
     """
     client_config._x_source = "PYTHON-CLI"  # pylint: disable=protected-access

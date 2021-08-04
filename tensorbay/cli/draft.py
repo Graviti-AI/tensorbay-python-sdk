@@ -5,8 +5,9 @@
 
 """Implementation of gas draft."""
 
+from configparser import ConfigParser
 from textwrap import indent
-from typing import Dict, Optional, Tuple
+from typing import Optional, Tuple
 
 import click
 
@@ -15,7 +16,7 @@ from ..client.struct import ROOT_COMMIT_ID
 from ..exception import ResourceNotExistError
 from .auth import INDENT
 from .tbrn import TBRN, TBRNType
-from .utility import edit_message, error, format_hint, get_dataset_client, get_gas
+from .utility import ContextInfo, edit_message, error, format_hint, get_dataset_client, get_gas
 
 _DRAFT_HINT = """
 # Please enter the message for your draft.
@@ -30,9 +31,14 @@ _FULL_DRAFT_MESSAGE = """Branch:{}{}
 
 
 def _implement_draft(  # pylint: disable=too-many-arguments
-    obj: Dict[str, str], tbrn: str, is_list: bool, edit: bool, close: bool, message: Tuple[str, ...]
+    obj: ContextInfo,
+    tbrn: str,
+    is_list: bool,
+    edit: bool,
+    close: bool,
+    message: Tuple[str, ...],
 ) -> None:
-    gas = get_gas(**obj)
+    gas = get_gas(*obj)
     info = TBRN(tbrn=tbrn)
     dataset_client = get_dataset_client(gas, info)
 
@@ -42,18 +48,23 @@ def _implement_draft(  # pylint: disable=too-many-arguments
     if is_list:
         _list_drafts(dataset_client, info)
     elif edit:
-        _edit_draft(dataset_client, info, message)
+        _edit_draft(dataset_client, info, message, obj.config_parser)
     elif close:
         _close_draft(dataset_client, info)
     else:
-        _create_draft(dataset_client, info, message)
+        _create_draft(dataset_client, info, message, obj.config_parser)
 
 
-def _create_draft(dataset_client: DatasetClientType, info: TBRN, message: Tuple[str, ...]) -> None:
+def _create_draft(
+    dataset_client: DatasetClientType,
+    info: TBRN,
+    message: Tuple[str, ...],
+    config_parser: ConfigParser,
+) -> None:
     if info.is_draft:
         error(f'Create a draft in draft status "{info}" is not permitted')
 
-    title, description = edit_message(message, _DRAFT_HINT)
+    title, description = edit_message(message, _DRAFT_HINT, config_parser)
     if not title:
         error("Aborting creating draft due to empty draft message")
 
@@ -111,13 +122,18 @@ def _echo_draft(
     )
 
 
-def _edit_draft(dataset_client: DatasetClientType, info: TBRN, message: Tuple[str, ...]) -> None:
+def _edit_draft(
+    dataset_client: DatasetClientType,
+    info: TBRN,
+    message: Tuple[str, ...],
+    config_parser: ConfigParser,
+) -> None:
     if not info.is_draft:
         error("Draft number is required when editing draft")
 
     draft = dataset_client.get_draft()
     hint_message = format_hint(draft.title, draft.description, _DRAFT_HINT)
-    title, description = edit_message(message, hint_message)
+    title, description = edit_message(message, hint_message, config_parser)
     if not title:
         error("Aborting updating draft due to empty draft message")
 

@@ -7,14 +7,13 @@
 
 import click
 
-from .utility import error, read_config, update_config, write_config
+from .utility import ContextInfo, error, write_config
 
 
-def _implement_config(key: str, value: str, unset: bool) -> None:
+def _implement_config(obj: ContextInfo, key: str, value: str, unset: bool) -> None:
     _check_args_and_options(key, value, unset)
 
-    update_config()
-    config_parser = read_config()
+    config_parser = obj.config_parser
 
     if not config_parser.has_section("config"):
         config_parser.add_section("config")

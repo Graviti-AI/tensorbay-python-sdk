@@ -17,7 +17,7 @@ from ..client.gas import DatasetClientType
 from ..client.struct import Commit
 from .auth import INDENT
 from .tbrn import TBRN, TBRNType
-from .utility import error, get_gas, shorten
+from .utility import ContextInfo, error, get_gas, shorten
 
 _LEFT_BRACKET = click.style("(", fg="yellow", reset=False)
 _COMMA = click.style(", ", fg="yellow", reset=False)
@@ -35,14 +35,14 @@ _ONELINE_LOG = f"""{click.style("{}", fg="yellow")} {{}}
 
 
 def _implement_log(  # pylint: disable=too-many-arguments
-    obj: Dict[str, str],
+    obj: ContextInfo,
     tbrn: str,
     max_count: Optional[int],
     oneline: bool,
     is_all: bool,
     graph: bool,
 ) -> None:
-    gas = get_gas(**obj)
+    gas = get_gas(*obj)
     info = TBRN(tbrn=tbrn)
     if info.type != TBRNType.DATASET:
         error(f'To log commits, "{info}" must be a dataset')

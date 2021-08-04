@@ -5,22 +5,20 @@
 
 """Implementation of gas tag."""
 
-from typing import Dict
-
 import click
 
 from ..client.gas import DatasetClientType
 from .tbrn import TBRN, TBRNType
-from .utility import error, get_dataset_client, get_gas
+from .utility import ContextInfo, error, get_dataset_client, get_gas
 
 
-def _implement_tag(obj: Dict[str, str], tbrn: str, name: str, is_delete: bool) -> None:
+def _implement_tag(obj: ContextInfo, tbrn: str, name: str, is_delete: bool) -> None:
     info = TBRN(tbrn=tbrn)
 
     if info.type != TBRNType.DATASET:
         error(f'To operate a tag, "{info}" must be a dataset')
 
-    gas = get_gas(**obj)
+    gas = get_gas(*obj)
     dataset_client = get_dataset_client(gas, info)
 
     if is_delete:

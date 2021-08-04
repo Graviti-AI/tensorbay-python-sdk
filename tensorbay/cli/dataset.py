@@ -5,16 +5,14 @@
 
 """Implementation of gas dataset."""
 
-from typing import Dict
-
 import click
 
 from .tbrn import TBRN, TBRNType
-from .utility import error, get_gas
+from .utility import ContextInfo, error, get_gas
 
 
-def _implement_dataset(obj: Dict[str, str], tbrn: str, is_delete: bool, yes: bool) -> None:
-    gas = get_gas(**obj)
+def _implement_dataset(obj: ContextInfo, tbrn: str, is_delete: bool, yes: bool) -> None:
+    gas = get_gas(*obj)
     if is_delete:
         if not tbrn:
             error("Missing argument TBRN")
