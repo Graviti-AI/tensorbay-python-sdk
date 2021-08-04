@@ -25,16 +25,17 @@ def AADB(path: str) -> Dataset:
     """Load the AADB to TensorBay.
 
     The file structure looks like:
-    <path>
-        AADB_newtest/
-            0.500_farm1_487_20167490236_ae920475e2_b.jpg
-            ...
-        datasetImages_warp256/
-            farm1_441_19470426814_baae1eb396_b.jpg
-            ...
-        imgListFiles_label/
-            imgList<segment_name>Regression_<attribute_name>.txt
-            ...
+
+        <path>
+            AADB_newtest/
+                0.500_farm1_487_20167490236_ae920475e2_b.jpg
+                ...
+            datasetImages_warp256/
+                farm1_441_19470426814_baae1eb396_b.jpg
+                ...
+            imgListFiles_label/
+                imgList<segment_name>Regression_<attribute_name>.txt
+                ...
 
     Arguments:
         path: the root directory of the dataset.

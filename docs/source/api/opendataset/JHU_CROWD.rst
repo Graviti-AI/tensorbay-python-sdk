@@ -1,5 +1,5 @@
-tensorbay.opendataset.JHU\_CROWD.loader
-=======================================
+tensorbay.opendataset.JHU_CROWD.loader
+======================================
 
 .. automodule:: tensorbay.opendataset.JHU_CROWD.loader
    :members:

@@ -35,16 +35,16 @@ _XYWH_KEYS = _FIELDNAMES[2:6]
 def UAVDT(path: str) -> Dataset:
     """Dataloader of the `UAVDT`_ Dataset.
 
-    The "score", "in-view", "occlusion" fields in MOT Groundtruth file(*_gt.txt) are constant, and
-    other fields in that file are the same with such fields in DET Groundtruth file(*_gt_whole.txt).
-    Therefore, they are not included in the dataloader.
-
-    The Ignore Areas file(*_gt_ignore.txt) is useless, so they are not included in the dataloader
-    neither.
-
     .. _UAVDT: https://sites.google.com/site/daviddo0323/projects/uavdt
 
-    The file structure of UAVDT looks like:
+    The "score", "in-view", "occlusion" fields in MOT Groundtruth file(``*_gt.txt``) are constant,
+    and other fields in that file are the same with such fields in DET Groundtruth file
+    (``*_gt_whole.txt``). Therefore, they are not included in the dataloader.
+
+    The Ignore Areas file(``*_gt_ignore.txt``) is useless,
+    so they are not included in the dataloader neither.
+
+    The file structure of UAVDT looks like::
 
         <path>
             M_attr/

@@ -6,6 +6,7 @@ tensorbay.geometry
 
    box
    keypoint
+   point_list
    polygon
    polyline
    transform

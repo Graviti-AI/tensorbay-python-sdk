@@ -30,24 +30,26 @@ def COVIDChestXRay(path: str) -> Dataset:
     .. _COVID-chestxray: https://github.com/ieee8023/covid-chestxray-dataset
 
     The file structure should be like::
-    <path>
-        images/
-            0a7faa2a.jpg
-            000001-2.png
-            000001-3.jpg
-            1B734A89-A1BF-49A8-A1D3-66FAFA4FAC5D.jpeg
+
+        <path>
+            images/
+                0a7faa2a.jpg
+                000001-2.png
+                000001-3.jpg
+                1B734A89-A1BF-49A8-A1D3-66FAFA4FAC5D.jpeg
+                ...
+            volumes/
+                coronacases_org_001.nii.gz
+                ....
+            metadata.csv
             ...
-        volumes/
-            coronacases_org_001.nii.gz
-            ....
-        metadata.csv
-        ...
 
     Arguments:
         path: The root directory of the dataset.
 
     Returns:
         Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
+
     """
     root_path = os.path.abspath(os.path.expanduser(path))
 
