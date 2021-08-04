@@ -277,10 +277,6 @@ class AttributeInfo(NameMixin, Items):
         ...     description="This is an example",
         ... )
         AttributeInfo("example")(
-          (name): 'example',
-          (parent_categories): [
-            'parent_category_of_example'
-          ],
           (type): 'array',
           (enum): [
             1,
@@ -296,14 +292,17 @@ class AttributeInfo(NameMixin, Items):
             (enum): [...],
             (minimum): 1,
             (maximum): 5
-          )
+          ),
+          (parent_categories): [
+            'parent_category_of_example'
+          ]
         )
 
     """
 
     _T = TypeVar("_T", bound="AttributeInfo")
 
-    _repr_attrs = ("name", "parent_categories") + Items._repr_attrs
+    _repr_attrs = Items._repr_attrs + ("parent_categories",)
     _repr_maxlevel = 2
 
     _attrs_base: Items = attr_base(key=None)
@@ -344,35 +343,21 @@ class AttributeInfo(NameMixin, Items):
 
         Examples:
             >>> contents = {
-                ...     "name": "example",
-                ...     "type": "array",
-                ...     "enum": [1, 2, 3, 4, 5],
-                ...     "items": {"enum": ["true", "false"], "type": "boolean"},
-                ...     "minimum": 1,
-                ...     "maximum": 5,
-                ...     "description": "This is an example",
-                ...     "parentCategories": ["parent_category_of_example"],
-                ... }
+            ...     "name": "example",
+            ...     "type": "array",
+            ...     "items": {"type": "boolean"},
+            ...     "description": "This is an example",
+            ...     "parentCategories": ["parent_category_of_example"],
+            ... }
             >>> AttributeInfo.loads(contents)
             AttributeInfo("example")(
-              (name): 'example',
-              (parent_categories): [
-                'parent_category_of_example'
-              ],
               (type): 'array',
-              (enum): [
-                1,
-                2,
-                3,
-                4,
-                5
-              ],
-              (minimum): 1,
-              (maximum): 5,
               (items): Items(
                 (type): 'boolean',
-                (enum): [...]
-              )
+              ),
+              (parent_categories): [
+                'parent_category_of_example'
+              ]
             )
 
         """
@@ -386,14 +371,11 @@ class AttributeInfo(NameMixin, Items):
 
         Examples:
             >>> from tensorbay.label import Items
-            >>> items = Items(type_="integer", enum=[1, 2, 3, 4, 5], minimum=1, maximum=5)
+            >>> items = Items(type_="integer", minimum=1, maximum=5)
             >>> attributeinfo = AttributeInfo(
             ...     name="example",
             ...     type_="array",
-            ...     enum=[1, 2, 3, 4, 5],
             ...     items=items,
-            ...     minimum=1,
-            ...     maximum=5,
             ...     parent_categories=["parent_category_of_example"],
             ...     description="This is an example",
             ... )
@@ -402,10 +384,7 @@ class AttributeInfo(NameMixin, Items):
                 'name': 'example',
                 'description': 'This is an example',
                 'type': 'array',
-                'items': {'type': 'integer', 'enum': [1, 2, 3], 'minimum': 1, 'maximum': 5},
-                'enum': [1, 2, 3, 4, 5],
-                'minimum': 1,
-                'maximum': 5,
+                'items': {'type': 'integer', 'minimum': 1, 'maximum': 5},
                 'parentCategories': ['parent_category_of_example'],
             }
 
