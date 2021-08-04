@@ -106,7 +106,6 @@ class TestDataset:
 
         gas_client.delete_dataset(dataset_name)
 
-    @pytest.mark.xfail(reason="backend alias processing")
     def test_get_dataset_to_latest_commit(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
@@ -127,7 +126,6 @@ class TestDataset:
 
         gas_client.delete_dataset(dataset_name)
 
-    @pytest.mark.xfail(reason="backend alias processing")
     def test_get_fusion_dataset_to_latest_commit(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
