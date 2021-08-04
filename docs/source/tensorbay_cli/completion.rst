@@ -2,6 +2,12 @@
  Shell Completion
 ##################
 
+The completion of CLI is supported by the completion of ``click``, see details in `v7.x`_ and `v8.x`_ click
+documentations.
+
+.. _v7.x: https://click.palletsprojects.com/en/7.x/bashcomplete/
+.. _v8.x: https://click.palletsprojects.com/en/8.0.x/shell-completion
+
 CLI provides tab completion support for Bash (version not lower than 4.4), Zsh, and Fish. It is possible to add support
 for other shells too.
 
@@ -25,12 +31,13 @@ Here is an example of completion:
     tag      -- List, create or delete tags.
     $ gas auth -<TAB><TAB>
     --get    -g  -- Get the accesskey of the profile
+    --status -s  -- Get the user info and accesskey of the profile
     --unset  -u  -- Unset the accesskey of the profile
     --all    -a  -- All the auth info
     --help       -- Show this message and exit.
 
 .. note::
-    The result may differ with different versions of click or shell.
+    The result may differ with different versions of ``click`` or shell.
 
 Activation
 **********
