@@ -4,9 +4,17 @@ tensorbay.opendataset
 .. toctree::
    :maxdepth: 4
 
+   AADB
    AnimalPose
    AnimalsWithAttributes2
+   BDD100K
    BSTLD
+   BioIDFace
+   CACD
+   CADC
+   CCPD
+   COVIDChestXRay
+   COVID_CT
    CarConnection
    CoinImage
    CompCars
@@ -17,6 +25,7 @@ tensorbay.opendataset
    FLIC
    FSDD
    Flower
+   HalpeFullBody
    HardHatWorkers
    HeadPoseImage
    ImageEmotion
@@ -24,6 +33,7 @@ tensorbay.opendataset
    KenyanFood
    KylbergTexture
    LISATrafficLight
+   LISATrafficSign
    LeedsSportsPose
    NeolixOD
    Newsgroups20
@@ -32,4 +42,9 @@ tensorbay.opendataset
    THCHS30
    THUCNews
    TLR
+   UAVDT
+   VOC2012ActionClassification
+   VOC2012Detection
    WIDER_FACE
+   _utility
+   nuScenes

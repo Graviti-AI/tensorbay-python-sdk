@@ -24,10 +24,6 @@ class VersionControlClient:
         gas: The initial client to interact between local and TensorBay.
         status: The version control status of the dataset.
 
-    Attributes:
-        dataset_id: Dataset ID.
-        status: The version control status of the dataset.
-
     """
 
     def __init__(self, dataset_id: str, gas: "GAS", *, status: Status) -> None:
