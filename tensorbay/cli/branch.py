@@ -5,23 +5,21 @@
 
 """Implementation of gas branch."""
 
-from typing import Dict
-
 import click
 
 from ..client.gas import DatasetClientType
 from .tbrn import TBRN, TBRNType
-from .utility import error, get_dataset_client, get_gas, shorten
+from .utility import ContextInfo, error, get_dataset_client, get_gas, shorten
 
 
 def _implement_branch(
-    obj: Dict[str, str], tbrn: str, name: str, verbose: bool, is_delete: bool
+    obj: ContextInfo, tbrn: str, name: str, verbose: bool, is_delete: bool
 ) -> None:
     info = TBRN(tbrn=tbrn)
     if info.type != TBRNType.DATASET:
         error(f'To operate a branch, "{info}" must be a dataset')
 
-    gas = get_gas(**obj)
+    gas = get_gas(*obj)
     dataset_client = get_dataset_client(gas, info)
 
     if is_delete:

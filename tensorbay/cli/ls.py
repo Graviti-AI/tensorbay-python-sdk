@@ -5,7 +5,7 @@
 
 """Implementation of gas ls."""
 
-from typing import Dict, Iterable, Optional
+from typing import Iterable, Optional
 
 import click
 
@@ -13,7 +13,7 @@ from ..client import GAS
 from ..client.dataset import FusionDatasetClient
 from ..client.gas import DatasetClientType
 from .tbrn import TBRN, TBRNType
-from .utility import error, get_dataset_client, get_gas
+from .utility import ContextInfo, error, get_dataset_client, get_gas
 
 
 def _echo_data(
@@ -121,10 +121,8 @@ _LS_FUNCS = {
 }
 
 
-def _implement_ls(
-    obj: Dict[str, str], tbrn: str, list_all_files: bool, show_total_num: bool
-) -> None:
-    gas = get_gas(**obj)
+def _implement_ls(obj: ContextInfo, tbrn: str, list_all_files: bool, show_total_num: bool) -> None:
+    gas = get_gas(*obj)
     if not tbrn:
         dataset_names = gas.list_dataset_names()
         if show_total_num:

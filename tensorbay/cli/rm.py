@@ -5,16 +5,14 @@
 
 """Implementation of gas rm."""
 
-from typing import Dict
-
 import click
 
 from .tbrn import TBRN, TBRNType
-from .utility import error, get_dataset_client, get_gas
+from .utility import ContextInfo, error, get_dataset_client, get_gas
 
 
-def _implement_rm(obj: Dict[str, str], tbrn: str, is_recursive: bool) -> None:
-    gas = get_gas(**obj)
+def _implement_rm(obj: ContextInfo, tbrn: str, is_recursive: bool) -> None:
+    gas = get_gas(*obj)
     info = TBRN(tbrn=tbrn)
     dataset_client = get_dataset_client(gas, info, is_fusion=False)
 

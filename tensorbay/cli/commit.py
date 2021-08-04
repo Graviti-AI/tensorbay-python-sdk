@@ -5,12 +5,12 @@
 
 """Implementation of gas commit."""
 
-from typing import Dict, Tuple
+from typing import Tuple
 
 import click
 
 from .tbrn import TBRN, TBRNType
-from .utility import edit_message, error, format_hint, get_dataset_client, get_gas
+from .utility import ContextInfo, edit_message, error, format_hint, get_dataset_client, get_gas
 
 _COMMIT_HINT = """
 # Please enter the commit message for your changes.
@@ -20,8 +20,8 @@ _COMMIT_HINT = """
 """
 
 
-def _implement_commit(obj: Dict[str, str], tbrn: str, message: Tuple[str, ...]) -> None:
-    gas = get_gas(**obj)
+def _implement_commit(obj: ContextInfo, tbrn: str, message: Tuple[str, ...]) -> None:
+    gas = get_gas(*obj)
     info = TBRN(tbrn=tbrn)
     dataset_client = get_dataset_client(gas, info)
 
@@ -35,7 +35,7 @@ def _implement_commit(obj: Dict[str, str], tbrn: str, message: Tuple[str, ...]) 
 
     draft = dataset_client.get_draft()
     hint_message = format_hint(draft.title, draft.description, _COMMIT_HINT)
-    title, description = edit_message(message, hint_message)
+    title, description = edit_message(message, hint_message, obj.config_parser)
     if not title:
         error("Aborting commit due to empty commit message")
 

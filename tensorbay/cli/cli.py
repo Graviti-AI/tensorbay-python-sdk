@@ -33,12 +33,13 @@ Use ``gas tag`` to list, create or delete tags.
 """
 
 from functools import partial
-from typing import Dict, Iterable, Optional, Tuple
+from typing import Iterable, Optional, Tuple
 
 import click
 
 from .. import __version__
 from .custom import CustomCommand, DeprecatedOption, DeprecatedOptionsCommand
+from .utility import ContextInfo
 
 
 @click.group(context_settings={"help_option_names": ("-h", "--help")})
@@ -95,12 +96,12 @@ command = partial(cli.command, cls=CustomCommand)
 @click.option("-l", "show_total_num", is_flag=True, help="Show the total number of resources")
 @click.pass_obj
 def ls(  # pylint: disable=invalid-name
-    obj: Dict[str, str], tbrn: str, list_all_files: bool, show_total_num: bool
+    obj: ContextInfo, tbrn: str, list_all_files: bool, show_total_num: bool
 ) -> None:
     """List data under the path. If path is empty, list the names of all datasets.\f
 
     Arguments:
-        obj: A dict contains config information.
+        obj: A NamedTuple containing the command context.
         tbrn: Path to be listed, like "tb:KITTI:seg1". If empty, list names of all datasets.
         list_all_files: If true, list all files under the segment.
         show_total_num: If true, show the total number of resources.
@@ -121,10 +122,12 @@ def ls(  # pylint: disable=invalid-name
 @click.argument("key", type=str, default="")
 @click.argument("value", type=str, default="")
 @click.option("-u", "--unset", is_flag=True, help="Unset the config option")
-def config(key: str, value: str, unset: bool) -> None:
+@click.pass_obj
+def config(obj: ContextInfo, key: str, value: str, unset: bool) -> None:
     """Configure the options when using gas CLI.\f
 
     Arguments:
+        obj: A NamedTuple containing the command context.
         key: The option key.
         value: The option value.
         unset: Whether to unset the option.
@@ -132,7 +135,7 @@ def config(key: str, value: str, unset: bool) -> None:
     """  # noqa: D301,D415
     from .config import _implement_config
 
-    _implement_config(key, value, unset)
+    _implement_config(obj, key, value, unset)
 
 
 @command(
@@ -146,11 +149,11 @@ def config(key: str, value: str, unset: bool) -> None:
 @click.option("-d", "--delete", "is_delete", is_flag=True, help="Delete TensorBay dataset")
 @click.option("-y", "--yes", is_flag=True, help="Confirm to delete the dataset completely.")
 @click.pass_obj
-def dataset(obj: Dict[str, str], tbrn: str, is_delete: bool, yes: bool) -> None:
+def dataset(obj: ContextInfo, tbrn: str, is_delete: bool, yes: bool) -> None:
     """List, create or delete datasets.\f
 
     Arguments:
-        obj: A dict including config information.
+        obj: A NamedTuple containing the command context.
         tbrn: The tbrn of the dataset, like "tb:KITTI".
         is_delete: Whether to delete the TensorBay dataset.
         yes: Confirm to delete the dataset completely.
@@ -189,7 +192,7 @@ def dataset(obj: Dict[str, str], tbrn: str, is_delete: bool, yes: bool) -> None:
 )
 @click.pass_obj
 def draft(  # pylint: disable=too-many-arguments
-    obj: Dict[str, str],
+    obj: ContextInfo,
     tbrn: str,
     is_list: bool,
     edit: bool,
@@ -199,7 +202,7 @@ def draft(  # pylint: disable=too-many-arguments
     """List or create drafts.\f
 
     Arguments:
-        obj: A dict contains config information.
+        obj: A NamedTuple containing the command context.
         tbrn: The tbrn of the dataset.
         is_list: Whether to list the drafts.
         edit: Whether to edit the draft's title and description.
@@ -220,11 +223,11 @@ def draft(  # pylint: disable=too-many-arguments
     "-m", "--message", type=str, multiple=True, default=(), help="The title of the commit."
 )
 @click.pass_obj
-def commit(obj: Dict[str, str], tbrn: str, message: Tuple[str, ...]) -> None:
+def commit(obj: ContextInfo, tbrn: str, message: Tuple[str, ...]) -> None:
     """Commit drafts.\f
 
     Arguments:
-        obj: A dict contains config information.
+        obj: A NamedTuple containing the command context.
         tbrn: The path to commit a draft, like "tb:KITTI#1".
         message: The message of the commit.
 
@@ -261,7 +264,7 @@ def commit(obj: Dict[str, str], tbrn: str, message: Tuple[str, ...]) -> None:
 )
 @click.pass_obj
 def cp(  # pylint: disable=invalid-name, too-many-arguments
-    obj: Dict[str, str],
+    obj: ContextInfo,
     local_paths: Iterable[str],
     tbrn: str,
     is_recursive: bool,
@@ -271,7 +274,7 @@ def cp(  # pylint: disable=invalid-name, too-many-arguments
     """Copy local data to a remote path.\f
 
     Arguments:
-        obj: A dict contains config information.
+        obj: A NamedTuple containing the command context.
         local_paths: An iterable of local paths contains data to be uploaded.
         tbrn: The path to save the uploaded data, like "tb:KITTI:seg1".
         is_recursive: Whether copy directories recursively.
@@ -299,12 +302,12 @@ def cp(  # pylint: disable=invalid-name, too-many-arguments
 )
 @click.pass_obj
 def rm(  # pylint: disable=invalid-name, too-many-arguments
-    obj: Dict[str, str], tbrn: str, is_recursive: bool
+    obj: ContextInfo, tbrn: str, is_recursive: bool
 ) -> None:
     """Remove the remote data.\f
 
     Arguments:
-        obj: A dict contains config information.
+        obj: A NamedTuple containing the command context.
         tbrn: The path to be removed, like "tb:KITTI#1".
         is_recursive: Whether remove directories recursively.
 
@@ -326,11 +329,11 @@ def rm(  # pylint: disable=invalid-name, too-many-arguments
 @click.option("-v", "--verbose", is_flag=True, help="Show short commit id and commit message.")
 @click.option("-d", "--delete", "is_delete", is_flag=True, help="Delete the branch")
 @click.pass_obj
-def branch(obj: Dict[str, str], tbrn: str, name: str, verbose: bool, is_delete: bool) -> None:
+def branch(obj: ContextInfo, tbrn: str, name: str, verbose: bool, is_delete: bool) -> None:
     """List, create or delete branches.\f
 
     Arguments:
-        obj: A dict contains config information.
+        obj: A NamedTuple containing the command context.
         tbrn: The tbrn of the dataset.
         name: The name of the branch to be created.
         verbose: Whether to show the short commit id and commit message.
@@ -353,11 +356,11 @@ def branch(obj: Dict[str, str], tbrn: str, name: str, verbose: bool, is_delete: 
 @click.argument("name", type=str, default="")
 @click.option("-d", "--delete", "is_delete", is_flag=True, help="Delete the tag.")
 @click.pass_obj
-def tag(obj: Dict[str, str], tbrn: str, name: str, is_delete: bool) -> None:
+def tag(obj: ContextInfo, tbrn: str, name: str, is_delete: bool) -> None:
     """List, create or delete tags.\f
 
     Arguments:
-        obj: A dict contains config information.
+        obj: A NamedTuple containing the command context.
         tbrn: The tbrn of the dataset.
         name: The name of the tag.
         is_delete: Whether to delete the tag.
@@ -395,7 +398,7 @@ def tag(obj: Dict[str, str], tbrn: str, name: str, is_delete: bool) -> None:
 @click.option("--graph", is_flag=True, help="Show text-based graphical commits history")
 @click.pass_obj
 def log(  # pylint: disable=too-many-arguments
-    obj: Dict[str, str],
+    obj: ContextInfo,
     tbrn: str,
     max_count: Optional[int],
     oneline: bool,
@@ -405,7 +408,7 @@ def log(  # pylint: disable=too-many-arguments
     """Show commit logs.\f
 
     Arguments:
-        obj: A dict contains config information.
+        obj: A NamedTuple containing the command context.
         tbrn: The tbrn of a dataset.
         max_count: Max number of commits to show.
         oneline: Whether to show a commit message in oneline.
@@ -437,12 +440,18 @@ def log(  # pylint: disable=too-many-arguments
 @click.option("-a", "--all", "is_all", is_flag=True, help="All the auth info")
 @click.pass_obj
 def auth(  # pylint: disable=too-many-arguments
-    obj: Dict[str, str], arg1: str, arg2: str, get: bool, status: bool, unset: bool, is_all: bool
+    obj: ContextInfo,
+    arg1: str,
+    arg2: str,
+    get: bool,
+    status: bool,
+    unset: bool,
+    is_all: bool,
 ) -> None:
     """Authenticate the accessKey of gas.\f
 
     Arguments:
-        obj: A dict contains config information.
+        obj: A NamedTuple containing the command context.
         arg1: The accessKey or the url of gas for the authentication.
         arg2: The accessKey of gas for the authentication if arg1 is url.
         get: Whether to get the accesskey of the profile.

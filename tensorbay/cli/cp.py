@@ -7,22 +7,22 @@
 
 import os
 from pathlib import Path, PurePosixPath
-from typing import Dict, Iterable
+from typing import Iterable
 
 from ..dataset import Data, Segment
 from .tbrn import TBRN, TBRNType
-from .utility import error, get_dataset_client, get_gas
+from .utility import ContextInfo, error, get_dataset_client, get_gas
 
 
 def _implement_cp(  # pylint: disable=too-many-arguments
-    obj: Dict[str, str],
+    obj: ContextInfo,
     local_paths: Iterable[str],
     tbrn: str,
     is_recursive: bool,
     jobs: int,
     skip_uploaded_files: bool,
 ) -> None:
-    gas = get_gas(**obj)
+    gas = get_gas(*obj)
     info = TBRN(tbrn=tbrn)
 
     dataset_client = get_dataset_client(gas, info, is_fusion=False)

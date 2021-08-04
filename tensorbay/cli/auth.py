@@ -7,20 +7,19 @@
 
 from configparser import ConfigParser, NoSectionError
 from textwrap import indent
-from typing import Dict, Optional
+from typing import Optional
 from urllib.parse import urljoin
 
 import click
 
 from ..exception import UnauthorizedError
 from .utility import (
+    ContextInfo,
     error,
     form_profile_value,
     get_gas,
     is_accesskey,
-    read_config,
     read_profile,
-    update_config,
     write_config,
 )
 
@@ -28,22 +27,26 @@ INDENT = " " * 4
 
 
 def _implement_auth(  # pylint: disable=too-many-arguments
-    obj: Dict[str, str], arg1: str, arg2: str, get: bool, status: bool, unset: bool, is_all: bool
+    obj: ContextInfo,
+    arg1: str,
+    arg2: str,
+    get: bool,
+    status: bool,
+    unset: bool,
+    is_all: bool,
 ) -> None:
     _check_args_and_options(arg1, arg2, get, status, unset, is_all)
-    update_config()
-    config_parser = read_config()
 
     if get:
-        _get_auth(obj, config_parser, is_all)
+        _get_auth(obj, is_all)
         return
 
     if status:
-        _status_auth(obj, config_parser, is_all)
+        _status_auth(obj, is_all)
         return
 
     if unset:
-        _unset_auth(obj, config_parser, is_all)
+        _unset_auth(obj, is_all)
         return
 
     if not arg1 and not arg2:
@@ -63,10 +66,11 @@ def _implement_auth(  # pylint: disable=too-many-arguments
     else:
         error(f'Invalid argument "{arg1}"')
 
-    _update_profile(config_parser, obj["profile_name"], arg1, arg2)
+    _update_profile(obj, arg1, arg2)
 
 
-def _get_auth(obj: Dict[str, str], config_parser: ConfigParser, is_all: bool) -> None:
+def _get_auth(obj: ContextInfo, is_all: bool) -> None:
+    config_parser = obj.config_parser
     if is_all:
         try:
             profiles = config_parser["profiles"]
@@ -76,24 +80,25 @@ def _get_auth(obj: Dict[str, str], config_parser: ConfigParser, is_all: bool) ->
             _echo_formatted_profile(key, value)
         return
 
-    profile_name = obj["profile_name"]
+    profile_name = obj.profile_name
     try:
         profile = config_parser["profiles"][profile_name]
     except KeyError:
-        error(f"Profile '{profile_name}' does not exist.")
+        error(f'Profile "{profile_name}" does not exist.')
     _echo_formatted_profile(profile_name, profile)
 
 
-def _unset_auth(obj: Dict[str, str], config_parser: ConfigParser, is_all: bool) -> None:
+def _unset_auth(obj: ContextInfo, is_all: bool) -> None:
+    config_parser = obj.config_parser
     if is_all:
         config_parser.remove_section("profiles")
     else:
         try:
-            removed = config_parser.remove_option("profiles", obj["profile_name"])
+            removed = config_parser.remove_option("profiles", obj.profile_name)
         except NoSectionError:
             removed = False
         if not removed:
-            error(f"Profile '{obj['profile_name']}' does not exist.")
+            error(f'Profile "{obj.profile_name}" does not exist.')
     write_config(config_parser, show_message=False)
     click.echo("Unset successfully")
 
@@ -127,9 +132,10 @@ def _is_gas_url(arg: str) -> bool:
     return arg.startswith("https://gas.")
 
 
-def _update_profile(config_parser: ConfigParser, profile_name: str, arg1: str, arg2: str) -> None:
+def _update_profile(obj: ContextInfo, arg1: str, arg2: str) -> None:
     access_key, url = (arg2, arg1) if arg2 else (arg1, arg2)
-    gas_client = get_gas(access_key, url, profile_name)
+    profile_name, config_parser = obj.profile_name, obj.config_parser
+    gas_client = get_gas(access_key, url, profile_name, config_parser)
     try:
         user_info = gas_client.get_user()
     except UnauthorizedError:
@@ -141,12 +147,12 @@ def _update_profile(config_parser: ConfigParser, profile_name: str, arg1: str, a
     write_config(config_parser, show_message=False)
 
     messages = [
-        f"Successfully set authentication info of '{click.style(user_info.name, bold=True)}'"
+        f'Successfully set authentication info of "{click.style(user_info.name, bold=True)}"'
     ]
     if user_info.team:
-        messages.append(f" in '{click.style(user_info.team.name, bold=True)}' team")
+        messages.append(f' in "{click.style(user_info.team.name, bold=True)}" team')
     if profile_name != "default":
-        messages.append(f" into profile '{click.style(profile_name, bold=True)}'")
+        messages.append(f' into profile "{click.style(profile_name, bold=True)}"')
     click.echo("".join(messages))
 
 
@@ -168,7 +174,8 @@ def _echo_formatted_profile(name: str, value: str) -> None:
     click.echo(f"{name} = {formatted_value}\n")
 
 
-def _status_auth(obj: Dict[str, str], config_parser: ConfigParser, is_all: bool) -> None:
+def _status_auth(obj: ContextInfo, is_all: bool) -> None:
+    config_parser = obj.config_parser
     if is_all:
         try:
             profiles = config_parser["profiles"]
@@ -178,12 +185,12 @@ def _status_auth(obj: Dict[str, str], config_parser: ConfigParser, is_all: bool)
             _echo_user_info(key, config_parser)
         return
 
-    _echo_user_info(obj["profile_name"], config_parser)
+    _echo_user_info(obj.profile_name, config_parser)
 
 
 def _echo_user_info(profile_name: str, config_parser: ConfigParser) -> None:
     access_key, url = read_profile(profile_name, config_parser)
-    gas_client = get_gas(access_key, url, profile_name)
+    gas_client = get_gas(access_key, url, profile_name, config_parser)
     try:
         user_info = gas_client.get_user()
     except UnauthorizedError:
