@@ -19,11 +19,18 @@ from .auth import INDENT
 from .tbrn import TBRN, TBRNType
 from .utility import error, get_gas, shorten
 
-_FULL_LOG = """commit {}
-Author: {}
-Date: {}
+_LEFT_BRACKET = click.style("(", fg="yellow", reset=False)
+_COMMA = click.style(", ", fg="yellow", reset=False)
+_RIGHT_BRACKET = click.style(")", fg="yellow", reset=True)
 
-    {}
+_FULL_LOG = f"""{click.style("commit {}", fg="yellow")}
+Author: {{}}
+Date: {{}}
+
+    {{}}
+"""
+
+_ONELINE_LOG = f"""{click.style("{}", fg="yellow")} {{}}
 """
 
 
@@ -58,21 +65,29 @@ def _implement_log(  # pylint: disable=too-many-arguments
     click.echo_via_pager(islice(printer.generate_commits(), max_count))
 
 
-def _get_oneline_log(commit: Commit, branch_name: Optional[str]) -> str:
+def _join_branch_names(commit_id: str, branch_names: List[str]) -> str:
+    return (
+        f"{commit_id} {_LEFT_BRACKET}"
+        f"{_COMMA.join(click.style(name, fg='green', reset=False) for name in branch_names)}"
+        f"{_RIGHT_BRACKET}"
+    )
+
+
+def _get_oneline_log(commit: Commit, branch_names: Optional[List[str]]) -> str:
     commit_id = shorten(commit.commit_id)
-    if branch_name:
-        commit_id = f"{commit_id} ({branch_name})"
-    return f"{commit_id} {commit.title}\n"
+    if branch_names:
+        commit_id = _join_branch_names(commit_id, branch_names)
+    return _ONELINE_LOG.format(commit_id, commit.title)
 
 
-def _get_full_log(commit: Commit, branch_name: Optional[str]) -> str:
+def _get_full_log(commit: Commit, branch_names: Optional[List[str]]) -> str:
     description = commit.description
     if description:
         description = f"\n\n{indent(description, INDENT)}"
     commit_message = f"{commit.title}{description}\n"
     commit_id = commit.commit_id
-    if branch_name:
-        commit_id = f"{commit_id} ({branch_name})"
+    if branch_names:
+        commit_id = _join_branch_names(commit_id, branch_names)
     return _FULL_LOG.format(
         commit_id,
         commit.committer.name,
@@ -174,8 +189,7 @@ class _CommitPrinter:  # pylint: disable=too-few-public-methods
         """
         for commit in self._generate_commits():
             commit_id = commit.commit_id
-            print_branch_name = ", ".join(self._commit_id_to_branches.get(commit_id, ()))
-            yield self._printer(commit, print_branch_name)
+            yield self._printer(commit, self._commit_id_to_branches.get(commit_id))
 
 
 class _CommitNode:  # pylint: disable=too-few-public-methods
@@ -281,9 +295,9 @@ class _GraphPrinter:  # pylint: disable=too-few-public-methods
         self._sorted_leaves[self._pointer] = node
 
     def _add_graph_oneline(
-        self, commit: Commit, branch_name: Optional[str], original_pointer: int
+        self, commit: Commit, branch_names: Optional[List[str]], original_pointer: int
     ) -> str:
-        log = _get_oneline_log(commit, branch_name)
+        log = _get_oneline_log(commit, branch_names)
         prefixes = ["|"] * self._layer
         # Don't merge branches.
         if self._merge_pointer is None:
@@ -296,9 +310,9 @@ class _GraphPrinter:  # pylint: disable=too-few-public-methods
         return "".join(lines)
 
     def _add_graph_full(
-        self, commit: Commit, branch_name: Optional[str], original_pointer: int
+        self, commit: Commit, branch_names: Optional[List[str]], original_pointer: int
     ) -> str:
-        log = _get_full_log(commit, branch_name)
+        log = _get_full_log(commit, branch_names)
         splitlines = iter(log.splitlines())
         prefixes = ["|"] * self._layer
         # Don't merge branches.
@@ -378,11 +392,11 @@ class _GraphPrinter:  # pylint: disable=too-few-public-methods
             parent = current_node.parent
             # Merge branch.
             original_pointer = self._merge_branches(parent)
-
-            print_branch_name = ", ".join(
-                self._commit_id_to_branches.get(current_node.commit.commit_id, ())
+            yield self._graph_printer(
+                current_node.commit,
+                self._commit_id_to_branches.get(current_node.commit.commit_id),
+                original_pointer,
             )
-            yield self._graph_printer(current_node.commit, print_branch_name, original_pointer)
 
             if not parent:
                 break
