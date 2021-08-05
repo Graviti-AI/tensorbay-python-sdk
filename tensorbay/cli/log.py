@@ -7,7 +7,7 @@
 import bisect
 from collections import defaultdict
 from datetime import datetime
-from itertools import islice, zip_longest
+from itertools import cycle, islice, zip_longest
 from textwrap import indent
 from typing import DefaultDict, Dict, Iterator, List, Optional, Type, Union
 
@@ -32,6 +32,20 @@ Date: {{}}
 
 _ONELINE_LOG = f"""{click.style("{}", fg="yellow")} {{}}
 """
+
+_LOG_COLORS = (
+    "red",
+    "green",
+    "blue",
+    "magenta",
+    "cyan",
+    "bright_blue",
+    "bright_magenta",
+    "bright_cyan",
+    "bright_red",
+    "bright_green",
+    "bright_yellow",
+)
 
 
 def _implement_log(  # pylint: disable=too-many-arguments
@@ -240,9 +254,10 @@ class _GraphPrinter:  # pylint: disable=too-few-public-methods
         self._graph_printer = self._add_graph_oneline if oneline else self._add_graph_full
 
         self._sorted_leaves = self._build_commit_tree(dataset_client, revisions)
-        self._layer = 1
         self._pointer = 0
         self._merge_pointer: Optional[int] = None
+        self._log_colors = cycle(_LOG_COLORS)
+        self._layer_colors: List[str] = [next(self._log_colors)]
 
     def _get_log_node(self) -> _CommitNode:
         """Get the next log commit node.
@@ -260,29 +275,21 @@ class _GraphPrinter:  # pylint: disable=too-few-public-methods
                 return log_node
 
             self._pointer += 1
-            if self._pointer >= self._layer:
-                self._layer += 1
+            if self._pointer >= len(self._layer_colors):
+                self._layer_colors.append(next(self._log_colors))
 
         raise RuntimeError("Graphical logging algorithm error.")
 
-    def _merge_branches(self, parent: Optional[_CommitNode]) -> int:
+    def _merge_branches(self, parent: _CommitNode) -> None:
         """Merge branches.
 
         Arguments:
             parent: The parent node.
 
-        Returns:
-            The original print pointer.
-
         """
-        if parent not in self._sorted_leaves:
-            return self._pointer
         index = self._sorted_leaves.index(parent)
-        original_pointer = self._pointer
         self._pointer, self._merge_pointer = sorted((index, self._pointer))
-        self._layer -= 1
         del self._sorted_leaves[self._merge_pointer]
-        return original_pointer
 
     def _set_next_node(self, node: _CommitNode) -> None:
         """Set the next node at the position of the printing pointer.
@@ -298,13 +305,13 @@ class _GraphPrinter:  # pylint: disable=too-few-public-methods
         self, commit: Commit, branch_names: Optional[List[str]], original_pointer: int
     ) -> str:
         log = _get_oneline_log(commit, branch_names)
-        prefixes = ["|"] * self._layer
+        prefixes = self._get_colorful_prefixes()
         # Don't merge branches.
         if self._merge_pointer is None:
             return f"{self._get_title_prefix(prefixes, original_pointer)} {log}"
 
         # Merge branches.
-        prefixes.append("|")
+        del self._layer_colors[self._merge_pointer]
         lines = [f"{self._get_title_prefix(prefixes, original_pointer)} {log}"]
         lines.extend(f"{prefixes}\n" for prefixes in self._get_merge_prefixes())
         return "".join(lines)
@@ -314,26 +321,31 @@ class _GraphPrinter:  # pylint: disable=too-few-public-methods
     ) -> str:
         log = _get_full_log(commit, branch_names)
         splitlines = iter(log.splitlines())
-        prefixes = ["|"] * self._layer
+        prefixes = self._get_colorful_prefixes()
+        lines = [f"{self._get_title_prefix(prefixes, original_pointer)} {next(splitlines)}\n"]
         # Don't merge branches.
         if self._merge_pointer is None:
             details_prefix = " ".join(prefixes)
-            lines = [f"{self._get_title_prefix(prefixes, original_pointer)} {next(splitlines)}\n"]
             lines.extend(f"{details_prefix} {line}\n" for line in splitlines)
         else:
             # Merge branches.
-            prefixes.append("|")
+            del self._layer_colors[self._merge_pointer]
             merge_prefixes = self._get_merge_prefixes()
-            lines = [f"{self._get_title_prefix(prefixes, original_pointer)} {next(splitlines)}\n"]
             lines.extend(self._combine_details(list(merge_prefixes), list(splitlines)))
-
         return "".join(lines)
 
+    def _get_colorful_prefixes(self) -> List[str]:
+        return [click.style("|", fg=color) for color in self._layer_colors]
+
     def _get_merge_prefixes(self) -> Iterator[str]:
+        prefixes = []
+        for color in self._layer_colors:
+            prefixes.append(click.style("|", fg=color))
+            prefixes.append(" ")
         for i in range(self._merge_pointer, self._pointer, -1):  # type: ignore[arg-type]
-            prefixes = ["| "] * self._layer
-            prefixes[i - 1] = "|/"
-            yield "".join(prefixes)
+            temp_prefixes = prefixes.copy()
+            temp_prefixes[2 * i - 1] = click.style("/", fg=self._layer_colors[self._pointer])
+            yield "".join(temp_prefixes)
 
     @staticmethod
     def _get_title_prefix(prefixes: List[str], original_pointer: int) -> str:
@@ -387,11 +399,20 @@ class _GraphPrinter:  # pylint: disable=too-few-public-methods
             The graphical commit log.
 
         """
+        change_color = False
         while True:
             current_node = self._get_log_node()
             parent = current_node.parent
-            # Merge branch.
-            original_pointer = self._merge_branches(parent)
+            original_pointer = self._pointer
+            if parent not in self._sorted_leaves:
+                if change_color:
+                    # pylint: disable=stop-iteration-return
+                    self._layer_colors[self._pointer] = next(self._log_colors)
+                    change_color = False
+            else:
+                # Merge branch.
+                change_color = True
+                self._merge_branches(parent)
             yield self._graph_printer(
                 current_node.commit,
                 self._commit_id_to_branches.get(current_node.commit.commit_id),
