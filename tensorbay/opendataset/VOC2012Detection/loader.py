@@ -15,7 +15,7 @@ _SEGMENT_NAMES = (
     "trainval",
     "val",
 )
-_BOOLEAN_ATTRIBUTES = {"occluded", "pose", "truncated"}
+_BOOLEAN_ATTRIBUTES = {"occluded", "difficult", "truncated"}
 DATASET_NAME = "VOC2012Detection"
 
 
