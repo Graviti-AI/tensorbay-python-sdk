@@ -189,6 +189,7 @@ class GAS:
         Returns:
             The cloud client of this dataset.
         """
+        self.get_auth_storage_config(name)
         return CloudClient(name, self._client)
 
     @overload

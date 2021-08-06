@@ -226,8 +226,25 @@ class TestGAS:
 
         assert list(configs) == response_data["configs"]
 
-    def test_get_cloud_client(self):
+    def test_get_cloud_client(self, mocker):
         config_name = "cloud_train"
+        response_data = {
+            "configs": [
+                {
+                    "name": "cloud_train",
+                    "type": "azure",
+                    "accountName": "tensorbay",
+                    "containerName": "tensorbay",
+                },
+            ],
+            "offset": 0,
+            "recordSize": 1,
+            "totalCount": 1,
+        }
+        mocker.patch(
+            f"{gas.__name__}.Client.open_api_do",
+            return_value=mock_response(data=response_data),
+        )
         cloud_client = self.gas_client.get_cloud_client(config_name)
         cloud_client_1 = CloudClient(config_name, self.gas_client._client)
         assert cloud_client._name == cloud_client_1._name
