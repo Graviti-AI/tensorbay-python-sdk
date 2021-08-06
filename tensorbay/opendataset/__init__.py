@@ -41,6 +41,7 @@ from .Newsgroups20 import Newsgroups20
 from .NightOwls import NightOwls
 from .nuScenes import nuScenes
 from .RP2K import RP2K
+from .SVHN import SVHN
 from .THCHS30 import THCHS30
 from .THUCNews import THUCNews
 from .TLR import TLR
@@ -90,6 +91,7 @@ __all__ = [
     "Newsgroups20",
     "NightOwls",
     "RP2K",
+    "SVHN",
     "THCHS30",
     "THUCNews",
     "TLR",
