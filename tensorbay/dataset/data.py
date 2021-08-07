@@ -14,10 +14,10 @@ import os
 from typing import Any, Callable, Dict, Optional, Type, TypeVar, Union
 
 from ..label import Label
-from ..utility import AttrsMixin, FileMixin, RemoteFileMixin, ReprMixin, attr, common_loads
+from ..utility import FileMixin, RemoteFileMixin, ReprMixin
 
 
-class DataBase(AttrsMixin, ReprMixin):  # pylint: disable=too-few-public-methods
+class DataBase(ReprMixin):  # pylint: disable=too-few-public-methods
     """DataBase is a base class for the file and label combination.
 
     Arguments:
@@ -30,13 +30,9 @@ class DataBase(AttrsMixin, ReprMixin):  # pylint: disable=too-few-public-methods
 
     """
 
-    _T = TypeVar("_T", bound="DataBase")
     _Type = Union["Data", "RemoteData", "AuthData"]
 
     _repr_attrs = ("timestamp", "label")
-
-    timestamp: float = attr(is_dynamic=True)
-    label: Label = attr()
 
     def __init__(self, timestamp: Optional[float] = None) -> None:
         if timestamp is not None:
@@ -66,10 +62,6 @@ class Data(DataBase, FileMixin):
         target_remote_path: The target remote path of the data.
 
     """
-
-    _T = TypeVar("_T", bound="Data")
-
-    path: str = attr(key="localPath")
 
     def __init__(
         self,
@@ -158,8 +150,6 @@ class RemoteData(DataBase, RemoteFileMixin):
 
     _T = TypeVar("_T", bound="RemoteData")
 
-    path: str = attr(key="remotePath")
-
     def __init__(
         self,
         remote_path: str,
@@ -171,11 +161,14 @@ class RemoteData(DataBase, RemoteFileMixin):
         RemoteFileMixin.__init__(self, remote_path, _url_getter=_url_getter)
 
     @classmethod
-    def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Loads :class:`RemoteData` from a dict containing remote data information.
+    def from_response_body(
+        cls: Type[_T], body: Dict[str, Any], *, _url_getter: Optional[Callable[[str], str]]
+    ) -> _T:
+        """Loads a :class:`RemoteData` object from a response body.
 
         Arguments:
-            contents: A dict containing the information of the data, which looks like::
+            body: The response body which contains the information of a remote data,
+                whose format should be like::
 
                     {
                         "remotePath": <str>,
@@ -191,34 +184,15 @@ class RemoteData(DataBase, RemoteFileMixin):
                         }
                     }
 
-        Returns:
-            A :class:`Data` instance containing information from the given dict.
-
-        """
-        return common_loads(cls, contents)
-
-    def dumps(self) -> Dict[str, Any]:
-        """Dumps the remote data into a dict.
+            _url_getter: The url getter of the remote file.
 
         Returns:
-            Dumped data dict, which looks like::
-
-                    {
-                        "remotePath": <str>,
-                        "timestamp": <float>,
-                        "label": {
-                            "CLASSIFICATION": {...},
-                            "BOX2D": {...},
-                            "BOX3D": {...},
-                            "POLYGON": {...},
-                            "POLYLINE2D": {...},
-                            "KEYPOINTS2D": {...},
-                            "SENTENCE": {...}
-                        }
-                    }
+            The loaded :class:`RemoteData` object.
 
         """
-        return super()._dumps()
+        data = cls(body["remotePath"], timestamp=body.get("timestamp"), _url_getter=_url_getter)
+        data.label._loads(body["label"])  # pylint: disable=protected-access
+        return data
 
 
 class AuthData(DataBase, RemoteFileMixin):
@@ -242,10 +216,6 @@ class AuthData(DataBase, RemoteFileMixin):
                 all the label information of the file.
 
     """
-
-    _T = TypeVar("_T", bound="AuthData")
-
-    path: str = attr(key="cloudPath")
 
     def __init__(
         self,

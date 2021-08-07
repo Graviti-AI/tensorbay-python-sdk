@@ -14,12 +14,12 @@ from different sensors.
 """
 
 import logging
-from typing import Any, Dict, Optional, Type, TypeVar
+from typing import Any, Dict, Mapping, Optional, Sequence, Type, TypeVar
 from uuid import UUID
 
 from ulid import ULID, from_str, from_uuid
 
-from ..utility import UserMutableMapping, common_loads
+from ..utility import UserMutableMapping
 from .data import DataBase, RemoteData
 
 logger = logging.getLogger(__name__)
@@ -61,33 +61,14 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
 
         return self.__class__.__name__
 
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        self._data = {}
-        if "frameId" in contents:
-            try:
-                self.frame_id = from_str(contents["frameId"])
-            except ValueError:
-                # Legacy fusion dataset use uuid as frame ID
-                # Keep this code here to make SDK compatible with uuid
-                self.frame_id = from_uuid(UUID(contents["frameId"]))
-                if self.__class__._logger_flag:  # pylint: disable=protected-access
-                    self.__class__._logger_flag = False  # pylint: disable=protected-access
-                    logger.warning(
-                        "WARNING: This is a legacy fusion dataset which use uuid as frame ID, "
-                        "it should be updated to ulid."
-                    )
-
-        for data_contents in contents["frame"]:
-            self._data[data_contents["sensorName"]] = RemoteData.loads(data_contents)
-
-        # self._pose = Transform3D.loads(contents["pose"]) if "pose" in contents else None
-
     @classmethod
-    def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Loads a :class:`Frame` object from a dict containing the frame information.
+    def from_response_body(
+        cls: Type[_T], body: Dict[str, Any], frame_index: int, urls: Sequence[Mapping[str, str]]
+    ) -> _T:
+        """Loads a :class:`Frame` object from a response body.
 
         Arguments:
-            contents: A dict containing the information of a frame,
+            body: The response body which contains the information of a frame,
                 whose format should be like::
 
                     {
@@ -95,7 +76,7 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
                         "frame": [
                             {
                                 "sensorName": <str>,
-                                "remotePath" or "localPath": <str>,
+                                "remotePath": <str>,
                                 "timestamp": <float>,
                                 "label": {...}
                             },
@@ -104,11 +85,34 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
                         ]
                     }
 
+            frame_index: The index of the frame.
+            urls: A sequence of mappings which key is the sensor name and value is the url.
+
         Returns:
             The loaded :class:`Frame` object.
 
-        """
-        return common_loads(cls, contents)
+        """  # noqa: DAR101  # https://github.com/terrencepreilly/darglint/issues/120
+        try:
+            frame_id = from_str(body["frameId"])
+        except ValueError:
+            # Legacy fusion dataset use uuid as frame ID
+            # Keep this code here to make SDK compatible with uuid
+            frame_id = from_uuid(UUID(body["frameId"]))
+            if cls._logger_flag:  # pylint: disable=protected-access
+                cls._logger_flag = False  # pylint: disable=protected-access
+                logger.warning(
+                    "WARNING: This is a legacy fusion dataset which use uuid as frame ID, "
+                    "it should be updated to ulid."
+                )
+        frame = cls(frame_id)
+        for data_contents in body["frame"]:
+            sensor_name = data_contents["sensorName"]
+            frame[sensor_name] = RemoteData.from_response_body(
+                data_contents,
+                _url_getter=lambda _, s=sensor_name: urls[frame_index][s],  # type: ignore[misc]
+            )
+
+        return frame
 
     # @property
     # def pose(self) -> Optional[Transform3D]:

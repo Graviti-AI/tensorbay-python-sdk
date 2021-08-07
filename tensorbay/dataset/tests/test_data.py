@@ -67,11 +67,8 @@ class TestRemoteData:
         with pytest.raises(ValueError):
             remote_data.get_url()
 
-    def test_loads(self):
-        data = RemoteData.loads(_REMOTE_DATA)
+    def test_from_response_body(self):
+        data = RemoteData.from_response_body(_REMOTE_DATA, _url_getter=lambda _: "url")
         assert data.path == _REMOTE_DATA["remotePath"]
         assert data.timestamp == _REMOTE_DATA["timestamp"]
-
-    def test_dumps(self):
-        data = RemoteData("test.json", timestamp=_REMOTE_DATA["timestamp"])
-        assert data.dumps() == _REMOTE_DATA
+        assert data.get_url() == "url"
