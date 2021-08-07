@@ -102,15 +102,17 @@ class Data(DataBase, FileMixin):
     def target_remote_path(self, target_remote_path: str) -> None:
         self._target_remote_path = target_remote_path
 
-    def dumps(self) -> Dict[str, Any]:
-        """Dumps the local data into a dict.
+    def get_callback_body(self) -> Dict[str, Any]:
+        """Get the callback request body for uploading.
 
         Returns:
-            Dumped data dict, which looks like::
+            The callback request body, which look like::
 
                     {
-                        "localPath": <str>,
+                        "remotePath": <str>,
                         "timestamp": <float>,
+                        "checksum": <str>,
+                        "fileSize": <int>,
                         "label": {
                             "CLASSIFICATION": {...},
                             "BOX2D": {...},
@@ -123,7 +125,14 @@ class Data(DataBase, FileMixin):
                     }
 
         """
-        return super()._dumps()
+        body = super()._get_callback_body()
+        body["remotePath"] = self.target_remote_path
+        if hasattr(self, "timestamp"):
+            body["timestamp"] = self.timestamp
+        if self.label:
+            body["label"] = self.label.dumps()
+
+        return body
 
 
 class RemoteData(DataBase, RemoteFileMixin):
@@ -249,29 +258,6 @@ class AuthData(DataBase, RemoteFileMixin):
         DataBase.__init__(self, timestamp)
         RemoteFileMixin.__init__(self, cloud_path, _url_getter=_url_getter)
         self._target_remote_path = target_remote_path
-
-    def dumps(self) -> Dict[str, Any]:
-        """Dumps the auth data into a dict.
-
-        Returns:
-            Dumped data dict, which looks like::
-
-                    {
-                        "cloudPath": <str>,
-                        "timestamp": <float>,
-                        "label": {
-                            "CLASSIFICATION": {...},
-                            "BOX2D": {...},
-                            "BOX3D": {...},
-                            "POLYGON": {...},
-                            "POLYLINE2D": {...},
-                            "KEYPOINTS2D": {...},
-                            "SENTENCE": {...}
-                        }
-                    }
-
-        """
-        return super()._dumps()
 
     @property
     def target_remote_path(self) -> str:

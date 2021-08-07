@@ -6,9 +6,10 @@
 """mixin classes for local file and remote file."""
 
 import os
+from hashlib import sha1
 from http.client import HTTPResponse
 from string import printable
-from typing import Callable, Optional
+from typing import Any, Callable, Dict, Optional
 from urllib.parse import quote, urljoin
 from urllib.request import pathname2url, urlopen
 
@@ -29,12 +30,27 @@ class FileMixin(ReprMixin):
     """
 
     _repr_maxlevel = 3
+    _BUFFER_SIZE = 65536
 
     def __init__(self, local_path: str) -> None:
         self.path = local_path
 
     def _repr_head(self) -> str:
         return f'{self.__class__.__name__}("{self.path}")'
+
+    def _get_checksum(self) -> str:
+        sha1_object = sha1()
+        with open(self.path, "rb") as fp:
+            while True:
+                data = fp.read(self._BUFFER_SIZE)
+                if not data:
+                    break
+                sha1_object.update(data)
+
+        return sha1_object.hexdigest()
+
+    def _get_callback_body(self) -> Dict[str, Any]:
+        return {"checksum": self._get_checksum(), "fileSize": os.path.getsize(self.path)}
 
     def get_url(self) -> str:
         """Return the url of the local data file.
