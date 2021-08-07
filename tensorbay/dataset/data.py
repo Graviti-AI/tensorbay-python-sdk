@@ -44,40 +44,6 @@ class DataBase(AttrsMixin, ReprMixin):  # pylint: disable=too-few-public-methods
 
         self.label = Label()
 
-    @staticmethod
-    def loads(contents: Dict[str, Any]) -> "_Type":
-        """Loads data subclass from a dict containing data information.
-
-        Arguments:
-            contents: A dict containing the information of the data, which looks like::
-
-                    {
-                        "localPath", "remotePath" or "cloudPath": <str>,
-                        "timestamp": <float>,
-                        "label": {
-                            "CLASSIFICATION": {...},
-                            "BOX2D": {...},
-                            "BOX3D": {...},
-                            "POLYGON": {...},
-                            "POLYLINE2D": {...},
-                            "KEYPOINTS2D": {...},
-                            "SENTENCE": {...}
-                        }
-                    }
-
-        Returns:
-            A :class:`Data`, :class:`RemoteData` or :class:`AuthData` instance containing
-            information from the given dict.
-
-        Raises:
-            KeyError: When the "localPath", "remotePath" or "cloudPath" not in contents.
-
-        """
-        for key, value in _DATA_SUBCLASS:
-            if key in contents:
-                return common_loads(value, contents)
-        raise KeyError("Must contain 'localPath', 'remotePath' or 'cloudPath' in contents.")
-
 
 class Data(DataBase, FileMixin):
     """Data is a combination of a specific local file and its label.
@@ -115,33 +81,6 @@ class Data(DataBase, FileMixin):
         DataBase.__init__(self, timestamp)
         FileMixin.__init__(self, local_path)
         self._target_remote_path = target_remote_path
-
-    @classmethod
-    def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Loads :class:`Data` from a dict containing local data information.
-
-        Arguments:
-            contents: A dict containing the information of the data, which looks like::
-
-                    {
-                        "localPath": <str>,
-                        "timestamp": <float>,
-                        "label": {
-                            "CLASSIFICATION": {...},
-                            "BOX2D": {...},
-                            "BOX3D": {...},
-                            "POLYGON": {...},
-                            "POLYLINE2D": {...},
-                            "KEYPOINTS2D": {...},
-                            "SENTENCE": {...}
-                        }
-                    }
-
-        Returns:
-            A :class:`Data` instance containing information from the given dict.
-
-        """
-        return common_loads(cls, contents)
 
     @property
     def target_remote_path(self) -> str:
@@ -311,33 +250,6 @@ class AuthData(DataBase, RemoteFileMixin):
         RemoteFileMixin.__init__(self, cloud_path, _url_getter=_url_getter)
         self._target_remote_path = target_remote_path
 
-    @classmethod
-    def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Loads :class:`AuthData` from a dict containing remote data information.
-
-        Arguments:
-            contents: A dict containing the information of the data, which looks like::
-
-                    {
-                        "cloudPath": <str>,
-                        "timestamp": <float>,
-                        "label": {
-                            "CLASSIFICATION": {...},
-                            "BOX2D": {...},
-                            "BOX3D": {...},
-                            "POLYGON": {...},
-                            "POLYLINE2D": {...},
-                            "KEYPOINTS2D": {...},
-                            "SENTENCE": {...}
-                        }
-                    }
-
-        Returns:
-            An :class:`AuthData` instance containing information from the given dict.
-
-        """
-        return common_loads(cls, contents)
-
     def dumps(self) -> Dict[str, Any]:
         """Dumps the auth data into a dict.
 
@@ -380,6 +292,3 @@ class AuthData(DataBase, RemoteFileMixin):
     @target_remote_path.setter
     def target_remote_path(self, target_remote_path: str) -> None:
         self._target_remote_path = target_remote_path
-
-
-_DATA_SUBCLASS = (("remotePath", RemoteData), ("localPath", Data), ("cloudPath", AuthData))

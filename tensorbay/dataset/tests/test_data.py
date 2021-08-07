@@ -24,11 +24,6 @@ class TestData:
         assert data.target_remote_path == target_remote_path
         assert data.timestamp == timestamp
 
-    def test_loads(self):
-        data = Data.loads(_DATA)
-        assert data.path == _DATA["localPath"]
-        assert data.timestamp == _DATA["timestamp"]
-
     def test_dumps(self):
         data = Data("test.json", timestamp=_DATA["timestamp"])
         assert data.dumps() == _DATA
