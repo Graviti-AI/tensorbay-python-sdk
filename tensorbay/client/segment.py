@@ -318,10 +318,10 @@ class SegmentClient(SegmentClientBase):
         response = self._list_labels(offset, limit)
 
         for i, item in enumerate(response["labels"], offset):
-            data = RemoteData.loads(item)
-            # pylint: disable=protected-access
-            data._url_getter = lambda _, i=i: urls[i]  # type: ignore[misc]
-            yield data
+            yield RemoteData.from_response_body(
+                item,
+                _url_getter=lambda _, i=i: urls[i],  # type: ignore[misc]
+            )
 
         return response["totalCount"]  # type: ignore[no-any-return]
 
@@ -626,14 +626,8 @@ class FusionSegmentClient(SegmentClientBase):
     ) -> Generator[Frame, None, int]:
         response = self._list_labels(offset, limit)
 
-        data: RemoteData
-        for i, item in enumerate(response["labels"], offset):
-            frame = Frame.loads(item)
-            # pylint: disable=no-member # pylint issue: #3131
-            for sensor_name, data in frame.items():  # type: ignore[assignment]
-                # pylint: disable=protected-access
-                data._url_getter = lambda _, i=i, s=sensor_name: urls[i][s]  # type: ignore[misc]
-            yield frame
+        for index, item in enumerate(response["labels"], offset):
+            yield Frame.from_response_body(item, index, urls)
 
         return response["totalCount"]  # type: ignore[no-any-return]
 
