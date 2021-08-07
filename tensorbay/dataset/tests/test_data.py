@@ -51,7 +51,7 @@ class TestRemoteData:
     def test_init(self):
         remote_path = "A/test.json"
         timestamp = 1614667532
-        remote_data = RemoteData(remote_path, timestamp=timestamp, url_getter=lambda x: x)
+        remote_data = RemoteData(remote_path, timestamp=timestamp, _url_getter=lambda x: x)
         assert remote_data.path == remote_path
         assert remote_data.timestamp == timestamp
         assert remote_data.get_url() == remote_path
