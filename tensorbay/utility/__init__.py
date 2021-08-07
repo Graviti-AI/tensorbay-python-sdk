@@ -8,6 +8,7 @@
 from .attr import AttrsMixin, attr, attr_base, camel, upper
 from .common import EqMixin, MatrixType, common_loads, locked
 from .deprecated import DefaultValueDeprecated, Deprecated, Disable, KwargsDeprecated
+from .file import FileMixin, RemoteFileMixin
 from .itertools import chunked
 from .name import NameList, NameMixin, SortedNameList
 from .repr import ReprMixin, ReprType, repr_config
@@ -20,10 +21,12 @@ __all__ = [
     "Deprecated",
     "Disable",
     "EqMixin",
+    "FileMixin",
     "KwargsDeprecated",
     "MatrixType",
     "NameList",
     "NameMixin",
+    "RemoteFileMixin",
     "ReprMixin",
     "ReprType",
     "SortedNameList",
