@@ -5,7 +5,7 @@
 
 import ulid
 
-from .. import Data, Frame
+from .. import Frame, RemoteData
 
 _FRAME_ID = ulid.from_str("01F29QVWASMNGNA2FZBMZCDEG1")
 
@@ -14,13 +14,13 @@ _FRAME_DATA = {
     "frame": [
         {
             "sensorName": "sensor1",
-            "localPath": "test1.png",
+            "remotePath": "test1.png",
             "timestamp": 1614945883,
             "label": {},
         },
         {
             "sensorName": "sensor2",
-            "localPath": "test2.png",
+            "remotePath": "test2.png",
             "timestamp": 1614945884,
             "label": {},
         },
@@ -48,6 +48,6 @@ class TestFrame:
 
     def test_dumps(self):
         frame = Frame(_FRAME_ID)
-        frame["sensor1"] = Data("test1.png", timestamp=1614945883)
-        frame["sensor2"] = Data("test2.png", timestamp=1614945884)
+        frame["sensor1"] = RemoteData("test1.png", timestamp=1614945883)
+        frame["sensor2"] = RemoteData("test2.png", timestamp=1614945884)
         assert frame.dumps() == _FRAME_DATA

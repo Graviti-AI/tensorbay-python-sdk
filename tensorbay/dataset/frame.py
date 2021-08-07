@@ -20,7 +20,7 @@ from uuid import UUID
 from ulid import ULID, from_str, from_uuid
 
 from ..utility import UserMutableMapping, common_loads
-from .data import DataBase
+from .data import DataBase, RemoteData
 
 logger = logging.getLogger(__name__)
 
@@ -78,7 +78,7 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
                     )
 
         for data_contents in contents["frame"]:
-            self._data[data_contents["sensorName"]] = DataBase.loads(data_contents)
+            self._data[data_contents["sensorName"]] = RemoteData.loads(data_contents)
 
         # self._pose = Transform3D.loads(contents["pose"]) if "pose" in contents else None
 
