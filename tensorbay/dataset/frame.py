@@ -121,29 +121,6 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
     #     """
     #     return self._pose
 
-    def dumps(self) -> Dict[str, Any]:
-        """Dumps the current frame into a dict.
-
-        Returns:
-            A dict containing all the information of the frame.
-
-        """
-        contents: Dict[str, Any] = {}
-        # if self._pose:
-        #     contents["pose"] = self._pose.dumps()
-        if hasattr(self, "frame_id"):
-            contents["frameId"] = str(self.frame_id)
-
-        frame = []
-        for sensor_name, data in self._data.items():
-            data_contents = {"sensorName": sensor_name}
-            data_contents.update(data.dumps())
-            frame.append(data_contents)
-
-        contents["frame"] = frame
-
-        return contents
-
     # def set_pose(
     #     self,
     #     translation: Optional[Iterable[float]] = (0, 0, 0),
