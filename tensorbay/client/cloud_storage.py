@@ -61,5 +61,5 @@ class CloudClient:  # pylint: disable=too-few-public-methods
 
         """
         return [
-            AuthData(cloud_path, url_getter=self._get_url) for cloud_path in self._list_files(path)
+            AuthData(cloud_path, _url_getter=self._get_url) for cloud_path in self._list_files(path)
         ]
