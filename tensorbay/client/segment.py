@@ -23,10 +23,8 @@ for more information.
 
 """
 
-import os
 import time
 from copy import deepcopy
-from hashlib import sha1
 from itertools import zip_longest
 from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Optional, Tuple, Union
 
@@ -65,7 +63,6 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
     """
 
     _EXPIRED_IN_SECOND = 240
-    _BUF_SIZE = 65536  # lets read stuff in 64kb chunks!
 
     def __init__(
         self, name: str, dataset_client: "Union[DatasetClient, FusionDatasetClient]"
@@ -145,41 +142,17 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
 
         return deepcopy(self._permission)
 
-    def _calculate_file_sha1(self, local_path: str) -> str:
-        sha1_obj = sha1()
-        with open(local_path, "rb") as fp:
-            while True:
-                data = fp.read(self._BUF_SIZE)
-                if not data:
-                    break
-                sha1_obj.update(data)
-
-        return sha1_obj.hexdigest()
-
-    def _upload_file(self, local_path: str, target_remote_path: str = "") -> Dict[str, Any]:
+    def _upload_file(self, local_path: str, checksum: str) -> None:
         """Upload data with local path to the draft.
 
         Arguments:
-            local_path: The local path of the data to upload.
-            target_remote_path: The path to save the data in segment client.
-
-        Returns:
-            The sha1 and target remote path of the file.
-
-        Raises:
-            InvalidParamsError: When target_remote_path does not follow linux style.
+            local_path: The local path of the file to upload.
+            checksum: The checksum of the file to upload.
 
         """
-        if not target_remote_path:
-            target_remote_path = os.path.basename(local_path)
-
-        if "\\" in target_remote_path:
-            raise InvalidParamsError(param_name="path", param_value=target_remote_path)
-
         permission = self._get_upload_permission()
         post_data = permission["result"]
 
-        checksum = self._calculate_file_sha1(local_path)
         post_data["key"] = permission["extra"]["objectPrefix"] + checksum
 
         backend_type = permission["extra"]["backendType"]
@@ -196,12 +169,6 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
                 local_path,
                 post_data,
             )
-
-        return {
-            "checksum": checksum,
-            "remotePath": target_remote_path,
-            "fileSize": os.path.getsize(local_path),
-        }
 
     def _post_multipart_formdata(
         self,
@@ -236,11 +203,11 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
 
     def _synchronize_upload_info(
         self,
-        callback_info: Tuple[Dict[str, Any], ...],
+        callback_bodies: Tuple[Dict[str, Any], ...],
     ) -> None:
         put_data: Dict[str, Any] = {
             "segmentName": self.name,
-            "objects": callback_info,
+            "objects": callback_bodies,
         }
         put_data.update(self._status.get_status_info())
 
@@ -368,10 +335,10 @@ class SegmentClient(SegmentClientBase):
 
     def _upload_or_import_data(self, data: Union[Data, AuthData]) -> Optional[Dict[str, Any]]:
         if isinstance(data, Data):
-            callback_info = self._upload_file(data.path, data.target_remote_path)
-            if data.label:
-                callback_info["label"] = data.label.dumps()
-            return callback_info
+            callback_body = data.get_callback_body()
+            self._upload_file(data.path, callback_body["checksum"])
+            return callback_body
+
         self.import_auth_data(data)
         return None
 
@@ -385,9 +352,10 @@ class SegmentClient(SegmentClientBase):
         """
         self._status.check_authority_for_draft()
 
-        callback_info = self._upload_file(local_path, target_remote_path)
+        callback_body = Data(local_path, target_remote_path=target_remote_path).get_callback_body()
+        self._upload_file(local_path, callback_body["checksum"])
 
-        self._synchronize_upload_info((callback_info,))
+        self._synchronize_upload_info((callback_body,))
 
     def upload_label(self, data: Data) -> None:
         """Upload label with Data object to the draft.
@@ -408,11 +376,9 @@ class SegmentClient(SegmentClientBase):
 
         """
         self._status.check_authority_for_draft()
-
-        callback_info = self._upload_file(data.path, data.target_remote_path)
-        if data.label:
-            callback_info["label"] = data.label.dumps()
-        self._synchronize_upload_info((callback_info,))
+        callback_body = data.get_callback_body()
+        self._upload_file(data.path, callback_body["checksum"])
+        self._synchronize_upload_info((callback_body,))
 
     def import_auth_data(self, data: AuthData) -> None:
         """Import AuthData object to the draft.
@@ -655,19 +621,6 @@ class FusionSegmentClient(SegmentClientBase):
     def __init__(self, name: str, data_client: "FusionDatasetClient") -> None:
         super().__init__(name, data_client)
 
-    @staticmethod
-    def _wrap_callback_info(
-        callback_info: Dict[str, Any], sensor_name: str, frame_id: str, data: Data
-    ) -> None:
-        callback_info["sensorName"] = sensor_name
-        callback_info["frameId"] = frame_id
-
-        if hasattr(data, "timestamp"):
-            callback_info["timestamp"] = data.timestamp
-
-        if data.label:
-            callback_info["label"] = data.label.dumps()
-
     def _generate_frames(
         self, urls: PagingList[Dict[str, str]], offset: int = 0, limit: int = 128
     ) -> Generator[Frame, None, int]:
@@ -701,9 +654,11 @@ class FusionSegmentClient(SegmentClientBase):
         frame_id: str,
     ) -> Optional[Dict[str, Any]]:
         if isinstance(data, Data):
-            callback_info = self._upload_file(data.path, data.target_remote_path)
-            self._wrap_callback_info(callback_info, sensor_name, frame_id, data)
-            return callback_info
+            callback_body = data.get_callback_body()
+            callback_body["frameId"] = frame_id
+            callback_body["sensorName"] = sensor_name
+            self._upload_file(data.path, callback_body["checksum"])
+            return callback_body
         return None
 
     def get_sensors(self) -> Sensors:
@@ -777,17 +732,20 @@ class FusionSegmentClient(SegmentClientBase):
         else:
             raise FrameError("Frame id conflicts, please do not give timestamp to the function!.")
 
-        all_callback_info = []
+        callback_bodies = []
         for sensor_name, data in frame.items():
             if not isinstance(data, Data):
                 continue
 
-            callback_info = self._upload_file(data.path, data.target_remote_path)
-            self._wrap_callback_info(callback_info, sensor_name, frame_id.str, data)
-            all_callback_info.append(callback_info)
+            callback_body = data.get_callback_body()
+            callback_body["frameId"] = frame_id.str
+            callback_body["sensorName"] = sensor_name
 
-        for chunked_callback_info in chunked(all_callback_info, 50):
-            self._synchronize_upload_info(chunked_callback_info)
+            self._upload_file(data.path, callback_body["checksum"])
+            callback_bodies.append(callback_body)
+
+        for chunked_callback_bodies in chunked(callback_bodies, 50):
+            self._synchronize_upload_info(chunked_callback_bodies)
 
     def list_frames(self) -> PagingList[Frame]:
         """List required frames in the segment in a certain commit.

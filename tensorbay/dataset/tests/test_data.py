@@ -24,9 +24,20 @@ class TestData:
         assert data.target_remote_path == target_remote_path
         assert data.timestamp == timestamp
 
-    def test_dumps(self):
-        data = Data("test.json", timestamp=_DATA["timestamp"])
-        assert data.dumps() == _DATA
+    def test_get_callback_body(self, tmp_path):
+        local_path = tmp_path / "file"
+        local_path.write_text("CONTENT")
+
+        timestamp = 1234
+
+        data = Data(str(local_path), timestamp=timestamp)
+
+        assert data.get_callback_body() == {
+            "checksum": "238a131a3e8eb98d1fc5b27d882ca40b7618fd2a",
+            "fileSize": 7,
+            "remotePath": local_path.name,
+            "timestamp": timestamp,
+        }
 
     def test_target_remote_path(self):
         target_remote_path = "test2.json"
@@ -62,5 +73,5 @@ class TestRemoteData:
         assert data.timestamp == _REMOTE_DATA["timestamp"]
 
     def test_dumps(self):
-        data = RemoteData("test.json", timestamp=_DATA["timestamp"])
+        data = RemoteData("test.json", timestamp=_REMOTE_DATA["timestamp"])
         assert data.dumps() == _REMOTE_DATA

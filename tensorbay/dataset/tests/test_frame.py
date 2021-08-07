@@ -45,9 +45,3 @@ class TestFrame:
         assert frame["sensor1"].timestamp == 1614945883
         assert frame["sensor2"].path == "test2.png"
         assert frame["sensor2"].timestamp == 1614945884
-
-    def test_dumps(self):
-        frame = Frame(_FRAME_ID)
-        frame["sensor1"] = RemoteData("test1.png", timestamp=1614945883)
-        frame["sensor2"] = RemoteData("test2.png", timestamp=1614945884)
-        assert frame.dumps() == _FRAME_DATA
