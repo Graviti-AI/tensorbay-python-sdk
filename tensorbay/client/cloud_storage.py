@@ -50,7 +50,7 @@ class CloudClient:  # pylint: disable=too-few-public-methods
                 break
             params["marker"] = response["nextMarker"]
 
-    def list_auth_data(self, path: str) -> List[AuthData]:
+    def list_auth_data(self, path: str = "") -> List[AuthData]:
         """List all cloud files in the given directory as :class:`~tensorbay.dataset.data.AuthData`.
 
         Arguments:

@@ -265,7 +265,6 @@ class GAS:
         self,
         name: str,
         config_name: str,
-        path: str,
         *,
         is_fusion: bool = False,
         alias: str = "",
@@ -278,7 +277,6 @@ class GAS:
         Arguments:
             name: Name of the dataset, unique for a user.
             config_name: The auth storage config name.
-            path: The path of the dataset to create in auth cloud storage.
             is_fusion: Whether the dataset is a fusion dataset, True for fusion dataset.
             alias: Alias of the dataset, default is "".
 
@@ -291,7 +289,7 @@ class GAS:
         post_data = {
             "name": name,
             "type": int(is_fusion),  # normal dataset: 0, fusion dataset: 1
-            "storageConfig": {"name": config_name, "path": path},
+            "configName": config_name,
             "alias": alias,
         }
 
