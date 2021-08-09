@@ -58,7 +58,10 @@ Unset the authentication information.
 
 Work with configuration operations.
 
-Add a single configuration.
+``gas config`` supports modifying the configurations about network request and editor.
+
+Add a single configuration, see the available keys and corresponding values about network request at
+:ref:`request_configuration<advanced_features/request_configuration:Request Configuration>`.
 
 .. code:: html
 
@@ -69,6 +72,7 @@ For example:
 .. code:: html
 
    $ gas config editor vim
+   $ gas config max_retries 5
 
 Show all the configurations.
 
