@@ -28,8 +28,8 @@ dataset = Dataset("DatasetName")
 # TensorBay uses "segment" to separate different parts in a dataset.
 segment = dataset.create_segment()
 
-images = cloud_client.list_auth_data("data/images")
-labels = cloud_client.list_auth_data("data/labels")
+images = cloud_client.list_auth_data("data/images/")
+labels = cloud_client.list_auth_data("data/labels/")
 
 for auth_data, label in zip(images, labels):
     with label.open() as fp:

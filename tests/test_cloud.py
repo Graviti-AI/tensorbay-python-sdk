@@ -17,16 +17,13 @@ class TestImportData:
 
         gas_client = GAS(access_key=accesskey, url=url)
         try:
-            cloud_client = gas_client.get_cloud_client("azure_china_config")
+            cloud_client = gas_client.get_cloud_client("azure_china_config_files")
         except ResourceNotExistError:
-            pytest.skip("skip this case because there's no 'azure_china_config' config")
+            pytest.skip("skip this case because there's no 'azure_china_config_files' config")
 
-        source_prefix, dataset_prefix = "test/02", "test/03"
-        auth_data = cloud_client.list_auth_data(source_prefix)
+        auth_data = cloud_client.list_auth_data("03")
         dataset_name = get_dataset_name()
-        dataset_client = gas_client.create_auth_dataset(
-            dataset_name, "azure_china_config", dataset_prefix
-        )
+        dataset_client = gas_client.create_auth_dataset(dataset_name, "azure_china_config_01")
 
         dataset = Dataset(name=dataset_name)
         segment = dataset.create_segment("Segment1")
@@ -41,6 +38,6 @@ class TestImportData:
         assert segment1[0].path == segment[0].path.split("/")[-1]
         assert not segment1[0].label
 
-        assert len(cloud_client.list_auth_data(dataset_prefix)) == len(segment)
+        assert len(auth_data) == len(segment)
 
         gas_client.delete_dataset(dataset_name)

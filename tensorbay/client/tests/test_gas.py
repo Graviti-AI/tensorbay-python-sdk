@@ -275,7 +275,7 @@ class TestGAS:
         params = {
             "name": "test",
             "type": int(is_fusion),
-            "storageConfig": {"name": "cloud_config", "path": "path/to/dataset"},
+            "configName": "cloud_config",
             "alias": "alias",
         }
         response_data = {"id": "12345"}
@@ -284,7 +284,7 @@ class TestGAS:
             return_value=mock_response(data=response_data),
         )
         dataset_client = self.gas_client.create_auth_dataset(
-            "test", "cloud_config", "path/to/dataset", is_fusion=is_fusion, alias="alias"
+            "test", "cloud_config", is_fusion=is_fusion, alias="alias"
         )
         dataset_type = FusionDatasetClient if is_fusion else DatasetClient
         assert isinstance(dataset_client, dataset_type)
