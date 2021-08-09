@@ -567,6 +567,58 @@ class DatasetClient(DatasetClientBase):
             lambda offset, limit: self._generate_diff_segments(basehead, offset, limit), 128
         )
 
+    def _get_diff_segment(
+        self,
+        segment_name: str,
+        *,
+        source: Optional[Union[str, int]] = None,
+        target: Optional[Union[str, int]] = None,
+    ) -> Dict[str, Any]:
+        """Get diff of the segment between two versions.
+
+        Arguments:
+            segment_name: The name of the segment.
+            source: Source version identification. Type int for draft number, type str for revision.
+                If is not given, use the current version.
+            target: Target version identification. Type int for draft number, type str for revision.
+                If is not given, use the parent commit id.
+
+        Examples:
+            >>> self._get_diff_segment(segment_name="Segment1", \
+            source="b382450220a64ca9b514dcef27c82d9a", target=1)
+            {
+                "name": "Segment1",
+                "action": "add",
+                "data": {
+                    "action": "add",
+                    "stats": {
+                        "total": 3,
+                        "additions": 3,
+                        "deletions": 0,
+                        "modifications": 0
+                    },
+                },
+                "sensors": {
+                    "action": "modify"
+                }
+            }
+
+        Returns:
+            The dict the segment between two versions.
+
+        Raises:
+            ResourceNotExistError: When the required segment does not exist.
+
+        """
+        if segment_name not in self.list_segment_names():
+            raise ResourceNotExistError(resource="segment", identification=segment_name)
+
+        basehead = self._get_basehead(source, target)
+
+        return self._client.open_api_do(  # type: ignore[no-any-return]
+            "GET", f"diffs/{basehead}/segments/{segment_name}", self._dataset_id
+        ).json()
+
 
 FrameDataGenerator = Iterator[Tuple[Union[Data, AuthData], str, str]]
 
