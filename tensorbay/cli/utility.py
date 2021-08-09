@@ -42,8 +42,18 @@ def _get_config_filepath() -> str:
         The path of the config file.
 
     """
-    home = "USERPROFILE" if os.name == "nt" else "HOME"
+    home = "USERPROFILE" if is_win() else "HOME"
     return os.path.join(os.environ[home], ".gasconfig")
+
+
+def is_win() -> bool:
+    """Determine whether the current system is Windows.
+
+    Returns:
+        Whether the current system is Windows.
+
+    """
+    return sys.platform.startswith("win")
 
 
 def read_profile(profile_name: str, config_parser: ConfigParser) -> Tuple[str, str]:

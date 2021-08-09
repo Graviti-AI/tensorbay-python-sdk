@@ -17,7 +17,7 @@ from ..client.gas import DatasetClientType
 from ..client.struct import Commit
 from .auth import INDENT
 from .tbrn import TBRN, TBRNType
-from .utility import error, get_gas, shorten
+from .utility import error, get_gas, is_win, shorten
 
 _FULL_LOG = """commit {}
 Author: {}
@@ -54,8 +54,15 @@ def _implement_log(  # pylint: disable=too-many-arguments
     Printer: Union[Type[_GraphPrinter], Type[_CommitPrinter]] = (
         _GraphPrinter if graph else _CommitPrinter
     )
-    printer = Printer(dataset_client, revisions, commit_id_to_branches, oneline)
-    click.echo_via_pager(islice(printer.generate_commits(), max_count))
+    commit_generator = islice(
+        Printer(dataset_client, revisions, commit_id_to_branches, oneline).generate_commits(),
+        max_count,
+    )
+    if is_win():
+        for item in commit_generator:
+            click.echo(item)
+    else:
+        click.echo_via_pager(commit_generator)
 
 
 def _get_oneline_log(commit: Commit, branch_name: Optional[str]) -> str:
