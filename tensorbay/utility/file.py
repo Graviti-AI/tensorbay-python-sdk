@@ -29,6 +29,8 @@ class FileMixin(ReprMixin):
 
     """
 
+    _checksum: str
+
     _repr_maxlevel = 3
     _BUFFER_SIZE = 65536
 
@@ -38,19 +40,28 @@ class FileMixin(ReprMixin):
     def _repr_head(self) -> str:
         return f'{self.__class__.__name__}("{self.path}")'
 
-    def _get_checksum(self) -> str:
-        sha1_object = sha1()
-        with open(self.path, "rb") as fp:
-            while True:
-                data = fp.read(self._BUFFER_SIZE)
-                if not data:
-                    break
-                sha1_object.update(data)
-
-        return sha1_object.hexdigest()
-
     def _get_callback_body(self) -> Dict[str, Any]:
-        return {"checksum": self._get_checksum(), "fileSize": os.path.getsize(self.path)}
+        return {"checksum": self.get_checksum(), "fileSize": os.path.getsize(self.path)}
+
+    def get_checksum(self) -> str:
+        """Get and cache the sha1 checksum of the local data.
+
+        Returns:
+            The sha1 checksum of the local data.
+
+        """
+        if not hasattr(self, "_checksum"):
+            sha1_object = sha1()
+            with open(self.path, "rb") as fp:
+                while True:
+                    data = fp.read(self._BUFFER_SIZE)
+                    if not data:
+                        break
+                    sha1_object.update(data)
+
+            self._checksum = sha1_object.hexdigest()
+
+        return self._checksum
 
     def get_url(self) -> str:
         """Return the url of the local data file.
