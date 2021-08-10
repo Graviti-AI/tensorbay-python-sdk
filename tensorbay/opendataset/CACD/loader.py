@@ -110,7 +110,7 @@ def _get_labels_map(path: str) -> Dict[str, Tuple[str, Dict[str, Any]]]:
     try:
         from h5py import File  # pylint: disable=import-outside-toplevel
     except ModuleNotFoundError as error:
-        raise ModuleImportError(error.name) from error  # type: ignore[arg-type]
+        raise ModuleImportError(module_name=error.name) from error
 
     mat_file = File(path, "r")
     celebrity_image_data = mat_file["celebrityImageData"]

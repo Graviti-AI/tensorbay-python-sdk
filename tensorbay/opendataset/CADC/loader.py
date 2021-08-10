@@ -189,7 +189,7 @@ def _load_sensors(calib_path: str) -> Sensors:
     try:
         import yaml  # pylint: disable=import-outside-toplevel
     except ModuleNotFoundError as error:
-        raise ModuleImportError(error.name, "pyyaml") from error  # type: ignore[arg-type]
+        raise ModuleImportError(module_name=error.name, package_name="pyyaml") from error
 
     sensors = Sensors()
 

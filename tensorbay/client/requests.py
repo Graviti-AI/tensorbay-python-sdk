@@ -157,7 +157,7 @@ class UserSession(Session):  # pylint: disable=too-few-public-methods
                 logger.error(
                     "Unexpected status code(%d)!%s", response.status_code, ResponseLogging(response)
                 )
-                raise ResponseError(response)
+                raise ResponseError(response=response)
 
             logger.debug(ResponseLogging(response))
             return response
@@ -267,7 +267,9 @@ class Client:
         except ResponseError as error:
             response = error.response
             error_code = response.json()["code"]
-            raise ResponseErrorDistributor.get(error_code, ResponseError)(response) from None
+            raise ResponseErrorDistributor.get(error_code, ResponseError)(
+                response=response
+            ) from None
 
     def do(self, method: str, url: str, **kwargs: Any) -> Response:  # pylint: disable=invalid-name
         """Send a request.
