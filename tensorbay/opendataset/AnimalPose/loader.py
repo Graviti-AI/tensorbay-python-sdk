@@ -100,7 +100,7 @@ def _get_data_part1(root_path: str, aniamls: Iterable[str]) -> Iterator[Data]:
     try:
         import xmltodict  # pylint: disable=import-outside-toplevel
     except ModuleNotFoundError as error:
-        raise ModuleImportError(error.name) from error  # type: ignore[arg-type]
+        raise ModuleImportError(module_name=error.name) from error
 
     for animal in aniamls:
         for image_path in glob(os.path.join(root_path, "keypoint_image_part1", animal, "*.jpg")):
@@ -145,7 +145,7 @@ def _get_data_part2(root_path: str, aniamls: Iterable[str]) -> Iterator[Data]:
     try:
         import xmltodict  # pylint: disable=import-outside-toplevel
     except ModuleNotFoundError as error:
-        raise ModuleImportError(error.name) from error  # type: ignore[arg-type]
+        raise ModuleImportError(module_name=error.name) from error
 
     for animal in aniamls:
         for image_path in glob(os.path.join(root_path, "animalpose_image_part2", animal, "*.jpeg")):

@@ -51,7 +51,7 @@ def SVHN(path: str) -> Dataset:
     try:
         from h5py import File  # pylint: disable=import-outside-toplevel
     except ModuleNotFoundError as error:
-        raise ModuleImportError(error.name) from error  # type: ignore[arg-type]
+        raise ModuleImportError(module_name=error.name) from error
 
     root_path = os.path.join(os.path.abspath(os.path.expanduser(path)), "FullNumbers")
     dataset = Dataset(DATASET_NAME)

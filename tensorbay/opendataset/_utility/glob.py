@@ -32,7 +32,7 @@ def glob(pathname: str, *, recursive: bool = False) -> List[str]:
     """
     paths = buildin_glob(pathname, recursive=recursive)
     if not paths:
-        raise NoFileError(pathname)
+        raise NoFileError(pattern=pathname)
     paths.sort()
 
     return paths

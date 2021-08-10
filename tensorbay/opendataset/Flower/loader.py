@@ -47,7 +47,7 @@ def Flower17(path: str) -> Dataset:
     try:
         from scipy.io import loadmat  # pylint: disable=import-outside-toplevel
     except ModuleNotFoundError as error:
-        raise ModuleImportError(error.name) from error  # type: ignore[arg-type]
+        raise ModuleImportError(module_name=error.name) from error
 
     root_path = os.path.abspath(os.path.expanduser(path))
     segment_info = loadmat(os.path.join(root_path, "datasplits.mat"))
@@ -97,7 +97,7 @@ def Flower102(path: str) -> Dataset:
     try:
         from scipy.io import loadmat  # pylint: disable=import-outside-toplevel
     except ModuleNotFoundError as error:
-        raise ModuleImportError(error.name) from error  # type: ignore[arg-type]
+        raise ModuleImportError(module_name=error.name) from error
 
     root_path = os.path.abspath(os.path.expanduser(path))
     labels = loadmat(os.path.join(root_path, "imagelabels.mat"))["labels"][0]

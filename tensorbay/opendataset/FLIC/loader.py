@@ -42,7 +42,7 @@ def FLIC(path: str) -> Dataset:
     try:
         from scipy.io import loadmat  # pylint: disable=import-outside-toplevel
     except ModuleNotFoundError as error:
-        raise ModuleImportError(error.name) from error  # type: ignore[arg-type]
+        raise ModuleImportError(module_name=error.name) from error
 
     root_path = os.path.abspath(os.path.expanduser(path))
 

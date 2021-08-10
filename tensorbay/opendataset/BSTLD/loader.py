@@ -59,7 +59,7 @@ def BSTLD(path: str) -> Dataset:
     try:
         import yaml  # pylint: disable=import-outside-toplevel
     except ModuleNotFoundError as error:
-        raise ModuleImportError(error.name, "pyyaml") from error  # type: ignore[arg-type]
+        raise ModuleImportError(module_name=error.name, package_name="pyyaml") from error
 
     root_path = os.path.abspath(os.path.expanduser(path))
 

@@ -341,7 +341,7 @@ class GAS:
         status = Status(default_branch, commit_id=commit_id)
 
         if is_fusion != type_flag:
-            raise DatasetTypeError(name, type_flag)
+            raise DatasetTypeError(dataset_name=name, is_fusion=type_flag)
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
         return ReturnType(name, dataset_id, self, status=status, alias=dataset_alias)
 

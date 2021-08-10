@@ -68,7 +68,7 @@ def _get_data(filename: str, image_path: str, annotation_path: str) -> Data:
     try:
         import xmltodict  # pylint: disable=import-outside-toplevel
     except ModuleNotFoundError as error:
-        raise ModuleImportError(error.name) from error  # type: ignore[arg-type]
+        raise ModuleImportError(module_name=error.name) from error
 
     data = Data(os.path.join(image_path, f"{filename}.jpg"))
     box2d = []
