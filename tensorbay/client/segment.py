@@ -34,8 +34,9 @@ from ulid import from_timestamp
 
 from ..dataset import AuthData, Data, Frame, RemoteData
 from ..exception import FrameError, InvalidParamsError, OperationError
+from ..label import Label
 from ..sensor.sensor import Sensor, Sensors
-from ..utility import Disable, chunked, locked
+from ..utility import Disable, FileMixin, chunked, locked
 from .lazy import PagingList
 from .requests import config
 from .status import Status
@@ -44,6 +45,7 @@ if TYPE_CHECKING:
     from .dataset import DatasetClient, FusionDatasetClient
 
 _STRATEGIES = {"abort", "override", "skip"}
+_MASK_KEYS = ("semantic_mask", "instance_mask", "panoptic_mask")
 
 
 class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
@@ -142,16 +144,18 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
 
         return deepcopy(self._permission)
 
-    def _upload_file(self, local_path: str, checksum: str) -> None:
-        """Upload data with local path to the draft.
+    def _upload_file(self, data: FileMixin) -> None:
+        """Upload the file in the data to the draft.
 
         Arguments:
-            local_path: The local path of the file to upload.
-            checksum: The checksum of the file to upload.
+            data: The data instance needs to be uploaded.
 
         """
         permission = self._get_upload_permission()
         post_data = permission["result"]
+
+        local_path = data.path
+        checksum = data.get_checksum()
 
         post_data["key"] = permission["extra"]["objectPrefix"] + checksum
 
@@ -169,6 +173,12 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
                 local_path,
                 post_data,
             )
+
+    def _upload_mask_files(self, label: Label) -> None:
+        for key in _MASK_KEYS:
+            mask = getattr(label, key, None)
+            if mask:
+                self._upload_file(mask)
 
     def _post_multipart_formdata(
         self,
@@ -335,9 +345,9 @@ class SegmentClient(SegmentClientBase):
 
     def _upload_or_import_data(self, data: Union[Data, AuthData]) -> Optional[Dict[str, Any]]:
         if isinstance(data, Data):
-            callback_body = data.get_callback_body()
-            self._upload_file(data.path, callback_body["checksum"])
-            return callback_body
+            self._upload_file(data)
+            self._upload_mask_files(data.label)
+            return data.get_callback_body()
 
         self.import_auth_data(data)
         return None
@@ -352,10 +362,10 @@ class SegmentClient(SegmentClientBase):
         """
         self._status.check_authority_for_draft()
 
-        callback_body = Data(local_path, target_remote_path=target_remote_path).get_callback_body()
-        self._upload_file(local_path, callback_body["checksum"])
+        data = Data(local_path, target_remote_path=target_remote_path)
+        self._upload_file(data)
 
-        self._synchronize_upload_info((callback_body,))
+        self._synchronize_upload_info((data.get_callback_body(),))
 
     def upload_label(self, data: Data) -> None:
         """Upload label with Data object to the draft.
@@ -366,6 +376,7 @@ class SegmentClient(SegmentClientBase):
         """
         self._status.check_authority_for_draft()
 
+        self._upload_mask_files(data.label)
         self._upload_label(data)
 
     def upload_data(self, data: Data) -> None:
@@ -376,9 +387,9 @@ class SegmentClient(SegmentClientBase):
 
         """
         self._status.check_authority_for_draft()
-        callback_body = data.get_callback_body()
-        self._upload_file(data.path, callback_body["checksum"])
-        self._synchronize_upload_info((callback_body,))
+        self._upload_file(data)
+        self._upload_mask_files(data.label)
+        self._synchronize_upload_info((data.get_callback_body(),))
 
     def import_auth_data(self, data: AuthData) -> None:
         """Import AuthData object to the draft.
@@ -648,10 +659,12 @@ class FusionSegmentClient(SegmentClientBase):
         frame_id: str,
     ) -> Optional[Dict[str, Any]]:
         if isinstance(data, Data):
+            self._upload_file(data)
+            self._upload_mask_files(data.label)
+
             callback_body = data.get_callback_body()
             callback_body["frameId"] = frame_id
             callback_body["sensorName"] = sensor_name
-            self._upload_file(data.path, callback_body["checksum"])
             return callback_body
         return None
 
@@ -731,11 +744,12 @@ class FusionSegmentClient(SegmentClientBase):
             if not isinstance(data, Data):
                 continue
 
+            self._upload_file(data)
+            self._upload_mask_files(data.label)
+
             callback_body = data.get_callback_body()
             callback_body["frameId"] = frame_id.str
             callback_body["sensorName"] = sensor_name
-
-            self._upload_file(data.path, callback_body["checksum"])
             callback_bodies.append(callback_body)
 
         for chunked_callback_bodies in chunked(callback_bodies, 50):
