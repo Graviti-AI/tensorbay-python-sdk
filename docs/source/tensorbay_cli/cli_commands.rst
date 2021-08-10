@@ -326,6 +326,18 @@ Show commit logs in oneline format.
 
    $ gas log --oneline tb:<dataset_name>
 
+Show commit logs of all revisions.
+
+.. code:: html
+
+   $ gas log --all tb:<dataset_name>
+
+Show graphical commit logs.
+
+.. code:: html
+
+   $ gas log --graph tb:<dataset_name>
+
 
 *************
  gas branch
