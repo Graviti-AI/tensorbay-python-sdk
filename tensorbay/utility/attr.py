@@ -49,6 +49,8 @@ class Field:  # pylint: disable=too-few-public-methods, too-many-instance-attrib
         key: Display value of the attr in contents.
         default: Default value of the attr.
         error_message: The custom error message of the attr.
+        loader: The custom loader of the attr.
+        dumper: The custom dumper of the attr.
 
     """
 
@@ -57,13 +59,19 @@ class Field:  # pylint: disable=too-few-public-methods, too-many-instance-attrib
 
     def __init__(
         self,
+        *,
         is_dynamic: bool,
         key: Union[str, None, _KeyConverter],
         default: Any,
         error_message: Optional[str],
+        loader: Optional[_Callable],
+        dumper: Optional[_Callable],
     ) -> None:
-        self.loader: _Callable
-        self.dumper: _Callable
+        if loader:
+            self.loader = loader
+
+        if dumper:
+            self.dumper = dumper
 
         self.is_dynamic = is_dynamic
         self.default = default
@@ -121,7 +129,15 @@ class AttrsMixin:
         for name, type_ in getattr(cls, "__annotations__", {}).items():
             field = getattr(cls, name, None)
             if isinstance(field, Field):
-                field.loader, field.dumper = _get_operators(type_)
+                need_loader = not hasattr(field, "loader")
+                need_dumper = not hasattr(field, "dumper")
+                if need_loader or need_dumper:
+                    loader, dumper = _get_operators(type_)
+                    if need_loader:
+                        field.loader = loader
+                    if need_dumper:
+                        field.dumper = dumper
+
                 if hasattr(field, "key_converter"):
                     field.key = field.key_converter(name)
                 attrs_fields[name] = field
@@ -207,6 +223,8 @@ def attr(
     key: Union[str, None, _KeyConverter] = lambda x: x,
     default: Any = ...,
     error_message: Optional[str] = None,
+    loader: Optional[Callable[[Any], Any]] = None,
+    dumper: Optional[Callable[[Any], Any]] = None,
 ) -> Any:
     """Return an instance to identify attr fields.
 
@@ -215,6 +233,8 @@ def attr(
         key: Display value of the attr in contents.
         default: Default value of the attr.
         error_message: The custom error message of the attr.
+        loader: The custom loader of the attr.
+        dumper: The custom dumper of the attr.
 
     Raises:
         AttrError: Dynamic attr cannot have default value.
@@ -226,7 +246,14 @@ def attr(
     if is_dynamic and default is not ...:
         raise AttrError()
 
-    return Field(is_dynamic, key, default, error_message)
+    return Field(
+        is_dynamic=is_dynamic,
+        key=key,
+        default=default,
+        error_message=error_message,
+        loader=loader,
+        dumper=dumper,
+    )
 
 
 def attr_base(key: Optional[str] = None) -> Any:
