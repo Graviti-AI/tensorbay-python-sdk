@@ -113,6 +113,21 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
         response = self._client.open_api_do("GET", "data/urls", self._dataset_id, params=params)
         return response.json()  # type: ignore[no-any-return]
 
+    def _list_mask_urls(self, mask_type: str, offset: int = 0, limit: int = 128) -> Dict[str, Any]:
+        params: Dict[str, Any] = {
+            "segmentName": self._name,
+            "maskType": mask_type,
+            "offset": offset,
+            "limit": limit,
+        }
+        params.update(self._status.get_status_info())
+
+        if config.is_internal:
+            params["isInternal"] = True
+
+        response = self._client.open_api_do("GET", "masks/urls", self._dataset_id, params=params)
+        return response.json()  # type: ignore[no-any-return]
+
     def _list_labels(self, offset: int = 0, limit: int = 128) -> Dict[str, Any]:
         params: Dict[str, Any] = {
             "segmentName": self._name,
@@ -337,6 +352,16 @@ class SegmentClient(SegmentClientBase):
 
     def _generate_urls(self, offset: int = 0, limit: int = 128) -> Generator[str, None, int]:
         response = self._list_urls(offset, limit)
+
+        for item in response["urls"]:
+            yield item["url"]
+
+        return response["totalCount"]  # type: ignore[no-any-return]
+
+    def _generate_mask_urls(
+        self, mask_type: str, offset: int = 0, limit: int = 128
+    ) -> Generator[str, None, int]:
+        response = self._list_mask_urls(mask_type, offset, limit)
 
         for item in response["urls"]:
             yield item["url"]
@@ -612,6 +637,21 @@ class SegmentClient(SegmentClientBase):
 
         """
         return PagingList(self._generate_urls, 128)
+
+    def list_mask_urls(self, mask_type: str) -> PagingList[str]:
+        """List the mask urls in this segment.
+
+        Arguments:
+            mask_type: The required mask type, the supported types are
+                ``SEMANTIC_MASK``, ``INSTANCE_MASK`` and ``PANOPTIC_MASK``
+
+        Returns:
+            The PagingList of mask urls.
+
+        """
+        return PagingList(
+            lambda offset, limit: self._generate_mask_urls(mask_type, offset, limit), 128
+        )
 
 
 class FusionSegmentClient(SegmentClientBase):
