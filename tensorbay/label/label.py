@@ -37,13 +37,21 @@ from ..utility import AttrsMixin, ReprMixin, ReprType, attr, common_loads, upper
 from .label_box import LabeledBox2D, LabeledBox3D
 from .label_classification import Classification
 from .label_keypoints import LabeledKeypoints2D
-from .label_mask import InstanceMaskBase, PanopticMaskBase, SemanticMaskBase
+from .label_mask import (
+    InstanceMaskBase,
+    PanopticMaskBase,
+    RemoteInstanceMask,
+    RemotePanopticMask,
+    RemoteSemanticMask,
+    SemanticMaskBase,
+)
 from .label_polygon import LabeledMultiPolygon, LabeledPolygon, LabeledRLE
 from .label_polyline import LabeledMultiPolyline2D, LabeledPolyline2D
 from .label_sentence import LabeledSentence
 
 _ERROR_MESSAGE = "The '{attr_name}' label is not provided in this data"
 _attr = partial(attr, is_dynamic=True, key=upper, error_message=_ERROR_MESSAGE)
+_mask_attr = partial(_attr, dumper=lambda self: self.get_callback_body())
 
 
 class Label(ReprMixin, AttrsMixin):
@@ -80,9 +88,9 @@ class Label(ReprMixin, AttrsMixin):
     keypoints2d: List[LabeledKeypoints2D] = _attr()
     multi_polygon: List[LabeledMultiPolygon] = _attr()
     sentence: List[LabeledSentence] = _attr()
-    semantic_mask: SemanticMaskBase = _attr()
-    instance_mask: InstanceMaskBase = _attr()
-    panoptic_mask: PanopticMaskBase = _attr()
+    semantic_mask: SemanticMaskBase = _mask_attr(loader=RemoteSemanticMask.from_response_body)
+    instance_mask: InstanceMaskBase = _mask_attr(loader=RemoteInstanceMask.from_response_body)
+    panoptic_mask: PanopticMaskBase = _mask_attr(loader=RemotePanopticMask.from_response_body)
 
     def __bool__(self) -> bool:
         return any(hasattr(self, key) for key in self._attrs_fields)
