@@ -1,20 +1,6 @@
 {
     "POLYGON": {
         "categories": [
-            { "name": "bicycle" },
-            { "name": "bus" },
-            { "name": "car" },
-            { "name": "caravan" },
-            { "name": "motorcycle" },
-            { "name": "person" },
-            { "name": "rider" },
-            { "name": "trailer" },
-            { "name": "train" },
-            { "name": "truck" }
-        ]
-    },
-    "POLYLINE2D": {
-        "categories": [
             { "name": "banner" },
             { "name": "bicycle" },
             { "name": "billboard" },

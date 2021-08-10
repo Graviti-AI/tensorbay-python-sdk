@@ -29,17 +29,10 @@ DATASET_NAMES = {
     "mot": "BDD100K_MOT2020",
 }
 _SEGMENT_NAMES = ("train", "val")
-_LABEL_TYPE_INFO = {
-    "100k": {
-        "det": ("Detection 2020", "BOX2D"),
-        "lane": ("Lane Marking", "POLYLINE2D"),
-        "drivable": ("Drivable Area", "POLYGON"),
-    },
-    "10k": {
-        "ins_seg": ("Instance Segmentation", "POLYGON"),
-        "sem_seg": ("Semantic Segmentation", "POLYLINE2D"),
-        "pan_seg": ("Panoptic Segmentation", "POLYLINE2D"),
-    },
+_LABEL_TYPE_INFO_100K = {
+    "det": ("Detection 2020", "BOX2D"),
+    "lane": ("Lane Marking", "POLYLINE2D"),
+    "drivable": ("Drivable Area", "POLYGON"),
 }
 _TRACKING_DATASET_INFO = {
     "mots": ("bdd100k_seg_track_20", "seg_track_20", os.path.join("seg_track_20", "polygons")),
@@ -103,18 +96,10 @@ def _BDD100K_10K(path: str) -> Dataset:
                         train
                         val
                 labels/
-                    ins_seg/
-                        polygons/
-                            ins_seg_train.json
-                            ins_seg_val.json
                     pan_seg/
                         polygons/
                             pan_seg_train.json
                             pan_seg_val.json
-                    sem_seg/
-                        polygons/
-                            sem_seg_train.json
-                            sem_seg_val.json
 
     Arguments:
         path: The root directory of the dataset.
@@ -143,6 +128,7 @@ def _load_segment(dataset: Dataset, root_path: str, dataset_type: str) -> None:
     labels_directory = os.path.join(root_path, "labels")
 
     get_data = _get_data_100k if dataset_type == "100k" else _get_data_10k
+    read_label_file = _read_label_file_100k if dataset_type == "100k" else _read_label_file_10k
 
     for segment_name in _SEGMENT_NAMES:
         segment = dataset.create_segment(segment_name)
@@ -153,7 +139,7 @@ def _load_segment(dataset: Dataset, root_path: str, dataset_type: str) -> None:
             for image_path in image_paths:
                 segment.append(Data(image_path))
         else:
-            label_contents = _read_label_file(labels_directory, segment_name, dataset_type)
+            label_contents = read_label_file(labels_directory, segment_name)
             for image_path in image_paths:
                 segment.append(get_data(image_path, label_contents[os.path.basename(image_path)]))
         print(f"Finished reading data to segment '{segment_name}'")
@@ -162,12 +148,10 @@ def _load_segment(dataset: Dataset, root_path: str, dataset_type: str) -> None:
 def _get_data_10k(image_path: str, label_content: Dict[str, Any]) -> Data:
     data = Data(image_path)
     polygon: List[LabeledPolygon] = []
-    polyline2d: List[LabeledPolyline2D] = []
     for label_info in label_content["labels"]:
         if "poly2d" in label_info:
-            _add_poly2d_label(label_info, polygon, polyline2d)
+            _add_poly2d_label_10k(label_info, polygon)
     data.label.polygon = polygon
-    data.label.polyline2d = polyline2d
     return data
 
 
@@ -181,7 +165,7 @@ def _get_data_100k(image_path: str, label_content: Dict[str, Any]) -> Data:
         if "box2d" in label_info:
             _add_box2d_label(label_info, box2d)
         if "poly2d" in label_info:
-            _add_poly2d_label(label_info, polygon, polyline2d)
+            _add_poly2d_label_100k(label_info, polygon, polyline2d)
     data.label.box2d = box2d
     data.label.polygon = polygon
     data.label.polyline2d = polyline2d
@@ -201,7 +185,7 @@ def _add_box2d_label(label_info: Dict[str, Any], box2d: List[LabeledBox2D]) -> N
     box2d.append(labeled_box2d)
 
 
-def _add_poly2d_label(
+def _add_poly2d_label_100k(
     label_info: Dict[str, Any], polygon: List[LabeledPolygon], polyline2d: List[LabeledPolyline2D]
 ) -> None:
     poly2d_info = label_info["poly2d"][0]
@@ -221,14 +205,23 @@ def _add_poly2d_label(
         polyline2d.append(labeled_polyline2d)
 
 
-def _read_label_file(label_directory: str, segment_name: str, dataset_type: str) -> Dict[str, Any]:
+def _add_poly2d_label_10k(label_info: Dict[str, Any], polygon: List[LabeledPolygon]) -> None:
+    poly2d_info = label_info["poly2d"][0]
+    labeled_polygon = LabeledPolygon(
+        points=poly2d_info["vertices"],
+        category=label_info["category"],
+        attributes=label_info.get("attributes", {}),
+    )
+    polygon.append(labeled_polygon)
+
+
+def _read_label_file_100k(label_directory: str, segment_name: str) -> Dict[str, Any]:
     source_label_contents = []
     label_filenames = glob(
         os.path.join(label_directory, "**", f"*_{segment_name}.json"), recursive=True
     )
 
-    label_type_info = _LABEL_TYPE_INFO[dataset_type]
-    label_prefixes = set(label_type_info)
+    label_prefixes = set(_LABEL_TYPE_INFO_100K)
     for label_filename in label_filenames:
         label_file_basename = os.path.basename(label_filename)
         label_prefix = label_file_basename.replace(f"_{segment_name}.json", "")
@@ -239,7 +232,7 @@ def _read_label_file(label_directory: str, segment_name: str, dataset_type: str)
             warn(warn_message)
             continue
 
-        label_description = label_type_info[label_prefix][0]
+        label_description = _LABEL_TYPE_INFO_100K[label_prefix][0]
         print(f"Reading '{label_description}' labels to segment '{segment_name}'...")
         with open(label_filename, "r") as fp:
             source_label_contents.append(json.load(fp))
@@ -248,10 +241,24 @@ def _read_label_file(label_directory: str, segment_name: str, dataset_type: str)
     for missing_label_prefix in label_prefixes:
         warn_message = (
             f"Missing label file '{missing_label_prefix}_{segment_name}.json'! "
-            f"The correspondent '{label_type_info[missing_label_prefix][1]}' "
+            f"The correspondent '{_LABEL_TYPE_INFO_100K[missing_label_prefix][1]}' "
             f"label will be set to empty!"
         )
         warn(warn_message)
+
+    print(f"Merging '{segment_name}' labels...")
+    label_contents = _merge_label(source_label_contents)
+    print(f"Finished merging '{segment_name}' labels")
+    return label_contents
+
+
+def _read_label_file_10k(label_directory: str, segment_name: str) -> Dict[str, Any]:
+    source_label_contents = []
+    label_filename = os.path.join(
+        label_directory, "pan_seg", "polygons", f"pan_seg_{segment_name}.json"
+    )
+    with open(label_filename, "r") as fp:
+        source_label_contents.append(json.load(fp))
 
     print(f"Merging '{segment_name}' labels...")
     label_contents = _merge_label(source_label_contents)
