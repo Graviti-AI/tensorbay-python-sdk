@@ -5,9 +5,9 @@
 
 """Mask related classes."""
 
-from typing import Any, Callable, Dict, Optional, Tuple, Union
+from typing import Any, Callable, Dict, Optional, Type, TypeVar
 
-from ..utility import FileMixin, RemoteFileMixin, ReprMixin, common_loads
+from ..utility import FileMixin, RemoteFileMixin, ReprMixin
 from .basic import AttributeType, SubcatalogBase
 from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
 
@@ -146,43 +146,7 @@ class PanopticMaskSubcatalog(SubcatalogBase, CategoriesMixin, AttributesMixin):
     """
 
 
-class MaskBase(ReprMixin):  # pylint: disable=too-few-public-methods
-    """MaskBase is a base class for the mask label.
-
-    Attributes:
-        all_attributes: The dict of the attributes in this mask, which key is the pixel value,
-            and the value is the corresponding attributes.
-
-    """
-
-    _repr_attrs: Tuple[str, ...] = ("all_attributes",)
-
-    _PATH_KEY: str
-    _ID_KEY: str
-
-    path: str
-
-    all_attributes: Dict[int, AttributeType]
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        self.path = contents[self._PATH_KEY]
-        if "info" in contents:
-            self.all_attributes = {
-                item[self._ID_KEY]: item["attributes"] for item in contents["info"]
-            }
-
-    def _dumps(self) -> Dict[str, Any]:
-        contents: Dict[str, Any] = {self._PATH_KEY: self.path}
-        if hasattr(self, "all_attributes"):
-            contents["info"] = [
-                {self._ID_KEY: i, "attributes": attributes}
-                for i, attributes in self.all_attributes.items()
-            ]
-
-        return contents
-
-
-class SemanticMaskBase(MaskBase):  # pylint: disable=too-few-public-methods
+class SemanticMaskBase(ReprMixin):  # pylint: disable=too-few-public-methods
     """SemanticMaskBase is a base class for the semantic mask label.
 
     Attributes:
@@ -191,57 +155,12 @@ class SemanticMaskBase(MaskBase):  # pylint: disable=too-few-public-methods
 
     """
 
-    _Type = Union["SemanticMask", "RemoteSemanticMask"]
+    _repr_attrs = ("all_attributes",)
 
-    _ID_KEY = "categoryId"
-
-    @classmethod
-    def loads(cls, contents: Dict[str, Any]) -> "_Type":
-        """Loads a SemanticMaskBase subclass from a dict containing the information of the label.
-
-        Arguments:
-            contents: A dict containing the information of the semantic mask label.
-
-        Returns:
-            A :class:`SemanticMask` or :class:`RemoteSemanticMask` instance containing the
-            information from the given dict.
-
-        Examples:
-            >>> contents = {
-                "localPath": "mask_000000.png",
-                "info": [
-                    {
-                        "categoryId": 0,
-                        "attributes": {
-                            "occluded": True
-                        }
-                    },
-                    {
-                        "categoryId": 1,
-                        "attributes": {
-                            "occluded": False
-                        }
-                    }
-                ]
-            }
-            >>> SemanticMaskBase.loads(contents)
-            SemanticMask("mask_000000.png")(
-              (all_attributes): {
-                0: {
-                  'occluded': True
-                },
-                1: {
-                  'occluded': False
-                }
-              }
-            )
-
-        """
-        class_ = RemoteSemanticMask if "remotePath" in contents else SemanticMask
-        return common_loads(class_, contents)
+    all_attributes: Dict[int, AttributeType]
 
 
-class InstanceMaskBase(MaskBase):  # pylint: disable=too-few-public-methods
+class InstanceMaskBase(ReprMixin):  # pylint: disable=too-few-public-methods
     """InstanceMaskBase is a base class for the instance mask label.
 
     Attributes:
@@ -250,57 +169,12 @@ class InstanceMaskBase(MaskBase):  # pylint: disable=too-few-public-methods
 
     """
 
-    _Type = Union["InstanceMask", "RemoteInstanceMask"]
+    _repr_attrs = ("all_attributes",)
 
-    _ID_KEY = "instanceId"
-
-    @classmethod
-    def loads(cls, contents: Dict[str, Any]) -> "_Type":
-        """Loads a InstanceMaskBase subclass from a dict containing the information of the label.
-
-        Arguments:
-            contents: A dict containing the information of the instance mask label.
-
-        Returns:
-            A :class:`InstanceMask` or :class:`RemoteInstanceMask` instance containing the
-            information from the given dict.
-
-        Examples:
-            >>> contents = {
-                "localPath": "mask_000000.png",
-                "info": [
-                    {
-                        "instanceId": 0,
-                        "attributes": {
-                            "occluded": True
-                        }
-                    },
-                    {
-                        "instanceId": 1,
-                        "attributes": {
-                            "occluded": False
-                        }
-                    }
-                ]
-            }
-            >>> InstanceMaskBase.loads(contents)
-            InstanceMask("mask_000000.png")(
-              (all_attributes): {
-                0: {
-                  'occluded': True
-                },
-                1: {
-                  'occluded': False
-                }
-              }
-            )
-
-        """
-        class_ = RemoteInstanceMask if "remotePath" in contents else InstanceMask
-        return common_loads(class_, contents)
+    all_attributes: Dict[int, AttributeType]
 
 
-class PanopticMaskBase(MaskBase):  # pylint: disable=too-few-public-methods
+class PanopticMaskBase(ReprMixin):  # pylint: disable=too-few-public-methods
     """PanopticMaskBase is a base class for the panoptic mask label.
 
     Attributes:
@@ -311,86 +185,12 @@ class PanopticMaskBase(MaskBase):  # pylint: disable=too-few-public-methods
 
     """
 
-    _Type = Union["PanopticMask", "RemotePanopticMask"]
-
     _repr_attrs = ("all_category_ids", "all_attributes")
 
-    _ID_KEY = "instanceId"
+    all_attributes: Dict[int, AttributeType]
 
     def __init__(self) -> None:
         self.all_category_ids: Dict[int, int] = {}
-
-    def _loads(self, contents: Dict[str, Any]) -> None:
-        self.path = contents[self._PATH_KEY]
-        info = contents["info"]
-        self.all_category_ids = {item[self._ID_KEY]: item["categoryId"] for item in info}
-
-        if "attributes" in info[0]:
-            self.all_attributes = {item[self._ID_KEY]: item["attributes"] for item in info}
-
-    def _dumps(self) -> Dict[str, Any]:
-        contents: Dict[str, Any] = {self._PATH_KEY: self.path}
-        all_attributes = getattr(self, "all_attributes", None)
-        info = []
-        for i, category_id in self.all_category_ids.items():
-            item = {self._ID_KEY: i, "categoryId": category_id}
-            if all_attributes:
-                item["attributes"] = all_attributes[i]
-            info.append(item)
-
-        contents["info"] = info
-        return contents
-
-    @classmethod
-    def loads(cls, contents: Dict[str, Any]) -> "_Type":
-        """Loads a PanopticMaskBase subclass from a dict containing the information of the label.
-
-        Arguments:
-            contents: A dict containing the information of the panoptic mask label.
-
-        Returns:
-            A :class:`PanopticMask` or :class:`RemotePanopticMask` instance containing the
-            information from the given dict.
-
-        Examples:
-            >>> contents = {
-                "localPath": "mask_000000.png",
-                "info": [
-                    {
-                        "instanceId": 0,
-                        "categoryId": 100,
-                        "attributes": {
-                            "occluded": True
-                        }
-                    },
-                    {
-                        "instanceId": 1,
-                        "categoryId": 101,
-                        "attributes": {
-                            "occluded": False
-                        }
-                    }
-                ]
-            }
-            >>> PanopticMaskBase.loads(contents)
-            PanopticMask("mask_000000.png")(
-              (all_category_ids): {
-                0: 100,
-                1: 101
-              },
-              (all_attributes): {
-                0: {
-                  'occluded': True
-                },
-                1: {
-                  'occluded': False
-                }
-              }
-            )
-
-        """
-        class_ = RemotePanopticMask if "remotePath" in contents else PanopticMask
-        return common_loads(class_, contents)
 
 
 class SemanticMask(SemanticMaskBase, FileMixin):
@@ -402,40 +202,42 @@ class SemanticMask(SemanticMaskBase, FileMixin):
 
     """
 
-    _PATH_KEY = "localPath"
+    def __init__(self, local_path: str) -> None:
+        FileMixin.__init__(self, local_path)
 
-    def dumps(self) -> Dict[str, Any]:
-        """Dumps the current semantic mask label into a dict.
+    def get_callback_body(self) -> Dict[str, Any]:
+        """Get the callback request body for uploading.
 
         Returns:
-            A dict containing all the information of the semantic mask label.
+            The callback request body, which looks like::
 
-        Examples:
-            >>> semantic_mask = SemanticMask("mask_000000.png")
-            >>> semantic_mask.all_attributes = {}
-            >>> semantic_mask.all_attributes[0] = {"occluded": True}
-            >>> semantic_mask.all_attributes[1] = {"occluded": False}
-            >>> semantic_mask.dumps()
-            {
-                "localPath": "mask_000000.png",
-                "info": [
                     {
-                        "categoryId": 0,
-                        "attributes": {
-                            "occluded": True
-                        }
-                    },
-                    {
-                        "categoryId": 1,
-                        "attributes": {
-                            "occluded": False
-                        }
+                        "checksum": <str>,
+                        "fileSize": <int>,
+                        "info": [
+                            {
+                                "categoryId": 0,
+                                "attributes": {
+                                    "occluded": True
+                                }
+                            },
+                            {
+                                "categoryId": 1,
+                                "attributes": {
+                                    "occluded": False
+                                }
+                            }
+                        ]
                     }
-                ]
-            }
 
         """
-        return self._dumps()
+        body = super()._get_callback_body()
+        if hasattr(self, "all_attributes"):
+            body["info"] = [
+                {"categoryId": i, "attributes": attributes}
+                for i, attributes in self.all_attributes.items()
+            ]
+        return body
 
 
 class InstanceMask(InstanceMaskBase, FileMixin):
@@ -447,40 +249,42 @@ class InstanceMask(InstanceMaskBase, FileMixin):
 
     """
 
-    _PATH_KEY = "localPath"
+    def __init__(self, local_path: str) -> None:
+        FileMixin.__init__(self, local_path)
 
-    def dumps(self) -> Dict[str, Any]:
-        """Dumps the current instance mask label into a dict.
+    def get_callback_body(self) -> Dict[str, Any]:
+        """Get the callback request body for uploading.
 
         Returns:
-            A dict containing all the information of the semantic mask label.
+            The callback request body, which looks like::
 
-        Examples:
-            >>> instance_mask = InstanceMask("mask_000000.png")
-            >>> instance_mask.all_attributes = {}
-            >>> instance_mask.all_attributes[0] = {"occluded": True}
-            >>> instance_mask.all_attributes[1] = {"occluded": False}
-            >>> instance_mask.dumps()
-            {
-                "localPath": "mask_000000.png",
-                "info": [
                     {
-                        "instanceId": 0,
-                        "attributes": {
-                            "occluded": True
-                        }
-                    },
-                    {
-                        "instanceId": 1,
-                        "attributes": {
-                            "occluded": False
-                        }
+                        "checksum": <str>,
+                        "fileSize": <int>,
+                        "info": [
+                            {
+                                "instanceId": 0,
+                                "attributes": {
+                                    "occluded": True
+                                }
+                            },
+                            {
+                                "instanceId": 1,
+                                "attributes": {
+                                    "occluded": False
+                                }
+                            }
+                        ]
                     }
-                ]
-            }
 
         """
-        return self._dumps()
+        body = super()._get_callback_body()
+        if hasattr(self, "all_attributes"):
+            body["info"] = [
+                {"instanceId": i, "attributes": attributes}
+                for i, attributes in self.all_attributes.items()
+            ]
+        return body
 
 
 class PanopticMask(PanopticMaskBase, FileMixin):
@@ -494,48 +298,49 @@ class PanopticMask(PanopticMaskBase, FileMixin):
 
     """
 
-    _PATH_KEY = "localPath"
-
     def __init__(self, local_path: str) -> None:
         PanopticMaskBase.__init__(self)
         FileMixin.__init__(self, local_path)
 
-    def dumps(self) -> Dict[str, Any]:
-        """Dumps the current panoptic mask label into a dict.
+    def get_callback_body(self) -> Dict[str, Any]:
+        """Get the callback request body for uploading.
 
         Returns:
-            A dict containing all the information of the semantic mask label.
+            The callback request body, which looks like::
 
-        Examples:
-            >>> panoptic_mask = PanopticMask("mask_000000.png")
-            >>> panoptic_mask.all_attributes = {}
-            >>> panoptic_mask.all_attributes[0] = {"occluded": True}
-            >>> panoptic_mask.all_category_ids[0] = 100
-            >>> panoptic_mask.all_attributes[1] = {"occluded": False}
-            >>> panoptic_mask.all_category_ids[1] = 101
-            >>> panoptic_mask.dumps()
-            {
-                "localPath": "mask_000000.png",
-                "info": [
                     {
-                        "instanceId": 0,
-                        "categoryId": 100,
-                        "attributes": {
-                            "occluded": True
-                        }
-                    },
-                    {
-                        "instanceId": 1,
-                        "categoryId": 101,
-                        "attributes": {
-                            "occluded": False
-                        }
+                        "checksum": <str>,
+                        "fileSize": <int>,
+                        "info": [
+                            {
+                                "instanceId": 0,
+                                "categoryId": 100,
+                                "attributes": {
+                                    "occluded": True
+                                }
+                            },
+                            {
+                                "instanceId": 1,
+                                "categoryId": 101,
+                                "attributes": {
+                                    "occluded": False
+                                }
+                            }
+                        ]
                     }
-                ]
-            }
 
         """
-        return self._dumps()
+        body = super()._get_callback_body()
+        all_attributes = getattr(self, "all_attributes", None)
+        info = []
+        for i, category_id in self.all_category_ids.items():
+            item = {"instanceId": i, "categoryId": category_id}
+            if all_attributes:
+                item["attributes"] = all_attributes[i]  # pylint: disable=unsubscriptable-object
+            info.append(item)
+
+        body["info"] = info
+        return body
 
 
 class RemoteSemanticMask(SemanticMaskBase, RemoteFileMixin):
@@ -547,39 +352,43 @@ class RemoteSemanticMask(SemanticMaskBase, RemoteFileMixin):
 
     """
 
-    _PATH_KEY = "remotePath"
+    _T = TypeVar("_T", bound="RemoteSemanticMask")
 
-    def dumps(self) -> Dict[str, Any]:
-        """Dumps the current semantic mask label into a dict.
+    @classmethod
+    def from_response_body(cls: Type[_T], body: Dict[str, Any]) -> _T:
+        """Loads a :class:`RemoteSemanticMask` object from a response body.
+
+        Arguments:
+            body: The response body which contains the information of a remote semantic mask,
+                whose format should be like::
+
+                    {
+                        "remotePath": <str>,
+                        "info": [
+                            {
+                                "categoryId": 0,
+                                "attributes": {
+                                    "occluded": True
+                                }
+                            },
+                            {
+                                "categoryId": 1,
+                                "attributes": {
+                                    "occluded": False
+                                }
+                            }
+                        ]
+                    }
 
         Returns:
-            A dict containing all the information of the semantic mask label.
-
-        Examples:
-            >>> semantic_mask = RemoteSemanticMask("mask_000000.png")
-            >>> semantic_mask.all_attributes[0] = {"occluded": True}
-            >>> semantic_mask.all_attributes[1] = {"occluded": False}
-            >>> semantic_mask.dumps()
-            {
-                "remotePath": "mask_000000.png",
-                "info": [
-                    {
-                        "categoryId": 0,
-                        "attributes": {
-                            "occluded": True
-                        }
-                    },
-                    {
-                        "categoryId": 1,
-                        "attributes": {
-                            "occluded": False
-                        }
-                    }
-                ]
-            }
+            The loaded :class:`RemoteSemanticMask` object.
 
         """
-        return self._dumps()
+        mask = cls(body["remotePath"])
+        if "info" in body:
+            mask.all_attributes = {item["categoryId"]: item["attributes"] for item in body["info"]}
+
+        return mask
 
 
 class RemoteInstanceMask(InstanceMaskBase, RemoteFileMixin):
@@ -591,40 +400,43 @@ class RemoteInstanceMask(InstanceMaskBase, RemoteFileMixin):
 
     """
 
-    _PATH_KEY = "remotePath"
+    _T = TypeVar("_T", bound="RemoteInstanceMask")
 
-    def dumps(self) -> Dict[str, Any]:
-        """Dumps the current instance mask label into a dict.
+    @classmethod
+    def from_response_body(cls: Type[_T], body: Dict[str, Any]) -> _T:
+        """Loads a :class:`RemoteInstanceMask` object from a response body.
+
+        Arguments:
+            body: The response body which contains the information of a remote instance mask,
+                whose format should be like::
+
+                    {
+                        "remotePath": <str>,
+                        "info": [
+                            {
+                                "instanceId": 0,
+                                "attributes": {
+                                    "occluded": True
+                                }
+                            },
+                            {
+                                "instanceId": 1,
+                                "attributes": {
+                                    "occluded": False
+                                }
+                            }
+                        ]
+                    }
 
         Returns:
-            A dict containing all the information of the semantic mask label.
-
-        Examples:
-            >>> instance_mask = RemoteInstanceMask("mask_000000.png")
-            >>> instance_mask.all_attributes = {}
-            >>> instance_mask.all_attributes[0] = {"occluded": True}
-            >>> instance_mask.all_attributes[1] = {"occluded": False}
-            >>> instance_mask.dumps()
-            {
-                "remotePath": "mask_000000.png",
-                "info": [
-                    {
-                        "instanceId": 0,
-                        "attributes": {
-                            "occluded": True
-                        }
-                    },
-                    {
-                        "instanceId": 1,
-                        "attributes": {
-                            "occluded": False
-                        }
-                    }
-                ]
-            }
+            The loaded :class:`RemoteInstanceMask` object.
 
         """
-        return self._dumps()
+        mask = cls(body["remotePath"])
+        if "info" in body:
+            mask.all_attributes = {item["instanceId"]: item["attributes"] for item in body["info"]}
+
+        return mask
 
 
 class RemotePanopticMask(PanopticMaskBase, RemoteFileMixin):
@@ -636,7 +448,7 @@ class RemotePanopticMask(PanopticMaskBase, RemoteFileMixin):
 
     """
 
-    _PATH_KEY = "remotePath"
+    _T = TypeVar("_T", bound="RemotePanopticMask")
 
     def __init__(
         self, remote_path: str, *, _url_getter: Optional[Callable[[str], str]] = None
@@ -644,39 +456,42 @@ class RemotePanopticMask(PanopticMaskBase, RemoteFileMixin):
         PanopticMaskBase.__init__(self)
         RemoteFileMixin.__init__(self, remote_path, _url_getter=_url_getter)
 
-    def dumps(self) -> Dict[str, Any]:
-        """Dumps the current panoptic mask label into a dict.
+    @classmethod
+    def from_response_body(cls: Type[_T], body: Dict[str, Any]) -> _T:
+        """Loads a :class:`RemotePanopticMask` object from a response body.
+
+        Arguments:
+            body: The response body which contains the information of a remote panoptic mask,
+                whose format should be like::
+
+                    {
+                        "remotePath": <str>,
+                        "info": [
+                            {
+                                "instanceId": 0,
+                                "categoryId": 100,
+                                "attributes": {
+                                    "occluded": True
+                                }
+                            },
+                            {
+                                "instanceId": 1,
+                                "categoryId": 101,
+                                "attributes": {
+                                    "occluded": False
+                                }
+                            }
+                        ]
+                    }
 
         Returns:
-            A dict containing all the information of the semantic mask label.
-
-        Examples:
-            >>> panoptic_mask = RemotePanoticMask("mask_000000.png")
-            >>> panoptic_mask.all_attributes = {}
-            >>> panoptic_mask.all_attributes[0] = {"occluded": True}
-            >>> panoptic_mask.all_category_ids[0] = 100
-            >>> panoptic_mask.all_attributes[1] = {"occluded": False}
-            >>> panoptic_mask.all_category_ids[1] = 101
-            >>> panoptic_mask.dumps()
-            {
-                "remotePath": "mask_000000.png",
-                "info": [
-                    {
-                        "instanceId": 0,
-                        "categoryId": 100,
-                        "attributes": {
-                            "occluded": True
-                        }
-                    },
-                    {
-                        "instanceId": 1,
-                        "categoryId": 101,
-                        "attributes": {
-                            "occluded": False
-                        }
-                    }
-                ]
-            }
+            The loaded :class:`RemotePanopticMask` object.
 
         """
-        return self._dumps()
+        mask = cls(body["remotePath"])
+        info = body["info"]
+        mask.all_category_ids = {item["instanceId"]: item["categoryId"] for item in info}
+        if "attributes" in info[0]:
+            mask.all_attributes = {item["instanceId"]: item["attributes"] for item in body["info"]}
+
+        return mask
