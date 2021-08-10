@@ -25,7 +25,7 @@
 
 """
 
-from typing import Any, Dict, List, Sequence, Tuple, Type, TypeVar, Union, overload
+from typing import Any, Dict, Sequence, Tuple, Type, TypeVar, Union, overload
 
 from ..utility import (
     AttrsMixin,
@@ -37,6 +37,7 @@ from ..utility import (
     camel,
     common_loads,
 )
+from .lazy import PagingList
 
 
 class DiffBase(AttrsMixin, ReprMixin):
@@ -180,13 +181,13 @@ class SegmentDiff(UserSequence[DataDiff], NameMixin):
 
     """
 
-    _repr_attrs = ("name", "action")
+    _repr_attrs = ("action",)
 
-    def __init__(self, name: str, action: str) -> None:
+    def __init__(self, name: str, action: str, data: PagingList[DataDiff]) -> None:
         super().__init__(name)
 
         self.action = action
-        self._data: List[DataDiff] = []
+        self._data = data
 
 
 class DatasetDiff(Sequence[SegmentDiff], NameMixin):  # pylint: disable=too-many-ancestors
@@ -198,12 +199,12 @@ class DatasetDiff(Sequence[SegmentDiff], NameMixin):  # pylint: disable=too-many
 
     """
 
-    _repr_attrs = ("name", "action")
-
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, segments: PagingList[SegmentDiff]) -> None:
         super().__init__(name)
 
         self._segments: SortedNameList[SegmentDiff] = SortedNameList()
+        for segment in segments:
+            self._segments.add(segment)
 
     def __len__(self) -> int:
         return self._segments.__len__()

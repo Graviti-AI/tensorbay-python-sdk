@@ -36,6 +36,7 @@ from ..exception import (
     ResourceNotExistError,
 )
 from ..label import Catalog
+from .diff import DataDiff, DatasetDiff, SegmentDiff
 from .lazy import PagingList
 from .log import UPLOAD_SEGMENT_RESUME_TEMPLATE
 from .requests import Tqdm, multithread_upload
@@ -292,17 +293,42 @@ class DatasetClient(DatasetClientBase):
 
         return response["totalCount"]  # type: ignore[no-any-return]
 
-    def _generate_diff_segments(
+    def _generate_segment_diffs(
         self, basehead: str, offset: int = 0, limit: int = 128
-    ) -> Generator[Dict[str, Any], None, int]:
+    ) -> Generator[SegmentDiff, None, int]:
         params: Dict[str, Any] = {"offset": offset, "limit": limit}
 
         response = self._client.open_api_do(
-            "GET", f"diffs/{basehead}/segments", self._dataset_id, param=params
+            "GET", f"diffs/{basehead}/segments", self._dataset_id, params=params
         ).json()
 
-        yield from response["segments"]
+        for segment_diff_response in response["segments"]:
+            segment_name = segment_diff_response["name"]
+            data_diffs = self._list_data_diffs(basehead, segment_name)
+            segment_diff = SegmentDiff(segment_name, segment_diff_response["action"], data_diffs)
+            yield segment_diff
+
         return response["totalCount"]  # type: ignore[no-any-return]
+
+    def _generate_data_diffs(
+        self, basehead: str, segment_name: str, offset: int = 0, limit: int = 128
+    ) -> Generator[DataDiff, None, int]:
+        params: Dict[str, Any] = {"offset": offset, "limit": limit}
+
+        response = self._client.open_api_do(
+            "GET", f"diffs/{basehead}/segments/{segment_name}/data", self._dataset_id, param=params
+        ).json()
+
+        for data in response["data"]:
+            yield DataDiff.loads(data)
+
+        return response["totalCount"]  # type: ignore[no-any-return]
+
+    def _list_data_diffs(self, basehead: str, segment_name: str) -> PagingList[DataDiff]:
+        return PagingList(
+            lambda offset, limit: self._generate_data_diffs(basehead, segment_name, offset, limit),
+            128,
+        )
 
     def _list_segment_instances(self) -> PagingList[Segment]:
         return PagingList(self._generate_segments, 128)
@@ -500,67 +526,29 @@ class DatasetClient(DatasetClientBase):
             )
             raise
 
-    def _list_diff_segments(
-        self, *, source: Optional[Union[str, int]] = None, target: Optional[Union[str, int]] = None
-    ) -> PagingList[Dict[str, Any]]:
-        """List diffs of each segment between two versions.
+    def get_diff(self, *, head: Optional[Union[str, int]] = None) -> DatasetDiff:
+        """Get a brief diff between head and its parent commit.
 
         Arguments:
-            source: Source version identification. Type int for draft number, type str for revision.
-                If is not given, use the current version.
-            target: Target version identification. Type int for draft number, type str for revision.
-                If is not given, use the parent commit id.
+            head: Target version identification. Type int for draft number, type str for revision.
+                If not given, use the current commit id.
 
         Examples:
-            >>> self._list_diff_segments(source="b382450220a64ca9b514dcef27c82d9a", target=1)
-            {
-                "segments": [
-                    {
-                        "name": "Segment1",
-                        "action": "add",
-                        "data": {
-                            "stats": {
-                                "total": 3,
-                                "additions": 3,
-                                "deletions": 0,
-                                "modifications": 0
-                            },
-                        },
-                        "sensors": {
-                            "action": "modify"
-                        }
-                    },
-                    {
-                        "name": "Segment2",
-                        "action": "add",
-                        "data": {
-                            "stats": {
-                                "total": 3,
-                                "additions": 3,
-                                "deletions": 0,
-                               "modifications": 0
-                            },
-                        },
-                        "sensors": {
-                            "action": "modify"
-                        }
-                    },
-                ]
-                ...
-                "offset": 0,
-                "recordSize": 2,
-                "totalCount": 2
-            }
+            >>> self.get_diff(head="b382450220a64ca9b514dcef27c82d9a")
 
         Returns:
-            The PagingList of diffs of each segment.
+            The brief diff between head and its parent commit.
 
         """
-        basehead = self._get_basehead(source, target)
+        basehead = self._get_basehead(None, head)
 
-        return PagingList(
-            lambda offset, limit: self._generate_diff_segments(basehead, offset, limit), 128
+        segment_diffs = PagingList(
+            lambda offset, limit: self._generate_segment_diffs(basehead, offset, limit), 128
         )
+
+        dataset_diff = DatasetDiff(self.name, segment_diffs)
+
+        return dataset_diff
 
 
 FrameDataGenerator = Iterator[Tuple[Union[Data, AuthData], str, str]]
