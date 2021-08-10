@@ -243,15 +243,10 @@ class DatasetClientBase(VersionControlClient):
         Arguments:
             catalog: :class:`~tensorbay.label.catalog.Catalog` to upload.
 
-        Raises:
-            TypeError: When the catalog is empty.
-
         """
         self._status.check_authority_for_draft()
 
         put_data: Dict[str, Any] = {"catalog": catalog.dumps()}
-        if not put_data:
-            raise TypeError("Empty catalog")
         put_data.update(self._status.get_status_info())
 
         self._client.open_api_do("PUT", "labels/catalogs", self._dataset_id, json=put_data)
