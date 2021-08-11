@@ -14,6 +14,7 @@ The class hierarchy for TensorBay custom exceptions is::
              +-- FrameError
              +-- ResponseError
                  +-- AccessDeniedError
+                 +-- ForbiddenError
                  +-- InvalidParamsError
                  +-- NameConflictError
                  +-- RequestParamsMissingError
@@ -150,6 +151,12 @@ class ResponseError(ClientError):
 
 class AccessDeniedError(ResponseError):
     """This class defines the exception for access denied response error."""
+
+    STATUS_CODE = 403
+
+
+class ForbiddenError(ResponseError):
+    """This class defines the exception for illegal operations Tensorbay forbids."""
 
     STATUS_CODE = 403
 
@@ -364,6 +371,7 @@ class TBRNError(TensorBayException):
 
 ResponseErrorDistributor: Dict[str, Type[ResponseError]] = {
     "AccessDenied": AccessDeniedError,
+    "Forbidden": ForbiddenError,
     "InvalidParamsValue": InvalidParamsError,
     "NameConflict": NameConflictError,
     "RequestParamsMissing": RequestParamsMissingError,
