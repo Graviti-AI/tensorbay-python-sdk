@@ -18,7 +18,7 @@ The class hierarchy for TensorBay custom exceptions is::
                  +-- NameConflictError
                  +-- RequestParamsMissingError
                  +-- ResourceNotExistError
-                 +-- ResponseSystemError
+                 +-- InternalServerError
                  +-- UnauthorizedError
         +-- UtilityError
             +-- AttrError
@@ -26,6 +26,9 @@ The class hierarchy for TensorBay custom exceptions is::
          +-- OpenDatasetError
              +-- NoFileError
              +-- FileStructureError
+
+:class:`ResponseSystemError` is deprecated since version v1.11.0.
+It will be removed in version v1.13.0. Use :class:`InternalServerError` instead.
 
 """
 
@@ -269,10 +272,13 @@ class ResourceNotExistError(ResponseError):
         return f"The {self._resource}: {self._identification} does not exist."
 
 
-class ResponseSystemError(ResponseError):
-    """This class defines the exception for system response error."""
+class InternalServerError(ResponseError):
+    """This class defines the exception for internal server error."""
 
     STATUS_CODE = 500
+
+
+ResponseSystemError = InternalServerError
 
 
 class UnauthorizedError(ResponseError):
@@ -362,7 +368,7 @@ ResponseErrorDistributor: Dict[str, Type[ResponseError]] = {
     "NameConflict": NameConflictError,
     "RequestParamsMissing": RequestParamsMissingError,
     "ResourceNotExist": ResourceNotExistError,
-    "SystemError": ResponseSystemError,
+    "SystemError": InternalServerError,
     "Unauthorized": UnauthorizedError,
 }
 
