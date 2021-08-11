@@ -7,7 +7,7 @@ import pytest
 
 from tensorbay import GAS
 from tensorbay.dataset import Data, Dataset, Frame, FusionDataset, FusionSegment, Segment
-from tensorbay.exception import InvalidParamsError, ResourceNotExistError, ResponseSystemError
+from tensorbay.exception import InternalServerError, InvalidParamsError, ResourceNotExistError
 from tensorbay.label import Catalog, Label
 from tensorbay.sensor import Sensor
 
@@ -166,7 +166,7 @@ class TestMove:
             segment2.append(data)
 
         dataset_client = gas_client.upload_dataset(dataset)
-        with pytest.raises(ResponseSystemError):
+        with pytest.raises(InternalServerError):
             dataset_client.move_segment("Segment1", "Segment2")
 
         gas_client.delete_dataset(dataset_name)
@@ -471,7 +471,7 @@ class TestCopy:
             segment2.append(data)
 
         dataset_client = gas_client.upload_dataset(dataset)
-        with pytest.raises(ResponseSystemError):
+        with pytest.raises(InternalServerError):
             dataset_client.copy_segment("Segment1", "Segment2")
 
         gas_client.delete_dataset(dataset_name)

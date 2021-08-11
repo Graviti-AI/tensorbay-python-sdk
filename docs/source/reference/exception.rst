@@ -51,9 +51,9 @@ TensorBay SDK defines a series of custom exceptions.
         :class:`~tensorbay.exception.ResourceNotExistError` defines the exception for resource not existing response error in the client module.
         Raised when the request resource does not exist on Tensorbay.
 
-    ResponseSystemError
-        :class:`~tensorbay.exception.ResponseSystemError` defines the exception for system response error in the client module.
-        Raised when system error was responded.
+    InternalServerError
+        :class:`~tensorbay.exception.InternalServerError` defines the exception for internal server error in the client module.
+        Raised when internal server error was responded.
 
     UnauthorizedError
         :class:`~tensorbay.exception.UnauthorizedError` defines the exception for unauthorized response error in the client module.
