@@ -35,6 +35,10 @@ TensorBay SDK defines a series of custom exceptions.
         :class:`~tensorbay.exception.AccessDeniedError` defines the exception for access denied response error in the client module.
         Raised when the current account has no permission to access the resource.
 
+    ForbiddenError
+        :class:`~tensorbay.exception.ForbiddenError` defines the exception for illegal operations Tensorbay forbids.
+        Raised when the current operation is forbidden by Tensorbay.
+
     InvalidParamsError
         :class:`~tensorbay.exception.InvalidParamsError` defines the exception for invalid parameters response error in the client module.
         Raised when the parameters of the request are invalid.
