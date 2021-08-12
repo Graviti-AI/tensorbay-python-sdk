@@ -26,7 +26,7 @@ for more information.
 import time
 from copy import deepcopy
 from itertools import zip_longest
-from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Callable, Dict, Generator, Iterable, Optional, Tuple, Union
 
 import filetype
 from requests_toolbelt import MultipartEncoder
@@ -46,6 +46,14 @@ if TYPE_CHECKING:
 
 _STRATEGIES = {"abort", "override", "skip"}
 _MASK_KEYS = ("semantic_mask", "instance_mask", "panoptic_mask")
+
+
+class _UrlGetters:  # pylint: disable=too-few-public-methods
+    def __init__(self, urls: PagingList[str]) -> None:
+        self._urls = urls
+
+    def __getitem__(self, index: int) -> Callable[[str], str]:
+        return lambda _: self._urls[index]
 
 
 class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
@@ -338,15 +346,21 @@ class SegmentClient(SegmentClientBase):
         return response["totalCount"]  # type: ignore[no-any-return]
 
     def _generate_data(
-        self, urls: PagingList[str], offset: int = 0, limit: int = 128
+        self, url_getters: Dict[str, _UrlGetters], offset: int = 0, limit: int = 128
     ) -> Generator[RemoteData, None, int]:
         response = self._list_labels(offset, limit)
+        urls = url_getters["file"]
 
         for i, item in enumerate(response["labels"], offset):
-            yield RemoteData.from_response_body(
-                item,
-                _url_getter=lambda _, i=i: urls[i],  # type: ignore[misc]
-            )
+            data = RemoteData.from_response_body(item, _url_getter=urls[i])
+            label = data.label
+            for key in _MASK_KEYS:
+                mask = getattr(label, key, None)
+                if mask:
+                    # pylint: disable=protected-access
+                    mask._url_getter = url_getters[key][i]
+
+            yield data
 
         return response["totalCount"]  # type: ignore[no-any-return]
 
@@ -626,8 +640,13 @@ class SegmentClient(SegmentClientBase):
             The PagingList of :class:`~tensorbay.dataset.data.RemoteData`.
 
         """
-        urls = self.list_urls()
-        return PagingList(lambda offset, limit: self._generate_data(urls, offset, limit), 128)
+        url_getters = {"file": _UrlGetters(self.list_urls())}
+        for key in _MASK_KEYS:
+            url_getters[key] = _UrlGetters(self.list_mask_urls(key.upper()))
+
+        return PagingList(
+            lambda offset, limit: self._generate_data(url_getters, offset, limit), 128
+        )
 
     def list_urls(self) -> PagingList[str]:
         """List the data urls in this segment.
