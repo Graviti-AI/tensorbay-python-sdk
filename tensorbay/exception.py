@@ -208,7 +208,7 @@ class NameConflictError(ResponseError):
 
     """
 
-    STATUS_CODE = 400
+    STATUS_CODE = 409
 
     def __init__(  # pylint: disable=super-init-not-called
         self,
