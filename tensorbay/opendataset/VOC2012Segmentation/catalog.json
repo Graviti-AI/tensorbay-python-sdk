@@ -1,0 +1,34 @@
+{
+    "SEMANTIC_MASK": {
+        "categories": [
+            { "name": "background", "categoryId": 0 },
+            { "name": "aeroplane", "categoryId": 1 },
+            { "name": "bicycle", "categoryId": 2 },
+            { "name": "bird", "categoryId": 3 },
+            { "name": "boat", "categoryId": 4 },
+            { "name": "bottle", "categoryId": 5 },
+            { "name": "bus", "categoryId": 6 },
+            { "name": "car", "categoryId": 7 },
+            { "name": "cat", "categoryId": 8 },
+            { "name": "chair", "categoryId": 9 },
+            { "name": "cow", "categoryId": 10 },
+            { "name": "diningtable", "categoryId": 11 },
+            { "name": "dog", "categoryId": 12 },
+            { "name": "horse", "categoryId": 13 },
+            { "name": "motorbike", "categoryId": 14 },
+            { "name": "person", "categoryId": 15 },
+            { "name": "pottedplant", "categoryId": 16 },
+            { "name": "sheep", "categoryId": 17 },
+            { "name": "sofa", "categoryId": 18 },
+            { "name": "train", "categoryId": 19 },
+            { "name": "tvmonitor", "categoryId": 20 },
+            { "name": "void", "categoryId": 255 }
+        ]
+    },
+    "INSTANCE_MASK": {
+        "categories": [
+            { "name": "background", "categoryId": 0 },
+            { "name": "void", "categoryId": 255 }
+        ]
+    }
+}

@@ -48,6 +48,7 @@ from .TLR import TLR
 from .UAVDT import UAVDT
 from .VOC2012ActionClassification import VOC2012ActionClassification
 from .VOC2012Detection import VOC2012Detection
+from .VOC2012Segmentation import VOC2012Segmentation
 from .WIDER_FACE import WIDER_FACE
 
 __all__ = [
@@ -100,4 +101,5 @@ __all__ = [
     "COVID_CT",
     "VOC2012Detection",
     "VOC2012ActionClassification",
+    "VOC2012Segmentation",
 ]
