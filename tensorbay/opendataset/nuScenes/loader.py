@@ -13,15 +13,10 @@ from typing import Any, Dict, Iterator, List
 from ...dataset import Data, Frame, FusionDataset, FusionSegment
 from ...geometry import Transform3D
 from ...label import LabeledBox3D
-from ...sensor import Camera, Lidar, Radar
+from .._utility.nuScenes import get_info_with_determined_token, get_info_with_token, get_sensor
 
 DATASET_NAME = "nuScenes"
 
-_SENSOR_TYPE_CLASS = {
-    "lidar": Lidar,
-    "radar": Radar,
-    "camera": Camera,
-}
 _ATTRIBUTE_KEYS = {
     "vehicle": "vehicle_motion",
     "cycle": "cycle_rider",
@@ -136,44 +131,24 @@ def _generate_segments(root_path: str, subset: str) -> Iterator[FusionSegment]:
 
 def _get_annotation_info(info_path: str, is_test: bool = False) -> Dict[str, Any]:
     annotation_info = {
-        "samples": _get_info_with_token(info_path, "sample"),
-        "frame_data": _get_info_with_sample_token(info_path, "sample_data"),
-        "calibrated_sensors": _get_info_with_token(info_path, "calibrated_sensor"),
-        "ego_poses": _get_info_with_token(info_path, "ego_pose"),
-        "sensor": _get_info_with_token(info_path, "sensor"),
+        "samples": get_info_with_token(info_path, "sample"),
+        "frame_data": get_info_with_determined_token(info_path, "sample_data"),
+        "calibrated_sensors": get_info_with_token(info_path, "calibrated_sensor"),
+        "ego_poses": get_info_with_token(info_path, "ego_pose"),
+        "sensor": get_info_with_token(info_path, "sensor"),
     }
     with open(os.path.join(info_path, "scene.json"), "r") as file:
         annotation_info["scenes"] = json.load(file)
     if not is_test:
-        annotation_info["sample_annotations"] = _get_info_with_sample_token(
+        annotation_info["sample_annotations"] = get_info_with_determined_token(
             info_path, "sample_annotation", no_key_frame=True
         )
-        annotation_info["instance"] = _get_info_with_token(info_path, "instance")
-        annotation_info["category"] = _get_info_with_token(info_path, "category")
-        annotation_info["attribute"] = _get_info_with_token(info_path, "attribute")
-        annotation_info["visibility"] = _get_info_with_token(info_path, "visibility")
+        annotation_info["instance"] = get_info_with_token(info_path, "instance")
+        annotation_info["category"] = get_info_with_token(info_path, "category")
+        annotation_info["attribute"] = get_info_with_token(info_path, "attribute")
+        annotation_info["visibility"] = get_info_with_token(info_path, "visibility")
 
     return annotation_info
-
-
-def _get_info_with_token(info_path: str, annotation_part: str) -> Dict[str, Any]:
-    filepath = os.path.join(info_path, f"{annotation_part}.json")
-    with open(filepath, "r") as fp:
-        info = json.load(fp)
-    return {item.pop("token"): item for item in info}
-
-
-def _get_info_with_sample_token(
-    info_path: str, annotation_part: str, no_key_frame: bool = False
-) -> Dict[str, List[Any]]:
-    filepath = os.path.join(info_path, f"{annotation_part}.json")
-    with open(filepath, "r") as fp:
-        info = json.load(fp)
-    info_with_keys: Dict[str, List[Any]] = {}
-    for item in info:
-        if no_key_frame or item["is_key_frame"]:
-            info_with_keys.setdefault(item.pop("sample_token"), []).append(item)
-    return info_with_keys
 
 
 def _load_frame_and_sensor(
@@ -193,7 +168,7 @@ def _load_frame_and_sensor(
         sensor_type = common_sensor["modality"]
 
         if sensor_name not in segment.sensors:
-            _load_sensor(segment, sensor_type, sensor_name, calibrated_sensor_info)
+            segment.sensors.add(get_sensor(sensor_type, sensor_name, calibrated_sensor_info))
 
         data = Data(
             os.path.join(subset_path, sensor_frame["filename"]),
@@ -201,8 +176,7 @@ def _load_frame_and_sensor(
         )
 
         if not is_test and sensor_type == "lidar":
-            _load_labels(
-                data,
+            data.label.box3d = _get_labels(
                 current_frame_token,
                 annotation_info["ego_poses"][sensor_frame["ego_pose_token"]],
                 segment.sensors[sensor_name].extrinsics,
@@ -213,30 +187,12 @@ def _load_frame_and_sensor(
     segment.append(frame)
 
 
-def _load_sensor(
-    segment: FusionSegment,
-    sensor_type: str,
-    sensor_name: str,
-    calibrated_sensor_info: Dict[str, Any],
-) -> None:
-    sensor = _SENSOR_TYPE_CLASS[sensor_type](sensor_name)
-    sensor.set_extrinsics(
-        translation=calibrated_sensor_info["translation"],
-        rotation=calibrated_sensor_info["rotation"],
-    )
-    intrinsics = calibrated_sensor_info["camera_intrinsic"]
-    if intrinsics:
-        sensor.set_camera_matrix(matrix=intrinsics)  # type: ignore[attr-defined]
-    segment.sensors.add(sensor)  # type: ignore[arg-type]
-
-
-def _load_labels(
-    data: Data,
+def _get_labels(
     current_frame_token: str,
     lidar_ego_pose_info: Dict[str, Any],
     lidar_to_ego: Transform3D,
     annotation_info: Dict[str, Dict[str, Any]],
-) -> None:
+) -> List[LabeledBox3D]:
     labels = []
     sample_annotations = annotation_info["sample_annotations"]
     if current_frame_token in sample_annotations:
@@ -248,7 +204,7 @@ def _load_labels(
         for instance_annotation in sample_annotations[current_frame_token]:
             labeled_box = _get_labeled_box(instance_annotation, annotation_info)
             labels.append(world_to_lidar * labeled_box)
-    data.label.box3d = labels
+    return labels
 
 
 def _get_labeled_box(

@@ -39,6 +39,7 @@ from .LISATrafficSign import LISATrafficSign
 from .NeolixOD import NeolixOD
 from .Newsgroups20 import Newsgroups20
 from .NightOwls import NightOwls
+from .nuImages import nuImages
 from .nuScenes import nuScenes
 from .OxfordIIITPet import OxfordIIITPet
 from .PASCALContext import PASCALContext
@@ -102,6 +103,7 @@ __all__ = [
     "PlantSeedlingsFullimages",
     "RP2K",
     "SVHN",
+    "nuImages",
     "THCHS30",
     "THUCNews",
     "TLR",
