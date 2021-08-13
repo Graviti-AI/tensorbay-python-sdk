@@ -10,11 +10,7 @@ from xml.etree import ElementTree
 from ...dataset import Data, Dataset
 from ...label import LabeledBox2D
 
-_SEGMENT_NAMES = (
-    "train",
-    "trainval",
-    "val",
-)
+_SEGMENT_NAMES = ("train", "val")
 _BOOLEAN_ATTRIBUTES = {"occluded", "difficult", "truncated"}
 DATASET_NAME = "VOC2012Detection"
 
@@ -36,7 +32,6 @@ def VOC2012Detection(path: str) -> Dataset:
             ImageSets/
                 Main/
                     train.txt
-                    trainval.txt
                     val.txt
                     ...
                 ...

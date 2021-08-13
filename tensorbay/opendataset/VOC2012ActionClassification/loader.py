@@ -10,11 +10,7 @@ from ...dataset import Data, Dataset
 from ...exception import ModuleImportError
 from ...label import LabeledBox2D
 
-_SEGMENT_NAMES = (
-    "train",
-    "trainval",
-    "val",
-)
+_SEGMENT_NAMES = ("train", "val")
 DATASET_NAME = "VOC2012ActionClassification"
 
 
@@ -35,7 +31,6 @@ def VOC2012ActionClassification(path: str) -> Dataset:
             ImageSets/
                 Action/
                     train.txt
-                    trainval.txt
                     val.txt
                     ...
                 ...
