@@ -131,7 +131,7 @@ class ResponseError(ClientError):
         self, message: Optional[str] = None, *, response: Optional[Response] = None
     ) -> None:
         super().__init__(message)
-        if response:
+        if response is not None:
             self.response = response
 
     def __init_subclass__(cls) -> None:
