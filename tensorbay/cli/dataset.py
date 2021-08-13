@@ -8,9 +8,10 @@
 import click
 
 from .tbrn import TBRN, TBRNType
-from .utility import ContextInfo, error, get_gas
+from .utility import ContextInfo, error, exception_handler, get_gas
 
 
+@exception_handler
 def _implement_dataset(obj: ContextInfo, tbrn: str, is_delete: bool, yes: bool) -> None:
     gas = get_gas(*obj)
     if is_delete:

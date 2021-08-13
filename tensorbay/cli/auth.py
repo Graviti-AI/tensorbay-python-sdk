@@ -7,7 +7,7 @@
 
 from configparser import ConfigParser, NoSectionError
 from textwrap import indent
-from typing import Optional
+from typing import Optional, Tuple
 from urllib.parse import urljoin
 
 import click
@@ -16,6 +16,7 @@ from ..exception import UnauthorizedError
 from .utility import (
     ContextInfo,
     error,
+    exception_handler,
     form_profile_value,
     get_gas,
     is_accesskey,
@@ -26,6 +27,7 @@ from .utility import (
 INDENT = " " * 4
 
 
+@exception_handler
 def _implement_auth(  # pylint: disable=too-many-arguments
     obj: ContextInfo,
     arg1: str,
@@ -36,7 +38,6 @@ def _implement_auth(  # pylint: disable=too-many-arguments
     is_all: bool,
 ) -> None:
     _check_args_and_options(arg1, arg2, get, status, unset, is_all)
-
     if get:
         _get_auth(obj, is_all)
         return
@@ -49,22 +50,7 @@ def _implement_auth(  # pylint: disable=too-many-arguments
         _unset_auth(obj, is_all)
         return
 
-    if not arg1 and not arg2:
-        arg1 = _interactive_auth()
-
-    elif is_accesskey(arg1):
-        if _is_gas_url(arg2):
-            error('Please use "gas auth [url] [accessKey]" to specify the url and accessKey')
-        if arg2:
-            error(f'Redundant argument "{arg2}"')
-
-    elif _is_gas_url(arg1):
-        if not arg2:
-            arg2 = _interactive_auth(arg1)
-        elif not is_accesskey(arg2):
-            error("Wrong accesskey format")
-    else:
-        error(f'Invalid argument "{arg1}"')
+    arg1, arg2 = _reformat_args(arg1, arg2)
 
     _update_profile(obj, arg1, arg2)
 
@@ -203,3 +189,23 @@ def _echo_user_info(profile_name: str, config_parser: ConfigParser) -> None:
     click.echo(f"{INDENT}{access_key}")
     if url:
         click.echo(f"{INDENT}{url}\n")
+
+
+def _reformat_args(arg1: str, arg2: str) -> Tuple[str, str]:
+    if not arg1 and not arg2:
+        arg1 = _interactive_auth()
+
+    elif is_accesskey(arg1):
+        if _is_gas_url(arg2):
+            error('Please use "gas auth [url] [accessKey]" to specify the url and accessKey')
+        if arg2:
+            error(f'Redundant argument "{arg2}"')
+
+    elif _is_gas_url(arg1):
+        if not arg2:
+            arg2 = _interactive_auth(arg1)
+        elif not is_accesskey(arg2):
+            error("Wrong accesskey format")
+    else:
+        error(f'Invalid argument "{arg1}"')
+    return arg1, arg2

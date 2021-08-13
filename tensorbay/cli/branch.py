@@ -9,9 +9,10 @@ import click
 
 from ..client.gas import DatasetClientType
 from .tbrn import TBRN, TBRNType
-from .utility import ContextInfo, error, get_dataset_client, get_gas, shorten
+from .utility import ContextInfo, error, exception_handler, get_dataset_client, get_gas, shorten
 
 
+@exception_handler
 def _implement_branch(
     obj: ContextInfo, tbrn: str, name: str, verbose: bool, is_delete: bool
 ) -> None:
@@ -35,9 +36,6 @@ def _implement_branch(
 def _create_branch(dataset_client: DatasetClientType, name: str) -> None:
     if dataset_client.status.is_draft:
         error("Branch cannot be created from a draft")
-
-    if not dataset_client.status.commit_id:
-        error(f'To create a branch, "{dataset_client.name}" must have commit history')
 
     dataset_client.create_branch(name)
     branch_tbrn = TBRN(dataset_client.name, revision=name)

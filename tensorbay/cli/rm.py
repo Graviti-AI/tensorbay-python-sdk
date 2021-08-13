@@ -8,9 +8,10 @@
 import click
 
 from .tbrn import TBRN, TBRNType
-from .utility import ContextInfo, error, get_dataset_client, get_gas
+from .utility import ContextInfo, error, exception_handler, get_dataset_client, get_gas
 
 
+@exception_handler
 def _implement_rm(obj: ContextInfo, tbrn: str, is_recursive: bool) -> None:
     gas = get_gas(*obj)
     info = TBRN(tbrn=tbrn)

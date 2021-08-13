@@ -11,9 +11,10 @@ from typing import Iterable
 
 from ..dataset import Data, Segment
 from .tbrn import TBRN, TBRNType
-from .utility import ContextInfo, error, get_dataset_client, get_gas
+from .utility import ContextInfo, error, exception_handler, get_dataset_client, get_gas
 
 
+@exception_handler
 def _implement_cp(  # pylint: disable=too-many-arguments
     obj: ContextInfo,
     local_paths: Iterable[str],
