@@ -4,6 +4,7 @@
 #
 
 """Implementation of gas log."""
+
 import bisect
 from collections import defaultdict
 from datetime import datetime
@@ -17,7 +18,7 @@ from ..client.gas import DatasetClientType
 from ..client.struct import Commit
 from .auth import INDENT
 from .tbrn import TBRN, TBRNType
-from .utility import ContextInfo, error, get_gas, is_win, shorten
+from .utility import ContextInfo, error, exception_handler, get_gas, is_win, shorten
 
 _LEFT_BRACKET = click.style("(", fg="yellow", reset=False)
 _COMMA = click.style(", ", fg="yellow", reset=False)
@@ -48,6 +49,7 @@ _LOG_COLORS = (
 )
 
 
+@exception_handler
 def _implement_log(  # pylint: disable=too-many-arguments
     obj: ContextInfo,
     tbrn: str,

@@ -10,7 +10,15 @@ from typing import Tuple
 import click
 
 from .tbrn import TBRN, TBRNType
-from .utility import ContextInfo, edit_message, error, format_hint, get_dataset_client, get_gas
+from .utility import (
+    ContextInfo,
+    edit_message,
+    error,
+    exception_handler,
+    format_hint,
+    get_dataset_client,
+    get_gas,
+)
 
 _COMMIT_HINT = """
 # Please enter the commit message for your changes.
@@ -20,6 +28,7 @@ _COMMIT_HINT = """
 """
 
 
+@exception_handler
 def _implement_commit(obj: ContextInfo, tbrn: str, message: Tuple[str, ...]) -> None:
     gas = get_gas(*obj)
     info = TBRN(tbrn=tbrn)
@@ -27,12 +36,10 @@ def _implement_commit(obj: ContextInfo, tbrn: str, message: Tuple[str, ...]) -> 
 
     if info.type != TBRNType.DATASET:
         error(f'To operate a commit, "{info}" must be a dataset')
-
     if not info.is_draft:
         error(f'To commit, "{info}" must be in draft status, like "{info}#1"')
 
     dataset_client.checkout(draft_number=info.draft_number)
-
     draft = dataset_client.get_draft()
     hint_message = format_hint(draft.title, draft.description, _COMMIT_HINT)
     title, description = edit_message(message, hint_message, obj.config_parser)

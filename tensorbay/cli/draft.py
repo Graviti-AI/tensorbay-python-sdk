@@ -13,10 +13,17 @@ import click
 
 from ..client.gas import DatasetClientType
 from ..client.struct import ROOT_COMMIT_ID
-from ..exception import ResourceNotExistError
 from .auth import INDENT
 from .tbrn import TBRN, TBRNType
-from .utility import ContextInfo, edit_message, error, format_hint, get_dataset_client, get_gas
+from .utility import (
+    ContextInfo,
+    edit_message,
+    error,
+    exception_handler,
+    format_hint,
+    get_dataset_client,
+    get_gas,
+)
 
 _DRAFT_HINT = """
 # Please enter the message for your draft.
@@ -30,6 +37,7 @@ _FULL_DRAFT_MESSAGE = """Branch:{}{}
 """
 
 
+@exception_handler
 def _implement_draft(  # pylint: disable=too-many-arguments
     obj: ContextInfo,
     tbrn: str,
@@ -98,10 +106,7 @@ def _echo_draft(
     if not branch_name:
         error("Draft should be created based on a branch.")
 
-    try:
-        branch = dataset_client.get_branch(branch_name)
-    except ResourceNotExistError:
-        error(f'The branch "{branch_name}" does not exist')
+    branch = dataset_client.get_branch(branch_name)
 
     if branch.commit_id != ROOT_COMMIT_ID:
         commit_id = f"({branch.commit_id})"

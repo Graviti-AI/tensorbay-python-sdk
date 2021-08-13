@@ -10,7 +10,8 @@ import os
 import sys
 from collections import OrderedDict
 from configparser import ConfigParser, SectionProxy
-from typing import NamedTuple, Optional, Tuple, overload
+from functools import wraps
+from typing import Any, Callable, NamedTuple, Optional, Tuple, TypeVar, overload
 
 import click
 from typing_extensions import Literal, NoReturn
@@ -19,7 +20,12 @@ from ..client import GAS
 from ..client import config as client_config
 from ..client.dataset import DatasetClient, FusionDatasetClient
 from ..client.gas import DatasetClientType
+from ..client.log import dump_request_and_response
+from ..client.requests import logger
+from ..exception import InternalServerError, TensorBayException
 from .tbrn import TBRN
+
+_Callable = TypeVar("_Callable", bound=Callable[..., None])
 
 
 class ContextInfo(NamedTuple):
@@ -39,6 +45,8 @@ def _implement_cli(
 
     if debug:
         logging.basicConfig(level=logging.DEBUG)
+    else:
+        logger.disabled = True
 
 
 def _get_config_filepath() -> str:
@@ -387,3 +395,38 @@ def _set_request_config(config_parser: ConfigParser) -> None:
             client_config.is_internal = config_section.getboolean("is_internal")
         if "max_retries" in config_section:
             client_config.max_retries = config_section.getint("max_retries")
+
+
+def echo_response(err: InternalServerError) -> None:
+    """Log request and response when InternalServerError happens.
+
+    Arguments:
+        err: The InternalServerError raised from the CLI.
+
+    """
+    if logger.disabled:
+        click.echo(dump_request_and_response(err.response))
+
+
+def exception_handler(func: _Callable) -> _Callable:
+    """Decorator for CLI functions to catch custom exceptions.
+
+    Arguments:
+        func: The CLI function needs to be decorated.
+
+    Returns:
+        The CLI function with exception catching procedure.
+
+    """
+
+    @wraps(func)
+    def wrapper(*args: Any, **kwargs: Any) -> None:
+        try:
+            func(*args, **kwargs)
+        except InternalServerError as err:
+            echo_response(err)
+            raise
+        except TensorBayException as err:
+            error(str(err))
+
+    return wrapper  # type: ignore[return-value]
