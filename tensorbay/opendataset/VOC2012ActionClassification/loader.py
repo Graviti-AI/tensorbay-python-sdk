@@ -48,9 +48,10 @@ def VOC2012ActionClassification(path: str) -> Dataset:
         Loaded :class: `~tensorbay.dataset.dataset.Dataset` instance.
 
     """
-    annotation_path = os.path.join(path, "Annotations")
-    image_path = os.path.join(path, "JPEGImages")
-    action_path = os.path.join(path, "ImageSets", "Action")
+    root_path = os.path.abspath(os.path.expanduser(path))
+    annotation_path = os.path.join(root_path, "Annotations")
+    image_path = os.path.join(root_path, "JPEGImages")
+    action_path = os.path.join(root_path, "ImageSets", "Action")
 
     dataset = Dataset(DATASET_NAME)
     dataset.load_catalog(os.path.join(os.path.dirname(__file__), "catalog.json"))
