@@ -120,7 +120,7 @@ class TestGAS:
         assert self.gas_client._get_dataset(get_dataset_data["name"]) == get_dataset_data
         open_api_do.assert_called_once_with("GET", "", list_dataset_data["datasets"][0]["id"])
 
-    def test_list_datasets(self, mocker):
+    def test__list_datasets(self, mocker):
         params = {
             "name": "test",
             "offset": 0,
