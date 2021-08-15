@@ -6,7 +6,6 @@
 # pylint: disable=pointless-string-statement
 # pylint: disable=wrong-import-position
 # pylint: disable=import-error
-# pylint: disable=too-few-public-methods
 # type: ignore
 
 """This is the example code for using dataset in TensorFlow."""

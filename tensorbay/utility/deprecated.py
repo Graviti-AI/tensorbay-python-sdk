@@ -24,7 +24,7 @@ from typing import Any, Callable, Optional, Tuple, TypeVar, Union
 _Callable = TypeVar("_Callable", bound=Callable[..., Any])
 
 
-class Deprecated:  # pylint: disable=too-few-public-methods
+class Deprecated:
     """A decorator for deprecated functions.
 
     Arguments:
@@ -106,7 +106,7 @@ class Deprecated:  # pylint: disable=too-few-public-methods
         return "\n".join(lines)
 
 
-class KwargsDeprecated:  # pylint: disable=too-few-public-methods
+class KwargsDeprecated:
     """A decorator for the function which has deprecated keyword arguments.
 
     Arguments:
@@ -174,7 +174,7 @@ class KwargsDeprecated:  # pylint: disable=too-few-public-methods
         return wrapper  # type: ignore[return-value]
 
 
-class DefaultValueDeprecated:  # pylint: disable=too-few-public-methods
+class DefaultValueDeprecated:
     """A decorator for the function which has deprecated argument default value.
 
     Arguments:
@@ -236,7 +236,7 @@ class DefaultValueDeprecated:  # pylint: disable=too-few-public-methods
         return wrapper  # type: ignore[return-value]
 
 
-class Disable:  # pylint: disable=too-few-public-methods
+class Disable:
     """A decorator for the function which is disabled temporarily.
 
     Arguments:

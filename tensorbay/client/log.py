@@ -59,7 +59,7 @@ UPLOAD_SEGMENT_RESUME_TEMPLATE = """
 """
 
 
-class RequestLogging:  # pylint: disable=too-few-public-methods
+class RequestLogging:
     """This class used to lazy load request to logging.
 
     Arguments:
@@ -74,7 +74,7 @@ class RequestLogging:  # pylint: disable=too-few-public-methods
         return _dump_request(self._request)
 
 
-class ResponseLogging:  # pylint: disable=too-few-public-methods
+class ResponseLogging:
     """This class used to lazy load response to logging.
 
     Arguments:

@@ -46,7 +46,7 @@ def _get_allowed_methods_keyword() -> str:
 _ALLOWED_METHODS = _get_allowed_methods_keyword()
 
 
-class Config:  # pylint: disable=too-few-public-methods
+class Config:
     """This is a base class defining the concept of Request Config.
 
     Attributes:
@@ -116,7 +116,7 @@ class TimeoutHTTPAdapter(HTTPAdapter):
         return super().send(request, stream, timeout, verify, cert, proxies)
 
 
-class UserSession(Session):  # pylint: disable=too-few-public-methods
+class UserSession(Session):
     """This class defines UserSession."""
 
     def __init__(self) -> None:

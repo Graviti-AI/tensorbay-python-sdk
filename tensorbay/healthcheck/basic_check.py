@@ -18,7 +18,7 @@ from ..dataset import Dataset, FusionDataset
 from .report import Error
 
 
-class BasicError(Error):  # pylint: disable=too-few-public-methods
+class BasicError(Error):
     """The base class of the basic error.
 
     Arguments:
@@ -30,7 +30,7 @@ class BasicError(Error):  # pylint: disable=too-few-public-methods
         self._name = name
 
 
-class EmptyDatasetError(BasicError):  # pylint: disable=too-few-public-methods
+class EmptyDatasetError(BasicError):
     """The health check function for empty dataset.
 
     This error is raised to indicate that :class:`~tensorbay.dataset.dataset.Dataset`
@@ -42,7 +42,7 @@ class EmptyDatasetError(BasicError):  # pylint: disable=too-few-public-methods
         return f"Dataset '{self._name}' is empty"
 
 
-class EmptySegmentError(BasicError):  # pylint: disable=too-few-public-methods
+class EmptySegmentError(BasicError):
     """The health check function for empty segment.
 
     This error is raised to indicate that :class:`~tensorbay.dataset.segment.Segment`

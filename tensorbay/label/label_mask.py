@@ -146,7 +146,7 @@ class PanopticMaskSubcatalog(SubcatalogBase, CategoriesMixin, AttributesMixin):
     """
 
 
-class SemanticMaskBase(ReprMixin):  # pylint: disable=too-few-public-methods
+class SemanticMaskBase(ReprMixin):
     """SemanticMaskBase is a base class for the semantic mask label.
 
     Attributes:
@@ -160,7 +160,7 @@ class SemanticMaskBase(ReprMixin):  # pylint: disable=too-few-public-methods
     all_attributes: Dict[int, AttributeType]
 
 
-class InstanceMaskBase(ReprMixin):  # pylint: disable=too-few-public-methods
+class InstanceMaskBase(ReprMixin):
     """InstanceMaskBase is a base class for the instance mask label.
 
     Attributes:
@@ -174,7 +174,7 @@ class InstanceMaskBase(ReprMixin):  # pylint: disable=too-few-public-methods
     all_attributes: Dict[int, AttributeType]
 
 
-class PanopticMaskBase(ReprMixin):  # pylint: disable=too-few-public-methods
+class PanopticMaskBase(ReprMixin):
     """PanopticMaskBase is a base class for the panoptic mask label.
 
     Attributes:

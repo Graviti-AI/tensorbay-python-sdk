@@ -19,7 +19,7 @@ from typing import Any, Callable, List, TypeVar
 from ..utility import UserMutableMapping, UserSequence
 
 
-class Error:  # pylint: disable=too-few-public-methods
+class Error:
     """Base class of healthcheck errors."""
 
     def __str__(self) -> str:
@@ -100,7 +100,7 @@ class _ErrorDict(UserMutableMapping[_T, _ErrorSection], _ErrorContext):
         return value
 
 
-class HealthReport:  # pylint: disable=too-few-public-methods
+class HealthReport:
     """:class:`HealthReport` is the result of the healthcheck, which contains all the errors."""
 
     def __init__(self) -> None:

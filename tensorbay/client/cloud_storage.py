@@ -15,7 +15,7 @@ from ..dataset import AuthData
 from .requests import Client
 
 
-class CloudClient:  # pylint: disable=too-few-public-methods
+class CloudClient:
     """:class:`CloudClient` defines the client to interact between local and cloud platform.
 
     Arguments:

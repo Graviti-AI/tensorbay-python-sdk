@@ -21,7 +21,7 @@ from .pipeline import PipelineForIterable
 from .report import Error
 
 
-class AttributeInfoError(Error):  # pylint: disable=too-few-public-methods
+class AttributeInfoError(Error):
     """This class defines :class:`AttributeInfoError`.
 
     Arguments:
@@ -62,7 +62,7 @@ def check_catalog(catalog: Catalog) -> Iterator[Tuple[str, AttributeInfoError]]:
                 yield key, error
 
 
-class InvalidTypeError(AttributeInfoError):  # pylint: disable=too-few-public-methods
+class InvalidTypeError(AttributeInfoError):
     """The health check class for invalid.
 
     This error is raised to indicate that
@@ -109,7 +109,7 @@ def check_invalid_type(attribute_info: AttributeInfo) -> Iterator[InvalidTypeErr
         yield InvalidTypeError(attribute_info.name)
 
 
-class InvalidEnumError(AttributeInfoError):  # pylint: disable=too-few-public-methods
+class InvalidEnumError(AttributeInfoError):
     """The health check class for invalid enum.
 
     This error is raised to indicate that
@@ -148,7 +148,7 @@ def check_invalid_enum(attribute_info: AttributeInfo) -> Iterator[InvalidEnumErr
         yield InvalidEnumError(attribute_info.name)
 
 
-class NeitherTypeNorEnumError(AttributeInfoError):  # pylint: disable=too-few-public-methods
+class NeitherTypeNorEnumError(AttributeInfoError):
     """The health check class for either type enum.
 
     This error is raised to indicate
@@ -178,7 +178,7 @@ def check_neither_type_nor_enum(attribute_info: AttributeInfo) -> Iterator[Neith
         yield NeitherTypeNorEnumError(attribute_info.name)
 
 
-class RedundantTypeError(AttributeInfoError):  # pylint: disable=too-few-public-methods
+class RedundantTypeError(AttributeInfoError):
     """The health check class for redundant type error.
 
     This error is raised to indicate that
@@ -209,7 +209,7 @@ def check_redundant_type(attribute_info: AttributeInfo) -> Iterator[RedundantTyp
         yield RedundantTypeError(attribute_info.name)
 
 
-class RangeNotSupportError(AttributeInfoError):  # pylint: disable=too-few-public-methods
+class RangeNotSupportError(AttributeInfoError):
     """The health check class for range not support error.
 
     This error is raised to indicate :class:`~tensorbay.label.attributes.AttributeInfo`
@@ -252,7 +252,7 @@ def check_range_not_support(attribute_info: AttributeInfo) -> Iterator[RangeNotS
     yield RangeNotSupportError(attribute_info.name)
 
 
-class InvalidRangeError(AttributeInfoError):  # pylint: disable=too-few-public-methods
+class InvalidRangeError(AttributeInfoError):
     """The health check class for invalid range error.
 
     This error is raised to indicate that
@@ -288,7 +288,7 @@ def check_invalid_range(attribute_info: AttributeInfo) -> Iterator[InvalidRangeE
     yield InvalidRangeError(attribute_info.name)
 
 
-class InvalidParentCategories(AttributeInfoError):  # pylint: disable=too-few-public-methods
+class InvalidParentCategories(AttributeInfoError):
     """The health check class for invalid parent categories.
 
     This error is raised to indicate that :class:`~tensorbay.label.attributes.AttributeInfo`
@@ -312,7 +312,7 @@ class InvalidParentCategories(AttributeInfoError):  # pylint: disable=too-few-pu
         )
 
 
-class CheckParentCategories:  # pylint: disable=too-few-public-methods
+class CheckParentCategories:
     """The health check class for parent categories.
 
     This error is raised to indicate that :class:`~tensorbay.label.attributes.AttributeInfo`

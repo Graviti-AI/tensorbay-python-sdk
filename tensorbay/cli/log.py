@@ -88,7 +88,7 @@ def _get_full_log(commit: Commit, branch_name: Optional[str]) -> str:
     )
 
 
-class _CommitPrinter:  # pylint: disable=too-few-public-methods
+class _CommitPrinter:
     """This class defines the structure of logging commits.
 
     Arguments:
@@ -185,7 +185,7 @@ class _CommitPrinter:  # pylint: disable=too-few-public-methods
             yield self._printer(commit, print_branch_name)
 
 
-class _CommitNode:  # pylint: disable=too-few-public-methods
+class _CommitNode:
     """This class defines the tree struct of graphical logging commits.
 
     Arguments:
@@ -211,7 +211,7 @@ class _CommitNode:  # pylint: disable=too-few-public-methods
         self.available_child_num += 1
 
 
-class _GraphPrinter:  # pylint: disable=too-few-public-methods
+class _GraphPrinter:
     """This class defines the structure of logging graphical commits stack.
 
     Arguments:

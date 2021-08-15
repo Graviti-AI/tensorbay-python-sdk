@@ -22,7 +22,7 @@ from .repr import ReprMixin
 from .user import UserSequence
 
 
-class NameMixin(AttrsMixin, ReprMixin):  # pylint: disable=too-few-public-methods
+class NameMixin(AttrsMixin, ReprMixin):
     """A mixin class for instance which has immutable name and mutable description.
 
     Arguments:
