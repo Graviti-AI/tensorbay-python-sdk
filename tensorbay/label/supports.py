@@ -271,7 +271,7 @@ class KeypointsInfo(ReprMixin, AttrsMixin):
         return self._dumps()
 
 
-class IsTrackingMixin(AttrsMixin):  # pylint: disable=too-few-public-methods
+class IsTrackingMixin(AttrsMixin):
     """A mixin class supporting tracking information of a subcatalog.
 
     Arguments:
@@ -288,7 +288,7 @@ class IsTrackingMixin(AttrsMixin):  # pylint: disable=too-few-public-methods
         self.is_tracking = is_tracking
 
 
-class CategoriesMixin(AttrsMixin):  # pylint: disable=too-few-public-methods
+class CategoriesMixin(AttrsMixin):
     """A mixin class supporting category information of a subcatalog.
 
     Attributes:
@@ -341,7 +341,7 @@ class CategoriesMixin(AttrsMixin):  # pylint: disable=too-few-public-methods
         self.categories.append(CategoryInfo(name, description))
 
 
-class AttributesMixin(AttrsMixin):  # pylint: disable=too-few-public-methods
+class AttributesMixin(AttrsMixin):
     """A mixin class supporting attribute information of a subcatalog.
 
     Attributes:

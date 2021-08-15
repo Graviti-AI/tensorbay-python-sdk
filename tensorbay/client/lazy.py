@@ -28,7 +28,7 @@ _T = TypeVar("_T")
 PagingGenerator = Callable[[int, int], Generator[_T, None, int]]
 
 
-class LazyItem(Generic[_T]):  # pylint: disable=too-few-public-methods
+class LazyItem(Generic[_T]):
     """In paging lazy evaluation system, a LazyItem instance represents an element in a pagination.
 
     If user wants to access the elememt, LazyItem will trigger the paging request to pull a page of
@@ -101,7 +101,7 @@ class LazyItem(Generic[_T]):  # pylint: disable=too-few-public-methods
 _R = TypeVar("_R")
 
 
-class ReturnGenerator(Generic[_T, _R]):  # pylint: disable=too-few-public-methods
+class ReturnGenerator(Generic[_T, _R]):
     """ReturnGenerator is a generator wrap to get the return value easily.
 
     Arguments:
@@ -121,7 +121,7 @@ class ReturnGenerator(Generic[_T, _R]):  # pylint: disable=too-few-public-method
         self.value = yield from self._generator
 
 
-class LazyPage(Generic[_T]):  # pylint: disable=too-few-public-methods
+class LazyPage(Generic[_T]):
     """In paging lazy evaluation system, a LazyPage instance represents a page with elements.
 
     LazyPage is used for sending paging request to pull a page of elements and storing them in
@@ -158,7 +158,7 @@ class LazyPage(Generic[_T]):  # pylint: disable=too-few-public-methods
             item.data = data
 
 
-class InitPage(LazyPage[_T]):  # pylint: disable=too-few-public-methods
+class InitPage(LazyPage[_T]):
     """In paging lazy evaluation system, InitPage is the page for initializing :class:`PagingList`.
 
     InitPage will send a paging request to pull a page of elements and storing them in different

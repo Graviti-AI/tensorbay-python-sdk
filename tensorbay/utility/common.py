@@ -42,7 +42,7 @@ def common_loads(object_class: Type[_T], contents: Any) -> _T:
     return obj
 
 
-class EqMixin:  # pylint: disable=too-few-public-methods
+class EqMixin:
     """A mixin class to support __eq__() method.
 
     The __eq__() method defined here compares all the instance variables.
