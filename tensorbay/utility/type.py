@@ -44,7 +44,7 @@ class TypeEnum(Enum):
 _T = TypeVar("_T", bound=TypeEnum)
 
 
-class TypeMixin(Generic[_T]):  # pylint: disable=too-few-public-methods
+class TypeMixin(Generic[_T]):
     """TypeMixin is a superclass for the class which needs to link with TypeEnum.
 
     It provides the class variable 'TYPE' to access the corresponding TypeEnum.
@@ -67,7 +67,7 @@ class TypeMixin(Generic[_T]):  # pylint: disable=too-few-public-methods
 _S = TypeVar("_S", bound=TypeMixin[Any])
 
 
-class TypeRegister(Generic[_T]):  # pylint: disable=too-few-public-methods
+class TypeRegister(Generic[_T]):
     """TypeRegister is a decorator, which is used for registering TypeMixin to TypeEnum.
 
     Arguments:

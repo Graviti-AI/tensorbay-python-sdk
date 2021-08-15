@@ -36,12 +36,12 @@ _DEFAULT_ERROR_MESSAGE = "'{class_name}' object has no attribute '{attr_name}'"
 _ATTRS_BASE = "_attrs_base"
 
 
-class _A(Protocol):  # pylint: disable=too-few-public-methods
+class _A(Protocol):
     def dumps(self) -> Any:
         """Dumps all the information of attrs into a dict."""
 
 
-class Field:  # pylint: disable=too-few-public-methods, too-many-instance-attributes
+class Field:  # pylint: disable=too-many-instance-attributes
     """A class to identify attr fields.
 
     Arguments:
@@ -90,7 +90,7 @@ class Field:  # pylint: disable=too-few-public-methods, too-many-instance-attrib
         )
 
 
-class BaseField:  # pylint: disable=too-few-public-methods
+class BaseField:
     """A class to identify fields of base class.
 
     Arguments:

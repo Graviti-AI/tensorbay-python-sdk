@@ -48,7 +48,7 @@ _STRATEGIES = {"abort", "override", "skip"}
 _MASK_KEYS = ("semantic_mask", "instance_mask", "panoptic_mask")
 
 
-class _UrlGetters:  # pylint: disable=too-few-public-methods
+class _UrlGetters:
     def __init__(self, urls: PagingList[str]) -> None:
         self._urls = urls
 

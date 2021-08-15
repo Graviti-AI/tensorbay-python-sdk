@@ -77,7 +77,7 @@ class SubcatalogBase(ReprMixin, AttrsMixin):
 AttributeType = Dict[str, Union[str, int, float, bool, List[Union[str, int, float, bool]]]]
 
 
-class _LabelBase(AttrsMixin, ReprMixin):  # pylint: disable=too-few-public-methods
+class _LabelBase(AttrsMixin, ReprMixin):
     """This class defines the basic concept of label.
 
     :class:`_LabelBase` is the most basic label level in the TensorBay dataset structure,

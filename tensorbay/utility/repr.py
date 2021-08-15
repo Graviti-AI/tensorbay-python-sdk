@@ -29,7 +29,7 @@ class ReprType(Enum):
     MAPPING = auto()
 
 
-class ReprMixin:  # pylint: disable=too-few-public-methods
+class ReprMixin:
     """ReprMixin provides customized repr config and method."""
 
     _repr_type = ReprType.INSTANCE
@@ -47,7 +47,7 @@ class ReprMixin:  # pylint: disable=too-few-public-methods
         return self.__class__.__name__
 
 
-class _ReprConfig:  # pylint: disable=too-few-public-methods
+class _ReprConfig:
     """Config for customized repr method.
 
     Arguments:
@@ -91,7 +91,7 @@ repr_config = _ReprConfig()
 # Reference:
 # - https://github.com/PyCQA/pylint/issues/3098
 # - https://github.com/PyCQA/pylint/pull/3446
-class _ReprSequence(ReprMixin, Sequence[Any], ABC):  # pylint: disable=too-few-public-methods
+class _ReprSequence(ReprMixin, Sequence[Any], ABC):
     ...
 
 
@@ -104,7 +104,7 @@ _ReprPrinter = Callable[[Any, int, int, bool], str]
 _PRINTERS: Dict[Union[Type[Any], ReprType], _ReprPrinter] = {}
 
 
-class _PrinterRegister:  # pylint: disable=too-few-public-methods
+class _PrinterRegister:
     """Decorator class to register repr printer functions to '_PRINTERS'.
 
     Arguments:

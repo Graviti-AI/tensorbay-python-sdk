@@ -17,7 +17,7 @@ from ..label import Label
 from ..utility import FileMixin, RemoteFileMixin, ReprMixin
 
 
-class DataBase(ReprMixin):  # pylint: disable=too-few-public-methods
+class DataBase(ReprMixin):
     """DataBase is a base class for the file and label combination.
 
     Arguments:

@@ -120,6 +120,7 @@ repos:
         exclude: "(test_\\w*\\.py$)"
         args:
           [
+            "--min-public-methods=0",
             "--good-names=i,j,k,m,n,x,y,z,w,fp",
             "--disable=bad-continuation,cyclic-import",
             "--generated-members=torch.*,cv2.*",
