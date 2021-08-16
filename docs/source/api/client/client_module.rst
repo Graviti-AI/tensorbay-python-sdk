@@ -14,3 +14,4 @@ tensorbay.client
    status
    struct
    version
+   diff

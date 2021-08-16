@@ -141,15 +141,15 @@ class DataDiff(DiffBase):
             contents: A dict containing all the brief diff information of data::
 
                      {
-                        "remotePath": <str>,
-                        "action": <str>,
-                        "file": {
-                            "action": <str>
-                        }
-                        "label": {
-                            "action": <str>
-                        }
-                    }
+                         "remotePath": <str>,
+                         "action": <str>,
+                         "file": {
+                             "action": <str>
+                         },
+                         "label": {
+                             "action": <str>
+                         }
+                     }
 
         Returns:
             A :class:`DataDiff` instance containing all the information in the given contents.
@@ -164,15 +164,15 @@ class DataDiff(DiffBase):
             A dict containing all the brief diff information of data::
 
                  {
-                    "remotePath": <str>,
-                    "action": <str>,
-                    "file": {
-                        "action": <str>
-                    }
-                    "label": {
-                        "action": <str>
-                    }
-                }
+                     "remotePath": <str>,
+                     "action": <str>,
+                     "file": {
+                         "action": <str>
+                     },
+                     "label": {
+                         "action": <str>
+                     }
+                 }
 
         """
         return self._dumps()
