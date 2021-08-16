@@ -22,5 +22,7 @@ between different versions of a dataset.
    ../version_control/draft_and_commit
    ../version_control/branch
    ../version_control/tag
+   ../version_control/diff
+
 
 

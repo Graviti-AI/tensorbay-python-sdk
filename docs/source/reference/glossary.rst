@@ -16,6 +16,17 @@ For the usage of accesskey via Tensorbay SDK or CLI,
 please see :ref:`SDK authorization <quick_start/getting_started_with_tensorbay:Authorize a Client Instance>`
 or :ref:`CLI configration <tensorbay_cli/getting_started_with_cli:Authentication>`.
 
+basehead
+========
+The basehead is the string for recording the two relative versions(commits or drafts) in the
+format of "base...head".
+
+The basehead param is comprised of two parts: base and head. Both must be :ref:`reference/glossary:revision`
+or draft number in dataset. The terms "head" and "base" are used as they normally are in Git.
+
+The head is the version which changes are on.
+The base is the version of which these changes are based.
+
 branch
 ======
 
@@ -122,6 +133,12 @@ According to the time continuity of data inside the dataset, a dataset can be a 
 The corresponding class of dataset is :class:`~tensorbay.dataset.dataset.Dataset`.
 
 See :ref:`reference/dataset_structure:Dataset Structure` for more details.
+
+diff
+====
+
+TensorBay supports showing the status difference of the relative
+resource between commits or drafts in the form of diff.
 
 draft
 =====
