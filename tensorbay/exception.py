@@ -350,7 +350,7 @@ ResponseErrorDistributor: Dict[str, Type[ResponseError]] = {
     "NameConflict": NameConflictError,
     "RequestParamsMissing": RequestParamsMissingError,
     "ResourceNotExist": ResourceNotExistError,
-    "SystemError": InternalServerError,
+    "InternalServerError": InternalServerError,
     "Unauthorized": UnauthorizedError,
 }
 
