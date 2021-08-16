@@ -294,7 +294,7 @@ class DatasetClient(DatasetClientBase):
         return response["totalCount"]  # type: ignore[no-any-return]
 
     def _generate_segment_diffs(
-        self, basehead: str, offset: int = 0, limit: int = 128
+        self, basehead: str, offset: int = 0, limit: int = 10
     ) -> Generator[SegmentDiff, None, int]:
         params: Dict[str, Any] = {"offset": offset, "limit": limit}
 
@@ -311,12 +311,12 @@ class DatasetClient(DatasetClientBase):
         return response["totalCount"]  # type: ignore[no-any-return]
 
     def _generate_data_diffs(
-        self, basehead: str, segment_name: str, offset: int = 0, limit: int = 128
+        self, basehead: str, segment_name: str, offset: int = 0, limit: int = 10
     ) -> Generator[DataDiff, None, int]:
         params: Dict[str, Any] = {"offset": offset, "limit": limit}
 
         response = self._client.open_api_do(
-            "GET", f"diffs/{basehead}/segments/{segment_name}/data", self._dataset_id, param=params
+            "GET", f"diffs/{basehead}/segments/{segment_name}/data", self._dataset_id, params=params
         ).json()
 
         for data in response["data"]:
@@ -327,7 +327,7 @@ class DatasetClient(DatasetClientBase):
     def _list_data_diffs(self, basehead: str, segment_name: str) -> PagingList[DataDiff]:
         return PagingList(
             lambda offset, limit: self._generate_data_diffs(basehead, segment_name, offset, limit),
-            128,
+            10,
         )
 
     def _list_segment_instances(self) -> PagingList[Segment]:
@@ -543,7 +543,7 @@ class DatasetClient(DatasetClientBase):
         basehead = self._get_basehead(None, head)
 
         segment_diffs = PagingList(
-            lambda offset, limit: self._generate_segment_diffs(basehead, offset, limit), 128
+            lambda offset, limit: self._generate_segment_diffs(basehead, offset, limit), 10
         )
 
         dataset_diff = DatasetDiff(self.name, segment_diffs)
