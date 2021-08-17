@@ -294,7 +294,7 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
         """
         return self._status
 
-    @Disable(since="v1.6.0", enabled_in="v1.11.0", reason="TensorBay server refactor")
+    @Disable(since="v1.6.0", enabled_in="v1.12.0", reason="TensorBay server refactor")
     def delete_data(self, remote_paths: Union[str, Iterable[str]]) -> None:
         """Delete data of a segment in a certain commit with the given remote paths.
 
