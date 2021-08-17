@@ -31,6 +31,7 @@ from ..utility import (
     AttrsMixin,
     NameMixin,
     ReprMixin,
+    ReprType,
     SortedNameList,
     UserSequence,
     attr,
@@ -121,11 +122,16 @@ class DataDiff(DiffBase):
 
     _T = TypeVar("_T", bound="DataDiff")
 
-    _repr_attrs = ("remote_path", "action")
+    _repr_attrs = ("action", "file", "label")
+
+    _repr_maxlevel = 2
 
     remote_path: str = attr(key=camel)
     file: FileDiff = attr()
     label: LabelDiff = attr()
+
+    def _repr_head(self) -> str:
+        return f'{self.__class__.__name__}("{self.remote_path}")'
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
@@ -198,6 +204,8 @@ class DatasetDiff(Sequence[SegmentDiff], NameMixin):  # pylint: disable=too-many
         action: The action of a segment.
 
     """
+
+    _repr_type = ReprType.SEQUENCE
 
     def __init__(self, name: str, segments: PagingList[SegmentDiff]) -> None:
         super().__init__(name)
