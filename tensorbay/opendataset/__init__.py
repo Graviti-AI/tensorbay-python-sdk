@@ -40,6 +40,7 @@ from .NeolixOD import NeolixOD
 from .Newsgroups20 import Newsgroups20
 from .NightOwls import NightOwls
 from .nuScenes import nuScenes
+from .PASCALContext import PASCALContext
 from .RP2K import RP2K
 from .SVHN import SVHN
 from .THCHS30 import THCHS30
@@ -92,6 +93,7 @@ __all__ = [
     "NeolixOD",
     "Newsgroups20",
     "NightOwls",
+    "PASCALContext",
     "RP2K",
     "SVHN",
     "THCHS30",
