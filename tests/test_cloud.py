@@ -21,7 +21,7 @@ class TestImportData:
         except ResourceNotExistError:
             pytest.skip("skip this case because there's no 'azure_china_config_files' config")
 
-        auth_data = cloud_client.list_auth_data("03")
+        auth_data = cloud_client.list_auth_data("test/03/")
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_auth_dataset(dataset_name, "azure_china_config_01")
 
