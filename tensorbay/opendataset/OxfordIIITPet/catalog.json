@@ -1,0 +1,51 @@
+{
+    "CLASSIFICATION": {
+        "categories": [
+            { "name": "Cat.Abyssinian" },
+            { "name": "Cat.Bengal" },
+            { "name": "Cat.Birman" },
+            { "name": "Cat.Bombay" },
+            { "name": "Cat.British_Shorthair" },
+            { "name": "Cat.Egyptian_Mau" },
+            { "name": "Cat.Maine_Coon" },
+            { "name": "Cat.Persian" },
+            { "name": "Cat.Ragdoll" },
+            { "name": "Cat.Russian_Blue" },
+            { "name": "Cat.Siamese" },
+            { "name": "Cat.Sphynx" },
+            { "name": "Dog.american_bulldog" },
+            { "name": "Dog.american_pit_bull_terrier" },
+            { "name": "Dog.basset_hound" },
+            { "name": "Dog.beagle" },
+            { "name": "Dog.boxer" },
+            { "name": "Dog.chihuahua" },
+            { "name": "Dog.english_cocker_spaniel" },
+            { "name": "Dog.english_setter" },
+            { "name": "Dog.german_shorthaired" },
+            { "name": "Dog.great_pyrenees" },
+            { "name": "Dog.havanese" },
+            { "name": "Dog.japanese_chin" },
+            { "name": "Dog.keeshond" },
+            { "name": "Dog.leonberger" },
+            { "name": "Dog.miniature_pinscher" },
+            { "name": "Dog.newfoundland" },
+            { "name": "Dog.pomeranian" },
+            { "name": "Dog.pug" },
+            { "name": "Dog.saint_bernard" },
+            { "name": "Dog.samoyed" },
+            { "name": "Dog.scottish_terrier" },
+            { "name": "Dog.shiba_inu" },
+            { "name": "Dog.staffordshire_bull_terrier" },
+            { "name": "Dog.wheaten_terrier" },
+            { "name": "Dog.yorkshire_terrier" }
+        ]
+    },
+    "BOX2D": {},
+    "SEMANTIC_MASK": {
+        "categories": [
+            { "name": "foreground", "categoryId": 1 },
+            { "name": "background", "categoryId": 2 },
+            { "name": "contour", "categoryId": 3 }
+        ]
+    }
+}
