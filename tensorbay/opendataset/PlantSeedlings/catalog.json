@@ -1,0 +1,80 @@
+{
+    "SEMANTIC_MASK": {
+        "categories": [
+            {
+                "name": "background",
+                "categoryId": 0
+            },
+            {
+                "name": "Black-grass",
+                "categoryId": 1,
+                "description": "Danish name: Agerrævehale; Latin name: Alopecurus myosuroides"
+            },
+            {
+                "name": "Charlock",
+                "categoryId": 2,
+                "description": "Danish name: Agersennep; Latin name: Sinapis arvensis L."
+            },
+            {
+                "name": "Cleavers",
+                "categoryId": 3,
+                "description": "Danish name:  Burresnerre; Latin name: Galium aparine L."
+            },
+            {
+                "name": "Common Chickweed",
+                "categoryId": 4,
+                "description": "Danish name: Fuglegræs; Latin name: Stellaria media"
+            },
+            {
+                "name": "Common wheat",
+                "categoryId": 5,
+                "description": "Danish name: Vinterhvede; Latin name: Tricicum aestivum L"
+            },
+            {
+                "name": "Small-flowered Cranesbill",
+                "categoryId": 6,
+                "description": "Danish name: Liden storkenæb; Latin name: Geranium spp."
+            },
+            {
+                "name": "Fat Hen",
+                "categoryId": 7,
+                "description": "Danish name:  Hvidmelet gåsefod; Latin name: Chenopodium albu"
+            },
+            {
+                "name": "Fersken pileurt",
+                "categoryId": 8,
+                "description": "Fersken pileurt is Danish name, the plant is dead in this dataset."
+            },
+            {
+                "name": "Field Pansy",
+                "categoryId": 9,
+                "description": "Danish name: Agerstedmoder; Latin name: Viola arvensis. The plant is dead in this dataset."
+            },
+            {
+                "name": "Loose Silky-bent",
+                "categoryId": 10,
+                "description": "Danish name: Vindaks; Latin name: Apera spica-venti"
+            },
+            {
+                "name": "Maize",
+                "categoryId": 11,
+                "description": "Danish name: Majs; Latin name: Zeamays"
+            },
+            {
+                "name": "Scentless Mayweed",
+                "categoryId": 12,
+                "description": "Danish name: Lughløs kamille; Latin name: Tripleurospermum perforatum"
+            },
+            {
+                "name": "Shepherd’s Purse",
+                "categoryId": 13,
+                "description": "Danish name: Hyrdetaske; Latin name: Capsella bursa-pastoris"
+            },
+            {
+                "name": "Sugar beet",
+                "categoryId": 14,
+                "description": "Danish name: Sukkerroe; Latin name: Beta vulgaris"
+            }
+        ]
+    }
+}
