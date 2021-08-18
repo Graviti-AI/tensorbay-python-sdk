@@ -64,6 +64,7 @@ __all__ = [
     "CarConnection",
     "CCPD",
     "CCPDGreen",
+    "CIHP",
     "CoinImage",
     "COVIDChestXRay",
     "CompCars",

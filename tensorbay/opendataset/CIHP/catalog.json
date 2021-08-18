@@ -1,0 +1,29 @@
+{
+    "SEMANTIC_MASK": {
+        "categories": [
+            { "name": "Background", "categoryId": 0 },
+            { "name": "Hat", "categoryId": 1 },
+            { "name": "Hair", "categoryId": 2 },
+            { "name": "Glove", "categoryId": 3 },
+            { "name": "Sunglasses", "categoryId": 4 },
+            { "name": "UpperClothes", "categoryId": 5 },
+            { "name": "Dress", "categoryId": 6 },
+            { "name": "Coat", "categoryId": 7 },
+            { "name": "Socks", "categoryId": 8 },
+            { "name": "Pants", "categoryId": 9 },
+            { "name": "Torso-skin", "categoryId": 10 },
+            { "name": "Scarf", "categoryId": 11 },
+            { "name": "Skirt", "categoryId": 12 },
+            { "name": "Face", "categoryId": 13 },
+            { "name": "Left-arm", "categoryId": 14 },
+            { "name": "Right-arm", "categoryId": 15 },
+            { "name": "Left-leg", "categoryId": 16 },
+            { "name": "Right-leg", "categoryId": 17 },
+            { "name": "Left-shoe", "categoryId": 18 },
+            { "name": "Right-shoe", "categoryId": 19 }
+        ]
+    },
+    "INSTANCE_MASK": {
+        "categories": [{ "name": "Background", "categoryId": 0 }]
+    }
+}
