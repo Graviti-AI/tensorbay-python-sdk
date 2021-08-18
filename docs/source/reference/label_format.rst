@@ -1528,7 +1528,7 @@ To add a :class:`~tensorbay.label.label_mask.SemanticMask` label to one data:
  InstanceMask
 **************
 
-InstanceMask is a type of label which is usually used for semantic segmentation task.
+InstanceMask is a type of label which is usually used for instance segmentation task.
 
 In TensorBay, the structure of InstanceMask label is unified as follows::
 
