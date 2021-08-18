@@ -1,0 +1,52 @@
+{
+    "SEMANTIC_MASK": {
+        "categories": [
+            { "name": "Background", "categoryId": 0 },
+            { "name": "Hat", "categoryId": 1 },
+            { "name": "Hair", "categoryId": 2 },
+            { "name": "Glove", "categoryId": 3 },
+            { "name": "Sunglasses", "categoryId": 4 },
+            { "name": "UpperClothes", "categoryId": 5 },
+            { "name": "Dress", "categoryId": 6 },
+            { "name": "Coat", "categoryId": 7 },
+            { "name": "Socks", "categoryId": 8 },
+            { "name": "Pants", "categoryId": 9 },
+            { "name": "Jumpsuits", "categoryId": 10 },
+            { "name": "Scarf", "categoryId": 11 },
+            { "name": "Skirt", "categoryId": 12 },
+            { "name": "Face", "categoryId": 13 },
+            { "name": "Left-arm", "categoryId": 14 },
+            { "name": "Right-arm", "categoryId": 15 },
+            { "name": "Left-leg", "categoryId": 16 },
+            { "name": "Right-leg", "categoryId": 17 },
+            { "name": "Left-shoe", "categoryId": 18 },
+            { "name": "Right-shoe", "categoryId": 19 }
+        ]
+    },
+    "KEYPOINTS2D": {
+        "keypoints": [
+            {
+                "number": 16,
+                "names": [
+                    "R_Ankle",
+                    "R_Knee",
+                    "R_Hip",
+                    "L_Hip",
+                    "L_Knee",
+                    "L_Ankle",
+                    "B_Pelvis",
+                    "B_Spine",
+                    "B_Neck",
+                    "B_Head",
+                    "R_Wrist",
+                    "R_Elbow",
+                    "R_Shoulder",
+                    "L_Shoulder",
+                    "L_Elbow",
+                    "L_Wrist"
+                ],
+                "visible": "BINARY"
+            }
+        ]
+    }
+}
