@@ -11,6 +11,7 @@ tensorbay.label
    label_box
    label_classification
    label_keypoints
+   label_mask
    label_polygon
    label_polyline
    label_sentence

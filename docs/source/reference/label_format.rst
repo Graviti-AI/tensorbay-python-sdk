@@ -27,6 +27,9 @@ and has a corresponding :ref:`subcatalog <reference/dataset_structure:Catalog>` 
    :ref:`reference/label_format:Polyline2D`       :class:`~tensorbay.label.label_polyline.LabeledPolyline2D`       :class:`~tensorbay.label.label_polyline.Polyline2DSubcatalog`
    :ref:`reference/label_format:MultiPolyline2D`  :class:`~tensorbay.label.label_polyline.LabeledMultiPolyline2D`  :class:`~tensorbay.label.label_polyline.MultiPolyline2DSubcatalog`
    :ref:`reference/label_format:Sentence`         :class:`~tensorbay.label.label_sentence.LabeledSentence`         :class:`~tensorbay.label.label_sentence.SentenceSubcatalog`
+   :ref:`reference/label_format:SemanticMask`     :class:`~tensorbay.label.label_mask.SemanticMask`                :class:`~tensorbay.label.label_mask.SemanticMaskSubcatalog`
+   :ref:`reference/label_format:InstanceMask`     :class:`~tensorbay.label.label_mask.InstanceMask`                :class:`~tensorbay.label.label_mask.InstanceMaskSubcatalog`
+   :ref:`reference/label_format:PanopticMask`     :class:`~tensorbay.label.label_mask.PanopticMask`                :class:`~tensorbay.label.label_mask.PanopticMaskSubcatalog`
    =============================================  ===============================================================  =======================================================================
 
 *************************
@@ -1435,3 +1438,268 @@ To add a :class:`~tensorbay.label.label_sentence.LabeledSentence` label to one d
 
    One data may contain multiple Sentence labels,
    so the :attr:`Data.label.sentence<tensorbay.dataset.data.Data.label.sentence>` must be a list.
+
+
+**************
+ SemanticMask
+**************
+
+SemanticMask is a type of label which is usually used for semantic segmentation task.
+
+In TensorBay, the structure of SemanticMask label is unified as follows::
+
+    {
+        "localPath": <str>
+        "info": [
+            {
+                "categoryId": <int>
+                "attributes": {
+                    <key>: <value>
+                    ...
+                    ...
+                }
+            },
+            ...
+            ...
+        ]
+    }
+
+``local_path`` is the storage path of the mask image. TensorBay only supports single-channel, gray-scale png images.
+If the number of categories exceeds 256, the color depth of this image should be 16 bits, otherwise it is 8 bits.
+
+The gray-scale value of the pixel corresponds to the index of the ``categories`` within the :class:`~tensorbay.label.label_mask.SemanticMaskSubcatalog`.
+
+Each data can only be assigned with one :class:`~tensorbay.label.label_mask.SemanticMask` label.
+
+To create a :class:`~tensorbay.label.label_mask.SemanticMask` label:
+
+    >>> from tensorbay.label import SemanticMask
+    >>> semantic_mask_label = SemanticMask(local_path="/semantic_mask/mask_image.png")
+    >>> semantic_mask_label
+    SemanticMask("/semantic_mask/mask_image.png")()
+
+SemanticMask.all_attributes
+===========================
+
+``all_attributes`` is a dictionary that stores attributes for each category. Each attribute is stored in key-value pairs.
+See :ref:`reference/label_format:attributes` for details.
+
+To create `all_attributes`:
+
+    >>> semantic_mask_label.all_attributes = {1: {"occluded": True}, 2: {"occluded": False}}
+    >>> semantic_mask_label
+    SemanticMask("/semantic_mask/mask_image.png")(
+      (all_attributes): {
+        1: {
+          'occluded': True
+        },
+        2: {
+          'occluded': False
+        }
+      }
+    )
+
+.. note::
+
+   In :class:`~tensorbay.label.label_mask.SemanticMask`, the key of `all_attributes` is category id which should be an integer.
+
+SemanticMaskSubcatalog
+======================
+
+Before adding the SemanticMask labels to data,
+:class:`~tensorbay.label.label_mask.SemanticMaskSubcatalog` should be defined.
+
+:class:`~tensorbay.label.label_mask.SemanticMaskSubcatalog` has categories and attributes,
+see :ref:`reference/label_format:category information` and
+:ref:`reference/label_format:attributes information` for details.
+
+To add a :class:`~tensorbay.label.label_mask.SemanticMask` label to one data:
+
+    >>> from tensorbay.dataset import Data
+    >>> data = Data("local_path")
+    >>> data.label.semantic_mask = semantic_mask_label
+
+.. note::
+
+   One data can only have one SemanticMask label,
+   See :attr:`Data.label.semantic_mask<tensorbay.dataset.data.Data.label.semantic_mask>` for details.
+
+**************
+ InstanceMask
+**************
+
+InstanceMask is a type of label which is usually used for semantic segmentation task.
+
+In TensorBay, the structure of InstanceMask label is unified as follows::
+
+    {
+        "localPath": <str>
+        "info": [
+            {
+                "instanceId": <int>
+                "attributes": {
+                    <key>: <value>
+                    ...
+                    ...
+                }
+            },
+            ...
+            ...
+        ]
+    }
+
+``local_path`` is the storage path of the mask image. TensorBay only supports single-channel, gray-scale png images.
+If the number of categories exceeds 256, the color depth of this image should be 16 bits, otherwise it is 8 bits.
+
+Each data can only be assigned with one :class:`~tensorbay.label.label_mask.InstanceMask` label.
+
+To create a :class:`~tensorbay.label.label_mask.InstanceMask` label:
+
+    >>> from tensorbay.label import InstanceMask
+    >>> instance_mask_label = InstanceMask(local_path="/instance_mask/mask_image.png")
+    >>> instance_mask_label
+    InstanceMask("/instance_mask/mask_image.png")()
+
+InstanceMask.all_attributes
+===========================
+
+`all_attributes` is a dictionary that stores attributes for each instance. Each attribute is stored in key-value pairs.
+See :ref:`reference/label_format:attributes` for details.
+
+To create `all_attributes`:
+
+    >>> instance_mask_label.all_attributes = {1: {"occluded": True}, 2: {"occluded": True}}
+    >>> instance_mask_label
+    InstanceMask("/instance_mask/mask_image.png")(
+      (all_attributes): {
+        1: {
+          'occluded': True
+        },
+        2: {
+          'occluded': True
+        }
+      }
+    )
+
+.. note::
+
+   In :class:`~tensorbay.label.label_mask.InstanceMask`, the key of `all_attributes` is instance id which should be an integer.
+
+InstanceMaskSubcatalog
+======================
+
+Before adding the InstanceMask labels to data,
+:class:`~tensorbay.label.label_mask.InstanceMaskSubcatalog` should be defined.
+
+:class:`~tensorbay.label.label_mask.InstanceMaskSubcatalog` has attributes,
+see :ref:`reference/label_format:attributes information` for details.
+
+To add a :class:`~tensorbay.label.label_mask.InstanceMask` label to one data:
+
+    >>> from tensorbay.dataset import Data
+    >>> data = Data("local_path")
+    >>> data.label.instance_mask = instance_mask_label
+
+.. note::
+
+   One data can only have one InstanceMask label,
+   See :attr:`Data.label.instance_mask<tensorbay.dataset.data.Data.label.instance_mask>` for details.
+
+**************
+ PanopticMask
+**************
+
+PanopticMask is a type of label which is usually used for panoptic segmentation task.
+
+In TensorBay, the structure of PanopticMask label is unified as follows::
+
+    {
+        "localPath": <str>
+        "info": [
+            {
+                "instanceId": <int>
+                "categoryId": <int>
+                "attributes": {
+                    <key>: <value>
+                    ...
+                    ...
+                }
+            }
+            ...
+            ...
+        ],
+    }
+
+``local_path`` is the storage path of the mask image. TensorBay only supports single-channel, gray-scale png images.
+If the number of categories exceeds 256, the color depth of this image should be 16 bits, otherwise it is 8 bits.
+
+The gray-scale value of the pixel corresponds to the index of the ``categories`` within the :class:`~tensorbay.label.label_mask.PanopticMaskSubcatalog`.
+
+Each data can only be assigned with one :class:`~tensorbay.label.label_mask.PanopticMask` label.
+
+To create a :class:`~tensorbay.label.label_mask.PanopticMask` label:
+
+    >>> from tensorbay.label import PanopticMask
+    >>> panoptic_mask_label = PanopticMask(local_path="/panoptic_mask/mask_image.png")
+    >>> panoptic_mask_label.all_category_ids = {1: 2, 2: 2}
+    >>> panoptic_mask_label
+    PanopticMask("/panoptic_mask/mask_image.png")(
+      (all_category_ids): {
+        1: 2,
+        2: 2
+      }
+    )
+
+.. note::
+
+   In :class:`~tensorbay.label.label_mask.PanopticMask`, the key and value of `all_category_ids` are instance id and category id, respectively, which both should be integers.
+
+PanopticMask.all_attributes
+===========================
+
+`all_attributes` is a dictionary that stores attributes for each instance. Each attribute is stored in key-value pairs.
+See :ref:`reference/label_format:attributes` for details.
+
+To create `all_attributes`:
+
+    >>> panoptic_mask_label.all_attributes = {1: {"occluded": True}, 2: {"occluded": True}}
+    >>> panoptic_mask_label
+    PanopticMask("/panoptic_mask/mask_image.png")(
+      (all_category_ids): {
+        1: 2,
+        2: 2
+      },
+      (all_attributes): {
+        1: {
+          'occluded': True
+        },
+        2: {
+          'occluded': True
+        }
+      }
+    )
+
+.. note::
+
+   In :class:`~tensorbay.label.label_mask.PanopticMask`, the key of `all_attributes` is instance id which should be integer.
+
+PanopticMaskSubcatalog
+======================
+
+Before adding the PanopticMask labels to data,
+:class:`~tensorbay.label.label_mask.PanopticMaskSubcatalog` should be defined.
+
+:class:`~tensorbay.label.label_mask.PanopticMaskSubcatalog` has categories and attributes,
+see :ref:`reference/label_format:category information` and
+:ref:`reference/label_format:attributes information` for details.
+
+To add a :class:`~tensorbay.label.label_mask.PanopticMask` label to one data:
+
+    >>> from tensorbay.dataset import Data
+    >>> data = Data("local_path")
+    >>> data.label.panoptic_mask = panoptic_mask_label
+
+.. note::
+
+   One data can only have one PanopticMask label,
+   See :attr:`Data.label.panoptic_mask<tensorbay.dataset.data.Data.label.panoptic_mask>` for details.
