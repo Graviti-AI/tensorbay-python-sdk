@@ -1,0 +1,62 @@
+{
+    "CLASSIFICATION": {
+        "categories": [
+            {
+                "name": "Black grass",
+                "description": "Danish name: Agerrævehale; Latin name: Alopecurus myosuroides"
+            },
+            {
+                "name": "Charlock",
+                "description": "Danish name: Agersennep; Latin name: Sinapis arvensis L."
+            },
+            {
+                "name": "Cleavers",
+                "description": "Danish name:  Burresnerre; Latin name: Galium aparine L."
+            },
+            {
+                "name": "Common Chickweed",
+                "description": "Danish name: Fuglegræs; Latin name: Stellaria media"
+            },
+            {
+                "name": "Common wheat",
+                "description": "Danish name: Vinterhvede; Latin name: Tricicum aestivum L"
+            },
+            {
+                "name": "Cranes-bill",
+                "description": "Danish name: Liden storkenæb; Latin name: Geranium spp."
+            },
+            {
+                "name": "Fat Hen",
+                "description": "Danish name:  Hvidmelet gåsefod; Latin name: Chenopodium albu"
+            },
+            {
+                "name": "Fersken pileurt",
+                "description": "Fersken pileurt is Danish name, the plant is dead in this dataset."
+            },
+            {
+                "name": "Field Pansy",
+                "description": "Danish name: Agerstedmoder; Latin name: Viola arvensis. The plant is dead in this dataset."
+            },
+            {
+                "name": "Loose Silky-bent",
+                "description": "Danish name: Vindaks; Latin name: Apera spica-venti"
+            },
+            {
+                "name": "Maize",
+                "description": "Danish name: Majs; Latin name: Zeamays"
+            },
+            {
+                "name": "scentless mayweed",
+                "description": "Danish name: Lughløs kamille; Latin name: Tripleurospermum perforatum"
+            },
+            {
+                "name": "shepherd's-purse",
+                "description": "Danish name: Hyrdetaske; Latin name: Capsella bursa-pastoris"
+            },
+            {
+                "name": "Sugar beet",
+                "description": "Danish name: Sukkerroe; Latin name: Beta vulgaris"
+            }
+        ]
+    }
+}

@@ -42,6 +42,7 @@ from .NightOwls import NightOwls
 from .nuScenes import nuScenes
 from .OxfordIIITPet import OxfordIIITPet
 from .PASCALContext import PASCALContext
+from .PlantSeedlings import PlantSeedlings, PlantSeedlingsFullimages
 from .RP2K import RP2K
 from .SVHN import SVHN
 from .THCHS30 import THCHS30
@@ -97,6 +98,8 @@ __all__ = [
     "NightOwls",
     "OxfordIIITPet",
     "PASCALContext",
+    "PlantSeedlings",
+    "PlantSeedlingsFullimages",
     "RP2K",
     "SVHN",
     "THCHS30",
