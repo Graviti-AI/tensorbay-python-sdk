@@ -87,6 +87,7 @@ __all__ = [
     "KenyanFoodOrNonfood",
     "KenyanFoodType",
     "KylbergTexture",
+    "LIP",
     "LISATrafficLight",
     "LISATrafficSign",
     "LeedsSportsPose",
