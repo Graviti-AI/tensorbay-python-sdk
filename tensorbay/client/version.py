@@ -73,11 +73,9 @@ class VersionControlClient:
         return response["totalCount"]  # type: ignore[no-any-return]
 
     def _generate_commits(
-        self, revision: Optional[str] = None, offset: int = 0, limit: int = 128
+        self, revision: str, offset: int = 0, limit: int = 128
     ) -> Generator[Commit, None, int]:
-        params: Dict[str, Any] = {"offset": offset, "limit": limit}
-        if revision:
-            params["commit"] = revision
+        params: Dict[str, Any] = {"offset": offset, "limit": limit, "commit": revision}
 
         response = self._client.open_api_do(
             "GET", "commits", self._dataset_id, params=params
@@ -367,12 +365,27 @@ class VersionControlClient:
                 If is given, list the commits before the given commit.
                 If is not given, list the commits before the current commit.
 
+        Raises:
+            TypeError: When the given revision is illegal.
+
         Returns:
             The PagingList of :class:`commits<.Commit>`.
 
         """
+        if revision is None:
+            if self.status.is_draft:
+                revision = self._status.branch_name
+            else:
+                revision = self._status.commit_id
+
+        if not revision:
+            raise TypeError("The given revision is illegal")
+
         return PagingList(
-            lambda offset, limit: self._generate_commits(revision, offset, limit), 128
+            lambda offset, limit: self._generate_commits(
+                revision, offset, limit  # type: ignore[arg-type]
+            ),
+            128,
         )
 
     def create_branch(self, name: str, revision: Optional[str] = None) -> None:

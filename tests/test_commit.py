@@ -111,8 +111,8 @@ class TestCommit:
         dataset_client.commit("commit-3")
         commit_3_id = dataset_client.status.commit_id
 
-        # List commits(based on default branch)
-        commits = dataset_client.list_commits()
+        # List commits based on the top commit
+        commits = dataset_client.list_commits(commit_3_id)
         assert len(commits) == 3
         assert commits[0].commit_id == commit_3_id
         assert commits[1].commit_id == commit_2_id
