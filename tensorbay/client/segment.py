@@ -36,7 +36,7 @@ from ..dataset import AuthData, Data, Frame, RemoteData
 from ..exception import FrameError, InvalidParamsError, OperationError
 from ..label import Label
 from ..sensor.sensor import Sensor, Sensors
-from ..utility import Disable, FileMixin, chunked, locked
+from ..utility import FileMixin, chunked, locked
 from .lazy import PagingList
 from .requests import config
 from .status import Status
@@ -294,26 +294,21 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
         """
         return self._status
 
-    @Disable(since="v1.6.0", enabled_in="v1.12.0", reason="TensorBay server refactor")
-    def delete_data(self, remote_paths: Union[str, Iterable[str]]) -> None:
+    def delete_data(self, remote_path: str) -> None:
         """Delete data of a segment in a certain commit with the given remote paths.
 
         Arguments:
-            remote_paths: The remote paths of data in a segment.
+            remote_path: The remote path of data in a segment.
 
         """
         self._status.check_authority_for_draft()
+        delete_data: Dict[str, Any] = {
+            "segmentName": self.name,
+            "remotePath": remote_path,
+        }
+        delete_data.update(self._status.get_status_info())
 
-        all_paths = iter((remote_paths,)) if isinstance(remote_paths, str) else iter(remote_paths)
-
-        for request_remote_paths in chunked(all_paths, 128):
-            delete_data: Dict[str, Any] = {
-                "segmentName": self.name,
-                "remotePaths": request_remote_paths,
-            }
-            delete_data.update(self._status.get_status_info())
-
-            self._client.open_api_do("DELETE", "data", self._dataset_id, json=delete_data)
+        self._client.open_api_do("DELETE", "data", self._dataset_id, json=delete_data)
 
 
 class SegmentClient(SegmentClientBase):
