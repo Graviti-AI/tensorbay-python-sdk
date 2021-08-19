@@ -8,8 +8,7 @@ import pytest
 from tensorbay import GAS
 from tensorbay.client.gas import DEFAULT_BRANCH
 from tensorbay.client.struct import ROOT_COMMIT_ID
-from tensorbay.dataset import Data, Segment
-from tensorbay.exception import ResourceNotExistError, StatusError
+from tensorbay.exception import ResourceNotExistError
 
 from .utility import get_dataset_name
 
@@ -20,7 +19,7 @@ class TestCommit:
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
-        dataset_client.commit("commit-1", "test", tag="V1")
+        dataset_client.commit("commit-1", "commit-1-description")
         commit_1_id = dataset_client.status.commit_id
         dataset_client.create_draft("draft-2")
         dataset_client.commit("commit-2")
@@ -40,23 +39,9 @@ class TestCommit:
         assert commit.commit_id == commit_1_id
         assert commit.parent_commit_id == ROOT_COMMIT_ID
         assert commit.title == "commit-1"
-        assert commit.description == "test"
+        assert commit.description == "commit-1-description"
         assert commit.committer.name
         assert commit.committer.date
-
-        # If not giving commit, get the current commit
-        commit = dataset_client.get_commit()
-        assert commit.commit_id == commit_2_id
-        assert commit.parent_commit_id == commit_1_id
-        assert commit.title == "commit-2"
-        assert commit.description == ""
-        assert commit.committer.name
-        assert commit.committer.date
-
-        # Can not create the tag without giving commit in the draft
-        dataset_client.create_draft("draft-3")
-        with pytest.raises(StatusError):
-            dataset_client.get_commit()
 
         gas_client.delete_dataset(dataset_name)
 
@@ -65,7 +50,7 @@ class TestCommit:
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
-        dataset_client.commit("commit-1", "test", tag="V1")
+        dataset_client.commit("commit-1", "commit-1-description", tag="V1")
         commit_1_id = dataset_client.status.commit_id
         dataset_client.create_draft("draft-2")
         dataset_client.commit("commit-2")
@@ -76,7 +61,7 @@ class TestCommit:
         assert commit.commit_id == commit_1_id
         assert commit.parent_commit_id == ROOT_COMMIT_ID
         assert commit.title == "commit-1"
-        assert commit.description == "test"
+        assert commit.description == "commit-1-description"
         assert commit.committer.name
         assert commit.committer.date
 
@@ -89,9 +74,11 @@ class TestCommit:
         assert commit.committer.name
         assert commit.committer.date
 
+        # The tag does not exists
         with pytest.raises(ResourceNotExistError):
             dataset_client.get_commit("V2")
 
+        # Thr branch does not exists
         with pytest.raises(ResourceNotExistError):
             dataset_client.get_commit("main1")
 
@@ -116,6 +103,7 @@ class TestCommit:
         assert len(commits) == 3
         assert commits[0].commit_id == commit_3_id
         assert commits[1].commit_id == commit_2_id
+        assert commits[2].commit_id == commit_1_id
 
         # List commits based on one commit before the top one
         commits = dataset_client.list_commits(commit_2_id)
@@ -134,31 +122,50 @@ class TestCommit:
 
         gas_client.delete_dataset(dataset_name)
 
-    def test_data_in_draft(self, accesskey, url, tmp_path):
+    def test_list_commits_in_multi_branch_structure(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
-        dataset_client.create_draft("draft-1")
-        segment = Segment("segment1")
-        path = tmp_path / "sub"
-        path.mkdir()
+        commit_ids_main = []
+
+        # Create 10 commits on the default branch
         for i in range(10):
-            local_path = path / f"hello{i}.txt"
-            local_path.write_text("CONTENT")
-            data = Data(local_path=str(local_path))
-            segment.append(data)
+            dataset_client.create_draft(f"draft-{i}")
+            dataset_client.commit(f"commit-{i}", tag=f"main-V{i}")
+            commit_ids_main.append(dataset_client.status.commit_id)
 
-        dataset_client.upload_segment(segment)
-        dataset_client.commit("commit-1")
-        segment1 = Segment(name="segment1", client=dataset_client)
-        assert len(segment1) == 10
-        assert segment1[0].get_url()
-        assert segment1[0].path == segment[0].target_remote_path
+        # Create a branch "dev" on the 5th commit
+        commit_ids_dev = commit_ids_main[0:5]
+        dataset_client.create_branch("dev", commit_ids_main[4])
 
-        dataset_client.create_draft("draft-2")
-        segment1 = Segment(name="segment1", client=dataset_client)
-        assert len(segment1) == 10
-        assert segment1[0].get_url()
-        assert segment1[0].path == segment[0].target_remote_path
+        # Create 10 commits on the branch "dev"
+        for i in range(10):
+            dataset_client.create_draft(f"draft-{i}")
+            dataset_client.commit(f"commit-{i}", tag=f"dev-V{i}")
+            commit_ids_dev.append(dataset_client.status.commit_id)
+
+        # List commits based on the top commit in branch "dev"
+        commits = dataset_client.list_commits(commit_ids_dev[-1])
+        assert len(commits) == 15
+        assert commits[0].commit_id == commit_ids_dev[-1]
+        assert commits[-1].commit_id == commit_ids_dev[0]
+
+        # List commits based on tag
+        commits = dataset_client.list_commits("dev-V9")
+        assert len(commits) == 15
+        assert commits[0].commit_id == commit_ids_dev[-1]
+        assert commits[-1].commit_id == commit_ids_dev[0]
+
+        # List commits based on branch "dev"
+        commits = dataset_client.list_commits("dev")
+        assert len(commits) == 15
+        assert commits[0].commit_id == commit_ids_dev[-1]
+        assert commits[-1].commit_id == commit_ids_dev[0]
+
+        # List commits based on default branch
+        commits = dataset_client.list_commits(DEFAULT_BRANCH)
+        assert len(commits) == 10
+        assert commits[0].commit_id == commit_ids_main[-1]
+        assert commits[-1].commit_id == commit_ids_main[0]
 
         gas_client.delete_dataset(dataset_name)
