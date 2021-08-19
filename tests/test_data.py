@@ -73,20 +73,14 @@ class TestData:
         path.mkdir()
         for i in range(10):
             local_path = path / f"hello{i}.txt"
-            local_path.write_text("CONTENT")
+            local_path.write_text(f"CONTENT{i}")
             data = Data(local_path=str(local_path))
             data.label = Label.loads(LABEL)
             segment_client.upload_data(data)
 
-        with pytest.raises(NotImplementedError):
-            segment_client.delete_data("hello0.txt")
+        segment_client.delete_data("hello0.txt")
         data_paths = segment_client.list_data_paths()
-        # assert "hello0.txt" not in data_paths
-
-        with pytest.raises(NotImplementedError):
-            segment_client.delete_data(segment_client.list_data_paths())
-        data = segment_client.list_data()
-        # assert len(data) == 0
+        assert "hello0.txt" not in data_paths
 
         gas_client.delete_dataset(dataset_name)
 
