@@ -47,5 +47,89 @@
             { "name": "vegetation" },
             { "name": "wall" }
         ]
+    },
+    "SEMANTIC_MASK": {
+        "categories": [
+            { "name": "road", "categoryId": 0 },
+            { "name": "sidewalk", "categoryId": 1 },
+            { "name": "building", "categoryId": 2 },
+            { "name": "wall", "categoryId": 3 },
+            { "name": "fence", "categoryId": 4 },
+            { "name": "pole", "categoryId": 5 },
+            { "name": "traffic light", "categoryId": 6 },
+            { "name": "traffic sign", "categoryId": 7 },
+            { "name": "vegetation", "categoryId": 8 },
+            { "name": "terrain", "categoryId": 9 },
+            { "name": "sky", "categoryId": 10 },
+            { "name": "person", "categoryId": 11 },
+            { "name": "rider", "categoryId": 12 },
+            { "name": "car", "categoryId": 13 },
+            { "name": "truck", "categoryId": 14 },
+            { "name": "bus", "categoryId": 15 },
+            { "name": "train", "categoryId": 16 },
+            { "name": "motorcycle", "categoryId": 17 },
+            { "name": "bicycle", "categoryId": 18 },
+            { "name": "unknown", "categoryId": 255 }
+        ]
+    },
+    "INSTANCE_MASK": {
+        "categories": [{ "name": "background", "categoryId": 0 }],
+        "attributes": [
+            { "name": "crowd", "type": "boolean" },
+            { "name": "ignore", "type": "boolean" },
+            { "name": "occluded", "type": "boolean" },
+            { "name": "truncated", "type": "boolean" }
+        ]
+    },
+    "PANOPTIC_MASK": {
+        "categories": [
+            { "name": "unlabeled", "categoryId": 0 },
+            { "name": "dynamic", "categoryId": 1 },
+            { "name": "ego vehicle", "categoryId": 2 },
+            { "name": "ground", "categoryId": 3 },
+            { "name": "static", "categoryId": 4 },
+            { "name": "parking", "categoryId": 5 },
+            { "name": "rail track", "categoryId": 6 },
+            { "name": "road", "categoryId": 7 },
+            { "name": "sidewalk", "categoryId": 8 },
+            { "name": "bridge", "categoryId": 9 },
+            { "name": "building", "categoryId": 10 },
+            { "name": "fence", "categoryId": 11 },
+            { "name": "garage", "categoryId": 12 },
+            { "name": "guard rail", "categoryId": 13 },
+            { "name": "tunnel", "categoryId": 14 },
+            { "name": "wall", "categoryId": 15 },
+            { "name": "banner", "categoryId": 16 },
+            { "name": "billboard", "categoryId": 17 },
+            { "name": "lane divider", "categoryId": 18 },
+            { "name": "parking sign", "categoryId": 19 },
+            { "name": "pole", "categoryId": 20 },
+            { "name": "polegroup", "categoryId": 21 },
+            { "name": "street light", "categoryId": 22 },
+            { "name": "traffic cone", "categoryId": 23 },
+            { "name": "traffic device", "categoryId": 24 },
+            { "name": "traffic light", "categoryId": 25 },
+            { "name": "traffic sign", "categoryId": 26 },
+            { "name": "traffic sign frame", "categoryId": 27 },
+            { "name": "terrain", "categoryId": 28 },
+            { "name": "vegetation", "categoryId": 29 },
+            { "name": "sky", "categoryId": 30 },
+            { "name": "person", "categoryId": 31 },
+            { "name": "rider", "categoryId": 32 },
+            { "name": "bicycle", "categoryId": 33 },
+            { "name": "bus", "categoryId": 34 },
+            { "name": "car", "categoryId": 35 },
+            { "name": "caravan", "categoryId": 36 },
+            { "name": "motorcycle", "categoryId": 37 },
+            { "name": "trailer", "categoryId": 38 },
+            { "name": "train", "categoryId": 39 },
+            { "name": "truck", "categoryId": 40 }
+        ],
+        "attributes": [
+            { "name": "crowd", "type": "boolean" },
+            { "name": "ignore", "type": "boolean" },
+            { "name": "occluded", "type": "boolean" },
+            { "name": "truncated", "type": "boolean" }
+        ]
     }
 }

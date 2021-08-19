@@ -8,19 +8,28 @@
 
 import json
 import os
-from glob import glob
 from typing import Any, Callable, Dict, Iterable, List
 from warnings import warn
+
+import numpy as np
 
 from ...dataset import Data, Dataset
 from ...label import (
     Classification,
+    InstanceMask,
     LabeledBox2D,
     LabeledMultiPolygon,
     LabeledPolygon,
     LabeledPolyline2D,
+    PanopticMask,
+    SemanticMask,
 )
-from ...opendataset import _utility
+from .._utility import glob
+
+try:
+    from PIL import Image
+except ModuleNotFoundError:
+    from .._utility.mocker import Image
 
 DATASET_NAMES = {
     "100k": "BDD100K",
@@ -33,6 +42,11 @@ _LABEL_TYPE_INFO_100K = {
     "det": ("Detection 2020", "BOX2D"),
     "lane": ("Lane Marking", "POLYLINE2D"),
     "drivable": ("Drivable Area", "POLYGON"),
+}
+_SEGMENTATIONS_INFO = {
+    "sem": ("sem_seg", "masks"),
+    "ins": ("ins_seg", "bitmasks"),
+    "pan": ("pan_seg", "bitmasks"),
 }
 _TRACKING_DATASET_INFO = {
     "mots": ("bdd100k_seg_track_20", "seg_track_20", os.path.join("seg_track_20", "polygons")),
@@ -92,14 +106,43 @@ def _BDD100K_10K(path: str) -> Dataset:
             bdd100k_images_10k/
                 images/
                     10k/
-                        test
-                        train
-                        val
+                        test/
+                            cabc30fc-e7726578.jpg
+                            ...
+                        train/
+                            0a0a0b1a-7c39d841.jpg
+                            ...
+                        val/
+                            b1c9c847-3bda4659.jpg
+                            ...
                 labels/
                     pan_seg/
                         polygons/
                             pan_seg_train.json
                             pan_seg_val.json
+                        bitmasks/
+                            train/
+                                0a0a0b1a-7c39d841.png
+                                ...
+                            val/
+                                b1c9c847-3bda4659.png
+                                ...
+                    sem_seg/
+                        masks/
+                            train/
+                                0a0a0b1a-7c39d841.png
+                                ...
+                            val/
+                                b1c9c847-3bda4659.png
+                                ...
+                    ins_seg/
+                        bitmasks/
+                            train/
+                                0a0a0b1a-7c39d841.png
+                                ...
+                            val/
+                                b1c9c847-3bda4659.png
+                                ...
 
     Arguments:
         path: The root directory of the dataset.
@@ -117,58 +160,104 @@ def _BDD100K_loader(path: str, dataset_type: str) -> Dataset:
     )
     dataset = Dataset(DATASET_NAMES[dataset_type])
     dataset.load_catalog(os.path.join(os.path.dirname(__file__), f"catalog_{dataset_type}.json"))
-
-    _load_segment(dataset, root_path, dataset_type)
+    load_segment = _load_segment_10k if dataset_type == "10k" else _load_segment_100k
+    labels_directory = os.path.join(root_path, "labels")
+    load_segment(dataset, root_path, labels_directory)
 
     return dataset
 
 
-def _load_segment(dataset: Dataset, root_path: str, dataset_type: str) -> None:
-    images_directory = os.path.join(root_path, "images", dataset_type)
-    labels_directory = os.path.join(root_path, "labels")
-
-    get_data = _get_data_100k if dataset_type == "100k" else _get_data_10k
-    read_label_file = _read_label_file_100k if dataset_type == "100k" else _read_label_file_10k
-
+def _load_segment_100k(dataset: Dataset, root_path: str, labels_directory: str) -> None:
     for segment_name in _SEGMENT_NAMES:
         segment = dataset.create_segment(segment_name)
-        image_paths = _utility.glob(os.path.join(images_directory, segment_name, "*.jpg"))
+        image_paths = glob(os.path.join(root_path, "images", "100k", segment_name, "*.jpg"))
 
         print(f"Reading data to segment '{segment_name}'...")
         if segment_name == "test":
             for image_path in image_paths:
                 segment.append(Data(image_path))
         else:
-            label_contents = read_label_file(labels_directory, segment_name)
+            label_contents = _read_label_file_100k(labels_directory, segment_name)
             for image_path in image_paths:
-                segment.append(get_data(image_path, label_contents[os.path.basename(image_path)]))
+                data = Data(image_path)
+                box2d: List[LabeledBox2D] = []
+                polygon: List[LabeledPolygon] = []
+                polyline2d: List[LabeledPolyline2D] = []
+                label = data.label
+                label_content = label_contents[os.path.basename(image_path)]
+                label.classification = Classification(attributes=label_content["attributes"])
+                for label_info in label_content["labels"]:
+                    if "box2d" in label_info:
+                        _add_box2d_label(label_info, box2d)
+                    if "poly2d" in label_info:
+                        _add_poly2d_label_100k(label_info, polygon, polyline2d)
+                label.box2d = box2d
+                label.polygon = polygon
+                label.polyline2d = polyline2d
+                segment.append(data)
         print(f"Finished reading data to segment '{segment_name}'")
 
 
-def _get_data_10k(image_path: str, label_content: Dict[str, Any]) -> Data:
+def _load_segment_10k(dataset: Dataset, root_path: str, labels_directory: str) -> None:
+    for segment_name in _SEGMENT_NAMES:
+        segment = dataset.create_segment(segment_name)
+        image_paths = glob(os.path.join(root_path, "images", "10k", segment_name, "*.jpg"))
+
+        print(f"Reading data to segment '{segment_name}'...")
+        if segment_name == "test":
+            for image_path in image_paths:
+                segment.append(Data(image_path))
+        else:
+            single_channel_mask_directories: Dict[str, str] = {}
+            original_mask_directories: Dict[str, str] = {}
+            for seg_type, directory_names in _SEGMENTATIONS_INFO.items():
+                original_mask_directories[seg_type] = os.path.join(
+                    labels_directory, *directory_names, segment_name
+                )
+                if seg_type != "sem":
+                    single_channel_mask_directory = os.path.join(
+                        labels_directory,
+                        "single_channel_mask",
+                        segment_name,
+                        directory_names[0],
+                    )
+                    single_channel_mask_directories[seg_type] = single_channel_mask_directory
+                    os.makedirs(single_channel_mask_directory, exist_ok=True)
+
+            label_contents = _read_label_file_10k(labels_directory, segment_name)
+            for image_path in image_paths:
+                segment.append(
+                    _get_data_10k(
+                        image_path,
+                        original_mask_directories,
+                        label_contents[os.path.basename(image_path)],
+                        single_channel_mask_directories,
+                    )
+                )
+            print(f"Finished reading data to segment '{segment_name}'")
+
+
+def _get_data_10k(
+    image_path: str,
+    original_mask_paths: Dict[str, str],
+    label_content: Dict[str, Any],
+    single_channel_mask_paths: Dict[str, str],
+) -> Data:
     data = Data(image_path)
     polygon: List[LabeledPolygon] = []
     for label_info in label_content["labels"]:
         if "poly2d" in label_info:
             _add_poly2d_label_10k(label_info, polygon)
-    data.label.polygon = polygon
-    return data
-
-
-def _get_data_100k(image_path: str, label_content: Dict[str, Any]) -> Data:
-    data = Data(image_path)
-    box2d: List[LabeledBox2D] = []
-    polygon: List[LabeledPolygon] = []
-    polyline2d: List[LabeledPolyline2D] = []
-    data.label.classification = Classification(attributes=label_content["attributes"])
-    for label_info in label_content["labels"]:
-        if "box2d" in label_info:
-            _add_box2d_label(label_info, box2d)
-        if "poly2d" in label_info:
-            _add_poly2d_label_100k(label_info, polygon, polyline2d)
-    data.label.box2d = box2d
-    data.label.polygon = polygon
-    data.label.polyline2d = polyline2d
+    label = data.label
+    label.polygon = polygon
+    filename = os.path.splitext(os.path.basename(image_path))[0]
+    label.semantic_mask = SemanticMask(os.path.join(original_mask_paths["sem"], f"{filename}.png"))
+    label.instance_mask = _get_instance_mask(
+        filename, original_mask_paths["ins"], single_channel_mask_paths["ins"]
+    )
+    label.panoptic_mask = _get_panoptic_mask(
+        filename, original_mask_paths["pan"], single_channel_mask_paths["pan"]
+    )
     return data
 
 
@@ -277,6 +366,77 @@ def _merge_label(source_label_contents: List[List[Dict[str, Any]]]) -> Dict[str,
             image_label.setdefault("attributes", {}).update(image_info.get("attributes", {}))
 
     return label_contents
+
+
+def _get_instance_mask(
+    filename: str, original_mask_directory: str, mask_directory: str
+) -> InstanceMask:
+    mask_path = os.path.join(mask_directory, f"{filename}.png")
+    mask_info = _save_and_get_mask_info(
+        os.path.join(original_mask_directory, f"{filename}.png"),
+        mask_path,
+        os.path.join(mask_directory, f"{filename}.json"),
+        "ins",
+    )
+
+    ins_mask = InstanceMask(mask_path)
+    ins_mask.all_attributes = mask_info["all_attributes"]
+    return ins_mask
+
+
+def _get_panoptic_mask(
+    filename: str, original_mask_directory: str, mask_directory: str
+) -> PanopticMask:
+    mask_path = os.path.join(mask_directory, f"{filename}.png")
+    mask_info = _save_and_get_mask_info(
+        os.path.join(original_mask_directory, f"{filename}.png"),
+        mask_path,
+        os.path.join(mask_directory, f"{filename}.json"),
+        "pan",
+    )
+
+    pan_mask = PanopticMask(mask_path)
+    pan_mask.all_category_ids = mask_info["all_category_ids"]
+    pan_mask.all_attributes = mask_info["all_attributes"]
+    return pan_mask
+
+
+def _save_and_get_mask_info(
+    original_mask_path: str, mask_path: str, mask_info_path: str, seg_type: str
+) -> Dict[str, Any]:
+    if not os.path.exists(mask_path):
+        mask = np.array(Image.open(original_mask_path))
+        all_attributes = {}
+        if seg_type == "pan":
+            all_category_ids = {}
+        for instance_info in set(map(tuple, np.reshape(mask, (-1, 4)))):
+            instance_id = int(instance_info[-1])  # type:ignore[call-overload]
+            attributes = instance_info[1]
+            all_attributes[instance_id] = {
+                "truncated": bool(attributes & 8),  # type:ignore[operator]
+                "occluded": bool(attributes & 4),  # type:ignore[operator]
+                "crowd": bool(attributes & 2),  # type:ignore[operator]
+                "ignore": bool(attributes & 1),  # type:ignore[operator]
+            }
+            if seg_type == "pan":
+                all_category_ids[instance_id] = int(instance_info[0])  # type:ignore[call-overload]
+        mask_info = (
+            {"all_attributes": all_attributes, "all_category_ids": all_category_ids}
+            if seg_type == "pan"
+            else {"all_attributes": all_attributes}
+        )
+        with open(mask_info_path, "w") as fp:
+            json.dump(mask_info, fp)
+        Image.fromarray(mask[:, :, -1]).save(mask_path)
+    else:
+        with open(mask_info_path, "r") as fp:
+            mask_info = json.load(
+                fp,
+                object_hook=lambda info: {
+                    int(key) if key.isdigit() else key: value for key, value in info.items()
+                },
+            )
+    return mask_info
 
 
 def _BDD100K_MOTS2020(path: str) -> Dataset:
@@ -393,7 +553,7 @@ def _load_tracking_segment(
     load_label: _DATA_GETTER,
 ) -> None:
     for segment_prefix in _SEGMENT_NAMES:
-        image_directory = _utility.glob(os.path.join(images_directory, segment_prefix, "*"))
+        image_directory = glob(os.path.join(images_directory, segment_prefix, "*"))
         labels_directory_segment = os.path.join(labels_directory, segment_prefix)
         if segment_prefix == "test":
             generate_data: _DATA_GENERATOR = _generate_test_data
@@ -405,7 +565,7 @@ def _load_tracking_segment(
 
 
 def _generate_test_data(image_subdir: str, _: str, __: _DATA_GETTER) -> Iterable[Data]:
-    yield from map(Data, _utility.glob(os.path.join(image_subdir, "*.jpg")))
+    yield from map(Data, glob(os.path.join(image_subdir, "*.jpg")))
 
 
 def _generate_data(
