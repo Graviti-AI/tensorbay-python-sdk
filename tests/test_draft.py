@@ -7,10 +7,14 @@ import pytest
 
 from tensorbay.client import GAS
 from tensorbay.client.gas import DEFAULT_BRANCH
-from tensorbay.client.struct import Draft
-from tensorbay.exception import ResourceNotExistError, ResponseError, StatusError
+from tensorbay.exception import (
+    InvalidParamsError,
+    OperationError,
+    ResourceNotExistError,
+    ResponseError,
+)
 
-from .utility import get_dataset_name, get_draft_number_by_title
+from .utility import get_dataset_name
 
 
 class TestDraft:
@@ -19,15 +23,58 @@ class TestDraft:
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
 
-        draft_number_1 = dataset_client.create_draft("draft-1", "description")
-        assert draft_number_1 == 1
-        assert dataset_client.status.is_draft
-        assert dataset_client.status.draft_number == draft_number_1
-        assert dataset_client.status.commit_id is None
-        with pytest.raises(StatusError):
-            dataset_client.create_draft("draft-2")
-        draft_number = get_draft_number_by_title(dataset_client.list_drafts(), "draft-1")
-        assert draft_number_1 == draft_number
+        draft_1_number = dataset_client.create_draft(
+            "draft-1", "description", branch_name=DEFAULT_BRANCH
+        )
+        assert draft_1_number == 1
+
+        # Creating more than 1 draft on one branch and one accesskey is not allowed
+        with pytest.raises(InvalidParamsError):
+            dataset_client.create_draft("draft-2", "description", branch_name=DEFAULT_BRANCH)
+
+        dataset_client.get_draft(draft_1_number)
+
+        gas_client.delete_dataset(dataset_name)
+
+    def test_create_draft_on_other_branch(self, accesskey, url):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_dataset_name()
+        dataset_client = gas_client.create_dataset(dataset_name)
+        dataset_client.create_draft("draft-1")
+        dataset_client.commit("commit-1")
+        dataset_client.create_branch("dev")
+
+        # Creating the draft on branch "dev"
+        draft_2_number = dataset_client.create_draft("draft-2", "description-2", branch_name="dev")
+        assert draft_2_number == 2
+        draft_get = dataset_client.get_draft(draft_2_number)
+        assert draft_get.branch_name == "dev"
+
+        # Creating the draft on DEFAULT BRANCH
+        draft_3_number = dataset_client.create_draft(
+            "draft-3", "description-3", branch_name=DEFAULT_BRANCH
+        )
+        assert draft_3_number == 3
+        draft_get = dataset_client.get_draft(draft_3_number)
+        assert draft_get.branch_name == DEFAULT_BRANCH
+
+        gas_client.delete_dataset(dataset_name)
+
+    def test_get_draft(self, accesskey, url):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_dataset_name()
+        dataset_client = gas_client.create_dataset(dataset_name)
+        draft_1_number = dataset_client.create_draft("draft-1", "description-1")
+
+        draft_get = dataset_client.get_draft(draft_1_number)
+        assert draft_get.number == 1
+        assert draft_get.title == "draft-1"
+        assert draft_get.branch_name == DEFAULT_BRANCH
+        assert draft_get.description == "description-1"
+        assert draft_get.status == "OPEN"
+
+        with pytest.raises(ResourceNotExistError):
+            dataset_client.get_draft(2)
 
         gas_client.delete_dataset(dataset_name)
 
@@ -35,22 +82,22 @@ class TestDraft:
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
-        dataset_client.create_draft("draft-1", "description for draft 1")
-        dataset_client.commit("commit-draft-1")
-        draft_number_2 = dataset_client.create_draft("draft-2", "description for draft 2")
+        dataset_client.create_draft("draft-1", "description-1")
+        dataset_client.commit("commit-1")
+        dataset_client.create_draft("draft-2", "description-2")
 
         # After committing, the draft will be deleted
-        with pytest.raises(TypeError):
-            get_draft_number_by_title(dataset_client.list_drafts(), "draft-1")
+        drafts_get = dataset_client.list_drafts()
+        assert len(drafts_get) == 1
+        assert drafts_get[0].number == 2
 
-        drafts = dataset_client.list_drafts()
-        assert len(drafts) == 1
-        assert drafts[0] == Draft(
-            draft_number_2, "draft-2", DEFAULT_BRANCH, "OPEN", "description for draft 2"
-        )
-
-        with pytest.raises(TypeError):
-            get_draft_number_by_title(dataset_client.list_drafts(), "draft-3")
+        dataset_client.checkout(revision=DEFAULT_BRANCH)
+        dataset_client.create_branch("dev")
+        dataset_client.create_draft("draft-3", "description-3", branch_name="dev")
+        drafts_get = dataset_client.list_drafts()
+        assert len(drafts_get) == 2
+        assert drafts_get[0].number == 2
+        assert drafts_get[1].number == 3
 
         gas_client.delete_dataset(dataset_name)
 
@@ -61,18 +108,18 @@ class TestDraft:
         dataset_client.create_draft("draft-1")
         dataset_client.commit("commit-1")
         dataset_client.create_draft("draft-2")
-        dataset_client.commit("commit-2", tag="V1")
+        dataset_client.commit("commit-2", tag="V2")
 
+        # Committing the draft with the duplicated tag is not allowed
         dataset_client.create_draft("draft-3")
         with pytest.raises(ResponseError):
-            dataset_client.commit("commit-3", tag="V1")
-        dataset_client.commit("commit-3", tag="V2")
-        assert not dataset_client.status.is_draft
-        assert dataset_client.status.draft_number is None
-        assert dataset_client.status.commit_id is not None
+            dataset_client.commit("commit-3", tag="V2")
+
+        dataset_client.commit("commit-3", tag="V3")
+
         # After committing, the draft will be deleted
-        with pytest.raises(TypeError):
-            get_draft_number_by_title(dataset_client.list_drafts(), "draft-3")
+        with pytest.raises(ResourceNotExistError):
+            dataset_client.get_draft(3)
 
         gas_client.delete_dataset(dataset_name)
 
@@ -81,22 +128,11 @@ class TestDraft:
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
-        dataset_client.commit("commit-1", "test", tag="V1")
-        dataset_client.create_draft("draft-2")
 
-        dataset_client.checkout("V1")
-        dataset_client.create_branch("T123")
-        dataset_client.create_draft("draft-3", "description00")
-        dataset_client.update_draft(title="draft-4", description="description01")
-
-        draft = dataset_client.get_draft(3)
-        assert draft.title == "draft-4"
-        assert draft.description == "description01"
-
-        dataset_client.update_draft(2, title="draft-4", description="description02")
-        draft = dataset_client.get_draft(2)
-        assert draft.title == "draft-4"
-        assert draft.description == "description02"
+        dataset_client.update_draft(1, title="draft-updated", description="description-updated")
+        draft = dataset_client.get_draft(1)
+        assert draft.title == "draft-updated"
+        assert draft.description == "description-updated"
 
         gas_client.delete_dataset(dataset_name)
 
@@ -105,19 +141,15 @@ class TestDraft:
         dataset_name = get_dataset_name()
         dataset_client = gas_client.create_dataset(dataset_name)
         dataset_client.create_draft("draft-1")
-        dataset_client.commit("commit-1", "test", tag="V1")
-        dataset_client.create_draft("draft-2")
 
-        dataset_client.checkout("V1")
-        dataset_client.create_branch("T123")
-        dataset_client.create_draft("draft-3")
+        # Closing the current draft is not allowed
+        with pytest.raises(OperationError):
+            dataset_client.close_draft(1)
 
-        dataset_client.close_draft()
+        dataset_client.checkout(revision=DEFAULT_BRANCH)
+        dataset_client.close_draft(1)
+
         with pytest.raises(ResourceNotExistError):
-            dataset_client.get_draft(3)
-
-        dataset_client.close_draft(2)
-        with pytest.raises(ResourceNotExistError):
-            dataset_client.get_draft(2)
+            dataset_client.get_draft(1)
 
         gas_client.delete_dataset(dataset_name)
