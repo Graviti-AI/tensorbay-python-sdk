@@ -5,8 +5,9 @@
 import pytest
 
 from tensorbay import GAS
-from tensorbay.dataset import Data
+from tensorbay.dataset import Data, Frame
 from tensorbay.label import Catalog, Label
+from tensorbay.sensor import Sensor
 
 from .utility import get_dataset_name
 
@@ -58,32 +59,17 @@ NEW_LABEL = {
         }
     ]
 }
+LIDAR_DATA = {
+    "name": "Lidar1",
+    "type": "LIDAR",
+    "extrinsics": {
+        "translation": {"x": 1, "y": 2, "z": 3},
+        "rotation": {"w": 1.0, "x": 2.0, "y": 3.0, "z": 4.0},
+    },
+}
 
 
 class TestData:
-    def test_delete_data(self, accesskey, url, tmp_path):
-        gas_client = GAS(access_key=accesskey, url=url)
-        dataset_name = get_dataset_name()
-        dataset_client = gas_client.create_dataset(dataset_name)
-        dataset_client.create_draft("draft-1")
-        dataset_client.upload_catalog(Catalog.loads(CATALOG))
-        segment_client = dataset_client.get_or_create_segment("segment1")
-
-        path = tmp_path / "sub"
-        path.mkdir()
-        for i in range(10):
-            local_path = path / f"hello{i}.txt"
-            local_path.write_text(f"CONTENT{i}")
-            data = Data(local_path=str(local_path))
-            data.label = Label.loads(LABEL)
-            segment_client.upload_data(data)
-
-        segment_client.delete_data("hello0.txt")
-        data_paths = segment_client.list_data_paths()
-        assert "hello0.txt" not in data_paths
-
-        gas_client.delete_dataset(dataset_name)
-
     def test_list_file_order(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
@@ -189,5 +175,55 @@ class TestData:
         assert data[0].path == "hello0.txt"
         assert data[0].label
         # todo: match the input and output label
+
+        gas_client.delete_dataset(dataset_name)
+
+    def test_delete_data(self, accesskey, url, tmp_path):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_dataset_name()
+        dataset_client = gas_client.create_dataset(dataset_name)
+        dataset_client.create_draft("draft-1")
+        dataset_client.upload_catalog(Catalog.loads(CATALOG))
+        segment_client = dataset_client.get_or_create_segment("segment1")
+
+        path = tmp_path / "sub"
+        path.mkdir()
+        for i in range(10):
+            local_path = path / f"hello{i}.txt"
+            local_path.write_text(f"CONTENT{i}")
+            data = Data(local_path=str(local_path))
+            data.label = Label.loads(LABEL)
+            segment_client.upload_data(data)
+
+        segment_client.delete_data("hello0.txt")
+        data_paths = segment_client.list_data_paths()
+        assert "hello0.txt" not in data_paths
+
+        gas_client.delete_dataset(dataset_name)
+
+    def test_delete_frame(self, accesskey, url, tmp_path):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_dataset_name()
+        dataset_client = gas_client.create_dataset(dataset_name, is_fusion=True)
+        dataset_client.create_draft("draft-1")
+        dataset_client.upload_catalog(Catalog.loads(CATALOG))
+        segment_client = dataset_client.get_or_create_segment("segment1")
+        segment_client.upload_sensor(Sensor.loads(LIDAR_DATA))
+
+        path = tmp_path / "sub"
+        path.mkdir()
+        for i in range(5):
+            frame = Frame()
+            local_path = path / f"hello{i}.txt"
+            local_path.write_text("CONTENT")
+            data = Data(local_path=str(local_path))
+            data.label = Label.loads(LABEL)
+            frame[LIDAR_DATA["name"]] = data
+            segment_client.upload_frame(frame, timestamp=i)
+
+        frame_1_id = segment_client.list_frames()[0].frame_id
+        segment_client.delete_frame(frame_1_id)
+        frame_ids = [frame.frame_id for frame in segment_client.list_frames()]
+        assert frame_1_id not in frame_ids
 
         gas_client.delete_dataset(dataset_name)

@@ -30,7 +30,7 @@ from typing import TYPE_CHECKING, Any, Callable, Dict, Generator, Iterable, Opti
 
 import filetype
 from requests_toolbelt import MultipartEncoder
-from ulid import from_timestamp
+from ulid import ULID, from_timestamp
 
 from ..dataset import AuthData, Data, Frame, RemoteData
 from ..exception import FrameError, InvalidParamsError, OperationError
@@ -818,6 +818,22 @@ class FusionSegmentClient(SegmentClientBase):
         """
         urls = self.list_urls()
         return PagingList(lambda offset, limit: self._generate_frames(urls, offset, limit), 128)
+
+    def delete_frame(self, frame_id: Union[str, ULID]) -> None:
+        """Delete a frame of a segment in a certain commit with the given frame id.
+
+        Arguments:
+            frame_id: The id of a frame in a segment.
+
+        """
+        self._status.check_authority_for_draft()
+        delete_data: Dict[str, Any] = {
+            "segmentName": self.name,
+            "frameId": str(frame_id),
+        }
+        delete_data.update(self._status.get_status_info())
+
+        self._client.open_api_do("DELETE", "frames", self._dataset_id, json=delete_data)
 
     def list_urls(self) -> PagingList[Dict[str, str]]:
         """List the data urls in this segment.
