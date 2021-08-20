@@ -15,7 +15,7 @@ which is often used for CV tasks such as lane detection.
 from typing import Any, Dict, Iterable, Optional, Type, TypeVar
 
 from ..geometry import MultiPolyline2D, Polyline2D
-from ..utility import ReprType, attr_base, common_loads
+from ..utility import ReprType, attr, attr_base, camel, common_loads
 from .basic import SubcatalogBase, _LabelBase
 from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
 
@@ -26,6 +26,8 @@ class Polyline2DSubcatalog(SubcatalogBase, IsTrackingMixin, CategoriesMixin, Att
     Arguments:
         is_tracking: A boolean value indicates whether the corresponding
             subcatalog contains tracking information.
+        is_beizer_curve: A boolean value indicates whether the corresponding
+            subcatalog contains beizer curve information.
 
     Attributes:
         description: The description of the entire 2D polyline subcatalog.
@@ -39,6 +41,7 @@ class Polyline2DSubcatalog(SubcatalogBase, IsTrackingMixin, CategoriesMixin, Att
             with the attribute names as keys
             and the :class:`~tensorbay.label.attribute.AttributeInfo` as values.
         is_tracking: Whether the Subcatalog contains tracking information.
+        is_beizer_curve: Whether the Subcatalog contains beizer curve information.
 
     Examples:
         *Initialization Method 1:* Init from ``Polyline2DSubcatalog.loads()`` method.
@@ -46,12 +49,14 @@ class Polyline2DSubcatalog(SubcatalogBase, IsTrackingMixin, CategoriesMixin, Att
         >>> catalog = {
         ...     "POLYLINE2D": {
         ...         "isTracking": True,
+        ...         "isBeizerCurve": True,
         ...         "categories": [{"name": "0"}, {"name": "1"}],
         ...         "attributes": [{"name": "gender", "enum": ["male", "female"]}],
         ...     }
         ... }
         >>> Polyline2DSubcatalog.loads(catalog["POLYLINE2D"])
         Polyline2DSubcatalog(
+          (is_beizer_curve): True,
           (is_tracking): True,
           (categories): NameList [...],
           (attributes): NameList [...]
@@ -67,10 +72,12 @@ class Polyline2DSubcatalog(SubcatalogBase, IsTrackingMixin, CategoriesMixin, Att
         >>> attributes.append(AttributeInfo("gender", enum=["female", "male"]))
         >>> polyline2d_subcatalog = Polyline2DSubcatalog()
         >>> polyline2d_subcatalog.is_tracking = True
+        >>> polyline2d_subcatalog.is_beizer_curve = True
         >>> polyline2d_subcatalog.categories = categories
         >>> polyline2d_subcatalog.attributes = attributes
         >>> polyline2d_subcatalog
         Polyline2DSubcatalog(
+          (is_beizer_curve): True,
           (is_tracking): True,
           (categories): NameList [...],
           (attributes): NameList [...]
@@ -78,9 +85,13 @@ class Polyline2DSubcatalog(SubcatalogBase, IsTrackingMixin, CategoriesMixin, Att
 
     """
 
-    def __init__(self, is_tracking: bool = False) -> None:
+    _repr_attrs = ("is_beizer_curve",) + SubcatalogBase._repr_attrs
+    is_beizer_curve: bool = attr(key=camel, default=False)
+
+    def __init__(self, is_tracking: bool = False, is_beizer_curve: bool = False) -> None:
         SubcatalogBase.__init__(self)
         IsTrackingMixin.__init__(self, is_tracking)
+        self.is_beizer_curve = is_beizer_curve
 
 
 class LabeledPolyline2D(_LabelBase, Polyline2D):  # pylint: disable=too-many-ancestors
@@ -94,11 +105,13 @@ class LabeledPolyline2D(_LabelBase, Polyline2D):  # pylint: disable=too-many-anc
         category: The category of the label.
         attributes: The attributes of the label.
         instance: The instance id of the label.
+        beizer_point_types: The beizer point types of the label.
 
     Attributes:
         category: The category of the label.
         attributes: The attributes of the label.
         instance: The instance id of the label.
+        beizer_point_types: The beizer point types of the label.
 
     Examples:
         >>> LabeledPolyline2D(
@@ -106,12 +119,14 @@ class LabeledPolyline2D(_LabelBase, Polyline2D):  # pylint: disable=too-many-anc
         ...     category="example",
         ...     attributes={"key": "value"},
         ...     instance="123",
+        ...     beizer_point_types="LLL",
         ... )
         LabeledPolyline2D [
           Vector2D(1, 2),
           Vector2D(2, 4),
           Vector2D(2, 1)
         ](
+          (beizer_point_types): 'LLL',
           (category): 'example',
           (attributes): {...},
           (instance): '123'
@@ -122,8 +137,9 @@ class LabeledPolyline2D(_LabelBase, Polyline2D):  # pylint: disable=too-many-anc
     _T = TypeVar("_T", bound="LabeledPolyline2D")
 
     _repr_type = ReprType.SEQUENCE
-    _repr_attrs = _LabelBase._repr_attrs
+    _repr_attrs = ("beizer_point_types",) + _LabelBase._repr_attrs
     _attrs_base: Polyline2D = attr_base(key="polyline2d")
+    beizer_point_types: str = attr(is_dynamic=True, key=camel)
 
     def __init__(
         self,
@@ -132,9 +148,12 @@ class LabeledPolyline2D(_LabelBase, Polyline2D):  # pylint: disable=too-many-anc
         category: Optional[str] = None,
         attributes: Optional[Dict[str, Any]] = None,
         instance: Optional[str] = None,
+        beizer_point_types: Optional[str] = None,
     ):
         Polyline2D.__init__(self, points)  # type: ignore[arg-type]
         _LabelBase.__init__(self, category, attributes, instance)
+        if beizer_point_types:
+            self.beizer_point_types = beizer_point_types
 
     @classmethod
     def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:  # type: ignore[override]
@@ -152,6 +171,7 @@ class LabeledPolyline2D(_LabelBase, Polyline2D):  # pylint: disable=too-many-anc
             ...     "category": "example",
             ...     "attributes": {"key": "value"},
             ...     "instance": "12345",
+            ...     "beizer_point_types": "LLL",
             ... }
             >>> LabeledPolyline2D.loads(contents)
             LabeledPolyline2D [
@@ -159,6 +179,7 @@ class LabeledPolyline2D(_LabelBase, Polyline2D):  # pylint: disable=too-many-anc
               Vector2D(2, 4),
               Vector2D(2, 1)
             ](
+              (beizer_point_types): 'LLL',
               (category): 'example',
               (attributes): {...},
               (instance): '12345'
@@ -179,6 +200,7 @@ class LabeledPolyline2D(_LabelBase, Polyline2D):  # pylint: disable=too-many-anc
             ...     category="example",
             ...     attributes={"key": "value"},
             ...     instance="123",
+            ...     beizer_point_types="LLL",
             ... )
             >>> labeledpolyline2d.dumps()
             {
@@ -186,6 +208,7 @@ class LabeledPolyline2D(_LabelBase, Polyline2D):  # pylint: disable=too-many-anc
                 'attributes': {'key': 'value'},
                 'instance': '123',
                 'polyline2d': [{'x': 1, 'y': 2}, {'x': 2, 'y': 4}, {'x': 2, 'y': 1}],
+                'beizerPointTypes': 'LLL',
             }
 
         """
