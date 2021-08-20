@@ -36,7 +36,7 @@ class SubcatalogBase(ReprMixin, AttrsMixin):
     _T = TypeVar("_T", bound="SubcatalogBase")
 
     _repr_type = ReprType.INSTANCE
-    _repr_attrs = (
+    _repr_attrs: Tuple[str, ...] = (
         "is_sample",
         "sample_rate",
         "is_tracking",
