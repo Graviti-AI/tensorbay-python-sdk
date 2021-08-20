@@ -143,8 +143,8 @@ def _edit_draft(
 
 
 def _close_draft(dataset_client: DatasetClientType, info: TBRN) -> None:
-    if not info.is_draft:
+    if not info.draft_number:
         error("Draft number is required when editing draft")
 
-    dataset_client.close_draft()
+    dataset_client._close_draft(info.draft_number)  # pylint: disable=protected-access
     click.echo(f"{info.get_tbrn()} is closed.")
