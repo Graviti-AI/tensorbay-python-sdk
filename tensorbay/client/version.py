@@ -72,6 +72,10 @@ class VersionControlClient:
 
         return response["totalCount"]  # type: ignore[no-any-return]
 
+    def _close_draft(self, number: int) -> None:
+        patch_data = {"status": "CLOSED"}
+        self._client.open_api_do("PATCH", f"drafts/{number}", self._dataset_id, json=patch_data)
+
     def _generate_commits(
         self, revision: str, offset: int = 0, limit: int = 128
     ) -> Generator[Commit, None, int]:
@@ -307,21 +311,20 @@ class VersionControlClient:
             "PATCH", f"drafts/{draft_number}", self._dataset_id, json=patch_data
         )
 
-    def close_draft(self, draft_number: Optional[int] = None) -> None:
+    def close_draft(self, number: int) -> None:
         """Close the draft.
 
         Arguments:
-            draft_number: The closed draft number.
-                If is not given, close the current draft.
-        """
-        if draft_number is None:
-            self._status.check_authority_for_draft()
-            draft_number = self.status.draft_number
+            number: The draft number.
 
-        patch_data = {"status": "CLOSED"}
-        self._client.open_api_do(
-            "PATCH", f"drafts/{draft_number}", self._dataset_id, json=patch_data
-        )
+        Raises:
+            OperationError: When closing the current draft.
+
+        """
+        if number == self.status.draft_number:
+            raise OperationError("Closing the current draft is not allowed")
+
+        self._close_draft(number)
 
     def get_commit(self, revision: Optional[str] = None) -> Commit:
         """Get the certain commit with the given revision.
