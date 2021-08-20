@@ -34,7 +34,7 @@ from .label_polyline import (
     Polyline2DSubcatalog,
 )
 from .label_sentence import LabeledSentence, SentenceSubcatalog, Word
-from .supports import CategoryInfo, KeypointsInfo
+from .supports import CategoryInfo, KeypointsInfo, MaskCategoryInfo
 
 __all__ = [
     "AttributeInfo",
@@ -59,6 +59,7 @@ __all__ = [
     "LabeledPolyline2D",
     "LabeledRLE",
     "LabeledSentence",
+    "MaskCategoryInfo",
     "MultiPolygonSubcatalog",
     "MultiPolyline2DSubcatalog",
     "PanopticMask",

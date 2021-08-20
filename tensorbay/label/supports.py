@@ -3,9 +3,11 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""CatagoryInfo, KeypointsInfo and different SubcatalogMixin classes.
+"""CatagoryInfo, MaskCategoryInfo, KeypointsInfo and different SubcatalogMixin classes.
 
 :class:`CatagoryInfo` defines a category with the name and description of it.
+
+:class:`MaskCategoryInfo` defines a category with the name, id and description of it.
 
 :class:`KeypointsInfo` defines the structure of a set of keypoints.
 
@@ -88,6 +90,36 @@ class CategoryInfo(NameMixin):
 
         """
         return self._dumps()
+
+
+class MaskCategoryInfo(CategoryInfo):
+    """This class represents the information of a category, including name, id and description.
+
+    Arguments:
+        name: The name of the category.
+        category_id: The id of the category.
+        description: The description of the category.
+
+    Attributes:
+        name: The name of the category.
+        category_id: The id of the category.
+        description: The description of the category.
+
+    Examples:
+        >>> MaskCategoryInfo(name="example", category_id=1, description="This is an example")
+        MaskCategoryInfo("example")(
+          (category_id): 1
+        )
+
+    """
+
+    _repr_attrs = ("category_id",)
+
+    category_id: int = attr(key=camel)
+
+    def __init__(self, name: str, category_id: int, description: str = "") -> None:
+        super().__init__(name, description)
+        self.category_id = category_id
 
 
 class _VisibleType(Enum):
@@ -339,6 +371,60 @@ class CategoriesMixin(AttrsMixin):
             self.categories = NameList()
 
         self.categories.append(CategoryInfo(name, description))
+
+
+class MaskCategoriesMixin(AttrsMixin):
+    """A mixin class supporting category information of a MaskSubcatalog.
+
+    Attributes:
+        categories: All the possible categories in the corresponding dataset
+            stored in a :class:`~tensorbay.utility.name.NameList`
+            with the category names as keys
+            and the :class:`~tensorbay.label.supports.MaskCategoryInfo` as values.
+        category_delimiter: The delimiter in category values indicating parent-child relationship.
+
+    """
+
+    category_delimiter: str = attr(is_dynamic=True, key=camel)
+    categories: NameList[MaskCategoryInfo] = attr(is_dynamic=True)
+
+    def get_category_to_index(self) -> Dict[str, int]:
+        """Return the dict containing the conversion from category name to category id.
+
+        Returns:
+            A dict containing the conversion from category name to category id.
+
+        """
+        if not hasattr(self, "categories"):
+            return {}
+
+        return {item.name: item.category_id for item in self.categories}
+
+    def get_index_to_category(self) -> Dict[int, str]:
+        """Return the dict containing the conversion from category id to category name.
+
+        Returns:
+            A dict containing the conversion from category id to category name.
+
+        """
+        if not hasattr(self, "categories"):
+            return {}
+
+        return {item.category_id: item.name for item in self.categories}
+
+    def add_category(self, name: str, category_id: int, description: str = "") -> None:
+        """Add a category to the Subcatalog.
+
+        Arguments:
+            name: The name of the category.
+            category_id: The id of the category.
+            description: The description of the category.
+
+        """
+        if not hasattr(self, "categories"):
+            self.categories = NameList()
+
+        self.categories.append(MaskCategoryInfo(name, category_id, description))
 
 
 class AttributesMixin(AttrsMixin):
