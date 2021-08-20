@@ -9,10 +9,10 @@ from typing import Any, Callable, Dict, Optional, Type, TypeVar
 
 from ..utility import FileMixin, RemoteFileMixin, ReprMixin
 from .basic import AttributeType, SubcatalogBase
-from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
+from .supports import AttributesMixin, IsTrackingMixin, MaskCategoriesMixin
 
 
-class SemanticMaskSubcatalog(SubcatalogBase, CategoriesMixin, AttributesMixin):
+class SemanticMaskSubcatalog(SubcatalogBase, MaskCategoriesMixin, AttributesMixin):
     """This class defines the subcatalog for semantic mask type of labels.
 
     Attributes:
@@ -33,7 +33,10 @@ class SemanticMaskSubcatalog(SubcatalogBase, CategoriesMixin, AttributesMixin):
 
         >>> catalog = {
         ...     "SEMANTIC_MASK": {
-        ...         "categories": [{'name': 'cat'}, {'name': 'dog'}],
+        ...         "categories": [
+        ...             {'name': 'cat', "categoryId": 1},
+        ...             {'name': 'dog', "categoryId": 2}
+        ...         ],
         ...         "attributes": [{'name': 'occluded', 'type': 'boolean'}],
         ...     }
         ... }
@@ -46,8 +49,8 @@ class SemanticMaskSubcatalog(SubcatalogBase, CategoriesMixin, AttributesMixin):
         *Initialization Method 2:* Init an empty SemanticMaskSubcatalog and then add the attributes.
 
         >>> semantic_mask_subcatalog = SemanticMaskSubcatalog()
-        >>> semantic_mask_subcatalog.add_category("cat")
-        >>> semantic_mask_subcatalog.add_category("dog")
+        >>> semantic_mask_subcatalog.add_category("cat", 1)
+        >>> semantic_mask_subcatalog.add_category("dog", 2)
         >>> semantic_mask_subcatalog.add_attribute("occluded", type_="boolean")
         >>> semantic_mask_subcatalog
         SemanticMaskSubcatalog(
@@ -100,7 +103,7 @@ class InstanceMaskSubcatalog(SubcatalogBase, IsTrackingMixin, AttributesMixin):
     """
 
 
-class PanopticMaskSubcatalog(SubcatalogBase, CategoriesMixin, AttributesMixin):
+class PanopticMaskSubcatalog(SubcatalogBase, MaskCategoriesMixin, AttributesMixin):
     """This class defines the subcatalog for panoptic mask type of labels.
 
     Attributes:
@@ -121,7 +124,10 @@ class PanopticMaskSubcatalog(SubcatalogBase, CategoriesMixin, AttributesMixin):
 
         >>> catalog = {
         ...     "PANOPTIC_MASK": {
-        ...         "categories": [{'name': 'cat'}, {'name': 'dog'}],
+        ...         "categories": [
+        ...             {'name': 'cat', "categoryId": 1},
+        ...             {'name': 'dog', "categoryId": 2}
+        ...         ],
         ...         "attributes": [{'name': 'occluded', 'type': 'boolean'}],
         ...     }
         ... }
@@ -134,8 +140,8 @@ class PanopticMaskSubcatalog(SubcatalogBase, CategoriesMixin, AttributesMixin):
         *Initialization Method 2:* Init an empty PanopticMaskSubcatalog and then add the attributes.
 
         >>> panoptic_mask_subcatalog = PanopticMaskSubcatalog()
-        >>> panoptic_mask_subcatalog.add_category("cat")
-        >>> panoptic_mask_subcatalog.add_category("dog")
+        >>> panoptic_mask_subcatalog.add_category("cat", 1)
+        >>> panoptic_mask_subcatalog.add_category("dog", 2)
         >>> panoptic_mask_subcatalog.add_attribute("occluded", type_="boolean")
         >>> panoptic_mask_subcatalog
         PanopticMaskSubcatalog(
