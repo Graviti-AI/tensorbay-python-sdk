@@ -61,7 +61,7 @@ class SemanticMaskSubcatalog(SubcatalogBase, MaskCategoriesMixin, AttributesMixi
     """
 
 
-class InstanceMaskSubcatalog(SubcatalogBase, IsTrackingMixin, AttributesMixin):
+class InstanceMaskSubcatalog(SubcatalogBase, MaskCategoriesMixin, IsTrackingMixin, AttributesMixin):
     """This class defines the subcatalog for instance mask type of labels.
 
     Attributes:
@@ -82,20 +82,26 @@ class InstanceMaskSubcatalog(SubcatalogBase, IsTrackingMixin, AttributesMixin):
 
         >>> catalog = {
         ...     "INSTANCE_MASK": {
+        ...         "categories": [
+        ...             {'name': 'background', "categoryId": 0}
+        ...         ],
         ...         "attributes": [{'name': 'occluded', 'type': 'boolean'}],
         ...     }
         ... }
         >>> InstanceMaskSubcatalog.loads(catalog["INSTANCE_MASK"])
         InstanceMaskSubcatalog(
+          (is_tracking): False,
+          (categories): NameList [...],
           (attributes): NameList [...]
         )
 
         *Initialization Method 2:* Init an empty InstanceMaskSubcatalog and then add the attributes.
 
         >>> instance_mask_subcatalog = InstanceMaskSubcatalog()
+        >>> instance_mask_subcatalog.add_category("background", 0)
         >>> instance_mask_subcatalog.add_attribute("occluded", type_="boolean")
         >>> instance_mask_subcatalog
-        SemanticMaskSubcatalog(
+        InstanceMaskSubcatalog(
           (categories): NameList [...],
           (attributes): NameList [...]
         )
