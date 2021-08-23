@@ -35,13 +35,13 @@ class Keypoint2D(Vector2D):
 
             Visible status can be "BINARY" or "TERNARY":
 
-            +---------------+---------+-----------+-----------+
-            | Visual Status | v = 0   | v = 1     | v = 2     |
-            +===============+=========+===========+===========+
-            | BINARY        | visible | invisible |           |
-            +---------------+---------+-----------+-----------+
-            | TERNARY       | visible | occluded  | invisible |
-            +---------------+---------+-----------+-----------+
+            +---------------+-----------+-----------+---------+
+            | Visual Status | v = 0     | v = 1     | v = 2   |
+            +===============+===========+===========+=========+
+            | BINARY        | invisible | visible   |         |
+            +---------------+-----------+-----------+---------+
+            | TERNARY       | invisible | occluded  | visible |
+            +---------------+-----------+-----------+---------+
 
     Examples:
         *Initialization Method 1:* Init from coordinates of x, y.
