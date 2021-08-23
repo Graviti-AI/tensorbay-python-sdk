@@ -294,22 +294,6 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
         """
         return self._status
 
-    def delete_data(self, remote_path: str) -> None:
-        """Delete data of a segment in a certain commit with the given remote paths.
-
-        Arguments:
-            remote_path: The remote path of data in a segment.
-
-        """
-        self._status.check_authority_for_draft()
-        delete_data: Dict[str, Any] = {
-            "segmentName": self.name,
-            "remotePath": remote_path,
-        }
-        delete_data.update(self._status.get_status_info())
-
-        self._client.open_api_do("DELETE", "data", self._dataset_id, json=delete_data)
-
 
 class SegmentClient(SegmentClientBase):
     """This class defines :class:`SegmentClient`.
@@ -642,6 +626,22 @@ class SegmentClient(SegmentClientBase):
         return PagingList(
             lambda offset, limit: self._generate_data(url_getters, offset, limit), 128
         )
+
+    def delete_data(self, remote_path: str) -> None:
+        """Delete data of a segment in a certain commit with the given remote paths.
+
+        Arguments:
+            remote_path: The remote path of data in a segment.
+
+        """
+        self._status.check_authority_for_draft()
+        delete_data: Dict[str, Any] = {
+            "segmentName": self.name,
+            "remotePath": remote_path,
+        }
+        delete_data.update(self._status.get_status_info())
+
+        self._client.open_api_do("DELETE", "data", self._dataset_id, json=delete_data)
 
     def list_urls(self) -> PagingList[str]:
         """List the data urls in this segment.
