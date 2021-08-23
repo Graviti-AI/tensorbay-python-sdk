@@ -45,13 +45,13 @@ and the unique ones will be explained under the corresponding type of label.
 Take a :ref:`2D box label <reference/label_format:Box2D>` as an example:
 
     >>> from tensorbay.label import LabeledBox2D
-    >>> label = LabeledBox2D(
+    >>> box2d_label = LabeledBox2D(
     ... 10, 20, 30, 40,
     ... category="category",
     ... attributes={"attribute_name": "attribute_value"},
     ... instance="instance_ID"
     ... )
-    >>> label
+    >>> box2d_label
     LabeledBox2D(10, 20, 30, 40)(
       (category): 'category',
       (attributes): {...},
@@ -63,7 +63,7 @@ category
 
 Category is a string indicating the class of the labeled object.
 
-    >>> label.category
+    >>> box2d_label.category
     'data_category'
 
 attributes
@@ -74,7 +74,7 @@ and there is no limit on the number of attributes.
 
 The attribute names and values are stored in key-value pairs.
 
-   >>> label.attributes
+   >>> box2d_label.attributes
    {'attribute_name': 'attribute_value'}
 
 
@@ -84,7 +84,7 @@ instance
 Instance is the unique id for the object inside of the label,
 which is mostly used for tracking tasks.
 
-   >>> label.instance
+   >>> box2d_label.instance
    "instance_ID"
 
 ******************************
@@ -121,13 +121,16 @@ or set the ``is_tracking`` attr after initialization.
 category information
 ====================
 
+common category information
+---------------------------
+
 If the label of this type in the dataset has category,
 then the subcatalog should contain all the optional categories.
 
 Each :ref:`reference/label_format:category` of a label
 appeared in the dataset should be within the categories of the subcatalog.
 
-Category information can be added to the subcatalog.
+Common category information can be added to the most subcatalogs except for mask subcatalogs.
 
     >>> box2d_subcatalog.add_category(name="cat", description="The Flerken")
     >>> box2d_subcatalog.categories
@@ -138,6 +141,26 @@ Category information can be added to the subcatalog.
 :class:`~tensorbay.label.supports.CategoryInfo` is used to describe
 a :ref:`reference/label_format:category`.
 See details in :class:`~tensorbay.label.supports.CategoryInfo`.
+
+mask category information
+-------------------------
+
+If the mask label in the dataset has category information,
+then the subcatalog should contain all the optional mask categories.
+
+MaskCategory information can be added to the mask subcatalog.
+
+Different from common category, mask category information must have ``category_id`` which
+is the pixel value of this category in all mask images.
+
+    >>> semantic_mask_subcatalog.add_category(name="cat", category_id=1, description="Ragdoll")
+    >>> semantic_mask_subcatalog.categories
+    NameList [
+      MaskCategoryInfo("cat")(...)
+    ]
+
+:class:`~tensorbay.label.supports.MaskCategoryInfo` is used to describe the category information of pixels in the mask image.
+See details in :class:`~tensorbay.label.supports.MaskCategoryInfo`.
 
 attributes information
 ======================
@@ -233,7 +256,7 @@ Before adding the classification label to data,
 
 :class:`~tensorbay.label.label_classification.ClassificationSubcatalog`
 has categories and attributes information,
-see :ref:`reference/label_format:category information` and
+see :ref:`reference/label_format:common category information` and
 :ref:`reference/label_format:attributes information` for details.
 
 To add a :class:`~tensorbay.label.label_classification.Classification` label to one data:
@@ -348,7 +371,7 @@ Before adding the Box2D labels to data,
 
 :class:`~tensorbay.label.label_box.Box2DSubcatalog`
 has categories, attributes and tracking information,
-see :ref:`reference/label_format:category information`,
+see :ref:`reference/label_format:common category information`,
 :ref:`reference/label_format:attributes information` and
 :ref:`reference/label_format:tracking information` for details.
 
@@ -500,7 +523,7 @@ Before adding the Box3D labels to data,
 
 :class:`~tensorbay.label.label_box.Box3DSubcatalog`
 has categories, attributes and tracking information,
-see :ref:`reference/label_format:category information`,
+see :ref:`reference/label_format:common category information`,
 :ref:`reference/label_format:attributes information` and
 :ref:`reference/label_format:tracking information` for details.
 
@@ -623,7 +646,7 @@ Before adding 2D keypoints labels to the dataset,
 :class:`~tensorbay.label.label_keypoints.Keypoints2DSubcatalog` should be defined.
 
 Besides :ref:`reference/label_format:attributes information`,
-:ref:`reference/label_format:category information`,
+:ref:`reference/label_format:common category information`,
 :ref:`reference/label_format:tracking information` in
 :class:`~tensorbay.label.label_keypoints.Keypoints2DSubcatalog`,
 it also has :attr:`~tensorbay.label.label_keypoints.Keypoints2DSubcatalog.keypoints`
@@ -781,7 +804,7 @@ Before adding the Polygon labels to data,
 
 :class:`~tensorbay.label.label_polygon.PolygonSubcatalog`
 has categories, attributes and tracking information,
-see :ref:`reference/label_format:category information`,
+see :ref:`reference/label_format:common category information`,
 :ref:`reference/label_format:attributes information` and
 :ref:`reference/label_format:tracking information` for details.
 
@@ -891,7 +914,7 @@ Before adding the MultiPolygon labels to data,
 
 :class:`~tensorbay.label.label_polygon.MultiPolygonSubcatalog`
 has categories, attributes and tracking information,
-see :ref:`reference/label_format:category information`,
+see :ref:`reference/label_format:common category information`,
 :ref:`reference/label_format:attributes information` and
 :ref:`reference/label_format:tracking information` for details.
 
@@ -995,7 +1018,7 @@ Before adding the RLE labels to data,
 
 :class:`~tensorbay.label.label_polygon.RLESubcatalog`
 has categories, attributes and tracking information,
-see :ref:`reference/label_format:category information`,
+see :ref:`reference/label_format:common category information`,
 :ref:`reference/label_format:attributes information` and
 :ref:`reference/label_format:tracking information` for details.
 
@@ -1111,7 +1134,7 @@ Before adding the Polyline2D labels to data,
 
 :class:`~tensorbay.label.label_polyline.Polyline2DSubcatalog`
 has categories, attributes and tracking information,
-see :ref:`reference/label_format:category information`,
+see :ref:`reference/label_format:common category information`,
 :ref:`reference/label_format:attributes information` and
 :ref:`reference/label_format:tracking information` for details.
 
@@ -1221,7 +1244,7 @@ Before adding the MultiPolyline2D labels to data,
 
 :class:`~tensorbay.label.label_polyline.MultiPolyline2DSubcatalog`
 has categories, attributes and tracking information,
-see :ref:`reference/label_format:category information`,
+see :ref:`reference/label_format:common category information`,
 :ref:`reference/label_format:attributes information` and
 :ref:`reference/label_format:tracking information` for details.
 
@@ -1467,7 +1490,7 @@ In TensorBay, the structure of SemanticMask label is unified as follows::
 ``local_path`` is the storage path of the mask image. TensorBay only supports single-channel, gray-scale png images.
 If the number of categories exceeds 256, the color depth of this image should be 16 bits, otherwise it is 8 bits.
 
-The gray-scale value of the pixel corresponds to the index of the ``categories`` within the :class:`~tensorbay.label.label_mask.SemanticMaskSubcatalog`.
+The gray-scale value of the pixel corresponds to the category id of the ``categories`` within the :class:`~tensorbay.label.label_mask.SemanticMaskSubcatalog`.
 
 Each data can only be assigned with one :class:`~tensorbay.label.label_mask.SemanticMask` label.
 
@@ -1509,8 +1532,8 @@ SemanticMaskSubcatalog
 Before adding the SemanticMask labels to data,
 :class:`~tensorbay.label.label_mask.SemanticMaskSubcatalog` should be defined.
 
-:class:`~tensorbay.label.label_mask.SemanticMaskSubcatalog` has categories and attributes,
-see :ref:`reference/label_format:category information` and
+:class:`~tensorbay.label.label_mask.SemanticMaskSubcatalog` has mask categories and attributes,
+see :ref:`reference/label_format:mask category information` and
 :ref:`reference/label_format:attributes information` for details.
 
 To add a :class:`~tensorbay.label.label_mask.SemanticMask` label to one data:
@@ -1550,6 +1573,9 @@ In TensorBay, the structure of InstanceMask label is unified as follows::
 
 ``local_path`` is the storage path of the mask image. TensorBay only supports single-channel, gray-scale png images.
 If the number of categories exceeds 256, the color depth of this image should be 16 bits, otherwise it is 8 bits.
+
+There are pixels in the InstanceMask that do not represent the instance, such as backgrounds or borders. This information is written to the
+``categories`` within the :class:`~tensorbay.label.label_mask.InstanceMaskSubcatalog`.
 
 Each data can only be assigned with one :class:`~tensorbay.label.label_mask.InstanceMask` label.
 
@@ -1591,8 +1617,9 @@ InstanceMaskSubcatalog
 Before adding the InstanceMask labels to data,
 :class:`~tensorbay.label.label_mask.InstanceMaskSubcatalog` should be defined.
 
-:class:`~tensorbay.label.label_mask.InstanceMaskSubcatalog` has attributes,
-see :ref:`reference/label_format:attributes information` for details.
+:class:`~tensorbay.label.label_mask.InstanceMaskSubcatalog` has mask categories and attributes,
+see :ref:`reference/label_format:mask category information` and
+:ref:`reference/label_format:attributes information` for details.
 
 To add a :class:`~tensorbay.label.label_mask.InstanceMask` label to one data:
 
@@ -1633,7 +1660,7 @@ In TensorBay, the structure of PanopticMask label is unified as follows::
 ``local_path`` is the storage path of the mask image. TensorBay only supports single-channel, gray-scale png images.
 If the number of categories exceeds 256, the color depth of this image should be 16 bits, otherwise it is 8 bits.
 
-The gray-scale value of the pixel corresponds to the index of the ``categories`` within the :class:`~tensorbay.label.label_mask.PanopticMaskSubcatalog`.
+The gray-scale value of the pixel corresponds to the category id of the ``categories`` within the :class:`~tensorbay.label.label_mask.PanopticMaskSubcatalog`.
 
 Each data can only be assigned with one :class:`~tensorbay.label.label_mask.PanopticMask` label.
 
@@ -1689,8 +1716,8 @@ PanopticMaskSubcatalog
 Before adding the PanopticMask labels to data,
 :class:`~tensorbay.label.label_mask.PanopticMaskSubcatalog` should be defined.
 
-:class:`~tensorbay.label.label_mask.PanopticMaskSubcatalog` has categories and attributes,
-see :ref:`reference/label_format:category information` and
+:class:`~tensorbay.label.label_mask.PanopticMaskSubcatalog` has mask categories and attributes,
+see :ref:`reference/label_format:mask category information` and
 :ref:`reference/label_format:attributes information` for details.
 
 To add a :class:`~tensorbay.label.label_mask.PanopticMask` label to one data:
