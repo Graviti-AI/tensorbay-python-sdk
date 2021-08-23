@@ -201,6 +201,7 @@ def _add_poly2d_label_100k(
             points=poly2d_info["vertices"],
             category=label_info["category"],
             attributes=label_info.get("attributes", {}),
+            beizer_point_types=poly2d_info["types"],
         )
         polyline2d.append(labeled_polyline2d)
 
