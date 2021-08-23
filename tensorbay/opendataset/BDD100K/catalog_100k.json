@@ -73,6 +73,7 @@
         ]
     },
     "POLYLINE2D": {
+        "isBeizerCurve": true,
         "categories": [
             { "name": "crosswalk" },
             { "name": "double other" },
