@@ -1054,6 +1054,7 @@ The structure of one Polyline2D label is like::
             ...
             ...
         ],
+        "beizerPointTypes": <str>
         "category": <str>
         "attributes": {
             <key>: <value>
@@ -1063,11 +1064,17 @@ The structure of one Polyline2D label is like::
         "instance": <str>
     }
 
+.. note::
+
+   When the ``is_beizer_curve`` is ``True`` in the :ref:`reference/label_format:Polyline2DSubcatalog`, ``beizerPointTypes`` is mandatory,
+   where each character in the string represents the type of the point ("L" represents the vertex and "C" represents the control point) at the corresponding position in the ``polyline2d`` list.
+
 To create a :class:`~tensorbay.label.label_polyline.LabeledPolyline2D` label:
 
     >>> from tensorbay.label import LabeledPolyline2D
     >>> polyline2d_label = LabeledPolyline2D(
     ... [(1, 2), (2, 3)],
+    ... beizer_point_types="LL",
     ... category="category",
     ... attributes={"attribute_name": "attribute_value"},
     ... instance="instance_ID"
@@ -1077,6 +1084,7 @@ To create a :class:`~tensorbay.label.label_polyline.LabeledPolyline2D` label:
       Vector2D(1, 2),
       Vector2D(2, 3)
     ](
+      (beizer_point_types): 'LL',
       (category): 'category',
       (attributes): {...},
       (instance): 'instance_ID'
@@ -1132,11 +1140,38 @@ Polyline2DSubcatalog
 Before adding the Polyline2D labels to data,
 :class:`~tensorbay.label.label_polyline.Polyline2DSubcatalog` should be defined.
 
-:class:`~tensorbay.label.label_polyline.Polyline2DSubcatalog`
-has categories, attributes and tracking information,
-see :ref:`reference/label_format:common category information`,
+Besides :ref:`reference/label_format:common category information`,
 :ref:`reference/label_format:attributes information` and
-:ref:`reference/label_format:tracking information` for details.
+:ref:`reference/label_format:tracking information` in
+:class:`~tensorbay.label.label_polyline.Polyline2DSubcatalog`,
+it also has :attr:`~tensorbay.label.label_polyline.Polyline2DSubcatalog.is_beizer_curve`
+to describe the type of the polyline.
+
+
+   >>> from tensorbay.label import Polyline2DSubcatalog
+   >>> polyline2d_subcatalog = Polyline2DSubcatalog(
+   ... is_beizer_curve=True
+   ... )
+   >>> polyline2d_subcatalog
+   Polyline2DSubcatalog(
+     (is_beizer_curve): True,
+     (is_tracking): False
+   )
+
+The ``is_beizer_curve`` is a boolen value indicating whether the polyline is a Bezier curve.
+
+Besides giving the parameters while initializing
+:class:`~tensorbay.label.label_sentence.Polyline2DSubcatalog`,
+it's also feasible to set them after initialization.
+
+   >>> from tensorbay.label import Polyline2DSubcatalog
+   >>> polyline2d_subcatalog = Polyline2DSubcatalog()
+   >>> polyline2d_subcatalog.is_beizer_curve = True
+   >>> polyline2d_subcatalog
+   Polyline2DSubcatalog(
+     (is_beizer_curve): True,
+     (is_tracking): False
+   )
 
 To add a :class:`~tensorbay.label.label_polyline.LabeledPolyline2D` label to one data:
 
@@ -1434,7 +1469,7 @@ If ``is_sample`` is Ture, then ``sample_rate`` must be provided.
 
 The ``lexicon`` is a list consists all of text and phone.
 
-Besides giving the parameters while initialing
+Besides giving the parameters while initializing
 :class:`~tensorbay.label.label_sentence.SentenceSubcatalog`,
 it's also feasible to set them after initialization.
 
