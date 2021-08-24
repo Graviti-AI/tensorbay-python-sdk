@@ -226,6 +226,11 @@ class TestGAS:
 
         assert list(configs) == response_data["configs"]
 
+    def test_delete_storage_config(self, mocker):
+        open_api_do = mocker.patch(f"{gas.__name__}.Client.open_api_do")
+        self.gas_client.delete_storage_config("test-config")
+        open_api_do.assert_called_once_with("DELETE", "storage-configs/test-config")
+
     def test_get_cloud_client(self, mocker):
         config_name = "cloud_train"
         response_data = {
