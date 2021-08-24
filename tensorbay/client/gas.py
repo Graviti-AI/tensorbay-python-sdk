@@ -180,6 +180,15 @@ class GAS:
             128,
         )
 
+    def delete_storage_config(self, name: str) -> None:
+        """Delete a storage config in TensorBay.
+
+        Arguments:
+            name: Name of the storage config, unique for a team.
+
+        """
+        self._client.open_api_do("DELETE", f"storage-configs/{name}")
+
     def get_cloud_client(self, name: str) -> CloudClient:
         """Get a cloud client used for interacting with cloud platform.
 
