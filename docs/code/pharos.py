@@ -25,3 +25,7 @@ from pharos import visualize
 
 visualize(dataset)
 """"""
+
+"""Visualize The Dataset On Remote Server"""
+visualize(dataset, host="0.0.0.0", port=5000)
+""""""
