@@ -35,13 +35,23 @@ Config
 
 See `cloud storage instruction <https://docs.graviti.cn/guide/tensorbay/data/authorize>`_ for details about how to configure cloud storage on TensorBay.
 
+TensorBay SDK supports following methods to configure cloud storage.
+
+    - :func:`~tensorbay.client.gas.GAS.create_oss_storage_config`
+    - :func:`~tensorbay.client.gas.GAS.create_s3_storage_config`
+    - :func:`~tensorbay.client.gas.GAS.create_azure_storage_config`
+
+For example:
+
+.. literalinclude:: ../../../docs/code/cloud_storage.py
+   :language: python
+   :start-after: """Create storage config"""
+   :end-before: """"""
+
 TensorBay SDK supports a method to list a user's all previous configurations.
 
 .. code:: python
 
-    from tensorbay import GAS
-
-    gas = GAS("Accesskey-*****")
     gas.list_auth_storage_configs()
 
 

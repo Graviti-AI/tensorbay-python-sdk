@@ -16,6 +16,17 @@ gas = GAS("Accesskey-*****")
 cloud_client = gas.get_cloud_client("config_name")
 """"""
 
+"""Create storage config"""
+gas.create_oss_storage_config(
+    "oss_config",
+    "tests",
+    endpoint="<YOUR_ENDPOINT>",  # like oss-cn-qingdao.aliyuncs.com
+    accesskey_id="<YOUR_ACCESSKEYID>",
+    accesskey_secret="<YOUR_ACCESSKEYSECRET>",
+    bucket_name="<YOUR_BUCKETNAME>",
+)
+""""""
+
 """Import dataset from cloud platform to the authorized storage dataset"""
 import json
 

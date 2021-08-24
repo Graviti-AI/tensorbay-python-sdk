@@ -234,6 +234,64 @@ class TestGAS:
         self.gas_client.delete_storage_config("test-config")
         open_api_do.assert_called_once_with("DELETE", "storage-configs/test-config")
 
+    def test_create_oss_storage_config(self, mocker):
+        open_api_do = mocker.patch(f"{gas.__name__}.Client.open_api_do")
+        self.gas_client.create_oss_storage_config(
+            "oss_config",
+            "tests",
+            endpoint="oss-cn-qingdao.aliyuncs.com",
+            accesskey_id="accesskeyId",
+            accesskey_secret="accesskeySecret",
+            bucket_name="bucketName",
+        )
+        post_data = {
+            "name": "oss_config",
+            "filePath": "tests",
+            "endpoint": "oss-cn-qingdao.aliyuncs.com",
+            "accesskeyId": "accesskeyId",
+            "accesskeySecret": "accesskeySecret",
+            "bucketName": "bucketName",
+        }
+        open_api_do("POST", "storage-configs/oss", json=post_data)
+
+    def test_create_s3_storage_config(self, mocker):
+        open_api_do = mocker.patch(f"{gas.__name__}.Client.open_api_do")
+        self.gas_client.create_s3_storage_config(
+            "s3_config",
+            "tests",
+            endpoint="s3.cn-northwest-1.amazonaws.com",
+            accesskey_id="accesskeyId",
+            accesskey_secret="accesskeySecret",
+            bucket_name="bucketName",
+        )
+        post_data = {
+            "name": "s3_config",
+            "filePath": "tests",
+            "endpoint": "s3.cn-northwest-1.amazonaws.com",
+            "accesskeyId": "accesskeyId",
+            "accesskeySecret": "accesskeySecret",
+            "bucketName": "bucketName",
+        }
+        open_api_do("POST", "storage-configs/s3", json=post_data)
+
+    def test_create_azure_storage_config(self, mocker):
+        open_api_do = mocker.patch(f"{gas.__name__}.Client.open_api_do")
+        self.gas_client.create_azure_storage_config(
+            "azure_config",
+            "tests",
+            account_name="accountName",
+            account_key="accountKey",
+            container_name="containerName",
+        )
+        post_data = {
+            "name": "s3_config",
+            "filePath": "tests",
+            "accesskeyId": "accountName",
+            "accesskeySecret": "accountKey",
+            "containerName": "containerName",
+        }
+        open_api_do("POST", "storage-configs/azure", json=post_data)
+
     def test_get_cloud_client(self, mocker):
         config_name = "cloud_train"
         response_data = {
