@@ -199,6 +199,111 @@ class GAS:
         """
         self._client.open_api_do("DELETE", f"storage-configs/{name}")
 
+    def create_oss_storage_config(
+        self,
+        name: str,
+        file_path: str,
+        *,
+        endpoint: str,
+        accesskey_id: str,
+        accesskey_secret: str,
+        bucket_name: str,
+    ) -> CloudClient:
+        """Create an oss auth storage config.
+
+        Arguments:
+            name: The required auth storage config name.
+            file_path: dataset storage path of the bucket.
+            endpoint: endpoint of the oss.
+            accesskey_id: accesskey_id of the oss.
+            accesskey_secret: accesskey_secret of the oss.
+            bucket_name: bucket_name of the oss.
+
+        Returns:
+            The cloud client of this dataset.
+
+        """
+        post_data = {
+            "name": name,
+            "filePath": file_path,
+            "endpoint": endpoint,
+            "accesskeyId": accesskey_id,
+            "accesskeySecret": accesskey_secret,
+            "bucketName": bucket_name,
+        }
+
+        self._client.open_api_do("POST", "storage-configs/oss", json=post_data)
+        return CloudClient(name, self._client)
+
+    def create_s3_storage_config(
+        self,
+        name: str,
+        file_path: str,
+        *,
+        endpoint: str,
+        accesskey_id: str,
+        accesskey_secret: str,
+        bucket_name: str,
+    ) -> CloudClient:
+        """Create a s3 auth storage config.
+
+        Arguments:
+            name: The required auth storage config name.
+            file_path: dataset storage path of the bucket.
+            endpoint: endpoint of the s3.
+            accesskey_id: accesskey_id of the s3.
+            accesskey_secret: accesskey_secret of the s3.
+            bucket_name: bucket_name of the s3.
+
+        Returns:
+            The cloud client of this dataset.
+
+        """
+        post_data = {
+            "name": name,
+            "filePath": file_path,
+            "endpoint": endpoint,
+            "accesskeyId": accesskey_id,
+            "accesskeySecret": accesskey_secret,
+            "bucketName": bucket_name,
+        }
+
+        self._client.open_api_do("POST", "storage-configs/s3", json=post_data)
+        return CloudClient(name, self._client)
+
+    def create_azure_storage_config(
+        self,
+        name: str,
+        file_path: str,
+        *,
+        account_name: str,
+        account_key: str,
+        container_name: str,
+    ) -> CloudClient:
+        """Create an azure auth storage config.
+
+        Arguments:
+            name: The required auth storage config name.
+            file_path: dataset storage path of the bucket.
+            account_name: account name of the azure.
+            account_key: account key of the azure.
+            container_name: container name of the azure.
+
+        Returns:
+            The cloud client of this dataset.
+
+        """
+        post_data = {
+            "name": name,
+            "filePath": file_path,
+            "accesskeyId": account_name,
+            "accesskeySecret": account_key,
+            "containerName": container_name,
+        }
+
+        self._client.open_api_do("POST", "storage-configs/azure", json=post_data)
+        return CloudClient(name, self._client)
+
     def get_cloud_client(self, name: str) -> CloudClient:
         """Get a cloud client used for interacting with cloud platform.
 
@@ -207,6 +312,7 @@ class GAS:
 
         Returns:
             The cloud client of this dataset.
+
         """
         self.get_auth_storage_config(name)
         return CloudClient(name, self._client)
