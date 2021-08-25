@@ -386,8 +386,8 @@ class TestGAS:
             f"{gas.__name__}.GAS._get_dataset",
             return_value=response_data,
         )
-        patch_data = {"alias": "new_alias"}
-        self.gas_client.update_dataset("test", alias="new_alias")
+        patch_data = {"alias": "new_alias", "isPublic": True}
+        self.gas_client.update_dataset("test", alias="new_alias", is_public=True)
         open_api_do.assert_called_once_with("PATCH", "", response_data["id"], json=patch_data)
 
     def test_rename_dataset(self, mocker):

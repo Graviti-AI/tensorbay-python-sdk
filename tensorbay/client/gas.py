@@ -394,18 +394,28 @@ class GAS:
             lambda offset, limit: self._generate_dataset_names(None, offset, limit), 128
         )
 
-    def update_dataset(self, name: str, *, alias: Optional[str] = None) -> None:
+    def update_dataset(
+        self,
+        name: str,
+        *,
+        alias: Optional[str] = None,
+        is_public: Optional[bool] = None,
+    ) -> None:
         """Update a TensorBay Dataset.
 
         Arguments:
             name: Name of the dataset, unique for a user.
             alias: New alias of the dataset.
+            is_public: Whether the dataset is public.
 
         """
         dataset_id = self._get_dataset(name)["id"]
-        patch_data = {}
+        patch_data: Dict[str, Any] = {}
         if alias is not None:
             patch_data["alias"] = alias
+
+        if is_public is not None:
+            patch_data["isPublic"] = is_public
 
         if patch_data:
             self._client.open_api_do("PATCH", "", dataset_id, json=patch_data)
