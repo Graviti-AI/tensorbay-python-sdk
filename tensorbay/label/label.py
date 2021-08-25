@@ -54,7 +54,7 @@ _attr = partial(attr, is_dynamic=True, key=upper, error_message=_ERROR_MESSAGE)
 _mask_attr = partial(_attr, dumper=lambda self: self.get_callback_body())
 
 
-class Label(ReprMixin, AttrsMixin):
+class Label(ReprMixin, AttrsMixin):  # pylint: disable=too-many-instance-attributes
     """This class defines :attr:`~tensorbay.dataset.data.Data.label`.
 
     It contains growing types of labels referring to different tasks.
