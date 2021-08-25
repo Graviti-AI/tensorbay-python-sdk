@@ -125,9 +125,10 @@ class TestDataset:
         gas_client.create_dataset(dataset_name)
 
         new_dataset_alias = f"{get_dataset_name()}alias"
-        gas_client.update_dataset(name=dataset_name, alias=new_dataset_alias)
+        gas_client.update_dataset(name=dataset_name, alias=new_dataset_alias, is_public=True)
         dataset_client_get = gas_client.get_dataset(dataset_name)
         assert dataset_client_get.alias == new_dataset_alias
+        assert dataset_client_get.is_public is True
         gas_client.delete_dataset(dataset_name)
 
     def test_rename_dataset(self, accesskey, url):
