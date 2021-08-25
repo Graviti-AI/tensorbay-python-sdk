@@ -168,6 +168,18 @@ class GAS:
 
         return config
 
+    def rename_storage_config(self, name: str, new_name: str) -> None:
+        """Rename a TensorBay Dataset with given name.
+
+        Arguments:
+            name: Name of the storage config.
+            new_name: New name of the storage config.
+
+        """
+        self._client.open_api_do(
+            "PATCH", "storage-configs", json={"name": name, "newName": new_name}
+        )
+
     def list_auth_storage_configs(self) -> PagingList[Dict[str, Any]]:
         """List auth storage configs.
 

@@ -204,6 +204,13 @@ class TestGAS:
             == response_data["configs"][0]
         )
 
+    def test_rename_storage_config(self, mocker):
+        open_api_do = mocker.patch(f"{gas.__name__}.Client.open_api_do")
+        self.gas_client.rename_storage_config("config", "config_02")
+        open_api_do.assert_called_once_with(
+            "PATCH", "storage-configs", json={"name": "config", "newName": "config_02"}
+        )
+
     def test_list_auth_storage_configs(self, mocker):
         response_data = {
             "configs": [
