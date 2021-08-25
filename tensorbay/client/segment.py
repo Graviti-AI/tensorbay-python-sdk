@@ -33,7 +33,7 @@ from requests_toolbelt import MultipartEncoder
 from ulid import from_timestamp
 
 from ..dataset import AuthData, Data, Frame, RemoteData
-from ..exception import FrameError, InvalidParamsError, OperationError
+from ..exception import FrameError, InvalidParamsError, OperationError, ResponseError
 from ..label import Label
 from ..sensor.sensor import Sensor, Sensors
 from ..utility import Disable, FileMixin, chunked, locked
@@ -213,12 +213,25 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
             file_type = filetype.guess_mime(local_path)
             if "x-amz-date" in data:
                 data["Content-Type"] = file_type
-            data["file"] = ("", fp, file_type)
-            multipart = MultipartEncoder(data)
 
-            self._client.do(
-                "POST", url, data=multipart, headers={"Content-Type": multipart.content_type}
-            )
+            try:
+                data["file"] = ("", fp, file_type)
+                self._post_formdata(url, data)
+            except ResponseError as error:
+                if b"MalformedPOSTRequest" in error.response.content:
+                    data["file"] = ("workaroundForMalformedPostRequest", fp, file_type)
+                    self._post_formdata(url, data)
+                else:
+                    raise
+
+    def _post_formdata(self, url: str, data: Dict[str, Any]) -> None:
+        multipart = MultipartEncoder(data)
+        self._client.do(
+            "POST",
+            url,
+            data=multipart,
+            headers={"Content-Type": multipart.content_type},
+        )
 
     def _put_binary_file_to_azure(
         self,
