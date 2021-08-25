@@ -28,7 +28,7 @@ DATASET_NAMES = {
     "mots": "BDD100K_MOTS2020",
     "mot": "BDD100K_MOT2020",
 }
-_SEGMENT_NAMES = ("train", "val")
+_SEGMENT_NAMES = ("train", "val", "test")
 _LABEL_TYPE_INFO_100K = {
     "det": ("Detection 2020", "BOX2D"),
     "lane": ("Lane Marking", "POLYLINE2D"),
