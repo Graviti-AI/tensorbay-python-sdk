@@ -10,7 +10,7 @@ from ...exception import InvalidParamsError, OperationError
 from ...label import Catalog
 from .. import gas
 from ..dataset import DatasetClient
-from ..gas import DEFAULT_BRANCH, GAS
+from ..gas import DEFAULT_BRANCH, DEFAULT_COVER_URL, DEFAULT_IS_PUBLIC, GAS
 from ..status import Status
 from ..struct import ROOT_COMMIT_ID
 from .utility import mock_response
@@ -23,12 +23,18 @@ class TestDatasetClientBase:
         "12345",
         gas_client,
         status=Status(DEFAULT_BRANCH, commit_id=ROOT_COMMIT_ID),
+        alias="",
+        is_public=DEFAULT_IS_PUBLIC,
+        cover_url=DEFAULT_COVER_URL,
     )
     source_dataset_client = DatasetClient(
         "source_dataset",
         "544321",
         gas_client,
         status=Status(DEFAULT_BRANCH, commit_id=ROOT_COMMIT_ID),
+        alias="",
+        is_public=DEFAULT_IS_PUBLIC,
+        cover_url=DEFAULT_COVER_URL,
     )
 
     def test__create_segment(self, mocker):

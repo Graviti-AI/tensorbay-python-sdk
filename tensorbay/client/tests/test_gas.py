@@ -12,7 +12,7 @@ from ...exception import DatasetTypeError, ResourceNotExistError
 from .. import gas
 from ..cloud_storage import CloudClient
 from ..dataset import DatasetClient, FusionDatasetClient
-from ..gas import DEFAULT_BRANCH, GAS
+from ..gas import DEFAULT_BRANCH, DEFAULT_COVER_URL, DEFAULT_IS_PUBLIC, GAS
 from ..status import Status
 from ..struct import ROOT_COMMIT_ID, Draft
 from .utility import mock_response
@@ -58,6 +58,8 @@ class TestGAS:
             "owner": "",
             "id": "123456",
             "alias": "alias",
+            "isPublic": DEFAULT_IS_PUBLIC,
+            "coverUrl": DEFAULT_COVER_URL,
         }
         get_dataset = mocker.patch(
             f"{gas.__name__}.GAS._get_dataset",
@@ -71,6 +73,8 @@ class TestGAS:
         assert dataset_client._status.commit_id == response_data["commitId"]
         assert dataset_client._status.branch_name == response_data["defaultBranch"]
         assert dataset_client._alias == response_data["alias"]
+        assert dataset_client._is_public == response_data["isPublic"]
+        assert dataset_client._cover_url == response_data["coverUrl"]
         get_dataset.assert_called_once_with(response_data["name"])
 
     def test__get_dataset(self, mocker):
@@ -108,6 +112,8 @@ class TestGAS:
             "updateTime": 1622693494,
             "owner": "",
             "id": "123456",
+            "isPublic": DEFAULT_IS_PUBLIC,
+            "coverUrl": DEFAULT_COVER_URL,
         }
         mocker.patch(
             f"{gas.__name__}.GAS._list_datasets",
@@ -268,6 +274,8 @@ class TestGAS:
         assert dataset_client.status.branch_name == DEFAULT_BRANCH
         assert dataset_client.status.commit_id == ROOT_COMMIT_ID
         assert dataset_client._alias == params["alias"]
+        assert dataset_client._is_public == DEFAULT_IS_PUBLIC
+        assert dataset_client._cover_url == DEFAULT_COVER_URL
         open_api_do.assert_called_once_with("POST", "", json=params)
 
     @pytest.mark.parametrize("is_fusion", [True, False])
@@ -293,6 +301,8 @@ class TestGAS:
         assert dataset_client.status.branch_name == DEFAULT_BRANCH
         assert dataset_client.status.commit_id == ROOT_COMMIT_ID
         assert dataset_client._alias == params["alias"]
+        assert dataset_client._is_public == DEFAULT_IS_PUBLIC
+        assert dataset_client._cover_url == DEFAULT_COVER_URL
         open_api_do.assert_called_once_with("POST", "", json=params)
 
     @pytest.mark.parametrize("is_fusion", [True, False])
@@ -305,6 +315,8 @@ class TestGAS:
                 "commitId": "4",
                 "defaultBranch": DEFAULT_BRANCH,
                 "alias": "alias",
+                "isPublic": DEFAULT_IS_PUBLIC,
+                "coverUrl": DEFAULT_COVER_URL,
             },
         )
         with pytest.raises(DatasetTypeError):
@@ -316,6 +328,8 @@ class TestGAS:
             "commitId": "4",
             "defaultBranch": DEFAULT_BRANCH,
             "alias": "alias",
+            "isPublic": DEFAULT_IS_PUBLIC,
+            "coverUrl": DEFAULT_COVER_URL,
         }
         dataset_name = "test"
         get_dataset = mocker.patch(
@@ -330,6 +344,8 @@ class TestGAS:
         assert dataset_client._status.commit_id == response_data["commitId"]
         assert dataset_client._status.branch_name == response_data["defaultBranch"]
         assert dataset_client._alias == response_data["alias"]
+        assert dataset_client._is_public == response_data["isPublic"]
+        assert dataset_client._cover_url == response_data["coverUrl"]
         get_dataset.assert_called_once_with(dataset_name)
 
     def test_list_dataset_names(self, mocker):
@@ -416,6 +432,9 @@ class TestGAS:
                 "12345",
                 self.gas_client,
                 status=Status(DEFAULT_BRANCH, commit_id=ROOT_COMMIT_ID),
+                alias="",
+                is_public=DEFAULT_IS_PUBLIC,
+                cover_url=DEFAULT_COVER_URL,
             ),
         )
         checkout = mocker.patch(f"{gas.__name__}.DatasetClient.checkout")
