@@ -64,21 +64,29 @@ class DatasetClientBase(VersionControlClient):
         gas: The initial client to interact between local and TensorBay.
         status: The version control status of the dataset.
         alias: Dataset alias.
+        is_public: Whether the dataset is public.
 
     Attributes:
         name: Dataset name.
         dataset_id: Dataset ID.
         status: The version control status of the dataset.
-        alias: Dataset alias.
 
     """
 
     def __init__(
-        self, name: str, dataset_id: str, gas: "GAS", *, status: Status, alias: str = ""
+        self,
+        name: str,
+        dataset_id: str,
+        gas: "GAS",
+        *,
+        status: Status,
+        alias: str,
+        is_public: bool,
     ) -> None:
         super().__init__(dataset_id, gas, status=status)
         self._name = name
         self._alias = alias
+        self._is_public = is_public
 
     def _create_segment(self, name: str) -> None:
         post_data: Dict[str, Any] = {"name": name}
@@ -173,6 +181,16 @@ class DatasetClientBase(VersionControlClient):
 
         """
         return self._alias
+
+    @property
+    def is_public(self) -> bool:
+        """Return whether the dataset is public.
+
+        Returns:
+            Whether the dataset is public.
+
+        """
+        return self._is_public
 
     def update_notes(
         self,

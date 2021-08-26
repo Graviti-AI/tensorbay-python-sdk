@@ -33,6 +33,7 @@ DatasetClientType = Union[DatasetClient, FusionDatasetClient]
 logger = logging.getLogger(__name__)
 
 DEFAULT_BRANCH = "main"
+DEFAULT_IS_PUBLIC = False
 
 
 class GAS:
@@ -70,11 +71,19 @@ class GAS:
         commit_id = info["commitId"]
         default_branch = info["defaultBranch"]
         dataset_alias = info["alias"]
+        is_public = info["isPublic"]
 
         status = Status(default_branch, commit_id=commit_id)
 
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
-        return ReturnType(name, dataset_id, self, status=status, alias=dataset_alias)
+        return ReturnType(
+            name,
+            dataset_id,
+            self,
+            status=status,
+            alias=dataset_alias,
+            is_public=is_public,
+        )
 
     def _get_dataset(self, name: str) -> Dict[str, Any]:
         """Get the information of the TensorBay dataset with the input name.
@@ -269,7 +278,14 @@ class GAS:
 
         response = self._client.open_api_do("POST", "", json=post_data)
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
-        return ReturnType(name, response.json()["id"], self, status=status, alias=alias)
+        return ReturnType(
+            name,
+            response.json()["id"],
+            self,
+            status=status,
+            alias=alias,
+            is_public=DEFAULT_IS_PUBLIC,
+        )
 
     def create_auth_dataset(
         self,
@@ -307,7 +323,14 @@ class GAS:
 
         response = self._client.open_api_do("POST", "", json=post_data)
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
-        return ReturnType(name, response.json()["id"], self, status=status, alias=alias)
+        return ReturnType(
+            name,
+            response.json()["id"],
+            self,
+            status=status,
+            alias=alias,
+            is_public=DEFAULT_IS_PUBLIC,
+        )
 
     @overload
     def get_dataset(self, name: str, is_fusion: Literal[False] = False) -> DatasetClient:
@@ -344,13 +367,21 @@ class GAS:
         commit_id = info["commitId"]
         default_branch = info["defaultBranch"]
         dataset_alias = info["alias"]
+        is_public = info["isPublic"]
 
         status = Status(default_branch, commit_id=commit_id)
 
         if is_fusion != type_flag:
             raise DatasetTypeError(dataset_name=name, is_fusion=type_flag)
         ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
-        return ReturnType(name, dataset_id, self, status=status, alias=dataset_alias)
+        return ReturnType(
+            name,
+            dataset_id,
+            self,
+            status=status,
+            alias=dataset_alias,
+            is_public=is_public,
+        )
 
     def list_dataset_names(self) -> PagingList[str]:
         """List names of all TensorBay datasets.

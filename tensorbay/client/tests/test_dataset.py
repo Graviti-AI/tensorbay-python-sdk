@@ -17,7 +17,7 @@ from ...label import Catalog
 from .. import dataset, gas, segment
 from ..dataset import DatasetClient, FusionDatasetClient
 from ..diff import DataDiff, SegmentDiff
-from ..gas import DEFAULT_BRANCH, GAS
+from ..gas import DEFAULT_BRANCH, DEFAULT_IS_PUBLIC, GAS
 from ..lazy import ReturnGenerator
 from ..requests import Tqdm
 from ..segment import FusionSegmentClient, SegmentClient
@@ -33,12 +33,16 @@ class TestDatasetClientBase:
         "12345",
         gas_client,
         status=Status(DEFAULT_BRANCH, commit_id=ROOT_COMMIT_ID),
+        alias="",
+        is_public=DEFAULT_IS_PUBLIC,
     )
     source_dataset_client = DatasetClient(
         "source_dataset",
         "544321",
         gas_client,
         status=Status(DEFAULT_BRANCH, commit_id=ROOT_COMMIT_ID),
+        alias="",
+        is_public=DEFAULT_IS_PUBLIC,
     )
 
     def test__create_segment(self, mocker):
@@ -561,12 +565,16 @@ class TestFusionDatasetClient(TestDatasetClientBase):
         "12345",
         gas_client,
         status=Status(DEFAULT_BRANCH, commit_id=ROOT_COMMIT_ID),
+        alias="",
+        is_public=DEFAULT_IS_PUBLIC,
     )
     source_dataset_client = FusionDatasetClient(
         "source_dataset",
         "544321",
         gas_client,
         status=Status(DEFAULT_BRANCH, commit_id=ROOT_COMMIT_ID),
+        alias="",
+        is_public=DEFAULT_IS_PUBLIC,
     )
 
     def test__extract_all_data(self):
