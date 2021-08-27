@@ -38,7 +38,7 @@ from typing import Iterable, Optional, Tuple
 import click
 
 from .. import __version__
-from .custom import CustomCommand, DeprecatedOption, DeprecatedOptionsCommand
+from .custom import CustomCommand, DeprecatedOptionsCommand
 from .utility import ContextInfo
 
 
@@ -178,17 +178,10 @@ def dataset(obj: ContextInfo, tbrn: str, is_delete: bool, yes: bool) -> None:
 @click.option(
     "-m",
     "--message",
-    "-t",
-    "--title",
     type=str,
     multiple=True,
     default=(),
     help="The title of the draft.",
-    deprecated=("-t", "--title"),
-    preferred="-m",
-    since="v1.8.0",
-    removed_in="v1.10.0",
-    cls=DeprecatedOption,
 )
 @click.pass_obj
 def draft(  # pylint: disable=too-many-arguments
