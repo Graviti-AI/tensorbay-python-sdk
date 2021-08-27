@@ -86,7 +86,8 @@ def _unset_auth(obj: ContextInfo, is_all: bool) -> None:
         if not removed:
             error(f'Profile "{obj.profile_name}" does not exist.')
     write_config(config_parser, show_message=False)
-    click.echo("Unset successfully")
+    hint = "all" if is_all else f'"{obj.profile_name}"'
+    click.echo(f"Successfully unset {hint} auth info")
 
 
 def _interactive_auth(url: Optional[str] = None) -> str:

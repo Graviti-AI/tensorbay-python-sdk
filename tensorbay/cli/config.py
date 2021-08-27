@@ -30,7 +30,7 @@ def _implement_config(obj: ContextInfo, key: str, value: str, unset: bool) -> No
         if unset:
             del config_section[key]
             write_config(config_parser, show_message=False)
-            click.echo(f'Unset "{key}" successfully')
+            click.echo(f'Successfully unset "{key}"')
             return
 
         click.echo(f"{key} = {config_section[key]}\n")

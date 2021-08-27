@@ -47,5 +47,7 @@ def _implement_commit(obj: ContextInfo, tbrn: str, message: Tuple[str, ...]) -> 
         error("Aborting commit due to empty commit message")
 
     dataset_client.commit(title, description)
-    commit_tbrn = TBRN(info.dataset_name, revision=dataset_client.status.commit_id).get_tbrn()
-    click.echo(f"Committed successfully: {tbrn} -> {commit_tbrn}")
+    commit_tbrn = TBRN(info.dataset_name, revision=dataset_client.status.commit_id)
+    click.echo(
+        "Committed successfully: " f"{info.get_colored_tbrn()} -> {commit_tbrn.get_colored_tbrn()}"
+    )

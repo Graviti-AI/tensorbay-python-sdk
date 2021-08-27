@@ -38,8 +38,8 @@ def _create_branch(dataset_client: DatasetClientType, name: str) -> None:
         error("Branch cannot be created from a draft")
 
     dataset_client.create_branch(name)
-    branch_tbrn = TBRN(dataset_client.name, revision=name)
-    click.echo(f"{branch_tbrn} has been successfully created")
+    branch_tbrn = TBRN(dataset_client.name, revision=name).get_colored_tbrn()
+    click.echo(f'Successfully created branch "{branch_tbrn}"')
 
 
 def _list_branches(dataset_client: DatasetClientType, verbose: bool) -> None:
@@ -58,4 +58,4 @@ def _delete_branch(dataset_client: DatasetClientType, info: TBRN) -> None:
         error(f'To delete a branch, "{info}" must have a branch name')
 
     dataset_client._delete_branch(info.revision)  # pylint: disable=protected-access
-    click.echo(f"{info} has been successfully deleted")
+    click.echo(f'Successfully deleted branch "{info.get_colored_tbrn()}"')

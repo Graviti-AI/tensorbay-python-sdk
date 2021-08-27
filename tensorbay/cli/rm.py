@@ -32,4 +32,4 @@ def _implement_rm(obj: ContextInfo, tbrn: str, is_recursive: bool) -> None:
         segment = dataset_client.get_segment(info.segment_name)
         segment.delete_data(info.remote_path)
 
-    click.echo(f"{tbrn} is deleted successfully")
+    click.echo(f'Successfully deleted "{info.get_colored_tbrn()}"')

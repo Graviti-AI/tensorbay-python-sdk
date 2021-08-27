@@ -35,8 +35,8 @@ def _delete_tag(dataset_client: DatasetClientType, info: TBRN) -> None:
         error(f'To delete a tag, "{info}" must have a tag name')
 
     dataset_client.delete_tag(info.revision)
-    tag_tbrn = TBRN(dataset_client.name, revision=info.revision).get_tbrn()
-    click.echo(f"{tag_tbrn} is deleted successfully")
+    tag_tbrn = TBRN(dataset_client.name, revision=info.revision).get_colored_tbrn()
+    click.echo(f'Successfully deleted tag "{tag_tbrn}"')
 
 
 def _create_tag(dataset_client: DatasetClientType, name: str) -> None:
@@ -47,8 +47,8 @@ def _create_tag(dataset_client: DatasetClientType, name: str) -> None:
         error(f'To create a tag, "{dataset_client.name}" should have commit history')
 
     dataset_client.create_tag(name=name)
-    tag_tbrn = TBRN(dataset_client.name, revision=name).get_tbrn()
-    click.echo(f"{tag_tbrn} is created successfully")
+    tag_tbrn = TBRN(dataset_client.name, revision=name).get_colored_tbrn()
+    click.echo(f'Successfully created tag "{tag_tbrn}"')
 
 
 def _list_tags(dataset_client: DatasetClientType) -> None:

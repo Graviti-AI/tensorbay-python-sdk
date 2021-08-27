@@ -15,6 +15,8 @@
 from enum import Enum, Flag, auto
 from typing import Any, List, Optional, Tuple, TypeVar
 
+import click
+
 from ..exception import TBRNError
 
 
@@ -378,3 +380,15 @@ class TBRN:
         if self._names[4] is not None:
             tbrn = f"{tbrn}{TBRN._PATH_SEPARATOR}{self.remote_path}"
         return tbrn
+
+    def get_colored_tbrn(self, color: Optional[str] = "yellow") -> str:
+        """Get the colored tbrn string.
+
+        Arguments:
+            color: The color of the tbrn.
+
+        Returns:
+            The colored tbrn string.
+
+        """
+        return click.style(self.get_tbrn(), fg=color)
