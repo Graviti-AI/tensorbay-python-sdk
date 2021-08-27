@@ -78,8 +78,8 @@ def _create_draft(
 
     dataset_client.create_draft(title=title, description=description)
     status = dataset_client.status
-    draft_tbrn = TBRN(info.dataset_name, draft_number=status.draft_number).get_tbrn()
-    click.echo(f"{draft_tbrn} is created successfully")
+    draft_tbrn = TBRN(info.dataset_name, draft_number=status.draft_number).get_colored_tbrn()
+    click.echo(f'Successfully created draft "{draft_tbrn}"')
     _echo_draft(dataset_client, title, description, status.branch_name)
 
 
@@ -143,7 +143,7 @@ def _edit_draft(
         error("Aborting updating draft due to empty draft message")
 
     dataset_client.update_draft(title=title, description=description)
-    click.echo(f"{info.get_tbrn()} is updated successfully!")
+    click.echo(f'Successfully updated draft "{info.get_colored_tbrn()}"')
     _echo_draft(dataset_client, title, description, dataset_client.status.branch_name)
 
 
@@ -152,4 +152,4 @@ def _close_draft(dataset_client: DatasetClientType, info: TBRN) -> None:
         error("Draft number is required when editing draft")
 
     dataset_client._close_draft(info.draft_number)  # pylint: disable=protected-access
-    click.echo(f"{info.get_tbrn()} is closed.")
+    click.echo(f'Successfully closed draft "{info.get_colored_tbrn()}"')
