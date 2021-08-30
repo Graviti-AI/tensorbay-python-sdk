@@ -2,10 +2,10 @@
  TensorBay Resource Name
 #########################
 
-TensorBay Resource Name(TBRN) uniquely defines the resource stored in TensorBay.
+TensorBay Resource Name(TBRN) uniquely identifies the resource stored in TensorBay.
 All TBRN begins with ``tb:``.
 
-| 1. Define a dataset
+| 1. Identify a dataset
 
 .. code:: html
 
@@ -18,7 +18,7 @@ For example, the following TBRN means the dataset "VOC2012".
     tb:VOC2012
 
 
-| 2. Define a segment
+| 2. Identify a segment
 
 .. code:: html
 
@@ -31,7 +31,7 @@ For example, the following TBRN means the "train" segment of dataset "VOC2012".
     tb:VOC2010:train
 
 
-| 3. Define a file
+| 3. Identify a file
 
 .. code:: html
 

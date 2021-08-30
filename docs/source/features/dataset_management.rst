@@ -50,7 +50,7 @@ There are plenty of benefits of uploading local datasets to TensorBay.
 - **VISUALIZATION**: uploaded datasets can be visualized without coding.
 - **VERSION CONTROL**: different versions of one dataset can be uploaded and controlled conveniently.
 
-Take the :ref:`Uploading of BSTLD <examples/bstld:Upload Dataset>` as an example.
+Take the :ref:`Upload Dataset of BSTLD <examples/bstld:Upload Dataset>` as an example.
 
 **************
  Read Dataset
@@ -75,7 +75,7 @@ Two types of datasets can be read from TensorBay:
 .. _my datasets(or team datasets): https://gas.graviti.cn/tensorbay/dataset-list
 .. _TensorBay: https://gas.graviti.cn/tensorbay/
 
-Take the :ref:`Uploading of BSTLD <examples/bstld:Read Dataset>` as an example.
+Take the :ref:`Read Dataset of BSTLD <examples/bstld:Read Dataset>` as an example.
 
 ****************
  Update Dataset
