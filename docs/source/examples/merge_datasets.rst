@@ -44,7 +44,14 @@ Copy all segments in ``OxfordIIITPetDog`` to ``mergedDataset``.
 
 .. literalinclude:: ../../../docs/code/merge_datasets.py
    :language: python
-   :start-after: """Copy Segment from Pet"""
+   :start-after: """Copy Segment From Pet"""
+   :end-before: """"""
+
+Use the catalog of OxfordIIITPet as the catalog of the merged dataset.
+
+.. literalinclude:: ../../../docs/code/merge_datasets.py
+   :language: python
+   :start-after: """Upload Catalog"""
    :end-before: """"""
 
 
@@ -52,7 +59,7 @@ Unify categories of ``train`` segment.
 
 .. literalinclude:: ../../../docs/code/merge_datasets.py
    :language: python
-   :start-after: """Unify category"""
+   :start-after: """Unify Category"""
    :end-before: """"""
 
 .. note::
@@ -65,5 +72,5 @@ Copy data from ``Dogs vs Cats`` to ``mergedDataset``.
 
 .. literalinclude:: ../../../docs/code/merge_datasets.py
    :language: python
-   :start-after: """Copy Data from Dog vs Cat"""
+   :start-after: """Copy Data From Dog VS Cat"""
    :end-before: """"""
