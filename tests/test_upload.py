@@ -590,16 +590,12 @@ class TestUploadData:
         data = Data(local_path=str(local_path))
         data.label = Label.loads(LABEL)
         # If not uploading file, uploading label is not allowed
-        with pytest.raises(ResponseError):
+        with pytest.raises(ResourceNotExistError):
             segment_client.upload_label(data)
 
         # Uploading files
         segment_client.upload_file(data.path, data.target_remote_path)
 
-        data.label = Label.loads(WRONG_LABEL)
-        # Uploading wrong label is not allowed
-        with pytest.raises(ResourceNotExistError):
-            segment_client.upload_label(data)
         data.label = Label.loads(LABEL)
         segment_client.upload_label(data)
 
