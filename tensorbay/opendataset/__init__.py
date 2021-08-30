@@ -102,6 +102,7 @@ __all__ = [
     "PlantSeedlings",
     "PlantSeedlingsFullimages",
     "RP2K",
+    "SegTrack",
     "SVHN",
     "nuImages",
     "THCHS30",
