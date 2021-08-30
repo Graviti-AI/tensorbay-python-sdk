@@ -20,13 +20,17 @@ dataset_client = gas.create_dataset("mergedDataset")
 dataset_client.create_draft("merge dataset")
 """"""
 
-"""Copy Segment from Pet"""
+"""Copy Segment From Pet"""
 pet_dataset_client = gas.get_dataset("OxfordIIITPet")
 dataset_client.copy_segment("train", target_name="trainval", source_client=pet_dataset_client)
 dataset_client.copy_segment("test", source_client=pet_dataset_client)
 """"""
 
-"""Unify category"""
+"""Upload Catalog"""
+dataset_client.upload_catalog(pet_dataset_client.get_catalog())
+""""""
+
+"""Unify Category"""
 from tensorbay.dataset import Data
 
 segment_client = dataset_client.get_segment("train")
@@ -37,7 +41,7 @@ for remote_data in segment_client.list_data():
     segment_client.upload_label(data)
 """"""
 
-"""Copy Data from Dog vs Cat"""
+"""Copy Data From Dog VS Cat"""
 pet_dataset_client = gas.get_dataset("DogsVsCats")
 for name in ["test", "train"]:
     source_segment_client = pet_dataset_client.get_segment(name)
