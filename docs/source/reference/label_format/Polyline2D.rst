@@ -112,18 +112,55 @@ Besides :ref:`reference/label_format/CommonSubcatalogProperties:common category 
 it also has :attr:`~tensorbay.label.label_polyline.Polyline2DSubcatalog.is_beizer_curve`
 to describe the type of the polyline.
 
+The catalog with only Polyline2D subcatalog is typically stored in a json file as follows::
 
-   >>> from tensorbay.label import Polyline2DSubcatalog
-   >>> polyline2d_subcatalog = Polyline2DSubcatalog(
-   ... is_beizer_curve=True
-   ... )
-   >>> polyline2d_subcatalog
-   Polyline2DSubcatalog(
-     (is_beizer_curve): True,
-     (is_tracking): False
-   )
+    {
+        "POLYLINE2D": {                                   <object>*
+            "description":                                <string>! -- Subcatalog description, (default: "").
+            "isTracking":                                <boolean>! -- Whether this type of label in the dataset contains tracking
+                                                                       information, (default: false).
+            "isBeizerCurve"                              <boolean>! -- Whether the polyline is a Bezier curve, (default: false).
+            "categoryDelimiter":                          <string>  -- The delimiter in category names indicating subcategories.
+                                                                       Recommended delimiter is ".". There is no "categoryDelimiter"
+                                                                       field by default which means the category is of one level.
+            "categories": [                                <array>  -- Category list, which contains all category information.
+                {
+                    "name":                               <string>* -- Category name.
+                    "description":                        <string>! -- Category description, (default: "").
+                },
+                ...
+                ...
+            ],
+            "attributes": [                                <array>  -- Attribute list, which contains all attribute information.
+                {
+                    "name":                               <string>* -- Attribute name.
+                    "enum": [...],                         <array>  -- All possible options for the attribute.
+                    "type":                      <string or array>  -- Type of the attribute including "boolean", "integer",
+                                                                       "number", "string", "array" and "null". And it is not
+                                                                       required when "enum" is provided.
+                    "minimum":                            <number>  -- Minimum value of the attribute when type is "number".
+                    "maximum":                            <number>  -- Maximum value of the attribute when type is "number".
+                    "items": {                            <object>  -- Used only if the attribute type is "array".
+                        "enum": [...],                     <array>  -- All possible options for elements in the attribute array.
+                        "type":                  <string or array>  -- Type of elements in the attribute array.
+                        "minimum":                        <number>  -- Minimum value of elements in the attribute array when type is
+                                                                       "number".
+                        "maximum":                        <number>  -- Maximum value of elements in the attribute array when type is
+                                                                       "number".
+                    },
+                    "parentCategories": [...],             <array>  -- Indicates the category to which the attribute belongs. Do not
+                                                                       add this field if it is a global attribute.
+                    "description":                        <string>! -- Attribute description, (default: "").
+                },
+                ...
+                ...
+            ]
+        }
+    }
 
-The ``is_beizer_curve`` is a boolen value indicating whether the polyline is a Bezier curve.
+.. note::
+
+   ``*`` indicates that the field is required. ``!`` indicates that the field has a default value.
 
 Besides giving the parameters while initializing
 :class:`~tensorbay.label.label_sentence.Polyline2DSubcatalog`,
