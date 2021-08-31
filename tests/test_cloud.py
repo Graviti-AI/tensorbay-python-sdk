@@ -12,7 +12,21 @@ from tensorbay.exception import ResourceNotExistError
 from .utility import get_dataset_name
 
 
-class TestImportData:
+class TestCloudStorage:
+    @pytest.mark.parametrize("config_name", ["azure_china_config", "oss_config", "s3_config"])
+    def test_create_dataset_with_config(self, accesskey, url, config_name):
+        gas_client = GAS(access_key=accesskey, url=url)
+        try:
+            gas_client.get_cloud_client(config_name)
+        except ResourceNotExistError:
+            pytest.skip(f"skip this case because there's no {config_name} config")
+
+        dataset_name = get_dataset_name()
+        gas_client.create_dataset(dataset_name, config_name=config_name)
+        gas_client.get_dataset(dataset_name)
+
+        gas_client.delete_dataset(dataset_name)
+
     @pytest.mark.parametrize("config_name", ["azure_china_config", "oss_config", "s3_config"])
     def test_import_cloud_files(self, accesskey, url, config_name):
 
@@ -24,7 +38,7 @@ class TestImportData:
 
         auth_data = cloud_client.list_auth_data("tests")
         dataset_name = get_dataset_name()
-        dataset_client = gas_client.create_auth_dataset(dataset_name, config_name)
+        dataset_client = gas_client.create_dataset(dataset_name, config_name=config_name)
 
         dataset = Dataset(name=dataset_name)
         segment = dataset.create_segment("Segment1")
