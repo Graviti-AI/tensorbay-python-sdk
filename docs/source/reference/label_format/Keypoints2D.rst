@@ -54,7 +54,7 @@ Keypoints2D.keypoints2d
 =======================
 
 :class:`~tensorbay.label.label_keypoints.LabeledKeypoints2D` extends
-:class:`~tensorbay.geometry.box.Keypoints2D`.
+:class:`~tensorbay.geometry.keypoint.Keypoints2D`.
 
 To construct a :class:`~tensorbay.label.label_keypoints.LabeledKeypoints2D` instance with only the geometry
 information,
@@ -112,6 +112,81 @@ Besides :ref:`reference/label_format/CommonSubcatalogProperties:attributes infor
 it also has :attr:`~tensorbay.label.label_keypoints.Keypoints2DSubcatalog.keypoints`
 to describe a set of keypoints corresponding to certain categories.
 
+The catalog with only Keypoints2D subcatalog is typically stored in a json file as follows::
+
+    {
+        "KEYPOINTS2D": {                                  <object>*
+            "description":                                <string>! -- Subcatalog description, (default: "").
+            "isTracking":                                <boolean>! -- Whether this type of label in the dataset contains tracking
+                                                                       information, (default: false).
+            "keypoints": [
+                {
+                    "number":                            <integer>* -- The number of key points.
+                    "name":                                <array>  -- The name of each key point that corresponds to the
+                                                                       "keypoints2d" in the Keypoints2D label via index.
+                    "skeleton": [                          <array>  -- Key points skeleton for visualization.
+                        [<index>, <index>],                <array>  -- Each array represents a line segment. The skeleton is formed
+                                                                       by connecting these lines corresponding to the value of
+                                                                       <index>.
+                        ...
+                    ],
+                    "visible":                            <string>  -- Indicates the meaning of field "v" in the Keypoints2D label.
+                                                                       There are two cases as follows:
+                                                                       1. "TERNARY": v=0: invisible, v=1: occluded, v=2: visible.
+                                                                       2. "BINARY": v=0: invisible, v=1: visible.
+                                                                       Do not add this field if the field "v" does not exist.
+                    "parentCategories": [...],             <array>  -- A list of categories indicating to which category the
+                                                                       keypoints rule applies.Do not add this field if the keypoints
+                                                                       rule applies to all the categories of the entire dataset.
+                    "description":                        <string>! -- Key points description, (default: "").
+                },
+            ],
+            "categoryDelimiter":                          <string>  -- The delimiter in category names indicating subcategories.
+                                                                       Recommended delimiter is ".". There is no "categoryDelimiter"
+                                                                       field by default which means the category is of one level.
+            "categories": [                                <array>  -- Category list, which contains all category information.
+                {
+                    "name":                               <string>* -- Category name.
+                    "description":                        <string>! -- Category description, (default: "").
+                },
+                ...
+                ...
+            ],
+            "attributes": [                                <array>  -- Attribute list, which contains all attribute information.
+                {
+                    "name":                               <string>* -- Attribute name.
+                    "enum": [...],                         <array>  -- All possible options for the attribute.
+                    "type":                      <string or array>  -- Type of the attribute including "boolean", "integer",
+                                                                       "number", "string", "array" and "null". And it is not
+                                                                       required when "enum" is provided.
+                    "minimum":                            <number>  -- Minimum value of the attribute when type is "number".
+                    "maximum":                            <number>  -- Maximum value of the attribute when type is "number".
+                    "items": {                            <object>  -- Used only if the attribute type is "array".
+                        "enum": [...],                     <array>  -- All possible options for elements in the attribute array.
+                        "type":                  <string or array>  -- Type of elements in the attribute array.
+                        "minimum":                        <number>  -- Minimum value of elements in the attribute array when type is
+                                                                       "number".
+                        "maximum":                        <number>  -- Maximum value of elements in the attribute array when type is
+                                                                       "number".
+                    },
+                    "parentCategories": [...],             <array>  -- Indicates the category to which the attribute belongs. Do not
+                                                                       add this field if it is a global attribute.
+                    "description":                        <string>! -- Attribute description, (default: "").
+                },
+                ...
+                ...
+            ]
+        }
+    }
+
+.. note::
+
+   ``*`` indicates that the field is required. ``!`` indicates that the field has a default value.
+
+Besides giving the parameters while initializing
+:class:`~tensorbay.label.label_keypoints.Keypoints2DSubcatalog`,
+it's also feasible to set them after initialization.
+
    >>> from tensorbay.label import Keypoints2DSubcatalog
    >>> keypoints2d_subcatalog = Keypoints2DSubcatalog()
    >>> keypoints2d_subcatalog.add_keypoints(
@@ -132,27 +207,6 @@ to describe a set of keypoints corresponding to certain categories.
     )]
 
 :class:`~tensorbay.label.supports.KeypointsInfo` is used to describe a set of 2D keypoints.
-
-The first parameter of :meth:`~tensorbay.label.label_keypoints.Keypoints2DSubcatalog.add_keypoints`
-is the number of the set of 2D keypoints, which is required.
-
-The ``names`` is a list of string representing the names for each 2D keypoint,
-the length of which is consistent with the number.
-
-The ``skeleton`` is a two-dimensional list indicating the connection between the keypoints.
-
-The ``visible`` is the visible status that limits the
-:attr:`~tensorbay.geometry.keypoint.Keypoint2D.v`
-of :class:`~tensorbay.geometry.keypoint.Keypoint2D`.
-It can only be "BINARY" or "TERNARY".
-
-See details in :class:`~tensorbay.geometry.keypoint.Keypoint2D`.
-
-The ``parent_categories`` is a list of categories indicating to which category the keypoints rule
-applies.
-
-Mostly, ``parent_categories`` is not given,
-which means the keypoints rule applies to all the categories of the entire dataset.
 
 To add a :class:`~tensorbay.label.label_keypoints.LabeledKeypoints2D` label to one data:
 

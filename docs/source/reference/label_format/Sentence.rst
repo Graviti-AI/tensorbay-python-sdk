@@ -149,27 +149,54 @@ it also has :attr:`~tensorbay.label.label_sentence.SentenceSubcatalog.is_sample`
 and :attr:`~tensorbay.label.label_sentence.SentenceSubcatalog.lexicon`.
 to describe the transcripted sentences of the audio.
 
-   >>> from tensorbay.label import SentenceSubcatalog
-   >>> sentence_subcatalog = SentenceSubcatalog(
-   ... is_sample=True,
-   ... sample_rate=5,
-   ... lexicon=[["word", "spell", "phone"]]
-   ... )
-   >>> sentence_subcatalog
-   SentenceSubcatalog(
-     (is_sample): True,
-     (sample_rate): 5,
-     (lexicon): [...]
-   )
-   >>> sentence_subcatalog.lexicon
-   [['word', 'spell', 'phone']]
+The catalog with only Sentence subcatalog is typically stored in a json file as follows::
 
-The ``is_sample`` is a boolen value indicating whether time format is sample related.
+    {
+        "SENTENCE": {                                     <object>*
+            "isSample":                                  <boolean>! -- Whether the unit of sampling points in Sentence label is the
+                                                                       number of samples. The default value is false and the units
+                                                                       are seconds.
+            "sampleRate":                                 <number>  -- Audio sampling frequency whose unit is Hz. It is required
+                                                                       when "isSample" is true.
+            "description":                                <string>! -- Subcatalog description, (default: "").
+            "attributes": [                                <array>  -- Attribute list, which contains all attribute information.
+                {
+                    "name":                               <string>* -- Attribute name.
+                    "enum": [...],                         <array>  -- All possible options for the attribute.
+                    "type":                      <string or array>  -- Type of the attribute including "boolean", "integer",
+                                                                       "number", "string", "array" and "null". And it is not
+                                                                       required when "enum" is provided.
+                    "minimum":                            <number>  -- Minimum value of the attribute when type is "number".
+                    "maximum":                            <number>  -- Maximum value of the attribute when type is "number".
+                    "items": {                            <object>  -- Used only if the attribute type is "array".
+                        "enum": [...],                     <array>  -- All possible options for elements in the attribute array.
+                        "type":                  <string or array>  -- Type of elements in the attribute array.
+                        "minimum":                        <number>  -- Minimum value of elements in the attribute array when type is
+                                                                       "number".
+                        "maximum":                        <number>  -- Maximum value of elements in the attribute array when type is
+                                                                       "number".
+                    },
+                    "description":                        <string>! -- Attribute description, (default: "").
+                },
+                ...
+                ...
+            ]
+            "lexicon": [                                   <array>  -- A list consists all of text and phone.
+                [
+                    text,                                 <string>  -- Word.
+                    phone,                                <string>  -- Corresponding phonemes.
+                    phone,                                <string>  -- Corresponding phonemes (A word can correspond to more than
+                                                                       one phoneme).
+                    ...
+                ],
+                ...
+            ]
+        }
+    }
 
-The ``sample_rate`` is the number of samples of audio carried per second.
-If ``is_sample`` is Ture, then ``sample_rate`` must be provided.
+.. note::
 
-The ``lexicon`` is a list consists all of text and phone.
+   ``*`` indicates that the field is required. ``!`` indicates that the field has a default value.
 
 Besides giving the parameters while initializing
 :class:`~tensorbay.label.label_sentence.SentenceSubcatalog`,
