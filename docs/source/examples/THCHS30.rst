@@ -3,7 +3,7 @@
 ###########
 
 This topic describes how to manage the `THCHS-30 Dataset`_,
-which is a dataset with :ref:`reference/label_format:Sentence` label
+which is a dataset with :ref:`reference/label_format/Sentence:Sentence` label
 
 .. _THCHS-30 Dataset: https://www.graviti.com/open-datasets/data-decorators/THCHS30
 
@@ -57,7 +57,7 @@ into a :class:`~tensorbay.dataset.dataset.Dataset` instance.
    :name: THCHS30-dataloader
    :linenos:
 
-See :ref:`Sentence annotation <reference/label_format:Sentence>` for more details.
+See :ref:`Sentence annotation <reference/label_format/Sentence:Sentence>` for more details.
 
 .. note::
     Since the :ref:`THCHS-30 dataloader <THCHS30-dataloader>` above is already included in TensorBay,
@@ -146,7 +146,7 @@ which can be obtained by index.
    :end-before: """"""
 
 In each :ref:`reference/dataset_structure:Data`,
-there is a sequence of :ref:`reference/label_format:Sentence` annotations,
+there is a sequence of :ref:`reference/label_format/Sentence:Sentence` annotations,
 which can be obtained by index.
 
 .. literalinclude:: ../../../docs/code/THCHS30.py
@@ -155,7 +155,7 @@ which can be obtained by index.
    :end-before: """"""
 
 There is only one label type in "THCHS-30" dataset, which is ``Sentence``. It contains
-``sentence``, ``spell`` and ``phone`` information. See :ref:`Sentence <reference/label_format:Sentence>`
+``sentence``, ``spell`` and ``phone`` information. See :ref:`Sentence <reference/label_format/Sentence:Sentence>`
 label format for more details.
 
 ****************

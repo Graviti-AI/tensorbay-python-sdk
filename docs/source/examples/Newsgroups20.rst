@@ -3,7 +3,7 @@
 ###############
 
 This topic describes how to manage the `20 Newsgroups dataset`_, which is a dataset 
-with :ref:`reference/label_format:Classification` label type.
+with :ref:`reference/label_format/Classification:Classification` label type.
 
 .. _20 Newsgroups dataset: https://gas.graviti.cn/dataset/data-decorators/Newsgroups20
 
@@ -45,15 +45,15 @@ which is typically stored in a json file.
    :name: Newsgroups20-catalog
    :linenos:
 
-The only annotation type for "20 Newsgroups" is :ref:`reference/label_format:Classification`,
-and there are 20 :ref:`reference/label_format:Category` types.
+The only annotation type for "20 Newsgroups" is :ref:`reference/label_format/Classification:Classification`,
+and there are 20 :ref:`reference/label_format/CommonLabelProperties:Category` types.
 
 .. important::
 
    See :ref:`catalog table <reference/dataset_structure:catalog>` for more catalogs with different label types.
 
 .. note::
-   The :ref:`categories<reference/label_format:Category>` in
+   The :ref:`categories<reference/label_format/CommonLabelProperties:Category>` in
    :ref:`reference/dataset_structure:Dataset` "20 Newsgroups" have parent-child relationship,
    and it use "." to sparate different levels.
 
@@ -68,7 +68,7 @@ A :ref:`reference/glossary:Dataloader` is neeeded to organize the dataset into a
    :name: Newsgroups20-dataloader
    :linenos:
 
-See :ref:`Classification annotation <reference/label_format:Classification>` for more details.
+See :ref:`Classification annotation <reference/label_format/Classification:Classification>` for more details.
 
 .. note::
 
@@ -163,7 +163,7 @@ which can be obtained by index.
    :end-before: """"""
 
 In each :ref:`reference/dataset_structure:Data`,
-there is a sequence of :ref:`reference/label_format:Classification` annotations,
+there is a sequence of :ref:`reference/label_format/Classification:Classification` annotations,
 which can be obtained by index.
 
 .. literalinclude:: ../../../docs/code/Newsgroups20.py
@@ -172,9 +172,9 @@ which can be obtained by index.
    :end-before: """"""
 
 There is only one label type in "20 Newsgroups" dataset, which is ``Classification``.
-The information stored in :ref:`reference/label_format:Category` is
+The information stored in :ref:`reference/label_format/CommonLabelProperties:Category` is
 one of the category names in "categories" list of :ref:`catalog.json <Newsgroups20-catalog>`.
-See :ref:`this page <reference/label_format:Classification>` for more details about the
+See :ref:`this page <reference/label_format/Classification:Classification>` for more details about the
 structure of Classification.
    
 ****************

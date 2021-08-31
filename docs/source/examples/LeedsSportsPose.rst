@@ -3,7 +3,7 @@
 ###################
 
 This topic describes how to manage the `Leeds Sports Pose Dataset <https://gas.graviti.cn/dataset/data-decorators/LeedsSportsPose>`_,
-which is a dataset with :ref:`reference/label_format:Keypoints2D` label(:numref:`Fig. %s <example-leedssportspose>`).
+which is a dataset with :ref:`reference/label_format/Keypoints2D:Keypoints2D` label(:numref:`Fig. %s <example-leedssportspose>`).
 
 .. _example-leedssportspose:
 
@@ -50,7 +50,7 @@ is typically stored in a json file.
    :name: LeedsSportsPose-catalog
    :linenos:
 
-The only annotation type for "Leeds Sports Pose" is :ref:`reference/label_format:Keypoints2D`.
+The only annotation type for "Leeds Sports Pose" is :ref:`reference/label_format/Keypoints2D:Keypoints2D`.
 
 .. important::
 
@@ -67,7 +67,7 @@ a :class:`~tensorbay.dataset.dataset.Dataset` instance.
    :name: LeedsSportsPose-dataloader
    :linenos:
 
-See :ref:`Keipoints2D annotation <reference/label_format:Keypoints2D>` for more details.
+See :ref:`Keipoints2D annotation <reference/label_format/Keypoints2D:Keypoints2D>` for more details.
 
 .. note::
 
@@ -147,7 +147,7 @@ which can be obtained by index.
    :end-before: """"""
 
 In each :ref:`reference/dataset_structure:data`,
-there is a sequence of :ref:`reference/label_format:Keypoints2D` annotations,
+there is a sequence of :ref:`reference/label_format/Keypoints2D:Keypoints2D` annotations,
 which can be obtained by index.
 
 .. literalinclude:: ../../../docs/code/LeedsSportsPose.py
@@ -157,7 +157,7 @@ which can be obtained by index.
 
 There is only one label type in "Leeds Sports Pose" dataset, which is ``keypoints2d``. The information stored in ``x`` (``y``) is
 the x (y) coordinate of one keypoint of one keypoints list. The information stored in ``v`` is
-the visible status of one keypoint of one keypoints list. See :ref:`reference/label_format:Keypoints2D`
+the visible status of one keypoint of one keypoints list. See :ref:`reference/label_format/Keypoints2D:Keypoints2D`
 label format for more details.
 
 ****************

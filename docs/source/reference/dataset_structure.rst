@@ -60,20 +60,20 @@ Here are some catalog examples of datasets with different label types and a data
    :align: center
    :widths: auto
 
-   =============================  =============================================================================
+   =============================  ============================================================================================
     Catalogs                       Description
-   =============================  =============================================================================
+   =============================  ============================================================================================
    `elpv Catalog`_                | This example is the catalog of `elpv Dataset`_,
-                                  | which is a dataset with :ref:`reference/label_format:Classification` label.
+                                  | which is a dataset with :ref:`reference/label_format/Classification:Classification` label.
    `BSTLD Catalog`_               | This example is the catalog of `BSTLD Dataset`_,
-                                  | which is a dataset with :ref:`reference/label_format:Box2D` label.
+                                  | which is a dataset with :ref:`reference/label_format/Box2D:Box2D` label.
    `Neolix OD Catalog`_           | This example is the catalog of `Neolix OD Dataset`_,
-                                  | which is a dataset with :ref:`reference/label_format:Box3D` label.
+                                  | which is a dataset with :ref:`reference/label_format/Box3D:Box3D` label.
    `Leeds Sports Pose Catalog`_   | This example is the catalog of `Leeds Sports Pose Dataset`_,
-                                  | which is a dataset with :ref:`reference/label_format:Keypoints2D` label.
+                                  | which is a dataset with :ref:`reference/label_format/Keypoints2D:Keypoints2D` label.
    `NightOwls Catalog`_           | This example is the catalog of `NightOwls Dataset`_,
-                                  | which is a dataset with tracking :ref:`reference/label_format:Box2D` label.
-   =============================  =============================================================================
+                                  | which is a dataset with tracking :ref:`reference/label_format/Box2D:Box2D` label.
+   =============================  ============================================================================================
 
 .. _elpv Catalog: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/Elpv/catalog.json
 .. _elpv Dataset: https://gas.graviti.cn/dataset/data-decorators/Elpv

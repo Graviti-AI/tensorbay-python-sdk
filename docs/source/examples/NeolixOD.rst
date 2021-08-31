@@ -3,7 +3,7 @@
 ###########
 
 This topic describes how to manage the `Neolix OD dataset`_,
-which is a dataset with :ref:`reference/label_format:Box3D` label type
+which is a dataset with :ref:`reference/label_format/Box3D:Box3D` label type
 (:numref:`Fig. %s <example-neolixod>`).
 
 .. _Neolix OD dataset: https://gas.graviti.cn/dataset/graviti-open-dataset/NeolixOD
@@ -54,8 +54,8 @@ which is typically stored in a json file.
    :name: neolixod-catalog
    :linenos:
 
-The only annotation type for "Neolix OD" is :ref:`reference/label_format:Box3D`, and there are 15
-:ref:`reference/label_format:Category` types and 3 :ref:`reference/label_format:Attributes` types.
+The only annotation type for "Neolix OD" is :ref:`reference/label_format/Box3D:Box3D`, and there are 15
+:ref:`reference/label_format/CommonLabelProperties:Category` types and 3 :ref:`reference/label_format/CommonLabelProperties:Attributes` types.
 
 .. important::
 
@@ -72,7 +72,7 @@ a :class:`~tensorbay.dataset.dataset.Dataset` instance.
    :name: neolixod-dataloader
    :linenos:
 
-See :ref:`Box3D annotation <reference/label_format:Box3D>` for more details.
+See :ref:`Box3D annotation <reference/label_format/Box3D:Box3D>` for more details.
 
 .. note::
 
@@ -154,7 +154,7 @@ which can be obtained by index.
    :end-before: """"""
 
 In each :ref:`reference/dataset_structure:Data`,
-there is a sequence of :ref:`reference/label_format:Box3D` annotations,
+there is a sequence of :ref:`reference/label_format/Box3D:Box3D` annotations,
 
 .. literalinclude:: ../../../docs/code/NeolixOD.py
    :language: python
@@ -162,11 +162,11 @@ there is a sequence of :ref:`reference/label_format:Box3D` annotations,
    :end-before: """"""
 
 There is only one label type in "Neolix OD" dataset, which is ``box3d``.
-The information stored in :ref:`reference/label_format:Category` is
+The information stored in :ref:`reference/label_format/CommonLabelProperties:Category` is
 one of the category names in "categories" list of :ref:`catalog.json <neolixod-catalog>`.
-The information stored in :ref:`reference/label_format:Attributes`
+The information stored in :ref:`reference/label_format/CommonLabelProperties:Attributes`
 is one of the attributes in "attributes" list of :ref:`catalog.json <neolixod-catalog>`.
-See :ref:`reference/label_format:Box3D` label format for more details.
+See :ref:`reference/label_format/Box3D:Box3D` label format for more details.
 
 ****************
  Delete Dataset
