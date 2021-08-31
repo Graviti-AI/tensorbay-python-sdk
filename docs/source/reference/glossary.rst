@@ -84,20 +84,20 @@ Here are some dataloader examples of datasets with different label types and con
    :align: center
    :widths: auto
 
-   ================================  =============================================================================
+   ================================  ============================================================================================
     Dataloaders                       Description
-   ================================  =============================================================================
+   ================================  ============================================================================================
    `LISA Traffic Light Dataloader`_  | This example is the dataloader of `LISA Traffic Light Dataset`_,
-                                     | which is a continuous dataset with :ref:`reference/label_format:Box2D` label.
+                                     | which is a continuous dataset with :ref:`reference/label_format/Box2D:Box2D` label.
    `Dogs vs Cats Dataloader`_        | This example is the dataloader of `Dogs vs Cats Dataset`_,
-                                     | which is a dataset with :ref:`reference/label_format:Classification` label.
+                                     | which is a dataset with :ref:`reference/label_format/Classification:Classification` label.
    `BSTLD Dataloader`_               | This example is the dataloader of `BSTLD Dataset`_,
-                                     | which is a dataset with :ref:`reference/label_format:Box2D` label.
+                                     | which is a dataset with :ref:`reference/label_format/Box2D:Box2D` label.
    `Neolix OD Dataloader`_           | This example is the dataloader of `Neolix OD Dataset`_,
-                                     | which is a dataset with :ref:`reference/label_format:Box3D` label.
+                                     | which is a dataset with :ref:`reference/label_format/Box3D:Box3D` label.
    `Leeds Sports Pose Daraloader`_   | This example is the dataloader of `Leeds Sports Pose Dataset`_,
-                                     | which is a dataset with :ref:`reference/label_format:Keypoints2D` label.
-   ================================  =============================================================================
+                                     | which is a dataset with :ref:`reference/label_format/Keypoints2D:Keypoints2D` label.
+   ================================  ============================================================================================
 
 .. _Dogs vs Cats Dataloader: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/DogsVsCats/loader.py
 .. _Dogs vs Cats Dataset: https://gas.graviti.cn/dataset/data-decorators/DogsVsCats

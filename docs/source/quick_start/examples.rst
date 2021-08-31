@@ -10,31 +10,31 @@ The following table lists a series of examples to help developers to use TensorB
    :align: center
    :widths: auto
 
-   =======================================================  ===========================================================
+   =======================================================  ==========================================================================
    Examples                                                 Description
-   =======================================================  ===========================================================
+   =======================================================  ==========================================================================
    :ref:`examples/DogsVsCats:Dogs vs Cats`                  | Topic: Dataset Management
                                                             | Data Type: Image
-                                                            | Label Type: :ref:`reference/label_format:Classification`
+                                                            | Label Type: :ref:`reference/label_format/Classification:Classification`
    :ref:`examples/Newsgroups20:20 Newsgroups`               | Topic: Dataset Management
                                                             | Data Type: Text
-                                                            | Label Type: :ref:`reference/label_format:Classification`
+                                                            | Label Type: :ref:`reference/label_format/Classification:Classification`
    :ref:`examples/BSTLD:BSTLD`                              | Topic: Dataset Management
                                                             | Data Type: Image
-                                                            | Label Type: :ref:`reference/label_format:Box2D`
+                                                            | Label Type: :ref:`reference/label_format/Box2D:Box2D`
    :ref:`examples/NeolixOD:Neolix OD`                       | Topic: Dataset Management
                                                             | Data Type: Point Cloud
-                                                            | Label Type: :ref:`reference/label_format:Box3D`
+                                                            | Label Type: :ref:`reference/label_format/Box3D:Box3D`
    :ref:`examples/LeedsSportsPose:Leeds Sports Pose`        | Topic: Dataset Management
                                                             | Data Type: Image
-                                                            | Label Type: :ref:`reference/label_format:Keypoints2D`
+                                                            | Label Type: :ref:`reference/label_format/Keypoints2D:Keypoints2D`
    :ref:`examples/THCHS30:THCHS-30`                         | Topic: Dataset Management
                                                             | Data Type: Audio
-                                                            | Label Type: :ref:`reference/label_format:Sentence`
+                                                            | Label Type: :ref:`reference/label_format/Sentence:Sentence`
    :ref:`examples/update_dataset:Update Dataset`            | Topic: Update Dataset
    :ref:`examples/move_and_copy:Move And Copy`              | Topic: Move And Copy
    :ref:`examples/merge_datasets:Merge Datasets`             | Topic: Merge Datasets
-   =======================================================  ===========================================================
+   =======================================================  ==========================================================================
 
 .. toctree::
    :hidden:

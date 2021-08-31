@@ -3,7 +3,7 @@
 ##############
 
 This topic describes how to manage the `Dogs vs Cats Dataset <https://gas.graviti.cn/dataset/data-decorators/DogsVsCats>`_,
-which is a dataset with :ref:`reference/label_format:Classification` label.
+which is a dataset with :ref:`reference/label_format/Classification:Classification` label.
 
 *****************************
  Authorize a Client Instance
@@ -42,8 +42,8 @@ is typically stored in a json file.
    :name: dogsvscats-catalog
    :linenos:
 
-The only annotation type for "Dogs vs Cats" is :ref:`reference/label_format:Classification`, and there are 2
-:ref:`reference/label_format:category` types.
+The only annotation type for "Dogs vs Cats" is :ref:`reference/label_format/Classification:Classification`, and there are 2
+:ref:`reference/label_format/CommonLabelProperties:category` types.
 
 .. important::
 
@@ -60,7 +60,7 @@ a :class:`~tensorbay.dataset.dataset.Dataset` instance.
    :name: dogsvscats-dataloader
    :linenos:
 
-See :ref:`Classification annotation <reference/label_format:Classification>` for more details.
+See :ref:`Classification annotation <reference/label_format/Classification:Classification>` for more details.
 
 .. note::
 
@@ -148,7 +148,7 @@ which can be obtained by index.
    :end-before: """"""
 
 In each :ref:`reference/dataset_structure:data`,
-there is a sequence of :ref:`reference/label_format:Classification` annotations,
+there is a sequence of :ref:`reference/label_format/Classification:Classification` annotations,
 which can be obtained by index.
 
 .. literalinclude:: ../../../docs/code/DogsVsCats.py
@@ -156,9 +156,9 @@ which can be obtained by index.
    :start-after: """Read Dataset / get label"""
    :end-before: """"""
 
-There is only one label type in "Dogs vs Cats" dataset, which is ``classification``. The information stored in :ref:`reference/label_format:category` is
+There is only one label type in "Dogs vs Cats" dataset, which is ``classification``. The information stored in :ref:`reference/label_format/CommonLabelProperties:category` is
 one of the names in "categories" list of :ref:`catalog.json <dogsvscats-catalog>`.
-See :ref:`reference/label_format:Classification` label format for more details.
+See :ref:`reference/label_format/Classification:Classification` label format for more details.
 
 ****************
  Delete Dataset

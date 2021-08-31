@@ -3,7 +3,7 @@
 ########
 
 This topic describes how to manage the `BSTLD Dataset <https://gas.graviti.cn/dataset/data-decorators/BSTLD>`_,
-which is a dataset with :ref:`reference/label_format:Box2D` label(:numref:`Fig. %s <example-bstld>`).
+which is a dataset with :ref:`reference/label_format/Box2D:Box2D` label(:numref:`Fig. %s <example-bstld>`).
 
 .. _example-bstld:
 
@@ -50,8 +50,8 @@ is typically stored in a json file.
    :name: BSTLD-catalog
    :linenos:
 
-The only annotation type for "BSTLD" is :ref:`reference/label_format:Box2D`, and there are 13
-:ref:`reference/label_format:category` types and one :ref:`reference/label_format:attributes` type.
+The only annotation type for "BSTLD" is :ref:`reference/label_format/Box2D:Box2D`, and there are 13
+:ref:`reference/label_format/CommonLabelProperties:category` types and one :ref:`reference/label_format/CommonLabelProperties:attributes` type.
 
 .. important::
 
@@ -68,7 +68,7 @@ a :class:`~tensorbay.dataset.dataset.Dataset` instance.
    :name: BSTLD-dataloader
    :linenos:
 
-See :ref:`Box2D annotation <reference/label_format:Box2D>` for more details.
+See :ref:`Box2D annotation <reference/label_format/Box2D:Box2D>` for more details.
 
 .. note::
 
@@ -157,7 +157,7 @@ which can be obtained by index.
    :end-before: """"""
 
 In each :ref:`reference/dataset_structure:data`,
-there is a sequence of :ref:`reference/label_format:Box2D` annotations,
+there is a sequence of :ref:`reference/label_format/Box2D:Box2D` annotations,
 which can be obtained by index.
 
 .. literalinclude:: ../../../docs/code/BSTLD.py
@@ -166,10 +166,10 @@ which can be obtained by index.
    :end-before: """"""
 
 There is only one label type in "BSTLD" dataset, which is ``box2d``.
-The information stored in :ref:`reference/label_format:category` is
+The information stored in :ref:`reference/label_format/CommonLabelProperties:category` is
 one of the names in "categories" list of :ref:`catalog.json <BSTLD-catalog>`. The information stored
-in :ref:`reference/label_format:attributes` is one or several of the attributes in "attributes" list of :ref:`catalog.json <BSTLD-catalog>`.
-See :ref:`reference/label_format:Box2D` label format for more details.
+in :ref:`reference/label_format/CommonLabelProperties:attributes` is one or several of the attributes in "attributes" list of :ref:`catalog.json <BSTLD-catalog>`.
+See :ref:`reference/label_format/Box2D:Box2D` label format for more details.
 
 ****************
  Delete Dataset
