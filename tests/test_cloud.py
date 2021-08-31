@@ -13,17 +13,18 @@ from .utility import get_dataset_name
 
 
 class TestImportData:
-    def test_import_dataset_from_azure(self, accesskey, url):
+    @pytest.mark.parametrize("config_name", ["azure_china_config", "oss_config", "s3_config"])
+    def test_import_cloud_files(self, accesskey, url, config_name):
 
         gas_client = GAS(access_key=accesskey, url=url)
         try:
-            cloud_client = gas_client.get_cloud_client("azure_china_config_files")
+            cloud_client = gas_client.get_cloud_client(config_name)
         except ResourceNotExistError:
-            pytest.skip("skip this case because there's no 'azure_china_config_files' config")
+            pytest.skip(f"skip this case because there's no {config_name} config")
 
-        auth_data = cloud_client.list_auth_data("test/03/")
+        auth_data = cloud_client.list_auth_data("tests")
         dataset_name = get_dataset_name()
-        dataset_client = gas_client.create_auth_dataset(dataset_name, "azure_china_config_01")
+        dataset_client = gas_client.create_auth_dataset(dataset_name, config_name)
 
         dataset = Dataset(name=dataset_name)
         segment = dataset.create_segment("Segment1")
