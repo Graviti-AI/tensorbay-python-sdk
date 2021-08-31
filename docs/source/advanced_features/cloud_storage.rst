@@ -52,7 +52,7 @@ Create a dataset with authorized cloud storage:
 
 .. code:: python
 
-    dataset_client = gas.create_auth_dataset("dataset_name", "config_name")
+    dataset_client = gas.create_dataset("dataset_name", config_name="config_name")
 
 Import Cloud Files into Authorized Storage Dataset
 ==================================================

@@ -260,40 +260,14 @@ class TestGAS:
 
     @pytest.mark.parametrize("is_fusion", [True, False])
     def test_create_dataset(self, mocker, is_fusion):
-        params = {"name": "test", "type": int(is_fusion), "region": "beijing", "alias": "alias"}
+        params = {"name": "test", "type": int(is_fusion), "configName": "config", "alias": "alias"}
         response_data = {"id": "12345"}
         open_api_do = mocker.patch(
             f"{gas.__name__}.Client.open_api_do",
             return_value=mock_response(data=response_data),
         )
         dataset_client = self.gas_client.create_dataset(
-            "test", is_fusion, region="beijing", alias="alias"
-        )
-        dataset_type = FusionDatasetClient if is_fusion else DatasetClient
-        assert isinstance(dataset_client, dataset_type)
-        assert dataset_client._name == params["name"]
-        assert dataset_client._dataset_id == response_data["id"]
-        assert dataset_client.status.branch_name == DEFAULT_BRANCH
-        assert dataset_client.status.commit_id == ROOT_COMMIT_ID
-        assert dataset_client._alias == params["alias"]
-        assert dataset_client._is_public == DEFAULT_IS_PUBLIC
-        open_api_do.assert_called_once_with("POST", "", json=params)
-
-    @pytest.mark.parametrize("is_fusion", [True, False])
-    def test_create_auth_dataset(self, mocker, is_fusion):
-        params = {
-            "name": "test",
-            "type": int(is_fusion),
-            "configName": "cloud_config",
-            "alias": "alias",
-        }
-        response_data = {"id": "12345"}
-        open_api_do = mocker.patch(
-            f"{gas.__name__}.Client.open_api_do",
-            return_value=mock_response(data=response_data),
-        )
-        dataset_client = self.gas_client.create_auth_dataset(
-            "test", "cloud_config", is_fusion=is_fusion, alias="alias"
+            "test", is_fusion, config_name="config", alias="alias"
         )
         dataset_type = FusionDatasetClient if is_fusion else DatasetClient
         assert isinstance(dataset_client, dataset_type)

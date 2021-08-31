@@ -20,6 +20,7 @@ from typing_extensions import Literal
 
 from ..dataset import Dataset, FusionDataset
 from ..exception import DatasetTypeError, OperationError, ResourceNotExistError
+from ..utility import Deprecated
 from .cloud_storage import CloudClient
 from .dataset import DatasetClient, FusionDatasetClient
 from .lazy import PagingList
@@ -216,7 +217,7 @@ class GAS:
         name: str,
         is_fusion: Literal[False] = False,
         *,
-        region: Optional[str] = None,
+        config_name: Optional[str] = None,
         alias: str = "",
     ) -> DatasetClient:
         ...
@@ -227,7 +228,7 @@ class GAS:
         name: str,
         is_fusion: Literal[True],
         *,
-        region: Optional[str] = None,
+        config_name: Optional[str] = None,
         alias: str = "",
     ) -> FusionDatasetClient:
         ...
@@ -238,7 +239,7 @@ class GAS:
         name: str,
         is_fusion: bool = False,
         *,
-        region: Optional[str] = None,
+        config_name: Optional[str] = None,
         alias: str = "",
     ) -> DatasetClientType:
         ...
@@ -248,7 +249,7 @@ class GAS:
         name: str,
         is_fusion: bool = False,
         *,
-        region: Optional[str] = None,  # beijing, hangzhou, shanghai
+        config_name: Optional[str] = None,
         alias: str = "",
     ) -> DatasetClientType:
         """Create a TensorBay dataset with given name.
@@ -256,8 +257,7 @@ class GAS:
         Arguments:
             name: Name of the dataset, unique for a user.
             is_fusion: Whether the dataset is a fusion dataset, True for fusion dataset.
-            region: Region of the dataset to be stored,
-                only support "beijing", "hangzhou", "shanghai", default is "shanghai".
+            config_name: The auth storage config name.
             alias: Alias of the dataset, default is "".
 
         Returns:
@@ -271,8 +271,8 @@ class GAS:
             "type": int(is_fusion),  # normal dataset: 0, fusion dataset: 1
             "alias": alias,
         }
-        if region:
-            post_data["region"] = region
+        if config_name is not None:
+            post_data["configName"] = config_name
 
         status = Status(DEFAULT_BRANCH, commit_id=ROOT_COMMIT_ID)
 
@@ -287,12 +287,13 @@ class GAS:
             is_public=DEFAULT_IS_PUBLIC,
         )
 
+    @Deprecated(since="1.12.0", removed_in="1.15.0", substitute="GAS.create_dataset")
     def create_auth_dataset(
         self,
         name: str,
-        config_name: str,
-        *,
         is_fusion: bool = False,
+        *,
+        config_name: Optional[str] = None,
         alias: str = "",
     ) -> DatasetClientType:
         """Create a TensorBay dataset with given name in auth cloud storage.
@@ -302,8 +303,8 @@ class GAS:
 
         Arguments:
             name: Name of the dataset, unique for a user.
-            config_name: The auth storage config name.
             is_fusion: Whether the dataset is a fusion dataset, True for fusion dataset.
+            config_name: The auth storage config name.
             alias: Alias of the dataset, default is "".
 
         Returns:
@@ -312,25 +313,7 @@ class GAS:
             and the status of dataset client is "commit".
 
         """
-        post_data = {
-            "name": name,
-            "type": int(is_fusion),  # normal dataset: 0, fusion dataset: 1
-            "configName": config_name,
-            "alias": alias,
-        }
-
-        status = Status(DEFAULT_BRANCH, commit_id=ROOT_COMMIT_ID)
-
-        response = self._client.open_api_do("POST", "", json=post_data)
-        ReturnType: Type[DatasetClientType] = FusionDatasetClient if is_fusion else DatasetClient
-        return ReturnType(
-            name,
-            response.json()["id"],
-            self,
-            status=status,
-            alias=alias,
-            is_public=DEFAULT_IS_PUBLIC,
-        )
+        return self.create_dataset(name, is_fusion, config_name=config_name, alias=alias)
 
     @overload
     def get_dataset(self, name: str, is_fusion: Literal[False] = False) -> DatasetClient:

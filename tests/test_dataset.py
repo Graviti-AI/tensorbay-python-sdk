@@ -24,22 +24,6 @@ class TestDataset:
 
         gas_client.delete_dataset(dataset_name)
 
-    def test_create_dataset_with_region(self, accesskey, url):
-        gas_client = GAS(access_key=accesskey, url=url)
-        regions = ("beijing", "hangzhou", "shanghai")
-
-        for region in regions:
-            dataset_name = get_dataset_name()
-            gas_client.create_dataset(dataset_name, region=region)
-            gas_client.get_dataset(dataset_name)
-
-            gas_client.delete_dataset(dataset_name)
-
-        region = "guangzhou"
-        dataset_name = get_dataset_name()
-        with pytest.raises(ResponseError):
-            gas_client.create_dataset(dataset_name, region=region)
-
     def test_create_fusion_dataset(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
