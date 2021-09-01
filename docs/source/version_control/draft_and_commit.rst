@@ -54,6 +54,9 @@ List Drafts
 
 The draft number can be found through listing drafts.
 
+``status`` includes "OPEN", "CLOSED", "COMMITTED" and None where None means listing drafts in all status.
+``branch_name`` refers to the branch name of the draft to be listed.
+
 .. literalinclude:: ../../../docs/code/draft_and_commit.py
       :language: python
       :start-after: """List Drafts"""
