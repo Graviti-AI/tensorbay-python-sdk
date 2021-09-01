@@ -63,8 +63,10 @@ class VersionControlClient:
         response = self._client.open_api_do("POST", "commits", self._dataset_id, json=post_data)
         return response.json()["commitId"]  # type: ignore[no-any-return]
 
-    def _generate_drafts(self, offset: int = 0, limit: int = 128) -> Generator[Draft, None, int]:
-        params = {"offset": offset, "limit": limit}
+    def _generate_drafts(
+        self, status: Optional[str], branch_name: Optional[str], offset: int = 0, limit: int = 128
+    ) -> Generator[Draft, None, int]:
+        params = {"offset": offset, "limit": limit, "status": status, "branchName": branch_name}
         response = self._client.open_api_do("GET", "drafts", self._dataset_id, params=params).json()
 
         for item in response["drafts"]:
@@ -271,14 +273,24 @@ class VersionControlClient:
 
         raise ResourceNotExistError(resource="draft", identification=draft_number)
 
-    def list_drafts(self) -> PagingList[Draft]:
+    def list_drafts(
+        self, status: Optional[str] = "OPEN", branch_name: Optional[str] = None
+    ) -> PagingList[Draft]:
         """List all the drafts.
+
+        Arguments:
+            status: The draft status which includes "OPEN", "CLOSED", "COMMITTED", "ALL" and None.
+                    where None means listing open drafts.
+            branch_name: The branch name.
 
         Returns:
             The PagingList of :class:`drafts<.Draft>`.
 
         """
-        return PagingList(self._generate_drafts, 128)
+        return PagingList(
+            lambda offset, limit: self._generate_drafts(status, branch_name, offset, limit),
+            128,
+        )
 
     def update_draft(
         self,

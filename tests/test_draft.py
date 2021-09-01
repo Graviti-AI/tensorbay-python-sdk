@@ -85,19 +85,39 @@ class TestDraft:
         dataset_client.create_draft("draft-1", "description-1")
         dataset_client.commit("commit-1")
         dataset_client.create_draft("draft-2", "description-2")
-
-        # After committing, the draft will be deleted
-        drafts_get = dataset_client.list_drafts()
-        assert len(drafts_get) == 1
-        assert drafts_get[0].number == 2
-
+        dataset_client.checkout(revision=DEFAULT_BRANCH)
+        dataset_client.close_draft(2)
+        dataset_client.create_draft("draft-3", "description-3")
         dataset_client.checkout(revision=DEFAULT_BRANCH)
         dataset_client.create_branch("dev")
-        dataset_client.create_draft("draft-3", "description-3", branch_name="dev")
+        dataset_client.create_draft("draft-4", "description-4", branch_name="dev")
+
+        # After committing, the draft will be deleted
+        drafts_get_open = dataset_client.list_drafts(branch_name=DEFAULT_BRANCH)
+        assert len(drafts_get_open) == 1
+        assert drafts_get_open[0].number == 3
+
+        drafts_get_closed = dataset_client.list_drafts(status="CLOSED", branch_name=DEFAULT_BRANCH)
+        assert len(drafts_get_closed) == 1
+        assert drafts_get_closed[0].number == 2
+
+        drafts_get_commited = dataset_client.list_drafts(
+            status="COMMITTED", branch_name=DEFAULT_BRANCH
+        )
+        assert len(drafts_get_commited) == 1
+        assert drafts_get_commited[0].number == 1
+
+        drafts_get_all = dataset_client.list_drafts(status="ALL", branch_name=DEFAULT_BRANCH)
+        assert len(drafts_get_all) == 3
+
+        drafts_get_dev_open = dataset_client.list_drafts(branch_name="dev")
+        assert len(drafts_get_dev_open) == 1
+        assert drafts_get_dev_open[0].number == 4
+
         drafts_get = dataset_client.list_drafts()
         assert len(drafts_get) == 2
-        assert drafts_get[0].number == 2
-        assert drafts_get[1].number == 3
+        assert drafts_get[0].number == 3
+        assert drafts_get[1].number == 4
 
         gas_client.delete_dataset(dataset_name)
 

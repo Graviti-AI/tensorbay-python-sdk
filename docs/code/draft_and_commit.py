@@ -40,7 +40,7 @@ dataset_client.create_draft("draft-1", branch_name="main")
 """"""
 
 """List Drafts"""
-drafts = dataset_client.list_drafts()
+drafts = dataset_client.list_drafts(status="CLOSED", branch_name="branch-1")
 """"""
 
 """Get Draft"""
