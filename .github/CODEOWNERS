@@ -4,7 +4,7 @@
 
 * @linjiX
 
-/docs/ @Lee-000
+/docs/ @graczhual
 
 /tests/ @AChenQ
 /.github/workflows/ @AChenQ
@@ -13,8 +13,7 @@
 /tensorbay/cli/ @Lee-000
 /tensorbay/cli/tests/ @Lee-000 @AChenQ
 
-/tensorbay/client/ @rexzheng324-c
-/tensorbay/client/tests/ @rexzheng324-c @AChenQ
+/tensorbay/client/ @AChenQ
 
 /tensorbay/dataset/ @Lee-000
 /tensorbay/dataset/tests/ @Lee-000 @AChenQ
