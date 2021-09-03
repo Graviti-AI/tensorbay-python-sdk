@@ -10,9 +10,9 @@ The following table lists a series of examples to help developers to use TensorB
    :align: center
    :widths: auto
 
-   =======================================================  ==========================================================================
+   ======================================================== =========================================================================
    Examples                                                 Description
-   =======================================================  ==========================================================================
+   ======================================================== =========================================================================
    :ref:`examples/DogsVsCats:Dogs vs Cats`                  | Topic: Dataset Management
                                                             | Data Type: Image
                                                             | Label Type: :ref:`reference/label_format/Classification:Classification`
@@ -31,10 +31,14 @@ The following table lists a series of examples to help developers to use TensorB
    :ref:`examples/THCHS30:THCHS-30`                         | Topic: Dataset Management
                                                             | Data Type: Audio
                                                             | Label Type: :ref:`reference/label_format/Sentence:Sentence`
+   :ref:`examples/VOC2012Segmentation:VOC2012 Segmentation` | Topic: Dataset Management
+                                                            | Data Type: Image
+                                                            | Label Types: :ref:`reference/label_format/SemanticMask:SemanticMask`,
+                                                              :ref:`reference/label_format/InstanceMask:InstanceMask`
    :ref:`examples/update_dataset:Update Dataset`            | Topic: Update Dataset
    :ref:`examples/move_and_copy:Move And Copy`              | Topic: Move And Copy
    :ref:`examples/merge_datasets:Merge Datasets`             | Topic: Merge Datasets
-   =======================================================  ==========================================================================
+   ======================================================== =========================================================================
 
 .. toctree::
    :hidden:
@@ -46,6 +50,7 @@ The following table lists a series of examples to help developers to use TensorB
    ../examples/NeolixOD
    ../examples/THCHS30
    ../examples/Newsgroups20
+   ../examples/VOC2012Segmentation
    ../examples/update_dataset
    ../examples/move_and_copy
    ../examples/merge_datasets
