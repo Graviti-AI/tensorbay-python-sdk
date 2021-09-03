@@ -6,9 +6,11 @@
 """Client module."""
 
 from .gas import GAS
+from .profile import profile
 from .requests import config
 
 __all__ = [
     "GAS",
     "config",
+    "profile",
 ]

@@ -271,7 +271,9 @@ class Client:
                 response=response
             ) from None
 
-    def do(self, method: str, url: str, **kwargs: Any) -> Response:  # pylint: disable=invalid-name
+    def do(  # pylint: disable=function-redefined,invalid-name
+        self, method: str, url: str, **kwargs: Any
+    ) -> Response:
         """Send a request.
 
         Arguments:
