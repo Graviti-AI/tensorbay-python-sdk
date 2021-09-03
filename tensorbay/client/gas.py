@@ -276,6 +276,7 @@ class GAS:
         name: str,
         file_path: str,
         *,
+        account_type: str,
         account_name: str,
         account_key: str,
         container_name: str,
@@ -285,6 +286,7 @@ class GAS:
         Arguments:
             name: The required auth storage config name.
             file_path: dataset storage path of the bucket.
+            account_type: account type of azure, only support "China" and "Global".
             account_name: account name of the azure.
             account_key: account key of the azure.
             container_name: container name of the azure.
@@ -299,6 +301,7 @@ class GAS:
             "accesskeyId": account_name,
             "accesskeySecret": account_key,
             "containerName": container_name,
+            "accountType": account_type,
         }
 
         self._client.open_api_do("POST", "storage-configs/azure", json=post_data)

@@ -279,6 +279,7 @@ class TestGAS:
         self.gas_client.create_azure_storage_config(
             "azure_config",
             "tests",
+            account_type="China",
             account_name="accountName",
             account_key="accountKey",
             container_name="containerName",
@@ -289,6 +290,7 @@ class TestGAS:
             "accesskeyId": "accountName",
             "accesskeySecret": "accountKey",
             "containerName": "containerName",
+            "accountType": "China",
         }
         open_api_do("POST", "storage-configs/azure", json=post_data)
 
