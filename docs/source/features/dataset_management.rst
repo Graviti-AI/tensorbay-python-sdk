@@ -9,6 +9,7 @@ This topic describes dataset management, including:
 - :ref:`features/dataset_management:Read Dataset`
 - :ref:`features/dataset_management:Update Dataset`
 - :ref:`features/dataset_management:Move and Copy`
+- :ref:`features/dataset_management:Merge Datasets`
 
 
 ******************
