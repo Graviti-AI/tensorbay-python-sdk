@@ -27,5 +27,14 @@
                 "type": "boolean"
             }
         ]
+    },
+    "INSTANCE_MASK": {
+        "categories": [{ "name": "background", "categoryId": 0 }],
+        "attributes": [
+            { "name": "crowd", "type": "boolean" },
+            { "name": "ignore", "type": "boolean" },
+            { "name": "occluded", "type": "boolean" },
+            { "name": "truncated", "type": "boolean" }
+        ]
     }
 }

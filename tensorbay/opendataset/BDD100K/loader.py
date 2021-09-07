@@ -49,15 +49,10 @@ _SEGMENTATIONS_INFO = {
     "pan": ("pan_seg", "bitmasks"),
 }
 _TRACKING_DATASET_INFO = {
-    "mots": ("bdd100k_seg_track_20", "seg_track_20", os.path.join("seg_track_20", "polygons")),
-    "mot": (
-        "bdd100k_box_track_20",
-        "",
-        "",
-    ),
+    "mots": ("bdd100k_seg_track_20", "seg_track_20"),
+    "mot": ("bdd100k_box_track_20", ""),
 }
-_DATA_GETTER = Callable[[str, Dict[str, Any]], Data]
-_DATA_GENERATOR = Callable[[str, str, _DATA_GETTER], Iterable[Data]]
+_DATA_GENERATOR = Callable[[str, str, str, str, str], Iterable[Data]]
 
 
 def BDD100K(path: str) -> Dataset:
@@ -250,13 +245,13 @@ def _get_data_10k(
             _add_poly2d_label_10k(label_info, polygon)
     label = data.label
     label.polygon = polygon
-    filename = os.path.splitext(os.path.basename(image_path))[0]
-    label.semantic_mask = SemanticMask(os.path.join(original_mask_paths["sem"], f"{filename}.png"))
+    stem = os.path.splitext(os.path.basename(image_path))[0]
+    label.semantic_mask = SemanticMask(os.path.join(original_mask_paths["sem"], f"{stem}.png"))
     label.instance_mask = _get_instance_mask(
-        filename, original_mask_paths["ins"], single_channel_mask_paths["ins"]
+        stem, original_mask_paths["ins"], single_channel_mask_paths["ins"]
     )
     label.panoptic_mask = _get_panoptic_mask(
-        filename, original_mask_paths["pan"], single_channel_mask_paths["pan"]
+        stem, original_mask_paths["pan"], single_channel_mask_paths["pan"]
     )
     return data
 
@@ -369,13 +364,13 @@ def _merge_label(source_label_contents: List[List[Dict[str, Any]]]) -> Dict[str,
 
 
 def _get_instance_mask(
-    filename: str, original_mask_directory: str, mask_directory: str
+    stem: str, original_mask_directory: str, mask_directory: str
 ) -> InstanceMask:
-    mask_path = os.path.join(mask_directory, f"{filename}.png")
+    mask_path = os.path.join(mask_directory, f"{stem}.png")
     mask_info = _save_and_get_mask_info(
-        os.path.join(original_mask_directory, f"{filename}.png"),
+        os.path.join(original_mask_directory, f"{stem}.png"),
         mask_path,
-        os.path.join(mask_directory, f"{filename}.json"),
+        os.path.join(mask_directory, f"{stem}.json"),
         "ins",
     )
 
@@ -385,13 +380,13 @@ def _get_instance_mask(
 
 
 def _get_panoptic_mask(
-    filename: str, original_mask_directory: str, mask_directory: str
+    stem: str, original_mask_directory: str, mask_directory: str
 ) -> PanopticMask:
-    mask_path = os.path.join(mask_directory, f"{filename}.png")
+    mask_path = os.path.join(mask_directory, f"{stem}.png")
     mask_info = _save_and_get_mask_info(
-        os.path.join(original_mask_directory, f"{filename}.png"),
+        os.path.join(original_mask_directory, f"{stem}.png"),
         mask_path,
-        os.path.join(mask_directory, f"{filename}.json"),
+        os.path.join(mask_directory, f"{stem}.json"),
         "pan",
     )
 
@@ -405,21 +400,23 @@ def _save_and_get_mask_info(
     original_mask_path: str, mask_path: str, mask_info_path: str, seg_type: str
 ) -> Dict[str, Any]:
     if not os.path.exists(mask_path):
-        mask = np.array(Image.open(original_mask_path))
+        mask = np.array(Image.open(original_mask_path), dtype=np.uint16)
         all_attributes = {}
         if seg_type == "pan":
             all_category_ids = {}
-        for instance_info in set(map(tuple, np.reshape(mask, (-1, 4)))):
-            instance_id = int(instance_info[-1])  # type:ignore[call-overload]
-            attributes = instance_info[1]
+        for category_id, attributes, instance_id_high, instance_id_low in np.unique(
+            np.reshape(mask, (-1, 4)), axis=0
+        ):
+            # the instance_id is represented by 2 channels, instance_id = high*256+low
+            instance_id = int(instance_id_low + (instance_id_high << 8))
             all_attributes[instance_id] = {
-                "truncated": bool(attributes & 8),  # type:ignore[operator]
-                "occluded": bool(attributes & 4),  # type:ignore[operator]
-                "crowd": bool(attributes & 2),  # type:ignore[operator]
-                "ignore": bool(attributes & 1),  # type:ignore[operator]
+                "truncated": bool(attributes & 8),
+                "occluded": bool(attributes & 4),
+                "crowd": bool(attributes & 2),
+                "ignore": bool(attributes & 1),
             }
             if seg_type == "pan":
-                all_category_ids[instance_id] = int(instance_info[0])  # type:ignore[call-overload]
+                all_category_ids[instance_id] = int(category_id)
         mask_info = (
             {"all_attributes": all_attributes, "all_category_ids": all_category_ids}
             if seg_type == "pan"
@@ -427,7 +424,7 @@ def _save_and_get_mask_info(
         )
         with open(mask_info_path, "w") as fp:
             json.dump(mask_info, fp)
-        Image.fromarray(mask[:, :, -1]).save(mask_path)
+        Image.fromarray(mask[:, :, -1] + (mask[:, :, -2] << 8)).save(mask_path)
     else:
         with open(mask_info_path, "r") as fp:
             mask_info = json.load(
@@ -467,6 +464,17 @@ def _BDD100K_MOTS2020(path: str) -> Dataset:
                             ...
                 labels/
                     seg_track_20/
+                        bitmasks/
+                            train/
+                                000d4f89-3bcbe37a/
+                                    000d4f89-3bcbe37a-0000001.png
+                                    ...
+                                ...
+                            val/
+                                b1c9c847-3bda4659/
+                                    b1c9c847-3bda4659-0000001.png
+                                    ...
+                                ...
                         polygons/
                             train/
                                 000d4f89-3bcbe37a.json
@@ -529,19 +537,14 @@ def _BDD100K_MOT2020(path: str) -> Dataset:
 
 
 def _tracking_loader(path: str, tracking_type: str) -> Dataset:
-    if tracking_type == "mot":
-        get_data = _get_mot_data
-    else:
-        get_data = _get_mots_data
-    root_path = os.path.join(
-        os.path.abspath(os.path.expanduser(path)), _TRACKING_DATASET_INFO[tracking_type][0]
-    )
+    tracking_dataset_info = _TRACKING_DATASET_INFO[tracking_type]
+    root_path = os.path.join(os.path.abspath(os.path.expanduser(path)), tracking_dataset_info[0])
     dataset = Dataset(DATASET_NAMES[tracking_type])
     dataset.notes.is_continuous = True
     dataset.load_catalog(os.path.join(os.path.dirname(__file__), f"catalog_{tracking_type}.json"))
-    images_directory = os.path.join(root_path, "images", _TRACKING_DATASET_INFO[tracking_type][1])
-    labels_directory = os.path.join(root_path, "labels", _TRACKING_DATASET_INFO[tracking_type][2])
-    _load_tracking_segment(dataset, images_directory, labels_directory, get_data)
+    images_directory = os.path.join(root_path, "images", tracking_dataset_info[1])
+    labels_directory = os.path.join(root_path, "labels", tracking_dataset_info[1])
+    _load_tracking_segment(dataset, images_directory, labels_directory, tracking_type)
 
     return dataset
 
@@ -550,39 +553,64 @@ def _load_tracking_segment(
     dataset: Dataset,
     images_directory: str,
     labels_directory: str,
-    load_label: _DATA_GETTER,
+    tracking_type: str,
 ) -> None:
     for segment_prefix in _SEGMENT_NAMES:
         image_directory = glob(os.path.join(images_directory, segment_prefix, "*"))
-        labels_directory_segment = os.path.join(labels_directory, segment_prefix)
+        segment_labels_directory = os.path.join(labels_directory, "polygons", segment_prefix)
+        original_mask_directory = os.path.join(labels_directory, "bitmasks", segment_prefix)
+        mask_directory = os.path.join(labels_directory, "single_channel_masks", segment_prefix)
+        os.makedirs(mask_directory, exist_ok=True)
+
         if segment_prefix == "test":
             generate_data: _DATA_GENERATOR = _generate_test_data
         else:
             generate_data = _generate_data
         for image_subdir in image_directory:
             segment = dataset.create_segment(f"{segment_prefix}_{os.path.basename(image_subdir)}")
-            segment.extend(generate_data(image_subdir, labels_directory_segment, load_label))
+            segment.extend(
+                generate_data(
+                    image_subdir,
+                    segment_labels_directory,
+                    original_mask_directory,
+                    mask_directory,
+                    tracking_type,
+                )
+            )
 
 
-def _generate_test_data(image_subdir: str, _: str, __: _DATA_GETTER) -> Iterable[Data]:
+def _generate_test_data(image_subdir: str, _: str, __: str, ___: str, ____: str) -> Iterable[Data]:
     yield from map(Data, glob(os.path.join(image_subdir, "*.jpg")))
 
 
 def _generate_data(
     image_subdir: str,
-    labels_directory_segment: str,
-    get_data: _DATA_GETTER,
+    segment_labels_directory: str,
+    original_mask_directory: str,
+    mask_directory: str,
+    tracking_type: str,
 ) -> Iterable[Data]:
-    label_filename = f"{os.path.basename(image_subdir)}.json"
-    with open(os.path.join(labels_directory_segment, label_filename), "r") as fp:
+    subdir_name = os.path.basename(image_subdir)
+    if tracking_type == "mots":
+        original_mask_subdir = os.path.join(original_mask_directory, subdir_name)
+        mask_subdir = os.path.join(mask_directory, subdir_name)
+        os.makedirs(mask_subdir, exist_ok=True)
+    with open(os.path.join(segment_labels_directory, f"{subdir_name}.json"), "r") as fp:
         label_contents = json.load(fp)
     for label_content in label_contents:
         label_content_name = label_content["name"]
         if "/" in label_content_name:
             label_content_name = label_content_name[len(label_content["videoName"]) + 1 :]
         image_path = os.path.join(image_subdir, label_content_name)
-
-        yield get_data(image_path, label_content)
+        yield _get_mot_data(
+            image_path, label_content
+        ) if tracking_type == "mot" else _get_mots_data(
+            image_path,
+            original_mask_subdir,
+            mask_subdir,
+            os.path.splitext(label_content_name)[0],
+            label_content,
+        )
 
 
 def _get_mot_data(image_path: str, label_content: Dict[str, Any]) -> Data:
@@ -607,7 +635,13 @@ def _get_mot_data(image_path: str, label_content: Dict[str, Any]) -> Data:
     return data
 
 
-def _get_mots_data(image_path: str, label_content: Dict[str, Any]) -> Data:
+def _get_mots_data(
+    image_path: str,
+    original_mask_subdir: str,
+    mask_subdir: str,
+    stem: str,
+    label_content: Dict[str, Any],
+) -> Data:
     data = Data(image_path)
     labeled_multipolygons = []
     for label_info in label_content.get("labels", ()):
@@ -620,6 +654,7 @@ def _get_mots_data(image_path: str, label_content: Dict[str, Any]) -> Data:
             instance=str(label_info["id"]),
         )
         labeled_multipolygons.append(labeled_multipolygon)
-    data.label.multi_polygon = labeled_multipolygons
-
+    label = data.label
+    label.multi_polygon = labeled_multipolygons
+    label.instance_mask = _get_instance_mask(stem, original_mask_subdir, mask_subdir)
     return data
