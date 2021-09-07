@@ -668,13 +668,13 @@ class FusionDatasetClient(DatasetClientBase):
                 (frame, from_timestamp(10 * index + 10)) for index, frame in enumerate(segment)
             )
 
-        done_frames: Dict[float, Frame] = {
-            frame.frame_id.timestamp().timestamp: frame for frame in segment_client.list_frames()
-        }
-
         if not skip_uploaded_files:
             data_to_upload = FusionDatasetClient._extract_all_data(source_frames, pbar)
         else:
+            done_frames: Dict[float, Frame] = {
+                frame.frame_id.timestamp().timestamp: frame
+                for frame in segment_client.list_frames()
+            }
             data_to_upload = FusionDatasetClient._extract_unuploaded_data(
                 source_frames, pbar, done_frames=done_frames
             )
