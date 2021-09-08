@@ -31,6 +31,7 @@ RESPONSE_TEMPLATE = """
 "reason": {}
 "headers": {}
 "content": {}
+"cost_time": {}s
 ===================================================================
 """
 
@@ -146,6 +147,7 @@ def dump_request_and_response(response: Response) -> str:
               "message": "success",
               "data": {}
             }
+            "cost_time": 0.0813691616058
             ====================================================
 
     """
@@ -198,7 +200,12 @@ def _dump_response(response: Response) -> str:
             content = str(response.content)
 
     return RESPONSE_TEMPLATE.format(
-        response.url, response.status_code, response.reason, headers, content
+        response.url,
+        response.status_code,
+        response.reason,
+        headers,
+        content,
+        response.elapsed.total_seconds(),
     )
 
 
