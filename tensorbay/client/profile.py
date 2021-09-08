@@ -13,7 +13,9 @@ import json
 import time
 from collections import defaultdict
 from functools import wraps
-from typing import Any, Callable, DefaultDict, TypeVar
+from multiprocessing import Manager
+from multiprocessing.managers import SyncManager
+from typing import Any, Callable, DefaultDict, Dict, TypeVar
 
 from requests.models import Response
 
@@ -23,29 +25,25 @@ _Callable = TypeVar("_Callable", bound=Callable[..., Response])
 
 
 class Profile:
-    """This is a class used to save statistical summary.
+    """This is a class used to save statistical summary."""
 
-    Attributes:
-        summary: The statistical summary.
-        running: Whether the statistical is running.
-
-    """
+    _manager: SyncManager
+    _summary: Dict[str, DefaultDict[str, Any]]
 
     def __init__(self) -> None:
-        self.summary: DefaultDict[str, DefaultDict[str, Any]] = defaultdict(
-            lambda: defaultdict(int)
-        )
         self.do_function = Client.do
 
     def __enter__(self) -> "Profile":
+        self.start()
         return self
 
     def __exit__(self, *_: Any) -> None:
         self.stop()
 
     def _calculate_average_time(self) -> None:
-        for value in self.summary.values():
+        for key, value in self._summary.items():
             value["avgTime"] = value["totalTime"] / value["callNumber"]
+            self._summary[key] = value
 
     def statistical(self, func: _Callable) -> _Callable:
         """A decorator to record the running time, response length ..etc of the function.
@@ -81,11 +79,12 @@ class Profile:
             file_size: the upload file size.
 
         """
-        item = self.summary[key]
+        item = self._summary.get(key, defaultdict(float))
         item["totalTime"] += cost_time
         item["callNumber"] += 1
         item["totalResponseLength"] += response_length
         item["totalFileSize"] += file_size
+        self._summary[key] = item
 
     def save(self, path: str) -> None:
         """Save the statistical summary into a file.
@@ -95,16 +94,32 @@ class Profile:
 
         """
         self._calculate_average_time()
+        summary = self._summary if isinstance(self._summary, dict) else self._summary.copy()
         with open(path, "w") as fp:
-            fp.write(json.dumps(self.summary, indent=4))
+            json.dump(summary, fp, indent=4)
 
-    def start(self) -> None:
-        """Start statistical record."""
+    def start(self, multiprocess: bool = False) -> None:
+        """Start statistical record.
+
+        Arguments:
+            multiprocess: Whether the records is in a multi-process environment.
+
+        """
+        if multiprocess:
+            self._manager = Manager()
+            self._summary = self._manager.dict()
+        else:
+            self._summary = {}
+
         Client.do = self.statistical(self.do_function)  # type: ignore[assignment]
 
     def stop(self) -> None:
         """Stop statistical record."""
         Client.do = self.do_function  # type: ignore[assignment]
+        delattr(self, "_summary")
+        if hasattr(self, "_manager"):
+            self._manager.shutdown()
+            delattr(self, "_manager")
 
 
 profile = Profile()
