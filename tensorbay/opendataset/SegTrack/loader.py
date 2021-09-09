@@ -97,17 +97,29 @@ def SegTrack(path: str) -> Dataset:
         original_mask_dir = os.path.join(segment_dir, mask_name)
         for image_path in glob(os.path.join(segment_dir, "*.*")):
             data = Data(image_path)
-            stem = os.path.splitext(os.path.basename(image_path))[0]
-            mask_path = os.path.join(mask_dir, f"{stem}.png")
-            mask = np.array(
-                Image.open(os.path.join(original_mask_dir, filename_reformatter(stem))),
-                dtype=int,
-            )[:, :, 0]
-            # reformat mask
-            # from {background: 0, overlap: 1~254, target: 255}
-            # to {background: 0, overlap: 1, target: 2}
-            mask = (mask - 1) // 254 + 1
-            Image.fromarray(mask, mode="L").save(mask_path)
-            data.label.instance_mask = InstanceMask(mask_path)
+            data.label.instance_mask = _get_instance_mask(
+                image_path, mask_dir, original_mask_dir, filename_reformatter
+            )
             segment.append(data)
     return dataset
+
+
+def _get_instance_mask(
+    image_path: str,
+    mask_dir: str,
+    original_mask_dir: str,
+    filename_reformatter: Callable[[str], str],
+) -> InstanceMask:
+    stem = os.path.splitext(os.path.basename(image_path))[0]
+    mask_path = os.path.join(mask_dir, f"{stem}.png")
+    mask = np.array(
+        Image.open(os.path.join(original_mask_dir, filename_reformatter(stem))),
+    )[:, :, 0]
+    # reformat mask
+    # from {background: 0, overlap: 1~254, target: 255}
+    # to {background: 0, target: 1, overlap: 255}
+    overlap = np.logical_and(mask > 0, mask < 255)
+    mask[mask == 255] = 1
+    mask[overlap] = 255
+    Image.fromarray(mask).save(mask_path)
+    return InstanceMask(mask_path)
