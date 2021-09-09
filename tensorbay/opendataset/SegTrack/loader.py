@@ -90,17 +90,17 @@ def SegTrack(path: str) -> Dataset:
 
     for segment_name, filename_reformatter in _SEGMENTS_INFO.items():
         segment = dataset.create_segment(segment_name)
-        segment_directory = os.path.join(root_path, segment_name)
-        mask_directory = os.path.join(segment_directory, "masks")
-        os.makedirs(mask_directory, exist_ok=True)
+        segment_dir = os.path.join(root_path, segment_name)
+        mask_dir = os.path.join(segment_dir, "masks")
+        os.makedirs(mask_dir, exist_ok=True)
         mask_name = "ground_truth" if segment_name == "penguin" else "ground-truth"
-        original_mask_directory = os.path.join(segment_directory, mask_name)
-        for image_path in glob(os.path.join(segment_directory, "*.*")):
+        original_mask_dir = os.path.join(segment_dir, mask_name)
+        for image_path in glob(os.path.join(segment_dir, "*.*")):
             data = Data(image_path)
             stem = os.path.splitext(os.path.basename(image_path))[0]
-            mask_path = os.path.join(mask_directory, f"{stem}.png")
+            mask_path = os.path.join(mask_dir, f"{stem}.png")
             mask = np.array(
-                Image.open(os.path.join(original_mask_directory, filename_reformatter(stem))),
+                Image.open(os.path.join(original_mask_dir, filename_reformatter(stem))),
                 dtype=int,
             )[:, :, 0]
             # reformat mask

@@ -54,7 +54,7 @@ def HalpeFullBody(path: str) -> Dataset:
     dataset = Dataset(DATASET_NAME)
     dataset.load_catalog(os.path.join(os.path.dirname(__file__), "catalog.json"))
 
-    for mode, label_file, image_directory in _SEGMENT_SPLIT:
+    for mode, label_file, image_dir in _SEGMENT_SPLIT:
         segment = dataset.create_segment(mode)
 
         with open(os.path.join(root_path, label_file), "r", encoding="utf-8") as fp:
@@ -62,13 +62,11 @@ def HalpeFullBody(path: str) -> Dataset:
 
         if mode == "train":
             for annotation, image in zip(annotations["annotations"], annotations["images"]):
-                image_path = os.path.join(root_path, image_directory, image["file_name"])
+                image_path = os.path.join(root_path, image_dir, image["file_name"])
                 segment.append(_get_data(image_path, annotation))
         else:
             for annotation in annotations["annotations"]:
-                image_path = os.path.join(
-                    root_path, image_directory, f"{annotation['image_id']:012}.jpg"
-                )
+                image_path = os.path.join(root_path, image_dir, f"{annotation['image_id']:012}.jpg")
                 segment.append(_get_data(image_path, annotation))
 
     return dataset

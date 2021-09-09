@@ -156,13 +156,13 @@ def _BDD100K_loader(path: str, dataset_type: str) -> Dataset:
     dataset = Dataset(DATASET_NAMES[dataset_type])
     dataset.load_catalog(os.path.join(os.path.dirname(__file__), f"catalog_{dataset_type}.json"))
     load_segment = _load_segment_10k if dataset_type == "10k" else _load_segment_100k
-    labels_directory = os.path.join(root_path, "labels")
-    load_segment(dataset, root_path, labels_directory)
+    labels_dir = os.path.join(root_path, "labels")
+    load_segment(dataset, root_path, labels_dir)
 
     return dataset
 
 
-def _load_segment_100k(dataset: Dataset, root_path: str, labels_directory: str) -> None:
+def _load_segment_100k(dataset: Dataset, root_path: str, labels_dir: str) -> None:
     for segment_name in _SEGMENT_NAMES:
         segment = dataset.create_segment(segment_name)
         image_paths = glob(os.path.join(root_path, "images", "100k", segment_name, "*.jpg"))
@@ -172,7 +172,7 @@ def _load_segment_100k(dataset: Dataset, root_path: str, labels_directory: str) 
             for image_path in image_paths:
                 segment.append(Data(image_path))
         else:
-            label_contents = _read_label_file_100k(labels_directory, segment_name)
+            label_contents = _read_label_file_100k(labels_dir, segment_name)
             for image_path in image_paths:
                 data = Data(image_path)
                 box2d: List[LabeledBox2D] = []
@@ -193,7 +193,7 @@ def _load_segment_100k(dataset: Dataset, root_path: str, labels_directory: str) 
         print(f"Finished reading data to segment '{segment_name}'")
 
 
-def _load_segment_10k(dataset: Dataset, root_path: str, labels_directory: str) -> None:
+def _load_segment_10k(dataset: Dataset, root_path: str, labels_dir: str) -> None:
     for segment_name in _SEGMENT_NAMES:
         segment = dataset.create_segment(segment_name)
         image_paths = glob(os.path.join(root_path, "images", "10k", segment_name, "*.jpg"))
@@ -203,30 +203,28 @@ def _load_segment_10k(dataset: Dataset, root_path: str, labels_directory: str) -
             for image_path in image_paths:
                 segment.append(Data(image_path))
         else:
-            single_channel_mask_directories: Dict[str, str] = {}
-            original_mask_directories: Dict[str, str] = {}
-            for seg_type, directory_names in _SEGMENTATIONS_INFO.items():
-                original_mask_directories[seg_type] = os.path.join(
-                    labels_directory, *directory_names, segment_name
-                )
+            single_channel_mask_dirs: Dict[str, str] = {}
+            original_mask_dirs: Dict[str, str] = {}
+            for seg_type, dir_names in _SEGMENTATIONS_INFO.items():
+                original_mask_dirs[seg_type] = os.path.join(labels_dir, *dir_names, segment_name)
                 if seg_type != "sem":
-                    single_channel_mask_directory = os.path.join(
-                        labels_directory,
+                    single_channel_mask_dir = os.path.join(
+                        labels_dir,
                         "single_channel_mask",
                         segment_name,
-                        directory_names[0],
+                        dir_names[0],
                     )
-                    single_channel_mask_directories[seg_type] = single_channel_mask_directory
-                    os.makedirs(single_channel_mask_directory, exist_ok=True)
+                    single_channel_mask_dirs[seg_type] = single_channel_mask_dir
+                    os.makedirs(single_channel_mask_dir, exist_ok=True)
 
-            label_contents = _read_label_file_10k(labels_directory, segment_name)
+            label_contents = _read_label_file_10k(labels_dir, segment_name)
             for image_path in image_paths:
                 segment.append(
                     _get_data_10k(
                         image_path,
-                        original_mask_directories,
+                        original_mask_dirs,
                         label_contents[os.path.basename(image_path)],
-                        single_channel_mask_directories,
+                        single_channel_mask_dirs,
                     )
                 )
             print(f"Finished reading data to segment '{segment_name}'")
@@ -300,11 +298,9 @@ def _add_poly2d_label_10k(label_info: Dict[str, Any], polygon: List[LabeledPolyg
     polygon.append(labeled_polygon)
 
 
-def _read_label_file_100k(label_directory: str, segment_name: str) -> Dict[str, Any]:
+def _read_label_file_100k(label_dir: str, segment_name: str) -> Dict[str, Any]:
     source_label_contents = []
-    label_filenames = glob(
-        os.path.join(label_directory, "**", f"*_{segment_name}.json"), recursive=True
-    )
+    label_filenames = glob(os.path.join(label_dir, "**", f"*_{segment_name}.json"), recursive=True)
 
     label_prefixes = set(_LABEL_TYPE_INFO_100K)
     for label_filename in label_filenames:
@@ -337,11 +333,9 @@ def _read_label_file_100k(label_directory: str, segment_name: str) -> Dict[str, 
     return label_contents
 
 
-def _read_label_file_10k(label_directory: str, segment_name: str) -> Dict[str, Any]:
+def _read_label_file_10k(label_dir: str, segment_name: str) -> Dict[str, Any]:
     source_label_contents = []
-    label_filename = os.path.join(
-        label_directory, "pan_seg", "polygons", f"pan_seg_{segment_name}.json"
-    )
+    label_filename = os.path.join(label_dir, "pan_seg", "polygons", f"pan_seg_{segment_name}.json")
     with open(label_filename, "r") as fp:
         source_label_contents.append(json.load(fp))
 
@@ -363,14 +357,12 @@ def _merge_label(source_label_contents: List[List[Dict[str, Any]]]) -> Dict[str,
     return label_contents
 
 
-def _get_instance_mask(
-    stem: str, original_mask_directory: str, mask_directory: str
-) -> InstanceMask:
-    mask_path = os.path.join(mask_directory, f"{stem}.png")
+def _get_instance_mask(stem: str, original_mask_dir: str, mask_dir: str) -> InstanceMask:
+    mask_path = os.path.join(mask_dir, f"{stem}.png")
     mask_info = _save_and_get_mask_info(
-        os.path.join(original_mask_directory, f"{stem}.png"),
+        os.path.join(original_mask_dir, f"{stem}.png"),
         mask_path,
-        os.path.join(mask_directory, f"{stem}.json"),
+        os.path.join(mask_dir, f"{stem}.json"),
         "ins",
     )
 
@@ -379,14 +371,12 @@ def _get_instance_mask(
     return ins_mask
 
 
-def _get_panoptic_mask(
-    stem: str, original_mask_directory: str, mask_directory: str
-) -> PanopticMask:
-    mask_path = os.path.join(mask_directory, f"{stem}.png")
+def _get_panoptic_mask(stem: str, original_mask_dir: str, mask_dir: str) -> PanopticMask:
+    mask_path = os.path.join(mask_dir, f"{stem}.png")
     mask_info = _save_and_get_mask_info(
-        os.path.join(original_mask_directory, f"{stem}.png"),
+        os.path.join(original_mask_dir, f"{stem}.png"),
         mask_path,
-        os.path.join(mask_directory, f"{stem}.json"),
+        os.path.join(mask_dir, f"{stem}.json"),
         "pan",
     )
 
@@ -542,38 +532,38 @@ def _tracking_loader(path: str, tracking_type: str) -> Dataset:
     dataset = Dataset(DATASET_NAMES[tracking_type])
     dataset.notes.is_continuous = True
     dataset.load_catalog(os.path.join(os.path.dirname(__file__), f"catalog_{tracking_type}.json"))
-    images_directory = os.path.join(root_path, "images", tracking_dataset_info[1])
-    labels_directory = os.path.join(root_path, "labels", tracking_dataset_info[1])
-    _load_tracking_segment(dataset, images_directory, labels_directory, tracking_type)
+    images_dir = os.path.join(root_path, "images", tracking_dataset_info[1])
+    labels_dir = os.path.join(root_path, "labels", tracking_dataset_info[1])
+    _load_tracking_segment(dataset, images_dir, labels_dir, tracking_type)
 
     return dataset
 
 
 def _load_tracking_segment(
     dataset: Dataset,
-    images_directory: str,
-    labels_directory: str,
+    images_dir: str,
+    labels_dir: str,
     tracking_type: str,
 ) -> None:
     for segment_prefix in _SEGMENT_NAMES:
-        image_directory = glob(os.path.join(images_directory, segment_prefix, "*"))
-        segment_labels_directory = os.path.join(labels_directory, "polygons", segment_prefix)
-        original_mask_directory = os.path.join(labels_directory, "bitmasks", segment_prefix)
-        mask_directory = os.path.join(labels_directory, "single_channel_masks", segment_prefix)
-        os.makedirs(mask_directory, exist_ok=True)
+        image_subdirs = glob(os.path.join(images_dir, segment_prefix, "*"))
+        segment_labels_dir = os.path.join(labels_dir, "polygons", segment_prefix)
+        original_mask_dir = os.path.join(labels_dir, "bitmasks", segment_prefix)
+        mask_dir = os.path.join(labels_dir, "single_channel_masks", segment_prefix)
+        os.makedirs(mask_dir, exist_ok=True)
 
         if segment_prefix == "test":
             generate_data: _DATA_GENERATOR = _generate_test_data
         else:
             generate_data = _generate_data
-        for image_subdir in image_directory:
+        for image_subdir in image_subdirs:
             segment = dataset.create_segment(f"{segment_prefix}_{os.path.basename(image_subdir)}")
             segment.extend(
                 generate_data(
                     image_subdir,
-                    segment_labels_directory,
-                    original_mask_directory,
-                    mask_directory,
+                    segment_labels_dir,
+                    original_mask_dir,
+                    mask_dir,
                     tracking_type,
                 )
             )
@@ -585,17 +575,17 @@ def _generate_test_data(image_subdir: str, _: str, __: str, ___: str, ____: str)
 
 def _generate_data(
     image_subdir: str,
-    segment_labels_directory: str,
-    original_mask_directory: str,
-    mask_directory: str,
+    segment_labels_dir: str,
+    original_mask_dir: str,
+    mask_dir: str,
     tracking_type: str,
 ) -> Iterable[Data]:
     subdir_name = os.path.basename(image_subdir)
     if tracking_type == "mots":
-        original_mask_subdir = os.path.join(original_mask_directory, subdir_name)
-        mask_subdir = os.path.join(mask_directory, subdir_name)
+        original_mask_subdir = os.path.join(original_mask_dir, subdir_name)
+        mask_subdir = os.path.join(mask_dir, subdir_name)
         os.makedirs(mask_subdir, exist_ok=True)
-    with open(os.path.join(segment_labels_directory, f"{subdir_name}.json"), "r") as fp:
+    with open(os.path.join(segment_labels_dir, f"{subdir_name}.json"), "r") as fp:
         label_contents = json.load(fp)
     for label_content in label_contents:
         label_content_name = label_content["name"]
