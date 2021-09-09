@@ -20,10 +20,10 @@ def _implement_dataset(obj: ContextInfo, tbrn: str, is_delete: bool, yes: bool) 
         for dataset_name in gas.list_dataset_names():
             click.echo(TBRN(dataset_name).get_tbrn())
 
-    info = TBRN(tbrn=tbrn)
-    if info.type != TBRNType.DATASET:
+    tbrn_info = TBRN(tbrn=tbrn)
+    if tbrn_info.type != TBRNType.DATASET:
         error(f'"{tbrn}" is not a dataset')
-    colored_tbrn = info.get_colored_tbrn()
+    colored_tbrn = tbrn_info.get_colored_tbrn()
 
     if is_delete:
         if not yes:
@@ -32,9 +32,9 @@ def _implement_dataset(obj: ContextInfo, tbrn: str, is_delete: bool, yes: bool) 
                 abort=True,
             )
 
-        gas.delete_dataset(info.dataset_name)
+        gas.delete_dataset(tbrn_info.dataset_name)
         click.echo(f'Successfully deleted dataset "{colored_tbrn}"')
         return
 
-    gas.create_dataset(info.dataset_name)
+    gas.create_dataset(tbrn_info.dataset_name)
     click.echo(f'Successfully created dataset "{colored_tbrn}"')

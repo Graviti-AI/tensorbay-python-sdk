@@ -50,8 +50,8 @@ def _validate_dataset_client(dataset_client: DatasetClientType) -> None:
         error(f'"{dataset_client.name}" has no commit history.')
 
 
-def _ls_dataset(gas: GAS, info: TBRN, list_all_files: bool, show_total_num: bool) -> None:
-    dataset_client = get_dataset_client(gas, info)
+def _ls_dataset(gas: GAS, tbrn_info: TBRN, list_all_files: bool, show_total_num: bool) -> None:
+    dataset_client = get_dataset_client(gas, tbrn_info)
     _validate_dataset_client(dataset_client)
 
     segment_names = dataset_client.list_segment_names()
@@ -59,7 +59,7 @@ def _ls_dataset(gas: GAS, info: TBRN, list_all_files: bool, show_total_num: bool
         if show_total_num:
             click.echo(f"total {len(segment_names)}")
         for segment_name in segment_names:
-            click.echo(TBRN(info.dataset_name, segment_name).get_tbrn())
+            click.echo(TBRN(tbrn_info.dataset_name, segment_name).get_tbrn())
         return
 
     if isinstance(dataset_client, FusionDatasetClient):
@@ -74,9 +74,9 @@ def _ls_dataset(gas: GAS, info: TBRN, list_all_files: bool, show_total_num: bool
 
     for segment_name, segment_path in zip(segment_names, segment_paths):
         _echo_data(
-            info.dataset_name,
-            info.draft_number,
-            info.revision,
+            tbrn_info.dataset_name,
+            tbrn_info.draft_number,
+            tbrn_info.revision,
             segment_name,
             segment_path,
         )
@@ -84,30 +84,30 @@ def _ls_dataset(gas: GAS, info: TBRN, list_all_files: bool, show_total_num: bool
 
 def _ls_segment(
     gas: GAS,
-    info: TBRN,
+    tbrn_info: TBRN,
     list_all_files: bool,  # pylint: disable=unused-argument
     show_total_num: bool,
 ) -> None:
-    dataset_client = get_dataset_client(gas, info)
+    dataset_client = get_dataset_client(gas, tbrn_info)
     _validate_dataset_client(dataset_client)
     if isinstance(dataset_client, FusionDatasetClient):
         error("List fusion segment is not supported yet")
 
-    segment_path = dataset_client.get_segment(info.segment_name).list_data_paths()
+    segment_path = dataset_client.get_segment(tbrn_info.segment_name).list_data_paths()
     if show_total_num:
         click.echo(f"total {len(segment_path)}")
     _echo_data(
-        info.dataset_name,
-        info.draft_number,
-        info.revision,
-        info.segment_name,
+        tbrn_info.dataset_name,
+        tbrn_info.draft_number,
+        tbrn_info.revision,
+        tbrn_info.segment_name,
         segment_path,
     )
 
 
 def _ls_normal_file(
     gas: GAS,  # pylint: disable=unused-argument
-    info: TBRN,  # pylint: disable=unused-argument
+    tbrn_info: TBRN,  # pylint: disable=unused-argument
     list_all_files: bool,  # pylint: disable=unused-argument
     show_total_num: bool,  # pylint: disable=unused-argument
 ) -> None:
@@ -132,5 +132,5 @@ def _implement_ls(obj: ContextInfo, tbrn: str, list_all_files: bool, show_total_
             click.echo(TBRN(dataset_name).get_tbrn())
         return
 
-    info = TBRN(tbrn=tbrn)
-    _LS_FUNCS[info.type](gas, info, list_all_files, show_total_num)
+    tbrn_info = TBRN(tbrn=tbrn)
+    _LS_FUNCS[tbrn_info.type](gas, tbrn_info, list_all_files, show_total_num)

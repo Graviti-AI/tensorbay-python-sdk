@@ -118,31 +118,37 @@ def get_gas(access_key: str, url: str, profile_name: str, config_parser: ConfigP
 
 
 @overload
-def get_dataset_client(gas: GAS, info: TBRN, is_fusion: Literal[None] = None) -> DatasetClientType:
+def get_dataset_client(
+    gas: GAS, tbrn_info: TBRN, is_fusion: Literal[None] = None
+) -> DatasetClientType:
     ...
 
 
 @overload
-def get_dataset_client(gas: GAS, info: TBRN, is_fusion: Literal[False]) -> DatasetClient:
+def get_dataset_client(gas: GAS, tbrn_info: TBRN, is_fusion: Literal[False]) -> DatasetClient:
     ...
 
 
 @overload
-def get_dataset_client(gas: GAS, info: TBRN, is_fusion: Literal[True]) -> FusionDatasetClient:
+def get_dataset_client(gas: GAS, tbrn_info: TBRN, is_fusion: Literal[True]) -> FusionDatasetClient:
     ...
 
 
 @overload
-def get_dataset_client(gas: GAS, info: TBRN, is_fusion: Optional[bool] = None) -> DatasetClientType:
+def get_dataset_client(
+    gas: GAS, tbrn_info: TBRN, is_fusion: Optional[bool] = None
+) -> DatasetClientType:
     ...
 
 
-def get_dataset_client(gas: GAS, info: TBRN, is_fusion: Optional[bool] = None) -> DatasetClientType:
+def get_dataset_client(
+    gas: GAS, tbrn_info: TBRN, is_fusion: Optional[bool] = None
+) -> DatasetClientType:
     """Get the dataset client with any type and its version info.
 
     Arguments:
         gas: The gas client.
-        info: The tbrn of the resource.
+        tbrn_info: The tbrn of the resource.
         is_fusion: Whether the dataset is a fusion dataset, True for fusion dataset.
 
     Returns:
@@ -150,14 +156,14 @@ def get_dataset_client(gas: GAS, info: TBRN, is_fusion: Optional[bool] = None) -
 
     """
     dataset_client = (
-        gas._get_dataset_with_any_type(info.dataset_name)  # pylint: disable=protected-access
+        gas._get_dataset_with_any_type(tbrn_info.dataset_name)  # pylint: disable=protected-access
         if is_fusion is None
-        else gas.get_dataset(info.dataset_name, is_fusion)
+        else gas.get_dataset(tbrn_info.dataset_name, is_fusion)
     )
-    if info.is_draft:
-        dataset_client.checkout(draft_number=info.draft_number)
-    elif info.revision is not None:
-        dataset_client.checkout(revision=info.revision)
+    if tbrn_info.is_draft:
+        dataset_client.checkout(draft_number=tbrn_info.draft_number)
+    elif tbrn_info.revision is not None:
+        dataset_client.checkout(revision=tbrn_info.revision)
     return dataset_client
 
 
