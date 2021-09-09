@@ -58,3 +58,7 @@ dataset_client.delete_segment("SegmentName")
 segment_client = dataset_client.get_segment("SegmentName")
 segment_client.delete_data(["a.png", "b.png"])
 """"""
+
+"""Delete frame"""
+segment_client.delete_frame("00000000003W09TEMC1HXYMC74")
+""""""
