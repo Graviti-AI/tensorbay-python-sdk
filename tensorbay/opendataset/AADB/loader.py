@@ -49,7 +49,7 @@ def AADB(path: str) -> Dataset:
     dataset.load_catalog(os.path.join(os.path.dirname(__file__), "catalog.json"))
     attribute_names = dataset.catalog.classification.attributes.keys()
 
-    for mode, image_directory, label_file_prefix in _SEGMENTS_INFO:
+    for mode, image_dir, label_file_prefix in _SEGMENTS_INFO:
         image_name_handler: Callable[[str, Dict[str, float]], str] = (
             (lambda image_name, attributes: f"{attributes['score']:.3f}_{image_name}")
             if mode == "new_test"
@@ -60,7 +60,7 @@ def AADB(path: str) -> Dataset:
         attributes_map = _extract_attributes_map(root_path, label_file_prefix, attribute_names)
         for image_name, attributes in attributes_map.items():
             real_image_name = image_name_handler(image_name, attributes)
-            image_path = os.path.join(root_path, image_directory, real_image_name)
+            image_path = os.path.join(root_path, image_dir, real_image_name)
             data = Data(image_path)
             data.label.classification = Classification(attributes=attributes)
             segment.append(data)
@@ -72,10 +72,10 @@ def _extract_attributes_map(
     path: str, label_file_prefix: str, attribute_names: Tuple[str, ...]
 ) -> Dict[str, Dict[str, float]]:
     attributes_map: DefaultDict[str, Dict[str, float]] = defaultdict(dict)
-    label_directory = os.path.join(path, "imgListFiles_label")
+    label_dir = os.path.join(path, "imgListFiles_label")
     for attribute_name in attribute_names:
         label_file_name = f"{label_file_prefix}_{attribute_name}.txt"
-        label_file_path = os.path.join(label_directory, label_file_name)
+        label_file_path = os.path.join(label_dir, label_file_name)
         with open(label_file_path) as fp:
             # one line of file looks like:
             # "<image_name> value"

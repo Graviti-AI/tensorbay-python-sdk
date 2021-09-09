@@ -67,12 +67,12 @@ def COVID_CT(path: str) -> Dataset:
     data_split_path = os.path.join(root_path, "Data-split")
     images_processed_path = os.path.join(root_path, "Images-processed")
 
-    for segment_name, (split_filename, image_directory, category) in _SEGMENT_TO_PATH.items():
+    for segment_name, (split_filename, image_dir, category) in _SEGMENT_TO_PATH.items():
         segment = dataset.create_segment(segment_name)
-        image_directory = os.path.join(images_processed_path, image_directory)
+        image_dir = os.path.join(images_processed_path, image_dir)
         with open(os.path.join(data_split_path, category, split_filename), "r") as fp:
             for line in fp:
-                image_path = os.path.join(image_directory, line.strip("\n"))
+                image_path = os.path.join(image_dir, line.strip("\n"))
                 data = Data(image_path)
                 data.label.classification = Classification(category)
                 segment.append(data)

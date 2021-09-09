@@ -49,27 +49,27 @@ def RP2K(path: str) -> Dataset:
     for segment_name in ("train", "test"):
         segment = dataset.create_segment(segment_name)
         segment_path = os.path.join(root_path, segment_name)
-        catagories = os.listdir(segment_path)
-        catagories.sort()
-        for catagory in catagories:
-            catagory_path = os.path.join(segment_path, catagory)
-            if not os.path.isdir(catagory_path):
+        categories = os.listdir(segment_path)
+        categories.sort()
+        for category in categories:
+            category_dir = os.path.join(segment_path, category)
+            if not os.path.isdir(category_dir):
                 continue
-            image_paths = _glob(catagory_path, ("*.jpg", "*.png"))
+            image_paths = _glob(category_dir, ("*.jpg", "*.png"))
             for image_path in image_paths:
                 remote_path = os.path.basename(image_path).replace(" ", "_")
                 data = Data(local_path=image_path, target_remote_path=remote_path)
-                data.label.classification = Classification(catagory)
+                data.label.classification = Classification(category)
                 segment.append(data)
 
     return dataset
 
 
-def _glob(directory: str, patterns: Iterable[str]) -> List[str]:
+def _glob(category_dir: str, patterns: Iterable[str]) -> List[str]:
     file_paths = []
 
     for pattern in patterns:
-        file_paths.extend(glob(os.path.join(directory, pattern)))
+        file_paths.extend(glob(os.path.join(category_dir, pattern)))
 
     file_paths.sort()
     return file_paths
