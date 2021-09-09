@@ -59,12 +59,12 @@ def _implement_log(  # pylint: disable=too-many-arguments
     graph: bool,
 ) -> None:
     gas = get_gas(*obj)
-    info = TBRN(tbrn=tbrn)
-    if info.type != TBRNType.DATASET:
-        error(f'To log commits, "{info}" must be a dataset')
+    tbrn_info = TBRN(tbrn=tbrn)
+    if tbrn_info.type != TBRNType.DATASET:
+        error(f'To log commits, "{tbrn}" must be a dataset')
 
     dataset_client = gas._get_dataset_with_any_type(  # pylint: disable=protected-access
-        info.dataset_name
+        tbrn_info.dataset_name
     )
     commit_id_to_branches: DefaultDict[str, List[str]] = defaultdict(list)
     for branch in dataset_client.list_branches():
@@ -72,7 +72,9 @@ def _implement_log(  # pylint: disable=too-many-arguments
     if is_all:
         revisions: List[Optional[str]] = [branch.name for branch in dataset_client.list_branches()]
     else:
-        revisions = [info.revision] if info.revision else [dataset_client.status.branch_name]
+        revisions = (
+            [tbrn_info.revision] if tbrn_info.revision else [dataset_client.status.branch_name]
+        )
 
     Printer: Union[Type[_GraphPrinter], Type[_CommitPrinter]] = (
         _GraphPrinter if graph else _CommitPrinter

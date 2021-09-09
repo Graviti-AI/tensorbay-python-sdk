@@ -14,28 +14,28 @@ from .utility import ContextInfo, error, exception_handler, get_dataset_client, 
 
 @exception_handler
 def _implement_tag(obj: ContextInfo, tbrn: str, name: str, is_delete: bool) -> None:
-    info = TBRN(tbrn=tbrn)
+    tbrn_info = TBRN(tbrn=tbrn)
 
-    if info.type != TBRNType.DATASET:
-        error(f'To operate a tag, "{info}" must be a dataset')
+    if tbrn_info.type != TBRNType.DATASET:
+        error(f'To operate a tag, "{tbrn}" must be a dataset')
 
     gas = get_gas(*obj)
-    dataset_client = get_dataset_client(gas, info)
+    dataset_client = get_dataset_client(gas, tbrn_info)
 
     if is_delete:
-        _delete_tag(dataset_client, info)
+        _delete_tag(dataset_client, tbrn_info)
     elif name:
         _create_tag(dataset_client, name)
     else:
         _list_tags(dataset_client)
 
 
-def _delete_tag(dataset_client: DatasetClientType, info: TBRN) -> None:
-    if not info.revision:
-        error(f'To delete a tag, "{info}" must have a tag name')
+def _delete_tag(dataset_client: DatasetClientType, tbrn_info: TBRN) -> None:
+    if not tbrn_info.revision:
+        error(f'To delete a tag, "{tbrn_info.get_tbrn()}" must have a tag name')
 
-    dataset_client.delete_tag(info.revision)
-    tag_tbrn = TBRN(dataset_client.name, revision=info.revision).get_colored_tbrn()
+    dataset_client.delete_tag(tbrn_info.revision)
+    tag_tbrn = TBRN(dataset_client.name, revision=tbrn_info.revision).get_colored_tbrn()
     click.echo(f'Successfully deleted tag "{tag_tbrn}"')
 
 

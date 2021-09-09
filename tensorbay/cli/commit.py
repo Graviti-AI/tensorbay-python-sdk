@@ -31,15 +31,15 @@ _COMMIT_HINT = """
 @exception_handler
 def _implement_commit(obj: ContextInfo, tbrn: str, message: Tuple[str, ...]) -> None:
     gas = get_gas(*obj)
-    info = TBRN(tbrn=tbrn)
-    dataset_client = get_dataset_client(gas, info)
+    tbrn_info = TBRN(tbrn=tbrn)
+    dataset_client = get_dataset_client(gas, tbrn_info)
 
-    if info.type != TBRNType.DATASET:
-        error(f'To operate a commit, "{info}" must be a dataset')
-    if not info.is_draft:
-        error(f'To commit, "{info}" must be in draft status, like "{info}#1"')
+    if tbrn_info.type != TBRNType.DATASET:
+        error(f'To operate a commit, "{tbrn}" must be a dataset')
+    if not tbrn_info.is_draft:
+        error(f'To commit, "{tbrn}" must be in draft status, like "{tbrn}#1"')
 
-    dataset_client.checkout(draft_number=info.draft_number)
+    dataset_client.checkout(draft_number=tbrn_info.draft_number)
     draft = dataset_client.get_draft()
     hint_message = format_hint(draft.title, draft.description, _COMMIT_HINT)
     title, description = edit_message(message, hint_message, obj.config_parser)
@@ -47,7 +47,8 @@ def _implement_commit(obj: ContextInfo, tbrn: str, message: Tuple[str, ...]) -> 
         error("Aborting commit due to empty commit message")
 
     dataset_client.commit(title, description)
-    commit_tbrn = TBRN(info.dataset_name, revision=dataset_client.status.commit_id)
+    commit_tbrn = TBRN(tbrn_info.dataset_name, revision=dataset_client.status.commit_id)
     click.echo(
-        "Committed successfully: " f"{info.get_colored_tbrn()} -> {commit_tbrn.get_colored_tbrn()}"
+        "Committed successfully: "
+        f"{tbrn_info.get_colored_tbrn()} -> {commit_tbrn.get_colored_tbrn()}"
     )

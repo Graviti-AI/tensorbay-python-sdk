@@ -120,23 +120,23 @@ class TBRN:
 
     Use as a generator:
 
-        >>> info = TBRN("VOC2010", "train", remote_path="2012_004330.jpg")
-        >>> info.type
+        >>> tbrn_info = TBRN("VOC2010", "train", remote_path="2012_004330.jpg")
+        >>> tbrn_info.type
         <TBRNType.NORMAL_FILE: 5>
-        >>> info.get_tbrn()
+        >>> tbrn_info.get_tbrn()
         'tb:VOC2010:train://2012_004330.jpg'
-        >>> print(info)
+        >>> print(tbrn_info)
         'tb:VOC2010:train://2012_004330.jpg'
 
     Use as a parser:
 
         >>> tbrn = "tb:VOC2010:train://2012_004330.jpg"
-        >>> info = TBRN(tbrn=tbrn)
-        >>> info.dataset
+        >>> tbrn_info = TBRN(tbrn=tbrn)
+        >>> tbrn_info.dataset
         'VOC2010'
-        >>> info.segment_name
+        >>> tbrn_info.segment_name
         'train'
-        >>> info.remote_path
+        >>> tbrn_info.remote_path
         '2012_004330.jpg'
 
     Arguments:

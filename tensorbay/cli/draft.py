@@ -47,30 +47,30 @@ def _implement_draft(  # pylint: disable=too-many-arguments
     message: Tuple[str, ...],
 ) -> None:
     gas = get_gas(*obj)
-    info = TBRN(tbrn=tbrn)
-    dataset_client = get_dataset_client(gas, info)
+    tbrn_info = TBRN(tbrn=tbrn)
+    dataset_client = get_dataset_client(gas, tbrn_info)
 
-    if info.type != TBRNType.DATASET:
-        error(f'To operate a draft, "{info}" must be a dataset')
+    if tbrn_info.type != TBRNType.DATASET:
+        error(f'To operate a draft, "{tbrn}" must be a dataset')
 
     if is_list:
-        _list_drafts(dataset_client, info)
+        _list_drafts(dataset_client, tbrn_info)
     elif edit:
-        _edit_draft(dataset_client, info, message, obj.config_parser)
+        _edit_draft(dataset_client, tbrn_info, message, obj.config_parser)
     elif close:
-        _close_draft(dataset_client, info)
+        _close_draft(dataset_client, tbrn_info)
     else:
-        _create_draft(dataset_client, info, message, obj.config_parser)
+        _create_draft(dataset_client, tbrn_info, message, obj.config_parser)
 
 
 def _create_draft(
     dataset_client: DatasetClientType,
-    info: TBRN,
+    tbrn_info: TBRN,
     message: Tuple[str, ...],
     config_parser: ConfigParser,
 ) -> None:
-    if info.is_draft:
-        error(f'Create a draft in draft status "{info}" is not permitted')
+    if tbrn_info.is_draft:
+        error(f'Create a draft in draft status "{tbrn_info.get_tbrn()}" is not permitted')
 
     title, description = edit_message(message, _DRAFT_HINT, config_parser)
     if not title:
@@ -78,22 +78,24 @@ def _create_draft(
 
     dataset_client.create_draft(title=title, description=description)
     status = dataset_client.status
-    draft_tbrn = TBRN(info.dataset_name, draft_number=status.draft_number).get_colored_tbrn()
+    draft_tbrn = TBRN(tbrn_info.dataset_name, draft_number=status.draft_number).get_colored_tbrn()
     click.echo(f'Successfully created draft "{draft_tbrn}"')
     _echo_draft(dataset_client, title, description, status.branch_name)
 
 
-def _list_drafts(dataset_client: DatasetClientType, info: TBRN) -> None:
-    if info.revision:
-        error(f'list drafts based on given revision "{info}" is not supported')
+def _list_drafts(dataset_client: DatasetClientType, tbrn_info: TBRN) -> None:
+    if tbrn_info.revision:
+        error(f'list drafts based on given revision "{tbrn_info.get_tbrn()}" is not supported')
 
-    if info.is_draft:
-        draft = dataset_client.get_draft(info.draft_number)
-        click.echo(f"Draft: {info.get_tbrn()}")
+    if tbrn_info.is_draft:
+        draft = dataset_client.get_draft(tbrn_info.draft_number)
+        click.echo(f"Draft: {tbrn_info.get_tbrn()}")
         _echo_draft(dataset_client, draft.title, draft.description, draft.branch_name)
     else:
         for draft in dataset_client.list_drafts():
-            click.echo(f"Draft: {TBRN(info.dataset_name, draft_number=draft.number).get_tbrn()}")
+            click.echo(
+                f"Draft: {TBRN(tbrn_info.dataset_name, draft_number=draft.number).get_tbrn()}"
+            )
             _echo_draft(dataset_client, draft.title, draft.description, draft.branch_name)
 
 
@@ -129,11 +131,11 @@ def _echo_draft(
 
 def _edit_draft(
     dataset_client: DatasetClientType,
-    info: TBRN,
+    tbrn_info: TBRN,
     message: Tuple[str, ...],
     config_parser: ConfigParser,
 ) -> None:
-    if not info.is_draft:
+    if not tbrn_info.is_draft:
         error("Draft number is required when editing draft")
 
     draft = dataset_client.get_draft()
@@ -143,13 +145,13 @@ def _edit_draft(
         error("Aborting updating draft due to empty draft message")
 
     dataset_client.update_draft(title=title, description=description)
-    click.echo(f'Successfully updated draft "{info.get_colored_tbrn()}"')
+    click.echo(f'Successfully updated draft "{tbrn_info.get_colored_tbrn()}"')
     _echo_draft(dataset_client, title, description, dataset_client.status.branch_name)
 
 
-def _close_draft(dataset_client: DatasetClientType, info: TBRN) -> None:
-    if not info.draft_number:
+def _close_draft(dataset_client: DatasetClientType, tbrn_info: TBRN) -> None:
+    if not tbrn_info.draft_number:
         error("Draft number is required when editing draft")
 
-    dataset_client._close_draft(info.draft_number)  # pylint: disable=protected-access
-    click.echo(f'Successfully closed draft "{info.get_colored_tbrn()}"')
+    dataset_client._close_draft(tbrn_info.draft_number)  # pylint: disable=protected-access
+    click.echo(f'Successfully closed draft "{tbrn_info.get_colored_tbrn()}"')

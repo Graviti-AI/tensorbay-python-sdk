@@ -16,15 +16,15 @@ from .utility import ContextInfo, error, exception_handler, get_dataset_client, 
 def _implement_branch(
     obj: ContextInfo, tbrn: str, name: str, verbose: bool, is_delete: bool
 ) -> None:
-    info = TBRN(tbrn=tbrn)
-    if info.type != TBRNType.DATASET:
-        error(f'To operate a branch, "{info}" must be a dataset')
+    tbrn_info = TBRN(tbrn=tbrn)
+    if tbrn_info.type != TBRNType.DATASET:
+        error(f'To operate a branch, "{tbrn_info}" must be a dataset')
 
     gas = get_gas(*obj)
-    dataset_client = get_dataset_client(gas, info)
+    dataset_client = get_dataset_client(gas, tbrn_info)
 
     if is_delete:
-        _delete_branch(dataset_client, info)
+        _delete_branch(dataset_client, tbrn_info)
         return
 
     if name:
@@ -53,9 +53,9 @@ def _list_branches(dataset_client: DatasetClientType, verbose: bool) -> None:
             click.echo(f"{branch.name:{name_length}} {shorten(branch.commit_id)} {branch.title}")
 
 
-def _delete_branch(dataset_client: DatasetClientType, info: TBRN) -> None:
-    if not info.revision:
-        error(f'To delete a branch, "{info}" must have a branch name')
+def _delete_branch(dataset_client: DatasetClientType, tbrn_info: TBRN) -> None:
+    if not tbrn_info.revision:
+        error(f'To delete a branch, "{tbrn_info.get_tbrn()}" must have a branch name')
 
-    dataset_client._delete_branch(info.revision)  # pylint: disable=protected-access
-    click.echo(f'Successfully deleted branch "{info.get_colored_tbrn()}"')
+    dataset_client._delete_branch(tbrn_info.revision)  # pylint: disable=protected-access
+    click.echo(f'Successfully deleted branch "{tbrn_info.get_colored_tbrn()}"')

@@ -24,14 +24,14 @@ def _implement_cp(  # pylint: disable=too-many-arguments
     skip_uploaded_files: bool,
 ) -> None:
     gas = get_gas(*obj)
-    info = TBRN(tbrn=tbrn)
+    tbrn_info = TBRN(tbrn=tbrn)
 
-    dataset_client = get_dataset_client(gas, info, is_fusion=False)
+    dataset_client = get_dataset_client(gas, tbrn_info, is_fusion=False)
 
-    if info.type not in (TBRNType.SEGMENT, TBRNType.NORMAL_FILE):
+    if tbrn_info.type not in (TBRNType.SEGMENT, TBRNType.NORMAL_FILE):
         error(f'"{tbrn}" is not a segment or file type')
 
-    target_remote_path = info.remote_path if info.type == TBRNType.NORMAL_FILE else ""
+    target_remote_path = tbrn_info.remote_path if tbrn_info.type == TBRNType.NORMAL_FILE else ""
 
     local_abspaths = [os.path.abspath(local_path) for local_path in local_paths]
     if (
@@ -40,10 +40,12 @@ def _implement_cp(  # pylint: disable=too-many-arguments
         and target_remote_path
         and not target_remote_path.endswith("/")
     ):
-        segment_client = dataset_client.get_or_create_segment(info.segment_name)
+        segment_client = dataset_client.get_or_create_segment(tbrn_info.segment_name)
         segment_client.upload_file(local_abspaths[0], target_remote_path)
     else:
-        segment = _get_segment(info.segment_name, local_abspaths, target_remote_path, is_recursive)
+        segment = _get_segment(
+            tbrn_info.segment_name, local_abspaths, target_remote_path, is_recursive
+        )
         dataset_client.upload_segment(segment, jobs=jobs, skip_uploaded_files=skip_uploaded_files)
 
 
