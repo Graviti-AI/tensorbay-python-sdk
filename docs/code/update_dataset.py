@@ -18,6 +18,10 @@ ACCESS_KEY = "Accesskey-*****"
 gas = GAS(ACCESS_KEY)
 """"""
 
+"""Update dataset meta"""
+gas.update_dataset("DATASET_NAME", alias="alias", is_public=True)
+""""""
+
 """Update label / get dataset an create draft"""
 dataset_client = gas.get_dataset("DATASET_NAME")
 dataset_client.create_draft("draft-1")

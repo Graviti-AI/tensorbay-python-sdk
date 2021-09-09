@@ -4,6 +4,7 @@
 
 This topic describes how to update datasets, including:
 
+- :ref:`examples/update_dataset:Update Dataset Meta`
 - :ref:`examples/update_dataset:Update Label`
 - :ref:`examples/update_dataset:Update Data`
 
@@ -15,6 +16,17 @@ The following scenario is used for demonstrating how to update data and label:
 
 | Please see :ref:`features/dataset_management:Upload Dataset` for more information about the first step.
 | The last two steps will be introduced in detail.
+
+*********************
+ Update Dataset Meta
+*********************
+
+TensorBay SDK supports a method to update dataset meta info.
+
+.. literalinclude:: ../../../docs/code/update_dataset.py
+   :language: python
+   :start-after: """Update dataset meta"""
+   :end-before: """"""
 
 ***************
  Update Label
