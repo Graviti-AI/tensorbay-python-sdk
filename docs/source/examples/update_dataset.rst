@@ -111,3 +111,10 @@ Delete data by the file list.
    :language: python
    :start-after: """Updata data/ delete data"""
    :end-before: """"""
+
+For a fusion dataset, TensorBay SDK supports deleting a frame by its id.
+
+.. literalinclude:: ../../../docs/code/update_dataset.py
+   :language: python
+   :start-after: """Delete frame"""
+   :end-before: """"""
