@@ -8,7 +8,8 @@
 from .AADB import AADB
 from .AnimalPose import AnimalPose5, AnimalPose7
 from .AnimalsWithAttributes2 import AnimalsWithAttributes2
-from .BDD100K import BDD100K
+from .BDD100K import BDD100K, BDD100K_10K
+from .BDD100K_MOT2020 import BDD100K_MOT2020, BDD100K_MOTS2020
 from .BioIDFace import BioIDFace
 from .BSTLD import BSTLD
 from .CACD import CACD
@@ -64,6 +65,9 @@ __all__ = [
     "AnimalsWithAttributes2",
     "BioIDFace",
     "BDD100K",
+    "BDD100K_MOT2020",
+    "BDD100K_MOTS2020",
+    "BDD100K_10K",
     "BSTLD",
     "CACD",
     "CADC",

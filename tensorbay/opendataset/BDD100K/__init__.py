@@ -4,8 +4,8 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of the BDD100K dataset."""
+"""Dataloader of the BDD100K dataset and the BDD100K_10K dataset."""
 
-from .loader import BDD100K
+from .loader import BDD100K, BDD100K_10K
 
-__all__ = ["BDD100K"]
+__all__ = ["BDD100K", "BDD100K_10K"]
