@@ -9,7 +9,7 @@ import click
 
 from ..client.gas import DatasetClientType
 from .tbrn import TBRN, TBRNType
-from .utility import ContextInfo, error, exception_handler, get_dataset_client, get_gas
+from .utility import ContextInfo, error, exception_handler, get_dataset_client
 
 
 @exception_handler
@@ -19,7 +19,7 @@ def _implement_tag(obj: ContextInfo, tbrn: str, name: str, is_delete: bool) -> N
     if tbrn_info.type != TBRNType.DATASET:
         error(f'To operate a tag, "{tbrn}" must be a dataset')
 
-    gas = get_gas(*obj)
+    gas = obj.get_gas()
     dataset_client = get_dataset_client(gas, tbrn_info)
 
     if is_delete:

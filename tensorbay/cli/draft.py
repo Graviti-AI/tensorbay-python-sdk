@@ -4,7 +4,6 @@
 #
 
 """Implementation of gas draft."""
-
 from configparser import ConfigParser
 from textwrap import indent
 from typing import Optional, Tuple
@@ -22,7 +21,6 @@ from .utility import (
     exception_handler,
     format_hint,
     get_dataset_client,
-    get_gas,
 )
 
 _DRAFT_HINT = """
@@ -46,7 +44,7 @@ def _implement_draft(  # pylint: disable=too-many-arguments
     close: bool,
     message: Tuple[str, ...],
 ) -> None:
-    gas = get_gas(*obj)
+    gas = obj.get_gas()
     tbrn_info = TBRN(tbrn=tbrn)
     dataset_client = get_dataset_client(gas, tbrn_info)
 

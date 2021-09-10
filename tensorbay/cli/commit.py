@@ -17,7 +17,6 @@ from .utility import (
     exception_handler,
     format_hint,
     get_dataset_client,
-    get_gas,
 )
 
 _COMMIT_HINT = """
@@ -30,7 +29,7 @@ _COMMIT_HINT = """
 
 @exception_handler
 def _implement_commit(obj: ContextInfo, tbrn: str, message: Tuple[str, ...]) -> None:
-    gas = get_gas(*obj)
+    gas = obj.get_gas()
     tbrn_info = TBRN(tbrn=tbrn)
     dataset_client = get_dataset_client(gas, tbrn_info)
 

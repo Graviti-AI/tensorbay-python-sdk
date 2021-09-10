@@ -7,7 +7,7 @@
 
 import click
 
-from .utility import ContextInfo, error, write_config
+from .utility import ContextInfo, error
 
 
 def _implement_config(obj: ContextInfo, key: str, value: str, unset: bool) -> None:
@@ -29,7 +29,7 @@ def _implement_config(obj: ContextInfo, key: str, value: str, unset: bool) -> No
             error(f"{key} has not been configured yet")
         if unset:
             del config_section[key]
-            write_config(config_parser, show_message=False)
+            obj.write_config(show_message=False)
             click.echo(f'Successfully unset "{key}"')
             return
 
@@ -37,7 +37,7 @@ def _implement_config(obj: ContextInfo, key: str, value: str, unset: bool) -> No
     else:
         _check_key_and_value(key, value)
         config_section[key] = value
-        write_config(config_parser)
+        obj.write_config()
 
 
 def _check_args_and_options(key: str, value: str, unset: bool) -> None:

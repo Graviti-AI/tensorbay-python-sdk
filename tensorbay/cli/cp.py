@@ -11,7 +11,7 @@ from typing import Iterable
 
 from ..dataset import Data, Segment
 from .tbrn import TBRN, TBRNType
-from .utility import ContextInfo, error, exception_handler, get_dataset_client, get_gas
+from .utility import ContextInfo, error, exception_handler, get_dataset_client
 
 
 @exception_handler
@@ -23,7 +23,7 @@ def _implement_cp(  # pylint: disable=too-many-arguments
     jobs: int,
     skip_uploaded_files: bool,
 ) -> None:
-    gas = get_gas(*obj)
+    gas = obj.get_gas()
     tbrn_info = TBRN(tbrn=tbrn)
 
     dataset_client = get_dataset_client(gas, tbrn_info, is_fusion=False)

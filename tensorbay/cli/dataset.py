@@ -8,12 +8,12 @@
 import click
 
 from .tbrn import TBRN, TBRNType
-from .utility import ContextInfo, error, exception_handler, get_gas
+from .utility import ContextInfo, error, exception_handler
 
 
 @exception_handler
 def _implement_dataset(obj: ContextInfo, tbrn: str, is_delete: bool, yes: bool) -> None:
-    gas = get_gas(*obj)
+    gas = obj.get_gas()
     if not tbrn:
         if is_delete:
             error("Missing argument TBRN")
