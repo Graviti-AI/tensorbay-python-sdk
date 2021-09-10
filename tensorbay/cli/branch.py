@@ -9,7 +9,7 @@ import click
 
 from ..client.gas import DatasetClientType
 from .tbrn import TBRN, TBRNType
-from .utility import ContextInfo, error, exception_handler, get_dataset_client, get_gas, shorten
+from .utility import ContextInfo, error, exception_handler, get_dataset_client, shorten
 
 
 @exception_handler
@@ -20,7 +20,7 @@ def _implement_branch(
     if tbrn_info.type != TBRNType.DATASET:
         error(f'To operate a branch, "{tbrn_info}" must be a dataset')
 
-    gas = get_gas(*obj)
+    gas = obj.get_gas()
     dataset_client = get_dataset_client(gas, tbrn_info)
 
     if is_delete:

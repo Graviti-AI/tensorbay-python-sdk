@@ -11,7 +11,7 @@ import sys
 from collections import OrderedDict
 from configparser import ConfigParser, SectionProxy
 from functools import wraps
-from typing import Any, Callable, NamedTuple, Optional, Tuple, TypeVar, overload
+from typing import Any, Callable, Iterable, Optional, Tuple, TypeVar, overload
 
 import click
 from typing_extensions import Literal, NoReturn
@@ -26,38 +26,192 @@ from ..exception import InternalServerError, TensorBayException
 from .tbrn import TBRN
 
 _Callable = TypeVar("_Callable", bound=Callable[..., None])
+INDENT = " " * 4
 
 
-class ContextInfo(NamedTuple):
+class ContextInfo:
     """This class contains command context."""
 
-    access_key: str
-    url: str
-    profile_name: str
-    config_parser: ConfigParser
+    def __init__(self, access_key: str, url: str, profile_name: str):
+        self.access_key = access_key
+        self.url = url
+        self.profile_name = profile_name
+
+        config_filepath = self._get_config_filepath()
+
+        config_parser = ConfigParser(dict_type=OrderedDict)
+        config_parser.read(config_filepath)
+        self.config_parser = config_parser
+
+    @staticmethod
+    def _get_config_filepath() -> str:
+        """Get the path of the config file.
+
+        Returns:
+            The path of the config file.
+
+        """
+        home = "USERPROFILE" if is_win() else "HOME"
+        return os.path.join(os.environ[home], ".gasconfig")
+
+    @staticmethod
+    def _is_updated(profile_section: SectionProxy) -> bool:
+        return "\n" in profile_section.get("accesskey", "\n")
+
+    @staticmethod
+    def _parse_profile_info(profile_info: str) -> Tuple[str, str]:
+        """Parse the profile information to get accessKey and URL.
+
+        Arguments:
+            profile_info: The profile information read from the config file.
+
+        Returns:
+            A tuple containing the accessKey and the url of profile_name read from the config file.
+
+        """
+        values = profile_info.split("\n")
+        if len(values) == 2:
+            return values[1], ""
+        return values[1], values[2]
+
+    def _set_request_config(self) -> None:
+        """Configure request related parameters."""
+        config_parser = self.config_parser
+        client_config._x_source = "PYTHON-CLI"  # pylint: disable=protected-access
+        if config_parser.has_section("config"):
+            config_section = config_parser["config"]
+            if "timeout" in config_section:
+                client_config.timeout = config_section.getint("timeout")
+            if "is_internal" in config_section:
+                client_config.is_internal = config_section.getboolean("is_internal")
+            if "max_retries" in config_section:
+                client_config.max_retries = config_section.getint("max_retries")
+
+    def generate_profiles(self) -> Iterable[Tuple[str, str, str]]:
+        """Get all profiles and corresponding profile information.
+
+        Yields:
+            A tuple containing profile name and the corresponding accesskey and url read from
+            the config file.
+
+        """
+        try:
+            profiles = self.config_parser["profiles"]
+        except KeyError:
+            return
+        yield from ((k, *self._parse_profile_info(v)) for k, v in profiles.items())
+
+    def get_gas(self, access_key: Optional[str] = None, url: Optional[str] = None) -> GAS:
+        """Load an object of :class:`~tensorbay.client.gas.GAS`.
+
+        Read accessKey and URL from the appointed profile_name and login gas.
+
+        Arguments:
+            access_key: The accessKey of gas.
+            url: The login URL.
+
+        Returns:
+            Gas client logged in with accessKey and URL.
+
+        """
+        self._set_request_config()
+
+        if access_key is None:
+            access_key, url = self.access_key, self.url
+
+        if not access_key and not url:
+            access_key, url = self.read_profile()
+
+        if not access_key:
+            error(
+                "AccessKey should be appointed. Please visit and login to the "
+                "TensorBay website to generate your AccessKey"
+            )
+
+        return GAS(access_key, url)  # type:ignore[arg-type]
+
+    def read_profile(self) -> Tuple[str, str]:
+        """Read accessKey and URL from the config file.
+
+        Returns:
+            A tuple containing the accessKey and the url of profile_name read from the config file.
+
+        """
+        profile_name = self.profile_name
+        config_parser = self.config_parser
+        if not config_parser.has_option("profiles", profile_name):
+            error(
+                f"{profile_name} does not exist"
+                f"\n\nPlease use 'gas -p {profile_name} auth [accessKey]' to create profile"
+            )
+        return self._parse_profile_info(config_parser["profiles"][profile_name])
+
+    def update_config(self) -> None:
+        """Update the config parser to the new format."""
+        config_parser = self.config_parser
+        old_sections = config_parser.sections()
+
+        if not old_sections or old_sections == ["config"]:
+            return
+
+        if (old_sections in (["config", "profiles"], ["profiles"])) and self._is_updated(
+            config_parser["profiles"]
+        ):
+            return
+
+        new_config_parser = ConfigParser(dict_type=OrderedDict)
+        new_config_parser.add_section("profiles")
+        for section_name, section_value in config_parser.items():
+            if section_name == "DEFAULT":
+                continue
+
+            if section_name == "config":
+                new_config_parser.add_section("config")
+                new_config_parser["config"] = config_parser["config"]
+
+            elif section_name == "profiles" and self._is_updated(section_value):
+                new_config_parser["profiles"].update(section_value)
+
+            else:
+                new_config_parser["profiles"][section_name] = form_profile_value(**section_value)
+        self.config_parser = new_config_parser
+        self.write_config(show_message=False)
+
+    def write_config(self, show_message: bool = True) -> None:
+        """Write the config parser to the config file.
+
+        Arguments:
+            show_message: Whether to show the message.
+
+        """
+        # pylint: disable=protected-access
+        config_parser = self.config_parser
+        if config_parser.has_section("config"):
+            config_parser._sections.move_to_end("config", last=False)  # type: ignore[attr-defined]
+        if config_parser.has_section("profiles") and config_parser.has_option(
+            "profiles", "default"
+        ):
+            config_parser._sections["profiles"].move_to_end(  # type: ignore[attr-defined]
+                "default", last=False
+            )
+
+        config_file = self._get_config_filepath()
+        with open(config_file, "w") as fp:
+            config_parser.write(fp)
+        if show_message:
+            click.echo(f'Success!\nConfiguration has been written into: "{config_file}"')
 
 
 def _implement_cli(
     ctx: click.Context, access_key: str, url: str, profile_name: str, debug: bool
 ) -> None:
-    config_parser = update_config(read_config())
-    ctx.obj = ContextInfo(access_key, url, profile_name, config_parser)
+    ctx.obj = ContextInfo(access_key, url, profile_name)
+    ctx.obj.update_config()
 
     if debug:
         logging.basicConfig(level=logging.DEBUG)
     else:
         logger.disabled = True
-
-
-def _get_config_filepath() -> str:
-    """Get the path of the config file.
-
-    Returns:
-        The path of the config file.
-
-    """
-    home = "USERPROFILE" if is_win() else "HOME"
-    return os.path.join(os.environ[home], ".gasconfig")
 
 
 def is_win() -> bool:
@@ -68,53 +222,6 @@ def is_win() -> bool:
 
     """
     return sys.platform.startswith("win")
-
-
-def read_profile(profile_name: str, config_parser: ConfigParser) -> Tuple[str, str]:
-    """Read accessKey and URL from the config file.
-
-    Arguments:
-        profile_name: The environment to login.
-        config_parser: The config parser read from the context object.
-
-    Returns:
-        A tuple containing the accessKey and the url of profile_name read from the config file.
-
-    """
-    if not config_parser.has_option("profiles", profile_name):
-        error(
-            f"{profile_name} does not exist"
-            f"\n\nPlease use 'gas -p {profile_name} auth [accessKey]' to create profile"
-        )
-    values = config_parser["profiles"][profile_name].split("\n")
-    if len(values) == 2:
-        return values[1], ""
-    return values[1], values[2]
-
-
-def get_gas(access_key: str, url: str, profile_name: str, config_parser: ConfigParser) -> GAS:
-    """Load an object of :class:`~tensorbay.client.gas.GAS`.
-
-    We will read accessKey and URL from the appointed profile_name and login gas.
-
-    Arguments:
-        access_key: The accessKey of gas.
-        url: The login URL.
-        profile_name: The environment to login.
-        config_parser: The config parser read from the context object.
-
-    Returns:
-        Gas client logged in with accessKey and URL.
-
-    """
-    _set_request_config(config_parser)
-    if not access_key and not url:
-        access_key, url = read_profile(profile_name, config_parser)
-
-    if not access_key:
-        error("AccessKey should be appointed")
-
-    return GAS(access_key, url)
 
 
 @overload
@@ -167,6 +274,23 @@ def get_dataset_client(
     return dataset_client
 
 
+def form_profile_value(accesskey: str, url: Optional[str] = None) -> str:
+    """Form the profile value with accesskey (and url).
+
+    Arguments:
+        accesskey: The accesskey to TensorBay.
+        url: The TensorBay url.
+
+    Returns:
+        The formed profile value.
+
+    """
+    values = ["", accesskey]
+    if url:
+        values.append(url)
+    return "\n".join(values)
+
+
 def _edit_input(hint: str, config_parser: ConfigParser) -> Tuple[str, str]:
     """Edit information input from the editor.
 
@@ -215,107 +339,6 @@ def error(message: str) -> NoReturn:
     """
     click.secho(f"ERROR: {message}", err=True, fg="red")
     sys.exit(1)
-
-
-def update_config(config_parser: ConfigParser) -> ConfigParser:
-    """Update the config parser to the new format.
-
-    Arguments:
-        config_parser: The config parser read from the context object.
-
-    Returns:
-        The updated config parser with new format.
-
-    """
-    old_sections = config_parser.sections()
-
-    if not old_sections or old_sections == ["config"]:
-        return config_parser
-
-    if (old_sections in (["config", "profiles"], ["profiles"])) and _is_updated(
-        config_parser["profiles"]
-    ):
-        return config_parser
-
-    new_config_parser = ConfigParser(dict_type=OrderedDict)
-    new_config_parser.add_section("profiles")
-    for section_name, section_value in config_parser.items():
-        if section_name == "DEFAULT":
-            continue
-
-        if section_name == "config":
-            new_config_parser.add_section("config")
-            new_config_parser["config"] = config_parser["config"]
-
-        elif section_name == "profiles" and _is_updated(section_value):
-            new_config_parser["profiles"].update(section_value)
-
-        else:
-            new_config_parser["profiles"][section_name] = form_profile_value(**section_value)
-    write_config(new_config_parser, show_message=False)
-    return new_config_parser
-
-
-def _is_updated(profile_section: SectionProxy) -> bool:
-    return "\n" in profile_section.get("accesskey", "\n")
-
-
-def form_profile_value(accesskey: str, url: Optional[str] = None) -> str:
-    """Form the profile value with accesskey (and url).
-
-    Arguments:
-        accesskey: The accesskey to TensorBay.
-        url: The TensorBay url.
-
-    Returns:
-        The formed profile value.
-
-    """
-    values = ["", accesskey]
-    if url:
-        values.append(url)
-    return "\n".join(values)
-
-
-def read_config(config_filepath: Optional[str] = None) -> ConfigParser:
-    """Write the config from the config file.
-
-    Arguments:
-        config_filepath: The path of the config file to read.
-
-    Returns:
-        The config parser read from the config file.
-
-    """
-    if not config_filepath:
-        config_filepath = _get_config_filepath()
-
-    config_parser = ConfigParser(dict_type=OrderedDict)
-    config_parser.read(config_filepath)
-    return config_parser
-
-
-def write_config(config_parser: ConfigParser, show_message: bool = True) -> None:
-    """Write the config parser to the config file.
-
-    Arguments:
-        config_parser: The config parser to write to the file.
-        show_message: Whether to show the message.
-
-    """
-    # pylint: disable=protected-access
-    if config_parser.has_section("config"):
-        config_parser._sections.move_to_end("config", last=False)  # type: ignore[attr-defined]
-    if config_parser.has_section("profiles") and config_parser.has_option("profiles", "default"):
-        config_parser._sections["profiles"].move_to_end(  # type: ignore[attr-defined]
-            "default", last=False
-        )
-
-    config_file = _get_config_filepath()
-    with open(config_file, "w") as fp:
-        config_parser.write(fp)
-    if show_message:
-        click.echo(f'Success!\nConfiguration has been written into: "{config_file}"')
 
 
 def is_accesskey(arg: str) -> bool:
@@ -383,24 +406,6 @@ def edit_message(
         title, description = _edit_input(hint_message, config_parser)
 
     return title, description
-
-
-def _set_request_config(config_parser: ConfigParser) -> None:
-    """Configure request related parameters.
-
-    Arguments:
-        config_parser: The config parser read from the context object.
-
-    """
-    client_config._x_source = "PYTHON-CLI"  # pylint: disable=protected-access
-    if config_parser.has_section("config"):
-        config_section = config_parser["config"]
-        if "timeout" in config_section:
-            client_config.timeout = config_section.getint("timeout")
-        if "is_internal" in config_section:
-            client_config.is_internal = config_section.getboolean("is_internal")
-        if "max_retries" in config_section:
-            client_config.max_retries = config_section.getint("max_retries")
 
 
 def echo_response(err: InternalServerError) -> None:

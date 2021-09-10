@@ -18,7 +18,7 @@ from ..client.gas import DatasetClientType
 from ..client.struct import Commit
 from .auth import INDENT
 from .tbrn import TBRN, TBRNType
-from .utility import ContextInfo, error, exception_handler, get_gas, is_win, shorten
+from .utility import ContextInfo, error, exception_handler, is_win, shorten
 
 _LEFT_BRACKET = click.style("(", fg="yellow", reset=False)
 _COMMA = click.style(", ", fg="yellow", reset=False)
@@ -58,7 +58,7 @@ def _implement_log(  # pylint: disable=too-many-arguments
     is_all: bool,
     graph: bool,
 ) -> None:
-    gas = get_gas(*obj)
+    gas = obj.get_gas()
     tbrn_info = TBRN(tbrn=tbrn)
     if tbrn_info.type != TBRNType.DATASET:
         error(f'To log commits, "{tbrn}" must be a dataset')

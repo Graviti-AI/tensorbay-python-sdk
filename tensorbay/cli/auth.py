@@ -5,7 +5,7 @@
 
 """Implementation of gas auth."""
 
-from configparser import ConfigParser, NoSectionError
+from configparser import NoSectionError
 from textwrap import indent
 from typing import Optional, Tuple
 from urllib.parse import urljoin
@@ -13,16 +13,7 @@ from urllib.parse import urljoin
 import click
 
 from ..exception import UnauthorizedError
-from .utility import (
-    ContextInfo,
-    error,
-    exception_handler,
-    form_profile_value,
-    get_gas,
-    is_accesskey,
-    read_profile,
-    write_config,
-)
+from .utility import ContextInfo, error, exception_handler, form_profile_value, is_accesskey
 
 INDENT = " " * 4
 
@@ -85,7 +76,7 @@ def _unset_auth(obj: ContextInfo, is_all: bool) -> None:
             removed = False
         if not removed:
             error(f'Profile "{obj.profile_name}" does not exist.')
-    write_config(config_parser, show_message=False)
+    obj.write_config(show_message=False)
     hint = "all" if is_all else f'"{obj.profile_name}"'
     click.echo(f"Successfully unset {hint} auth info")
 
@@ -122,7 +113,7 @@ def _is_gas_url(arg: str) -> bool:
 def _update_profile(obj: ContextInfo, arg1: str, arg2: str) -> None:
     access_key, url = (arg2, arg1) if arg2 else (arg1, arg2)
     profile_name, config_parser = obj.profile_name, obj.config_parser
-    gas_client = get_gas(access_key, url, profile_name, config_parser)
+    gas_client = obj.get_gas(access_key, url)
     try:
         user_info = gas_client.get_user()
     except UnauthorizedError:
@@ -131,7 +122,7 @@ def _update_profile(obj: ContextInfo, arg1: str, arg2: str) -> None:
     if not config_parser.has_section("profiles"):
         config_parser.add_section("profiles")
     config_parser["profiles"][profile_name] = form_profile_value(access_key, url)
-    write_config(config_parser, show_message=False)
+    obj.write_config(show_message=False)
 
     messages = [
         f'Successfully set authentication info of "{click.style(user_info.name, bold=True)}"'
@@ -162,34 +153,13 @@ def _echo_formatted_profile(name: str, value: str) -> None:
 
 
 def _status_auth(obj: ContextInfo, is_all: bool) -> None:
-    config_parser = obj.config_parser
     if is_all:
-        try:
-            profiles = config_parser["profiles"]
-        except KeyError:
-            return
-        for key in profiles:
-            _echo_user_info(key, config_parser)
+        for profile_name, access_key, url in obj.generate_profiles():
+            _echo_user_info(access_key, url, obj, profile_name)
         return
 
-    _echo_user_info(obj.profile_name, config_parser)
-
-
-def _echo_user_info(profile_name: str, config_parser: ConfigParser) -> None:
-    access_key, url = read_profile(profile_name, config_parser)
-    gas_client = get_gas(access_key, url, profile_name, config_parser)
-    try:
-        user_info = gas_client.get_user()
-    except UnauthorizedError:
-        error(f"{access_key} is not a valid AccessKey")
-
-    click.echo(f"{profile_name}\n{INDENT}USER: {user_info.name}")
-    team = user_info.team
-    if team:
-        click.echo(f"{INDENT}TEAM: {team.name}")
-    click.echo(f"{INDENT}{access_key}")
-    if url:
-        click.echo(f"{INDENT}{url}\n")
+    access_key, url = obj.read_profile()
+    _echo_user_info(access_key, url, obj)
 
 
 def _reformat_args(arg1: str, arg2: str) -> Tuple[str, str]:
@@ -210,3 +180,23 @@ def _reformat_args(arg1: str, arg2: str) -> Tuple[str, str]:
     else:
         error(f'Invalid argument "{arg1}"')
     return arg1, arg2
+
+
+def _echo_user_info(
+    access_key: str, url: str, obj: ContextInfo, profile_name: Optional[str] = None
+) -> None:
+    gas_client = obj.get_gas(access_key, url)
+    if not profile_name:
+        profile_name = obj.profile_name
+    try:
+        user_info = gas_client.get_user()
+    except UnauthorizedError:
+        error(f"{access_key} is not a valid AccessKey")
+
+    click.echo(f"{profile_name}\n{INDENT}USER: {user_info.name}")
+    team = user_info.team
+    if team:
+        click.echo(f"{INDENT}TEAM: {team.name}")
+    click.echo(f"{INDENT}{access_key}")
+    if url:
+        click.echo(f"{INDENT}{url}\n")

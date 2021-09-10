@@ -13,7 +13,7 @@ from ..client import GAS
 from ..client.dataset import FusionDatasetClient
 from ..client.gas import DatasetClientType
 from .tbrn import TBRN, TBRNType
-from .utility import ContextInfo, error, exception_handler, get_dataset_client, get_gas
+from .utility import ContextInfo, error, exception_handler, get_dataset_client
 
 
 def _echo_data(
@@ -123,7 +123,7 @@ _LS_FUNCS = {
 
 @exception_handler
 def _implement_ls(obj: ContextInfo, tbrn: str, list_all_files: bool, show_total_num: bool) -> None:
-    gas = get_gas(*obj)
+    gas = obj.get_gas()
     if not tbrn:
         dataset_names = gas.list_dataset_names()
         if show_total_num:
