@@ -76,7 +76,7 @@ Add new data to dataset.
 
 .. literalinclude:: ../../../docs/code/update_dataset.py
    :language: python
-   :start-after: """Updata data/ upload dataset"""
+   :start-after: """Update data/ upload dataset"""
    :end-before: """"""
 
 Set `skip_uploaded_files=True` to skip uploaded data.
@@ -85,7 +85,7 @@ Overwrite uploaded data to dataset.
 
 .. literalinclude:: ../../../docs/code/update_dataset.py
    :language: python
-   :start-after: """Updata data/ overwrite dataset"""
+   :start-after: """Update data/ overwrite dataset"""
    :end-before: """"""
 
 The default value of `skip_uploaded_files` is false, use it to overwrite uploaded data.
@@ -102,14 +102,14 @@ Delete segment by the segment name.
 
 .. literalinclude:: ../../../docs/code/update_dataset.py
    :language: python
-   :start-after: """Updata data/ delete segment"""
+   :start-after: """Update data/ delete segment"""
    :end-before: """"""
 
 Delete data by the file list.
 
 .. literalinclude:: ../../../docs/code/update_dataset.py
    :language: python
-   :start-after: """Updata data/ delete data"""
+   :start-after: """Update data/ delete data"""
    :end-before: """"""
 
 For a fusion dataset, TensorBay SDK supports deleting a frame by its id.
