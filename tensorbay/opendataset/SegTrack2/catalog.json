@@ -1,0 +1,9 @@
+{
+    "INSTANCE_MASK": {
+        "isTracking": true,
+        "categories": [
+            { "name": "background", "categoryId": 0 },
+            { "name": "overlap", "categoryId": 255 }
+        ]
+    }
+}
