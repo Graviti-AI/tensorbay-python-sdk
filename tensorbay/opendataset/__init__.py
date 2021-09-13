@@ -47,6 +47,8 @@ from .OxfordIIITPet import OxfordIIITPet
 from .PASCALContext import PASCALContext
 from .PlantSeedlings import PlantSeedlings, PlantSeedlingsFullimages
 from .RP2K import RP2K
+from .SegTrack import SegTrack
+from .SegTrack2 import SegTrack2
 from .SVHN import SVHN
 from .THCHS30 import THCHS30
 from .THUCNews import THUCNews
@@ -109,6 +111,7 @@ __all__ = [
     "PlantSeedlingsFullimages",
     "RP2K",
     "SegTrack",
+    "SegTrack2",
     "SVHN",
     "nuImages",
     "THCHS30",
