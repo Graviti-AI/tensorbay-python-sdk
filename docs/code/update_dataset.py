@@ -23,8 +23,12 @@ gas = GAS(ACCESS_KEY)
 gas.update_dataset("DATASET_NAME", alias="alias", is_public=True)
 """"""
 
-"""Update label / get dataset an create draft"""
+"""Update dataset notes"""
 dataset_client = gas.get_dataset("DATASET_NAME")
+dataset_client.update_notes(is_continuous=True)
+""""""
+
+"""Update label / get dataset an create draft"""
 dataset_client.create_draft("draft-1")
 """"""
 

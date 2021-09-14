@@ -87,7 +87,7 @@ Take the :ref:`Read Dataset of BSTLD <examples/bstld:Read Dataset>` as an exampl
  Update Dataset
 ****************
 
-Since TensorBay supports version control, users can update dataset meta, data and labels to a new commit of a dataset.
+Since TensorBay supports version control, users can update dataset meta, notes, data and labels to a new commit of a dataset.
 Thus, different versions of data and labels can coexist in one dataset, which greatly facilitates the datasets' maintenance.
 
 Please see :ref:`Update dataset<examples/update_dataset:Update Dataset>` example for more details.
