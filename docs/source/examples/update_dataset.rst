@@ -5,6 +5,7 @@
 This topic describes how to update datasets, including:
 
 - :ref:`examples/update_dataset:Update Dataset Meta`
+- :ref:`examples/update_dataset:Update Dataset Notes`
 - :ref:`examples/update_dataset:Update Label`
 - :ref:`examples/update_dataset:Update Data`
 
@@ -26,6 +27,18 @@ TensorBay SDK supports a method to update dataset meta info.
 .. literalinclude:: ../../../docs/code/update_dataset.py
    :language: python
    :start-after: """Update dataset meta"""
+   :end-before: """"""
+
+**********************
+ Update Dataset Notes
+**********************
+
+TensorBay SDK supports a method to update :ref:`dataset notes <reference/dataset_structure:notes>`. The dataset can be updated into continuous
+dataset by setting ``is_continuous`` to ``True``.
+
+.. literalinclude:: ../../../docs/code/update_dataset.py
+   :language: python
+   :start-after: """Update dataset notes"""
    :end-before: """"""
 
 ***************
