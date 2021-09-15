@@ -51,6 +51,11 @@ There are plenty of benefits of uploading local datasets to TensorBay.
 - **VISUALIZATION**: uploaded datasets can be visualized without coding.
 - **VERSION CONTROL**: different versions of one dataset can be uploaded and controlled conveniently.
 
+.. note::
+
+   During uploading dataset or data, if the remote path of the data is the same as another data under the same segment,
+   the old data will be replaced.
+
 Take the :ref:`Upload Dataset of BSTLD <examples/bstld:Upload Dataset>` as an example.
 
 **************
