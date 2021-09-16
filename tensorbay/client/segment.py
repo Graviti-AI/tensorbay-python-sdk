@@ -259,20 +259,6 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
 
         self._client.open_api_do("PUT", "multi/callback", self._dataset_id, json=put_data)
 
-    def _import_cloud_file(
-        self,
-        cloud_path: str,
-        remote_path: str,
-    ) -> None:
-
-        put_data: Dict[str, Any] = {
-            "segmentName": self.name,
-            "objects": [{"cloudPath": cloud_path, "remotePath": remote_path}],
-            "deleteSource": False,
-        }
-        put_data.update(self._status.get_status_info())
-        self._client.open_api_do("PUT", "multi/cloud-callback", self._dataset_id, json=put_data)
-
     def _upload_label(self, data: Union[AuthData, Data]) -> None:
         label = data.label.dumps()
         if not label:
@@ -430,9 +416,19 @@ class SegmentClient(SegmentClientBase):
 
         """
         self._status.check_authority_for_draft()
-
-        self._import_cloud_file(data.path, data.target_remote_path)
-        self._upload_label(data)
+        put_data: Dict[str, Any] = {
+            "segmentName": self.name,
+            "objects": [
+                {
+                    "cloudPath": data.path,
+                    "remotePath": data.target_remote_path,
+                    "label": data.label.dumps(),
+                }
+            ],
+            "deleteSource": False,
+        }
+        put_data.update(self._status.get_status_info())
+        self._client.open_api_do("PUT", "multi/cloud-callback", self._dataset_id, json=put_data)
 
     def copy_data(
         self,
