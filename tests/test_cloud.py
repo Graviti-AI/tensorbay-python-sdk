@@ -8,6 +8,7 @@ import pytest
 from tensorbay import GAS
 from tensorbay.dataset import Dataset, Segment
 from tensorbay.exception import ResourceNotExistError
+from tensorbay.label import Classification
 
 from .utility import get_dataset_name
 
@@ -43,15 +44,17 @@ class TestCloudStorage:
         dataset = Dataset(name=dataset_name)
         segment = dataset.create_segment("Segment1")
         for data in auth_data:
+            data.label.classification = Classification("cat", attributes={"color": "red"})
             segment.append(data)
 
         dataset_client = gas_client.upload_dataset(dataset, jobs=5)
-        dataset_client.commit("import data")
+        # dataset_client.commit("import data")
 
         segment1 = Segment("Segment1", client=dataset_client)
         assert len(segment1) == len(segment)
         assert segment1[0].path == segment[0].path.split("/")[-1]
-        assert not segment1[0].label
+        assert segment1[0].label.classification.category == "cat"
+        assert segment1[0].label.classification.attributes["color"] == "red"
 
         assert len(auth_data) == len(segment)
 
