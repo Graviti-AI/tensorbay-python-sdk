@@ -21,17 +21,21 @@ from typing import Any, Callable, DefaultDict, Dict, Optional, TypeVar
 from urllib.parse import urlparse
 
 from requests.models import Response
+from requests_toolbelt.multipart.encoder import FileWrapper, MultipartEncoder
 
 from .requests import Client
 
 _Callable = TypeVar("_Callable", bound=Callable[..., Response])
-_Columns = OrderedDict(
-    totalTime=12,
-    callNumber=11,
-    avgTime=10,
-    totalResponseLength=20,
-    totalFileSize=16,
+
+_COLUMNS = OrderedDict(
+    totalTime="{:<20.3f}",
+    callNumber="{:<20}",
+    avgTime="{:<20.3f}",
+    totalResponseLength="{:<20}",
+    totalFileSize="{:<20}",
 )
+_TITLE = f"{'totalTime (s)':<20}{' |callNumber':<18}\
+    {' |avgTime (s)':<22}{' |totalResponseLength':<22}{' |totalFileSize (B)':<22}"
 _PATH_PREFIX = "/gatewayv2/tensorbay-open-api/v1/"
 
 
@@ -58,13 +62,22 @@ class Profile:
 
     @staticmethod
     def _format_string(path: str = "Path", item: Optional[Dict[str, float]] = None) -> str:
-        content = [f"| {path:<58}"]
+        content = [f"| {path:<63}"]
         if item is None:
-            content.extend(f"{key:<{value}}" for key, value in _Columns.items())
+            content.append(_TITLE)
         else:
-            content.extend(f"{item[key]:<{value}.3f}" for key, value in _Columns.items())
+            content.extend(value.format(item[key]) for key, value in _COLUMNS.items())
         content.append("\n")
         return " |".join(content)
+
+    @staticmethod
+    def _get_file_size(data: MultipartEncoder) -> int:
+        for part in data.parts:
+            body = part.body
+            if isinstance(body, FileWrapper):
+                return body.len  # type: ignore[no-any-return]
+
+        return 0
 
     def _save_to_txt(self, path: str) -> None:
         with open(path, "w") as fp:
@@ -75,16 +88,16 @@ class Profile:
     def _save_to_csv(self, path: str) -> None:
         with open(path, "w") as fp:
             writer = csv.writer(fp)
-            writer.writerow(chain(["Path"], _Columns.keys()))
+            writer.writerow(chain(["Path"], _COLUMNS.keys()))
             for post, item in self._summary.items():
-                writer.writerow(chain([post], (item[key] for key in _Columns)))
+                writer.writerow(chain([post], (item[key] for key in _COLUMNS)))
 
     def _save_to_json(self, path: str) -> None:
         summary = self._summary if isinstance(self._summary, dict) else self._summary.copy()
         with open(path, "w") as fp:
             json.dump(summary, fp, indent=4)
 
-    def statistical(self, func: _Callable) -> _Callable:
+    def _statistical(self, func: _Callable) -> _Callable:
         """A decorator to record the running time, response length ..etc of the function.
 
         Arguments:
@@ -98,17 +111,18 @@ class Profile:
         @wraps(func)
         def wrapper(client: Client, method: str, url: str, **kwargs: Any) -> Response:
             key = f"[{method}] {urlparse(url).path.replace(_PATH_PREFIX, '')}"
-            data_length = getattr(kwargs.get("data"), "len", 0)
+            data = kwargs.get("data")
+            file_size = self._get_file_size(data) if isinstance(data, MultipartEncoder) else 0
             start_time = time.time()
             response = func(client, method, url, **kwargs)
             cost_time = time.time() - start_time
-            self.update(key, len(response.content), cost_time, data_length)
+            self._update(key, len(response.content), cost_time, file_size)
 
             return response
 
         return wrapper  # type: ignore[return-value]
 
-    def update(self, key: str, response_length: int, cost_time: float, file_size: int) -> None:
+    def _update(self, key: str, response_length: int, cost_time: float, file_size: int) -> None:
         """Update the giving information into summary.
 
         Arguments:
@@ -118,7 +132,7 @@ class Profile:
             file_size: the upload file size.
 
         """
-        item = self._summary.get(key, defaultdict(float))
+        item = self._summary.get(key, defaultdict(int))
         item["totalTime"] += cost_time
         item["callNumber"] += 1
         item["totalResponseLength"] += response_length
@@ -130,7 +144,7 @@ class Profile:
 
         Arguments:
             path: The file local path.
-            file_type: Type of the save file, only support txt, json, csv.
+            file_type: Type of the save file, only support 'txt', 'json', 'csv'.
 
         """
         self._calculate_average_time()
@@ -149,7 +163,7 @@ class Profile:
             self._summary = self._manager.dict()
         else:
             self._summary = {}
-        Client.do = self.statistical(self.do_function)  # type: ignore[assignment]
+        Client.do = self._statistical(self.do_function)  # type: ignore[assignment]
 
     def stop(self) -> None:
         """Stop statistical record."""
