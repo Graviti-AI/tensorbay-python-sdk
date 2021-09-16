@@ -15,3 +15,4 @@ tensorbay.client
    struct
    version
    diff
+   profile
