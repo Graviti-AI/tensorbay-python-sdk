@@ -105,7 +105,7 @@ Delete segment by the segment name.
    :start-after: """Update data/ delete segment"""
    :end-before: """"""
 
-Delete data by the file list.
+Delete data by the data remote path.
 
 .. literalinclude:: ../../../docs/code/update_dataset.py
    :language: python
