@@ -45,7 +45,6 @@ from .nuImages import nuImages
 from .nuScenes import nuScenes
 from .OxfordIIITPet import OxfordIIITPet
 from .PASCALContext import PASCALContext
-from .PlantSeedlings import PlantSeedlings, PlantSeedlingsFullimages
 from .RP2K import RP2K
 from .SegTrack import SegTrack
 from .SegTrack2 import SegTrack2
@@ -107,8 +106,6 @@ __all__ = [
     "NightOwls",
     "OxfordIIITPet",
     "PASCALContext",
-    "PlantSeedlings",
-    "PlantSeedlingsFullimages",
     "RP2K",
     "SegTrack",
     "SegTrack2",
