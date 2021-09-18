@@ -5,6 +5,7 @@
 
 # pylint: disable=pointless-string-statement
 # pylint: disable=wrong-import-position
+# pylint: disable=invalid-name
 # type: ignore[arg-type]
 
 """Authorize a Client Instance."""
@@ -56,7 +57,7 @@ dataset_client.delete_segment("SegmentName")
 
 """Update data/ delete data"""
 segment_client = dataset_client.get_segment("SegmentName")
-segment_client.delete_data(["a.png", "b.png"])
+segment_client.delete_data("a.png")
 """"""
 
 """Delete frame"""
