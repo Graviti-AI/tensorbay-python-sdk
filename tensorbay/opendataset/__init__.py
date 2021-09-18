@@ -16,6 +16,7 @@ from .CACD import CACD
 from .CADC import CADC
 from .CarConnection import CarConnection
 from .CCPD import CCPD, CCPDGreen
+from .CIHP import CIHP
 from .COCO2017 import COCO2017
 from .CoinImage import CoinImage
 from .CompCars import CompCars
@@ -36,6 +37,7 @@ from .JHU_CROWD import JHU_CROWD
 from .KenyanFood import KenyanFoodOrNonfood, KenyanFoodType
 from .KylbergTexture import KylbergTexture
 from .LeedsSportsPose import LeedsSportsPose
+from .LIP import LIP
 from .LISATrafficLight import LISATrafficLight
 from .LISATrafficSign import LISATrafficSign
 from .NeolixOD import NeolixOD
