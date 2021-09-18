@@ -10,6 +10,7 @@ This topic describes dataset management, including:
 - :ref:`features/dataset_management:Update Dataset`
 - :ref:`features/dataset_management:Move and Copy`
 - :ref:`features/dataset_management:Merge Datasets`
+- :ref:`features/dataset_management:Get Label Statistics`
 
 
 ******************
@@ -120,3 +121,11 @@ Please see :ref:`Move and copy<examples/move_and_copy:Move And Copy>` example fo
 Since TensorBay supports copy operation between different datasets, users can use it to merge datasets.
 
 Please see :ref:`examples/merge_datasets:Merge Datasets` example for more details.
+
+**********************
+ Get Label Statistics
+**********************
+
+TensorBay supports getting label statistics of dataset.
+
+Please see :ref:`examples/get_label_statistics:Get Label Statistics` example for more details.

@@ -16,6 +16,7 @@ from ..gas import DEFAULT_BRANCH, DEFAULT_IS_PUBLIC, GAS
 from ..lazy import ReturnGenerator
 from ..requests import Tqdm
 from ..segment import FusionSegmentClient, SegmentClient
+from ..statistics import Statistics
 from ..status import Status
 from ..struct import ROOT_COMMIT_ID
 from .utility import mock_response
@@ -246,6 +247,38 @@ class TestDatasetClientBase:
         open_api_do.assert_called_once_with(
             "DELETE", "segments", self.dataset_client._dataset_id, json=delete_data
         )
+
+    def test_get_label_statistics(self, mocker):
+        params = self.dataset_client._status.get_status_info()
+        response_data = {
+            "labelStatistics": {
+                "BOX2D": {
+                    "quantity": 10,
+                    "categories": [
+                        {
+                            "name": "vehicles.bike",
+                            "quantity": 10,
+                            "attributes": [
+                                {
+                                    "name": "trafficLightColor",
+                                    "enum": ["none", "red", "yellow"],
+                                    "quantities": [5, 3, 2],
+                                }
+                            ],
+                        }
+                    ],
+                }
+            }
+        }
+        open_api_do = mocker.patch(
+            f"{gas.__name__}.Client.open_api_do",
+            return_value=mock_response(data=response_data),
+        )
+        statistics1 = self.dataset_client.get_label_statistics()
+        open_api_do.assert_called_once_with(
+            "GET", "labels/statistics", self.dataset_client.dataset_id, params=params
+        )
+        assert statistics1 == Statistics(response_data["labelStatistics"])
 
 
 class TestDatasetClient(TestDatasetClientBase):

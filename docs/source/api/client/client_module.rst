@@ -16,3 +16,4 @@ tensorbay.client
    version
    diff
    profile
+   statistics
