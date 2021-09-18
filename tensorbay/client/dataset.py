@@ -35,6 +35,7 @@ from .lazy import PagingList
 from .log import UPLOAD_SEGMENT_RESUME_TEMPLATE
 from .requests import Tqdm, multithread_upload
 from .segment import _STRATEGIES, FusionSegmentClient, SegmentClient
+from .statistics import Statistics
 from .status import Status
 from .version import VersionControlClient
 
@@ -277,6 +278,20 @@ class DatasetClientBase(VersionControlClient):
         delete_data.update(self._status.get_status_info())
 
         self._client.open_api_do("DELETE", "segments", self._dataset_id, json=delete_data)
+
+    def get_label_statistics(self) -> Statistics:
+        """Get label statistics of the dataset.
+
+        Returns:
+            Required :class:`~tensorbay.client.dataset.Statistics`.
+
+        """
+        params: Dict[str, Any] = self._status.get_status_info()
+        return Statistics(
+            self._client.open_api_do(
+                "GET", "labels/statistics", self._dataset_id, params=params
+            ).json()["labelStatistics"]
+        )
 
 
 class DatasetClient(DatasetClientBase):

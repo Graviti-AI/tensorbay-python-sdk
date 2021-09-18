@@ -7,6 +7,7 @@ import numpy as np
 import pytest
 
 from tensorbay import GAS
+from tensorbay.client.statistics import Statistics
 from tensorbay.dataset import Data, Dataset
 from tensorbay.label import Catalog, InstanceMask, Label, PanopticMask, SemanticMask
 from tensorbay.label.label_mask import RemoteInstanceMask, RemotePanopticMask, RemoteSemanticMask
@@ -108,6 +109,41 @@ LABEL = {
     "MULTI_POLYGON": MULTI_POLYGON_LABEL,
     "RLE": RLE_LABEL,
 }
+STATISTICS = {
+    "MULTI_POLYGON": {
+        "attributes": [{"enum": ["male"], "name": "gender", "quantities": [1]}],
+        "categories": [
+            {
+                "attributes": [{"enum": ["male"], "name": "gender", "quantities": [1]}],
+                "name": "cat",
+                "quantity": 1,
+            }
+        ],
+        "quantity": 1,
+    },
+    "MULTI_POLYLINE2D": {
+        "attributes": [{"enum": ["male"], "name": "gender", "quantities": [1]}],
+        "categories": [
+            {
+                "attributes": [{"enum": ["male"], "name": "gender", "quantities": [1]}],
+                "name": "cat",
+                "quantity": 1,
+            }
+        ],
+        "quantity": 1,
+    },
+    "RLE": {
+        "attributes": [{"enum": ["male"], "name": "gender", "quantities": [1]}],
+        "categories": [
+            {
+                "attributes": [{"enum": ["male"], "name": "gender", "quantities": [1]}],
+                "name": "cat",
+                "quantity": 1,
+            }
+        ],
+        "quantity": 1,
+    },
+}
 
 
 @pytest.fixture
@@ -143,6 +179,8 @@ class TestUploadLabel:
         assert dataset.catalog == Catalog.loads(CATALOG_CONTENTS)
         assert dataset[0][0].label == Label.loads(LABEL)
 
+        statistics1 = dataset_client.get_label_statistics()
+        assert statistics1 == Statistics(STATISTICS)
         gas_client.delete_dataset(dataset_name)
 
     def test_upload_dataset_with_mask(self, accesskey, url, tmp_path, mask_file):
