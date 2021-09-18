@@ -20,7 +20,7 @@ def pytest_addoption(parser):
     parser.addoption("--url")
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def accesskey(request):
     """Get the accesskey from command line.
 
@@ -34,7 +34,7 @@ def accesskey(request):
     return request.config.getoption("--accesskey")
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def url(request):
     """Get and return the url from command line.
 
