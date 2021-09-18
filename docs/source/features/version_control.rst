@@ -192,3 +192,4 @@ See :ref:`version_control/branch:Branch` for more details about branch.
    ../version_control/branch
    ../version_control/tag
    ../version_control/diff
+   ../version_control/squash_and_merge
