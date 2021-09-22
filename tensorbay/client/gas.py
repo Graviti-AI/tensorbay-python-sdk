@@ -59,7 +59,7 @@ class GAS:
         if name:
             params["name"] = name
 
-        response = self._client.open_api_do("GET", "auth-storage-configs", "", params=params).json()
+        response = self._client.open_api_do("GET", "storage-configs", "", params=params).json()
 
         yield from response["configs"]
 
