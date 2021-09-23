@@ -85,28 +85,6 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
         self._client = dataset_client._client  # pylint: disable=protected-access
         self._permission: Dict[str, Any] = {"expireAt": 0}
 
-    def _get_url(self, remote_path: str) -> str:
-        """Get URL of a specific remote path.
-
-        Arguments:
-            remote_path: The remote path of the file.
-
-        Returns:
-            The URL of the remote file.
-
-        """
-        params: Dict[str, Any] = {
-            "segmentName": self._name,
-            "remotePath": remote_path,
-        }
-        params.update(self._status.get_status_info())
-
-        if config.is_internal:
-            params["isInternal"] = True
-
-        response = self._client.open_api_do("GET", "data/urls", self._dataset_id, params=params)
-        return response.json()["urls"][0]["url"]  # type: ignore[no-any-return]
-
     def _list_urls(self, offset: int = 0, limit: int = 128) -> Dict[str, Any]:
         params: Dict[str, Any] = {
             "segmentName": self._name,
