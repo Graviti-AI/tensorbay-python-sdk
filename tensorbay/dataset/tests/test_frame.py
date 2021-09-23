@@ -16,12 +16,14 @@ _FRAME_DATA = {
             "sensorName": "sensor1",
             "remotePath": "test1.png",
             "timestamp": 1614945883,
+            "url": "url1",
             "label": {},
         },
         {
             "sensorName": "sensor2",
             "remotePath": "test2.png",
             "timestamp": 1614945884,
+            "url": "url2",
             "label": {},
         },
     ],
@@ -39,7 +41,7 @@ class TestFrame:
         assert frame._data == {}
 
     def test_from_response_body(self):
-        frame = Frame.from_response_body(_FRAME_DATA, 0, [{"sensor1": "url1", "sensor2": "url2"}])
+        frame = Frame.from_response_body(_FRAME_DATA)
         assert frame.frame_id == _FRAME_ID
         assert frame["sensor1"].path == "test1.png"
         assert frame["sensor1"].timestamp == 1614945883

@@ -14,7 +14,7 @@ from different sensors.
 """
 
 import logging
-from typing import Any, Dict, Mapping, Optional, Sequence, Type, TypeVar
+from typing import Any, Dict, Optional, Type, TypeVar
 from uuid import UUID
 
 from ulid import ULID, from_str, from_uuid
@@ -62,9 +62,7 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
         return self.__class__.__name__
 
     @classmethod
-    def from_response_body(
-        cls: Type[_T], body: Dict[str, Any], frame_index: int, urls: Sequence[Mapping[str, str]]
-    ) -> _T:
+    def from_response_body(cls: Type[_T], body: Dict[str, Any]) -> _T:
         """Loads a :class:`Frame` object from a response body.
 
         Arguments:
@@ -78,15 +76,13 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
                                 "sensorName": <str>,
                                 "remotePath": <str>,
                                 "timestamp": <float>,
+                                "url": <str>,
                                 "label": {...}
                             },
                             ...
                             ...
                         ]
                     }
-
-            frame_index: The index of the frame.
-            urls: A sequence of mappings which key is the sensor name and value is the url.
 
         Returns:
             The loaded :class:`Frame` object.
@@ -107,10 +103,7 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
         frame = cls(frame_id)
         for data_contents in body["frame"]:
             sensor_name = data_contents["sensorName"]
-            frame[sensor_name] = RemoteData.from_response_body(
-                data_contents,
-                _url_getter=lambda _, s=sensor_name: urls[frame_index][s],  # type: ignore[misc]
-            )
+            frame[sensor_name] = RemoteData.from_response_body(data_contents)
 
         return frame
 

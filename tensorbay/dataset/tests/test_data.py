@@ -10,7 +10,12 @@ import pytest
 from ..data import Data, RemoteData
 
 _DATA = {"localPath": "test.json", "timestamp": 1614667532, "label": {}}
-_REMOTE_DATA = {"remotePath": "test.json", "timestamp": 1614667532, "label": {}}
+_REMOTE_DATA = {
+    "remotePath": "test.json",
+    "timestamp": 1614667532,
+    "label": {},
+    "url": "url1",
+}
 
 
 class TestData:
@@ -68,7 +73,7 @@ class TestRemoteData:
             remote_data.get_url()
 
     def test_from_response_body(self):
-        data = RemoteData.from_response_body(_REMOTE_DATA, _url_getter=lambda _: "url")
+        data = RemoteData.from_response_body(_REMOTE_DATA)
         assert data.path == _REMOTE_DATA["remotePath"]
         assert data.timestamp == _REMOTE_DATA["timestamp"]
-        assert data.get_url() == "url"
+        assert data.get_url() == "url1"

@@ -121,6 +121,20 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
         response = self._client.open_api_do("GET", "data/urls", self._dataset_id, params=params)
         return response.json()  # type: ignore[no-any-return]
 
+    def _list_data_details(self, offset: int = 0, limit: int = 128) -> Dict[str, Any]:
+        params: Dict[str, Any] = {
+            "segmentName": self._name,
+            "offset": offset,
+            "limit": limit,
+        }
+        params.update(self._status.get_status_info())
+
+        if config.is_internal:
+            params["isInternal"] = True
+
+        response = self._client.open_api_do("GET", "data/details", self._dataset_id, params=params)
+        return response.json()  # type: ignore[no-any-return]
+
     def _list_mask_urls(self, mask_type: str, offset: int = 0, limit: int = 128) -> Dict[str, Any]:
         params: Dict[str, Any] = {
             "segmentName": self._name,
@@ -340,11 +354,10 @@ class SegmentClient(SegmentClientBase):
     def _generate_data(
         self, url_getters: Dict[str, _UrlGetters], offset: int = 0, limit: int = 128
     ) -> Generator[RemoteData, None, int]:
-        response = self._list_labels(offset, limit)
-        urls = url_getters["file"]
+        response = self._list_data_details(offset, limit)
 
-        for i, item in enumerate(response["labels"], offset):
-            data = RemoteData.from_response_body(item, _url_getter=urls[i])
+        for i, item in enumerate(response["dataDetails"], offset):
+            data = RemoteData.from_response_body(item)
             label = data.label
             for key in _MASK_KEYS:
                 mask = getattr(label, key, None)
@@ -632,7 +645,7 @@ class SegmentClient(SegmentClientBase):
             The PagingList of :class:`~tensorbay.dataset.data.RemoteData`.
 
         """
-        url_getters = {"file": _UrlGetters(self.list_urls())}
+        url_getters = {}
         for key in _MASK_KEYS:
             url_getters[key] = _UrlGetters(self.list_mask_urls(key.upper()))
 
@@ -699,13 +712,11 @@ class FusionSegmentClient(SegmentClientBase):
     def __init__(self, name: str, data_client: "FusionDatasetClient") -> None:
         super().__init__(name, data_client)
 
-    def _generate_frames(
-        self, urls: PagingList[Dict[str, str]], offset: int = 0, limit: int = 128
-    ) -> Generator[Frame, None, int]:
-        response = self._list_labels(offset, limit)
+    def _generate_frames(self, offset: int = 0, limit: int = 128) -> Generator[Frame, None, int]:
+        response = self._list_data_details(offset, limit)
 
-        for index, item in enumerate(response["labels"], offset):
-            yield Frame.from_response_body(item, index, urls)
+        for item in response["dataDetails"]:
+            yield Frame.from_response_body(item)
 
         return response["totalCount"]  # type: ignore[no-any-return]
 
@@ -829,8 +840,7 @@ class FusionSegmentClient(SegmentClientBase):
             The PagingList of :class:`~tensorbay.dataset.frame.Frame`.
 
         """
-        urls = self.list_urls()
-        return PagingList(lambda offset, limit: self._generate_frames(urls, offset, limit), 128)
+        return PagingList(self._generate_frames, 128)
 
     def delete_frame(self, frame_id: Union[str, ULID]) -> None:
         """Delete a frame of a segment in a certain commit with the given frame id.
