@@ -19,6 +19,7 @@ from uuid import UUID
 
 from ulid import ULID, from_str, from_uuid
 
+from ..client.lazy import LazyPage
 from ..utility import UserMutableMapping
 from .data import DataBase, RemoteData
 
@@ -62,7 +63,9 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
         return self.__class__.__name__
 
     @classmethod
-    def from_response_body(cls: Type[_T], body: Dict[str, Any]) -> _T:
+    def from_response_body(
+        cls: Type[_T], body: Dict[str, Any], frame_index: int, urls: LazyPage[Dict[str, str]]
+    ) -> _T:
         """Loads a :class:`Frame` object from a response body.
 
         Arguments:
@@ -83,6 +86,8 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
                             ...
                         ]
                     }
+            frame_index: The index of the frame.
+            urls: A sequence of mappings which key is the sensor name and value is the url.
 
         Returns:
             The loaded :class:`Frame` object.
@@ -103,8 +108,13 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
         frame = cls(frame_id)
         for data_contents in body["frame"]:
             sensor_name = data_contents["sensorName"]
-            frame[sensor_name] = RemoteData.from_response_body(data_contents)
-
+            frame[sensor_name] = RemoteData.from_response_body(
+                data_contents,
+                _url_getter=lambda _, s=sensor_name: urls.items[  # type: ignore[misc]
+                    frame_index
+                ].get()[s],
+                _url_updater=urls.pull,
+            )
         return frame
 
     # @property

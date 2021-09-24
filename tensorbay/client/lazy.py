@@ -151,6 +151,34 @@ class LazyPage(Generic[_T]):
         self._limit = limit
         self._func = func
 
+    @classmethod
+    def from_items(
+        cls,
+        offset: int,
+        limit: int,
+        func: PagingGenerator[_T],
+        item_contents: Iterable[_T],
+    ) -> "LazyPage[_T]":
+        """Create a LazyPage instance with the given items and generator function.
+
+        Arguments:
+            offset: The offset of the page.
+            limit: The limit of the page.
+            func: A paging generator function, which takes offset<int> and limit<int> as inputs and
+                returns a generator. The returned generator should yield the element user needs, and
+                return the total count of the elements in the paging request.
+            item_contents: The lazy item contents that need to be stored on this page.
+
+        Returns:
+            The LazyPage instance which stores the input items and function.
+
+        """
+        obj: "LazyPage[_T]" = object.__new__(cls)
+        obj._init(offset, limit, func)  # pylint: disable=protected-access
+        obj.items = tuple(LazyItem(obj, item) for item in item_contents)
+
+        return obj
+
     @locked
     def pull(self) -> None:
         """Send paging request to pull a page of elements and store them in :class:`LazyItem`."""

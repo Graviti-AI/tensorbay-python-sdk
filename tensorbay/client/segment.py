@@ -37,7 +37,7 @@ from ..exception import FrameError, InvalidParamsError, OperationError, Response
 from ..label import Label
 from ..sensor.sensor import Sensor, Sensors
 from ..utility import FileMixin, chunked, locked
-from .lazy import PagingList
+from .lazy import LazyPage, PagingList
 from .requests import config
 from .status import Status
 
@@ -49,11 +49,15 @@ _MASK_KEYS = ("semantic_mask", "instance_mask", "panoptic_mask")
 
 
 class _UrlGetters:
-    def __init__(self, urls: PagingList[str]) -> None:
+    def __init__(self, urls: LazyPage[str]) -> None:
         self._urls = urls
 
     def __getitem__(self, index: int) -> Callable[[str], str]:
-        return lambda _: self._urls[index]
+        return lambda _: self._urls.items[index].get()
+
+    def update(self) -> None:
+        """Update all urls."""
+        self._urls.pull()
 
 
 class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
@@ -351,19 +355,43 @@ class SegmentClient(SegmentClientBase):
 
         return response["totalCount"]  # type: ignore[no-any-return]
 
-    def _generate_data(
-        self, url_getters: Dict[str, _UrlGetters], offset: int = 0, limit: int = 128
-    ) -> Generator[RemoteData, None, int]:
+    def _generate_data(self, offset: int = 0, limit: int = 128) -> Generator[RemoteData, None, int]:
         response = self._list_data_details(offset, limit)
 
+        urls = _UrlGetters(
+            LazyPage.from_items(
+                offset,
+                limit,
+                self._generate_urls,
+                (item["url"] for item in response["dataDetails"]),
+            )
+        )
+
+        mask_urls = {}
+        for key in _MASK_KEYS:
+            mask_urls[key] = _UrlGetters(
+                LazyPage(
+                    offset,
+                    limit,
+                    lambda offset, limit, k=key: self._generate_mask_urls(  # type: ignore[misc]
+                        k.upper(), offset, limit
+                    ),
+                )
+            )
+
         for i, item in enumerate(response["dataDetails"], offset):
-            data = RemoteData.from_response_body(item)
+            data = RemoteData.from_response_body(
+                item,
+                _url_getter=urls[i],
+                _url_updater=urls.update,
+            )
             label = data.label
             for key in _MASK_KEYS:
                 mask = getattr(label, key, None)
                 if mask:
                     # pylint: disable=protected-access
-                    mask._url_getter = url_getters[key][i]
+                    mask._url_getter = mask_urls[key][i]
+                    mask._url_updater = mask_urls[key].update
 
             yield data
 
@@ -645,13 +673,7 @@ class SegmentClient(SegmentClientBase):
             The PagingList of :class:`~tensorbay.dataset.data.RemoteData`.
 
         """
-        url_getters = {}
-        for key in _MASK_KEYS:
-            url_getters[key] = _UrlGetters(self.list_mask_urls(key.upper()))
-
-        return PagingList(
-            lambda offset, limit: self._generate_data(url_getters, offset, limit), 128
-        )
+        return PagingList(self._generate_data, 128)
 
     def delete_data(self, remote_path: str) -> None:
         """Delete data of a segment in a certain commit with the given remote paths.
@@ -715,8 +737,18 @@ class FusionSegmentClient(SegmentClientBase):
     def _generate_frames(self, offset: int = 0, limit: int = 128) -> Generator[Frame, None, int]:
         response = self._list_data_details(offset, limit)
 
-        for item in response["dataDetails"]:
-            yield Frame.from_response_body(item)
+        url_page = LazyPage.from_items(
+            offset,
+            limit,
+            self._generate_urls,
+            (
+                {frame["sensorName"]: frame["url"] for frame in item["frame"]}
+                for item in response["dataDetails"]
+            ),
+        )
+
+        for index, item in enumerate(response["dataDetails"], offset):
+            yield Frame.from_response_body(item, index, url_page)
 
         return response["totalCount"]  # type: ignore[no-any-return]
 
