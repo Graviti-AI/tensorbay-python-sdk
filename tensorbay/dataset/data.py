@@ -156,12 +156,21 @@ class RemoteData(DataBase, RemoteFileMixin):
         *,
         timestamp: Optional[float] = None,
         _url_getter: Optional[Callable[[str], str]] = None,
+        _url_updater: Optional[Callable[[], None]] = None,
     ) -> None:
         DataBase.__init__(self, timestamp)
-        RemoteFileMixin.__init__(self, remote_path, _url_getter=_url_getter)
+        RemoteFileMixin.__init__(
+            self, remote_path, _url_getter=_url_getter, _url_updater=_url_updater
+        )
 
     @classmethod
-    def from_response_body(cls: Type[_T], body: Dict[str, Any]) -> _T:
+    def from_response_body(
+        cls: Type[_T],
+        body: Dict[str, Any],
+        *,
+        _url_getter: Optional[Callable[[str], str]],
+        _url_updater: Optional[Callable[[], None]] = None,
+    ) -> _T:
         """Loads a :class:`RemoteData` object from a response body.
 
         Arguments:
@@ -183,6 +192,9 @@ class RemoteData(DataBase, RemoteFileMixin):
                         }
                     }
 
+            _url_getter: The url getter of the remote file.
+            _url_updater: The url updater of the remote file.
+
         Returns:
             The loaded :class:`RemoteData` object.
 
@@ -190,7 +202,8 @@ class RemoteData(DataBase, RemoteFileMixin):
         data = cls(
             body["remotePath"],
             timestamp=body.get("timestamp"),
-            _url_getter=lambda _: body["url"],  # type: ignore[no-any-return]
+            _url_getter=_url_getter,
+            _url_updater=_url_updater,
         )
         data.label._loads(body["label"])  # pylint: disable=protected-access
         return data

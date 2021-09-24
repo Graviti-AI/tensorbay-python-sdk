@@ -10,6 +10,7 @@ from hashlib import sha1
 from http.client import HTTPResponse
 from string import printable
 from typing import Any, Callable, Dict, Optional
+from urllib.error import URLError
 from urllib.parse import quote, urljoin
 from urllib.request import pathname2url, urlopen
 
@@ -99,13 +100,32 @@ class RemoteFileMixin(ReprMixin):
     _repr_maxlevel = 3
 
     def __init__(
-        self, remote_path: str, *, _url_getter: Optional[Callable[[str], str]] = None
+        self,
+        remote_path: str,
+        *,
+        _url_getter: Optional[Callable[[str], str]] = None,
+        _url_updater: Optional[Callable[[], None]] = None,
     ) -> None:
         self.path = remote_path
         self._url_getter = _url_getter
+        self._url_updater = _url_updater
 
     def _repr_head(self) -> str:
         return f'{self.__class__.__name__}("{self.path}")'
+
+    def update_url(self) -> None:
+        """Update the url when the url is timed out.
+
+        Raises:
+            ValueError: When the _url_updater is missing.
+
+        """
+        if not self._url_updater:
+            raise ValueError(
+                f"The file URL cannot be updated because {self._repr_head()} has no url updater"
+            )
+
+        self._url_updater()
 
     def get_url(self) -> str:
         """Return the url of the data hosted by tensorbay.
@@ -129,8 +149,19 @@ class RemoteFileMixin(ReprMixin):
 
         The remote file pointer will be obtained by ``urllib.request.urlopen()``.
 
+        Raises:
+            URLError: When the url is timed out.
+
         Returns:
             The remote file pointer for this data.
 
         """
-        return urlopen(quote(self.get_url(), safe=printable))  # type: ignore[no-any-return]
+        try:
+            return urlopen(  # type: ignore[no-any-return]
+                quote(self.get_url(), safe=printable), timeout=2
+            )
+        except URLError as error:
+            if str(error) == "<urlopen error timed out>":
+                self.update_url()
+                return urlopen(quote(self.get_url(), safe=printable))  # type: ignore[no-any-return]
+            raise

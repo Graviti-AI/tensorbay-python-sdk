@@ -5,7 +5,8 @@
 
 import ulid
 
-from .. import Frame, RemoteData
+from ...client.lazy import LazyItem, LazyPage
+from .. import Frame
 
 _FRAME_ID = ulid.from_str("01F29QVWASMNGNA2FZBMZCDEG1")
 
@@ -28,6 +29,10 @@ _FRAME_DATA = {
         },
     ],
 }
+URL_PAGE: LazyPage[str] = object.__new__(LazyPage)
+URL_PAGE.items = (
+    LazyItem(URL_PAGE, {frame["sensorName"]: frame["url"] for frame in _FRAME_DATA["frame"]}),
+)
 
 
 class TestFrame:
@@ -41,7 +46,7 @@ class TestFrame:
         assert frame._data == {}
 
     def test_from_response_body(self):
-        frame = Frame.from_response_body(_FRAME_DATA)
+        frame = Frame.from_response_body(_FRAME_DATA, 0, URL_PAGE)
         assert frame.frame_id == _FRAME_ID
         assert frame["sensor1"].path == "test1.png"
         assert frame["sensor1"].timestamp == 1614945883
