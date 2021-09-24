@@ -688,6 +688,84 @@ class TestCopy:
         gas_client.delete_dataset(dataset_name_1)
         gas_client.delete_dataset(dataset_name_2)
 
+    def test_copy_between_datasets_override(self, accesskey, url, tmp_path):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name_1 = get_dataset_name()
+        gas_client.create_dataset(dataset_name_1)
+        dataset_1 = Dataset(name=dataset_name_1)
+        segment_1 = dataset_1.create_segment("Segment")
+        path = tmp_path / "sub"
+        path.mkdir()
+        for i in range(10):
+            local_path = path / f"hello{i}.txt"
+            local_path.write_text("CONTENT")
+            data = Data(local_path=str(local_path))
+            segment_1.append(data)
+        dataset_client_1 = gas_client.upload_dataset(dataset_1)
+        dataset_client_1.commit("upload data")
+
+        dataset_name_2 = dataset_name_1 + "_2"
+        dataset_client_2 = gas_client.create_dataset(dataset_name_2)
+        dataset_2 = Dataset(name=dataset_name_2)
+        segment_2 = dataset_2.create_segment("Segment")
+        for i in range(10, 15):
+            local_path = path / f"hello{i}.txt"
+            local_path.write_text("CONTENT")
+            data = Data(local_path=str(local_path))
+            segment_2.append(data)
+        dataset_client_2 = gas_client.upload_dataset(dataset_2)
+        dataset_client_2.commit("upload data")
+        dataset_client_2.create_draft("draft 2")
+        dataset_client_2.copy_segment(
+            "Segment", source_client=dataset_client_1, strategy="override"
+        )
+        dataset_client_2.commit("copy segmnet")
+
+        segment = Segment("Segment", client=dataset_client_2)
+        assert len(segment) == 10
+        assert segment[0].path == "hello0.txt"
+
+        gas_client.delete_dataset(dataset_name_1)
+        gas_client.delete_dataset(dataset_name_2)
+
+    def test_copy_between_datasets_skip(self, accesskey, url, tmp_path):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name_1 = get_dataset_name()
+        gas_client.create_dataset(dataset_name_1)
+        dataset_1 = Dataset(name=dataset_name_1)
+        segment_1 = dataset_1.create_segment("Segment")
+        path = tmp_path / "sub"
+        path.mkdir()
+        for i in range(10):
+            local_path = path / f"hello{i}.txt"
+            local_path.write_text("CONTENT")
+            data = Data(local_path=str(local_path))
+            segment_1.append(data)
+        dataset_client_1 = gas_client.upload_dataset(dataset_1)
+        dataset_client_1.commit("upload data")
+
+        dataset_name_2 = dataset_name_1 + "_2"
+        dataset_client_2 = gas_client.create_dataset(dataset_name_2)
+        dataset_2 = Dataset(name=dataset_name_2)
+        segment_2 = dataset_2.create_segment("Segment")
+        for i in range(10, 15):
+            local_path = path / f"hello{i}.txt"
+            local_path.write_text("CONTENT")
+            data = Data(local_path=str(local_path))
+            segment_2.append(data)
+        dataset_client_2 = gas_client.upload_dataset(dataset_2)
+        dataset_client_2.commit("upload data")
+        dataset_client_2.create_draft("draft 2")
+        dataset_client_2.copy_segment("Segment", source_client=dataset_client_1, strategy="skip")
+        dataset_client_2.commit("copy segmnet")
+
+        segment = Segment("Segment", client=dataset_client_2)
+        assert len(segment) == 5
+        assert segment[0].path == "hello10.txt"
+
+        gas_client.delete_dataset(dataset_name_1)
+        gas_client.delete_dataset(dataset_name_2)
+
     def test_copy_data_from_commits(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
