@@ -64,7 +64,7 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
 
     @classmethod
     def from_response_body(
-        cls: Type[_T], body: Dict[str, Any], frame_index: int, urls: LazyPage[Dict[str, str]]
+        cls: Type[_T], body: Dict[str, Any], url_index: int, urls: LazyPage[Dict[str, str]]
     ) -> _T:
         """Loads a :class:`Frame` object from a response body.
 
@@ -86,7 +86,7 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
                             ...
                         ]
                     }
-            frame_index: The index of the frame.
+            url_index: The index of the url.
             urls: A sequence of mappings which key is the sensor name and value is the url.
 
         Returns:
@@ -111,7 +111,7 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
             frame[sensor_name] = RemoteData.from_response_body(
                 data_contents,
                 _url_getter=lambda _, s=sensor_name: urls.items[  # type: ignore[misc]
-                    frame_index
+                    url_index
                 ].get()[s],
                 _url_updater=urls.pull,
             )
