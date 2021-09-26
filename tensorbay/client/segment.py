@@ -49,11 +49,12 @@ _MASK_KEYS = ("semantic_mask", "instance_mask", "panoptic_mask")
 
 
 class _UrlGetters:
-    def __init__(self, urls: LazyPage[str]) -> None:
+    def __init__(self, urls: LazyPage[str], limit: int = 128) -> None:
         self._urls = urls
+        self._limit = limit
 
     def __getitem__(self, index: int) -> Callable[[str], str]:
-        return lambda _: self._urls.items[index].get()
+        return lambda _: self._urls.items[index % self._limit].get()
 
     def update(self) -> None:
         """Update all urls."""
@@ -350,7 +351,8 @@ class SegmentClient(SegmentClientBase):
                 limit,
                 self._generate_urls,
                 (item["url"] for item in response["dataDetails"]),
-            )
+            ),
+            limit,
         )
 
         mask_urls = {}
@@ -362,7 +364,8 @@ class SegmentClient(SegmentClientBase):
                     lambda offset, limit, k=key: self._generate_mask_urls(  # type: ignore[misc]
                         k.upper(), offset, limit
                     ),
-                )
+                ),
+                limit,
             )
 
         for i, item in enumerate(response["dataDetails"], offset):
@@ -744,7 +747,7 @@ class FusionSegmentClient(SegmentClientBase):
         )
 
         for index, item in enumerate(response["dataDetails"], offset):
-            yield Frame.from_response_body(item, index, url_page)
+            yield Frame.from_response_body(item, index % limit, url_page)
 
         return response["totalCount"]  # type: ignore[no-any-return]
 
