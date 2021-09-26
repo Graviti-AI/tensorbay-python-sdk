@@ -110,7 +110,9 @@ class Profile:
 
         @wraps(func)
         def wrapper(client: Client, method: str, url: str, **kwargs: Any) -> Response:
-            key = f"[{method}] {urlparse(url).path.replace(_PATH_PREFIX, '')}"
+            path = urlparse(url).path
+            part = path.replace(_PATH_PREFIX, "") if path else url
+            key = f"[{method}] {part}"
             data = kwargs.get("data")
             file_size = self._get_file_size(data) if isinstance(data, MultipartEncoder) else 0
             start_time = time.time()
