@@ -62,7 +62,7 @@ class Profile:
 
     @staticmethod
     def _format_string(path: str = "Path", item: Optional[Dict[str, float]] = None) -> str:
-        content = [f"| {path:<63}"]
+        content = [f"|{path:<63}"]
         if item is None:
             content.append(_TITLE)
         else:
@@ -170,7 +170,6 @@ class Profile:
     def stop(self) -> None:
         """Stop statistical record."""
         Client.do = self.do_function  # type: ignore[assignment]
-        delattr(self, "_summary")
         if hasattr(self, "_manager"):
             self._manager.shutdown()
             delattr(self, "_manager")
