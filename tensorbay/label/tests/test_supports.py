@@ -1,7 +1,7 @@
 import pytest
 
-from .. import CategoryInfo, KeypointsInfo
-from ..supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
+from .. import CategoryInfo, KeypointsInfo, MaskCategoryInfo
+from ..supports import AttributesMixin, CategoriesMixin, IsTrackingMixin, MaskCategoriesMixin
 
 
 class TestCategoryInfo:
@@ -21,6 +21,26 @@ class TestCategoryInfo:
     def test_dumps(self):
         category_info = CategoryInfo(name="cat", description="This is an exmaple of test")
         assert category_info.dumps() == {"name": "cat", "description": "This is an exmaple of test"}
+
+
+class TestMaskCategoryInfo:
+    def test_loads(self):
+        contents = {"name": "cat", "description": "This is an exmaple of test", "categoryId": 1}
+        mask_category_info = MaskCategoryInfo.loads(contents)
+        assert mask_category_info.name == "cat"
+        assert mask_category_info.description == "This is an exmaple of test"
+        assert mask_category_info.category_id == 1
+
+    def test_eq(self):
+        mask_category_info1 = MaskCategoryInfo(name="cat", description="test", category_id=1)
+        mask_category_info2 = MaskCategoryInfo(name="cat", description="test", category_id=1)
+        mask_category_info3 = MaskCategoryInfo(name="dog", description="test", category_id=3)
+        assert mask_category_info1 == mask_category_info2
+        assert mask_category_info1 != mask_category_info3
+
+    def test_dumps(self):
+        category_info = MaskCategoryInfo(name="cat", description="test", category_id=1)
+        assert category_info.dumps() == {"name": "cat", "description": "test", "categoryId": 1}
 
 
 class TestKeypointsInfo:
@@ -218,6 +238,71 @@ class TestCategoriesMixin:
             "categories": categories_catalog_data,
             "categoryDelimiter": ".",
         }
+
+
+class TestMaskCategoriesMixin:
+    def test_loads(self, mask_categories_catalog_data):
+        support_categories = MaskCategoriesMixin()
+        support_categories._loads(
+            contents={"categories": mask_categories_catalog_data, "categoryDelimiter": "."}
+        )
+        assert support_categories.category_delimiter == "."
+
+        for category in mask_categories_catalog_data:
+            support_categorie_0 = support_categories.categories[category["name"]]
+            assert support_categorie_0.name == category["name"]
+            assert support_categorie_0.description == category["description"]
+            assert support_categorie_0.category_id == category["categoryId"]
+
+    def test_get_category_to_index(self, mask_categories_catalog_data):
+        support_categories = MaskCategoriesMixin()
+        support_categories._loads(contents={"categories": mask_categories_catalog_data})
+        assert support_categories.get_category_to_index() == {"cat": 0, "dog": 10}
+
+    def test_get_index_to_category(self, mask_categories_catalog_data):
+        support_categories = MaskCategoriesMixin()
+        support_categories._loads(contents={"categories": mask_categories_catalog_data})
+        assert support_categories.get_index_to_category() == {0: "cat", 10: "dog"}
+
+    def test_eq(self):
+        contents1 = {"categories": [{"name": "Test", "categoryId": 0}]}
+        contents2 = {"categories": [{"name": "Test", "categoryId": 1}]}
+
+        support_categories_1 = MaskCategoriesMixin()
+        support_categories_1._loads(contents1)
+
+        support_categories_2 = MaskCategoriesMixin()
+        support_categories_2._loads(contents1)
+
+        support_categories_3 = MaskCategoriesMixin()
+        support_categories_3._loads(contents2)
+
+        assert support_categories_1 == support_categories_2
+        assert support_categories_1 != support_categories_3
+
+    def test_add_category(self):
+        support_categories = MaskCategoriesMixin()
+        name = "Test"
+        description = "This is a test"
+        category_id = 1
+        support_categories.add_category(name=name, description=description, category_id=category_id)
+
+        assert support_categories.categories["Test"].name == name
+        assert support_categories.categories["Test"].description == description
+        assert support_categories.categories["Test"].category_id == category_id
+
+    def test_dumps(self, mask_categories_catalog_data):
+        support_categories = MaskCategoriesMixin()
+        name_1 = mask_categories_catalog_data[0]["name"]
+        name_2 = mask_categories_catalog_data[1]["name"]
+        description = mask_categories_catalog_data[0]["description"]
+        category_id_1 = mask_categories_catalog_data[0]["categoryId"]
+        category_id_2 = mask_categories_catalog_data[1]["categoryId"]
+
+        support_categories.add_category(name_1, category_id_1, description)
+        support_categories.add_category(name_2, category_id_2, description)
+
+        assert support_categories._dumps() == {"categories": mask_categories_catalog_data}
 
 
 class TestAttributesMixin:

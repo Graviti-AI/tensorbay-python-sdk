@@ -46,6 +46,19 @@ def categories_catalog_data():
     ]
 
 
+@pytest.fixture
+def mask_categories_catalog_data():
+    """Argument for mask categories in catalog.
+
+    Returns:
+        A list containing mask categories info.
+    """
+    return [
+        {"name": "cat", "description": "This is an exmaple of test", "categoryId": 0},
+        {"name": "dog", "description": "This is an exmaple of test", "categoryId": 10},
+    ]
+
+
 @pytest.fixture(params=[True, False])
 def is_tracking_data(request):
     """Argument for is_tracking.
