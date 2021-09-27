@@ -19,7 +19,7 @@ from typing import Any, Dict, Generator, Optional, Type, Union, overload
 from typing_extensions import Literal
 
 from ..dataset import Dataset, FusionDataset
-from ..exception import DatasetTypeError, OperationError, ResourceNotExistError
+from ..exception import DatasetTypeError, ResourceNotExistError
 from ..utility import Deprecated
 from .cloud_storage import CloudClient
 from .dataset import DatasetClient, FusionDatasetClient
@@ -598,7 +598,7 @@ class GAS:
             bound with the uploaded dataset.
 
         Raises:
-            OperationError: When uploading the dataset based on both draft number
+            ValueError: When uploading the dataset based on both draft number
                 and branch name is not allowed.
             Exception: When Exception was raised during uploading dataset.
 
@@ -606,7 +606,7 @@ class GAS:
         dataset_client = self.get_dataset(dataset.name, isinstance(dataset, FusionDataset))
 
         if draft_number and branch_name:
-            raise OperationError(
+            raise ValueError(
                 "Uploading the dataset based on both draft number and branch name is not allowed"
             )
 

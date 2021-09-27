@@ -9,9 +9,9 @@ from tensorbay.client import GAS
 from tensorbay.client.gas import DEFAULT_BRANCH
 from tensorbay.exception import (
     InvalidParamsError,
-    OperationError,
     ResourceNotExistError,
     ResponseError,
+    StatusError,
 )
 
 from .utility import get_dataset_name
@@ -163,7 +163,7 @@ class TestDraft:
         dataset_client.create_draft("draft-1")
 
         # Closing the current draft is not allowed
-        with pytest.raises(OperationError):
+        with pytest.raises(StatusError):
             dataset_client.close_draft(1)
 
         dataset_client.checkout(revision=DEFAULT_BRANCH)

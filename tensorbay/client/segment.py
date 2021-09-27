@@ -33,7 +33,7 @@ from requests_toolbelt import MultipartEncoder
 from ulid import ULID, from_timestamp
 
 from ..dataset import AuthData, Data, Frame, RemoteData
-from ..exception import FrameError, InvalidParamsError, OperationError, ResponseError
+from ..exception import FrameError, InvalidParamsError, ResponseError
 from ..label import Label
 from ..sensor.sensor import Sensor, Sensors
 from ..utility import FileMixin, chunked, locked
@@ -501,7 +501,7 @@ class SegmentClient(SegmentClientBase):
 
         Raises:
             InvalidParamsError: When strategy is invalid.
-            OperationError: When the type of target_remote_paths is not equal
+            ValueError: When the type of target_remote_paths is not equal
                 with source_remote_paths.
 
         """
@@ -526,12 +526,12 @@ class SegmentClient(SegmentClientBase):
             all_target_remote_paths = list(target_remote_paths)
             all_source_remote_paths = list(source_remote_paths)
             if len(all_target_remote_paths) != len(all_source_remote_paths):
-                raise OperationError(
+                raise ValueError(
                     "To copy the data, the length of target_remote_paths "
                     "must be equal with source_remote_paths"
                 )
         else:
-            raise OperationError(
+            raise ValueError(
                 "To copy the data, the type of target_remote_paths "
                 "must be equal with source_remote_paths"
             )
@@ -587,7 +587,7 @@ class SegmentClient(SegmentClientBase):
 
         Raises:
             InvalidParamsError: When strategy is invalid.
-            OperationError: When the type or the length of target_remote_paths is not equal
+            ValueError: When the type or the length of target_remote_paths is not equal
                 with source_remote_paths.
                 Or when the dataset_id and drafter_number of source_client
                 is not equal with the current segment client.
@@ -614,12 +614,12 @@ class SegmentClient(SegmentClientBase):
             all_target_remote_paths = list(target_remote_paths)
             all_source_remote_paths = list(source_remote_paths)
             if len(all_target_remote_paths) != len(all_source_remote_paths):
-                raise OperationError(
+                raise ValueError(
                     "To move the data, the length of target_remote_paths "
                     "must be equal with source_remote_paths"
                 )
         else:
-            raise OperationError(
+            raise ValueError(
                 "To move the data, the type of target_remote_paths "
                 "must be equal with source_remote_paths"
             )
@@ -633,7 +633,7 @@ class SegmentClient(SegmentClientBase):
             ):
                 source["segmentName"] = source_client.name
             else:
-                raise OperationError(
+                raise ValueError(
                     "To move the data, the dataset_id and drafter_number of source_client "
                     "must be equal with the current segment client"
                 )

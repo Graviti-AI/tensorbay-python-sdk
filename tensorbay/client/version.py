@@ -7,7 +7,7 @@
 
 from typing import TYPE_CHECKING, Any, Dict, Generator, Optional, Union
 
-from ..exception import OperationError, ResourceNotExistError, StatusError
+from ..exception import ResourceNotExistError, StatusError
 from .lazy import PagingList
 from .status import Status
 from .struct import Branch, Commit, Draft, Tag
@@ -330,11 +330,11 @@ class VersionControlClient:
             number: The draft number.
 
         Raises:
-            OperationError: When closing the current draft.
+            StatusError: When closing the current draft.
 
         """
         if number == self.status.draft_number:
-            raise OperationError("Closing the current draft is not allowed")
+            raise StatusError("Closing the current draft is not allowed")
 
         self._close_draft(number)
 
@@ -472,11 +472,11 @@ class VersionControlClient:
             name: The name of the branch to be deleted.
 
         Raises:
-            OperationError: When deleting the current branch.
+            StatusError: When deleting the current branch.
 
         """
         if name == self.status.branch_name:
-            raise OperationError("Deleting the current branch is not allowed")
+            raise StatusError("Deleting the current branch is not allowed")
 
         self._delete_branch(name)
 

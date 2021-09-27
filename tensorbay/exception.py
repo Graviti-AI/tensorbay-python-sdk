@@ -28,6 +28,9 @@ The class hierarchy for TensorBay custom exceptions is::
              +-- NoFileError
              +-- FileStructureError
 
+:class:`OperationError` is removed in version v1.13.0.
+Use :class:`StatusError` or :class:`ValueError` instead.
+
 """
 
 from typing import Dict, Optional, Type, Union
@@ -102,10 +105,6 @@ class DatasetTypeError(ClientError):
 
 class FrameError(ClientError):
     """This class defines the exception for incorrect frame id."""
-
-
-class OperationError(ClientError):
-    """This class defines the exception for incorrect operation."""
 
 
 class ResponseError(ClientError):

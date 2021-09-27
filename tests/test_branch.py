@@ -8,7 +8,7 @@ import pytest
 from tensorbay import GAS
 from tensorbay.client.gas import DEFAULT_BRANCH
 from tensorbay.client.struct import ROOT_COMMIT_ID
-from tensorbay.exception import ForbiddenError, OperationError, ResourceNotExistError
+from tensorbay.exception import ForbiddenError, ResourceNotExistError, StatusError
 
 from .utility import get_dataset_name
 
@@ -138,7 +138,7 @@ class TestBranch:
         commit_2_id = dataset_client.status.commit_id
 
         # Deleting the current branch is not allowed
-        with pytest.raises(OperationError):
+        with pytest.raises(StatusError):
             dataset_client.delete_branch("T123")
 
         dataset_client.checkout(revision=DEFAULT_BRANCH)
