@@ -28,13 +28,7 @@ from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Iterator, Opti
 from ulid import ULID, from_timestamp
 
 from ..dataset import AuthData, Data, Frame, FusionSegment, Notes, RemoteData, Segment
-from ..exception import (
-    FrameError,
-    InvalidParamsError,
-    NameConflictError,
-    OperationError,
-    ResourceNotExistError,
-)
+from ..exception import FrameError, InvalidParamsError, NameConflictError, ResourceNotExistError
 from ..label import Catalog
 from .diff import DataDiff, DatasetDiff, SegmentDiff
 from .lazy import PagingList
@@ -127,7 +121,7 @@ class DatasetClientBase(VersionControlClient):
 
         if not source_client:
             if source_name == target_name:
-                raise OperationError("Copying the segment to the same location is not allowed")
+                raise ValueError("Copying the segment to the same location is not allowed")
         else:
             source["id"] = source_client.dataset_id
             source.update(source_client.status.get_status_info())
