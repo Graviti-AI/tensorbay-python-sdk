@@ -7,12 +7,7 @@ import pytest
 from ulid import ULID, from_timestamp
 
 from ...dataset import Data, Frame, FusionSegment, Notes, RemoteData, Segment
-from ...exception import (
-    InvalidParamsError,
-    NameConflictError,
-    OperationError,
-    ResourceNotExistError,
-)
+from ...exception import InvalidParamsError, NameConflictError, ResourceNotExistError
 from ...label import Catalog
 from .. import dataset, gas, segment
 from ..dataset import DatasetClient, FusionDatasetClient
@@ -104,7 +99,7 @@ class TestDatasetClientBase:
                 source_name, target_name, source_client=None, strategy="move"
             )
 
-        with pytest.raises(OperationError):
+        with pytest.raises(ValueError):
             self.dataset_client._copy_segment(source_name, source_name, source_client=None)
 
         open_api_do = mocker.patch(
