@@ -11,7 +11,6 @@
 
 import csv
 import json
-import time
 from collections import OrderedDict, defaultdict
 from functools import wraps
 from itertools import chain
@@ -115,10 +114,8 @@ class Profile:
             key = f"[{method}] {part}"
             data = kwargs.get("data")
             file_size = self._get_file_size(data) if isinstance(data, MultipartEncoder) else 0
-            start_time = time.time()
             response = func(client, method, url, **kwargs)
-            cost_time = time.time() - start_time
-            self._update(key, len(response.content), cost_time, file_size)
+            self._update(key, len(response.content), response.elapsed.total_seconds(), file_size)
 
             return response
 
