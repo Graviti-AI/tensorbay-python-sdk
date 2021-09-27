@@ -96,7 +96,7 @@ def _get_data(keypoints_info: List[str], image_path: str, parsing_path: str) -> 
     keypoints = LabeledKeypoints2D()
     for x, y, v in chunked(islice(keypoints_info, 1, None), 3):
         keypoints.append(
-            Keypoint2D(float(x), float(y), int(v)) if x.isnumeric() else Keypoint2D(0, 0, 0)
+            Keypoint2D(float(x), float(y), 1 - int(v)) if x.isnumeric() else Keypoint2D(0, 0, 0)
         )
     label.keypoints2d = [keypoints]
     return data
