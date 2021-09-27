@@ -28,9 +28,6 @@ The class hierarchy for TensorBay custom exceptions is::
              +-- NoFileError
              +-- FileStructureError
 
-:class:`ResponseSystemError` is deprecated since version v1.11.0.
-It will be removed in version v1.13.0. Use :class:`InternalServerError` instead.
-
 """
 
 from typing import Dict, Optional, Type, Union
@@ -271,9 +268,6 @@ class InternalServerError(ResponseError):
     """This class defines the exception for internal server error."""
 
     STATUS_CODE = 500
-
-
-ResponseSystemError = InternalServerError
 
 
 class UnauthorizedError(ResponseError):
