@@ -98,3 +98,8 @@ Import the AuthData from cloud platform and load label file to an authorized sto
 
     Files will be copied from raw directory to the authorized cloud storage dataset path,
     thus the storage space will be doubled on the cloud platform.
+
+.. note::
+
+    Set the authorized cloud storage dataset path the same as raw directory could speed up
+    the import action. For example, set the config path of above dataset to ``data/images``.
