@@ -502,8 +502,11 @@ class RemotePanopticMask(PanopticMaskBase, RemoteFileMixin):
         """
         mask = cls(body["remotePath"])
         info = body["info"]
-        mask.all_category_ids = {item["instanceId"]: item["categoryId"] for item in info}
-        if "attributes" in info[0]:
-            mask.all_attributes = {item["instanceId"]: item["attributes"] for item in body["info"]}
+        # Workaround for panoptic masks with empty info.
+        # TODO: Remove this check after reuploading COCO mask labels or changing standards.
+        if info:
+            mask.all_category_ids = {item["instanceId"]: item["categoryId"] for item in info}
+            if "attributes" in info[0]:
+                mask.all_attributes = {item["instanceId"]: item["attributes"] for item in info}
 
         return mask
