@@ -265,6 +265,16 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
             }
             self._client.do("PUT", url, data=fp, headers=request_headers)
 
+    def _synchronize_import_info(self, callback_bodies: Tuple[Dict[str, Any], ...]) -> None:
+        put_data: Dict[str, Any] = {
+            "segmentName": self.name,
+            "objects": callback_bodies,
+            "deleteSource": False,
+        }
+        put_data.update(self._status.get_status_info())
+
+        self._client.open_api_do("PUT", "multi/cloud-callback", self._dataset_id, json=put_data)
+
     def _synchronize_upload_info(
         self,
         callback_bodies: Tuple[Dict[str, Any], ...],
@@ -407,7 +417,7 @@ class SegmentClient(SegmentClientBase):
             self._upload_mask_files(data.label)
             return data.get_callback_body()
 
-        self.import_auth_data(data)
+        self._synchronize_import_info((data.get_callback_body(),))
         return None
 
     def upload_file(self, local_path: str, target_remote_path: str = "") -> None:
@@ -457,19 +467,7 @@ class SegmentClient(SegmentClientBase):
 
         """
         self._status.check_authority_for_draft()
-        put_data: Dict[str, Any] = {
-            "segmentName": self.name,
-            "objects": [
-                {
-                    "cloudPath": data.path,
-                    "remotePath": data.target_remote_path,
-                    "label": data.label.dumps(),
-                }
-            ],
-            "deleteSource": False,
-        }
-        put_data.update(self._status.get_status_info())
-        self._client.open_api_do("PUT", "multi/cloud-callback", self._dataset_id, json=put_data)
+        self._synchronize_import_info((data.get_callback_body(),))
 
     def copy_data(
         self,
@@ -764,14 +762,16 @@ class FusionSegmentClient(SegmentClientBase):
         sensor_name: str,
         frame_id: str,
     ) -> Optional[Dict[str, Any]]:
+        callback_body = data.get_callback_body()
+        callback_body["frameId"] = frame_id
+        callback_body["sensorName"] = sensor_name
+
         if isinstance(data, Data):
             self._upload_file(data)
             self._upload_mask_files(data.label)
-
-            callback_body = data.get_callback_body()
-            callback_body["frameId"] = frame_id
-            callback_body["sensorName"] = sensor_name
             return callback_body
+
+        self._synchronize_import_info((callback_body,))
         return None
 
     def get_sensors(self) -> Sensors:
@@ -847,16 +847,19 @@ class FusionSegmentClient(SegmentClientBase):
 
         callback_bodies = []
         for sensor_name, data in frame.items():
-            if not isinstance(data, Data):
+            try:
+                callback_body = data.get_callback_body()  # type:ignore[union-attr]
+            except AttributeError:
                 continue
 
-            self._upload_file(data)
-            self._upload_mask_files(data.label)
-
-            callback_body = data.get_callback_body()
             callback_body["frameId"] = frame_id.str
             callback_body["sensorName"] = sensor_name
-            callback_bodies.append(callback_body)
+            if isinstance(data, Data):
+                self._upload_file(data)
+                self._upload_mask_files(data.label)
+                callback_bodies.append(callback_body)
+            elif isinstance(data, AuthData):
+                self._synchronize_import_info((callback_body,))
 
         for chunked_callback_bodies in chunked(callback_bodies, 50):
             self._synchronize_upload_info(chunked_callback_bodies)

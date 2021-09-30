@@ -378,6 +378,31 @@ class TestUploadFrame:
 
         gas_client.delete_dataset(dataset_name)
 
+    @pytest.mark.parametrize("config_name", ["azure_china_config", "oss_config", "s3_config"])
+    def test_upload_frame_with_auth_data(self, accesskey, url, config_name):
+        gas_client = GAS(access_key=accesskey, url=url)
+        try:
+            cloud_client = gas_client.get_cloud_client(config_name)
+        except ResourceNotExistError:
+            pytest.skip(f"skip this case because there's no {config_name} config")
+
+        auth_data = cloud_client.list_auth_data("tests")[:5]
+        dataset_name = get_dataset_name()
+        dataset_client = gas_client.create_dataset(dataset_name, True, config_name=config_name)
+        dataset_client.create_draft("draft-1")
+        segment_client = dataset_client.get_or_create_segment("segment1")
+        segment_client.upload_sensor(Sensor.loads(LIDAR_DATA))
+        for index, data in enumerate(auth_data):
+            frame = Frame()
+            frame[LIDAR_DATA["name"]] = data
+            segment_client.upload_frame(frame, timestamp=index)
+
+        frames = segment_client.list_frames()
+        assert len(frames) == len(auth_data)
+        assert frames[0][LIDAR_DATA["name"]].path == auth_data[0].path.split("/")[-1]
+
+        gas_client.delete_dataset(dataset_name)
+
     def test_upload_frame_with_label(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
