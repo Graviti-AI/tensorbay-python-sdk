@@ -262,3 +262,29 @@ class AuthData(DataBase, RemoteFileMixin):
     @target_remote_path.setter
     def target_remote_path(self, target_remote_path: str) -> None:
         self._target_remote_path = target_remote_path
+
+    def get_callback_body(self) -> Dict[str, Any]:
+        """Get the callback request body for uploading.
+
+        Returns:
+            The callback request body, which looks like::
+
+                    {
+                        "cloudPath": <str>,
+                        "remotePath": <str>,
+                        "label": {
+                            "CLASSIFICATION": {...},
+                            "BOX2D": {...},
+                            "BOX3D": {...},
+                            "POLYGON": {...},
+                            "POLYLINE2D": {...},
+                            "KEYPOINTS2D": {...},
+                            "SENTENCE": {...}
+                        }
+                    }
+
+        """
+        body: Dict[str, Any] = {"cloudPath": self.path, "remotePath": self.target_remote_path}
+        if self.label:
+            body["label"] = self.label.dumps()
+        return body
