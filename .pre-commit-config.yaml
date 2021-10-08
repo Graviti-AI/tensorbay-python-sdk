@@ -15,7 +15,7 @@ repos:
       - id: detect-private-key
 
   - repo: https://github.com/pre-commit/mirrors-isort
-    rev: v5.8.0
+    rev: v5.9.3
     hooks:
       - id: isort
         types: [python]
@@ -28,14 +28,14 @@ repos:
         args: ["--profile=black", "-w 100", "--thirdparty=tensorbay"]
 
   - repo: https://github.com/ambv/black
-    rev: 21.4b0
+    rev: 21.9b0
     hooks:
       - id: black
         types: [python]
         args: ["-l 100"]
 
   - repo: https://gitlab.com/pycqa/flake8
-    rev: 3.9.1
+    rev: 3.9.2
     hooks:
       - id: flake8
         types: [python]
