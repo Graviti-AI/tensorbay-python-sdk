@@ -24,6 +24,17 @@ class TestDataset:
 
         gas_client.delete_dataset(dataset_name)
 
+    def test_create_public_dataset(self, accesskey, url):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_dataset_name()
+
+        dataset_client = gas_client.create_dataset(dataset_name, is_public=True)
+        assert dataset_client.dataset_id is not None
+        dataset_client_get = gas_client.get_dataset(dataset_name)
+        assert dataset_client_get.is_public == True
+
+        gas_client.delete_dataset(dataset_name)
+
     def test_create_fusion_dataset(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()

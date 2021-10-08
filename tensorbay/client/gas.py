@@ -328,6 +328,7 @@ class GAS:
         *,
         config_name: Optional[str] = None,
         alias: str = "",
+        is_public: bool = DEFAULT_IS_PUBLIC,
     ) -> DatasetClient:
         ...
 
@@ -339,6 +340,7 @@ class GAS:
         *,
         config_name: Optional[str] = None,
         alias: str = "",
+        is_public: bool = DEFAULT_IS_PUBLIC,
     ) -> FusionDatasetClient:
         ...
 
@@ -350,6 +352,7 @@ class GAS:
         *,
         config_name: Optional[str] = None,
         alias: str = "",
+        is_public: bool = DEFAULT_IS_PUBLIC,
     ) -> DatasetClientType:
         ...
 
@@ -360,6 +363,7 @@ class GAS:
         *,
         config_name: Optional[str] = None,
         alias: str = "",
+        is_public: bool = DEFAULT_IS_PUBLIC,
     ) -> DatasetClientType:
         """Create a TensorBay dataset with given name.
 
@@ -368,6 +372,7 @@ class GAS:
             is_fusion: Whether the dataset is a fusion dataset, True for fusion dataset.
             config_name: The auth storage config name.
             alias: Alias of the dataset, default is "".
+            is_public: Whether the dataset is a public dataset.
 
         Returns:
             The created :class:`~tensorbay.client.dataset.DatasetClient` instance or
@@ -379,6 +384,7 @@ class GAS:
             "name": name,
             "type": int(is_fusion),  # normal dataset: 0, fusion dataset: 1
             "alias": alias,
+            "isPublic": is_public,
         }
         if config_name is not None:
             post_data["configName"] = config_name
@@ -393,7 +399,7 @@ class GAS:
             self,
             status=status,
             alias=alias,
-            is_public=DEFAULT_IS_PUBLIC,
+            is_public=is_public,
         )
 
     @Deprecated(since="1.12.0", removed_in="1.15.0", substitute="GAS.create_dataset")

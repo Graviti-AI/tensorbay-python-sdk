@@ -48,7 +48,8 @@ class TestGAS:
         open_api_do.assert_called_once_with("GET", "storage-configs", "", params=params)
 
     @pytest.mark.parametrize("is_fusion", [True, False])
-    def test_get_dataset_with_any_type(self, mocker, is_fusion):
+    @pytest.mark.parametrize("is_public", [True, False])
+    def test_get_dataset_with_any_type(self, mocker, is_fusion, is_public):
         response_data = {
             "name": "test",
             "type": int(is_fusion),
@@ -58,7 +59,7 @@ class TestGAS:
             "owner": "",
             "id": "123456",
             "alias": "alias",
-            "isPublic": DEFAULT_IS_PUBLIC,
+            "isPublic": is_public,
         }
         get_dataset = mocker.patch(
             f"{gas.__name__}.GAS._get_dataset",
@@ -319,15 +320,22 @@ class TestGAS:
         assert cloud_client._client == cloud_client_1._client
 
     @pytest.mark.parametrize("is_fusion", [True, False])
-    def test_create_dataset(self, mocker, is_fusion):
-        params = {"name": "test", "type": int(is_fusion), "configName": "config", "alias": "alias"}
+    @pytest.mark.parametrize("is_public", [True, False])
+    def test_create_dataset(self, mocker, is_fusion, is_public):
+        params = {
+            "name": "test",
+            "type": int(is_fusion),
+            "configName": "config",
+            "alias": "alias",
+            "isPublic": is_public,
+        }
         response_data = {"id": "12345"}
         open_api_do = mocker.patch(
             f"{gas.__name__}.Client.open_api_do",
             return_value=mock_response(data=response_data),
         )
         dataset_client = self.gas_client.create_dataset(
-            "test", is_fusion, config_name="config", alias="alias"
+            "test", is_fusion, config_name="config", alias="alias", is_public=is_public
         )
         dataset_type = FusionDatasetClient if is_fusion else DatasetClient
         assert isinstance(dataset_client, dataset_type)
@@ -336,11 +344,12 @@ class TestGAS:
         assert dataset_client.status.branch_name == DEFAULT_BRANCH
         assert dataset_client.status.commit_id == ROOT_COMMIT_ID
         assert dataset_client._alias == params["alias"]
-        assert dataset_client._is_public == DEFAULT_IS_PUBLIC
+        assert dataset_client._is_public == is_public
         open_api_do.assert_called_once_with("POST", "", json=params)
 
     @pytest.mark.parametrize("is_fusion", [True, False])
-    def test_get_dataset(self, mocker, is_fusion):
+    @pytest.mark.parametrize("is_public", [True, False])
+    def test_get_dataset(self, mocker, is_fusion, is_public):
         mocker.patch(
             f"{gas.__name__}.GAS._get_dataset",
             return_value={
@@ -349,7 +358,7 @@ class TestGAS:
                 "commitId": "4",
                 "defaultBranch": DEFAULT_BRANCH,
                 "alias": "alias",
-                "isPublic": DEFAULT_IS_PUBLIC,
+                "isPublic": is_public,
             },
         )
         with pytest.raises(DatasetTypeError):
@@ -361,7 +370,7 @@ class TestGAS:
             "commitId": "4",
             "defaultBranch": DEFAULT_BRANCH,
             "alias": "alias",
-            "isPublic": DEFAULT_IS_PUBLIC,
+            "isPublic": is_public,
         }
         dataset_name = "test"
         get_dataset = mocker.patch(
