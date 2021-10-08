@@ -19,6 +19,7 @@ def _implement_dataset(obj: ContextInfo, tbrn: str, is_delete: bool, yes: bool) 
             error("Missing argument TBRN")
         for dataset_name in gas.list_dataset_names():
             click.echo(TBRN(dataset_name).get_tbrn())
+        return
 
     tbrn_info = TBRN(tbrn=tbrn)
     if tbrn_info.type != TBRNType.DATASET:
