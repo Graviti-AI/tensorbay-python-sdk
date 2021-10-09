@@ -9,7 +9,7 @@ import os
 from hashlib import sha1
 from http.client import HTTPResponse
 from string import printable
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable, Dict, Optional, Union
 from urllib.error import URLError
 from urllib.parse import quote, urljoin
 from urllib.request import pathname2url, urlopen
@@ -91,6 +91,7 @@ class RemoteFileMixin(ReprMixin):
     Arguments:
         local_path: The file local path.
         _url_getter: The url getter of the remote file.
+        cache_path: The path to store the cache.
 
     Attributes:
         path: The file local path.
@@ -105,13 +106,26 @@ class RemoteFileMixin(ReprMixin):
         *,
         _url_getter: Optional[Callable[[str], str]] = None,
         _url_updater: Optional[Callable[[], None]] = None,
+        cache_path: str = "",
     ) -> None:
         self.path = remote_path
         self._url_getter = _url_getter
         self._url_updater = _url_updater
+        self.cache_path = os.path.join(cache_path, remote_path) if cache_path else ""
 
     def _repr_head(self) -> str:
         return f'{self.__class__.__name__}("{self.path}")'
+
+    def _urlopen(self) -> HTTPResponse:
+        try:
+            return urlopen(  # type: ignore[no-any-return]
+                quote(self.get_url(), safe=printable), timeout=2
+            )
+        except URLError as error:
+            if str(error) == "<urlopen error timed out>":
+                self.update_url()
+                return urlopen(quote(self.get_url(), safe=printable))  # type: ignore[no-any-return]
+            raise
 
     def update_url(self) -> None:
         """Update the url when the url is timed out.
@@ -144,24 +158,26 @@ class RemoteFileMixin(ReprMixin):
 
         return self._url_getter(self.path)
 
-    def open(self) -> HTTPResponse:
+    def open(self) -> Union[HTTPResponse, BufferedReader]:
         """Return the binary file pointer of this file.
 
         The remote file pointer will be obtained by ``urllib.request.urlopen()``.
-
-        Raises:
-            URLError: When the url is timed out.
 
         Returns:
             The remote file pointer for this data.
 
         """
-        try:
-            return urlopen(  # type: ignore[no-any-return]
-                quote(self.get_url(), safe=printable), timeout=2
-            )
-        except URLError as error:
-            if str(error) == "<urlopen error timed out>":
-                self.update_url()
-                return urlopen(quote(self.get_url(), safe=printable))  # type: ignore[no-any-return]
-            raise
+        cache_path = self.cache_path
+        if not cache_path:
+            return self._urlopen()
+
+        if not os.path.exists(cache_path):
+            dirname = os.path.dirname(cache_path)
+            if not os.path.exists(dirname):
+                os.makedirs(dirname)
+
+            with self._urlopen() as fp:
+                with open(cache_path, "wb") as cache:
+                    cache.write(fp.read())
+
+        return open(cache_path, "rb")

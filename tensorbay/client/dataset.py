@@ -23,6 +23,8 @@ Please refer to :class:`~tensorbay.dataset.dataset.FusionDataset` for more infor
 """
 
 import logging
+import os
+import tempfile
 from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Iterator, Optional, Tuple, Union
 
 from ulid import ULID, from_timestamp
@@ -41,6 +43,7 @@ from tensorbay.exception import (
     InvalidParamsError,
     NameConflictError,
     ResourceNotExistError,
+    StatusError,
 )
 from tensorbay.label import Catalog
 
@@ -87,6 +90,7 @@ class DatasetClientBase(VersionControlClient):
         self._name = name
         self._alias = alias
         self._is_public = is_public
+        self._cache_path = ""
 
     def _create_segment(self, name: str) -> None:
         post_data: Dict[str, Any] = {"name": name}
@@ -191,6 +195,45 @@ class DatasetClientBase(VersionControlClient):
 
         """
         return self._is_public
+
+    @property
+    def cache_enabled(self) -> bool:
+        """Whether the cache is enabled.
+
+        Returns:
+            Whether the cache is enabled.
+        """
+        return bool(self._cache_path) and not self.status.is_draft
+
+    def enable_cache(self, cache_path: str = "") -> None:
+        """Enable cache when open the remote data of the dataset.
+
+        Arguments:
+            cache_path: The path to store the cache.
+
+        Raises:
+            StatusError: When enable cache under draft status.
+
+        """
+        try:
+            self.status.check_authority_for_commit()
+        except StatusError as error:
+            raise StatusError("Cache is not available for datasets under draft status") from error
+
+        if cache_path:
+            self._cache_path = os.path.join(
+                os.path.abspath(os.path.expanduser(cache_path)), self.dataset_id
+            )
+        else:
+            self._cache_path = os.path.join(tempfile.gettempdir(), "tensorbay", self.dataset_id)
+
+        print(
+            "To use cache, "
+            "please make sure there is free storage space larger than the dataset size.\n"
+            "Note that cache will not work for datasets under draft status.\n\n"
+            f'The cache will be stored under "{self._cache_path}".\n'
+            "You can remove all the files after using."
+        )
 
     def update_notes(
         self,

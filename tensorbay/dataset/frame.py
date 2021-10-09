@@ -64,7 +64,12 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
 
     @classmethod
     def from_response_body(
-        cls: Type[_T], body: Dict[str, Any], url_index: int, urls: LazyPage[Dict[str, str]]
+        cls: Type[_T],
+        body: Dict[str, Any],
+        url_index: int,
+        urls: LazyPage[Dict[str, str]],
+        *,
+        cache_path: str = "",
     ) -> _T:
         """Loads a :class:`Frame` object from a response body.
 
@@ -88,6 +93,7 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
                     }
             url_index: The index of the url.
             urls: A sequence of mappings which key is the sensor name and value is the url.
+            cache_path: The path to store the cache.
 
         Returns:
             The loaded :class:`Frame` object.
@@ -114,6 +120,7 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
                     url_index
                 ].get()[s],
                 _url_updater=urls.pull,
+                cache_path=cache_path,
             )
         return frame
 
