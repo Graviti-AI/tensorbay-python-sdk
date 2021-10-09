@@ -164,7 +164,10 @@ class DatasetBase(Sequence[_T], NameMixin):  # pylint: disable=too-many-ancestor
     _repr_type = ReprType.SEQUENCE
 
     def __init__(
-        self, name: str, gas: Optional["GAS"] = None, revision: Optional[str] = None
+        self,
+        name: str,
+        gas: Optional["GAS"] = None,
+        revision: Optional[str] = None,
     ) -> None:
         super().__init__(name)
 
@@ -196,6 +199,10 @@ class DatasetBase(Sequence[_T], NameMixin):  # pylint: disable=too-many-ancestor
 
     def __contains__(self, key: Any) -> bool:
         return self._get_segments().__contains__(key)
+
+    def _assert_remote(self) -> None:
+        if not hasattr(self, "_client"):
+            raise TypeError("Cache is only for remote datasets")
 
     @locked
     def _init_segments(self) -> None:
@@ -235,6 +242,27 @@ class DatasetBase(Sequence[_T], NameMixin):  # pylint: disable=too-many-ancestor
             self._notes = self._client.get_notes()
 
         return self._notes
+
+    @property
+    def cache_enabled(self) -> bool:
+        """Whether the cache is enabled.
+
+        Returns:
+            Whether the cache is enabled.
+
+        """
+        self._assert_remote()
+        return self._client.cache_enabled
+
+    def enable_cache(self, cache_path: str = "") -> None:
+        """Enable cache when open the remote data of the dataset.
+
+        Arguments:
+            cache_path: The path to store the cache.
+
+        """
+        self._assert_remote()
+        self._client.enable_cache(cache_path)
 
     def keys(self) -> Tuple[str, ...]:
         """Get all segment names.

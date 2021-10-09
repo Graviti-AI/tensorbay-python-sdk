@@ -139,6 +139,7 @@ class RemoteData(DataBase, RemoteFileMixin):
         remote_path: The file remote path.
         timestamp: The timestamp for the file.
         _url_getter: The url getter of the remote file.
+        cache_path: The path to store the cache.
 
     Attributes:
         path: The file remote path.
@@ -157,10 +158,15 @@ class RemoteData(DataBase, RemoteFileMixin):
         timestamp: Optional[float] = None,
         _url_getter: Optional[Callable[[str], str]] = None,
         _url_updater: Optional[Callable[[], None]] = None,
+        cache_path: str = "",
     ) -> None:
         DataBase.__init__(self, timestamp)
         RemoteFileMixin.__init__(
-            self, remote_path, _url_getter=_url_getter, _url_updater=_url_updater
+            self,
+            remote_path,
+            _url_getter=_url_getter,
+            _url_updater=_url_updater,
+            cache_path=cache_path,
         )
 
     @classmethod
@@ -170,6 +176,7 @@ class RemoteData(DataBase, RemoteFileMixin):
         *,
         _url_getter: Optional[Callable[[str], str]],
         _url_updater: Optional[Callable[[], None]] = None,
+        cache_path: str = "",  # noqa: DAR101
     ) -> _T:
         """Loads a :class:`RemoteData` object from a response body.
 
@@ -194,6 +201,7 @@ class RemoteData(DataBase, RemoteFileMixin):
 
             _url_getter: The url getter of the remote file.
             _url_updater: The url updater of the remote file.
+            cache_path: The path to store the cache.
 
         Returns:
             The loaded :class:`RemoteData` object.
@@ -204,6 +212,7 @@ class RemoteData(DataBase, RemoteFileMixin):
             timestamp=body.get("timestamp"),
             _url_getter=_url_getter,
             _url_updater=_url_updater,
+            cache_path=cache_path,
         )
         data.label._loads(body["label"])  # pylint: disable=protected-access
         return data

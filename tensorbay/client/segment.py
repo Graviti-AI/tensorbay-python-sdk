@@ -23,6 +23,7 @@ for more information.
 
 """
 
+import os
 import time
 from copy import deepcopy
 from itertools import zip_longest
@@ -88,6 +89,15 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
         self._status = dataset_client.status
         self._client = dataset_client._client  # pylint: disable=protected-access
         self._permission: Dict[str, Any] = {"expireAt": 0}
+
+        if dataset_client.cache_enabled:
+            self._cache_path: str = os.path.join(
+                dataset_client._cache_path,
+                dataset_client.status.commit_id,  # type: ignore[arg-type]
+                name,
+            )
+        else:
+            self._cache_path = ""
 
     def _get_url(self, remote_path: str) -> str:
         """Get URL of a specific remote path.
@@ -380,6 +390,7 @@ class SegmentClient(SegmentClientBase):
                 item,
                 _url_getter=urls[i],
                 _url_updater=urls.update,
+                cache_path=self._cache_path,
             )
             label = data.label
             for key in _MASK_KEYS:
@@ -388,6 +399,7 @@ class SegmentClient(SegmentClientBase):
                     # pylint: disable=protected-access
                     mask._url_getter = mask_urls[key][i]
                     mask._url_updater = mask_urls[key].update
+                    mask.cache_path = os.path.join(self._cache_path, key, mask.path)
 
             yield data
 
@@ -742,7 +754,7 @@ class FusionSegmentClient(SegmentClientBase):
         )
 
         for index, item in enumerate(response["dataDetails"]):
-            yield Frame.from_response_body(item, index, url_page)
+            yield Frame.from_response_body(item, index, url_page, cache_path=self._cache_path)
 
         return response["totalCount"]  # type: ignore[no-any-return]
 
