@@ -101,7 +101,7 @@ def ls(  # pylint: disable=invalid-name
     """List data under the path. If path is empty, list the names of all datasets.\f
 
     Arguments:
-        obj: A NamedTuple containing the command context.
+        obj: A :class:`.utility.ContextInfo` instance containing the command context.
         tbrn: Path to be listed, like "tb:KITTI:seg1". If empty, list names of all datasets.
         list_all_files: If true, list all files under the segment.
         show_total_num: If true, show the total number of resources.
@@ -127,7 +127,7 @@ def config(obj: ContextInfo, key: str, value: str, unset: bool) -> None:
     """Configure the options when using gas CLI.\f
 
     Arguments:
-        obj: A NamedTuple containing the command context.
+        obj: A :class:`.utility.ContextInfo` instance containing the command context.
         key: The option key.
         value: The option value.
         unset: Whether to unset the option.
@@ -153,7 +153,7 @@ def dataset(obj: ContextInfo, tbrn: str, is_delete: bool, yes: bool) -> None:
     """List, create or delete datasets.\f
 
     Arguments:
-        obj: A NamedTuple containing the command context.
+        obj: A :class:`.utility.ContextInfo` instance containing the command context.
         tbrn: The tbrn of the dataset, like "tb:KITTI".
         is_delete: Whether to delete the TensorBay dataset.
         yes: Confirm to delete the dataset completely.
@@ -195,7 +195,7 @@ def draft(  # pylint: disable=too-many-arguments
     """List or create drafts.\f
 
     Arguments:
-        obj: A NamedTuple containing the command context.
+        obj: A :class:`.utility.ContextInfo` instance containing the command context.
         tbrn: The tbrn of the dataset.
         is_list: Whether to list the drafts.
         edit: Whether to edit the draft's title and description.
@@ -220,7 +220,7 @@ def commit(obj: ContextInfo, tbrn: str, message: Tuple[str, ...]) -> None:
     """Commit drafts.\f
 
     Arguments:
-        obj: A NamedTuple containing the command context.
+        obj: A :class:`.utility.ContextInfo` instance containing the command context.
         tbrn: The path to commit a draft, like "tb:KITTI#1".
         message: The message of the commit.
 
@@ -267,7 +267,7 @@ def cp(  # pylint: disable=invalid-name, too-many-arguments
     """Copy local data to a remote path.\f
 
     Arguments:
-        obj: A NamedTuple containing the command context.
+        obj: A :class:`.utility.ContextInfo` instance containing the command context.
         local_paths: An iterable of local paths contains data to be uploaded.
         tbrn: The path to save the uploaded data, like "tb:KITTI:seg1".
         is_recursive: Whether copy directories recursively.
@@ -300,7 +300,7 @@ def rm(  # pylint: disable=invalid-name, too-many-arguments
     """Remove the remote data.\f
 
     Arguments:
-        obj: A NamedTuple containing the command context.
+        obj: A :class:`.utility.ContextInfo` instance containing the command context.
         tbrn: The path to be removed, like "tb:KITTI#1".
         is_recursive: Whether remove directories recursively.
 
@@ -326,7 +326,7 @@ def branch(obj: ContextInfo, tbrn: str, name: str, verbose: bool, is_delete: boo
     """List, create or delete branches.\f
 
     Arguments:
-        obj: A NamedTuple containing the command context.
+        obj: A :class:`.utility.ContextInfo` instance containing the command context.
         tbrn: The tbrn of the dataset.
         name: The name of the branch to be created.
         verbose: Whether to show the short commit id and commit message.
@@ -353,7 +353,7 @@ def tag(obj: ContextInfo, tbrn: str, name: str, is_delete: bool) -> None:
     """List, create or delete tags.\f
 
     Arguments:
-        obj: A NamedTuple containing the command context.
+        obj: A :class:`.utility.ContextInfo` instance containing the command context.
         tbrn: The tbrn of the dataset.
         name: The name of the tag.
         is_delete: Whether to delete the tag.
@@ -401,7 +401,7 @@ def log(  # pylint: disable=too-many-arguments
     """Show commit logs.\f
 
     Arguments:
-        obj: A NamedTuple containing the command context.
+        obj: A :class:`.utility.ContextInfo` instance containing the command context.
         tbrn: The tbrn of a dataset.
         max_count: Max number of commits to show.
         oneline: Whether to show a commit message in oneline.
@@ -444,7 +444,7 @@ def auth(  # pylint: disable=too-many-arguments
     """Authenticate the accessKey of gas.\f
 
     Arguments:
-        obj: A NamedTuple containing the command context.
+        obj: A :class:`.utility.ContextInfo` instance containing the command context.
         arg1: The accessKey or the url of gas for the authentication.
         arg2: The accessKey of gas for the authentication if arg1 is url.
         get: Whether to get the accesskey of the profile.
