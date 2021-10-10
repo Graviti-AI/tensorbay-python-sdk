@@ -19,7 +19,7 @@ import math
 import warnings
 from typing import Dict, Iterable, Optional, Tuple, Type, TypeVar
 
-from ..utility import MatrixType, ReprMixin, ReprType, UserSequence, common_loads
+from ..utility import AttrsMixin, MatrixType, ReprMixin, ReprType, UserSequence, attr, common_loads
 from .transform import Transform3D
 from .vector import Vector2D, Vector3D
 
@@ -318,7 +318,7 @@ class Box2D(UserSequence[float]):
         return self.width * self.height
 
 
-class Box3D(ReprMixin):
+class Box3D(AttrsMixin, ReprMixin):  # pylint: disable=too-many-ancestors
     """This class defines the concept of Box3D.
 
     :class:`Box3D` contains the information of a 3D bounding box such as the transform,
@@ -356,6 +356,9 @@ class Box3D(ReprMixin):
 
     _repr_type = ReprType.INSTANCE
     _repr_attrs: Tuple[str, ...] = ("size", "translation", "rotation")
+
+    _size: Vector3D = attr(key="size")
+    _transform: Transform3D = attr(key=None)
 
     def __init__(
         self,
@@ -406,10 +409,6 @@ class Box3D(ReprMixin):
         line2_max = length2 / 2 + midpoint_distance
         intersect_length = min(line1_max, line2_max) - max(line1_min, line2_min)
         return intersect_length if intersect_length > 0 else 0
-
-    def _loads(self, contents: Dict[str, Dict[str, float]]) -> None:
-        self._size = Vector3D.loads(contents["size"])
-        self._transform = Transform3D.loads(contents)
 
     @classmethod
     def loads(cls: Type[_B3], contents: Dict[str, Dict[str, float]]) -> _B3:
@@ -561,6 +560,4 @@ class Box3D(ReprMixin):
             }
 
         """
-        contents = self._transform.dumps()
-        contents["size"] = self.size.dumps()
-        return contents
+        return self._dumps()
