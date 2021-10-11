@@ -6,8 +6,8 @@
 
 import os
 
-from ...dataset import Data, Dataset
-from ...label import InstanceMask, SemanticMask
+from tensorbay.dataset import Data, Dataset
+from tensorbay.label import InstanceMask, SemanticMask
 
 DATASET_NAME = "CIHP"
 _SEGMENTS_INFO = {"train": "Training", "val": "Validation", "test": "Testing"}

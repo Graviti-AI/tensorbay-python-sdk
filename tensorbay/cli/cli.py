@@ -37,9 +37,9 @@ from typing import Iterable, Optional, Tuple
 
 import click
 
-from .. import __version__
-from .custom import CustomCommand, DeprecatedOptionsCommand
-from .utility import ContextInfo
+from tensorbay import __version__
+from tensorbay.cli.custom import CustomCommand, DeprecatedOptionsCommand
+from tensorbay.cli.utility import ContextInfo
 
 
 @click.group(context_settings={"help_option_names": ("-h", "--help")})
@@ -74,7 +74,7 @@ def cli(ctx: click.Context, access_key: str, url: str, profile_name: str, debug:
         debug: Debug mode flag.
 
     """  # noqa: D301,D415
-    from .utility import _implement_cli
+    from tensorbay.cli.utility import _implement_cli
 
     _implement_cli(ctx, access_key, url, profile_name, debug)
 
@@ -107,7 +107,7 @@ def ls(  # pylint: disable=invalid-name
         show_total_num: If true, show the total number of resources.
 
     """  # noqa: D301,D415
-    from .ls import _implement_ls
+    from tensorbay.cli.ls import _implement_ls
 
     _implement_ls(obj, tbrn, list_all_files, show_total_num)
 
@@ -133,7 +133,7 @@ def config(obj: ContextInfo, key: str, value: str, unset: bool) -> None:
         unset: Whether to unset the option.
 
     """  # noqa: D301,D415
-    from .config import _implement_config
+    from tensorbay.cli.config import _implement_config
 
     _implement_config(obj, key, value, unset)
 
@@ -159,7 +159,7 @@ def dataset(obj: ContextInfo, tbrn: str, is_delete: bool, yes: bool) -> None:
         yes: Confirm to delete the dataset completely.
 
     """  # noqa: D301,D415
-    from .dataset import _implement_dataset
+    from tensorbay.cli.dataset import _implement_dataset
 
     _implement_dataset(obj, tbrn, is_delete, yes)
 
@@ -203,7 +203,7 @@ def draft(  # pylint: disable=too-many-arguments
         message: The message of the draft.
 
     """  # noqa: D301,D415
-    from .draft import _implement_draft
+    from tensorbay.cli.draft import _implement_draft
 
     _implement_draft(obj, tbrn, is_list, edit, close, message)
 
@@ -225,7 +225,7 @@ def commit(obj: ContextInfo, tbrn: str, message: Tuple[str, ...]) -> None:
         message: The message of the commit.
 
     """  # noqa: D301,D415
-    from .commit import _implement_commit
+    from tensorbay.cli.commit import _implement_commit
 
     _implement_commit(obj, tbrn, message)
 
@@ -275,7 +275,7 @@ def cp(  # pylint: disable=invalid-name, too-many-arguments
         skip_uploaded_files: Whether skip the uploaded files.
 
     """  # noqa: D301,D415
-    from .cp import _implement_cp
+    from tensorbay.cli.cp import _implement_cp
 
     _implement_cp(obj, local_paths, tbrn, is_recursive, jobs, skip_uploaded_files)
 
@@ -305,7 +305,7 @@ def rm(  # pylint: disable=invalid-name, too-many-arguments
         is_recursive: Whether remove directories recursively.
 
     """  # noqa: D301,D415
-    from .rm import _implement_rm
+    from tensorbay.cli.rm import _implement_rm
 
     _implement_rm(obj, tbrn, is_recursive)
 
@@ -333,7 +333,7 @@ def branch(obj: ContextInfo, tbrn: str, name: str, verbose: bool, is_delete: boo
         is_delete: Whether to delete the branch.
 
     """  # noqa: D301,D415
-    from .branch import _implement_branch
+    from tensorbay.cli.branch import _implement_branch
 
     _implement_branch(obj, tbrn, name, verbose, is_delete)
 
@@ -359,7 +359,7 @@ def tag(obj: ContextInfo, tbrn: str, name: str, is_delete: bool) -> None:
         is_delete: Whether to delete the tag.
 
     """  # noqa: D301,D415
-    from .tag import _implement_tag
+    from tensorbay.cli.tag import _implement_tag
 
     _implement_tag(obj, tbrn, name, is_delete)
 
@@ -409,7 +409,7 @@ def log(  # pylint: disable=too-many-arguments
         graph: Whether to show graphical commit history.
 
     """  # noqa: D301,D415
-    from .log import _implement_log
+    from tensorbay.cli.log import _implement_log
 
     _implement_log(obj, tbrn, max_count, oneline, is_all, graph)
 
@@ -453,7 +453,7 @@ def auth(  # pylint: disable=too-many-arguments
         is_all: All the auth info or not.
 
     """  # noqa: D301,D415
-    from .auth import _implement_auth
+    from tensorbay.cli.auth import _implement_auth
 
     _implement_auth(obj, arg1, arg2, get, status, unset, is_all)
 

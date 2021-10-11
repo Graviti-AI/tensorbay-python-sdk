@@ -6,6 +6,6 @@
 
 """Dataloader of the DownsampledImagenet dataset."""
 
-from .loader import DownsampledImagenet
+from tensorbay.opendataset.DownsampledImagenet.loader import DownsampledImagenet
 
 __all__ = ["DownsampledImagenet"]

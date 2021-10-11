@@ -19,9 +19,9 @@ from uuid import UUID
 
 from ulid import ULID, from_str, from_uuid
 
-from ..client.lazy import LazyPage
-from ..utility import UserMutableMapping
-from .data import DataBase, RemoteData
+from tensorbay.client.lazy import LazyPage
+from tensorbay.dataset.data import DataBase, RemoteData
+from tensorbay.utility import UserMutableMapping
 
 logger = logging.getLogger(__name__)
 

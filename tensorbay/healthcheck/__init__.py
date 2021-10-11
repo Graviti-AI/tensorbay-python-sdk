@@ -5,6 +5,6 @@
 
 """Healthcheck function."""
 
-from .healthcheck import healthcheck
+from tensorbay.healthcheck.healthcheck import healthcheck
 
 __all__ = ["healthcheck"]

@@ -10,9 +10,9 @@ from collections import defaultdict
 from typing import Dict, List
 from xml.dom.minidom import parse
 
-from ...dataset import Data, Dataset
-from ...label import LabeledBox2D
-from .._utility import glob
+from tensorbay.dataset import Data, Dataset
+from tensorbay.label import LabeledBox2D
+from tensorbay.opendataset._utility import glob
 
 DATASET_NAME = "TLR"
 

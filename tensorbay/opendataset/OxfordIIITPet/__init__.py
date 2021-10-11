@@ -6,6 +6,6 @@
 
 """Dataloader of the OxfordIIITPet dataset."""
 
-from .loader import OxfordIIITPet
+from tensorbay.opendataset.OxfordIIITPet.loader import OxfordIIITPet
 
 __all__ = ["OxfordIIITPet"]

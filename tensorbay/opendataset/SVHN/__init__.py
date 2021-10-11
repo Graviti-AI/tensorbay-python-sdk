@@ -6,6 +6,6 @@
 
 """Dataloader of SVHN."""
 
-from .loader import SVHN
+from tensorbay.opendataset.SVHN.loader import SVHN
 
 __all__ = ["SVHN"]

@@ -7,9 +7,9 @@
 
 import os
 
-from ...dataset import Data, Dataset
-from ...exception import ModuleImportError
-from ...label import Classification
+from tensorbay.dataset import Data, Dataset
+from tensorbay.exception import ModuleImportError
+from tensorbay.label import Classification
 
 DATASET_NAME_17 = "Flower17"
 DATASET_NAME_102 = "Flower102"

@@ -9,9 +9,9 @@ import os
 from collections import defaultdict
 from typing import Dict, List
 
-from ...dataset import Data, Dataset
-from ...label import Box2DSubcatalog, Classification, ClassificationSubcatalog, LabeledBox2D
-from .._utility import glob
+from tensorbay.dataset import Data, Dataset
+from tensorbay.label import Box2DSubcatalog, Classification, ClassificationSubcatalog, LabeledBox2D
+from tensorbay.opendataset._utility import glob
 
 _DATASET_NAME = "UAVDT"
 

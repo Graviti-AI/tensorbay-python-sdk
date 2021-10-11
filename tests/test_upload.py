@@ -12,8 +12,7 @@ from tensorbay.dataset import Data, Dataset, Frame, FusionSegment, Segment
 from tensorbay.exception import FrameError, ResourceNotExistError, ResponseError
 from tensorbay.label import Catalog, Label
 from tensorbay.sensor import Sensor
-
-from .utility import get_dataset_name
+from tests.utility import get_dataset_name
 
 CATALOG = {
     "BOX2D": {

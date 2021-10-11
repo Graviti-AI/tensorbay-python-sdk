@@ -10,11 +10,9 @@ from typing import Optional, Tuple
 
 import click
 
-from ..client.gas import DatasetClientType
-from ..client.struct import ROOT_COMMIT_ID
-from .auth import INDENT
-from .tbrn import TBRN, TBRNType
-from .utility import (
+from tensorbay.cli.auth import INDENT
+from tensorbay.cli.tbrn import TBRN, TBRNType
+from tensorbay.cli.utility import (
     ContextInfo,
     edit_message,
     error,
@@ -22,6 +20,8 @@ from .utility import (
     format_hint,
     get_dataset_client,
 )
+from tensorbay.client.gas import DatasetClientType
+from tensorbay.client.struct import ROOT_COMMIT_ID
 
 _DRAFT_HINT = """
 # Please enter the message for your draft.

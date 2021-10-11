@@ -9,9 +9,9 @@
 import csv
 import os
 
-from ...dataset import Data, Dataset, Segment
-from ...label import LabeledBox2D
-from .._utility import glob
+from tensorbay.dataset import Data, Dataset, Segment
+from tensorbay.label import LabeledBox2D
+from tensorbay.opendataset._utility import glob
 
 DATASET_NAME = "LISATrafficSign"
 

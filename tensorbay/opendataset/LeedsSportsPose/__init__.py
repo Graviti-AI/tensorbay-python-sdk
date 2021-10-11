@@ -6,6 +6,6 @@
 
 """Dataloader of the LeedsSportsPose dataset."""
 
-from .loader import LeedsSportsPose
+from tensorbay.opendataset.LeedsSportsPose.loader import LeedsSportsPose
 
 __all__ = ["LeedsSportsPose"]

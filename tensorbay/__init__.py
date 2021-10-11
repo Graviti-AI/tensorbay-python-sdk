@@ -5,7 +5,7 @@
 
 """Graviti python SDK."""
 
-from .__version__ import __version__
-from .client import GAS
+from tensorbay.__version__ import __version__
+from tensorbay.client import GAS
 
 __all__ = ["__version__", "GAS"]

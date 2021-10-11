@@ -8,8 +8,8 @@ import os
 from collections import defaultdict
 from typing import Callable, DefaultDict, Dict, Tuple
 
-from ...dataset import Data, Dataset
-from ...label import Classification
+from tensorbay.dataset import Data, Dataset
+from tensorbay.label import Classification
 
 _SEGMENTS_INFO = (
     ("new_test", "AADB_newtest", "imgListTestNewRegression"),

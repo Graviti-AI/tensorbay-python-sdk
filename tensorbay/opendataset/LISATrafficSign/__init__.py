@@ -6,6 +6,6 @@
 
 """Dataloader of the LISA Traffic Sign dataset."""
 
-from .loader import LISATrafficSign
+from tensorbay.opendataset.LISATrafficSign.loader import LISATrafficSign
 
 __all__ = ["LISATrafficSign"]

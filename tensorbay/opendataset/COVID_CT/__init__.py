@@ -6,6 +6,6 @@
 
 """Dataloader of the COVID_CT dataset."""
 
-from .loader import COVID_CT
+from tensorbay.opendataset.COVID_CT.loader import COVID_CT
 
 __all__ = ["COVID_CT"]

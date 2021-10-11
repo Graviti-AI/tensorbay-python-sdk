@@ -6,6 +6,6 @@
 
 """Dataloader of the Kenyan Food or Nonfood dataset and Kenyan Food Type dataset."""
 
-from .loader import KenyanFoodOrNonfood, KenyanFoodType
+from tensorbay.opendataset.KenyanFood.loader import KenyanFoodOrNonfood, KenyanFoodType
 
 __all__ = ["KenyanFoodOrNonfood", "KenyanFoodType"]

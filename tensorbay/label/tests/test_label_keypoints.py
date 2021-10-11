@@ -5,8 +5,8 @@
 
 import pytest
 
-from ...geometry import Keypoint2D
-from .. import Keypoints2DSubcatalog, LabeledKeypoints2D
+from tensorbay.geometry import Keypoint2D
+from tensorbay.label import Keypoints2DSubcatalog, LabeledKeypoints2D
 
 
 @pytest.fixture

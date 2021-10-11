@@ -17,9 +17,9 @@ which is often used for tasks such as automatic speech recognition.
 
 from typing import Any, Dict, Iterable, List, Optional, Type, TypeVar, Union
 
-from ..utility import AttrsMixin, ReprMixin, attr, camel, common_loads
-from .basic import SubcatalogBase, _LabelBase
-from .supports import AttributesMixin
+from tensorbay.label.basic import SubcatalogBase, _LabelBase
+from tensorbay.label.supports import AttributesMixin
+from tensorbay.utility import AttrsMixin, ReprMixin, attr, camel, common_loads
 
 
 class SentenceSubcatalog(SubcatalogBase, AttributesMixin):

@@ -8,7 +8,7 @@
 from glob import glob as buildin_glob
 from typing import List
 
-from ...exception import NoFileError
+from tensorbay.exception import NoFileError
 
 
 def glob(pathname: str, *, recursive: bool = False) -> List[str]:

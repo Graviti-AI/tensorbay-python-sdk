@@ -9,8 +9,8 @@ import os
 from glob import glob
 from typing import Iterable, List
 
-from ...dataset import Data, Dataset
-from ...label import Classification
+from tensorbay.dataset import Data, Dataset
+from tensorbay.label import Classification
 
 DATASET_NAME = "RP2K"
 

@@ -7,9 +7,9 @@
 import os
 from typing import Any
 
-from ...dataset import Data, Dataset
-from ...exception import ModuleImportError
-from ...label import LabeledBox2D
+from tensorbay.dataset import Data, Dataset
+from tensorbay.exception import ModuleImportError
+from tensorbay.label import LabeledBox2D
 
 _SEGMENTS = ("extra", "test", "train")
 

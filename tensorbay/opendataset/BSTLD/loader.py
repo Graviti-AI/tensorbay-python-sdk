@@ -7,9 +7,9 @@
 
 import os
 
-from ...dataset import Data, Dataset
-from ...exception import ModuleImportError
-from ...label import LabeledBox2D
+from tensorbay.dataset import Data, Dataset
+from tensorbay.exception import ModuleImportError
+from tensorbay.label import LabeledBox2D
 
 DATASET_NAME = "BSTLD"
 

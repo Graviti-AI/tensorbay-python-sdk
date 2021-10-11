@@ -9,11 +9,11 @@ import csv
 import os
 import re
 
-from ...dataset import Data, Dataset, Segment
-from ...exception import FileStructureError
-from ...label import Classification, LabeledBox2D
-from ...utility import chunked
-from .._utility import glob
+from tensorbay.dataset import Data, Dataset, Segment
+from tensorbay.exception import FileStructureError
+from tensorbay.label import Classification, LabeledBox2D
+from tensorbay.opendataset._utility import glob
+from tensorbay.utility import chunked
 
 DATASET_NAME = "LISATrafficLight"
 

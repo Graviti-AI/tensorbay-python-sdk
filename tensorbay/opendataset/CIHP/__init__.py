@@ -6,6 +6,6 @@
 
 """Dataloader of CIHP."""
 
-from .loader import CIHP
+from tensorbay.opendataset.CIHP.loader import CIHP
 
 __all__ = ["CIHP"]

@@ -7,7 +7,7 @@ import numpy as np
 import pytest
 from quaternion import quaternion
 
-from .. import Transform3D, Vector3D
+from tensorbay.geometry import Transform3D, Vector3D
 
 _DATA_TRANSFORM = {
     "translation": {"x": 1.0, "y": 2.0, "z": 3.0},

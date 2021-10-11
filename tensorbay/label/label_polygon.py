@@ -14,10 +14,10 @@ which is often used for CV tasks such as semantic segmentation.
 
 from typing import Any, Dict, Iterable, Optional, Type, TypeVar
 
-from ..geometry import RLE, MultiPolygon, Polygon
-from ..utility import ReprType, attr_base, common_loads
-from .basic import SubcatalogBase, _LabelBase
-from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
+from tensorbay.geometry import RLE, MultiPolygon, Polygon
+from tensorbay.label.basic import SubcatalogBase, _LabelBase
+from tensorbay.label.supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
+from tensorbay.utility import ReprType, attr_base, common_loads
 
 
 class PolygonSubcatalog(SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin):

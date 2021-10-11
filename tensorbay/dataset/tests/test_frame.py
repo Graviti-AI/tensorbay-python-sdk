@@ -5,8 +5,8 @@
 
 import ulid
 
-from ...client.lazy import LazyItem, LazyPage
-from .. import Frame
+from tensorbay.client.lazy import LazyItem, LazyPage
+from tensorbay.dataset import Frame
 
 _FRAME_ID = ulid.from_str("01F29QVWASMNGNA2FZBMZCDEG1")
 

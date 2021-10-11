@@ -6,6 +6,6 @@
 
 """Dataloader of the Animals with attributes 2 dataset."""
 
-from .loader import AnimalsWithAttributes2
+from tensorbay.opendataset.AnimalsWithAttributes2.loader import AnimalsWithAttributes2
 
 __all__ = ["AnimalsWithAttributes2"]

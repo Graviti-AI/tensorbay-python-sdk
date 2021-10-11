@@ -6,6 +6,6 @@
 
 """Dataloader of the BioID Face Database."""
 
-from .loader import BioIDFace
+from tensorbay.opendataset.BioIDFace.loader import BioIDFace
 
 __all__ = ["BioIDFace"]

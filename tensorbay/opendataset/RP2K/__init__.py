@@ -6,6 +6,6 @@
 
 """Dataloader of the RP2K dataset."""
 
-from .loader import RP2K
+from tensorbay.opendataset.RP2K.loader import RP2K
 
 __all__ = ["RP2K"]

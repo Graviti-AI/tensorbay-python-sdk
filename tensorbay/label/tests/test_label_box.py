@@ -6,8 +6,8 @@
 import pytest
 from quaternion import quaternion
 
-from ...geometry import Transform3D, Vector3D
-from .. import Box2DSubcatalog, Box3DSubcatalog, LabeledBox2D, LabeledBox3D
+from tensorbay.geometry import Transform3D, Vector3D
+from tensorbay.label import Box2DSubcatalog, Box3DSubcatalog, LabeledBox2D, LabeledBox3D
 
 
 @pytest.fixture

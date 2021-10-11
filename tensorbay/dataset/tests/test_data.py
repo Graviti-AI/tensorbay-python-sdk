@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from ..data import Data, RemoteData
+from tensorbay.dataset.data import Data, RemoteData
 
 _REMOTE_DATA = {
     "remotePath": "test.json",

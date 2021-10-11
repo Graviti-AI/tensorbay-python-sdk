@@ -22,7 +22,7 @@ from urllib.parse import urlparse
 from requests.models import Response
 from requests_toolbelt.multipart.encoder import FileWrapper, MultipartEncoder
 
-from .requests import Client
+from tensorbay.client.requests import Client
 
 _Callable = TypeVar("_Callable", bound=Callable[..., Response])
 

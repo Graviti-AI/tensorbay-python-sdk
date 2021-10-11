@@ -135,3 +135,8 @@ repos:
         name: gitlint
         args: ["--msg-filename"]
         stages: [commit-msg]
+
+  - repo: https://github.com/MarcoGorelli/absolufy-imports
+    rev: v0.3.0
+    hooks:
+      - id: absolufy-imports

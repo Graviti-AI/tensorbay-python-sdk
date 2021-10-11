@@ -9,8 +9,8 @@ import csv
 import os
 from typing import Any, Dict
 
-from ...dataset import Data, Dataset
-from ...label import Classification
+from tensorbay.dataset import Data, Dataset
+from tensorbay.label import Classification
 
 DATASET_NAME = "COVID-chestxray"
 

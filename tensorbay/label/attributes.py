@@ -17,7 +17,7 @@ It refers to the `Json schema`_ method to describe an attribute.
 from enum import Enum
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Union
 
-from ..utility import EqMixin, NameMixin, ReprMixin, attr, attr_base, camel, common_loads
+from tensorbay.utility import EqMixin, NameMixin, ReprMixin, attr, attr_base, camel, common_loads
 
 _AvailaleType = Union[list, bool, int, float, str, None]
 _SingleArgType = Union[str, None, Type[_AvailaleType]]

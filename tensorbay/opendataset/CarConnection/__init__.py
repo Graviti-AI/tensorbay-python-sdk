@@ -6,6 +6,6 @@
 
 """Dataloader of the The Car Connection Picture dataset."""
 
-from .loader import CarConnection
+from tensorbay.opendataset.CarConnection.loader import CarConnection
 
 __all__ = ["CarConnection"]

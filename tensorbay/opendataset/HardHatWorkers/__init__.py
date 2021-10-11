@@ -6,6 +6,6 @@
 
 """Dataloader of the Hard Hat Workers dataset."""
 
-from .loader import HardHatWorkers
+from tensorbay.opendataset.HardHatWorkers.loader import HardHatWorkers
 
 __all__ = ["HardHatWorkers"]

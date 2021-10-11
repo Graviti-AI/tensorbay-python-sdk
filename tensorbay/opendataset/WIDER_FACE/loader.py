@@ -10,8 +10,8 @@ from collections import OrderedDict
 from itertools import islice
 from typing import Dict, Iterator, List, Union
 
-from ...dataset import Data, Dataset
-from ...label import Classification, LabeledBox2D
+from tensorbay.dataset import Data, Dataset
+from tensorbay.label import Classification, LabeledBox2D
 
 DATASET_NAME = "WIDER_FACE"
 _SEGMENT_LIST = {

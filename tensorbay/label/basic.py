@@ -14,7 +14,7 @@ A subcatalog class extends :class:`SubcatalogBase` and needed :class:`Subcatalog
 
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
 
-from ..utility import AttrsMixin, ReprMixin, ReprType, attr, common_loads
+from tensorbay.utility import AttrsMixin, ReprMixin, ReprType, attr, common_loads
 
 
 class SubcatalogBase(ReprMixin, AttrsMixin):

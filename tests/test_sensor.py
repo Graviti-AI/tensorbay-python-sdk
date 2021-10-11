@@ -5,8 +5,7 @@
 
 from tensorbay import GAS
 from tensorbay.sensor import Sensor, Sensors
-
-from .utility import get_dataset_name
+from tests.utility import get_dataset_name
 
 SENSORS_DATA = [
     {

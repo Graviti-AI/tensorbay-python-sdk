@@ -8,7 +8,7 @@
 
 from typing import Any, Dict, Optional
 
-from ..exception import StatusError
+from tensorbay.exception import StatusError
 
 
 class Status:

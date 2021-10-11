@@ -9,8 +9,8 @@ from typing import KeysView
 
 import pytest
 
-from .. import Dataset, FusionDataset, FusionSegment, Segment
-from ..dataset import DatasetBase, Notes
+from tensorbay.dataset import Dataset, FusionDataset, FusionSegment, Segment
+from tensorbay.dataset.dataset import DatasetBase, Notes
 
 _NOTES_DATA = {
     "isContinuous": True,

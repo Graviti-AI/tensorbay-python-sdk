@@ -7,11 +7,11 @@
 
 import os
 
-from ...dataset import Data, Dataset
-from ...exception import ModuleImportError
-from ...geometry import Keypoint2D
-from ...label import LabeledKeypoints2D
-from .._utility import glob
+from tensorbay.dataset import Data, Dataset
+from tensorbay.exception import ModuleImportError
+from tensorbay.geometry import Keypoint2D
+from tensorbay.label import LabeledKeypoints2D
+from tensorbay.opendataset._utility import glob
 
 DATASET_NAME = "LeedsSportsPose"
 

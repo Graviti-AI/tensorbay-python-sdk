@@ -16,9 +16,9 @@ from itertools import accumulate, count, islice, product
 from sys import version_info
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Type, TypeVar
 
-from ..utility import common_loads
-from .point_list import MultiPointList2D, PointList2D
-from .vector import Vector2D
+from tensorbay.geometry.point_list import MultiPointList2D, PointList2D
+from tensorbay.geometry.vector import Vector2D
+from tensorbay.utility import common_loads
 
 if version_info >= (3, 8):
     from math import dist as _dist

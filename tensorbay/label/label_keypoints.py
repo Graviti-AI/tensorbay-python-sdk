@@ -14,10 +14,15 @@ which is often used for CV tasks such as human body pose estimation.
 
 from typing import Any, Dict, Iterable, List, Optional, Type, TypeVar, Union
 
-from ..geometry import Keypoints2D
-from ..utility import ReprType, attr, attr_base, common_loads
-from .basic import SubcatalogBase, _LabelBase
-from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin, KeypointsInfo
+from tensorbay.geometry import Keypoints2D
+from tensorbay.label.basic import SubcatalogBase, _LabelBase
+from tensorbay.label.supports import (
+    AttributesMixin,
+    CategoriesMixin,
+    IsTrackingMixin,
+    KeypointsInfo,
+)
+from tensorbay.utility import ReprType, attr, attr_base, common_loads
 
 
 class Keypoints2DSubcatalog(SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin):

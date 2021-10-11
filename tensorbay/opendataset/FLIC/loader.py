@@ -8,9 +8,9 @@
 import os
 from typing import Any, Dict, Iterator, Tuple
 
-from ...dataset import Data, Dataset
-from ...exception import ModuleImportError
-from ...label import Classification, LabeledBox2D, LabeledKeypoints2D
+from tensorbay.dataset import Data, Dataset
+from tensorbay.exception import ModuleImportError
+from tensorbay.label import Classification, LabeledBox2D, LabeledKeypoints2D
 
 DATASET_NAME = "FLIC"
 _VALID_KEYPOINT_INDICES = [0, 1, 2, 3, 4, 5, 6, 9, 12, 13, 16]

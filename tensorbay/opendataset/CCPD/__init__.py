@@ -6,6 +6,6 @@
 
 """Dataloader of CCPD."""
 
-from .loader import CCPD, CCPDGreen
+from tensorbay.opendataset.CCPD.loader import CCPD, CCPDGreen
 
 __all__ = ["CCPD", "CCPDGreen"]

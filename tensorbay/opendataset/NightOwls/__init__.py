@@ -6,6 +6,6 @@
 
 """Dataloader of the NightOwls dataset."""
 
-from .loader import NightOwls
+from tensorbay.opendataset.NightOwls.loader import NightOwls
 
 __all__ = ["NightOwls"]

@@ -10,9 +10,9 @@ import re
 from itertools import islice
 from typing import Dict, Tuple
 
-from ...dataset import Data, Dataset
-from ...label import LabeledBox2D
-from .._utility import glob
+from tensorbay.dataset import Data, Dataset
+from tensorbay.label import LabeledBox2D
+from tensorbay.opendataset._utility import glob
 
 DATASET_NAME = "HeadPoseImage"
 

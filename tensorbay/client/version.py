@@ -7,13 +7,13 @@
 
 from typing import TYPE_CHECKING, Any, Dict, Generator, Optional, Union
 
-from ..exception import ResourceNotExistError, StatusError
-from .lazy import PagingList
-from .status import Status
-from .struct import Branch, Commit, Draft, Tag
+from tensorbay.client.lazy import PagingList
+from tensorbay.client.status import Status
+from tensorbay.client.struct import Branch, Commit, Draft, Tag
+from tensorbay.exception import ResourceNotExistError, StatusError
 
 if TYPE_CHECKING:
-    from .gas import GAS
+    from tensorbay.client.gas import GAS
 
 
 class VersionControlClient:

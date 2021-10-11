@@ -3,7 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-from .. import Classification, Label, LabeledBox2D
+from tensorbay.label import Classification, Label, LabeledBox2D
 
 
 class TestLabel:

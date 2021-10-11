@@ -9,9 +9,9 @@ import base64
 import os
 from typing import Any, Dict, Iterator, List, Optional, Tuple
 
-from ...dataset import Data, Frame, FusionDataset, FusionSegment
-from ...label import LabeledBox2D, LabeledRLE
-from .._utility.nuScenes import (
+from tensorbay.dataset import Data, Frame, FusionDataset, FusionSegment
+from tensorbay.label import LabeledBox2D, LabeledRLE
+from tensorbay.opendataset._utility.nuScenes import (
     get_info_with_determined_token,
     get_info_with_token,
     get_sensor,

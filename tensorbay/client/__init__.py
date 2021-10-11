@@ -5,9 +5,9 @@
 
 """Client module."""
 
-from .gas import GAS
-from .profile import profile
-from .requests import config
+from tensorbay.client.gas import GAS
+from tensorbay.client.profile import profile
+from tensorbay.client.requests import config
 
 __all__ = [
     "GAS",

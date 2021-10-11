@@ -7,7 +7,7 @@
 
 import click
 
-from .utility import ContextInfo, error
+from tensorbay.cli.utility import ContextInfo, error
 
 
 def _implement_config(obj: ContextInfo, key: str, value: str, unset: bool) -> None:

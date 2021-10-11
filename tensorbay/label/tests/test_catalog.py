@@ -6,7 +6,7 @@
 
 import pytest
 
-from .. import (
+from tensorbay.label import (
     Box2DSubcatalog,
     Box3DSubcatalog,
     Catalog,

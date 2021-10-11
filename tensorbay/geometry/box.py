@@ -19,9 +19,9 @@ import math
 import warnings
 from typing import Dict, Iterable, Optional, Tuple, Type, TypeVar
 
-from ..utility import MatrixType, ReprMixin, ReprType, UserSequence, common_loads
-from .transform import Transform3D
-from .vector import Vector2D, Vector3D
+from tensorbay.geometry.transform import Transform3D
+from tensorbay.geometry.vector import Vector2D, Vector3D
+from tensorbay.utility import MatrixType, ReprMixin, ReprType, UserSequence, common_loads
 
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")

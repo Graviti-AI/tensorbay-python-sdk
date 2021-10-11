@@ -6,8 +6,8 @@
 
 import os
 
-from ...dataset import Data, Dataset
-from ...label import InstanceMask, SemanticMask
+from tensorbay.dataset import Data, Dataset
+from tensorbay.label import InstanceMask, SemanticMask
 
 _SEGMENT_NAMES = ("train", "val")
 DATASET_NAME = "VOC2012Segmentation"

@@ -28,9 +28,9 @@ from requests.models import PreparedRequest, Response
 from tqdm import tqdm
 from urllib3.util.retry import Retry
 
-from ..__version__ import __version__
-from ..exception import ResponseError, ResponseErrorDistributor
-from .log import RequestLogging, ResponseLogging
+from tensorbay.__version__ import __version__
+from tensorbay.client.log import RequestLogging, ResponseLogging
+from tensorbay.exception import ResponseError, ResponseErrorDistributor
 
 logger = logging.getLogger(__name__)
 

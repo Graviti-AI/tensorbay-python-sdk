@@ -17,9 +17,9 @@ It is maintained in sorted order according to the 'name' of :class:`NameMixin`.
 from bisect import bisect_left, bisect_right
 from typing import Any, Dict, Iterable, List, Tuple, TypeVar, Union, overload
 
-from .attr import AttrsMixin, attr
-from .repr import ReprMixin
-from .user import UserSequence
+from tensorbay.utility.attr import AttrsMixin, attr
+from tensorbay.utility.repr import ReprMixin
+from tensorbay.utility.user import UserSequence
 
 
 class NameMixin(AttrsMixin, ReprMixin):

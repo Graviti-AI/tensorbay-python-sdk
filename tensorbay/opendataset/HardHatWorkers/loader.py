@@ -9,9 +9,9 @@ import os
 from typing import List
 from xml.etree import ElementTree
 
-from ...dataset import Data, Dataset
-from ...label import LabeledBox2D
-from .._utility import glob
+from tensorbay.dataset import Data, Dataset
+from tensorbay.label import LabeledBox2D
+from tensorbay.opendataset._utility import glob
 
 DATASET_NAME = "HardHatWorkers"
 

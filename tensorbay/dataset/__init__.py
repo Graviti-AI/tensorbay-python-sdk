@@ -5,10 +5,10 @@
 
 """Dataset related classes."""
 
-from .data import AuthData, Data, RemoteData
-from .dataset import Dataset, FusionDataset, Notes
-from .frame import Frame
-from .segment import FusionSegment, Segment
+from tensorbay.dataset.data import AuthData, Data, RemoteData
+from tensorbay.dataset.dataset import Dataset, FusionDataset, Notes
+from tensorbay.dataset.frame import Frame
+from tensorbay.dataset.segment import FusionSegment, Segment
 
 __all__ = [
     "AuthData",

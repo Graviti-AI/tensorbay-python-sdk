@@ -6,7 +6,7 @@
 
 import pytest
 
-from ..lazy import InitPage, LazyPage, PagingList
+from tensorbay.client.lazy import InitPage, LazyPage, PagingList
 
 TOTAL_COUNT = 1000
 MIDDLE = TOTAL_COUNT // 2

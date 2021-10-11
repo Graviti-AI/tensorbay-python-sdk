@@ -5,7 +5,7 @@
 
 import pytest
 
-from .. import LabeledSentence, SentenceSubcatalog, Word
+from tensorbay.label import LabeledSentence, SentenceSubcatalog, Word
 
 _LEXICON = ["mean", "m", "iy", "n"]
 

@@ -6,6 +6,6 @@
 
 """Dataloader of 5 categories AnimalPose dataset and 7 categories AnimalPose dataset."""
 
-from .loader import AnimalPose5, AnimalPose7
+from tensorbay.opendataset.AnimalPose.loader import AnimalPose5, AnimalPose7
 
 __all__ = ["AnimalPose5", "AnimalPose7"]

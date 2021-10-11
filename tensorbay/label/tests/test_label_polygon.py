@@ -5,8 +5,8 @@
 
 import pytest
 
-from ...geometry import Polygon, Vector2D
-from .. import (
+from tensorbay.geometry import Polygon, Vector2D
+from tensorbay.label import (
     LabeledMultiPolygon,
     LabeledPolygon,
     LabeledRLE,

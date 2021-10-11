@@ -9,9 +9,9 @@
 
 import pytest
 
-from ...utility import NameList
-from ..attributes import AttributeInfo
-from ..supports import CategoryInfo, KeypointsInfo
+from tensorbay.label.attributes import AttributeInfo
+from tensorbay.label.supports import CategoryInfo, KeypointsInfo
+from tensorbay.utility import NameList
 
 
 @pytest.fixture

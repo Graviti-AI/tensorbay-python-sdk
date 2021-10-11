@@ -1,7 +1,12 @@
 import pytest
 
-from .. import CategoryInfo, KeypointsInfo, MaskCategoryInfo
-from ..supports import AttributesMixin, CategoriesMixin, IsTrackingMixin, MaskCategoriesMixin
+from tensorbay.label import CategoryInfo, KeypointsInfo, MaskCategoryInfo
+from tensorbay.label.supports import (
+    AttributesMixin,
+    CategoriesMixin,
+    IsTrackingMixin,
+    MaskCategoriesMixin,
+)
 
 
 class TestCategoryInfo:

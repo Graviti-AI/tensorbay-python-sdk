@@ -33,11 +33,10 @@ Different label types correspond to different label classes classes.
 from functools import partial
 from typing import Any, Dict, Iterator, List, Type, TypeVar
 
-from ..utility import AttrsMixin, ReprMixin, ReprType, attr, common_loads, upper
-from .label_box import LabeledBox2D, LabeledBox3D
-from .label_classification import Classification
-from .label_keypoints import LabeledKeypoints2D
-from .label_mask import (
+from tensorbay.label.label_box import LabeledBox2D, LabeledBox3D
+from tensorbay.label.label_classification import Classification
+from tensorbay.label.label_keypoints import LabeledKeypoints2D
+from tensorbay.label.label_mask import (
     InstanceMaskBase,
     PanopticMaskBase,
     RemoteInstanceMask,
@@ -45,9 +44,10 @@ from .label_mask import (
     RemoteSemanticMask,
     SemanticMaskBase,
 )
-from .label_polygon import LabeledMultiPolygon, LabeledPolygon, LabeledRLE
-from .label_polyline import LabeledMultiPolyline2D, LabeledPolyline2D
-from .label_sentence import LabeledSentence
+from tensorbay.label.label_polygon import LabeledMultiPolygon, LabeledPolygon, LabeledRLE
+from tensorbay.label.label_polyline import LabeledMultiPolyline2D, LabeledPolyline2D
+from tensorbay.label.label_sentence import LabeledSentence
+from tensorbay.utility import AttrsMixin, ReprMixin, ReprType, attr, common_loads, upper
 
 _ERROR_MESSAGE = "The '{attr_name}' label is not provided in this data"
 _attr = partial(attr, is_dynamic=True, key=upper, error_message=_ERROR_MESSAGE)

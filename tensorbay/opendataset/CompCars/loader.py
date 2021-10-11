@@ -9,8 +9,8 @@ import csv
 import os
 from typing import Dict, List, Union
 
-from ...dataset import Data, Dataset
-from ...label import Box2DSubcatalog, LabeledBox2D
+from tensorbay.dataset import Data, Dataset
+from tensorbay.label import Box2DSubcatalog, LabeledBox2D
 
 DATASET_NAME = "CompCars"
 

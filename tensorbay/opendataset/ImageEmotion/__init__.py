@@ -6,6 +6,6 @@
 
 """Dataloader of the ImageEmotionAbstract dataset and the ImageEmotionArtphoto dataset."""
 
-from .loader import ImageEmotionAbstract, ImageEmotionArtphoto
+from tensorbay.opendataset.ImageEmotion.loader import ImageEmotionAbstract, ImageEmotionArtphoto
 
 __all__ = ["ImageEmotionAbstract", "ImageEmotionArtphoto"]

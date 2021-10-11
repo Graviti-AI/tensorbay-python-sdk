@@ -6,10 +6,10 @@
 
 import os
 
-from ...dataset import Data, Dataset
-from ...exception import ModuleImportError
-from ...label import SemanticMask
-from .._utility import glob
+from tensorbay.dataset import Data, Dataset
+from tensorbay.exception import ModuleImportError
+from tensorbay.label import SemanticMask
+from tensorbay.opendataset._utility import glob
 
 DATASET_NAME = "PASCALContext"
 

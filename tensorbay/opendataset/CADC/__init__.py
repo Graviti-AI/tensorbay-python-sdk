@@ -6,6 +6,6 @@
 
 """Dataloader of the CADC dataset."""
 
-from .loader import CADC
+from tensorbay.opendataset.CADC.loader import CADC
 
 __all__ = ["CADC"]

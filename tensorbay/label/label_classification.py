@@ -14,9 +14,9 @@ which can apply to different types of data, such as images and texts.
 
 from typing import Any, Dict, Optional, Type, TypeVar
 
-from ..utility import common_loads
-from .basic import SubcatalogBase, _LabelBase
-from .supports import AttributesMixin, CategoriesMixin
+from tensorbay.label.basic import SubcatalogBase, _LabelBase
+from tensorbay.label.supports import AttributesMixin, CategoriesMixin
+from tensorbay.utility import common_loads
 
 
 class ClassificationSubcatalog(SubcatalogBase, CategoriesMixin, AttributesMixin):

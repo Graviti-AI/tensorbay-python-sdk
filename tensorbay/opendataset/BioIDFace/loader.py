@@ -9,10 +9,10 @@ import os
 from itertools import islice
 from typing import List
 
-from ...dataset import Data, Dataset
-from ...geometry import Keypoint2D
-from ...label import LabeledKeypoints2D
-from .._utility import glob
+from tensorbay.dataset import Data, Dataset
+from tensorbay.geometry import Keypoint2D
+from tensorbay.label import LabeledKeypoints2D
+from tensorbay.opendataset._utility import glob
 
 DATASET_NAME = "BioIDFace"
 

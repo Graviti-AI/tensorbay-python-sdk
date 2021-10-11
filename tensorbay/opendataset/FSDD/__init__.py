@@ -6,6 +6,6 @@
 
 """Dataloader of the Free Spoken Digit dataset."""
 
-from .loader import FSDD
+from tensorbay.opendataset.FSDD.loader import FSDD
 
 __all__ = ["FSDD"]

@@ -6,6 +6,6 @@
 
 """Dataloader of VOC2012ActionClassification."""
 
-from .loader import VOC2012ActionClassification
+from tensorbay.opendataset.VOC2012ActionClassification.loader import VOC2012ActionClassification
 
 __all__ = ["VOC2012ActionClassification"]

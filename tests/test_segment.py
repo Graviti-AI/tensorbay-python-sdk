@@ -7,8 +7,7 @@ import pytest
 
 from tensorbay import GAS
 from tensorbay.exception import NameConflictError, ResourceNotExistError, StatusError
-
-from .utility import get_dataset_name
+from tests.utility import get_dataset_name
 
 
 class TestSegment:

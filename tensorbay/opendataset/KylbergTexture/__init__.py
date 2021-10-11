@@ -6,6 +6,6 @@
 
 """Dataloader of the Kylberg Texture dataset."""
 
-from .loader import KylbergTexture
+from tensorbay.opendataset.KylbergTexture.loader import KylbergTexture
 
 __all__ = ["KylbergTexture"]

@@ -26,8 +26,8 @@ from typing import Dict, Iterator, Optional, Sequence, Tuple, Type, TypeVar
 
 import numpy as np
 
-from ..geometry import Vector2D
-from ..utility import AttrsMixin, MatrixType, ReprMixin, ReprType, attr, camel, common_loads
+from tensorbay.geometry import Vector2D
+from tensorbay.utility import AttrsMixin, MatrixType, ReprMixin, ReprType, attr, camel, common_loads
 
 
 class CameraMatrix(ReprMixin, AttrsMixin):

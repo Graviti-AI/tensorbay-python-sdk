@@ -16,14 +16,14 @@ from typing import Any, Callable, Iterable, Optional, Tuple, TypeVar, overload
 import click
 from typing_extensions import Literal, NoReturn
 
-from ..client import GAS
-from ..client import config as client_config
-from ..client.dataset import DatasetClient, FusionDatasetClient
-from ..client.gas import DatasetClientType
-from ..client.log import dump_request_and_response
-from ..client.requests import logger
-from ..exception import InternalServerError, TensorBayException
-from .tbrn import TBRN
+from tensorbay.cli.tbrn import TBRN
+from tensorbay.client import GAS
+from tensorbay.client import config as client_config
+from tensorbay.client.dataset import DatasetClient, FusionDatasetClient
+from tensorbay.client.gas import DatasetClientType
+from tensorbay.client.log import dump_request_and_response
+from tensorbay.client.requests import logger
+from tensorbay.exception import InternalServerError, TensorBayException
 
 _Callable = TypeVar("_Callable", bound=Callable[..., None])
 INDENT = " " * 4

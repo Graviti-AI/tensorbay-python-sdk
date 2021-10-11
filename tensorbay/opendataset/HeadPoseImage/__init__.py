@@ -6,6 +6,6 @@
 
 """Dataloader of the Head Pose Image dataset."""
 
-from .loader import HeadPoseImage
+from tensorbay.opendataset.HeadPoseImage.loader import HeadPoseImage
 
 __all__ = ["HeadPoseImage"]

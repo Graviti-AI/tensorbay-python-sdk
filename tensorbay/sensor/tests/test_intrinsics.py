@@ -5,8 +5,8 @@
 import numpy as np
 import pytest
 
-from ...geometry import Vector2D
-from .. import CameraIntrinsics, CameraMatrix, DistortionCoefficients
+from tensorbay.geometry import Vector2D
+from tensorbay.sensor import CameraIntrinsics, CameraMatrix, DistortionCoefficients
 
 _3x3_MATRIX = [[1, 2, 3], [0, 4, 5], [0, 0, 1]]
 _3x3_NUMPY = np.array([[1.0, 2.0, 3.0], [0.0, 5.0, 5.0], [0.0, 0.0, 1.0]])

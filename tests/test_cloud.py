@@ -10,8 +10,7 @@ from tensorbay.dataset import Dataset, Frame, FusionDataset, FusionSegment, Segm
 from tensorbay.exception import ResourceNotExistError
 from tensorbay.label import Classification
 from tensorbay.sensor import Lidar
-
-from .utility import get_dataset_name
+from tests.utility import get_dataset_name
 
 
 class TestCloudStorage:

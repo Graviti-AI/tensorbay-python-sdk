@@ -3,9 +3,9 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-from ..box import Box2D
-from ..polygon import RLE, MultiPolygon, Polygon
-from ..vector import Vector2D
+from tensorbay.geometry.box import Box2D
+from tensorbay.geometry.polygon import RLE, MultiPolygon, Polygon
+from tensorbay.geometry.vector import Vector2D
 
 _DATA_POLYGON = [{"x": 1.0, "y": 1.0}, {"x": 2.0, "y": 2.0}, {"x": 2.0, "y": 3.0}]
 _DATA_MULTIPOLYGON = [

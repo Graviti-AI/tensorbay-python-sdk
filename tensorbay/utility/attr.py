@@ -26,7 +26,7 @@ from typing import (
 
 from typing_extensions import NoReturn, Protocol
 
-from ..exception import AttrError
+from tensorbay.exception import AttrError
 
 _T = TypeVar("_T")
 _Callable = Callable[[Any], Any]

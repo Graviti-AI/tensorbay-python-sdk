@@ -6,6 +6,6 @@
 
 """Dataloader of the NeolixOD dataset."""
 
-from .loader import NeolixOD
+from tensorbay.opendataset.NeolixOD.loader import NeolixOD
 
 __all__ = ["NeolixOD"]

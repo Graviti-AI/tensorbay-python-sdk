@@ -6,7 +6,7 @@
 
 import pytest
 
-from ..struct import ROOT_COMMIT_ID, Branch, Commit, Draft, User, _NamedCommit
+from tensorbay.client.struct import ROOT_COMMIT_ID, Branch, Commit, Draft, User, _NamedCommit
 
 _DATE = 1617183289
 _USER_NAME = "user_name@graviti.cn"

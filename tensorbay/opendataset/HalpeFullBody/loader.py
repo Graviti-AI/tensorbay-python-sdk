@@ -10,10 +10,10 @@ import json
 import os
 from typing import Any, Dict
 
-from ...dataset import Data, Dataset
-from ...geometry import Keypoint2D
-from ...label import LabeledKeypoints2D
-from ...utility import chunked
+from tensorbay.dataset import Data, Dataset
+from tensorbay.geometry import Keypoint2D
+from tensorbay.label import LabeledKeypoints2D
+from tensorbay.utility import chunked
 
 DATASET_NAME = "HalpeFullBody"
 

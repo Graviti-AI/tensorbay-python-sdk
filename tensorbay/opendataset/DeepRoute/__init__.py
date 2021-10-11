@@ -6,6 +6,6 @@
 
 """Dataloader of the DeepRoute dataset."""
 
-from .loader import DeepRoute
+from tensorbay.opendataset.DeepRoute.loader import DeepRoute
 
 __all__ = ["DeepRoute"]

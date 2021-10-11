@@ -6,8 +6,7 @@
 
 import pytest
 
-from ...utility import NameList
-from .. import (
+from tensorbay.label import (
     InstanceMask,
     InstanceMaskSubcatalog,
     PanopticMask,
@@ -15,8 +14,9 @@ from .. import (
     SemanticMask,
     SemanticMaskSubcatalog,
 )
-from ..label_mask import RemoteInstanceMask, RemotePanopticMask, RemoteSemanticMask
-from ..supports import MaskCategoryInfo
+from tensorbay.label.label_mask import RemoteInstanceMask, RemotePanopticMask, RemoteSemanticMask
+from tensorbay.label.supports import MaskCategoryInfo
+from tensorbay.utility import NameList
 
 all_mask_subcatalog = (InstanceMaskSubcatalog, PanopticMaskSubcatalog, SemanticMaskSubcatalog)
 

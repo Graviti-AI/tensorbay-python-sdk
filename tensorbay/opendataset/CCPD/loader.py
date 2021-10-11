@@ -7,9 +7,9 @@
 import os
 from typing import Dict, Iterator, List, Union
 
-from ...dataset import Data, Dataset
-from ...label import LabeledPolygon
-from .._utility.glob import glob
+from tensorbay.dataset import Data, Dataset
+from tensorbay.label import LabeledPolygon
+from tensorbay.opendataset._utility.glob import glob
 
 _PROVINCES = (
     "皖",

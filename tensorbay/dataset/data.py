@@ -13,8 +13,8 @@ It contains path information of a data sample and its corresponding labels.
 import os
 from typing import Any, Callable, Dict, Optional, Type, TypeVar, Union
 
-from ..label import Label
-from ..utility import FileMixin, RemoteFileMixin, ReprMixin
+from tensorbay.label import Label
+from tensorbay.utility import FileMixin, RemoteFileMixin, ReprMixin
 
 
 class DataBase(ReprMixin):

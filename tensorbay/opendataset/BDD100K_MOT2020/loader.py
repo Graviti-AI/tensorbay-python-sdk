@@ -12,14 +12,14 @@ from typing import Any, Callable, Dict, Iterable
 
 import numpy as np
 
-from ...dataset import Data, Dataset
-from ...label import InstanceMask, LabeledBox2D, LabeledMultiPolygon
-from .._utility import glob
+from tensorbay.dataset import Data, Dataset
+from tensorbay.label import InstanceMask, LabeledBox2D, LabeledMultiPolygon
+from tensorbay.opendataset._utility import glob
 
 try:
     from PIL import Image
 except ModuleNotFoundError:
-    from .._utility.mocker import Image
+    from tensorbay.opendataset._utility.mocker import Image  # pylint:disable=ungrouped-imports
 
 DATASET_NAMES = {
     "mots": "BDD100K_MOTS2020",

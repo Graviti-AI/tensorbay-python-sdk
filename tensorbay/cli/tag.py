@@ -7,9 +7,9 @@
 
 import click
 
-from ..client.gas import DatasetClientType
-from .tbrn import TBRN, TBRNType
-from .utility import ContextInfo, error, exception_handler, get_dataset_client
+from tensorbay.cli.tbrn import TBRN, TBRNType
+from tensorbay.cli.utility import ContextInfo, error, exception_handler, get_dataset_client
+from tensorbay.client.gas import DatasetClientType
 
 
 @exception_handler

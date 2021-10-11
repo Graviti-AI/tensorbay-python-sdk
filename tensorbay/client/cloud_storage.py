@@ -11,8 +11,8 @@ The :class:`CloudClient` defines the initial client to interact between local an
 
 from typing import Any, Dict, Iterator, List
 
-from ..dataset import AuthData
-from .requests import Client
+from tensorbay.client.requests import Client
+from tensorbay.dataset import AuthData
 
 
 class CloudClient:
