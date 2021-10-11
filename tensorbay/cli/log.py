@@ -6,6 +6,7 @@
 """Implementation of gas log."""
 
 import bisect
+import sys
 from collections import defaultdict
 from datetime import datetime
 from itertools import cycle, islice, zip_longest
@@ -18,7 +19,7 @@ from ..client.gas import DatasetClientType
 from ..client.struct import Commit
 from .auth import INDENT
 from .tbrn import TBRN, TBRNType
-from .utility import ContextInfo, error, exception_handler, is_win, shorten
+from .utility import ContextInfo, error, exception_handler, shorten
 
 _LEFT_BRACKET = click.style("(", fg="yellow", reset=False)
 _COMMA = click.style(", ", fg="yellow", reset=False)
@@ -83,7 +84,7 @@ def _implement_log(  # pylint: disable=too-many-arguments
         Printer(dataset_client, revisions, commit_id_to_branches, oneline).generate_commits(),
         max_count,
     )
-    if is_win():
+    if sys.platform.startswith("win"):
         for item in commit_generator:
             click.echo(item)
     else:
