@@ -51,8 +51,7 @@ class ContextInfo:
             The path of the config file.
 
         """
-        home = "USERPROFILE" if is_win() else "HOME"
-        return os.path.join(os.environ[home], ".gasconfig")
+        return os.path.join(os.path.expanduser("~"), ".gasconfig")
 
     @staticmethod
     def _is_updated(profile_section: SectionProxy) -> bool:
@@ -212,16 +211,6 @@ def _implement_cli(
         logging.basicConfig(level=logging.DEBUG)
     else:
         logger.disabled = True
-
-
-def is_win() -> bool:
-    """Determine whether the current system is Windows.
-
-    Returns:
-        Whether the current system is Windows.
-
-    """
-    return sys.platform.startswith("win")
 
 
 @overload
