@@ -6,6 +6,6 @@
 
 """Dataloader of the BSTLD dataset."""
 
-from .loader import BSTLD
+from tensorbay.opendataset.BSTLD.loader import BSTLD
 
 __all__ = ["BSTLD"]

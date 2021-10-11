@@ -8,8 +8,7 @@ import pytest
 from tensorbay import GAS
 from tensorbay.exception import InvalidParamsError
 from tensorbay.label import Catalog
-
-from .utility import get_dataset_name
+from tests.utility import get_dataset_name
 
 CATALOG1 = {
     "BOX2D": {

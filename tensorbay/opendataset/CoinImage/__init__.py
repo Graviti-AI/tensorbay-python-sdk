@@ -6,6 +6,6 @@
 
 """Dataloader of the Coin Image dataset."""
 
-from .loader import CoinImage
+from tensorbay.opendataset.CoinImage.loader import CoinImage
 
 __all__ = ["CoinImage"]

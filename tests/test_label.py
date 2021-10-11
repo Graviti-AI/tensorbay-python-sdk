@@ -11,8 +11,7 @@ from tensorbay.client.statistics import Statistics
 from tensorbay.dataset import Data, Dataset
 from tensorbay.label import Catalog, InstanceMask, Label, PanopticMask, SemanticMask
 from tensorbay.label.label_mask import RemoteInstanceMask, RemotePanopticMask, RemoteSemanticMask
-
-from .utility import get_dataset_name
+from tests.utility import get_dataset_name
 
 CATALOG_ATTRBUTES = [
     {"name": "gender", "enum": ["male", "female"]},

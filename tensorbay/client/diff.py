@@ -27,7 +27,8 @@
 
 from typing import Any, Dict, Sequence, Tuple, Type, TypeVar, Union, overload
 
-from ..utility import (
+from tensorbay.client.lazy import PagingList
+from tensorbay.utility import (
     AttrsMixin,
     NameMixin,
     ReprMixin,
@@ -38,7 +39,6 @@ from ..utility import (
     camel,
     common_loads,
 )
-from .lazy import PagingList
 
 
 class DiffBase(AttrsMixin, ReprMixin):

@@ -9,11 +9,11 @@ import json
 import os
 from typing import Iterable, Iterator, List, Tuple
 
-from ...dataset import Data, Dataset
-from ...exception import ModuleImportError
-from ...geometry import Keypoint2D
-from ...label import LabeledBox2D, LabeledKeypoints2D
-from .._utility import glob
+from tensorbay.dataset import Data, Dataset
+from tensorbay.exception import ModuleImportError
+from tensorbay.geometry import Keypoint2D
+from tensorbay.label import LabeledBox2D, LabeledKeypoints2D
+from tensorbay.opendataset._utility import glob
 
 DATASET_NAME_5 = "AnimalPose5"
 DATASET_NAME_7 = "AnimalPose7"

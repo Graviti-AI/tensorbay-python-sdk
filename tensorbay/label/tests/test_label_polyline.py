@@ -4,8 +4,8 @@
 
 import pytest
 
-from ...geometry import Polyline2D, Vector2D
-from .. import (
+from tensorbay.geometry import Polyline2D, Vector2D
+from tensorbay.label import (
     LabeledMultiPolyline2D,
     LabeledPolyline2D,
     MultiPolyline2DSubcatalog,

@@ -16,7 +16,7 @@ basic checking and catalog checking.
 from collections import OrderedDict
 from typing import Any, Callable, List, TypeVar
 
-from ..utility import UserMutableMapping, UserSequence
+from tensorbay.utility import UserMutableMapping, UserSequence
 
 
 class Error:

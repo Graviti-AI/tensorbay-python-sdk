@@ -20,7 +20,7 @@
 from functools import partial
 from typing import Any, Dict, Optional, Tuple, Type, TypeVar
 
-from ..utility import AttrsMixin, NameMixin, ReprMixin, attr, camel, common_loads
+from tensorbay.utility import AttrsMixin, NameMixin, ReprMixin, attr, camel, common_loads
 
 ROOT_COMMIT_ID = "00000000000000000000000000000000"
 

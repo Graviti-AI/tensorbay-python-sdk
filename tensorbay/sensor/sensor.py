@@ -33,8 +33,9 @@ produces strong visual distortion intended to create a wide panoramic or hemisph
 import warnings
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Union
 
-from ..geometry import Transform3D
-from ..utility import (
+from tensorbay.geometry import Transform3D
+from tensorbay.sensor.intrinsics import CameraIntrinsics
+from tensorbay.utility import (
     MatrixType,
     NameMixin,
     ReprType,
@@ -44,7 +45,6 @@ from ..utility import (
     TypeRegister,
     common_loads,
 )
-from .intrinsics import CameraIntrinsics
 
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")

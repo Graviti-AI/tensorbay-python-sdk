@@ -9,8 +9,8 @@ from typing import Tuple
 
 import click
 
-from .tbrn import TBRN, TBRNType
-from .utility import (
+from tensorbay.cli.tbrn import TBRN, TBRNType
+from tensorbay.cli.utility import (
     ContextInfo,
     edit_message,
     error,

@@ -18,8 +18,8 @@ from typing import Dict, Iterable, Optional, Type, TypeVar, Union, overload
 
 import numpy as np
 
-from ..utility import MatrixType, ReprMixin, ReprType, common_loads
-from .vector import Vector3D
+from tensorbay.geometry.vector import Vector3D
+from tensorbay.utility import MatrixType, ReprMixin, ReprType, common_loads
 
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")

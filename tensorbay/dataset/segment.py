@@ -18,14 +18,14 @@ along with multiple :class:`~tensorbay.sensor.sensor.Sensors`.
 
 from typing import TYPE_CHECKING, Any, Callable, MutableSequence, Optional, Type, TypeVar
 
-from ..sensor import Sensors
-from ..utility import NameMixin, ReprType, UserMutableSequence
-from .frame import Frame
+from tensorbay.dataset.frame import Frame
+from tensorbay.sensor import Sensors
+from tensorbay.utility import NameMixin, ReprType, UserMutableSequence
 
 if TYPE_CHECKING:
-    from ..client.dataset import DatasetClient, FusionDatasetClient
-    from ..client.segment import FusionSegmentClient, SegmentClient
-    from .data import DataBase
+    from tensorbay.client.dataset import DatasetClient, FusionDatasetClient
+    from tensorbay.client.segment import FusionSegmentClient, SegmentClient
+    from tensorbay.dataset.data import DataBase
 
 _S = TypeVar("_S", bound="Segment")
 _FS = TypeVar("_FS", bound="FusionSegment")

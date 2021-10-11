@@ -33,7 +33,7 @@ from typing import (
     overload,
 )
 
-from .repr import ReprMixin, ReprType
+from tensorbay.utility.repr import ReprMixin, ReprType
 
 _T = TypeVar("_T")
 _K = TypeVar("_K")

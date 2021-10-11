@@ -6,6 +6,6 @@
 
 """Dataloader of the WIDER FACE dataset."""
 
-from .loader import WIDER_FACE
+from tensorbay.opendataset.WIDER_FACE.loader import WIDER_FACE
 
 __all__ = ["WIDER_FACE"]

@@ -7,9 +7,9 @@
 
 from typing import Any, Callable, Dict, Optional, Type, TypeVar
 
-from ..utility import FileMixin, RemoteFileMixin, ReprMixin
-from .basic import AttributeType, SubcatalogBase
-from .supports import AttributesMixin, IsTrackingMixin, MaskCategoriesMixin
+from tensorbay.label.basic import AttributeType, SubcatalogBase
+from tensorbay.label.supports import AttributesMixin, IsTrackingMixin, MaskCategoriesMixin
+from tensorbay.utility import FileMixin, RemoteFileMixin, ReprMixin
 
 
 class SemanticMaskSubcatalog(SubcatalogBase, MaskCategoriesMixin, AttributesMixin):

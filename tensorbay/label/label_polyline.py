@@ -14,10 +14,10 @@ which is often used for CV tasks such as lane detection.
 
 from typing import Any, Dict, Iterable, Optional, Type, TypeVar
 
-from ..geometry import MultiPolyline2D, Polyline2D
-from ..utility import ReprType, attr, attr_base, camel, common_loads
-from .basic import SubcatalogBase, _LabelBase
-from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
+from tensorbay.geometry import MultiPolyline2D, Polyline2D
+from tensorbay.label.basic import SubcatalogBase, _LabelBase
+from tensorbay.label.supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
+from tensorbay.utility import ReprType, attr, attr_base, camel, common_loads
 
 
 class Polyline2DSubcatalog(SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin):

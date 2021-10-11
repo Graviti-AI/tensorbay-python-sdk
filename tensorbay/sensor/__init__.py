@@ -5,8 +5,8 @@
 
 """Sensor related classes."""
 
-from .intrinsics import CameraIntrinsics, CameraMatrix, DistortionCoefficients
-from .sensor import Camera, FisheyeCamera, Lidar, Radar, Sensor, Sensors, SensorType
+from tensorbay.sensor.intrinsics import CameraIntrinsics, CameraMatrix, DistortionCoefficients
+from tensorbay.sensor.sensor import Camera, FisheyeCamera, Lidar, Radar, Sensor, Sensors, SensorType
 
 __all__ = [
     "Camera",

@@ -6,6 +6,6 @@
 
 """Dataloader of the CompCars dataset."""
 
-from .loader import CompCars
+from tensorbay.opendataset.CompCars.loader import CompCars
 
 __all__ = ["CompCars"]

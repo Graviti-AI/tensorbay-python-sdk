@@ -10,10 +10,14 @@ import json
 import os
 from typing import Any, Dict, Iterator, List
 
-from ...dataset import Data, Frame, FusionDataset, FusionSegment
-from ...geometry import Transform3D
-from ...label import LabeledBox3D
-from .._utility.nuScenes import get_info_with_determined_token, get_info_with_token, get_sensor
+from tensorbay.dataset import Data, Frame, FusionDataset, FusionSegment
+from tensorbay.geometry import Transform3D
+from tensorbay.label import LabeledBox3D
+from tensorbay.opendataset._utility.nuScenes import (
+    get_info_with_determined_token,
+    get_info_with_token,
+    get_sensor,
+)
 
 DATASET_NAME = "nuScenes"
 

@@ -6,20 +6,20 @@
 import pytest
 from ulid import ULID, from_timestamp
 
-from ...dataset import Data, Frame, FusionSegment, Notes, RemoteData, Segment
-from ...exception import InvalidParamsError, NameConflictError, ResourceNotExistError
-from ...label import Catalog
-from .. import dataset, gas, segment
-from ..dataset import DatasetClient, FusionDatasetClient
-from ..diff import DataDiff, SegmentDiff
-from ..gas import DEFAULT_BRANCH, DEFAULT_IS_PUBLIC, GAS
-from ..lazy import ReturnGenerator
-from ..requests import Tqdm
-from ..segment import FusionSegmentClient, SegmentClient
-from ..statistics import Statistics
-from ..status import Status
-from ..struct import ROOT_COMMIT_ID
-from .utility import mock_response
+from tensorbay.client import dataset, gas, segment
+from tensorbay.client.dataset import DatasetClient, FusionDatasetClient
+from tensorbay.client.diff import DataDiff, SegmentDiff
+from tensorbay.client.gas import DEFAULT_BRANCH, DEFAULT_IS_PUBLIC, GAS
+from tensorbay.client.lazy import ReturnGenerator
+from tensorbay.client.requests import Tqdm
+from tensorbay.client.segment import FusionSegmentClient, SegmentClient
+from tensorbay.client.statistics import Statistics
+from tensorbay.client.status import Status
+from tensorbay.client.struct import ROOT_COMMIT_ID
+from tensorbay.client.tests.utility import mock_response
+from tensorbay.dataset import Data, Frame, FusionSegment, Notes, RemoteData, Segment
+from tensorbay.exception import InvalidParamsError, NameConflictError, ResourceNotExistError
+from tensorbay.label import Catalog
 
 
 class TestDatasetClientBase:

@@ -6,6 +6,6 @@
 
 """Dataloader of the Elpv dataset."""
 
-from .loader import Elpv
+from tensorbay.opendataset.Elpv.loader import Elpv
 
 __all__ = ["Elpv"]

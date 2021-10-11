@@ -24,10 +24,10 @@ with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     from quaternion import quaternion
 
-from ..geometry import Box2D, Box3D, Transform3D
-from ..utility import MatrixType, ReprType, attr_base, common_loads
-from .basic import SubcatalogBase, _LabelBase
-from .supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
+from tensorbay.geometry import Box2D, Box3D, Transform3D
+from tensorbay.label.basic import SubcatalogBase, _LabelBase
+from tensorbay.label.supports import AttributesMixin, CategoriesMixin, IsTrackingMixin
+from tensorbay.utility import MatrixType, ReprType, attr_base, common_loads
 
 
 class Box2DSubcatalog(SubcatalogBase, IsTrackingMixin, CategoriesMixin, AttributesMixin):

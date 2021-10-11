@@ -7,8 +7,8 @@
 
 import click
 
-from .tbrn import TBRN, TBRNType
-from .utility import ContextInfo, error, exception_handler, get_dataset_client
+from tensorbay.cli.tbrn import TBRN, TBRNType
+from tensorbay.cli.utility import ContextInfo, error, exception_handler, get_dataset_client
 
 
 @exception_handler

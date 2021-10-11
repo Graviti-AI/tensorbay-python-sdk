@@ -13,8 +13,7 @@ from tensorbay.exception import (
     ResponseError,
     StatusError,
 )
-
-from .utility import get_dataset_name
+from tests.utility import get_dataset_name
 
 
 class TestDraft:

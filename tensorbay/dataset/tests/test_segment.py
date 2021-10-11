@@ -3,7 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-from .. import Data, Segment
+from tensorbay.dataset import Data, Segment
 
 
 class TestSegment:

@@ -27,7 +27,8 @@
 from enum import Enum, auto
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Union
 
-from ..utility import (
+from tensorbay.label.attributes import AttributeInfo, Items, _ArgType, _EnumElementType
+from tensorbay.utility import (
     AttrsMixin,
     NameList,
     NameMixin,
@@ -37,7 +38,6 @@ from ..utility import (
     camel,
     common_loads,
 )
-from .attributes import AttributeInfo, Items, _ArgType, _EnumElementType
 
 
 class CategoryInfo(NameMixin):

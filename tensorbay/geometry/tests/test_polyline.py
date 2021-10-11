@@ -5,7 +5,7 @@
 
 from math import isclose
 
-from .. import Box2D, MultiPolyline2D, Polyline2D, Vector2D
+from tensorbay.geometry import Box2D, MultiPolyline2D, Polyline2D, Vector2D
 
 _POLYLINE_SEQUENCE_1 = [[1, 1], [2, 2], [4, 4], [5, 5]]
 _POLYLINE_SEQUENCE_2 = [[2, 1], [4, 3], [6, 5]]

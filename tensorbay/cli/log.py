@@ -15,11 +15,11 @@ from typing import DefaultDict, Dict, Iterator, List, Optional, Type, Union
 
 import click
 
-from ..client.gas import DatasetClientType
-from ..client.struct import Commit
-from .auth import INDENT
-from .tbrn import TBRN, TBRNType
-from .utility import ContextInfo, error, exception_handler, shorten
+from tensorbay.cli.auth import INDENT
+from tensorbay.cli.tbrn import TBRN, TBRNType
+from tensorbay.cli.utility import ContextInfo, error, exception_handler, shorten
+from tensorbay.client.gas import DatasetClientType
+from tensorbay.client.struct import Commit
 
 _LEFT_BRACKET = click.style("(", fg="yellow", reset=False)
 _COMMA = click.style(", ", fg="yellow", reset=False)

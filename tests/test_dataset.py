@@ -9,8 +9,7 @@ from tensorbay import GAS
 from tensorbay.client.gas import DEFAULT_BRANCH, DEFAULT_IS_PUBLIC
 from tensorbay.client.struct import ROOT_COMMIT_ID
 from tensorbay.exception import ResourceNotExistError, ResponseError, StatusError
-
-from .utility import get_dataset_name
+from tests.utility import get_dataset_name
 
 
 class TestDataset:

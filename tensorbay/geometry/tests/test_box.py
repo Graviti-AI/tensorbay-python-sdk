@@ -6,8 +6,8 @@
 import pytest
 from quaternion import quaternion
 
-from ...utility import UserSequence
-from .. import Box2D, Box3D, Transform3D, Vector2D, Vector3D
+from tensorbay.geometry import Box2D, Box3D, Transform3D, Vector2D, Vector3D
+from tensorbay.utility import UserSequence
 
 _DATA_2D = {"xmin": 1.0, "ymin": 2.0, "xmax": 3.0, "ymax": 4.0}
 _DATA_3D = {

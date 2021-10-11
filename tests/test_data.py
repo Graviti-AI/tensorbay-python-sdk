@@ -8,8 +8,7 @@ from tensorbay import GAS
 from tensorbay.dataset import Data, Frame
 from tensorbay.label import Catalog, Label
 from tensorbay.sensor import Sensor
-
-from .utility import get_dataset_name
+from tests.utility import get_dataset_name
 
 CATALOG = {
     "BOX2D": {

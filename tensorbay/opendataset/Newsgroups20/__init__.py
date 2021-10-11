@@ -6,6 +6,6 @@
 
 """Dataloader of the Newsgroups20 dataset."""
 
-from .loader import Newsgroups20
+from tensorbay.opendataset.Newsgroups20.loader import Newsgroups20
 
 __all__ = ["Newsgroups20"]

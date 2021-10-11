@@ -6,6 +6,6 @@
 
 """Dataloader of VOC2012Detection."""
 
-from .loader import VOC2012Detection
+from tensorbay.opendataset.VOC2012Detection.loader import VOC2012Detection
 
 __all__ = ["VOC2012Detection"]

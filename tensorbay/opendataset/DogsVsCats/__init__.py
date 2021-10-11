@@ -6,6 +6,6 @@
 
 """Dataloader of the DogsVsCats dataset."""
 
-from .loader import DogsVsCats
+from tensorbay.opendataset.DogsVsCats.loader import DogsVsCats
 
 __all__ = ["DogsVsCats"]

@@ -9,9 +9,9 @@ import os
 
 from quaternion import from_rotation_vector
 
-from ...dataset import Data, Dataset
-from ...label import LabeledBox3D
-from .._utility import glob
+from tensorbay.dataset import Data, Dataset
+from tensorbay.label import LabeledBox3D
+from tensorbay.opendataset._utility import glob
 
 DATASET_NAME = "NeolixOD"
 

@@ -27,20 +27,25 @@ from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Iterator, Opti
 
 from ulid import ULID, from_timestamp
 
-from ..dataset import AuthData, Data, Frame, FusionSegment, Notes, RemoteData, Segment
-from ..exception import FrameError, InvalidParamsError, NameConflictError, ResourceNotExistError
-from ..label import Catalog
-from .diff import DataDiff, DatasetDiff, SegmentDiff
-from .lazy import PagingList
-from .log import UPLOAD_SEGMENT_RESUME_TEMPLATE
-from .requests import Tqdm, multithread_upload
-from .segment import _STRATEGIES, FusionSegmentClient, SegmentClient
-from .statistics import Statistics
-from .status import Status
-from .version import VersionControlClient
+from tensorbay.client.diff import DataDiff, DatasetDiff, SegmentDiff
+from tensorbay.client.lazy import PagingList
+from tensorbay.client.log import UPLOAD_SEGMENT_RESUME_TEMPLATE
+from tensorbay.client.requests import Tqdm, multithread_upload
+from tensorbay.client.segment import _STRATEGIES, FusionSegmentClient, SegmentClient
+from tensorbay.client.statistics import Statistics
+from tensorbay.client.status import Status
+from tensorbay.client.version import VersionControlClient
+from tensorbay.dataset import AuthData, Data, Frame, FusionSegment, Notes, RemoteData, Segment
+from tensorbay.exception import (
+    FrameError,
+    InvalidParamsError,
+    NameConflictError,
+    ResourceNotExistError,
+)
+from tensorbay.label import Catalog
 
 if TYPE_CHECKING:
-    from .gas import GAS
+    from tensorbay.client.gas import GAS
 
 logger = logging.getLogger(__name__)
 

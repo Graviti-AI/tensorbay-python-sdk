@@ -39,8 +39,9 @@ from typing import (
     overload,
 )
 
-from ..label import Catalog
-from ..utility import (
+from tensorbay.dataset.segment import FusionSegment, Segment
+from tensorbay.label import Catalog
+from tensorbay.utility import (
     AttrsMixin,
     NameMixin,
     ReprMixin,
@@ -51,10 +52,9 @@ from ..utility import (
     common_loads,
     locked,
 )
-from .segment import FusionSegment, Segment
 
 if TYPE_CHECKING:
-    from ..client import GAS
+    from tensorbay.client import GAS
 
 _T = TypeVar("_T", FusionSegment, Segment)
 

@@ -5,11 +5,11 @@
 
 from itertools import zip_longest
 
-from ...dataset import AuthData
-from .. import gas
-from ..cloud_storage import CloudClient
-from ..requests import Client
-from .utility import mock_response
+from tensorbay.client import gas
+from tensorbay.client.cloud_storage import CloudClient
+from tensorbay.client.requests import Client
+from tensorbay.client.tests.utility import mock_response
+from tensorbay.dataset import AuthData
 
 
 class TestCloudClient:

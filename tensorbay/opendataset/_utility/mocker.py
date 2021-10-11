@@ -4,7 +4,7 @@
 #
 # pylint: disable=missing-module-docstring
 
-from ...exception import ModuleImportError
+from tensorbay.exception import ModuleImportError
 
 
 class Image:

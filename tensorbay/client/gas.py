@@ -18,16 +18,16 @@ from typing import Any, Dict, Generator, Optional, Type, Union, overload
 
 from typing_extensions import Literal
 
-from ..dataset import Dataset, FusionDataset
-from ..exception import DatasetTypeError, ResourceNotExistError
-from ..utility import Deprecated
-from .cloud_storage import CloudClient
-from .dataset import DatasetClient, FusionDatasetClient
-from .lazy import PagingList
-from .log import UPLOAD_DATASET_RESUME_TEMPLATE
-from .requests import Client, Tqdm
-from .status import Status
-from .struct import ROOT_COMMIT_ID, UserInfo
+from tensorbay.client.cloud_storage import CloudClient
+from tensorbay.client.dataset import DatasetClient, FusionDatasetClient
+from tensorbay.client.lazy import PagingList
+from tensorbay.client.log import UPLOAD_DATASET_RESUME_TEMPLATE
+from tensorbay.client.requests import Client, Tqdm
+from tensorbay.client.status import Status
+from tensorbay.client.struct import ROOT_COMMIT_ID, UserInfo
+from tensorbay.dataset import Dataset, FusionDataset
+from tensorbay.exception import DatasetTypeError, ResourceNotExistError
+from tensorbay.utility import Deprecated
 
 DatasetClientType = Union[DatasetClient, FusionDatasetClient]
 

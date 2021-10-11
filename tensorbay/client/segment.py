@@ -32,17 +32,17 @@ import filetype
 from requests_toolbelt import MultipartEncoder
 from ulid import ULID, from_timestamp
 
-from ..dataset import AuthData, Data, Frame, RemoteData
-from ..exception import FrameError, InvalidParamsError, ResponseError
-from ..label import Label
-from ..sensor.sensor import Sensor, Sensors
-from ..utility import FileMixin, chunked, locked
-from .lazy import LazyPage, PagingList
-from .requests import config
-from .status import Status
+from tensorbay.client.lazy import LazyPage, PagingList
+from tensorbay.client.requests import config
+from tensorbay.client.status import Status
+from tensorbay.dataset import AuthData, Data, Frame, RemoteData
+from tensorbay.exception import FrameError, InvalidParamsError, ResponseError
+from tensorbay.label import Label
+from tensorbay.sensor.sensor import Sensor, Sensors
+from tensorbay.utility import FileMixin, chunked, locked
 
 if TYPE_CHECKING:
-    from .dataset import DatasetClient, FusionDatasetClient
+    from tensorbay.client.dataset import DatasetClient, FusionDatasetClient
 
 _STRATEGIES = {"abort", "override", "skip"}
 _MASK_KEYS = ("semantic_mask", "instance_mask", "panoptic_mask")

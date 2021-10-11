@@ -6,6 +6,6 @@
 
 """Dataloader of the FLIC dataset."""
 
-from .loader import FLIC
+from tensorbay.opendataset.FLIC.loader import FLIC
 
 __all__ = ["FLIC"]

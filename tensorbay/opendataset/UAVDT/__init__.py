@@ -6,6 +6,6 @@
 
 """Dataloader of UAVDT."""
 
-from .loader import UAVDT
+from tensorbay.opendataset.UAVDT.loader import UAVDT
 
 __all__ = ["UAVDT"]

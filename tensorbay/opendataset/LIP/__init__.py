@@ -6,6 +6,6 @@
 
 """Dataloader of the LIP dataset."""
 
-from .loader import LIP
+from tensorbay.opendataset.LIP.loader import LIP
 
 __all__ = ["LIP"]

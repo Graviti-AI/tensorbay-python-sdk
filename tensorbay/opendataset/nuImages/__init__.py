@@ -6,6 +6,6 @@
 
 """Dataloader of the nuImages dataset."""
 
-from .loader import nuImages
+from tensorbay.opendataset.nuImages.loader import nuImages
 
 __all__ = ["nuImages"]

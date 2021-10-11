@@ -12,7 +12,7 @@ from bisect import bisect
 from itertools import accumulate
 from typing import Any, Dict, List, Union
 
-from ...sensor import Camera, Lidar, Radar
+from tensorbay.sensor import Camera, Lidar, Radar
 
 _SENSOR_TYPE_CLASS = {
     "lidar": Lidar,

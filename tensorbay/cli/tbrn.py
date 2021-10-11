@@ -17,7 +17,7 @@ from typing import Any, List, Optional, Tuple, TypeVar
 
 import click
 
-from ..exception import TBRNError
+from tensorbay.exception import TBRNError
 
 
 class _TBRNFlag(Flag):

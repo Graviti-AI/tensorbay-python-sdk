@@ -7,15 +7,15 @@ import os
 
 import pytest
 
-from ...dataset import Dataset
-from ...exception import DatasetTypeError, ResourceNotExistError
-from .. import gas
-from ..cloud_storage import CloudClient
-from ..dataset import DatasetClient, FusionDatasetClient
-from ..gas import DEFAULT_BRANCH, DEFAULT_IS_PUBLIC, GAS
-from ..status import Status
-from ..struct import ROOT_COMMIT_ID, Draft
-from .utility import mock_response
+from tensorbay.client import gas
+from tensorbay.client.cloud_storage import CloudClient
+from tensorbay.client.dataset import DatasetClient, FusionDatasetClient
+from tensorbay.client.gas import DEFAULT_BRANCH, DEFAULT_IS_PUBLIC, GAS
+from tensorbay.client.status import Status
+from tensorbay.client.struct import ROOT_COMMIT_ID, Draft
+from tensorbay.client.tests.utility import mock_response
+from tensorbay.dataset import Dataset
+from tensorbay.exception import DatasetTypeError, ResourceNotExistError
 
 
 class TestGAS:

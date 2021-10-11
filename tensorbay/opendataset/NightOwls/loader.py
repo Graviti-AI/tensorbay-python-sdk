@@ -9,9 +9,9 @@ import json
 import os
 from typing import Any, Dict, Optional
 
-from ...dataset import Data, Dataset
-from ...label import LabeledBox2D
-from .._utility import coco, glob
+from tensorbay.dataset import Data, Dataset
+from tensorbay.label import LabeledBox2D
+from tensorbay.opendataset._utility import coco, glob
 
 DATASET_NAME = "NightOwls"
 

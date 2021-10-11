@@ -8,11 +8,11 @@
 import os
 from typing import Any, Dict, Tuple
 
-from ...dataset import Data, Dataset
-from ...exception import ModuleImportError
-from ...label import CategoryInfo, Classification, ClassificationSubcatalog
-from ...utility import NameList
-from .._utility import glob
+from tensorbay.dataset import Data, Dataset
+from tensorbay.exception import ModuleImportError
+from tensorbay.label import CategoryInfo, Classification, ClassificationSubcatalog
+from tensorbay.opendataset._utility import glob
+from tensorbay.utility import NameList
 
 DATASET_NAME = "CACD"
 _ATTRIBUTES = {

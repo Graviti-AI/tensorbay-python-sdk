@@ -15,9 +15,9 @@ such as the coordinates and visible status(optional).
 
 from typing import Dict, Iterable, List, Optional, Type, TypeVar
 
-from ..utility import common_loads
-from .point_list import PointList2D
-from .vector import Vector2D
+from tensorbay.geometry.point_list import PointList2D
+from tensorbay.geometry.vector import Vector2D
+from tensorbay.utility import common_loads
 
 _T = TypeVar("_T", bound=Vector2D)
 

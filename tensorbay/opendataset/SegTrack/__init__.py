@@ -6,6 +6,6 @@
 
 """Dataloader of the SegTrack dataset."""
 
-from .loader import SegTrack
+from tensorbay.opendataset.SegTrack.loader import SegTrack
 
 __all__ = ["SegTrack"]

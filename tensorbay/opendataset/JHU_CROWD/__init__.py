@@ -6,6 +6,6 @@
 
 """Dataloader of the JHU-CROWD++ dataset."""
 
-from .loader import JHU_CROWD
+from tensorbay.opendataset.JHU_CROWD.loader import JHU_CROWD
 
 __all__ = ["JHU_CROWD"]

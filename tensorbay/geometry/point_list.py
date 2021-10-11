@@ -13,9 +13,9 @@
 
 from typing import Any, Dict, Iterable, List, Optional, Type, TypeVar
 
-from ..utility import UserMutableSequence, common_loads
-from .box import Box2D
-from .vector import Vector2D
+from tensorbay.geometry.box import Box2D
+from tensorbay.geometry.vector import Vector2D
+from tensorbay.utility import UserMutableSequence, common_loads
 
 _T = TypeVar("_T", bound=Vector2D)
 

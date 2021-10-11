@@ -9,9 +9,9 @@ import os
 from itertools import islice
 from typing import List
 
-from ...dataset import Data, Dataset
-from ...label import LabeledSentence, SentenceSubcatalog, Word
-from .._utility import glob
+from tensorbay.dataset import Data, Dataset
+from tensorbay.label import LabeledSentence, SentenceSubcatalog, Word
+from tensorbay.opendataset._utility import glob
 
 DATASET_NAME = "THCHS-30"
 _SEGMENT_NAME_LIST = ("train", "dev", "test")

@@ -5,8 +5,8 @@
 
 import pytest
 
-from .. import AttributeInfo, Items
-from ..attributes import _AttributeType
+from tensorbay.label import AttributeInfo, Items
+from tensorbay.label.attributes import _AttributeType
 
 
 class TestAttributeType:

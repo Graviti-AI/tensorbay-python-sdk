@@ -6,6 +6,6 @@
 
 """Dataloader of the Halpe Full-Body Human Keypoints and HOI-Det dataset."""
 
-from .loader import HalpeFullBody
+from tensorbay.opendataset.HalpeFullBody.loader import HalpeFullBody
 
 __all__ = ["HalpeFullBody"]

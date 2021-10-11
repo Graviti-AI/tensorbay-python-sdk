@@ -6,6 +6,6 @@
 
 """Dataloader of the TLR dataset."""
 
-from .loader import TLR
+from tensorbay.opendataset.TLR.loader import TLR
 
 __all__ = ["TLR"]

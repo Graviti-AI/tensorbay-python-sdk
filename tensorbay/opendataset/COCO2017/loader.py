@@ -11,8 +11,8 @@ from typing import Any, DefaultDict, Dict, List, Tuple
 
 import numpy as np
 
-from ...dataset import Data, Dataset
-from ...label import (
+from tensorbay.dataset import Data, Dataset
+from tensorbay.label import (
     Label,
     LabeledBox2D,
     LabeledKeypoints2D,
@@ -20,13 +20,13 @@ from ...label import (
     LabeledRLE,
     PanopticMask,
 )
-from ...utility.itertools import chunked
-from .._utility.glob import glob
+from tensorbay.opendataset._utility.glob import glob
+from tensorbay.utility.itertools import chunked
 
 try:
     from PIL import Image
 except ModuleNotFoundError:
-    from .._utility.mocker import Image
+    from tensorbay.opendataset._utility.mocker import Image  # pylint:disable=ungrouped-imports
 
 DATASET_NAME = "COCO2017"
 _LABELED_SEGMENT_NAMES = ("train", "val")

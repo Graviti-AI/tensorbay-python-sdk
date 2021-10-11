@@ -8,9 +8,9 @@
 import os
 from typing import Dict, List
 
-from ...dataset import Data, Dataset
-from ...label import Classification, LabeledBox2D
-from .._utility import glob
+from tensorbay.dataset import Data, Dataset
+from tensorbay.label import Classification, LabeledBox2D
+from tensorbay.opendataset._utility import glob
 
 SEGMENT_LIST = ["train", "val", "test"]
 DATASET_NAME = "JHU-CROWD"

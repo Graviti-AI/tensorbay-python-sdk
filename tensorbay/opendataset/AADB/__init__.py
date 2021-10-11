@@ -6,6 +6,6 @@
 
 """Dataloader of the AADB dataset."""
 
-from .loader import AADB
+from tensorbay.opendataset.AADB.loader import AADB
 
 __all__ = ["AADB"]

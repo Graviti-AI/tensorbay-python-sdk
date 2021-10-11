@@ -7,8 +7,8 @@
 import os
 from xml.etree import ElementTree
 
-from ...dataset import Data, Dataset
-from ...label import LabeledBox2D
+from tensorbay.dataset import Data, Dataset
+from tensorbay.label import LabeledBox2D
 
 _SEGMENT_NAMES = ("train", "val")
 _BOOLEAN_ATTRIBUTES = {"occluded", "difficult", "truncated"}

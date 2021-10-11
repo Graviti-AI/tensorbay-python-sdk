@@ -10,14 +10,14 @@ from typing import Callable, Dict
 
 import numpy as np
 
-from ...dataset import Data, Dataset
-from ...label import InstanceMask
-from .._utility import glob
+from tensorbay.dataset import Data, Dataset
+from tensorbay.label import InstanceMask
+from tensorbay.opendataset._utility import glob
 
 try:
     from PIL import Image
 except ModuleNotFoundError:
-    from .._utility.mocker import Image
+    from tensorbay.opendataset._utility.mocker import Image  # pylint:disable=ungrouped-imports
 
 DATASET_NAME = "SegTrack2"
 

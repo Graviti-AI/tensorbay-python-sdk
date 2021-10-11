@@ -19,7 +19,7 @@ from math import hypot, sqrt
 from sys import version_info
 from typing import Dict, Iterable, Optional, Sequence, Tuple, Type, TypeVar, Union
 
-from ..utility import ReprType, UserSequence
+from tensorbay.utility import ReprType, UserSequence
 
 if version_info >= (3, 8):
     # math.hypot method supports n-dimensional points in Python3.8

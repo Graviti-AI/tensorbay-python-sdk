@@ -6,6 +6,6 @@
 
 """Dataloader of the THCHS-30 dataset."""
 
-from .loader import THCHS30
+from tensorbay.opendataset.THCHS30.loader import THCHS30
 
 __all__ = ["THCHS30"]

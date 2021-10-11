@@ -3,7 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-from .. import Box2D, Keypoint2D, Keypoints2D, Vector2D
+from tensorbay.geometry import Box2D, Keypoint2D, Keypoints2D, Vector2D
 
 _DATA_KEYPOINT = {"x": 1.0, "y": 1.0, "v": 1}
 _DATA_KEYPOINTS = [{"x": 1.0, "y": 1.0, "v": 1}, {"x": 2.0, "y": 2.0, "v": 2}]

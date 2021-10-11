@@ -14,8 +14,8 @@ or :class:`~tensorbay.dataset.dataset.FusionDataset` in the object is empty.
 
 from typing import Iterator, Union
 
-from ..dataset import Dataset, FusionDataset
-from .report import Error
+from tensorbay.dataset import Dataset, FusionDataset
+from tensorbay.healthcheck.report import Error
 
 
 class BasicError(Error):

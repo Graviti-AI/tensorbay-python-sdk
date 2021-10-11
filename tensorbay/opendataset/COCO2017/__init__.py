@@ -6,6 +6,6 @@
 
 """Dataloader of the COCO2017 dataset."""
 
-from .loader import COCO2017
+from tensorbay.opendataset.COCO2017.loader import COCO2017
 
 __all__ = ["COCO2017"]

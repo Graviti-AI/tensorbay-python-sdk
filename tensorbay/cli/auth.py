@@ -12,8 +12,14 @@ from urllib.parse import urljoin
 
 import click
 
-from ..exception import UnauthorizedError
-from .utility import ContextInfo, error, exception_handler, form_profile_value, is_accesskey
+from tensorbay.cli.utility import (
+    ContextInfo,
+    error,
+    exception_handler,
+    form_profile_value,
+    is_accesskey,
+)
+from tensorbay.exception import UnauthorizedError
 
 INDENT = " " * 4
 

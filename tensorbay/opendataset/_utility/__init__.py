@@ -5,7 +5,7 @@
 
 """OpenDataset utility code."""
 
-from .coco import coco
-from .glob import glob
+from tensorbay.opendataset._utility.coco import coco
+from tensorbay.opendataset._utility.glob import glob
 
 __all__ = ["coco", "glob"]

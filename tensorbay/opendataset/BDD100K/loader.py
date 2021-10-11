@@ -13,8 +13,8 @@ from warnings import warn
 
 import numpy as np
 
-from ...dataset import Data, Dataset
-from ...label import (
+from tensorbay.dataset import Data, Dataset
+from tensorbay.label import (
     Classification,
     InstanceMask,
     LabeledBox2D,
@@ -23,12 +23,12 @@ from ...label import (
     PanopticMask,
     SemanticMask,
 )
-from .._utility import glob
+from tensorbay.opendataset._utility import glob
 
 try:
     from PIL import Image
 except ModuleNotFoundError:
-    from .._utility.mocker import Image
+    from tensorbay.opendataset._utility.mocker import Image  # pylint:disable=ungrouped-imports
 
 DATASET_NAMES = {
     "100k": "BDD100K",

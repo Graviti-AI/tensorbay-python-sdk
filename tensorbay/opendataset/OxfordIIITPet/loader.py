@@ -8,9 +8,9 @@ import os
 import xml.etree.ElementTree as ET
 from typing import List
 
-from ...dataset import Data, Dataset
-from ...label import Classification, LabeledBox2D, SemanticMask
-from .._utility.glob import glob
+from tensorbay.dataset import Data, Dataset
+from tensorbay.label import Classification, LabeledBox2D, SemanticMask
+from tensorbay.opendataset._utility.glob import glob
 
 DATASET_NAME = "OxfordIIITPet"
 

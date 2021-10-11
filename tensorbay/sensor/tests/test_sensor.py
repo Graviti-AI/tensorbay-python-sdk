@@ -6,8 +6,8 @@
 import pytest
 from quaternion import quaternion
 
-from ...geometry import Transform3D, Vector3D
-from .. import (
+from tensorbay.geometry import Transform3D, Vector3D
+from tensorbay.sensor import (
     Camera,
     CameraIntrinsics,
     CameraMatrix,

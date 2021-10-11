@@ -10,10 +10,10 @@ import os
 from itertools import islice
 from typing import List
 
-from ...dataset import Data, Dataset
-from ...geometry import Keypoint2D
-from ...label import LabeledKeypoints2D, SemanticMask
-from ...utility import chunked
+from tensorbay.dataset import Data, Dataset
+from tensorbay.geometry import Keypoint2D
+from tensorbay.label import LabeledKeypoints2D, SemanticMask
+from tensorbay.utility import chunked
 
 DATASET_NAME = "LIP"
 _SEGMENT_NAMES = ("train", "val", "test")

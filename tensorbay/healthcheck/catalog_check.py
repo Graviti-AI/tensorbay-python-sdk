@@ -15,10 +15,10 @@ it finds errors in fields such as 'type', 'enum', 'range' and 'parent categories
 
 from typing import Iterator, Optional, Tuple
 
-from ..label import AttributeInfo, Catalog, CategoryInfo
-from ..utility import NameList
-from .pipeline import PipelineForIterable
-from .report import Error
+from tensorbay.healthcheck.pipeline import PipelineForIterable
+from tensorbay.healthcheck.report import Error
+from tensorbay.label import AttributeInfo, Catalog, CategoryInfo
+from tensorbay.utility import NameList
 
 
 class AttributeInfoError(Error):

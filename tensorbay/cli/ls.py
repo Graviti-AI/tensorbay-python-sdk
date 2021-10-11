@@ -9,11 +9,11 @@ from typing import Iterable, Optional
 
 import click
 
-from ..client import GAS
-from ..client.dataset import FusionDatasetClient
-from ..client.gas import DatasetClientType
-from .tbrn import TBRN, TBRNType
-from .utility import ContextInfo, error, exception_handler, get_dataset_client
+from tensorbay.cli.tbrn import TBRN, TBRNType
+from tensorbay.cli.utility import ContextInfo, error, exception_handler, get_dataset_client
+from tensorbay.client import GAS
+from tensorbay.client.dataset import FusionDatasetClient
+from tensorbay.client.gas import DatasetClientType
 
 
 def _echo_data(

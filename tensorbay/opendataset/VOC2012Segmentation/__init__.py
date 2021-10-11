@@ -6,6 +6,6 @@
 
 """Dataloader of VOC2012Segmentation."""
 
-from .loader import VOC2012Segmentation
+from tensorbay.opendataset.VOC2012Segmentation.loader import VOC2012Segmentation
 
 __all__ = ["VOC2012Segmentation"]

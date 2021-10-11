@@ -5,12 +5,12 @@
 
 """Geometry related classes."""
 
-from .box import Box2D, Box3D
-from .keypoint import Keypoint2D, Keypoints2D
-from .polygon import RLE, MultiPolygon, Polygon
-from .polyline import MultiPolyline2D, Polyline2D
-from .transform import Transform3D
-from .vector import Vector, Vector2D, Vector3D
+from tensorbay.geometry.box import Box2D, Box3D
+from tensorbay.geometry.keypoint import Keypoint2D, Keypoints2D
+from tensorbay.geometry.polygon import RLE, MultiPolygon, Polygon
+from tensorbay.geometry.polyline import MultiPolyline2D, Polyline2D
+from tensorbay.geometry.transform import Transform3D
+from tensorbay.geometry.vector import Vector, Vector2D, Vector3D
 
 __all__ = [
     "Box2D",

@@ -6,6 +6,6 @@
 
 """Dataloader of the PASCALContext dataset."""
 
-from .loader import PASCALContext
+from tensorbay.opendataset.PASCALContext.loader import PASCALContext
 
 __all__ = ["PASCALContext"]

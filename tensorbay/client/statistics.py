@@ -11,7 +11,7 @@
 """
 from typing import Any, Dict
 
-from ..utility import UserMapping
+from tensorbay.utility import UserMapping
 
 
 class Statistics(UserMapping[str, Any]):  # pylint: disable=too-many-ancestors

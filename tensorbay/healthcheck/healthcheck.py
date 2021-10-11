@@ -13,10 +13,10 @@ including basic errors and catalog errors.
 
 from typing import Union
 
-from ..dataset import Dataset, FusionDataset
-from .basic_check import check_basic
-from .catalog_check import check_catalog
-from .report import HealthReport
+from tensorbay.dataset import Dataset, FusionDataset
+from tensorbay.healthcheck.basic_check import check_basic
+from tensorbay.healthcheck.catalog_check import check_catalog
+from tensorbay.healthcheck.report import HealthReport
 
 
 def healthcheck(dataset: Union[Dataset, FusionDataset]) -> HealthReport:

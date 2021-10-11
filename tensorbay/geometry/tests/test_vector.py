@@ -5,7 +5,7 @@
 
 import pytest
 
-from .. import Vector, Vector2D, Vector3D
+from tensorbay.geometry import Vector, Vector2D, Vector3D
 
 _DATA = [{"x": 1.0, "y": 2.0}, {"x": 1.0, "y": 2.0, "z": 3.0}]
 

@@ -5,7 +5,7 @@
 
 import pytest
 
-from .. import Classification, ClassificationSubcatalog
+from tensorbay.label import Classification, ClassificationSubcatalog
 
 
 @pytest.fixture

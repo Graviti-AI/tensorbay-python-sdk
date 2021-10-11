@@ -6,6 +6,6 @@
 
 """Dataloader of the THUCNews dataset."""
 
-from .loader import THUCNews
+from tensorbay.opendataset.THUCNews.loader import THUCNews
 
 __all__ = ["THUCNews"]

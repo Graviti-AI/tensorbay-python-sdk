@@ -8,9 +8,9 @@
 import csv
 import os
 
-from ...dataset import Data, Dataset
-from ...label import Classification
-from .._utility import glob
+from tensorbay.dataset import Data, Dataset
+from tensorbay.label import Classification
+from tensorbay.opendataset._utility import glob
 
 DATASET_NAME_ABSTRACT = "ImageEmotionAbstract"
 DATASET_NAME_ARTPHOTO = "ImageEmotionArtPhoto"

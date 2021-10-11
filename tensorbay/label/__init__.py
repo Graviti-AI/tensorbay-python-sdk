@@ -5,13 +5,13 @@
 
 """Label related classes."""
 
-from .attributes import AttributeInfo, Items
-from .catalog import Catalog
-from .label import Label
-from .label_box import Box2DSubcatalog, Box3DSubcatalog, LabeledBox2D, LabeledBox3D
-from .label_classification import Classification, ClassificationSubcatalog
-from .label_keypoints import Keypoints2DSubcatalog, LabeledKeypoints2D
-from .label_mask import (
+from tensorbay.label.attributes import AttributeInfo, Items
+from tensorbay.label.catalog import Catalog
+from tensorbay.label.label import Label
+from tensorbay.label.label_box import Box2DSubcatalog, Box3DSubcatalog, LabeledBox2D, LabeledBox3D
+from tensorbay.label.label_classification import Classification, ClassificationSubcatalog
+from tensorbay.label.label_keypoints import Keypoints2DSubcatalog, LabeledKeypoints2D
+from tensorbay.label.label_mask import (
     InstanceMask,
     InstanceMaskSubcatalog,
     PanopticMask,
@@ -19,7 +19,7 @@ from .label_mask import (
     SemanticMask,
     SemanticMaskSubcatalog,
 )
-from .label_polygon import (
+from tensorbay.label.label_polygon import (
     LabeledMultiPolygon,
     LabeledPolygon,
     LabeledRLE,
@@ -27,14 +27,14 @@ from .label_polygon import (
     PolygonSubcatalog,
     RLESubcatalog,
 )
-from .label_polyline import (
+from tensorbay.label.label_polyline import (
     LabeledMultiPolyline2D,
     LabeledPolyline2D,
     MultiPolyline2DSubcatalog,
     Polyline2DSubcatalog,
 )
-from .label_sentence import LabeledSentence, SentenceSubcatalog, Word
-from .supports import CategoryInfo, KeypointsInfo, MaskCategoryInfo
+from tensorbay.label.label_sentence import LabeledSentence, SentenceSubcatalog, Word
+from tensorbay.label.supports import CategoryInfo, KeypointsInfo, MaskCategoryInfo
 
 __all__ = [
     "AttributeInfo",

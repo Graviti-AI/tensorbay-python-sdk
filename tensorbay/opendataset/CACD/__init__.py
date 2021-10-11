@@ -6,6 +6,6 @@
 
 """Dataloader of the CACD dataset."""
 
-from .loader import CACD
+from tensorbay.opendataset.CACD.loader import CACD
 
 __all__ = ["CACD"]

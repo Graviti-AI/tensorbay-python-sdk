@@ -16,7 +16,7 @@ from urllib.request import pathname2url, urlopen
 
 from _io import BufferedReader
 
-from .repr import ReprMixin
+from tensorbay.utility.repr import ReprMixin
 
 
 class FileMixin(ReprMixin):

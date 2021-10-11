@@ -12,9 +12,9 @@ and provides :meth:`Polygon.area` to calculate the area of the polygon.
 
 from typing import Dict, Iterable, List, Optional, Type, TypeVar
 
-from ..utility import UserMutableSequence, common_loads
-from .point_list import MultiPointList2D, PointList2D
-from .vector import Vector2D
+from tensorbay.geometry.point_list import MultiPointList2D, PointList2D
+from tensorbay.geometry.vector import Vector2D
+from tensorbay.utility import UserMutableSequence, common_loads
 
 
 class Polygon(PointList2D[Vector2D]):  # pylint: disable=too-many-ancestors
