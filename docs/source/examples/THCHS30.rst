@@ -59,15 +59,6 @@ into a :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
 See :ref:`Sentence annotation <reference/label_format/Sentence:Sentence>` for more details.
 
-.. note::
-    Since the :ref:`THCHS-30 dataloader <THCHS30-dataloader>` above is already included in TensorBay,
-    so it uses relative import.
-    However, the regular import should be used when writing a new dataloader.
-
-.. literalinclude:: ../../../docs/code/THCHS30.py
-   :language: python
-   :start-after: """Organize Dataset / regular import"""
-   :end-at: from tensorbay.opendataset._utility import glob
 
 There are already a number of dataloaders in TensorBay SDK provided by the community.
 Thus, instead of writing, importing an available dataloadert is also feasible.

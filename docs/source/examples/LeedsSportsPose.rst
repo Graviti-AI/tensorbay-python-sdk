@@ -69,16 +69,6 @@ a :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
 See :ref:`Keipoints2D annotation <reference/label_format/Keypoints2D:Keypoints2D>` for more details.
 
-.. note::
-
-   Since the :ref:`Leeds Sports Pose dataloader <LeedsSportsPose-dataloader>` above is already included in TensorBay,
-   so it uses relative import.
-   However, the regular import should be used when writing a new dataloader.
-
-.. literalinclude:: ../../../docs/code/LeedsSportsPose.py
-   :language: python
-   :start-after: """Organize Dataset / regular import"""
-   :end-at: from tensorbay.opendataset._utility import glob
 
 There are already a number of dataloaders in TensorBay SDK provided by the community.
 Thus, instead of writing, importing an available dataloader is also feasible.

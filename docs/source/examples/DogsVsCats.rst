@@ -62,16 +62,6 @@ a :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
 See :ref:`Classification annotation <reference/label_format/Classification:Classification>` for more details.
 
-.. note::
-
-   Since the :ref:`Dogs vs Cats dataloader <dogsvscats-dataloader>` above is already included in TensorBay,
-   so it uses relative import.
-   However, the regular import should be used when writing a new dataloader.
-
-.. literalinclude:: ../../../docs/code/DogsVsCats.py
-   :language: python
-   :start-after: """Organize Dataset / regular import"""
-   :end-at: from tensorbay.opendataset._utility import glob
 
 There are already a number of dataloaders in TensorBay SDK provided by the community.
 Thus, instead of writing, importing an available dataloadert is also feasible.
