@@ -76,16 +76,6 @@ See :ref:`Classification annotation <reference/label_format/Classification:Class
    so that a "txt" extension is added to the remote path of each data file
    to ensure the loaded dataset could function well on TensorBay.
 
-.. note::
-
-   Since the :ref:`20 Newsgroups dataloader <Newsgroups20-dataloader>` above is already included
-   in TensorBay, so it uses relative import. However, use regular import should be used when
-   writing a new dataloader.
-
-.. literalinclude:: ../../../docs/code/Newsgroups20.py
-   :language: python
-   :start-after: """Organize Dataset / regular import"""
-   :end-at: from tensorbay.opendataset._utility import glob
 
 There are already a number of dataloaders in TensorBay SDK provided by the community.
 Thus, instead of writing, importing an available dataloader is also feasible.

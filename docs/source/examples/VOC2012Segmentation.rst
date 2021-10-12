@@ -92,16 +92,6 @@ a :class:`~tensorbay.dataset.dataset.Dataset` instance.
 See :ref:`SemanticMask annotation <reference/label_format/SemanticMask:SemanticMask>`
 and :ref:`InstanceMask annotation <reference/label_format/InstanceMask:InstanceMask>` for more details.
 
-.. note::
-
-   Since the :ref:`VOC2012 Segmentation dataloader <voc2012segmentation-dataloader>` above is already included in
-   TensorBay, so it uses relative import.
-   However, the regular import should be used when writing a new dataloader.
-
-.. literalinclude:: ../../../docs/code/VOC2012Segmentation.py
-   :language: python
-   :start-after: """Organize Dataset / regular import"""
-   :end-at: from tensorbay.label import InstanceMask, SemanticMask
 
 There are already a number of dataloaders in TensorBay SDK provided by the community.
 Thus, instead of writing, importing an available dataloader is also feasible.
