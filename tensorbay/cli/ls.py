@@ -13,7 +13,6 @@ from tensorbay.cli.tbrn import TBRN, TBRNType
 from tensorbay.cli.utility import ContextInfo, error, exception_handler, get_dataset_client
 from tensorbay.client import GAS
 from tensorbay.client.dataset import FusionDatasetClient
-from tensorbay.client.gas import DatasetClientType
 
 
 def _echo_data(
@@ -45,14 +44,8 @@ def _echo_data(
         )
 
 
-def _validate_dataset_client(dataset_client: DatasetClientType) -> None:
-    if not dataset_client.status.draft_number and not dataset_client.status.commit_id:
-        error(f'"{dataset_client.name}" has no commit history.')
-
-
 def _ls_dataset(gas: GAS, tbrn_info: TBRN, list_all_files: bool, show_total_num: bool) -> None:
     dataset_client = get_dataset_client(gas, tbrn_info)
-    _validate_dataset_client(dataset_client)
 
     segment_names = dataset_client.list_segment_names()
     if not list_all_files:
@@ -89,7 +82,6 @@ def _ls_segment(
     show_total_num: bool,
 ) -> None:
     dataset_client = get_dataset_client(gas, tbrn_info)
-    _validate_dataset_client(dataset_client)
     if isinstance(dataset_client, FusionDatasetClient):
         error("List fusion segment is not supported yet")
 
