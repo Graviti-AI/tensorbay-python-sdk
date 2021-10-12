@@ -45,7 +45,7 @@ class TestGAS:
             == response_data["configs"]
         )
 
-        open_api_do.assert_called_once_with("GET", "storage-configs", "", params=params)
+        open_api_do.assert_called_once_with("GET", "auth-storage-configs", "", params=params)
 
     @pytest.mark.parametrize("is_fusion", [True, False])
     @pytest.mark.parametrize("is_public", [True, False])
