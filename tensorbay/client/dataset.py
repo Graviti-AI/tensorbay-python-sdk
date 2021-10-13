@@ -298,6 +298,20 @@ class DatasetClientBase(VersionControlClient):
             ).json()["labelStatistics"]
         )
 
+    def get_total_size(self) -> int:
+        """Get total data size of the dataset and the unit is byte.
+
+        Returns:
+            The total data size of the dataset.
+
+        """
+        self._status.check_authority_for_commit()
+
+        params: Dict[str, Any] = {"commit": self._status.commit_id}
+        return self._client.open_api_do(  # type: ignore[no-any-return]
+            "GET", "total-size", self._dataset_id, params=params
+        ).json()["totalSize"]
+
 
 class DatasetClient(DatasetClientBase):
     """This class defines :class:`DatasetClient`.

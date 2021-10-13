@@ -143,6 +143,7 @@ STATISTICS = {
         "quantity": 1,
     },
 }
+TOTALSIZE = 7
 
 
 @pytest.fixture
@@ -180,6 +181,9 @@ class TestUploadLabel:
 
         statistics1 = dataset_client.get_label_statistics()
         assert statistics1 == Statistics(STATISTICS)
+
+        total_size = dataset_client.get_total_size()
+        assert total_size == TOTALSIZE
         gas_client.delete_dataset(dataset_name)
 
     def test_upload_dataset_with_mask(self, accesskey, url, tmp_path, mask_file):

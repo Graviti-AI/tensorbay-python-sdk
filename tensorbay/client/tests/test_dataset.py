@@ -280,6 +280,20 @@ class TestDatasetClientBase:
         )
         assert statistics1 == Statistics(response_data["labelStatistics"])
 
+    def test_get_total_size(self, mocker):
+        self.dataset_client._status.checkout(commit_id="commit-1")
+        params = {"commit": self.dataset_client._status.commit_id}
+        response_data = {"totalSize": 7}
+        open_api_do = mocker.patch(
+            f"{gas.__name__}.Client.open_api_do",
+            return_value=mock_response(data=response_data),
+        )
+        total_size = self.dataset_client.get_total_size()
+        open_api_do.assert_called_once_with(
+            "GET", "total-size", self.dataset_client.dataset_id, params=params
+        )
+        assert total_size == response_data["totalSize"]
+
 
 class TestDatasetClient(TestDatasetClientBase):
     def test__generate_segments(self, mocker):
