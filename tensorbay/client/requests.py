@@ -19,6 +19,7 @@ from queue import Queue
 from threading import Lock
 from typing import Any, Callable, DefaultDict, Generic, Iterable, Optional, Tuple, TypeVar
 from urllib.parse import urljoin
+from uuid import uuid4
 
 import urllib3
 from requests import Session
@@ -257,10 +258,12 @@ class Client:
             Response of the request.
 
         """
-        kwargs.setdefault("headers", {})["X-Token"] = self.access_key
-        kwargs["headers"][
+        headers = kwargs.setdefault("headers", {})
+        headers["X-Token"] = self.access_key
+        headers[
             "X-Source"
         ] = f"{config._x_source}/{__version__}"  # pylint: disable=protected-access
+        headers["X-Request-Id"] = str(uuid4())
 
         try:
             return self.do(method=method, url=self._url_make(section, dataset_id), **kwargs)
