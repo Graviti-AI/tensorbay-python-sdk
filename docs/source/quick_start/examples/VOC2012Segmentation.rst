@@ -51,13 +51,21 @@ An :ref:`reference/glossary:accesskey` is needed to authenticate identity when u
  Organize Dataset
 ******************
 
+Normally, ``dataloader.py`` and ``catalog.json`` are required to organize the "VOC2012 Segmentation" dataset into the :class:`~tensorbay.dataset.dataset.Dataset` instance.
+In this example, they are stored in the same directory like::
+
+    VOC2012 Segmentation/
+        catalog.json
+        dataloader.py
+
+
 It takes the following steps to organize "VOC2012 Segmentation" dataset by the :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
 Step 1: Write the Catalog
 =========================
 
 A :ref:`Catalog <reference/dataset_structure:catalog>` contains all label information of one dataset,
-which is typically stored in a json file.
+which is typically stored in a json file like ``catalog.json``.
 
 .. literalinclude:: ../../../../tensorbay/opendataset/VOC2012Segmentation/catalog.json
    :language: json
@@ -72,7 +80,8 @@ background, and category 255 represents the border of instances.
 
 .. note::
 
-    The categories in :ref:`reference/label_format/InstanceMask:InstanceMaskSubcatalog` are for pixel values which are not instance ids.
+   * By passing the path of the ``catalog.json``, :func:`~tensorbay.dataset.dataset.DatasetBase.load_catalog` supports loading the catalog into dataset.
+   * The categories in :ref:`reference/label_format/InstanceMask:InstanceMaskSubcatalog` are for pixel values which are not instance ids.
 
 .. important::
 

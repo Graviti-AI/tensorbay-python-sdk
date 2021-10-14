@@ -37,13 +37,18 @@ An :ref:`reference/glossary:accesskey` is needed to authenticate identity when u
  Organize Dataset
 ******************
 
-It takes the following steps to organize the "BSTLD" dataset by the :class:`~tensorbay.dataset.dataset.Dataset` instance.
+Normally, ``dataloader.py`` and ``catalog.json`` are required to organize the "BSTLD" dataset into the :class:`~tensorbay.dataset.dataset.Dataset` instance.
+In this example, they are stored in the same directory like::
+
+    BSTLD/
+        catalog.json
+        dataloader.py
 
 Step 1: Write the Catalog
 =========================
 
 A :ref:`reference/dataset_structure:catalog` contains all label information of one dataset, which
-is typically stored in a json file.
+is typically stored in a json file like ``catalog.json``.
 
 .. literalinclude:: ../../../../tensorbay/opendataset/BSTLD/catalog.json
    :language: json
@@ -53,6 +58,10 @@ is typically stored in a json file.
 The only annotation type for "BSTLD" is :ref:`reference/label_format/Box2D:Box2D`, and there are 13
 :ref:`reference/label_format/CommonLabelProperties:category` types and one :ref:`reference/label_format/CommonLabelProperties:attributes` type.
 
+.. note::
+
+   By passing the path of the ``catalog.json``, :func:`~tensorbay.dataset.dataset.DatasetBase.load_catalog` supports loading the catalog into dataset.
+
 .. important::
 
    See :ref:`catalog table <reference/dataset_structure:catalog>` for more catalogs with different label types.
@@ -60,8 +69,7 @@ The only annotation type for "BSTLD" is :ref:`reference/label_format/Box2D:Box2D
 Step 2: Write the Dataloader
 ============================
 
-A :ref:`reference/glossary:dataloader` is needed to organize the dataset into
-a :class:`~tensorbay.dataset.dataset.Dataset` instance.
+A :ref:`reference/glossary:dataloader` is needed to organize the dataset into a :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
 .. literalinclude:: ../../../../tensorbay/opendataset/BSTLD/loader.py
    :language: python
@@ -69,7 +77,6 @@ a :class:`~tensorbay.dataset.dataset.Dataset` instance.
    :linenos:
 
 See :ref:`Box2D annotation <reference/label_format/Box2D:Box2D>` for more details.
-
 
 There are already a number of dataloaders in TensorBay SDK provided by the community.
 Thus, instead of writing, importing an available dataloader is also feasible.

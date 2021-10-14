@@ -29,13 +29,18 @@ An :ref:`reference/glossary:accesskey` is needed to authenticate identity when u
  Organize Dataset
 ******************
 
-It takes the following steps to organize the "Dogs vs Cats" dataset by the :class:`~tensorbay.dataset.dataset.Dataset` instance.
+Normally, ``dataloader.py`` and ``catalog.json`` are required to organize the "Dogs vs Cats" dataset into the :class:`~tensorbay.dataset.dataset.Dataset` instance.
+In this example, they are stored in the same directory like::
+
+    Dogs vs Cats/
+        catalog.json
+        dataloader.py
 
 Step 1: Write the Catalog
 =========================
 
 A :ref:`reference/dataset_structure:catalog` contains all label information of one dataset, which
-is typically stored in a json file.
+is typically stored in a json file like ``catalog.json``.
 
 .. literalinclude:: ../../../../tensorbay/opendataset/DogsVsCats/catalog.json
    :language: json
@@ -44,6 +49,10 @@ is typically stored in a json file.
 
 The only annotation type for "Dogs vs Cats" is :ref:`reference/label_format/Classification:Classification`, and there are 2
 :ref:`reference/label_format/CommonLabelProperties:category` types.
+
+.. note::
+
+   By passing the path of the ``catalog.json``, :func:`~tensorbay.dataset.dataset.DatasetBase.load_catalog` supports loading the catalog into dataset.
 
 .. important::
 
