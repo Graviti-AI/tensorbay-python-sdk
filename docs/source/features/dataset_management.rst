@@ -78,7 +78,7 @@ Two types of datasets can be read from TensorBay:
    datasets that can be read.
 
 .. _fork: https://docs.graviti.cn/guide/opendataset/fork
-.. _Open Datasets: https://www.graviti.cn/open-datasets
+.. _Open Datasets: https://gas.graviti.cn/open-datasets
 .. _my datasets(or team datasets): https://gas.graviti.cn/tensorbay/dataset-list
 .. _TensorBay: https://gas.graviti.cn/tensorbay/
 
