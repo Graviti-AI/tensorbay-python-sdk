@@ -30,7 +30,15 @@ An :ref:`reference/glossary:accesskey` is needed to authenticate identity when u
 ******************
  Organize Dataset
 ******************
-  
+
+Normally, ``dataloader.py`` and ``catalog.json`` are required to organize the "20 Newsgroups" dataset into the :class:`~tensorbay.dataset.dataset.Dataset` instance.
+In this example, they are stored in the same directory like::
+
+    20 Newsgroups/
+        catalog.json
+        dataloader.py
+
+
 It takes the following steps to organize the "20 Newsgroups" dataset by
 the :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
@@ -38,7 +46,7 @@ Step 1: Write the Catalog
 =========================
 
 A :ref:`Catalog <reference/dataset_structure:Catalog>` contains all label information of one dataset,
-which is typically stored in a json file.
+which is typically stored in a json file like ``catalog.json``.
 
 .. literalinclude:: ../../../../tensorbay/opendataset/Newsgroups20/catalog.json
    :language: json
@@ -48,14 +56,16 @@ which is typically stored in a json file.
 The only annotation type for "20 Newsgroups" is :ref:`reference/label_format/Classification:Classification`,
 and there are 20 :ref:`reference/label_format/CommonLabelProperties:Category` types.
 
+.. note::
+
+   * The :ref:`categories<reference/label_format/CommonLabelProperties:Category>` in
+     :ref:`reference/dataset_structure:Dataset` "20 Newsgroups" have parent-child relationship,
+     and it use "." to sparate different levels.
+   * By passing the path of the ``catalog.json``, :func:`~tensorbay.dataset.dataset.DatasetBase.load_catalog` supports loading the catalog into dataset.
+
 .. important::
 
    See :ref:`catalog table <reference/dataset_structure:catalog>` for more catalogs with different label types.
-
-.. note::
-   The :ref:`categories<reference/label_format/CommonLabelProperties:Category>` in
-   :ref:`reference/dataset_structure:Dataset` "20 Newsgroups" have parent-child relationship,
-   and it use "." to sparate different levels.
 
 Step 2: Write the Dataloader
 ============================
