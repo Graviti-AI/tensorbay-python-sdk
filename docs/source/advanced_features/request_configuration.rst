@@ -9,7 +9,6 @@ Note that the default settings can satisfy most use cases.
 .. _request_config_table:
 
 .. table:: Requests Configuration Tables
-   :align: center
    :widths: auto
 
    ===================== ======================================================================================
