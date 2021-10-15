@@ -263,7 +263,7 @@ class Client:
         headers[
             "X-Source"
         ] = f"{config._x_source}/{__version__}"  # pylint: disable=protected-access
-        headers["X-Request-Id"] = str(uuid4())
+        headers["X-Request-Id"] = uuid4().hex
 
         try:
             return self.do(method=method, url=self._url_make(section, dataset_id), **kwargs)
