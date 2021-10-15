@@ -1,0 +1,15 @@
+#
+# Copyright 2021 Graviti. Licensed under MIT License.
+#
+
+---
+version: 2
+
+sphinx:
+  configuration: docs/source/conf.py
+
+python:
+  version: "3.8"
+  install:
+    - requirements: requirments_docs.txt
+    - requirements: requirements.txt

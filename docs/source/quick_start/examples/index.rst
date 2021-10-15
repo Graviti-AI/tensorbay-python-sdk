@@ -7,7 +7,6 @@ The following table lists a series of examples to help developers to use TensorB
 .. _examples_table:
 
 .. table:: Examples
-   :align: center
    :widths: auto
 
    ====================================================================== =========================================================================

@@ -7,7 +7,6 @@ The following table lists the currently supported CLI commands.(:numref:`Table. 
 .. _cli_commands_table:
 
 .. table:: CLI Commands
-   :align: center
    :widths: auto
 
    =======================================================  ===========================================================
