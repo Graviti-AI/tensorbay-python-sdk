@@ -47,7 +47,7 @@ UPLOAD_DATASET_RESUME_TEMPLATE = """
 *****************************************************************************
 """
 
-UPLOAD_SEGMENT_RESUME_TEMPLATE = """
+UPLOAD_SEGMENT_RESUME_TEMPLATE_SDK = """
 *****************************************************************************
  This upload action was interrupted.
  The draft number is %d.
@@ -55,6 +55,18 @@ UPLOAD_SEGMENT_RESUME_TEMPLATE = """
 
      dataset_client.checkout(draft_number=%d)
      dataset_client.upload_segment(segment, skip_uploaded_files=True)
+
+*****************************************************************************
+"""
+
+UPLOAD_SEGMENT_RESUME_TEMPLATE_CLI = """
+*****************************************************************************
+ This upload action was interrupted.
+ The draft number is %d.
+ To resume this upload and skip the uploaded files, please add '-s' option to
+ the previous command:
+
+     $ gas cp -s ...
 
 *****************************************************************************
 """

@@ -31,7 +31,10 @@ from ulid import ULID, from_timestamp
 
 from tensorbay.client.diff import DataDiff, DatasetDiff, SegmentDiff
 from tensorbay.client.lazy import PagingList
-from tensorbay.client.log import UPLOAD_SEGMENT_RESUME_TEMPLATE
+from tensorbay.client.log import (
+    UPLOAD_SEGMENT_RESUME_TEMPLATE_CLI,
+    UPLOAD_SEGMENT_RESUME_TEMPLATE_SDK,
+)
 from tensorbay.client.requests import Tqdm, multithread_upload
 from tensorbay.client.segment import _STRATEGIES, FusionSegmentClient, SegmentClient
 from tensorbay.client.statistics import Statistics
@@ -574,6 +577,7 @@ class DatasetClient(DatasetClientBase):
         jobs: int = 1,
         skip_uploaded_files: bool = False,
         quiet: bool = False,
+        _is_cli: bool = False,
     ) -> SegmentClient:
         """Upload a :class:`~tensorbay.dataset.segment.Segment` to the dataset.
 
@@ -589,6 +593,7 @@ class DatasetClient(DatasetClientBase):
             jobs: The number of the max workers in multi-thread uploading method.
             skip_uploaded_files: True for skipping the uploaded files.
             quiet: Set to True to stop showing the upload process bar.
+            _is_cli: Whether the method is called by CLI.
 
         Raises:
             Exception: When the upload got interrupted by Exception.
@@ -608,11 +613,17 @@ class DatasetClient(DatasetClientBase):
                     pbar=pbar,
                 )
         except Exception:
-            logger.error(
-                UPLOAD_SEGMENT_RESUME_TEMPLATE,
-                self._status.draft_number,
-                self._status.draft_number,
-            )
+            if _is_cli:
+                logger.error(
+                    UPLOAD_SEGMENT_RESUME_TEMPLATE_CLI,
+                    self._status.draft_number,
+                )
+            else:
+                logger.error(
+                    UPLOAD_SEGMENT_RESUME_TEMPLATE_SDK,
+                    self._status.draft_number,
+                    self._status.draft_number,
+                )
             raise
 
     def get_diff(self, *, head: Optional[Union[str, int]] = None) -> DatasetDiff:
@@ -912,7 +923,7 @@ class FusionDatasetClient(DatasetClientBase):
                 )
         except Exception:
             logger.error(
-                UPLOAD_SEGMENT_RESUME_TEMPLATE,
+                UPLOAD_SEGMENT_RESUME_TEMPLATE_SDK,
                 self._status.draft_number,
                 self._status.draft_number,
             )

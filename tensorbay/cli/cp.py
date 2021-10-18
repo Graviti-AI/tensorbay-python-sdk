@@ -46,7 +46,9 @@ def _implement_cp(  # pylint: disable=too-many-arguments
         segment = _get_segment(
             tbrn_info.segment_name, local_abspaths, target_remote_path, is_recursive
         )
-        dataset_client.upload_segment(segment, jobs=jobs, skip_uploaded_files=skip_uploaded_files)
+        dataset_client.upload_segment(
+            segment, jobs=jobs, skip_uploaded_files=skip_uploaded_files, _is_cli=True
+        )
 
 
 def _get_segment(
