@@ -52,11 +52,12 @@ repos:
           ]
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v0.812
+    rev: v0.910
     hooks:
       - id: mypy
         types: [python]
         exclude: "(test_\\w*\\.py$)"
+        additional_dependencies: [types-PyYAML, types-mock, types-requests, click]
         args:
           [
             "--cache-dir=/tmp/mypy_cache/",
