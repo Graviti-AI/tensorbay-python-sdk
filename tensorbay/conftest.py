@@ -6,6 +6,9 @@
 # pylint: disable=redefined-outer-name
 
 """Pytest fixture config."""
+
+import sys
+
 import pytest
 
 from tensorbay.client import gas, segment, version
@@ -311,6 +314,63 @@ def mock_close_draft(mocker):
     return (
         mocker.patch(
             f"{gas.__name__}.Client.open_api_do", return_value=mock_response(data=response_data)
+        ),
+        response_data,
+    )
+
+
+@function_fixture
+def mock_list_data_details(mocker, num: int = 1):
+    """Mock the getDataDetails openAPI.
+
+    Arguments:
+        mocker: The mocker fixture.
+        num: The number of data.
+
+    Returns:
+        The pached mocker and response data.
+
+    """
+    response_data = {
+        "dataDetails": [
+            {
+                "remotePath": f"data{i}.png",
+                "timestamp": 1614667532,
+                "label": {},
+                "url": "url",
+            }
+            for i in range(num)
+        ],
+        "offset": 0,
+        "recordSize": num,
+        "totalCount": num,
+    }
+    return (
+        mocker.patch(
+            f"{gas.__name__}.Client.open_api_do",
+            return_value=mock_response(data=response_data),
+        ),
+        response_data,
+    )
+
+
+@function_fixture
+def mock_get_total_size(mocker, large: bool = False):
+    """Mock the getTotalSize openAPI.
+
+    Arguments:
+        mocker: The mocker fixture.
+        large: Whether the dataset size is large than free storage.
+
+    Returns:
+        The pached mocker and response data.
+
+    """
+    response_data = {"totalSize": 7 if not large else sys.maxsize}
+    return (
+        mocker.patch(
+            f"{gas.__name__}.Client.open_api_do",
+            return_value=mock_response(data=response_data),
         ),
         response_data,
     )

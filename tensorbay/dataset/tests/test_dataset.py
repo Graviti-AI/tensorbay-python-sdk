@@ -64,6 +64,11 @@ class TestDatasetBase:
         dataset.add_segment(segment)
         assert dataset[0] is segment
 
+    def test_enable_cache(self, mocker):
+        dataset = DatasetBase("test_name")
+        with pytest.raises(TypeError):
+            dataset.enable_cache()
+
     def test_load_catalog(self):
         catalog_path = os.path.join(
             os.path.dirname(__file__), "..", "..", "opendataset", "HeadPoseImage", "catalog.json"

@@ -3,6 +3,10 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
+import logging
+import shutil
+import tempfile
+
 import pytest
 from ulid import ULID, from_timestamp
 
@@ -17,9 +21,15 @@ from tensorbay.client.statistics import Statistics
 from tensorbay.client.status import Status
 from tensorbay.client.struct import ROOT_COMMIT_ID
 from tensorbay.client.tests.utility import mock_response
-from tensorbay.dataset import Data, Frame, FusionSegment, Notes, RemoteData, Segment
-from tensorbay.exception import InvalidParamsError, NameConflictError, ResourceNotExistError
+from tensorbay.dataset import Data, Frame, FusionSegment, Notes, Segment
+from tensorbay.exception import (
+    InvalidParamsError,
+    NameConflictError,
+    ResourceNotExistError,
+    StatusError,
+)
 from tensorbay.label import Catalog
+from tensorbay.utility import file
 
 
 class TestDatasetClientBase:
@@ -144,6 +154,76 @@ class TestDatasetClientBase:
         open_api_do.assert_called_once_with(
             "POST", "segments?move", self.dataset_client._dataset_id, json=post_data
         )
+
+    def test_enable_cache(
+        self,
+        mocker,
+        mock_list_segments,
+        mock_list_data_details,
+        mock_get_total_size,
+        tmp_path,
+        caplog,
+    ):
+        self.dataset_client._status.checkout(draft_number=1)
+        with pytest.raises(StatusError):
+            self.dataset_client.enable_cache()
+
+        self.dataset_client._status.checkout(commit_id="commit-1")
+
+        _, response_data = mock_get_total_size(mocker, True)
+        _, _, free_storage = shutil.disk_usage(tempfile.gettempdir())
+        self.dataset_client.enable_cache()
+        log_message = (
+            "bytes left on device, "
+            f'less than the dataset size {response_data["totalSize"]} bytes.\n '
+            "Please be aware that there is not enough space to cache the entire dataset."
+        )
+        assert log_message in caplog.text
+
+        mock_get_total_size(mocker)
+        cache_path = tmp_path / "cache_data"
+        dataset_cache_path = cache_path / self.dataset_client.dataset_id
+        self.dataset_client.enable_cache(cache_path)
+        assert self.dataset_client.cache_enabled == True
+        assert self.dataset_client._cache_path == str(dataset_cache_path)
+
+        _, list_segments = mock_list_segments(mocker)
+        segment_name = list_segments["segments"][0]["name"]
+        segment = self.dataset_client.get_segment(segment_name)
+        mock_list_data_details(mocker)
+        segment_data = segment.list_data()
+        urlopen = mocker.patch(
+            f"{file.__name__}.RemoteFileMixin._urlopen",
+            return_value=mock_response(read=lambda *args: bytes(1)),
+        )
+
+        segment_cache_path = (
+            dataset_cache_path / self.dataset_client.status.commit_id / segment_name
+        )
+
+        # Traverse the segment for the first time.
+        for data in segment_data:
+            assert data.cache_path == str(segment_cache_path / data.path)
+            data.open()
+
+        local_open = mocker.patch(
+            f"builtins.open",
+            return_value=bytes(1),
+        )
+        segment_length = len(segment_data)
+        # Traverse the segment for 3 times using cached data.
+        epoch = 3
+        for i in range(epoch):
+            for data in segment_data:
+                assert data.cache_path == str(segment_cache_path / data.path)
+                data.open()
+                # local_open.assert_called_once()
+        assert local_open.call_count == segment_length * epoch
+        assert urlopen.call_count == segment_length
+
+        self.dataset_client._status.checkout(draft_number=1)
+        assert self.dataset_client.cache_enabled == False
+        assert self.dataset_client._cache_path == str(dataset_cache_path)
 
     def test_update_notes(self, mocker):
         self.dataset_client._status.checkout(draft_number=1)
@@ -280,16 +360,12 @@ class TestDatasetClientBase:
         )
         assert statistics1 == Statistics(response_data["labelStatistics"])
 
-    def test_get_total_size(self, mocker):
+    def test_get_total_size(self, mocker, mock_get_total_size):
         self.dataset_client._status.checkout(commit_id="commit-1")
         params = {"commit": self.dataset_client._status.commit_id}
-        response_data = {"totalSize": 7}
-        open_api_do = mocker.patch(
-            f"{gas.__name__}.Client.open_api_do",
-            return_value=mock_response(data=response_data),
-        )
+        get_total_size, response_data = mock_get_total_size(mocker)
         total_size = self.dataset_client.get_total_size()
-        open_api_do.assert_called_once_with(
+        get_total_size.assert_called_once_with(
             "GET", "total-size", self.dataset_client.dataset_id, params=params
         )
         assert total_size == response_data["totalSize"]

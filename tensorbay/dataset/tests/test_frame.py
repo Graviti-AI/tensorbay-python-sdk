@@ -3,6 +3,8 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
+import os
+
 import ulid
 
 from tensorbay.client.lazy import LazyItem, LazyPage
@@ -46,11 +48,13 @@ class TestFrame:
         assert frame._data == {}
 
     def test_from_response_body(self):
-        frame = Frame.from_response_body(_FRAME_DATA, 0, URL_PAGE)
+        frame = Frame.from_response_body(_FRAME_DATA, 0, URL_PAGE, cache_path="cache_path")
         assert frame.frame_id == _FRAME_ID
         assert frame["sensor1"].path == "test1.png"
         assert frame["sensor1"].timestamp == 1614945883
         assert frame["sensor1"].get_url() == "url1"
+        assert frame["sensor1"].cache_path == os.path.join("cache_path", "test1.png")
         assert frame["sensor2"].path == "test2.png"
         assert frame["sensor2"].timestamp == 1614945884
         assert frame["sensor2"].get_url() == "url2"
+        assert frame["sensor2"].cache_path == os.path.join("cache_path", "test2.png")
