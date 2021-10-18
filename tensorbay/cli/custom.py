@@ -153,9 +153,7 @@ class DeprecatedOption(click.Option):
         prefix_opt.sort(key=lambda x: x[0])
         return ", ".join(x[1] for x in prefix_opt), any_prefix_is_slash
 
-    def get_help_record(  # type: ignore[override]
-        self, ctx: click.Context
-    ) -> Optional[Tuple[str, str]]:
+    def get_help_record(self, ctx: click.Context) -> Optional[Tuple[str, str]]:
         """Get help record.
 
         Arguments:
@@ -165,10 +163,10 @@ class DeprecatedOption(click.Option):
             The option help message.
 
         """
-        if self.hidden:
+        help_record = super().get_help_record(ctx)
+        if help_record is None:
             return None
 
-        _, help_message = super().get_help_record(ctx)
         any_prefix_is_slash = False
 
         def _write_opts(opts: Sequence[str]) -> str:
@@ -191,11 +189,40 @@ class DeprecatedOption(click.Option):
         if self.secondary_opts:
             opt_messages.append(_write_opts(self.secondary_opts))
 
-        return ("; " if any_prefix_is_slash else " / ").join(opt_messages), help_message
+        return ("; " if any_prefix_is_slash else " / ").join(opt_messages), help_record[1]
 
 
 class DeprecatedOptionsCommand(CustomCommand):
     """Customize command with deprecated options."""
+
+    @staticmethod
+    def _process(
+        option: click.parser.Option,
+        value: Any,
+        state: click.parser.ParsingState,
+    ) -> None:
+        option_obj: DeprecatedOption = option.obj  # type: ignore[assignment]
+
+        # reach up the stack and get 'opt'
+        import inspect
+
+        frame = inspect.currentframe()
+        if frame and frame.f_back:
+            opt = frame.f_back.f_locals.get("opt")
+        else:
+            opt = None
+
+        if opt in option_obj.deprecated:
+            messages = [
+                "DeprecationWarning: "
+                f'The option "{opt}" is deprecated since version {option_obj.since}.'
+            ]
+            if option_obj.removed_in:
+                messages.append(f"It will be removed in version {option_obj.removed_in}.")
+            if option_obj.preferred:
+                messages.append(f'Please use "{option_obj.preferred}" instead.')
+            click.secho(" ".join(messages), fg="yellow")
+        return click.parser.Option.process(option, value, state)
 
     def make_parser(self, ctx: click.Context) -> click.OptionParser:
         """Hook 'make_parser' and check whether the name used to invoke the option is preferred.
@@ -217,33 +244,5 @@ class DeprecatedOptionsCommand(CustomCommand):
             if not isinstance(option.obj, DeprecatedOption):
                 continue
 
-            def _process(
-                self: click.parser.Option,
-                value: Any,
-                state: click.parser.ParsingState,
-            ) -> None:
-                option_obj = self.obj
-
-                # reach up the stack and get 'opt'
-                import inspect
-
-                frame = inspect.currentframe()
-                if frame and frame.f_back:
-                    opt = frame.f_back.f_locals.get("opt")
-                else:
-                    opt = None
-
-                if opt in option_obj.deprecated:
-                    messages = [
-                        "DeprecationWarning: "
-                        f'The option "{opt}" is deprecated since version {option_obj.since}.'
-                    ]
-                    if option_obj.removed_in:
-                        messages.append(f"It will be removed in version {option_obj.removed_in}.")
-                    if option_obj.preferred:
-                        messages.append(f'Please use "{option_obj.preferred}" instead.')
-                    click.secho(" ".join(messages), fg="yellow")
-                return click.parser.Option.process(self, value, state)
-
-            option.process = MethodType(_process, option)  # type: ignore[assignment]
+            option.process = MethodType(self._process, option)  # type: ignore[assignment]
         return parser

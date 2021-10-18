@@ -435,14 +435,14 @@ class DatasetClient(DatasetClientBase):
             lambda data: pbar.update_for_skip(not isinstance(data, RemoteData)),
             segment,  # type: ignore[arg-type]
         )
-        if skip_uploaded_files:
+        if not skip_uploaded_files:
+            segment_filter = all_data
+        else:
             done_set = set(segment_client.list_data_paths())
             segment_filter = filter(
                 lambda data: pbar.update_for_skip(data.target_remote_path not in done_set),
                 all_data,
             )
-        else:
-            segment_filter = all_data
 
         multithread_upload(
             # pylint: disable=protected-access
