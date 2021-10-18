@@ -54,6 +54,7 @@ It provides:
    advanced_features/request_configuration
    advanced_features/use_internal_endpoint
    advanced_features/profile
+   advanced_features/cache
 
 .. toctree::
    :maxdepth: 1
