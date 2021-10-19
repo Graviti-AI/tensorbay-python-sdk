@@ -6,6 +6,9 @@ tensorbay.utility
 
    attr
    common
+   deprecated
+   file
+   itertools
    name
    repr
    type
