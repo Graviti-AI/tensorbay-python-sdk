@@ -13,7 +13,7 @@ which is a dataset with :ref:`reference/label_format/Sentence:Sentence` label
 
 An :ref:`reference/glossary:accesskey` is needed to authenticate identity when using TensorBay.
 
-.. literalinclude:: ../../../docs/code/THCHS30.py
+.. literalinclude:: ../../../../docs/code/THCHS30.py
    :language: python
    :start-after: """Authorize a Client Instance"""
    :end-before: """"""
@@ -22,7 +22,7 @@ An :ref:`reference/glossary:accesskey` is needed to authenticate identity when u
  Create Dataset
 ****************
 
-.. literalinclude:: ../../../docs/code/THCHS30.py
+.. literalinclude:: ../../../../docs/code/THCHS30.py
    :language: python
    :start-after: """Create Dataset"""
    :end-before: """"""
@@ -52,7 +52,7 @@ Step 2: Write the Dataloader
 A :ref:`dataloader <THCHS30-dataloader>` is needed to organize the dataset
 into a :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
-.. literalinclude:: ../../../tensorbay/opendataset/THCHS30/loader.py
+.. literalinclude:: ../../../../tensorbay/opendataset/THCHS30/loader.py
    :language: python
    :name: THCHS30-dataloader
    :linenos:
@@ -63,7 +63,7 @@ See :ref:`Sentence annotation <reference/label_format/Sentence:Sentence>` for mo
 There are already a number of dataloaders in TensorBay SDK provided by the community.
 Thus, instead of writing, importing an available dataloadert is also feasible.
 
-.. literalinclude:: ../../../docs/code/THCHS30.py
+.. literalinclude:: ../../../../docs/code/THCHS30.py
    :language: python
    :start-after: """Organize dataset / import dataloader"""
    :end-before: """"""
@@ -90,14 +90,14 @@ Upload Dataset
 
 The organized "THCHS-30" dataset can be uploaded to TensorBay for sharing, reuse, etc.
 
-.. literalinclude:: ../../../docs/code/THCHS30.py
+.. literalinclude:: ../../../../docs/code/THCHS30.py
    :language: python
    :start-after: """Upload Dataset"""
    :end-before: """"""
 
 Similar with Git, the commit step after uploading can record changes to the dataset as a version.
 If needed, do the modifications and commit again.
-Please see :ref:`features/version_control:Version Control` for more details.
+Please see :ref:`features/version_control/index:Version Control` for more details.
 
 **************
 Read Dataset
@@ -105,7 +105,7 @@ Read Dataset
 
 Now "THCHS-30" dataset can be read from TensorBay.
 
-.. literalinclude:: ../../../docs/code/THCHS30.py
+.. literalinclude:: ../../../../docs/code/THCHS30.py
    :language: python
    :start-after: """Read Dataset / get dataset"""
    :end-before: """"""
@@ -115,14 +115,14 @@ In :ref:`reference/dataset_structure:Dataset` "THCHS-30", there are three
 ``dev``, ``train`` and ``test``.
 Get the segment names by listing them all.
 
-.. literalinclude:: ../../../docs/code/THCHS30.py
+.. literalinclude:: ../../../../docs/code/THCHS30.py
    :language: python
    :start-after: """Read Dataset / list segment names"""
    :end-before: """"""
 
 Get a segment by passing the required segment name.
 
-.. literalinclude:: ../../../docs/code/THCHS30.py
+.. literalinclude:: ../../../../docs/code/THCHS30.py
    :language: python
    :start-after: """Read Dataset / get segment"""
    :end-before: """"""
@@ -131,7 +131,7 @@ In the dev :ref:`reference/dataset_structure:Segment`,
 there is a sequence of :ref:`reference/dataset_structure:Data`,
 which can be obtained by index.
 
-.. literalinclude:: ../../../docs/code/THCHS30.py
+.. literalinclude:: ../../../../docs/code/THCHS30.py
    :language: python
    :start-after: """Read Dataset / get data"""
    :end-before: """"""
@@ -140,7 +140,7 @@ In each :ref:`reference/dataset_structure:Data`,
 there is a sequence of :ref:`reference/label_format/Sentence:Sentence` annotations,
 which can be obtained by index.
 
-.. literalinclude:: ../../../docs/code/THCHS30.py
+.. literalinclude:: ../../../../docs/code/THCHS30.py
    :language: python
    :start-after: """Read Dataset / get label"""
    :end-before: """"""
@@ -153,7 +153,7 @@ label format for more details.
 Delete Dataset
 ****************
 
-.. literalinclude:: ../../../docs/code/THCHS30.py
+.. literalinclude:: ../../../../docs/code/THCHS30.py
    :language: python
    :start-after: """Delete Dataset"""
    :end-before: """"""

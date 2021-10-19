@@ -13,7 +13,7 @@ with :ref:`reference/label_format/Classification:Classification` label type.
 
 An :ref:`reference/glossary:accesskey` is needed to authenticate identity when using TensorBay.
 
-.. literalinclude:: ../../../docs/code/Newsgroups20.py
+.. literalinclude:: ../../../../docs/code/Newsgroups20.py
    :language: python
    :start-after: """Authorize a Client Instance"""
    :end-before: """"""
@@ -22,7 +22,7 @@ An :ref:`reference/glossary:accesskey` is needed to authenticate identity when u
  Create Dataset
 ****************
   
-.. literalinclude:: ../../../docs/code/Newsgroups20.py
+.. literalinclude:: ../../../../docs/code/Newsgroups20.py
    :language: python
    :start-after: """Create Dataset"""
    :end-before: """"""
@@ -40,7 +40,7 @@ Step 1: Write the Catalog
 A :ref:`Catalog <reference/dataset_structure:Catalog>` contains all label information of one dataset,
 which is typically stored in a json file.
 
-.. literalinclude:: ../../../tensorbay/opendataset/Newsgroups20/catalog.json
+.. literalinclude:: ../../../../tensorbay/opendataset/Newsgroups20/catalog.json
    :language: json
    :name: Newsgroups20-catalog
    :linenos:
@@ -63,7 +63,7 @@ Step 2: Write the Dataloader
 A :ref:`reference/glossary:Dataloader` is neeeded to organize the dataset into a
 :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
-.. literalinclude:: ../../../tensorbay/opendataset/Newsgroups20/loader.py
+.. literalinclude:: ../../../../tensorbay/opendataset/Newsgroups20/loader.py
    :language: python
    :name: Newsgroups20-dataloader
    :linenos:
@@ -80,7 +80,7 @@ See :ref:`Classification annotation <reference/label_format/Classification:Class
 There are already a number of dataloaders in TensorBay SDK provided by the community.
 Thus, instead of writing, importing an available dataloader is also feasible.
 
-.. literalinclude:: ../../../docs/code/Newsgroups20.py
+.. literalinclude:: ../../../../docs/code/Newsgroups20.py
    :language: python
    :start-after: """Organize dataset / import dataloader"""
    :end-before: """"""
@@ -107,14 +107,14 @@ Please see :ref:`features/visualization:Visualization` for more details.
 
 The organized "20 Newsgroups" dataset can be uploaded to TensorBay for sharing, reuse, etc.
 
-.. literalinclude:: ../../../docs/code/Newsgroups20.py
+.. literalinclude:: ../../../../docs/code/Newsgroups20.py
    :language: python
    :start-after: """Upload Dataset"""
    :end-before: """"""
 
 Similar with Git, the commit step after uploading can record changes to the dataset as a version.
 If needed, do the modifications and commit again.
-Please see :ref:`features/version_control:Version Control` for more details.
+Please see :ref:`features/version_control/index:Version Control` for more details.
 
 **************
  Read Dataset
@@ -122,7 +122,7 @@ Please see :ref:`features/version_control:Version Control` for more details.
 
 Now "20 Newsgroups" dataset can be read from TensorBay.
 
-.. literalinclude:: ../../../docs/code/Newsgroups20.py
+.. literalinclude:: ../../../../docs/code/Newsgroups20.py
    :language: python
    :start-after: """Read Dataset / get dataset"""
    :end-before: """"""
@@ -132,14 +132,14 @@ In :ref:`reference/dataset_structure:Dataset` "20 Newsgroups", there are four
 ``20news-bydate-test`` and ``20news-bydate-train``, ``20_newsgroups``.
 Get the segment names by listing them all.
 
-.. literalinclude:: ../../../docs/code/Newsgroups20.py
+.. literalinclude:: ../../../../docs/code/Newsgroups20.py
    :language: python
    :start-after: """Read Dataset / list segment names"""
    :end-before: """"""
 
 Get a segment by passing the required segment name.
 
-.. literalinclude:: ../../../docs/code/Newsgroups20.py
+.. literalinclude:: ../../../../docs/code/Newsgroups20.py
    :language: python
    :start-after: """Read Dataset / get segment"""
    :end-before: """"""
@@ -147,7 +147,7 @@ Get a segment by passing the required segment name.
 In the 20news-18828 :ref:`reference/dataset_structure:Segment`, there is a sequence of :ref:`reference/dataset_structure:Data`,
 which can be obtained by index.
 
-.. literalinclude:: ../../../docs/code/Newsgroups20.py
+.. literalinclude:: ../../../../docs/code/Newsgroups20.py
    :language: python
    :start-after: """Read Dataset / get data"""
    :end-before: """"""
@@ -156,7 +156,7 @@ In each :ref:`reference/dataset_structure:Data`,
 there is a sequence of :ref:`reference/label_format/Classification:Classification` annotations,
 which can be obtained by index.
 
-.. literalinclude:: ../../../docs/code/Newsgroups20.py
+.. literalinclude:: ../../../../docs/code/Newsgroups20.py
    :language: python
    :start-after: """Read Dataset / get label"""
    :end-before: """"""
@@ -171,7 +171,7 @@ structure of Classification.
  Delete Dataset
 ****************
 
-.. literalinclude:: ../../../docs/code/Newsgroups20.py
+.. literalinclude:: ../../../../docs/code/Newsgroups20.py
    :language: python
    :start-after: """Delete Dataset"""
    :end-before: """"""

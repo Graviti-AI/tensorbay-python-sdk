@@ -26,7 +26,7 @@ To install **Pharos** by **pip**, run the following command:
 Organize a Dataset
 ==================
 
-Take the :ref:`BSTLD <examples/BSTLD:Organize Dataset>` as an example:
+Take the :ref:`BSTLD <quick_start/examples/BSTLD:Organize Dataset>` as an example:
 
 .. literalinclude:: ../../../docs/code/pharos.py
       :language: python

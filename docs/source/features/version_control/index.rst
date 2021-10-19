@@ -15,7 +15,7 @@ Take the `VersionControlDemo Dataset <https://gas.graviti.cn/dataset/graviti-ope
 
 .. _commit-demonstration:
 
-.. figure:: ../images/commit.jpg
+.. figure:: ../../images/commit.jpg
    :scale: 40 %
    :align: center
 
@@ -57,7 +57,7 @@ The code below checkouts to the second commit and check the data amount.
 
 As shown above, there are 8 data in the train segment.
 
-See :ref:`version_control/draft_and_commit:Draft and Commit` for more details about commit.
+See :ref:`features/version_control/draft_and_commit:Draft and Commit` for more details about commit.
 
 *******
  Draft
@@ -80,7 +80,7 @@ It means the action to turn a draft into a commit.
 
 .. _draft-demonstration:
 
-.. figure:: ../images/draft.jpg
+.. figure:: ../../images/draft.jpg
    :scale: 30 %
    :align: center
 
@@ -108,7 +108,7 @@ adds a new segment to the "VersionControlDemo" dataset and does the commit opera
    dataset_client.upload_segment(test_segment, jobs=8)
    dataset_client.commit("add test segment")
 
-See :ref:`version_control/draft_and_commit:Draft and Commit` for more details about draft.
+See :ref:`features/version_control/draft_and_commit:Draft and Commit` for more details about draft.
 
 *****
  Tag
@@ -124,7 +124,7 @@ The tag "v1.0.0" in :numref:`Fig. %s <commit-demonstration>` is added by
 
    dataset_client.create_tag("v1.0.0", revision=SECOND_COMMIT_ID)
 
-See :ref:`version_control/tag:Tag` for more details about tag.
+See :ref:`features/version_control/tag:Tag` for more details about tag.
 
 ********
  Branch
@@ -146,7 +146,7 @@ and adds :ref:`classification <reference/label_format/Classification:Classificat
 
 .. _branch-demonstration:
 
-.. figure:: ../images/branch.jpg
+.. figure:: ../../images/branch.jpg
    :scale: 30 %
    :align: center
 
@@ -179,7 +179,7 @@ and adds :ref:`classification <reference/label_format/Classification:Classificat
 
    dataset_client.commit("add labels to train segment")
 
-See :ref:`version_control/branch:Branch` for more details about branch.
+See :ref:`features/version_control/branch:Branch` for more details about branch.
 
 **************
  More Details
@@ -188,8 +188,8 @@ See :ref:`version_control/branch:Branch` for more details about branch.
 .. toctree::
    :maxdepth: 1
 
-   ../version_control/draft_and_commit
-   ../version_control/branch
-   ../version_control/tag
-   ../version_control/diff
-   ../version_control/squash_and_merge
+   draft_and_commit
+   branch
+   tag
+   diff
+   squash_and_merge

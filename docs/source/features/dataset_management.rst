@@ -31,7 +31,7 @@ The typical steps to organize a local dataset:
 
    A catalog is needed only if there is label information inside the dataset.
 
-Take the :ref:`Organization of BSTLD <examples/bstld:Organize Dataset>` as an example.
+Take the :ref:`Organization of BSTLD <quick_start/examples/bstld:Organize Dataset>` as an example.
 
 
 ****************
@@ -57,7 +57,7 @@ There are plenty of benefits of uploading local datasets to TensorBay.
    During uploading dataset or data, if the remote path of the data is the same as another data under the same segment,
    the old data will be replaced.
 
-Take the :ref:`Upload Dataset of BSTLD <examples/bstld:Upload Dataset>` as an example.
+Take the :ref:`Upload Dataset of BSTLD <quick_start/examples/bstld:Upload Dataset>` as an example.
 
 **************
  Read Dataset
@@ -82,7 +82,7 @@ Two types of datasets can be read from TensorBay:
 .. _my datasets(or team datasets): https://gas.graviti.cn/tensorbay/dataset-list
 .. _TensorBay: https://gas.graviti.cn/tensorbay/
 
-Take the :ref:`Read Dataset of BSTLD <examples/bstld:Read Dataset>` as an example.
+Take the :ref:`Read Dataset of BSTLD <quick_start/examples/bstld:Read Dataset>` as an example.
 
 ****************
  Update Dataset
@@ -91,7 +91,7 @@ Take the :ref:`Read Dataset of BSTLD <examples/bstld:Read Dataset>` as an exampl
 Since TensorBay supports version control, users can update dataset meta, notes, data and labels to a new commit of a dataset.
 Thus, different versions of data and labels can coexist in one dataset, which greatly facilitates the datasets' maintenance.
 
-Please see :ref:`Update dataset<examples/update_dataset:Update Dataset>` example for more details.
+Please see :ref:`Update dataset<quick_start/examples/update_dataset:Update Dataset>` example for more details.
 
 ***************
  Move and Copy
@@ -112,7 +112,7 @@ Moving is only supported within one dataset.
 
    The target dataset of copying and moving must be in :ref:`reference/glossary:draft` status.
 
-Please see :ref:`Move and copy<examples/move_and_copy:Move And Copy>` example for more details.
+Please see :ref:`Move and copy<quick_start/examples/move_and_copy:Move And Copy>` example for more details.
 
 ****************
  Merge Datasets
@@ -120,7 +120,7 @@ Please see :ref:`Move and copy<examples/move_and_copy:Move And Copy>` example fo
 
 Since TensorBay supports copy operation between different datasets, users can use it to merge datasets.
 
-Please see :ref:`examples/merge_datasets:Merge Datasets` example for more details.
+Please see :ref:`quick_start/examples/merge_datasets:Merge Datasets` example for more details.
 
 **********************
  Get Label Statistics
@@ -128,4 +128,4 @@ Please see :ref:`examples/merge_datasets:Merge Datasets` example for more detail
 
 TensorBay supports getting label statistics of dataset.
 
-Please see :ref:`examples/get_label_statistics:Get Label Statistics` example for more details.
+Please see :ref:`quick_start/examples/get_label_statistics:Get Label Statistics` example for more details.

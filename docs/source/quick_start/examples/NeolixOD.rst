@@ -10,7 +10,7 @@ which is a dataset with :ref:`reference/label_format/Box3D:Box3D` label type
 
 .. _example-neolixod:
 
-.. figure:: ../images/example-Box3D.png
+.. figure:: ../../images/example-Box3D.png
    :scale: 50 %
    :align: center
 
@@ -22,7 +22,7 @@ which is a dataset with :ref:`reference/label_format/Box3D:Box3D` label type
 
 An :ref:`reference/glossary:accesskey` is needed to authenticate identity when using TensorBay.
 
-.. literalinclude:: ../../../docs/code/NeolixOD.py
+.. literalinclude:: ../../../../docs/code/NeolixOD.py
    :language: python
    :start-after: """Authorize a Client Instance"""
    :end-before: """"""
@@ -32,7 +32,7 @@ An :ref:`reference/glossary:accesskey` is needed to authenticate identity when u
 ****************
 
 
-.. literalinclude:: ../../../docs/code/NeolixOD.py
+.. literalinclude:: ../../../../docs/code/NeolixOD.py
    :language: python
    :start-after: """Create Dataset"""
    :end-before: """"""
@@ -49,7 +49,7 @@ Step 1: Write the Catalog
 A :ref:`Catalog <reference/dataset_structure:catalog>` contains all label information of one dataset,
 which is typically stored in a json file.
 
-.. literalinclude:: ../../../tensorbay/opendataset/NeolixOD/catalog.json
+.. literalinclude:: ../../../../tensorbay/opendataset/NeolixOD/catalog.json
    :language: json
    :name: neolixod-catalog
    :linenos:
@@ -67,7 +67,7 @@ Step 2: Write the Dataloader
 A :ref:`reference/glossary:dataloader` is needed to organize the dataset into
 a :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
-.. literalinclude:: ../../../tensorbay/opendataset/NeolixOD/loader.py
+.. literalinclude:: ../../../../tensorbay/opendataset/NeolixOD/loader.py
    :language: python
    :name: neolixod-dataloader
    :linenos:
@@ -78,7 +78,7 @@ See :ref:`Box3D annotation <reference/label_format/Box3D:Box3D>` for more detail
 There are already a number of dataloaders in TensorBay SDK provided by the community.
 Thus, instead of writing, importing an available dataloader is also feasible.
 
-.. literalinclude:: ../../../docs/code/NeolixOD.py
+.. literalinclude:: ../../../../docs/code/NeolixOD.py
    :language: python
    :start-after: """Organize dataset / import dataloader"""
    :end-before: """"""
@@ -105,14 +105,14 @@ Please see :ref:`features/visualization:Visualization` for more details.
 
 The organized "Neolix OD" dataset can be uploaded to tensorBay for sharing, reuse, etc.
 
-.. literalinclude:: ../../../docs/code/NeolixOD.py
+.. literalinclude:: ../../../../docs/code/NeolixOD.py
    :language: python
    :start-after: """Upload Dataset"""
    :end-before: """"""
 
 Similar with Git, the commit step after uploading can record changes to the dataset as a version.
 If needed, do the modifications and commit again.
-Please see :ref:`features/version_control:Version Control` for more details.
+Please see :ref:`features/version_control/index:Version Control` for more details.
 
 **************
  Read Dataset
@@ -120,7 +120,7 @@ Please see :ref:`features/version_control:Version Control` for more details.
 
 Now "Neolix OD" dataset can be read from TensorBay.
 
-.. literalinclude:: ../../../docs/code/NeolixOD.py
+.. literalinclude:: ../../../../docs/code/NeolixOD.py
    :language: python
    :start-after: """Read Dataset / get dataset"""
    :end-before: """"""
@@ -129,7 +129,7 @@ In :ref:`reference/dataset_structure:Dataset` "Neolix OD", there is only one
 :ref:`segment <reference/dataset_structure:Segment>`: ``default``.
 Get a segment by passing the required segment name or the index.
 
-.. literalinclude:: ../../../docs/code/NeolixOD.py
+.. literalinclude:: ../../../../docs/code/NeolixOD.py
    :language: python
    :start-after: """Read Dataset / get segment"""
    :end-before: """"""
@@ -138,7 +138,7 @@ In the default :ref:`reference/dataset_structure:Segment`,
 there is a sequence of :ref:`reference/dataset_structure:Data`,
 which can be obtained by index.
 
-.. literalinclude:: ../../../docs/code/NeolixOD.py
+.. literalinclude:: ../../../../docs/code/NeolixOD.py
    :language: python
    :start-after: """Read Dataset / get data"""
    :end-before: """"""
@@ -146,7 +146,7 @@ which can be obtained by index.
 In each :ref:`reference/dataset_structure:Data`,
 there is a sequence of :ref:`reference/label_format/Box3D:Box3D` annotations,
 
-.. literalinclude:: ../../../docs/code/NeolixOD.py
+.. literalinclude:: ../../../../docs/code/NeolixOD.py
    :language: python
    :start-after: """Read Dataset / get label"""
    :end-before: """"""
@@ -162,7 +162,7 @@ See :ref:`reference/label_format/Box3D:Box3D` label format for more details.
  Delete Dataset
 ****************
 
-.. literalinclude:: ../../../docs/code/NeolixOD.py
+.. literalinclude:: ../../../../docs/code/NeolixOD.py
    :language: python
    :start-after: """Delete Dataset"""
    :end-before: """"""

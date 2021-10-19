@@ -12,5 +12,5 @@ such as `nuScenes`_ and `KITTI-tracking`_.
 .. toctree::
    :maxdepth: 1
 
-   fusion_dataset/fusion_dataset_structure
-   fusion_dataset/CADC
+   fusion_dataset_structure
+   CADC

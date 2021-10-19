@@ -4,10 +4,10 @@
 
 This topic describes TensorBay dataset operations:
 
-- :ref:`examples/move_and_copy:Copy Segment`
-- :ref:`examples/move_and_copy:Move Segment`
-- :ref:`examples/move_and_copy:Copy Data`
-- :ref:`examples/move_and_copy:Move Data`
+- :ref:`quick_start/examples/move_and_copy:Copy Segment`
+- :ref:`quick_start/examples/move_and_copy:Move Segment`
+- :ref:`quick_start/examples/move_and_copy:Copy Data`
+- :ref:`quick_start/examples/move_and_copy:Move Data`
 
 Take the `Oxford-IIIT Pet <https://gas.graviti.cn/dataset/data-decorators/OxfordIIITPet>`_
 as an example. Its structure looks like::
@@ -27,7 +27,7 @@ as an example. Its structure looks like::
 
 Get the dataset client.
 
-.. literalinclude:: ../../../docs/code/move_and_copy.py
+.. literalinclude:: ../../../../docs/code/move_and_copy.py
    :language: python
    :start-after: """Get Dataset Client"""
    :end-before: """"""
@@ -40,7 +40,7 @@ There are currently two segments: ``test`` and ``trainval``.
 
 Copy segment ``test`` to ``test_1``.
 
-.. literalinclude:: ../../../docs/code/move_and_copy.py
+.. literalinclude:: ../../../../docs/code/move_and_copy.py
    :language: python
    :start-after: """Copy Segment"""
    :end-before: """"""
@@ -51,7 +51,7 @@ Copy segment ``test`` to ``test_1``.
 
 Move segment ``test`` to ``test_2``.
 
-.. literalinclude:: ../../../docs/code/move_and_copy.py
+.. literalinclude:: ../../../../docs/code/move_and_copy.py
    :language: python
    :start-after: """Move Segment"""
    :end-before: """"""
@@ -63,7 +63,7 @@ Move segment ``test`` to ``test_2``.
 Copy all data with prefix ``Abyssinian`` in both ``test_1`` and ``trainval``
 segments to ``abyssinian`` segment.
 
-.. literalinclude:: ../../../docs/code/move_and_copy.py
+.. literalinclude:: ../../../../docs/code/move_and_copy.py
    :language: python
    :start-after: """Copy Data"""
    :end-before: """"""
@@ -77,7 +77,7 @@ Split ``trainval`` segment into ``train`` and ``val``:
 #. Extract 500 data from ``trainval`` to ``val`` segment.
 #. Move ``trainval`` to ``train``.
 
-.. literalinclude:: ../../../docs/code/move_and_copy.py
+.. literalinclude:: ../../../../docs/code/move_and_copy.py
    :language: python
    :start-after: """Move Data"""
    :end-before: """"""

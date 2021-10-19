@@ -120,7 +120,7 @@ Here are some dataloader examples of datasets with different label types and con
 
   .. _dogs vs cats: https://gas.graviti.cn/dataset/data-decorators/DogsVsCats
 
-See more dataloader examples in :ref:`api/opendataset/opendataset_module:tensorbay.opendataset`.
+See more dataloader examples in :ref:`reference/api/opendataset/index:tensorbay.opendataset`.
 
 dataset
 =======
@@ -213,4 +213,4 @@ Tracking is a characteristic to describe the labels within a :ref:`reference/glo
 The labels of a dataset are tracking means the labels contain tracking information, such as tracking ID, which is used for tracking tasks.
 
 Tracking characteristic is stored in :ref:`reference/dataset_structure:catalog`,
-please see :ref:`reference/label_format:Label Format` for more details.
+please see :ref:`reference/label_format/index:Label Format` for more details.
