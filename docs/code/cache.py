@@ -5,6 +5,9 @@
 
 # pylint: disable=wrong-import-position
 # pylint: disable=pointless-string-statement
+# pylint: disable=unsubscriptable-object
+# pylint: disable=invalid-name
+# pylint: disable=not-an-iterable
 # type: ignore[arg-type]
 
 """This is the example code of using cache for online dataset."""

@@ -4,8 +4,7 @@
 
 # linter
 pre-commit
-pylint == 2.7.4
-astroid == 2.5.2
+pylint == 2.11.1
 pytest == 6.2.2
 mock == 2.0.0
 

@@ -10,6 +10,7 @@
 # pylint: disable=import-error
 # pylint: disable=pointless-string-statement
 # pylint: disable=invalid-name
+# pylint: disable=unsubscriptable-object
 
 """This file includes the python code of CADC.rst."""
 

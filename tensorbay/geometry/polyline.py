@@ -21,7 +21,7 @@ from tensorbay.geometry.vector import Vector2D
 from tensorbay.utility import common_loads
 
 if version_info >= (3, 8):
-    from math import dist as _dist
+    from math import dist as _dist  # pylint: disable=no-name-in-module
 else:
     from math import hypot
 

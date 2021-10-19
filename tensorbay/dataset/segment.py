@@ -181,7 +181,7 @@ class FusionSegment(NameMixin, UserMutableSequence[Frame]):
         """
         # pylint: disable=protected-access
         segment: _FS = object.__new__(cls)
-        super(cls, segment).__init__(client.name)
+        super(cls, segment).__init__(name=client.name)  # pylint: disable=no-value-for-parameter
         segment._client = client
         segment._data = client.list_frames()
         segment._repr_non_empty = True
