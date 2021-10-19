@@ -6,7 +6,7 @@
 # pylint: disable=wrong-import-position
 # pylint: disable=wrong-import-order
 # pylint: disable=pointless-string-statement
-
+# pylint: disable=invalid-name
 """This file includes the python code of auth cloud storage import."""
 
 """Get cloud client"""

@@ -23,7 +23,7 @@ class Error:
     """Base class of healthcheck errors."""
 
     def __str__(self) -> str:
-        ...
+        return ""
 
 
 class _ErrorContext:

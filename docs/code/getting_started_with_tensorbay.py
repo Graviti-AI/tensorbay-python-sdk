@@ -9,6 +9,8 @@
 # pylint: disable=ungrouped-imports
 # pylint: disable=import-error
 # pylint: disable=pointless-string-statement
+# pylint: disable=not-an-iterable
+# pylint: disable=invalid-name
 
 """This file includes the python code of getting_started_with_tensorbay.rst."""
 

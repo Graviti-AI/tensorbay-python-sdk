@@ -101,10 +101,7 @@ class Sensor(NameMixin, TypeMixin[SensorType]):
 
     extrinsics: Transform3D
 
-    def __new__(
-        cls: Type[_T],
-        name: str,  # pylint: disable=unused-argument
-    ) -> _T:
+    def __new__(cls: Type[_T], name: str) -> _T:  # pylint: disable=unused-argument,arguments-differ
         """Create a new instance of Sensor.
 
         Arguments:

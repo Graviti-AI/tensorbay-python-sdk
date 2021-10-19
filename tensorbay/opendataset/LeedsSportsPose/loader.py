@@ -4,6 +4,7 @@
 #
 # pylint: disable=invalid-name
 # pylint: disable=missing-module-docstring
+# pylint: disable=unsubscriptable-object
 
 import os
 

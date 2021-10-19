@@ -76,7 +76,7 @@ class Polygon(PointList2D[Vector2D]):  # pylint: disable=too-many-ancestors
 
         """
         area = 0.0
-        for i in range(len(self._data)):
+        for i in range(len(self._data)):  # pylint: disable=consider-using-enumerate
             # pylint: disable=invalid-name
             x1, y1 = self._data[i - 1]
             x2, y2 = self._data[i]

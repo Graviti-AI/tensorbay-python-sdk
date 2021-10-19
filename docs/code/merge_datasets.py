@@ -7,6 +7,7 @@
 # pylint: disable=wrong-import-order
 # pylint: disable=ungrouped-imports
 # pylint: disable=pointless-string-statement
+# pylint: disable=invalid-name
 
 
 """This file includes the python code of merged_dataset.rst."""

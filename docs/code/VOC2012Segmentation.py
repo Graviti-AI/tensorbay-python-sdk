@@ -11,6 +11,7 @@
 # pylint: disable=pointless-string-statement
 # pylint: disable=invalid-name
 # pylint: disable=unused-import
+# pylint: disable=unsubscriptable-object
 # flake8: noqa: F401
 # type: ignore[attr-defined]
 
