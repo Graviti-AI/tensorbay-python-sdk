@@ -5,7 +5,7 @@
 TensorBay supports showing changes between commits or drafts.
 
 Before operating the :ref:`reference/glossary:diff`, a dataset client instance with commits is needed.
-See more details in :ref:`version_control/draft_and_commit:Draft and Commit`
+See more details in :ref:`features/version_control/draft_and_commit:Draft and Commit`
 
 **********
  Get Diff
@@ -16,7 +16,7 @@ through :ref:`reference/glossary:basehead`. Currently, only obtaining the :ref:`
 between the head and its parent commit is supported; that is, the head is the given version(commit or draft) while the
 base is parent commit of the head.
 
-.. literalinclude:: ../../../docs/code/diff.py
+.. literalinclude:: ../../../../docs/code/diff.py
       :language: python
       :start-after: """Get Diff"""
       :end-before: """"""
@@ -30,7 +30,7 @@ Get Diff on Revision
 For example, the following diff records the difference between the commit whose id is ``"3bc35d806e0347d08fc23564b82737dc"``
 and its parent commit.
 
-.. literalinclude:: ../../../docs/code/diff.py
+.. literalinclude:: ../../../../docs/code/diff.py
       :language: python
       :start-after: """Get Diff on Commit"""
       :end-before: """"""
@@ -41,7 +41,7 @@ Get Diff on Draft Number
 For example, the following diff records the difference between the draft whose draft number is ``1``
 and its parent commit.
 
-.. literalinclude:: ../../../docs/code/diff.py
+.. literalinclude:: ../../../../docs/code/diff.py
       :language: python
       :start-after: """Get Diff on Draft"""
       :end-before: """"""

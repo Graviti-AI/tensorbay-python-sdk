@@ -5,9 +5,9 @@
 TensorBay supports multiple types of labels.
 
 Each :class:`~tensorbay.dataset.data.Data` instance
-can have multiple types of :class:`label <~tensorbay.label.basic.Label>`.
+can have multiple types of :class:`label <~tensorbay.label.label.Label>`.
 
-And each type of :class:`label <~tensorbay.label.basic.Label>` is supported with a specific label
+And each type of :class:`label <~tensorbay.label.label.Label>` is supported with a specific label
 class,
 and has a corresponding :ref:`subcatalog <reference/dataset_structure:Catalog>` class.
 
@@ -36,19 +36,18 @@ and has a corresponding :ref:`subcatalog <reference/dataset_structure:Catalog>` 
    :hidden:
    :maxdepth: 1
 
-   ./label_format/CommonLabelProperties
-   ./label_format/CommonSubcatalogProperties
-   ./label_format/Classification
-   ./label_format/Box2D
-   ./label_format/Box3D
-   ./label_format/Keypoints2D
-   ./label_format/Polygon
-   ./label_format/MultiPolygon
-   ./label_format/RLE
-   ./label_format/Polyline2D
-   ./label_format/MultiPolyline2D
-   ./label_format/Sentence
-   ./label_format/SemanticMask
-   ./label_format/InstanceMask
-   ./label_format/PanopticMask
-
+   CommonLabelProperties
+   CommonSubcatalogProperties
+   Classification
+   Box2D
+   Box3D
+   Keypoints2D
+   Polygon
+   MultiPolygon
+   RLE
+   Polyline2D
+   MultiPolyline2D
+   Sentence
+   SemanticMask
+   InstanceMask
+   PanopticMask

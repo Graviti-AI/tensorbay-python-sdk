@@ -48,7 +48,7 @@ The corresponding class of notes is :class:`~tensorbay.dataset.dataset.Notes`.
 
 Catalog is used for storing label meta information.
 It collects all the labels corresponding to a dataset.
-There could be one or several subcatalogs (:ref:`reference/label_format:Label Format`)
+There could be one or several subcatalogs (:ref:`reference/label_format/index:Label Format`)
 under one catalog. Each Subcatalog only stores label meta information of one label type,
 including whether the corresponding annotation has tracking information.
 

@@ -1,17 +1,17 @@
-###################
- Leeds Sports Pose
-###################
+########
+ BSTLD
+########
 
-This topic describes how to manage the `Leeds Sports Pose Dataset <https://gas.graviti.cn/dataset/data-decorators/LeedsSportsPose>`_,
-which is a dataset with :ref:`reference/label_format/Keypoints2D:Keypoints2D` label(:numref:`Fig. %s <example-leedssportspose>`).
+This topic describes how to manage the `BSTLD Dataset <https://gas.graviti.cn/dataset/data-decorators/BSTLD>`_,
+which is a dataset with :ref:`reference/label_format/Box2D:Box2D` label(:numref:`Fig. %s <example-bstld>`).
 
-.. _example-leedssportspose:
+.. _example-bstld:
 
-.. figure:: ../images/example-Keypoints2D.png
-   :scale: 80 %
+.. figure:: ../../images/example-Box2D.png
+   :scale: 50 %
    :align: center
 
-   The preview of an image with labels from "Leeds Sports Pose".
+   The preview of a cropped image with labels from "BSTLD".
 
 *****************************
  Authorize a Client Instance
@@ -19,7 +19,7 @@ which is a dataset with :ref:`reference/label_format/Keypoints2D:Keypoints2D` la
 
 An :ref:`reference/glossary:accesskey` is needed to authenticate identity when using TensorBay.
 
-.. literalinclude:: ../../../docs/code/LeedsSportsPose.py
+.. literalinclude:: ../../../../docs/code/BSTLD.py
    :language: python
    :start-after: """Authorize a Client Instance"""
    :end-before: """"""
@@ -28,7 +28,7 @@ An :ref:`reference/glossary:accesskey` is needed to authenticate identity when u
  Create Dataset
 ****************
 
-.. literalinclude:: ../../../docs/code/LeedsSportsPose.py
+.. literalinclude:: ../../../../docs/code/BSTLD.py
    :language: python
    :start-after: """Create Dataset"""
    :end-before: """"""
@@ -37,7 +37,7 @@ An :ref:`reference/glossary:accesskey` is needed to authenticate identity when u
  Organize Dataset
 ******************
 
-It takes the following steps to organize the "Leeds Sports Pose" dataset by the :class:`~tensorbay.dataset.dataset.Dataset` instance.
+It takes the following steps to organize the "BSTLD" dataset by the :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
 Step 1: Write the Catalog
 =========================
@@ -45,12 +45,13 @@ Step 1: Write the Catalog
 A :ref:`reference/dataset_structure:catalog` contains all label information of one dataset, which
 is typically stored in a json file.
 
-.. literalinclude:: ../../../tensorbay/opendataset/LeedsSportsPose/catalog.json
+.. literalinclude:: ../../../../tensorbay/opendataset/BSTLD/catalog.json
    :language: json
-   :name: LeedsSportsPose-catalog
+   :name: BSTLD-catalog
    :linenos:
 
-The only annotation type for "Leeds Sports Pose" is :ref:`reference/label_format/Keypoints2D:Keypoints2D`.
+The only annotation type for "BSTLD" is :ref:`reference/label_format/Box2D:Box2D`, and there are 13
+:ref:`reference/label_format/CommonLabelProperties:category` types and one :ref:`reference/label_format/CommonLabelProperties:attributes` type.
 
 .. important::
 
@@ -62,18 +63,18 @@ Step 2: Write the Dataloader
 A :ref:`reference/glossary:dataloader` is needed to organize the dataset into
 a :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
-.. literalinclude:: ../../../tensorbay/opendataset/LeedsSportsPose/loader.py
+.. literalinclude:: ../../../../tensorbay/opendataset/BSTLD/loader.py
    :language: python
-   :name: LeedsSportsPose-dataloader
+   :name: BSTLD-dataloader
    :linenos:
 
-See :ref:`Keipoints2D annotation <reference/label_format/Keypoints2D:Keypoints2D>` for more details.
+See :ref:`Box2D annotation <reference/label_format/Box2D:Box2D>` for more details.
 
 
 There are already a number of dataloaders in TensorBay SDK provided by the community.
 Thus, instead of writing, importing an available dataloader is also feasible.
 
-.. literalinclude:: ../../../docs/code/LeedsSportsPose.py
+.. literalinclude:: ../../../../docs/code/BSTLD.py
    :language: python
    :start-after: """Organize dataset / import dataloader"""
    :end-before: """"""
@@ -100,61 +101,75 @@ Please see :ref:`features/visualization:Visualization` for more details.
 
 The organized "BSTLD" dataset can be uploaded to TensorBay for sharing, reuse, etc.
 
-.. literalinclude:: ../../../docs/code/LeedsSportsPose.py
+.. literalinclude:: ../../../../docs/code/BSTLD.py
    :language: python
    :start-after: """Upload Dataset"""
    :end-before: """"""
 
+.. note::
+   Set `skip_uploaded_files=True` to skip uploaded data.
+   The data will be skiped if it's name and segment name is the same as remote data.
+
 Similar with Git, the commit step after uploading can record changes to the dataset as a version.
 If needed, do the modifications and commit again.
-Please see :ref:`features/version_control:Version Control` for more details.
+Please see :ref:`features/version_control/index:Version Control` for more details.
 
 **************
  Read Dataset
 **************
 
-Now "Leeds Sports Pose" dataset can be read from TensorBay.
+Now "BSTLD" dataset can be read from TensorBay.
 
-.. literalinclude:: ../../../docs/code/LeedsSportsPose.py
+.. literalinclude:: ../../../../docs/code/BSTLD.py
    :language: python
    :start-after: """Read Dataset / get dataset"""
    :end-before: """"""
 
-In :ref:`reference/dataset_structure:dataset` "Leeds Sports Pose", there is one
-:ref:`reference/dataset_structure:segment` named ``default``. Get it by passing the segment name or the index.
+In :ref:`reference/dataset_structure:dataset` "BSTLD", there are three
+:ref:`segments <reference/dataset_structure:segment>`: ``train``, ``test`` and ``additional``.
+Get the segment names by listing them all.
 
-.. literalinclude:: ../../../docs/code/LeedsSportsPose.py
+.. literalinclude:: ../../../../docs/code/BSTLD.py
+   :language: python
+   :start-after: """Read Dataset / list segment names"""
+   :end-before: """"""
+
+Get a segment by passing the required segment name.
+
+.. literalinclude:: ../../../../docs/code/BSTLD.py
    :language: python
    :start-after: """Read Dataset / get segment"""
    :end-before: """"""
 
-In the default :ref:`reference/dataset_structure:segment`, there is a sequence of :ref:`reference/dataset_structure:data`,
+
+In the train :ref:`reference/dataset_structure:segment`, there is a sequence of :ref:`reference/dataset_structure:data`,
 which can be obtained by index.
 
-.. literalinclude:: ../../../docs/code/LeedsSportsPose.py
+.. literalinclude:: ../../../../docs/code/BSTLD.py
    :language: python
    :start-after: """Read Dataset / get data"""
    :end-before: """"""
 
 In each :ref:`reference/dataset_structure:data`,
-there is a sequence of :ref:`reference/label_format/Keypoints2D:Keypoints2D` annotations,
+there is a sequence of :ref:`reference/label_format/Box2D:Box2D` annotations,
 which can be obtained by index.
 
-.. literalinclude:: ../../../docs/code/LeedsSportsPose.py
+.. literalinclude:: ../../../../docs/code/BSTLD.py
    :language: python
    :start-after: """Read Dataset / get label"""
    :end-before: """"""
 
-There is only one label type in "Leeds Sports Pose" dataset, which is ``keypoints2d``. The information stored in ``x`` (``y``) is
-the x (y) coordinate of one keypoint of one keypoints list. The information stored in ``v`` is
-the visible status of one keypoint of one keypoints list. See :ref:`reference/label_format/Keypoints2D:Keypoints2D`
-label format for more details.
+There is only one label type in "BSTLD" dataset, which is ``box2d``.
+The information stored in :ref:`reference/label_format/CommonLabelProperties:category` is
+one of the names in "categories" list of :ref:`catalog.json <BSTLD-catalog>`. The information stored
+in :ref:`reference/label_format/CommonLabelProperties:attributes` is one or several of the attributes in "attributes" list of :ref:`catalog.json <BSTLD-catalog>`.
+See :ref:`reference/label_format/Box2D:Box2D` label format for more details.
 
 ****************
  Delete Dataset
 ****************
 
-.. literalinclude:: ../../../docs/code/LeedsSportsPose.py
+.. literalinclude:: ../../../../docs/code/BSTLD.py
    :language: python
    :start-after: """Delete Dataset"""
    :end-before: """"""

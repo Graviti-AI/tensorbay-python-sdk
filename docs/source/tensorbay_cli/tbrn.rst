@@ -49,7 +49,7 @@ For example, the following TBRN means the file "2012_004330.jpg" under "train" s
 ************************
 
 The version information can also be included in the TBRN
-when using :ref:`version control <features/version_control:Version Control>` feature.
+when using :ref:`version control <features/version_control/index:Version Control>` feature.
 
 | 1. Include revision info:
 

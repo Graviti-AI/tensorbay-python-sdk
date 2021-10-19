@@ -4,10 +4,10 @@
 
 This topic describes how to update datasets, including:
 
-- :ref:`examples/update_dataset:Update Dataset Meta`
-- :ref:`examples/update_dataset:Update Dataset Notes`
-- :ref:`examples/update_dataset:Update Label`
-- :ref:`examples/update_dataset:Update Data`
+- :ref:`quick_start/examples/update_dataset:Update Dataset Meta`
+- :ref:`quick_start/examples/update_dataset:Update Dataset Notes`
+- :ref:`quick_start/examples/update_dataset:Update Label`
+- :ref:`quick_start/examples/update_dataset:Update Data`
 
 The following scenario is used for demonstrating how to update data and label:
 
@@ -24,7 +24,7 @@ The following scenario is used for demonstrating how to update data and label:
 
 TensorBay SDK supports a method to update dataset meta info.
 
-.. literalinclude:: ../../../docs/code/update_dataset.py
+.. literalinclude:: ../../../../docs/code/update_dataset.py
    :language: python
    :start-after: """Update dataset meta"""
    :end-before: """"""
@@ -36,7 +36,7 @@ TensorBay SDK supports a method to update dataset meta info.
 TensorBay SDK supports a method to update :ref:`dataset notes <reference/dataset_structure:notes>`. The dataset can be updated into continuous
 dataset by setting ``is_continuous`` to ``True``.
 
-.. literalinclude:: ../../../docs/code/update_dataset.py
+.. literalinclude:: ../../../../docs/code/update_dataset.py
    :language: python
    :start-after: """Update dataset notes"""
    :end-before: """"""
@@ -49,28 +49,28 @@ TensorBay SDK supports methods to update labels to overwrite previous labels.
 
 Get a previously uploaded dataset and create a draft:
 
-.. literalinclude:: ../../../docs/code/update_dataset.py
+.. literalinclude:: ../../../../docs/code/update_dataset.py
    :language: python
    :start-after: """Update label / get dataset an create draft"""
    :end-before: """"""
 
 Update the catalog if needed:
 
-.. literalinclude:: ../../../docs/code/update_dataset.py
+.. literalinclude:: ../../../../docs/code/update_dataset.py
    :language: python
    :start-after: """Update label / update catalog"""
    :end-before: """"""
 
 Overwrite previous labels with new label on dataset:
 
-.. literalinclude:: ../../../docs/code/update_dataset.py
+.. literalinclude:: ../../../../docs/code/update_dataset.py
    :language: python
    :start-after: """Update label / overwrite label"""
    :end-before: """"""
 
 Commit the dataset:
 
-.. literalinclude:: ../../../docs/code/update_dataset.py
+.. literalinclude:: ../../../../docs/code/update_dataset.py
    :language: python
    :start-after: """Update label / commit dataset"""
    :end-before: """"""
@@ -87,7 +87,7 @@ Commit the dataset:
 
 Add new data to dataset.
 
-.. literalinclude:: ../../../docs/code/update_dataset.py
+.. literalinclude:: ../../../../docs/code/update_dataset.py
    :language: python
    :start-after: """Update data/ upload dataset"""
    :end-before: """"""
@@ -96,7 +96,7 @@ Set `skip_uploaded_files=True` to skip uploaded data.
 
 Overwrite uploaded data to dataset.
 
-.. literalinclude:: ../../../docs/code/update_dataset.py
+.. literalinclude:: ../../../../docs/code/update_dataset.py
    :language: python
    :start-after: """Update data/ overwrite dataset"""
    :end-before: """"""
@@ -113,21 +113,21 @@ The default value of `skip_uploaded_files` is false, use it to overwrite uploade
 
 Delete segment by the segment name.
 
-.. literalinclude:: ../../../docs/code/update_dataset.py
+.. literalinclude:: ../../../../docs/code/update_dataset.py
    :language: python
    :start-after: """Update data/ delete segment"""
    :end-before: """"""
 
 Delete data by the data remote path.
 
-.. literalinclude:: ../../../docs/code/update_dataset.py
+.. literalinclude:: ../../../../docs/code/update_dataset.py
    :language: python
    :start-after: """Update data/ delete data"""
    :end-before: """"""
 
 For a fusion dataset, TensorBay SDK supports deleting a frame by its id.
 
-.. literalinclude:: ../../../docs/code/update_dataset.py
+.. literalinclude:: ../../../../docs/code/update_dataset.py
    :language: python
    :start-after: """Delete frame"""
    :end-before: """"""

@@ -11,7 +11,7 @@ which is a dataset with :ref:`reference/label_format/Classification:Classificati
 
 An :ref:`reference/glossary:accesskey` is needed to authenticate identity when using TensorBay.
 
-.. literalinclude:: ../../../docs/code/DogsVsCats.py
+.. literalinclude:: ../../../../docs/code/DogsVsCats.py
    :language: python
    :start-after: """Authorize a Client Instance"""
    :end-before: """"""
@@ -20,7 +20,7 @@ An :ref:`reference/glossary:accesskey` is needed to authenticate identity when u
  Create Dataset
 ****************
 
-.. literalinclude:: ../../../docs/code/DogsVsCats.py
+.. literalinclude:: ../../../../docs/code/DogsVsCats.py
    :language: python
    :start-after: """Create Dataset"""
    :end-before: """"""
@@ -37,7 +37,7 @@ Step 1: Write the Catalog
 A :ref:`reference/dataset_structure:catalog` contains all label information of one dataset, which
 is typically stored in a json file.
 
-.. literalinclude:: ../../../tensorbay/opendataset/DogsVsCats/catalog.json
+.. literalinclude:: ../../../../tensorbay/opendataset/DogsVsCats/catalog.json
    :language: json
    :name: dogsvscats-catalog
    :linenos:
@@ -55,7 +55,7 @@ Step 2: Write the Dataloader
 A :ref:`reference/glossary:dataloader` is needed to organize the dataset into
 a :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
-.. literalinclude:: ../../../tensorbay/opendataset/DogsVsCats/loader.py
+.. literalinclude:: ../../../../tensorbay/opendataset/DogsVsCats/loader.py
    :language: python
    :name: dogsvscats-dataloader
    :linenos:
@@ -66,7 +66,7 @@ See :ref:`Classification annotation <reference/label_format/Classification:Class
 There are already a number of dataloaders in TensorBay SDK provided by the community.
 Thus, instead of writing, importing an available dataloadert is also feasible.
 
-.. literalinclude:: ../../../docs/code/DogsVsCats.py
+.. literalinclude:: ../../../../docs/code/DogsVsCats.py
    :language: python
    :start-after: """Organize dataset / import dataloader"""
    :end-before: """"""
@@ -93,14 +93,14 @@ Please see :ref:`features/visualization:Visualization` for more details.
 
 The organized "Dogs vs Cats" dataset can be uploaded to TensorBay for sharing, reuse, etc.
 
-.. literalinclude:: ../../../docs/code/DogsVsCats.py
+.. literalinclude:: ../../../../docs/code/DogsVsCats.py
    :language: python
    :start-after: """Upload Dataset"""
    :end-before: """"""
 
 Similar with Git, the commit step after uploading can record changes to the dataset as a version.
 If needed, do the modifications and commit again.
-Please see :ref:`features/version_control:Version Control` for more details.
+Please see :ref:`features/version_control/index:Version Control` for more details.
 
 **************
  Read Dataset
@@ -108,7 +108,7 @@ Please see :ref:`features/version_control:Version Control` for more details.
 
 Now "Dogs vs Cats" dataset can be read from TensorBay.
 
-.. literalinclude:: ../../../docs/code/DogsVsCats.py
+.. literalinclude:: ../../../../docs/code/DogsVsCats.py
    :language: python
    :start-after: """Read Dataset / get dataset"""
    :end-before: """"""
@@ -117,14 +117,14 @@ In :ref:`reference/dataset_structure:dataset` "Dogs vs Cats", there are two
 :ref:`segments <reference/dataset_structure:segment>`: ``train`` and ``test``.
 Get the segment names by listing them all.
 
-.. literalinclude:: ../../../docs/code/DogsVsCats.py
+.. literalinclude:: ../../../../docs/code/DogsVsCats.py
    :language: python
    :start-after: """Read Dataset / list segment names"""
    :end-before: """"""
 
 Get a segment by passing the required segment name.
 
-.. literalinclude:: ../../../docs/code/DogsVsCats.py
+.. literalinclude:: ../../../../docs/code/DogsVsCats.py
    :language: python
    :start-after: """Read Dataset / get segment"""
    :end-before: """"""
@@ -132,7 +132,7 @@ Get a segment by passing the required segment name.
 In the train :ref:`reference/dataset_structure:segment`, there is a sequence of :ref:`reference/dataset_structure:data`,
 which can be obtained by index.
 
-.. literalinclude:: ../../../docs/code/DogsVsCats.py
+.. literalinclude:: ../../../../docs/code/DogsVsCats.py
    :language: python
    :start-after: """Read Dataset / get data"""
    :end-before: """"""
@@ -141,7 +141,7 @@ In each :ref:`reference/dataset_structure:data`,
 there is a sequence of :ref:`reference/label_format/Classification:Classification` annotations,
 which can be obtained by index.
 
-.. literalinclude:: ../../../docs/code/DogsVsCats.py
+.. literalinclude:: ../../../../docs/code/DogsVsCats.py
    :language: python
    :start-after: """Read Dataset / get label"""
    :end-before: """"""
@@ -154,7 +154,7 @@ See :ref:`reference/label_format/Classification:Classification` label format for
  Delete Dataset
 ****************
 
-.. literalinclude:: ../../../docs/code/DogsVsCats.py
+.. literalinclude:: ../../../../docs/code/DogsVsCats.py
    :language: python
    :start-after: """Delete Dataset"""
    :end-before: """"""

@@ -11,7 +11,7 @@ and :ref:`reference/label_format/InstanceMask:InstanceMask` labels
 
 .. _example-semantic-mask:
 
-.. figure:: ../images/example-semanticmask.png
+.. figure:: ../../images/example-semanticmask.png
    :scale: 150 %
    :align: center
 
@@ -19,7 +19,7 @@ and :ref:`reference/label_format/InstanceMask:InstanceMask` labels
 
 .. _example-instance-mask:
 
-.. figure:: ../images/example-instancemask.png
+.. figure:: ../../images/example-instancemask.png
    :scale: 150 %
    :align: center
 
@@ -32,7 +32,7 @@ and :ref:`reference/label_format/InstanceMask:InstanceMask` labels
 
 An :ref:`reference/glossary:accesskey` is needed to authenticate identity when using TensorBay.
 
-.. literalinclude:: ../../../docs/code/VOC2012Segmentation.py
+.. literalinclude:: ../../../../docs/code/VOC2012Segmentation.py
    :language: python
    :start-after: """Authorize a Client Instance"""
    :end-before: """"""
@@ -42,7 +42,7 @@ An :ref:`reference/glossary:accesskey` is needed to authenticate identity when u
 ****************
 
 
-.. literalinclude:: ../../../docs/code/VOC2012Segmentation.py
+.. literalinclude:: ../../../../docs/code/VOC2012Segmentation.py
    :language: python
    :start-after: """Create Dataset"""
    :end-before: """"""
@@ -59,7 +59,7 @@ Step 1: Write the Catalog
 A :ref:`Catalog <reference/dataset_structure:catalog>` contains all label information of one dataset,
 which is typically stored in a json file.
 
-.. literalinclude:: ../../../tensorbay/opendataset/VOC2012Segmentation/catalog.json
+.. literalinclude:: ../../../../tensorbay/opendataset/VOC2012Segmentation/catalog.json
    :language: json
    :name: voc2012segmentation-catalog
    :linenos:
@@ -84,7 +84,7 @@ Step 2: Write the Dataloader
 A :ref:`reference/glossary:dataloader` is needed to organize the dataset into
 a :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
-.. literalinclude:: ../../../tensorbay/opendataset/VOC2012Segmentation/loader.py
+.. literalinclude:: ../../../../tensorbay/opendataset/VOC2012Segmentation/loader.py
    :language: python
    :name: voc2012segmentation-dataloader
    :linenos:
@@ -96,7 +96,7 @@ and :ref:`InstanceMask annotation <reference/label_format/InstanceMask:InstanceM
 There are already a number of dataloaders in TensorBay SDK provided by the community.
 Thus, instead of writing, importing an available dataloader is also feasible.
 
-.. literalinclude:: ../../../docs/code/VOC2012Segmentation.py
+.. literalinclude:: ../../../../docs/code/VOC2012Segmentation.py
    :language: python
    :start-after: """Organize dataset / import dataloader"""
    :end-before: """"""
@@ -115,14 +115,14 @@ Thus, instead of writing, importing an available dataloader is also feasible.
 
 The organized "VOC2012 Segmentation" dataset can be uploaded to tensorBay for sharing, reuse, etc.
 
-.. literalinclude:: ../../../docs/code/VOC2012Segmentation.py
+.. literalinclude:: ../../../../docs/code/VOC2012Segmentation.py
    :language: python
    :start-after: """Upload Dataset"""
    :end-before: """"""
 
 Similar with Git, the commit step after uploading can record changes to the dataset as a version.
 If needed, do the modifications and commit again.
-Please see :ref:`features/version_control:Version Control` for more details.
+Please see :ref:`features/version_control/index:Version Control` for more details.
 
 See the visualization on TensorBay website.
 
@@ -132,7 +132,7 @@ See the visualization on TensorBay website.
 
 Now "VOC2012 Segmentation" dataset can be read from TensorBay.
 
-.. literalinclude:: ../../../docs/code/VOC2012Segmentation.py
+.. literalinclude:: ../../../../docs/code/VOC2012Segmentation.py
    :language: python
    :start-after: """Read Dataset / get dataset"""
    :end-before: """"""
@@ -141,7 +141,7 @@ In :ref:`reference/dataset_structure:Dataset` "VOC2012 Segmentation", there are 
 :ref:`segments <reference/dataset_structure:Segment>`: ``train`` and ``val``.
 Get a segment by passing the required segment name or the index.
 
-.. literalinclude:: ../../../docs/code/VOC2012Segmentation.py
+.. literalinclude:: ../../../../docs/code/VOC2012Segmentation.py
    :language: python
    :start-after: """Read Dataset / get segment"""
    :end-before: """"""
@@ -150,7 +150,7 @@ In the ``train`` :ref:`reference/dataset_structure:Segment`,
 there is a sequence of :ref:`reference/dataset_structure:Data`,
 which can be obtained by index.
 
-.. literalinclude:: ../../../docs/code/VOC2012Segmentation.py
+.. literalinclude:: ../../../../docs/code/VOC2012Segmentation.py
    :language: python
    :start-after: """Read Dataset / get data"""
    :end-before: """"""
@@ -158,7 +158,7 @@ which can be obtained by index.
 In each :ref:`reference/dataset_structure:Data`,
 there are one :ref:`reference/label_format/SemanticMask:SemanticMask` annotation and one :ref:`reference/label_format/InstanceMask:InstanceMask` annotation.
 
-.. literalinclude:: ../../../docs/code/VOC2012Segmentation.py
+.. literalinclude:: ../../../../docs/code/VOC2012Segmentation.py
    :language: python
    :start-after: """Read Dataset / get label"""
    :end-before: """"""
@@ -175,7 +175,7 @@ See :ref:`reference/label_format/SemanticMask:SemanticMask` and :ref:`reference/
  Delete Dataset
 ****************
 
-.. literalinclude:: ../../../docs/code/VOC2012Segmentation.py
+.. literalinclude:: ../../../../docs/code/VOC2012Segmentation.py
    :language: python
    :start-after: """Delete Dataset"""
    :end-before: """"""

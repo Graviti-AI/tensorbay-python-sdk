@@ -35,21 +35,21 @@ It provides:
    :caption: Quick Start
 
    quick_start/getting_started_with_tensorbay
-   quick_start/examples
+   quick_start/examples/index
 
 .. toctree::
    :maxdepth: 1
    :caption: Features
 
    features/dataset_management
-   features/version_control
+   features/version_control/index
    features/visualization
 
 .. toctree::
    :maxdepth: 1
    :caption: Advanced Features
 
-   advanced_features/fusion_dataset
+   advanced_features/fusion_dataset/index
    advanced_features/cloud_storage
    advanced_features/request_configuration
    advanced_features/use_internal_endpoint
@@ -78,9 +78,9 @@ It provides:
 
    reference/glossary
    reference/dataset_structure
-   reference/label_format
+   reference/label_format/index
    reference/exception
-   reference/api_reference
+   reference/api/index
 
 ..
    reference/release_note
