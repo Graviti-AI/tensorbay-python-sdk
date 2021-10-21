@@ -108,7 +108,7 @@ The organized "BSTLD" dataset can be uploaded to TensorBay for sharing, reuse, e
 
 .. note::
    Set `skip_uploaded_files=True` to skip uploaded data.
-   The data will be skiped if it's name and segment name is the same as remote data.
+   The data will be skiped if its name and segment name is the same as remote data.
 
 Similar with Git, the commit step after uploading can record changes to the dataset as a version.
 If needed, do the modifications and commit again.
