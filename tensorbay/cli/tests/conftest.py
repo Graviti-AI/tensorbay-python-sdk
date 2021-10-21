@@ -5,35 +5,50 @@
 
 """Pytest fixture config."""
 
-from collections import OrderedDict
-from configparser import ConfigParser
+import os
 from functools import partial
+from pathlib import Path
 from typing import Callable
 
 import pytest
 from click.testing import CliRunner, Result
+from pytest_mock import MockerFixture
 
-from tensorbay.cli.utility import ContextInfo
+from tensorbay.cli.utility import ContextInfo, form_profile_value
 
 
-@pytest.fixture(scope="session", name="context")  # type: ignore[misc]
-def context_object() -> ContextInfo:
+@pytest.fixture(name="context")  # type: ignore[misc]
+def context_object(mocker: MockerFixture, tmp_path: Path) -> ContextInfo:
     """Get a ContextInfo instance containing the command context.
+
+    Arguments:
+        mocker: The mocker fixture.
+        tmp_path: An instance of TempPathFactory.
 
     Returns:
         The ContextInfo instance.
 
     """
-    obj: ContextInfo = object.__new__(ContextInfo)
-    obj.access_key = "Accesskey-********************************"
-    obj.url = "https://gas.graviti.cn/"
-    obj.profile_name = "default"
-    obj.config_parser = ConfigParser(dict_type=OrderedDict)
+    path = tmp_path / "test_home"
+    path.mkdir()
+    mocker.patch(f"{os.__name__}.path.expanduser", return_value=path)
 
-    return obj
+    access_key = "Accesskey-********************************"
+    url = "https://gas.graviti.cn/"
+    context = ContextInfo(access_key, url, "test")
+
+    config_parser = context.config_parser
+    config_parser.add_section("profiles")
+    profiles = config_parser["profiles"]
+    profiles["test"] = form_profile_value(access_key, "")
+    profiles["test_01"] = form_profile_value(access_key, "")
+    profiles["test_02"] = form_profile_value(access_key, url)
+    context.write_config(False)
+
+    return context
 
 
-@pytest.fixture(scope="session")  # type: ignore[misc]
+@pytest.fixture()  # type: ignore[misc]
 def invoke(context: ContextInfo) -> Callable[..., Result]:
     """Get a partial object of CliRunner.invoke.
 
@@ -46,3 +61,27 @@ def invoke(context: ContextInfo) -> Callable[..., Result]:
     """
     runner = CliRunner(mix_stderr=False)
     return partial(runner.invoke, obj=context, catch_exceptions=False)
+
+
+def assert_cli_success(result: Result, stdout: str) -> None:
+    """Test if cli command is successful, output message is equal.
+
+    Arguments:
+        result: The Result instance.
+        stdout: Output message.
+
+    """
+    assert result.exit_code == 0
+    assert result.stdout == stdout
+
+
+def assert_cli_fail(result: Result, stderr: str) -> None:
+    """Test if cli command is failed, output message is equal.
+
+    Arguments:
+        result: The Result instance.
+        stderr: Output message.
+
+    """
+    assert result.exit_code == 1
+    assert result.stderr == stderr
