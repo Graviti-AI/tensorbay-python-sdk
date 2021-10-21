@@ -27,9 +27,7 @@ gas.create_dataset("Newsgroups20")
 """"""
 
 """Organize Dataset / regular import"""
-from tensorbay.dataset import Data, Dataset
-from tensorbay.label import LabeledBox2D
-from tensorbay.opendataset._utility import glob
+from tensorbay.dataset import Dataset
 
 """"""
 
