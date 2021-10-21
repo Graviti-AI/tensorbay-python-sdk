@@ -10,7 +10,7 @@ from hashlib import sha1
 from http.client import HTTPResponse
 from string import printable
 from typing import Any, Callable, Dict, Optional, Union
-from urllib.error import URLError
+from urllib.error import HTTPError
 from urllib.parse import quote, urljoin
 from urllib.request import pathname2url, urlopen
 
@@ -121,8 +121,8 @@ class RemoteFileMixin(ReprMixin):
             return urlopen(  # type: ignore[no-any-return]
                 quote(self.get_url(), safe=printable), timeout=2
             )
-        except URLError as error:
-            if str(error) == "<urlopen error timed out>":
+        except HTTPError as error:
+            if error.code == 403:
                 self.update_url()
                 return urlopen(quote(self.get_url(), safe=printable))  # type: ignore[no-any-return]
             raise
