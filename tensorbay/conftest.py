@@ -15,6 +15,7 @@ from tensorbay.client import gas, segment, version
 from tensorbay.client.gas import DEFAULT_BRANCH
 from tensorbay.client.struct import Branch, Draft
 from tensorbay.client.tests.utility import mock_response
+from tensorbay.exception import UnauthorizedError
 
 
 def function_fixture(fixture):
@@ -374,3 +375,37 @@ def mock_get_total_size(mocker, large: bool = False):
         ),
         response_data,
     )
+
+
+@function_fixture
+def mock_get_users(mocker, is_valid):
+    """Mock the getUsers OpenAPI.
+
+    Arguments:
+        mocker: The mocker fixture.
+        is_valid: Whether the mock need raise UnauthorizedError.
+
+    Returns:
+        The pached mocker and response data.
+
+    """
+    response_data = {
+        "id": "3713a28*************************",
+        "nickname": "test",
+        "email": "test***@graviti.cn",
+        "mobile": "180********",
+        "description": "",
+        "team": {
+            "id": "7d3e****************************",
+            "name": "Test",
+            "email": None,
+            "description": "",
+        },
+    }
+    mock = mocker.patch(
+        f"{gas.__name__}.Client.open_api_do", return_value=mock_response(data=response_data)
+    )
+    if is_valid is False:
+        mock.side_effect = UnauthorizedError()
+
+    return mock, response_data
