@@ -70,7 +70,7 @@ class TestDatasetBase:
         )
         dataset = DatasetBase("test_name")
         dataset.load_catalog(catalog_path)
-        with open(catalog_path) as fp:
+        with open(catalog_path, encoding="utf-8") as fp:
             catalog = json.load(fp)
         assert dataset.catalog.dumps() == catalog
 

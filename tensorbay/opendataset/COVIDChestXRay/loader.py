@@ -60,7 +60,7 @@ def COVIDChestXRay(path: str) -> Dataset:
 
     csv_path = os.path.join(root_path, "metadata.csv")
 
-    with open(csv_path) as fp:
+    with open(csv_path, encoding="utf-8") as fp:
         csv_reader = csv.DictReader(fp)
         for attributes in csv_reader:
             folder = attributes.pop("folder")

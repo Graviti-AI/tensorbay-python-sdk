@@ -105,7 +105,7 @@ def UAVDT(path: str) -> Dataset:
 def _extract_classification(
     path: str, classification_catalog: ClassificationSubcatalog
 ) -> Classification:
-    with open(path) as fp:
+    with open(path, encoding="utf-8") as fp:
         attribute_names = classification_catalog.attributes.keys()
         csv_reader = csv.reader(fp)
         elements = next(csv_reader)
@@ -128,7 +128,7 @@ def _extract_box2d(
 
     ground_truth_path = os.path.join(path, "UAV-benchmark-MOTD_v1.0", "GT")
     frame_id_ground_truth_map = defaultdict(list)
-    with open(os.path.join(ground_truth_path, f"{sequence}_gt_whole.txt")) as fp:
+    with open(os.path.join(ground_truth_path, f"{sequence}_gt_whole.txt"), encoding="utf-8") as fp:
         for elements in csv.DictReader(fp, fieldnames=_FIELDNAMES):
             box2d = LabeledBox2D.from_xywh(
                 *(int(elements[key]) for key in _XYWH_KEYS),

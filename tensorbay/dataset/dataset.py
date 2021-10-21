@@ -280,7 +280,7 @@ class DatasetBase(Sequence[_T], NameMixin):  # pylint: disable=too-many-ancestor
             filepath: The path of the json file which contains the catalog information.
 
         """
-        with open(filepath, "r") as fp:
+        with open(filepath, "r", encoding="utf-8") as fp:
             contents = json.load(fp)
         self._catalog = Catalog.loads(contents)
 
