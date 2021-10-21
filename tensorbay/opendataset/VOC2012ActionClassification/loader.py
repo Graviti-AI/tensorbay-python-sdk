@@ -53,7 +53,7 @@ def VOC2012ActionClassification(path: str) -> Dataset:
 
     for segment_name in _SEGMENT_NAMES:
         segment = dataset.create_segment(segment_name)
-        with open(os.path.join(action_path, f"{segment_name}.txt")) as fp:
+        with open(os.path.join(action_path, f"{segment_name}.txt"), encoding="utf-8") as fp:
             for filename in fp:
                 filename = filename.strip()
                 segment.append(_get_data(filename, image_path, annotation_path))
@@ -68,7 +68,7 @@ def _get_data(filename: str, image_path: str, annotation_path: str) -> Data:
 
     data = Data(os.path.join(image_path, f"{filename}.jpg"))
     box2d = []
-    with open(os.path.join(annotation_path, f"{filename}.xml"), "r") as fp:
+    with open(os.path.join(annotation_path, f"{filename}.xml"), "r", encoding="utf-8") as fp:
         objects = xmltodict.parse(fp.read())["annotation"]["object"]
     if not isinstance(objects, list):
         objects = [objects]

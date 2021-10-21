@@ -67,7 +67,9 @@ def CIHP(path: str) -> Dataset:
         segment = dataset.create_segment(segment_name)
         segment_abspath = os.path.join(root_path, segment_path)
         image_path = os.path.join(segment_abspath, "Images")
-        with open(os.path.join(segment_abspath, f"{segment_name}_id.txt"), "r") as fp:
+        with open(
+            os.path.join(segment_abspath, f"{segment_name}_id.txt"), "r", encoding="utf-8"
+        ) as fp:
             if segment_name == "test":
                 for filename in fp:
                     segment.append(Data(os.path.join(image_path, f"{filename.rstrip()}.jpg")))

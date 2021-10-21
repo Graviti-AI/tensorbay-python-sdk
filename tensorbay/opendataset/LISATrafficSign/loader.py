@@ -110,7 +110,7 @@ def _load_positive_segment(segment_name: str, segment_path: str) -> Segment:
     )[0]
     image_folder = os.path.dirname(annotation_file)
     pre_filename = ""
-    with open(annotation_file, "r") as fp:
+    with open(annotation_file, "r", encoding="utf-8") as fp:
         for annotation in csv.DictReader(fp, delimiter=";"):
             filename = annotation["Filename"]
 

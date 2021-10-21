@@ -57,7 +57,7 @@ def VOC2012Segmentation(path: str) -> Dataset:
 
     for segment_name in _SEGMENT_NAMES:
         segment = dataset.create_segment(segment_name)
-        with open(os.path.join(image_set_path, f"{segment_name}.txt")) as fp:
+        with open(os.path.join(image_set_path, f"{segment_name}.txt"), encoding="utf-8") as fp:
             for stem in fp:
                 stem = stem.strip()
                 data = Data(os.path.join(image_path, f"{stem}.jpg"))

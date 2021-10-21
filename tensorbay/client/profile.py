@@ -79,13 +79,13 @@ class Profile:
         return 0
 
     def _save_to_txt(self, path: str) -> None:
-        with open(path, "w") as fp:
+        with open(path, "w", encoding="utf-8") as fp:
             fp.write(self._format_string())
             for url, item in self._summary.items():
                 fp.write(self._format_string(url, item))
 
     def _save_to_csv(self, path: str) -> None:
-        with open(path, "w") as fp:
+        with open(path, "w", encoding="utf-8") as fp:
             writer = csv.writer(fp)
             writer.writerow(chain(["Path"], _COLUMNS.keys()))
             for post, item in self._summary.items():
@@ -93,7 +93,7 @@ class Profile:
 
     def _save_to_json(self, path: str) -> None:
         summary = self._summary if isinstance(self._summary, dict) else self._summary.copy()
-        with open(path, "w") as fp:
+        with open(path, "w", encoding="utf-8") as fp:
             json.dump(summary, fp, indent=4)
 
     def _statistical(self, func: _Callable) -> _Callable:

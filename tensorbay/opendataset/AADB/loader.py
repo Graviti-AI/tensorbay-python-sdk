@@ -76,7 +76,7 @@ def _extract_attributes_map(
     for attribute_name in attribute_names:
         label_file_name = f"{label_file_prefix}_{attribute_name}.txt"
         label_file_path = os.path.join(label_dir, label_file_name)
-        with open(label_file_path) as fp:
+        with open(label_file_path, encoding="utf-8") as fp:
             # one line of file looks like:
             # "<image_name> value"
             for line in fp:

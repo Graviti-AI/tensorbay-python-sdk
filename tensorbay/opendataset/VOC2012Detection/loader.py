@@ -54,7 +54,7 @@ def VOC2012Detection(path: str) -> Dataset:
 
     for segment_name in _SEGMENT_NAMES:
         segment = dataset.create_segment(segment_name)
-        with open(os.path.join(main_path, f"{segment_name}.txt")) as fp:
+        with open(os.path.join(main_path, f"{segment_name}.txt"), encoding="utf-8") as fp:
             for filename in fp:
                 filename = filename.strip()
                 segment.append(_get_data(filename, image_path, annotation_path))

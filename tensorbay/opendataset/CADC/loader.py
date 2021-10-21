@@ -91,7 +91,7 @@ def CADC(path: str) -> FusionDataset:
             segment_path = os.path.join(root_path, date, index)
             data_path = os.path.join(segment_path, "labeled")
 
-            with open(os.path.join(segment_path, "3d_ann.json"), "r") as fp:
+            with open(os.path.join(segment_path, "3d_ann.json"), "r", encoding="utf-8") as fp:
                 # The first line of the json file is the json body.
                 annotations = json.loads(fp.readline())
             timestamps = _load_timestamps(sensors, data_path)
@@ -106,7 +106,7 @@ def _load_timestamps(sensors: Sensors, data_path: str) -> Dict[str, List[str]]:
     for sensor_name in sensors.keys():
         data_folder = f"image_{sensor_name[-2:]}" if sensor_name != "LIDAR" else "lidar_points"
         timestamp_file = os.path.join(data_path, data_folder, "timestamps.txt")
-        with open(timestamp_file, "r") as fp:
+        with open(timestamp_file, "r", encoding="utf-8") as fp:
             timestamps[sensor_name] = fp.readlines()
 
     return timestamps
@@ -197,11 +197,11 @@ def _load_sensors(calib_path: str) -> Sensors:
     lidar.set_extrinsics()
     sensors.add(lidar)
 
-    with open(os.path.join(calib_path, "extrinsics.yaml"), "r") as fp:
+    with open(os.path.join(calib_path, "extrinsics.yaml"), "r", encoding="utf-8") as fp:
         extrinsics = yaml.load(fp, Loader=yaml.FullLoader)
 
     for camera_calibration_file in glob(os.path.join(calib_path, "[0-9]*.yaml")):
-        with open(camera_calibration_file, "r") as fp:
+        with open(camera_calibration_file, "r", encoding="utf-8") as fp:
             camera_calibration = yaml.load(fp, Loader=yaml.FullLoader)
 
         # camera_calibration_file looks like:

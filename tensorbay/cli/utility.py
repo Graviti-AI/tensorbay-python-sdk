@@ -195,7 +195,7 @@ class ContextInfo:
             )
 
         config_file = self._get_config_filepath()
-        with open(config_file, "w") as fp:
+        with open(config_file, "w", encoding="utf-8") as fp:
             config_parser.write(fp)
         if show_message:
             click.echo(f'Success!\nConfiguration has been written into: "{config_file}"')
