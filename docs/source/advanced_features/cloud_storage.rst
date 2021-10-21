@@ -67,7 +67,7 @@ Create a dataset with authorized cloud storage:
 Import Cloud Files into Authorized Storage Dataset
 ==================================================
 
-Take the following cloud directory as an example::
+Take the following original cloud directory as an example::
 
    data/
    ├── images/
@@ -96,10 +96,10 @@ Import the AuthData from cloud platform and load label file to an authorized sto
 
 .. important::
 
-    Files will be copied from raw directory to the authorized cloud storage dataset path,
+    Files will be copied from original directory to the authorized cloud storage dataset path,
     thus the storage space will be doubled on the cloud platform.
 
 .. note::
 
-    Set the authorized cloud storage dataset path the same as raw directory could speed up
+    Set the authorized cloud storage dataset path the same as original directory could speed up
     the import action. For example, set the config path of above dataset to ``data/images``.
