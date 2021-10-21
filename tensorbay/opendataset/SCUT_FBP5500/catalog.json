@@ -1,0 +1,23 @@
+{
+    "KEYPOINTS2D": {
+        "keypoints": [
+            {
+                "number": 86
+            }
+        ],
+        "categories": [
+            { "name": "Asian females" },
+            { "name": "Asian males" },
+            { "name": "Caucasian females" },
+            { "name": "Caucasian males" }
+        ],
+        "attributes": [
+            {
+                "name": "beauty score",
+                "type": "number",
+                "minimum": 1,
+                "maximum": 5
+            }
+        ]
+    }
+}
