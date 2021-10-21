@@ -28,8 +28,7 @@ gas.create_dataset("VOC2012Segmentation")
 """"""
 
 """Organize Dataset / regular import"""
-from tensorbay.dataset import Data, Dataset
-from tensorbay.label import InstanceMask, SemanticMask
+from tensorbay.dataset import Dataset
 
 """"""
 

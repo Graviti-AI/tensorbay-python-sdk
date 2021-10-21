@@ -27,11 +27,7 @@ gas.create_dataset("LeedsSportsPose")
 """"""
 
 """Organize Dataset / regular import"""
-from tensorbay.dataset import Data, Dataset
-from tensorbay.exception import ModuleImportError
-from tensorbay.geometry import Keypoint2D
-from tensorbay.label import LabeledKeypoints2D
-from tensorbay.opendataset._utility import glob
+from tensorbay.dataset import Dataset
 
 """"""
 
