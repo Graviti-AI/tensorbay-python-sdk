@@ -25,11 +25,13 @@ gas.update_dataset("DATASET_NAME", alias="alias", is_public=True)
 
 """Update dataset notes"""
 dataset_client = gas.get_dataset("DATASET_NAME")
+dataset_client.create_draft("draft-1")
 dataset_client.update_notes(is_continuous=True)
+dataset_client.commit("update notes")
 """"""
 
 """Update label / get dataset an create draft"""
-dataset_client.create_draft("draft-1")
+dataset_client.create_draft("draft-2")
 """"""
 
 """Update label / update catalog"""
@@ -56,6 +58,7 @@ gas.upload_dataset(dataset, jobs=8)
 """"""
 
 """Update data/ delete segment"""
+dataset_client.create_draft("draft-3")
 dataset_client.delete_segment("SegmentName")
 """"""
 
