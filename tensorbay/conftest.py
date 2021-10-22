@@ -145,3 +145,47 @@ def mock_paths(mocker):
         ),
         response_data,
     )
+
+
+@function_fixture
+def mock_create_dataset(mocker):
+    """Mock the createDataset OpenAPI.
+
+    Arguments:
+        mocker: The mocker fixture.
+
+    Returns:
+        The patched mocker and response data.
+
+    """
+    response_data = {"id": "123456"}
+    return (
+        mocker.patch(
+            f"{gas.__name__}.Client.open_api_do", return_value=mock_response(data=response_data)
+        ),
+        response_data,
+    )
+
+
+@function_fixture
+def mock_delete_dataset(mocker, is_fusion, is_public, mock_get_dataset):
+    """Mock the deleteDataset OpenAPI.
+
+    Arguments:
+        mocker: The mocker fixture.
+        is_fusion: Whether the dataset is a fusion dataset.
+        is_public: Whether the dataset is a public dataset.
+        mock_get_dataset: Mock the _get_dataset method of GAS class.
+
+    Returns:
+        The patched mocker and response data.
+
+    """
+    _, response_data = mock_get_dataset(mocker, is_fusion, is_public)
+    return (
+        mocker.patch(
+            f"{gas.__name__}.Client.open_api_do",
+            return_value=response_data,
+        ),
+        response_data,
+    )
