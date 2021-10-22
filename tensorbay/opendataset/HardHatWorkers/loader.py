@@ -7,11 +7,15 @@
 
 import os
 from typing import List
-from xml.etree import ElementTree
 
 from tensorbay.dataset import Data, Dataset
 from tensorbay.label import LabeledBox2D
 from tensorbay.opendataset._utility import glob
+
+try:
+    import xmltodict
+except ModuleNotFoundError:
+    from tensorbay.opendataset._utility.mocker import xmltodict  # pylint:disable=ungrouped-imports
 
 DATASET_NAME = "HardHatWorkers"
 
@@ -38,27 +42,38 @@ def HardHatWorkers(path: str) -> Dataset:
         Loaded :class:`~tensorbay.dataset.dataset.Dataset` instance.
 
     """
+    root_path = os.path.abspath(os.path.expanduser(path))
+    annotation_dir = os.path.join(root_path, "annotations")
+
     dataset = Dataset(DATASET_NAME)
     dataset.load_catalog(os.path.join(os.path.dirname(__file__), "catalog.json"))
+
     segment = dataset.create_segment()
-    image_paths = glob(os.path.join(path, "images", "*.png"))
+    image_paths = glob(os.path.join(root_path, "images", "*.png"))
     for image_path in image_paths:
         data = Data(image_path)
-        file_name = os.path.splitext(os.path.basename(image_path))[0]
-        data.label.box2d = _load_labels(os.path.join(path, "annotations", file_name + ".xml"))
+        data.label.box2d = _load_labels(
+            os.path.join(annotation_dir, f"{os.path.splitext(os.path.basename(image_path))[0]}.xml")
+        )
         segment.append(data)
     return dataset
 
 
 def _load_labels(label_file: str) -> List[LabeledBox2D]:
-    label_tree = ElementTree.parse(label_file)
-    labels = []
-    for obj in label_tree.findall("object"):
-        bndbox = obj.find("bndbox")
-        labels.append(
+    with open(label_file, "r", encoding="utf-8") as fp:
+        objects = xmltodict.parse(fp.read())["annotation"]["object"]
+    box2ds = []
+    if not isinstance(objects, list):
+        objects = [objects]
+    for obj in objects:
+        bndbox = obj["bndbox"]
+        box2ds.append(
             LabeledBox2D(
-                *(int(child.text) for child in bndbox),  # type: ignore[arg-type, union-attr]
-                category=obj.find("name").text  # type: ignore[union-attr]
+                xmin=float(bndbox["xmin"]),
+                ymin=float(bndbox["ymin"]),
+                xmax=float(bndbox["xmax"]),
+                ymax=float(bndbox["ymax"]),
+                category=obj["name"],
             )
         )
-    return labels
+    return box2ds
