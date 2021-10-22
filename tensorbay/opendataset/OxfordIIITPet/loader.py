@@ -5,12 +5,16 @@
 # pylint: disable=invalid-name, missing-module-docstring
 
 import os
-import xml.etree.ElementTree as ET
 from typing import List
 
 from tensorbay.dataset import Data, Dataset
 from tensorbay.label import Classification, LabeledBox2D, SemanticMask
 from tensorbay.opendataset._utility.glob import glob
+
+try:
+    import xmltodict
+except ModuleNotFoundError:
+    from tensorbay.opendataset._utility.mocker import xmltodict  # pylint:disable=ungrouped-imports
 
 DATASET_NAME = "OxfordIIITPet"
 
@@ -75,6 +79,19 @@ def OxfordIIITPet(path: str) -> Dataset:
 
 
 def _get_box_label(file_path: str) -> List[LabeledBox2D]:
-    root = ET.ElementTree(file=file_path).getroot()
-    bndbox = root.find("object").find("bndbox")  # type:ignore[union-attr]
-    return [LabeledBox2D(*(int(item.text) for item in bndbox))]  # type:ignore[arg-type, union-attr]
+    with open(file_path, "r", encoding="utf-8") as fp:
+        objects = xmltodict.parse(fp.read())["annotation"]["object"]
+    if not isinstance(objects, list):
+        objects = [objects]
+    box2d = []
+    for obj in objects:
+        bndbox = obj["bndbox"]
+        box2d.append(
+            LabeledBox2D(
+                float(bndbox["xmin"]),
+                float(bndbox["ymin"]),
+                float(bndbox["xmax"]),
+                float(bndbox["ymax"]),
+            )
+        )
+    return box2d

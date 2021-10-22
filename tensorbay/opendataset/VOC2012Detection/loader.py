@@ -5,10 +5,14 @@
 # pylint: disable=invalid-name, missing-module-docstring
 
 import os
-from xml.etree import ElementTree
 
 from tensorbay.dataset import Data, Dataset
 from tensorbay.label import LabeledBox2D
+
+try:
+    import xmltodict
+except ModuleNotFoundError:
+    from tensorbay.opendataset._utility.mocker import xmltodict  # pylint:disable=ungrouped-imports
 
 _SEGMENT_NAMES = ("train", "val")
 _BOOLEAN_ATTRIBUTES = {"occluded", "difficult", "truncated"}
@@ -56,8 +60,7 @@ def VOC2012Detection(path: str) -> Dataset:
         segment = dataset.create_segment(segment_name)
         with open(os.path.join(main_path, f"{segment_name}.txt"), encoding="utf-8") as fp:
             for filename in fp:
-                filename = filename.strip()
-                segment.append(_get_data(filename, image_path, annotation_path))
+                segment.append(_get_data(filename.rstrip(), image_path, annotation_path))
     return dataset
 
 
@@ -74,25 +77,24 @@ def _get_data(filename: str, image_path: str, annotation_path: str) -> Data:
 
     """
     data = Data(os.path.join(image_path, f"{filename}.jpg"))
-    data.label.box2d = []
-    tree = ElementTree.parse(os.path.join(annotation_path, f"{filename}.xml"))
-    for obj in tree.findall("object"):
-        attributes = {}
-        for child in obj:
-            if child.tag == "name":
-                category = child.text
-            elif child.tag == "bndbox":
-                box = (
-                    float(child.find("xmin").text),  # type:ignore[arg-type, union-attr]
-                    float(child.find("ymin").text),  # type:ignore[arg-type, union-attr]
-                    float(child.find("xmax").text),  # type:ignore[arg-type, union-attr]
-                    float(child.find("ymax").text),  # type:ignore[arg-type, union-attr]
-                )
-            elif child.tag == "pose":
-                attributes[child.tag] = child.text
-            elif child.tag in _BOOLEAN_ATTRIBUTES:
-                attributes[child.tag] = bool(
-                    int(child.text)  # type:ignore[assignment, arg-type]
-                )
-        data.label.box2d.append(LabeledBox2D(*box, category=category, attributes=attributes))
+    box2d = []
+    with open(os.path.join(annotation_path, f"{filename}.xml"), "r", encoding="utf-8") as fp:
+        objects = xmltodict.parse(fp.read())["annotation"]["object"]
+    if not isinstance(objects, list):
+        objects = [objects]
+    for obj in objects:
+        attributes = {attribute: bool(int(obj[attribute])) for attribute in _BOOLEAN_ATTRIBUTES}
+        attributes["pose"] = obj["pose"]
+        bndbox = obj["bndbox"]
+        box2d.append(
+            LabeledBox2D(
+                float(bndbox["xmin"]),
+                float(bndbox["ymin"]),
+                float(bndbox["xmax"]),
+                float(bndbox["ymax"]),
+                category=obj["name"],
+                attributes=attributes,
+            )
+        )
+    data.label.box2d = box2d
     return data
