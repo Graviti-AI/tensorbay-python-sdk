@@ -37,7 +37,7 @@ from tensorbay.client.lazy import LazyPage, PagingList
 from tensorbay.client.requests import config
 from tensorbay.client.status import Status
 from tensorbay.dataset import AuthData, Data, Frame, RemoteData
-from tensorbay.exception import FrameError, InvalidParamsError, ResponseError
+from tensorbay.exception import FrameError, InvalidParamsError, ResourceNotExistError, ResponseError
 from tensorbay.label import Label
 from tensorbay.sensor.sensor import Sensor, Sensors
 from tensorbay.utility import URL, FileMixin, chunked, locked
@@ -123,6 +123,24 @@ class SegmentClientBase:
         response = self._client.open_api_do("GET", "data/urls", self._dataset_id, params=params)
         return response.json()  # type: ignore[no-any-return]
 
+    def _get_data_details(self, remote_path: str) -> Dict[str, Any]:
+        params: Dict[str, Any] = {
+            "segmentName": self._name,
+            "remotePath": remote_path,
+        }
+        params.update(self._status.get_status_info())
+
+        if config.is_internal:
+            params["isInternal"] = True
+
+        response = self._client.open_api_do("GET", "data/details", self._dataset_id, params=params)
+        try:
+            data_details = response.json()["dataDetails"][0]
+        except IndexError as error:
+            raise ResourceNotExistError(resource="data", identification=remote_path) from error
+
+        return data_details  # type: ignore[no-any-return]
+
     def _list_data_details(self, offset: int = 0, limit: int = 128) -> Dict[str, Any]:
         params: Dict[str, Any] = {
             "segmentName": self._name,
@@ -136,6 +154,27 @@ class SegmentClientBase:
 
         response = self._client.open_api_do("GET", "data/details", self._dataset_id, params=params)
         return response.json()  # type: ignore[no-any-return]
+
+    def _get_mask_url(self, mask_type: str, remote_path: str) -> str:
+        params: Dict[str, Any] = {
+            "segmentName": self._name,
+            "maskType": mask_type,
+            "remotePath": remote_path,
+        }
+        params.update(self._status.get_status_info())
+
+        if config.is_internal:
+            params["isInternal"] = True
+
+        response = self._client.open_api_do("GET", "masks/urls", self._dataset_id, params=params)
+        try:
+            mask_url = response.json()["urls"][0]["url"]
+        except IndexError as error:
+            raise ResourceNotExistError(
+                resource="{mask_type} of data", identification=remote_path
+            ) from error
+
+        return mask_url  # type: ignore[no-any-return]
 
     def _list_mask_urls(self, mask_type: str, offset: int = 0, limit: int = 128) -> Dict[str, Any]:
         params: Dict[str, Any] = {
@@ -661,6 +700,43 @@ class SegmentClient(SegmentClientBase):
 
         """
         return PagingList(self._generate_data_paths, 128)
+
+    def get_data(self, remote_path: str) -> RemoteData:
+        """Get required Data object from a dataset segment.
+
+        Arguments:
+            remote_path: The remote paths of the required data.
+
+        Returns:
+            :class:`~tensorbay.dataset.data.RemoteData`.
+
+        Raises:
+            ResourceNotExistError: When the required data does not exist.
+
+        """
+        if not remote_path:
+            raise ResourceNotExistError(resource="data", identification=remote_path)
+
+        data_details = self._get_data_details(remote_path)
+        data = RemoteData.from_response_body(
+            data_details,
+            url=URL(data_details["url"], lambda: self._get_url(remote_path)),
+            cache_path=self._cache_path,
+        )
+        label = data.label
+
+        for key in _MASK_KEYS:
+            mask = getattr(label, key, None)
+            if mask:
+                mask.url = URL.from_getter(
+                    lambda k=key.upper(), r=remote_path: self._get_mask_url(k, r),
+                    lambda k=key.upper(), r=remote_path: (  # type: ignore[misc, arg-type]
+                        self._get_mask_url(k, r)
+                    ),
+                )
+                mask.cache_path = os.path.join(self._cache_path, key, mask.path)
+
+        return data
 
     def list_data(self) -> PagingList[RemoteData]:
         """List required Data object in a dataset segment.
