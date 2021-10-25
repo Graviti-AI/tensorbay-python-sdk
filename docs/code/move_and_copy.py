@@ -49,9 +49,11 @@ dataset_client.create_draft("draft-3")
 target_segment_client = dataset_client.create_segment("abyssinian")
 for name in ["test_1", "trainval"]:
     segment_client = dataset_client.get_segment(name)
+    copy_files = []
     for file_name in segment_client.list_data_paths():
         if file_name.startswith("Aabyssinian"):
-            target_segment_client.copy_data(file_name, file_name, source_client=segment_client)
+            copy_files.append(file_name)
+    target_segment_client.copy_data(copy_files, source_client=segment_client)
 
 dataset_client.list_segment_names()
 # test_1, test_2, trainval, abyssinian
