@@ -108,3 +108,9 @@ Checkout
       :language: python
       :start-after: """Checkout"""
       :end-before: """"""
+
+.. note::
+   Here, :ref:`reference/glossary:revision` is the information to locate the specific commit, which can be the commit id,
+   the branch, or the tag.
+
+
