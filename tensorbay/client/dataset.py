@@ -24,6 +24,7 @@ Please refer to :class:`~tensorbay.dataset.dataset.FusionDataset` for more infor
 
 import logging
 import os
+import shutil
 import tempfile
 from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Iterator, Optional, Tuple, Union
 
@@ -32,6 +33,7 @@ from ulid import ULID, from_timestamp
 from tensorbay.client.diff import DataDiff, DatasetDiff, SegmentDiff
 from tensorbay.client.lazy import PagingList
 from tensorbay.client.log import (
+    CACHE_SPACE_WARNING,
     UPLOAD_SEGMENT_RESUME_TEMPLATE_CLI,
     UPLOAD_SEGMENT_RESUME_TEMPLATE_SDK,
 )
@@ -229,14 +231,19 @@ class DatasetClientBase(VersionControlClient):
             )
         else:
             self._cache_path = os.path.join(tempfile.gettempdir(), "tensorbay", self.dataset_id)
-
+        total_size = self.get_total_size()
         print(
-            "To use cache, "
-            "please make sure there is free storage space larger than the dataset size.\n"
+            "To cache the entire dataset, "
+            f"please make sure there is free storage space larger than {total_size} bytes.\n"
             "Note that cache will not work for datasets under draft status.\n\n"
             f'The cache will be stored under "{self._cache_path}".\n'
             "You can remove all the files after using."
         )
+
+        os.makedirs(self._cache_path, exist_ok=True)
+        _, _, free = shutil.disk_usage(self._cache_path)
+        if free < total_size:
+            logger.warning(CACHE_SPACE_WARNING, free, total_size)
 
     def update_notes(
         self,

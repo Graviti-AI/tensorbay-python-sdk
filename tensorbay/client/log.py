@@ -71,6 +71,15 @@ UPLOAD_SEGMENT_RESUME_TEMPLATE_CLI = """
 *****************************************************************************
 """
 
+CACHE_SPACE_WARNING = """
+*****************************************************************************
+
+ %d bytes left on device, less than the dataset size %d bytes.
+ Please be aware that there is not enough space to cache the entire dataset.
+
+*****************************************************************************
+"""
+
 
 class RequestLogging:
     """This class used to lazy load request to logging.
