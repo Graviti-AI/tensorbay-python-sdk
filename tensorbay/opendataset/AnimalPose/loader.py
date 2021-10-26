@@ -174,7 +174,7 @@ def _get_data_part2(root_path: str, aniamls: Iterable[str]) -> Iterator[Data]:
 
             keypoints2d = LabeledKeypoints2D(category=animal)
             for keypoint in labels["annotation"]["keypoints"]["keypoint"]:
-                keypoints2d.append(  # pylint: disable=no-member
+                keypoints2d.append(
                     Keypoint2D(
                         float(keypoint["@x"]), float(keypoint["@y"]), int(keypoint["@visible"])
                     )

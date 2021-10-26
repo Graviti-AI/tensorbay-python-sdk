@@ -147,8 +147,8 @@ class Transform3D(ReprMixin):
     @classmethod
     def _create(cls: Type[_T], translation: Vector3D, rotation: Quaternion) -> _T:
         transform: _T = object.__new__(cls)
-        transform._translation = translation  # pylint: disable=protected-access
-        transform._rotation = rotation  # pylint: disable=protected-access
+        transform._translation = translation
+        transform._rotation = rotation
         return transform
 
     def _mul_vector(self, other: Iterable[float]) -> Vector3D:

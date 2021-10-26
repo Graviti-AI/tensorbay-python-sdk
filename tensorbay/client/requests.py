@@ -134,7 +134,7 @@ class UserSession(Session):
         self.mount("http://", TimeoutHTTPAdapter(20, 20, retry_strategy))
         self.mount("https://", TimeoutHTTPAdapter(20, 20, retry_strategy))
 
-    def request(  # type: ignore[override]  # pylint: disable=signature-differs
+    def request(  # type: ignore[override]
         self, method: str, url: str, *args: Any, **kwargs: Any
     ) -> Response:  # noqa: DAR401
         """Make the request.
@@ -274,9 +274,7 @@ class Client:
                 response=response
             ) from None
 
-    def do(  # pylint: disable=function-redefined,invalid-name
-        self, method: str, url: str, **kwargs: Any
-    ) -> Response:
+    def do(self, method: str, url: str, **kwargs: Any) -> Response:  # pylint: disable=invalid-name
         """Send a request.
 
         Arguments:

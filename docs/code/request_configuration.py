@@ -4,10 +4,6 @@
 #
 
 # pylint: disable=wrong-import-position
-# pylint: disable=wrong-import-order
-# pylint: disable=not-callable
-# pylint: disable=ungrouped-imports
-# pylint: disable=import-error
 # pylint: disable=pointless-string-statement
 
 """This file includes the python code of request_configuration.rst."""

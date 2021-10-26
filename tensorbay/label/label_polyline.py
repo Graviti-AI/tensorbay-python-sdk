@@ -94,7 +94,7 @@ class Polyline2DSubcatalog(SubcatalogBase, IsTrackingMixin, CategoriesMixin, Att
         self.is_beizer_curve = is_beizer_curve
 
 
-class LabeledPolyline2D(_LabelBase, Polyline2D):  # pylint: disable=too-many-ancestors
+class LabeledPolyline2D(_LabelBase, Polyline2D):
     """This class defines the concept of polyline2D label.
 
     :class:`LabeledPolyline2D` is the 2D polyline type of label,
@@ -275,9 +275,7 @@ class MultiPolyline2DSubcatalog(SubcatalogBase, IsTrackingMixin, CategoriesMixin
         IsTrackingMixin.__init__(self, is_tracking)
 
 
-class LabeledMultiPolyline2D(  # type: ignore[misc]
-    _LabelBase, MultiPolyline2D
-):  # pylint: disable=too-many-ancestors
+class LabeledMultiPolyline2D(_LabelBase, MultiPolyline2D):  # type: ignore[misc]
     """This class defines the concept of multiPolyline2D label.
 
     :class:`LabeledMultiPolyline2D` is the 2D multiple polyline type of label,

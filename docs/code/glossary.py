@@ -5,7 +5,6 @@
 
 # pylint: disable=wrong-import-position
 # pylint: disable=pointless-string-statement
-# pylint: disable=missing-function-docstring
 # pylint: disable=unused-argument
 # pylint: disable=invalid-name
 

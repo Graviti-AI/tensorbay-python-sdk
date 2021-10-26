@@ -61,7 +61,7 @@ class _UrlGetters:
         self._urls.pull()
 
 
-class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
+class SegmentClientBase:
     """This class defines the basic concept of :class:`SegmentClient`.
 
     A :class:`SegmentClientBase` contains the information needed for determining
@@ -87,7 +87,7 @@ class SegmentClientBase:  # pylint: disable=too-many-instance-attributes
         self._dataset_id = dataset_client.dataset_id
         self._dataset_client = dataset_client
         self._status = dataset_client.status
-        self._client = dataset_client._client  # pylint: disable=protected-access
+        self._client = dataset_client._client
         self._permission: Dict[str, Any] = {"expireAt": 0}
 
         if dataset_client.cache_enabled:
@@ -636,7 +636,7 @@ class SegmentClient(SegmentClientBase):
             if (
                 source_client.status.draft_number == self.status.draft_number
                 and source_client._dataset_id  # pylint: disable=protected-access
-                == self._dataset_id  # pylint: disable=protected-access
+                == self._dataset_id
             ):
                 source["segmentName"] = source_client.name
             else:

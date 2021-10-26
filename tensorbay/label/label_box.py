@@ -97,7 +97,7 @@ class Box2DSubcatalog(SubcatalogBase, IsTrackingMixin, CategoriesMixin, Attribut
         IsTrackingMixin.__init__(self, is_tracking)
 
 
-class LabeledBox2D(_LabelBase, Box2D):  # pylint: disable=too-many-ancestors
+class LabeledBox2D(_LabelBase, Box2D):
     """This class defines the concept of 2D bounding box label.
 
     :class:`LabeledBox2D` is the 2D bounding box type of label,

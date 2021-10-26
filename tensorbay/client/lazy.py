@@ -174,7 +174,7 @@ class LazyPage(Generic[_T]):
 
         """
         obj: "LazyPage[_T]" = object.__new__(cls)
-        obj._init(offset, limit, func)  # pylint: disable=protected-access
+        obj._init(offset, limit, func)
         obj.items = tuple(LazyItem(obj, item) for item in item_contents)
 
         return obj
@@ -219,7 +219,7 @@ class InitPage(LazyPage[_T]):
         self.total_count = generator.value
 
 
-class PagingList(MutableSequence[_T], ReprMixin):  # pylint: disable=too-many-ancestors
+class PagingList(MutableSequence[_T], ReprMixin):
     """PagingList is a wrap of web paging request.
 
     It follows the python MutableSequence protocal, which means it can be used like a python builtin

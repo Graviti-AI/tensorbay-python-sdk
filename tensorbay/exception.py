@@ -169,7 +169,7 @@ class InvalidParamsError(ResponseError):
 
     STATUS_CODE = 400
 
-    def __init__(  # pylint: disable=super-init-not-called
+    def __init__(
         self,
         message: Optional[str] = None,
         *,
@@ -206,7 +206,7 @@ class NameConflictError(ResponseError):
 
     STATUS_CODE = 409
 
-    def __init__(  # pylint: disable=super-init-not-called
+    def __init__(
         self,
         message: Optional[str] = None,
         *,
@@ -245,7 +245,7 @@ class ResourceNotExistError(ResponseError):
 
     STATUS_CODE = 404
 
-    def __init__(  # pylint: disable=super-init-not-called
+    def __init__(
         self,
         message: Optional[str] = None,
         *,

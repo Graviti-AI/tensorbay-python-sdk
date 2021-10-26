@@ -196,7 +196,7 @@ class SegmentDiff(UserSequence[DataDiff], NameMixin):
         self._data = data
 
 
-class DatasetDiff(Sequence[SegmentDiff], NameMixin):  # pylint: disable=too-many-ancestors
+class DatasetDiff(Sequence[SegmentDiff], NameMixin):
     """This class defines the basic structure of a brief diff of a dataset.
 
     Arguments:

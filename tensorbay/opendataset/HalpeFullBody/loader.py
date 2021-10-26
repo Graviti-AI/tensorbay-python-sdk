@@ -77,7 +77,7 @@ def _get_data(image_path: str, annotation: Dict[str, Any]) -> Data:
 
     keypoints = LabeledKeypoints2D()
     for x, y, v in chunked(annotation["keypoints"], 3):
-        keypoints.append(Keypoint2D(x, y, v if v in (0, 1, 2) else 2))  # pylint: disable=no-member
+        keypoints.append(Keypoint2D(x, y, v if v in (0, 1, 2) else 2))
 
     data.label.keypoints2d = [keypoints]
 

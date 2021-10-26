@@ -2,7 +2,6 @@
 #
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
-# pylint: disable=invalid-name
 
 """Coco method for open dataset."""
 

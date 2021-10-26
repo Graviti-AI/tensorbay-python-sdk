@@ -28,7 +28,7 @@ class VersionControlClient:
 
     def __init__(self, dataset_id: str, gas: "GAS", *, status: Status) -> None:
         self._dataset_id = dataset_id
-        self._client = gas._client  # pylint: disable=protected-access
+        self._client = gas._client
         self._status = status
 
     def _get_basehead(

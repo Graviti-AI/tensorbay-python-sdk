@@ -4,7 +4,6 @@
 #
 # pylint: disable=invalid-name
 # pylint: disable=missing-module-docstring
-# pylint: disable=unsubscriptable-object
 
 import os
 
@@ -63,9 +62,7 @@ def LeedsSportsPose(path: str) -> Dataset:
 
         keypoints = LabeledKeypoints2D()
         for keypoint in joints[index]:
-            keypoints.append(  # pylint: disable=no-member  # pylint issue #3131
-                Keypoint2D(keypoint[0], keypoint[1], int(not keypoint[2]))
-            )
+            keypoints.append(Keypoint2D(keypoint[0], keypoint[1], int(not keypoint[2])))
 
         data.label.keypoints2d.append(keypoints)
         segment.append(data)

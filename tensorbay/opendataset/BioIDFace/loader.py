@@ -64,8 +64,8 @@ def _get_label(eye_keypoints_path: str, face_keypoints_path: str) -> List[Labele
     with open(eye_keypoints_path, "r", encoding="utf-8") as fp:
         fp.readline()  # The first line is like: #LX     LY      RX      RY
         lx, ly, rx, ry = map(int, fp.readline().split())
-        eye_keypoints.append(Keypoint2D(lx, ly))  # pylint: disable=no-member
-        eye_keypoints.append(Keypoint2D(rx, ry))  # pylint: disable=no-member
+        eye_keypoints.append(Keypoint2D(lx, ly))
+        eye_keypoints.append(Keypoint2D(rx, ry))
 
     face_keypoints = LabeledKeypoints2D(category="Face")
     with open(face_keypoints_path, "r", encoding="utf-8") as fp:
@@ -78,6 +78,6 @@ def _get_label(eye_keypoints_path: str, face_keypoints_path: str) -> List[Labele
         # 24 }
         for line in islice(fp, 3, 23):
             x, y = map(float, line.split())
-            face_keypoints.append(Keypoint2D(x, y))  # pylint: disable=no-member
+            face_keypoints.append(Keypoint2D(x, y))
 
     return [eye_keypoints, face_keypoints]

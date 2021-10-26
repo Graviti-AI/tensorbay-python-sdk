@@ -17,7 +17,7 @@ from tensorbay.geometry.vector import Vector2D
 from tensorbay.utility import UserMutableSequence, common_loads
 
 
-class Polygon(PointList2D[Vector2D]):  # pylint: disable=too-many-ancestors
+class Polygon(PointList2D[Vector2D]):
     """This class defines the concept of Polygon.
 
     :class:`Polygon` contains the coordinates of the vertexes of the polygon and provides
@@ -84,7 +84,7 @@ class Polygon(PointList2D[Vector2D]):  # pylint: disable=too-many-ancestors
         return area / 2
 
 
-class MultiPolygon(MultiPointList2D[Polygon]):  # pylint: disable=too-many-ancestors
+class MultiPolygon(MultiPointList2D[Polygon]):
     """This class defines the concept of MultiPolygon.
 
     :class:`MultiPolygon` contains a list of polygons.

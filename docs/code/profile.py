@@ -4,8 +4,6 @@
 #
 
 # pylint: disable=wrong-import-position
-# pylint: disable=not-callable
-# pylint: disable=import-error
 # pylint: disable=pointless-string-statement
 
 """This file includes the python code of profile."""
