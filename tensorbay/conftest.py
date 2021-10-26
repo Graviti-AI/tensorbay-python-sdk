@@ -6,11 +6,11 @@
 # pylint: disable=redefined-outer-name
 
 """Pytest fixture config."""
-
 import pytest
 
-from tensorbay.client import gas, segment
+from tensorbay.client import gas, segment, version
 from tensorbay.client.gas import DEFAULT_BRANCH
+from tensorbay.client.struct import Branch, Draft
 from tensorbay.client.tests.utility import mock_response
 
 
@@ -186,6 +186,131 @@ def mock_delete_dataset(mocker, is_fusion, is_public, mock_get_dataset):
         mocker.patch(
             f"{gas.__name__}.Client.open_api_do",
             return_value=response_data,
+        ),
+        response_data,
+    )
+
+
+@function_fixture
+def mock_list_drafts(mocker, branch_name):
+    """Mock the list_drafts method of VersionControlClient class.
+
+    Arguments:
+        mocker: The mocker fixture.
+        branch_name: The branch name of draft.
+
+    Returns:
+        The patched mocker and response data.
+
+    """
+    drafts = [
+        {
+            "number": 1,
+            "title": "draft1",
+            "branchName": branch_name,
+            "status": "OPEN",
+            "description": "first draft of test_draft",
+        },
+        {
+            "number": 2,
+            "title": "",
+            "branchName": branch_name,
+            "status": "CLOSED",
+            "description": "",
+        },
+    ]
+    response = [Draft.loads(draft_response) for draft_response in drafts]
+    return (
+        mocker.patch(f"{version.__name__}.VersionControlClient.list_drafts", return_value=response),
+        response,
+    )
+
+
+@function_fixture
+def mock_get_branch(mocker, commit_id):
+    """Mock the get_branch method of VersionControlClient class.
+
+    Arguments:
+        mocker: The mocker fixture.
+        commit_id: The commit id of the branch.
+
+    Returns:
+        The patched mocker and response data.
+
+    """
+    response_data = Branch.loads(
+        {
+            "name": DEFAULT_BRANCH,
+            "commitId": commit_id,
+            "parentCommitId": "",
+            "title": "test_draft",
+            "description": "",
+            "committer": {"name": "", "date": 1632454975},
+        }
+    )
+    return (
+        mocker.patch(
+            f"{version.__name__}.VersionControlClient.get_branch", return_value=response_data
+        ),
+        response_data,
+    )
+
+
+@function_fixture
+def mock_update_draft(mocker):
+    """Mock the updateDraft OpenAPI.
+
+    Arguments:
+        mocker: The mocker fixture.
+
+    Returns:
+        The patched mocker and response data.
+
+    """
+    response_data = {"draftNumber": 1}
+    return (
+        mocker.patch(
+            f"{gas.__name__}.Client.open_api_do", return_value=mock_response(data=response_data)
+        ),
+        response_data,
+    )
+
+
+@function_fixture
+def mock_create_draft(mocker):
+    """Mock the createDraft OpenAPI.
+
+    Arguments:
+        mocker: The mocker fixture.
+
+    Returns:
+        The patched mocker and response data.
+
+    """
+    response_data = {"draftNumber": 1}
+    return (
+        mocker.patch(
+            f"{gas.__name__}.Client.open_api_do", return_value=mock_response(data=response_data)
+        ),
+        response_data,
+    )
+
+
+@function_fixture
+def mock_close_draft(mocker):
+    """Mock the closeDraft OpenAPI.
+
+    Arguments:
+        mocker: The mocker fixture.
+
+    Returns:
+        The patched mocker and response data.
+
+    """
+    response_data = {"status": "CLOSED"}
+    return (
+        mocker.patch(
+            f"{gas.__name__}.Client.open_api_do", return_value=mock_response(data=response_data)
         ),
         response_data,
     )
