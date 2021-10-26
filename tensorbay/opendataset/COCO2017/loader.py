@@ -47,9 +47,6 @@ def COCO2017(path: str) -> Dataset:
                     000000116040.png
                     ...
                 panoptic_val2017/
-                deprecated-challenge2017/
-                    train-ids.txt
-                    val-ids.txt
                 instances_train2017.json
                 instances_val2017.json
                 panoptic_train2017.json
