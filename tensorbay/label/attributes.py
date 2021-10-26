@@ -138,7 +138,7 @@ class Items(ReprMixin, EqMixin):
 
     @staticmethod
     def _convert_type(type_: _ArgType) -> Tuple[Union[str, List[str]], bool]:
-        if isinstance(type_, Iterable) and not isinstance(type_, str):  # pylint: disable=W1116
+        if isinstance(type_, Iterable) and not isinstance(type_, str):
             converted_types = [_AttributeType.get_type_name(single_type) for single_type in type_]
             return converted_types, "array" in converted_types
 

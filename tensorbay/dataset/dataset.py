@@ -139,7 +139,7 @@ class Notes(AttrsMixin, ReprMixin):
 
 # When the NameMixin is before Sequence[_T], typing will raise AttributeError.
 # related issue: python/typing#777
-class DatasetBase(Sequence[_T], NameMixin):  # pylint: disable=too-many-ancestors
+class DatasetBase(Sequence[_T], NameMixin):
     """This class defines the concept of a basic dataset.
 
     DatasetBase represents a whole dataset contains several segments

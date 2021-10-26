@@ -291,12 +291,14 @@ def cp(  # pylint: disable=invalid-name, too-many-arguments
 )
 @click.argument("tbrn", type=str)
 @click.option(
-    "-r", "--recursive", "is_recursive", is_flag=True, help="Remove directories recursively."
+    "-r",
+    "--recursive",
+    "is_recursive",
+    is_flag=True,
+    help="Remove directories recursively.",  # pylint: disable=invalid-name
 )
 @click.pass_obj
-def rm(  # pylint: disable=invalid-name, too-many-arguments
-    obj: ContextInfo, tbrn: str, is_recursive: bool
-) -> None:
+def rm(obj: ContextInfo, tbrn: str, is_recursive: bool) -> None:
     """Remove the remote data.\f
 
     Arguments:

@@ -105,8 +105,8 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
             # Legacy fusion dataset use uuid as frame ID
             # Keep this code here to make SDK compatible with uuid
             frame_id = from_uuid(UUID(body["frameId"]))
-            if cls._logger_flag:  # pylint: disable=protected-access
-                cls._logger_flag = False  # pylint: disable=protected-access
+            if cls._logger_flag:
+                cls._logger_flag = False
                 logger.warning(
                     "WARNING: This is a legacy fusion dataset which use uuid as frame ID, "
                     "it should be updated to ulid."

@@ -20,7 +20,7 @@ from tensorbay.utility import UserMutableSequence, common_loads
 _T = TypeVar("_T", bound=Vector2D)
 
 
-class PointList2D(UserMutableSequence[_T]):  # pylint: disable=too-many-ancestors
+class PointList2D(UserMutableSequence[_T]):
     """This class defines the concept of PointList2D.
 
     :class:`PointList2D` contains a list of 2D points.
@@ -104,7 +104,7 @@ class PointList2D(UserMutableSequence[_T]):  # pylint: disable=too-many-ancestor
 _L = TypeVar("_L", bound=PointList2D[Any])
 
 
-class MultiPointList2D(UserMutableSequence[_L]):  # pylint: disable=too-many-ancestors
+class MultiPointList2D(UserMutableSequence[_L]):
     """This class defines the concept of MultiPointList2D.
 
     :class:`MultiPointList2D` contains multiple 2D point lists.

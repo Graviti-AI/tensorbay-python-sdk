@@ -896,7 +896,7 @@ class FusionDatasetClient(DatasetClientBase):
         segment: FusionSegment,
         *,
         jobs: int = 1,
-        skip_uploaded_files: bool = False,  # pylint: disable=unused-argument
+        skip_uploaded_files: bool = False,
         quiet: bool = False,
     ) -> FusionSegmentClient:
         """Upload a fusion segment object to the draft.

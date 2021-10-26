@@ -41,7 +41,7 @@ class _A(Protocol):
         """Dumps all the information of attrs into a dict."""
 
 
-class Field:  # pylint: disable=too-many-instance-attributes
+class Field:
     """A class to identify attr fields.
 
     Arguments:

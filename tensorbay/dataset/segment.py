@@ -81,7 +81,6 @@ class Segment(NameMixin, UserMutableSequence["DataBase._Type"]):
             The Segment of the input :class:`~tensorbay.client.segment.SegmentClient`.
 
         """
-        # pylint: disable=protected-access
         segment = cls(client.name)
         segment._client = client
         segment._data = client.list_data()  # type: ignore[assignment]
@@ -179,7 +178,6 @@ class FusionSegment(NameMixin, UserMutableSequence[Frame]):
             The FusionSegment of the input :class:`~tensorbay.client.segment.FusionSegmentClient`.
 
         """
-        # pylint: disable=protected-access
         segment: _FS = object.__new__(cls)
         super(cls, segment).__init__(name=client.name)  # pylint: disable=no-value-for-parameter
         segment._client = client

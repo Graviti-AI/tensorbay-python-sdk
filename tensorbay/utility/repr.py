@@ -95,7 +95,7 @@ class _ReprSequence(ReprMixin, Sequence[Any], ABC):
     ...
 
 
-class _ReprMapping(ReprMixin, Mapping[Any, Any], ABC):  # pylint: disable=too-many-ancestors
+class _ReprMapping(ReprMixin, Mapping[Any, Any], ABC):
     ...
 
 

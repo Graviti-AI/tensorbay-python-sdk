@@ -5,9 +5,6 @@
 
 # pylint: disable=wrong-import-position
 # pylint: disable=wrong-import-order
-# pylint: disable=not-callable
-# pylint: disable=ungrouped-imports
-# pylint: disable=import-error
 # pylint: disable=pointless-string-statement
 # pylint: disable=not-an-iterable
 # pylint: disable=invalid-name

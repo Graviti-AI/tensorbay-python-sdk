@@ -205,7 +205,7 @@ class Keypoints2DSubcatalog(SubcatalogBase, IsTrackingMixin, CategoriesMixin, At
         return self._dumps()
 
 
-class LabeledKeypoints2D(_LabelBase, Keypoints2D):  # pylint: disable=too-many-ancestors
+class LabeledKeypoints2D(_LabelBase, Keypoints2D):
     """This class defines the concept of 2D keypoints label.
 
     :class:`LabeledKeypoints2D` is the 2D keypoints type of label,

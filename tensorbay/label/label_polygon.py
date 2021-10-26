@@ -201,7 +201,7 @@ class RLESubcatalog(SubcatalogBase, IsTrackingMixin, CategoriesMixin, Attributes
         IsTrackingMixin.__init__(self, is_tracking)
 
 
-class LabeledPolygon(_LabelBase, Polygon):  # pylint: disable=too-many-ancestors
+class LabeledPolygon(_LabelBase, Polygon):
     """This class defines the concept of polygon label.
 
     :class:`LabeledPolygon` is the polygon type of label,
@@ -314,9 +314,7 @@ class LabeledPolygon(_LabelBase, Polygon):  # pylint: disable=too-many-ancestors
         return self._dumps()
 
 
-class LabeledMultiPolygon(  # type: ignore[misc]
-    _LabelBase, MultiPolygon
-):  # pylint: disable=too-many-ancestors
+class LabeledMultiPolygon(_LabelBase, MultiPolygon):  # type: ignore[misc]
     """This class defines the concept of multiple polygon label.
 
     :class:`LabeledMultiPolygon` is the multipolygon type of label,
@@ -432,7 +430,7 @@ class LabeledMultiPolygon(  # type: ignore[misc]
         return self._dumps()
 
 
-class LabeledRLE(_LabelBase, RLE):  # type: ignore[misc]  # pylint: disable=too-many-ancestors
+class LabeledRLE(_LabelBase, RLE):  # type: ignore[misc]
     """This class defines the concept of rle label.
 
     :class:`LabeledRLE` is the rle type of label,

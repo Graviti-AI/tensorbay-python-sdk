@@ -194,7 +194,7 @@ class TBRN:
         Optional[str],
     ]
 
-    def __init__(  # pylint: disable=too-many-locals
+    def __init__(
         self,
         dataset_name: Optional[str] = None,
         segment_name: Optional[str] = None,
@@ -267,8 +267,7 @@ class TBRN:
         return self.get_tbrn()
 
     def _check_type(self) -> Tuple[TBRNType, int]:
-        # https://github.com/PyCQA/pylint/issues/2224
-        flag = _TBRNFlag.FIELD_HEAD.value  # pylint: disable=no-member
+        flag = _TBRNFlag.FIELD_HEAD.value
         for i, name in enumerate(self._names, 1):
             if name is not None:
                 flag |= 1 << i
