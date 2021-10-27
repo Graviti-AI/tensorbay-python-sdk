@@ -1,0 +1,6 @@
+{
+    "INSTANCE_MASK": {
+        "isTracking": true,
+        "categories": [{ "name": "background", "categoryId": 0 }]
+    }
+}
