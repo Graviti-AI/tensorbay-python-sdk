@@ -22,6 +22,7 @@ from tensorbay.opendataset.CoinImage import CoinImage
 from tensorbay.opendataset.CompCars import CompCars
 from tensorbay.opendataset.COVID_CT import COVID_CT
 from tensorbay.opendataset.COVIDChestXRay import COVIDChestXRay
+from tensorbay.opendataset.DAVIS2017 import DAVIS2017SemiSupervised, DAVIS2017Unsupervised
 from tensorbay.opendataset.DeepRoute import DeepRoute
 from tensorbay.opendataset.DogsVsCats import DogsVsCats
 from tensorbay.opendataset.DownsampledImagenet import DownsampledImagenet
@@ -83,6 +84,8 @@ __all__ = [
     "CoinImage",
     "COVIDChestXRay",
     "CompCars",
+    "DAVIS2017SemiSupervised",
+    "DAVIS2017Unsupervised",
     "DeepRoute",
     "DogsVsCats",
     "DownsampledImagenet",
