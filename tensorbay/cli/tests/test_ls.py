@@ -11,7 +11,14 @@ from tensorbay.cli.tests.conftest import assert_cli_fail, assert_cli_success
 
 @pytest.mark.parametrize("is_fusion", [True, False])
 def test_ls(
-    mocker, invoke, is_fusion, mock_get_dataset, mock_list_datasets, mock_list_segments, mock_paths
+    mocker,
+    invoke,
+    is_fusion,
+    mock_get_dataset,
+    mock_list_datasets,
+    mock_list_segments,
+    mock_paths,
+    mock_get_data,
 ):
     params = {
         "offset": 0,
@@ -39,6 +46,7 @@ def test_ls(
     assert_cli_success(result, f"total {len(segment_names)}\n{segment_output}\n")
 
     list_paths, paths = mock_paths(mocker)
+    remote_path = paths[0]
 
     result = invoke(ls, [f"tb:{dataset_name}:{segment_name}", "-l"])
     if is_fusion:
@@ -58,6 +66,14 @@ def test_ls(
         )
         assert_cli_success(result, f"total {len(segment_names)*len(paths)}\n{path_output}\n")
         list_paths.assert_called_with()
+
+    mock_get_data(mocker, remote_path)
+    tbrn = f"tb:{dataset_name}:{segment_name}://{remote_path}"
+    result = invoke(ls, [tbrn])
+    if is_fusion:
+        assert_cli_fail(result, "ERROR: List data in fusion segment is not supported yet\n")
+    else:
+        assert_cli_success(result, f"{tbrn}\n")
 
     segments_params = {"commit": "4", "offset": 0, "limit": 128}
     get_datasets.assert_called_with(dataset_name)

@@ -98,12 +98,24 @@ def _ls_segment(
 
 
 def _ls_normal_file(
-    gas: GAS,  # pylint: disable=unused-argument
-    tbrn_info: TBRN,  # pylint: disable=unused-argument
+    gas: GAS,
+    tbrn_info: TBRN,
     list_all_files: bool,  # pylint: disable=unused-argument
     show_total_num: bool,  # pylint: disable=unused-argument
 ) -> None:
-    error("List for specific file is not supported yet")
+    dataset_client = get_dataset_client(gas, tbrn_info)
+    if isinstance(dataset_client, FusionDatasetClient):
+        error("List data in fusion segment is not supported yet")
+
+    remote_path = tbrn_info.remote_path
+    dataset_client.get_segment(tbrn_info.segment_name).get_data(remote_path=remote_path)
+    _echo_data(
+        tbrn_info.dataset_name,
+        tbrn_info.draft_number,
+        tbrn_info.revision,
+        tbrn_info.segment_name,
+        (remote_path,),
+    )
 
 
 _LS_FUNCS = {
