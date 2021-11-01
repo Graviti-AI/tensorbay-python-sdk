@@ -15,6 +15,7 @@ from tensorbay.client import gas, segment, version
 from tensorbay.client.gas import DEFAULT_BRANCH
 from tensorbay.client.struct import Branch, Draft
 from tensorbay.client.tests.utility import mock_response
+from tensorbay.dataset import RemoteData
 from tensorbay.exception import UnauthorizedError
 
 
@@ -44,7 +45,7 @@ def mock_list_datasets(mocker):
         mocker: The mocker fixture.
 
     Returns:
-        The pached mocker and response data.
+        The patched mocker and response data.
 
     """
     response_data = {
@@ -81,7 +82,7 @@ def mock_get_dataset(mocker, is_fusion, is_public):
         is_public: Whether the dataset is a public dataset.
 
     Returns:
-        The pached mocker and response data.
+        The patched mocker and response data.
 
     """
     response_data = {
@@ -109,7 +110,7 @@ def mock_list_segments(mocker):
         mocker: The mocker fixture.
 
     Returns:
-        The pached mocker and response data.
+        The patched mocker and response data.
 
     """
     response_data = {
@@ -138,13 +139,35 @@ def mock_paths(mocker):
         mocker: The mocker fixture.
 
     Returns:
-        The pached mocker and response data.
+        The patched mocker and response data.
 
     """
     response_data = [f"data{i}.png" for i in range(2)]
     return (
         mocker.patch(
             f"{segment.__name__}.SegmentClient.list_data_paths",
+            return_value=response_data,
+        ),
+        response_data,
+    )
+
+
+@function_fixture
+def mock_get_data(mocker, remote_path):
+    """Mock the get_data funcion of SegmentClient class.
+
+    Arguments:
+        mocker: The mocker fixture.
+        remote_path: The remote path of data.
+
+    Returns:
+        The patched mocker and response data.
+
+    """
+    response_data = [RemoteData(remote_path=remote_path)]
+    return (
+        mocker.patch(
+            f"{segment.__name__}.SegmentClient.get_data",
             return_value=response_data,
         ),
         response_data,
@@ -329,7 +352,7 @@ def mock_list_data_details(mocker, num: int = 1):
         num: The number of data.
 
     Returns:
-        The pached mocker and response data.
+        The patched mocker and response data.
 
     """
     response_data = {
@@ -364,7 +387,7 @@ def mock_get_total_size(mocker, large: bool = False):
         large: Whether the dataset size is large than free storage.
 
     Returns:
-        The pached mocker and response data.
+        The patched mocker and response data.
 
     """
     response_data = {"totalSize": 7 if not large else sys.maxsize}
@@ -386,7 +409,7 @@ def mock_get_users(mocker, is_valid):
         is_valid: Whether the mock need raise UnauthorizedError.
 
     Returns:
-        The pached mocker and response data.
+        The patched mocker and response data.
 
     """
     response_data = {
