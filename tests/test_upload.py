@@ -8,10 +8,10 @@ import ulid
 
 from tensorbay import GAS
 from tensorbay.client.gas import DEFAULT_BRANCH
-from tensorbay.dataset import Data, Dataset, Frame, FusionSegment, Segment
+from tensorbay.dataset import Data, Dataset, Frame, FusionDataset, FusionSegment, Segment
 from tensorbay.exception import FrameError, ResourceNotExistError, ResponseError
 from tensorbay.label import Catalog, Label
-from tensorbay.sensor import Sensor
+from tensorbay.sensor import Sensor, Sensors
 from tests.utility import get_dataset_name
 
 CATALOG = {
@@ -55,8 +55,9 @@ LABEL = {
     ]
 }
 
+LIDAR_NAME = "Lidar1"
 LIDAR_DATA = {
-    "name": "Lidar1",
+    "name": LIDAR_NAME,
     "type": "LIDAR",
     "extrinsics": {
         "translation": {"x": 1, "y": 2, "z": 3},
@@ -177,6 +178,43 @@ class TestUploadDataset:
 
         with pytest.raises(ResourceNotExistError):
             gas_client.upload_dataset(dataset, branch_name="wrong")
+
+        gas_client.delete_dataset(dataset_name)
+
+    def test_upload_dataset_after_commit(self, accesskey, url, tmp_path):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_dataset_name()
+        gas_client.create_dataset(dataset_name, is_fusion=True)
+
+        dataset = FusionDataset(name=dataset_name)
+        dataset._catalog = Catalog.loads(CATALOG)
+        dataset.notes.is_continuous = True
+        segment = dataset.create_segment("Segment1")
+        segment.sensors = Sensors.loads([LIDAR_DATA])
+
+        path = tmp_path / "sub"
+        path.mkdir()
+        for i in range(10):
+            frame = Frame()
+            local_path = path / f"hello{i}.txt"
+            local_path.write_text("CONTENT")
+            data = Data(local_path=str(local_path))
+            data.label = Label.loads(LABEL)
+            frame[LIDAR_NAME] = data
+            segment.append(frame)
+
+        dataset_client = gas_client.upload_dataset(dataset)
+        dataset_client.commit("test")
+        dataset_remote = FusionDataset(name=dataset_name, gas=gas_client)
+        assert dataset_remote.notes.is_continuous == dataset.notes.is_continuous
+        assert dataset_remote.catalog == dataset.catalog
+
+        segment_remote = dataset_remote[0]
+        assert len(segment_remote) == len(segment)
+        assert segment_remote.sensors == segment.sensors
+        for index, frame in enumerate(segment_remote):
+            assert frame[LIDAR_NAME].path == segment[index][LIDAR_NAME].target_remote_path
+            assert frame[LIDAR_DATA["name"]].label == Label.loads(LABEL)
 
         gas_client.delete_dataset(dataset_name)
 
