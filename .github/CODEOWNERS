@@ -10,6 +10,8 @@
 /.github/workflows/ @AChenQ
 /.pre-commit-config.yaml @AChenQ
 
+/tensorbay/conftest.py @AChenQ
+
 /tensorbay/cli/ @Lee-000
 /tensorbay/cli/tests/ @Lee-000 @AChenQ
 
