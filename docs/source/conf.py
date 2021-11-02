@@ -2,7 +2,7 @@
 #
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
-# pylint: disable=missing-module-docstring,invalid-name
+# pylint: disable=missing-module-docstring,invalid-name,wrong-import-position
 #
 # This file only contains a selection of the most common options. For a full
 # list see the documentation:
@@ -20,6 +20,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parents[2]))
 
+from docs.plugins.example_creator import ExampleCreator  # noqa: E402
 
 # -- Project information -----------------------------------------------------
 
@@ -79,3 +80,6 @@ html_favicon = "images/favicon.svg"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 # html_static_path = ["_static"]
+
+# -- Operations for dataset management examples generation ------------------
+ExampleCreator.generate_examples()

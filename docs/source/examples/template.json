@@ -1,0 +1,34 @@
+{
+    "<dataset_name>": {
+        "head": "This topic describes how to manage the\n`<dataset_alias> Dataset <https://gas.graviti.cn/dataset/data-decorators/<dataset_name>>`_,\nwhich is a dataset with <label_types> annotation",
+        "with-image": "(:numref:`Fig. %s <<dataset_alias>-image>`).\n\n.. _<dataset_alias>-image:\n\n.. figure:: ../images/<dataset_name>.png\n   :scale: 50 %\n   :align: center\n\n   The preview of a dataset sample from \"<dataset_alias>\".\n\n",
+        "without-image": ".\n\n"
+    },
+    "Authorize a Client Instance": "An :ref:`reference/glossary:accesskey` is needed to authenticate identity when using TensorBay.\n\n.. code:: python\n\n   from tensorbay import GAS\n\n   ACCESS_KEY = \"Accesskey-*****\"\n   gas = GAS(ACCESS_KEY)\n\n",
+    "Create Dataset": ".. code:: python\n\n   gas.create_dataset(\"<dataset_name>\")\n\n",
+    "Organize Dataset": {
+        "head": "It takes the following steps to organize the \"<dataset_alias>\" dataset\nby the :class:`~tensorbay.dataset.dataset.Dataset` instance.\n\nStep 1: Write the Catalog\n=========================\n\nA :ref:`reference/dataset_structure:catalog` contains all label information of one dataset,\nwhich is typically stored in a json file.\n\n",
+        "with catalog": ".. literalinclude:: ../../../tensorbay/opendataset/<dataset_name>/catalog.json\n   :language: json\n   :name: dataset-catalog\n   :linenos:\n\n",
+        "without catalog": "However the catalog of <dataset_alias> is too large, instead of reading it from json file, we read it by mapping from subcatalog that is loaded by the raw file.\n\n",
+        "tail": ".. important::\n\n   See :ref:`catalog table <reference/dataset_structure:catalog>` for more catalogs with different label types.\n\nStep 2: Write the Dataloader\n============================\n\nA :ref:`reference/glossary:dataloader` is needed to organize the dataset into a :class:`~tensorbay.dataset.dataset.Dataset` instance.\n\n.. literalinclude:: ../../../tensorbay/opendataset/<dataset_name>/loader.py\n   :language: python\n   :name: dataloader\n   :linenos:\n\n.. note::\n\n   Since the :ref:`<dataset_alias> dataloader <dataloader>` above is already included in TensorBay,\n   so it uses relative import.\n   However, the regular import should be used when writing a new dataloader.\n\n.. code:: python\n\n   from tensorbay.dataset import Data, Dataset\n   from tensorbay.label import <label_classes>\n\nThere are already a number of dataloaders in TensorBay SDK provided by the community.\nThus, instead of writing, importing an available dataloader is also feasible.\n\n.. code:: python\n\n   from tensorbay.opendataset import <dataset_name>\n\n   dataset = <dataset_name>(\"path/to/dataset/directory\")\n\n.. note::\n\n   Note that catalogs are automatically loaded in available dataloaders, users do not have to write them again.\n\n.. important::\n\n   See :ref:`dataloader table <reference/glossary:dataloader>` for dataloaders with different label types.\n\n"
+    },
+    "Upload Dataset": "The organized \"<dataset_alias>\" dataset can be uploaded to TensorBay for sharing, reuse, etc.\n\n.. code:: python\n\n   dataset_client = gas.upload_dataset(dataset)\n   dataset_client.commit(\"initial commit\")\n\nSimilar with Git, the commit step after uploading can record changes to the dataset as a version.\nIf needed, do the modifications and commit again.\nPlease see :ref:`features/version_control:Version Control` for more details.\n\n",
+    "Read Dataset": {
+        "get_dataset": "Now \"<dataset_alias>\" dataset can be read from TensorBay.\n\n.. code:: python\n\n   dataset = Dataset(\"<dataset_name>\", gas)\n\nIn :ref:`reference/dataset_structure:dataset` \"<dataset_alias>\",\nthere <segment_number> <reference/dataset_structure:segment>`: <segments>.",
+        "list_segments": "\nGet the segment names by listing them all.\n\n.. code:: python\n\n   dataset.keys()",
+        "get_segment": "\n\nGet a segment by passing the required segment name.\n\n.. code:: python\n\n   segment = dataset[\"<segment_name>\"]\n\nIn the <segment_name> :ref:`reference/dataset_structure:segment`,\nthere is a sequence of :ref:`reference/dataset_structure:data`,\nwhich can be obtained by index.\n\n.. code:: python\n\n   data = segment[0]\n\n"
+    },
+    "Read Label": {
+        "head": "Read :ref:`reference/label_format:<label_type>` annotation.\n\n",
+        "category": "The information stored in :ref:`reference/label_format:category` is one of the names in \"categories\" list of :ref:`catalog.json <dataset-catalog>`.\n",
+        "attributes": "The information stored in :ref:`reference/label_format:attributes` is one or several of the attributes in \"attributes\" list of :ref:`catalog.json <dataset-catalog>`.\n",
+        "instance": "The informatin stored in :ref:`reference/label_format:instance` is the instance id of the labeled object.\n",
+        "Classification": ".. code:: python\n\n   category = data.label.classification.category\n\n",
+        "Box2D": ".. code:: python\n\n   label_box2d = data.label.box2d[0]\n   category = label_box2d.category\n   attributes = label_box2d.attributes\n   xmin = label_box2d.xmin\n   ymin = label_box2d.ymin\n   xmax = label_box2d.xmax\n   ymax = label_box2d.ymax\n\n",
+        "Box3D": ".. code:: python\n\n   label_box3d = data.label.box3d[0]\n   category = label_box3d.category\n   attributes = label_box3d.attributes\n   translation = label_box3d.translation\n   rotation = label_box3d.rotation\n   size = label_box3d.size\n\n",
+        "Keypoints2D": ".. code:: python\n\n   label_keypoints2d = data.label.keypoints2d[0]\n   x = data.label.keypoints2d[0][0].x\n   y = data.label.keypoints2d[0][0].y\n   v = data.label.keypoints2d[0][0].v\n\nThe information stored in ``x`` (``y``) is the x (y) coordinate of one keypoint of one keypoints list.\nThe information stored in ``v`` is the visible status of one keypoint.\n\n",
+        "Sentence": ".. code:: python\n\n   labeled_sentence = data.label.sentence[0]\n   sentence = labeled_sentence.sentence\n   spell = labeled_sentence.spell\n   phone = labeled_sentence.phone\n\n",
+        "tail": "See :ref:`reference/label_format:Label Format` for more details.\n\n"
+    },
+    "Delete Dataset": ".. code:: python\n\n   gas.delete_dataset(\"<dataset_name>\")\n"
+}
