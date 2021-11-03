@@ -120,7 +120,7 @@ Here are some dataloader examples of datasets with different label types and con
 
   .. _dogs vs cats: https://gas.graviti.cn/dataset/data-decorators/DogsVsCats
 
-See more dataloader examples in :ref:`reference/api/opendataset/index:tensorbay.opendataset`.
+See more dataloader examples in :ref:`reference/api/opendataset:tensorbay.opendataset`.
 
 dataset
 =======
