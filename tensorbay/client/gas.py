@@ -27,7 +27,6 @@ from tensorbay.client.status import Status
 from tensorbay.client.struct import ROOT_COMMIT_ID, UserInfo
 from tensorbay.dataset import Dataset, FusionDataset
 from tensorbay.exception import DatasetTypeError, ResourceNotExistError
-from tensorbay.utility import Deprecated
 
 DatasetClientType = Union[DatasetClient, FusionDatasetClient]
 
@@ -401,34 +400,6 @@ class GAS:
             alias=alias,
             is_public=is_public,
         )
-
-    @Deprecated(since="1.12.0", removed_in="1.15.0", substitute="GAS.create_dataset")
-    def create_auth_dataset(
-        self,
-        name: str,
-        is_fusion: bool = False,
-        *,
-        config_name: Optional[str] = None,
-        alias: str = "",
-    ) -> DatasetClientType:
-        """Create a TensorBay dataset with given name in auth cloud storage.
-
-        The dataset will be linked to the given auth cloud storage
-            and all of relative data will be stored in auth cloud storage.
-
-        Arguments:
-            name: Name of the dataset, unique for a user.
-            is_fusion: Whether the dataset is a fusion dataset, True for fusion dataset.
-            config_name: The auth storage config name.
-            alias: Alias of the dataset, default is "".
-
-        Returns:
-            The created :class:`~tensorbay.client.dataset.DatasetClient` instance or
-            :class:`~tensorbay.client.dataset.FusionDatasetClient` instance (is_fusion=True),
-            and the status of dataset client is "commit".
-
-        """
-        return self.create_dataset(name, is_fusion, config_name=config_name, alias=alias)
 
     @overload
     def get_dataset(self, name: str, is_fusion: Literal[False] = False) -> DatasetClient:
