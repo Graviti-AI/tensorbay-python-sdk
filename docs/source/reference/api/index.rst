@@ -11,4 +11,4 @@ API Reference
    sensor/index
    utility/index
    exception
-   opendataset/index
+   opendataset
