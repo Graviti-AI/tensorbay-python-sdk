@@ -6,8 +6,7 @@
 """Utility method for unit test in client module."""
 
 from typing import Any, Callable, Optional
-
-from mock import Mock
+from unittest.mock import Mock
 
 
 def mock_response(
