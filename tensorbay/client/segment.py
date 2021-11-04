@@ -27,7 +27,7 @@ import os
 import time
 from copy import deepcopy
 from itertools import zip_longest
-from typing import TYPE_CHECKING, Any, Callable, Dict, Generator, Iterable, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Dict, Generator, Iterable, Optional, Tuple, Union
 
 import filetype
 from requests_toolbelt import MultipartEncoder
@@ -40,25 +40,13 @@ from tensorbay.dataset import AuthData, Data, Frame, RemoteData
 from tensorbay.exception import FrameError, InvalidParamsError, ResponseError
 from tensorbay.label import Label
 from tensorbay.sensor.sensor import Sensor, Sensors
-from tensorbay.utility import FileMixin, chunked, locked
+from tensorbay.utility import URL, FileMixin, chunked, locked
 
 if TYPE_CHECKING:
     from tensorbay.client.dataset import DatasetClient, FusionDatasetClient
 
 _STRATEGIES = {"abort", "override", "skip"}
 _MASK_KEYS = ("semantic_mask", "instance_mask", "panoptic_mask")
-
-
-class _UrlGetters:
-    def __init__(self, urls: LazyPage[str]) -> None:
-        self._urls = urls
-
-    def __getitem__(self, index: int) -> Callable[[str], str]:
-        return lambda _: self._urls.items[index].get()
-
-    def update(self) -> None:
-        """Update all urls."""
-        self._urls.pull()
 
 
 class SegmentClientBase:
@@ -364,41 +352,34 @@ class SegmentClient(SegmentClientBase):
     def _generate_data(self, offset: int = 0, limit: int = 128) -> Generator[RemoteData, None, int]:
         response = self._list_data_details(offset, limit)
 
-        urls = _UrlGetters(
-            LazyPage.from_items(
-                offset,
-                limit,
-                self._generate_urls,
-                (item["url"] for item in response["dataDetails"]),
-            ),
+        urls = LazyPage.from_items(
+            offset,
+            limit,
+            self._generate_urls,
+            (item["url"] for item in response["dataDetails"]),
         )
 
         mask_urls = {}
         for key in _MASK_KEYS:
-            mask_urls[key] = _UrlGetters(
-                LazyPage(
-                    offset,
-                    limit,
-                    lambda offset, limit, k=key: self._generate_mask_urls(  # type: ignore[misc]
-                        k.upper(), offset, limit
-                    ),
+            mask_urls[key] = LazyPage(
+                offset,
+                limit,
+                lambda offset, limit, k=key: self._generate_mask_urls(  # type: ignore[misc]
+                    k.upper(), offset, limit
                 ),
             )
 
         for i, item in enumerate(response["dataDetails"]):
             data = RemoteData.from_response_body(
                 item,
-                _url_getter=urls[i],
-                _url_updater=urls.update,
+                url=URL.from_getter(urls.items[i].get, urls.pull),
                 cache_path=self._cache_path,
             )
             label = data.label
             for key in _MASK_KEYS:
                 mask = getattr(label, key, None)
                 if mask:
-                    # pylint: disable=protected-access
-                    mask._url_getter = mask_urls[key][i]
-                    mask._url_updater = mask_urls[key].update
+                    mask.url = URL.from_getter(mask_urls[key].items[i].get, mask_urls[key].pull)
                     mask.cache_path = os.path.join(self._cache_path, key, mask.path)
 
             yield data

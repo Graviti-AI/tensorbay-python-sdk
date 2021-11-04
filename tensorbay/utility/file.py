@@ -19,6 +19,52 @@ from _io import BufferedReader
 from tensorbay.utility.repr import ReprMixin
 
 
+class URL(ReprMixin):
+    """URL is a class used to get and update the url.
+
+    Arguments:
+        url: The url.
+        updater: A function used to update the url.
+
+    """
+
+    def __init__(self, url: str, updater: Callable[[], Optional[str]]) -> None:
+        self._updater = updater
+        self._getter: Callable[..., str] = lambda: url
+
+    @classmethod
+    def from_getter(cls, getter: Callable[..., str], updater: Callable[[], Optional[str]]) -> "URL":
+        """Create a URL instance from the given getter and updater.
+
+        Arguments:
+            getter: The url getter of the file.
+            updater: The updater of the url.
+
+        Returns:
+            The URL instance which stores the url the updater.
+
+        """
+        obj: "URL" = object.__new__(cls)
+        obj._getter = getter
+        obj._updater = updater
+        return obj
+
+    def update(self) -> None:
+        """Update the url."""
+        url = self._updater()
+        if url is not None:
+            self._getter = lambda: url  # type: ignore[assignment, return-value]
+
+    def get(self) -> str:
+        """Get the url of the file.
+
+        Returns:
+            The url.
+
+        """
+        return self._getter()
+
+
 class FileMixin(ReprMixin):
     """FileMixin is a mixin class to mixin file related methods for local file.
 
@@ -90,7 +136,7 @@ class RemoteFileMixin(ReprMixin):
 
     Arguments:
         local_path: The file local path.
-        _url_getter: The url getter of the remote file.
+        url: The URL instance used to get and update url.
         cache_path: The path to store the cache.
 
     Attributes:
@@ -104,59 +150,30 @@ class RemoteFileMixin(ReprMixin):
         self,
         remote_path: str,
         *,
-        _url_getter: Optional[Callable[[str], str]] = None,
-        _url_updater: Optional[Callable[[], None]] = None,
+        url: Optional[URL] = None,
         cache_path: str = "",
     ) -> None:
         self.path = remote_path
-        self._url_getter = _url_getter
-        self._url_updater = _url_updater
+        self.url = url
         self.cache_path = os.path.join(cache_path, remote_path) if cache_path else ""
 
     def _repr_head(self) -> str:
         return f'{self.__class__.__name__}("{self.path}")'
 
     def _urlopen(self) -> HTTPResponse:
+
+        if not self.url:
+            raise ValueError(f"The file cannot open because {self._repr_head()} has no url")
+
         try:
             return urlopen(  # type: ignore[no-any-return]
-                quote(self.get_url(), safe=printable), timeout=2
+                quote(self.url.get(), safe=printable), timeout=2
             )
         except HTTPError as error:
             if error.code == 403:
-                self.update_url()
-                return urlopen(quote(self.get_url(), safe=printable))  # type: ignore[no-any-return]
+                self.url.update()
+                return urlopen(quote(self.url.get(), safe=printable))  # type: ignore[no-any-return]
             raise
-
-    def update_url(self) -> None:
-        """Update the url when the url is timed out.
-
-        Raises:
-            ValueError: When the _url_updater is missing.
-
-        """
-        if not self._url_updater:
-            raise ValueError(
-                f"The file URL cannot be updated because {self._repr_head()} has no url updater"
-            )
-
-        self._url_updater()
-
-    def get_url(self) -> str:
-        """Return the url of the data hosted by tensorbay.
-
-        Returns:
-            The url of the data.
-
-        Raises:
-            ValueError: When the _url_getter is missing.
-
-        """
-        if not self._url_getter:
-            raise ValueError(
-                f"The file URL cannot be got because {self._repr_head()} has no url getter"
-            )
-
-        return self._url_getter(self.path)
 
     def open(self) -> Union[HTTPResponse, BufferedReader]:
         """Return the binary file pointer of this file.

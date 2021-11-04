@@ -21,7 +21,7 @@ from ulid import ULID, from_str, from_uuid
 
 from tensorbay.client.lazy import LazyPage
 from tensorbay.dataset.data import DataBase, RemoteData
-from tensorbay.utility import UserMutableMapping
+from tensorbay.utility import URL, UserMutableMapping
 
 logger = logging.getLogger(__name__)
 
@@ -114,12 +114,10 @@ class Frame(UserMutableMapping[str, "DataBase._Type"]):
         frame = cls(frame_id)
         for data_contents in body["frame"]:
             sensor_name = data_contents["sensorName"]
+            url = URL.from_getter(lambda s=sensor_name: urls.items[url_index].get()[s], urls.pull)
             frame[sensor_name] = RemoteData.from_response_body(
                 data_contents,
-                _url_getter=lambda _, s=sensor_name: urls.items[  # type: ignore[misc]
-                    url_index
-                ].get()[s],
-                _url_updater=urls.pull,
+                url=url,
                 cache_path=cache_path,
             )
         return frame
