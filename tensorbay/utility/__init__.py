@@ -13,7 +13,7 @@ from tensorbay.utility.deprecated import (
     Disable,
     KwargsDeprecated,
 )
-from tensorbay.utility.file import FileMixin, RemoteFileMixin
+from tensorbay.utility.file import URL, FileMixin, RemoteFileMixin
 from tensorbay.utility.itertools import chunked
 from tensorbay.utility.name import NameList, NameMixin, SortedNameList
 from tensorbay.utility.repr import ReprMixin, ReprType, repr_config
@@ -43,6 +43,7 @@ __all__ = [
     "TypeEnum",
     "TypeMixin",
     "TypeRegister",
+    "URL",
     "UserMapping",
     "UserMutableMapping",
     "UserMutableSequence",

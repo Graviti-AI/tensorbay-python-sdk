@@ -9,6 +9,7 @@ from pathlib import Path
 import pytest
 
 from tensorbay.dataset.data import Data, RemoteData
+from tensorbay.utility import URL
 
 _REMOTE_DATA = {
     "remotePath": "test.json",
@@ -16,6 +17,7 @@ _REMOTE_DATA = {
     "label": {},
     "url": "url",
 }
+url = URL("url", lambda: "url")
 
 
 class TestData:
@@ -62,21 +64,19 @@ class TestRemoteData:
     def test_init(self):
         remote_path = "A/test.json"
         timestamp = 1614667532
-        remote_data = RemoteData(remote_path, timestamp=timestamp, _url_getter=lambda x: x)
+        remote_data = RemoteData(remote_path, timestamp=timestamp, url=url)
         assert remote_data.path == remote_path
         assert remote_data.timestamp == timestamp
-        assert remote_data.get_url() == remote_path
+        assert remote_data.url.get() == "url"
 
     def test_get_url(self):
         remote_data = RemoteData("A/test.josn")
         with pytest.raises(ValueError):
-            remote_data.get_url()
+            remote_data.open()
 
     def test_from_response_body(self):
-        data = RemoteData.from_response_body(
-            _REMOTE_DATA, _url_getter=lambda _: "url", cache_path="cache_path"
-        )
+        data = RemoteData.from_response_body(_REMOTE_DATA, url=url, cache_path="cache_path")
         assert data.path == _REMOTE_DATA["remotePath"]
         assert data.timestamp == _REMOTE_DATA["timestamp"]
-        assert data.get_url() == "url"
+        assert data.url.get() == "url"
         assert data.cache_path == os.path.join("cache_path", _REMOTE_DATA["remotePath"])

@@ -52,9 +52,9 @@ class TestFrame:
         assert frame.frame_id == _FRAME_ID
         assert frame["sensor1"].path == "test1.png"
         assert frame["sensor1"].timestamp == 1614945883
-        assert frame["sensor1"].get_url() == "url1"
+        assert frame["sensor1"].url.get() == "url1"
         assert frame["sensor1"].cache_path == os.path.join("cache_path", "test1.png")
         assert frame["sensor2"].path == "test2.png"
         assert frame["sensor2"].timestamp == 1614945884
-        assert frame["sensor2"].get_url() == "url2"
+        assert frame["sensor2"].url.get() == "url2"
         assert frame["sensor2"].cache_path == os.path.join("cache_path", "test2.png")

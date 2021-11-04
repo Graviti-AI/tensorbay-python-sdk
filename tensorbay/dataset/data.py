@@ -11,10 +11,10 @@ It contains path information of a data sample and its corresponding labels.
 """
 
 import os
-from typing import Any, Callable, Dict, Optional, Type, TypeVar, Union
+from typing import Any, Dict, Optional, Type, TypeVar, Union
 
 from tensorbay.label import Label
-from tensorbay.utility import FileMixin, RemoteFileMixin, ReprMixin
+from tensorbay.utility import URL, FileMixin, RemoteFileMixin, ReprMixin
 
 
 class DataBase(ReprMixin):
@@ -138,7 +138,7 @@ class RemoteData(DataBase, RemoteFileMixin):
     Arguments:
         remote_path: The file remote path.
         timestamp: The timestamp for the file.
-        _url_getter: The url getter of the remote file.
+        url: The URL instance used to get and update url.
         cache_path: The path to store the cache.
 
     Attributes:
@@ -146,6 +146,7 @@ class RemoteData(DataBase, RemoteFileMixin):
         timestamp: The timestamp for the file.
         label: The :class:`~tensorbay.label.label.Label` instance that contains
                 all the label information of the file.
+        url: The :class:`~tensorbay.utility.file.URL` instance used to get and update url.
 
     """
 
@@ -156,16 +157,14 @@ class RemoteData(DataBase, RemoteFileMixin):
         remote_path: str,
         *,
         timestamp: Optional[float] = None,
-        _url_getter: Optional[Callable[[str], str]] = None,
-        _url_updater: Optional[Callable[[], None]] = None,
+        url: Optional[URL] = None,
         cache_path: str = "",
     ) -> None:
         DataBase.__init__(self, timestamp)
         RemoteFileMixin.__init__(
             self,
             remote_path,
-            _url_getter=_url_getter,
-            _url_updater=_url_updater,
+            url=url,
             cache_path=cache_path,
         )
 
@@ -174,10 +173,9 @@ class RemoteData(DataBase, RemoteFileMixin):
         cls: Type[_T],
         body: Dict[str, Any],
         *,
-        _url_getter: Optional[Callable[[str], str]],
-        _url_updater: Optional[Callable[[], None]] = None,
-        cache_path: str = "",  # noqa: DAR101
-    ) -> _T:
+        url: Optional[URL] = None,
+        cache_path: str = "",
+    ) -> _T:  # noqa: DAR101
         """Loads a :class:`RemoteData` object from a response body.
 
         Arguments:
@@ -198,9 +196,7 @@ class RemoteData(DataBase, RemoteFileMixin):
                             "SENTENCE": {...}
                         }
                     }
-
-            _url_getter: The url getter of the remote file.
-            _url_updater: The url updater of the remote file.
+            url: The URL instance used to get and update url.
             cache_path: The path to store the cache.
 
         Returns:
@@ -210,8 +206,7 @@ class RemoteData(DataBase, RemoteFileMixin):
         data = cls(
             body["remotePath"],
             timestamp=body.get("timestamp"),
-            _url_getter=_url_getter,
-            _url_updater=_url_updater,
+            url=url,
             cache_path=cache_path,
         )
         data.label._loads(body["label"])  # pylint: disable=protected-access
@@ -230,13 +225,14 @@ class AuthData(DataBase, RemoteFileMixin):
         cloud_path: The cloud file path.
         target_remote_path: The file remote path after uploading to tensorbay.
         timestamp: The timestamp for the file.
-        _url_getter: The url getter of the remote file.
+        url: The URL instance used to get and update url.
 
     Attributes:
         path: The cloud file path.
         timestamp: The timestamp for the file.
         label: The :class:`~tensorbay.label.label.Label` instance that contains
                 all the label information of the file.
+        url: The :class:`~tensorbay.utility.file.URL` instance used to get and update url.
 
     """
 
@@ -246,10 +242,10 @@ class AuthData(DataBase, RemoteFileMixin):
         *,
         target_remote_path: Optional[str] = None,
         timestamp: Optional[float] = None,
-        _url_getter: Optional[Callable[[str], str]] = None,
+        url: Optional[URL] = None,
     ) -> None:
         DataBase.__init__(self, timestamp)
-        RemoteFileMixin.__init__(self, cloud_path, _url_getter=_url_getter)
+        RemoteFileMixin.__init__(self, cloud_path, url=url)
         self._target_remote_path = target_remote_path
 
     @property

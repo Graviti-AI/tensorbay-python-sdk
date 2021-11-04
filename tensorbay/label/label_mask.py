@@ -5,11 +5,11 @@
 
 """Mask related classes."""
 
-from typing import Any, Callable, Dict, Optional, Type, TypeVar
+from typing import Any, Dict, Optional, Type, TypeVar
 
 from tensorbay.label.basic import AttributeType, SubcatalogBase
 from tensorbay.label.supports import AttributesMixin, IsTrackingMixin, MaskCategoriesMixin
-from tensorbay.utility import FileMixin, RemoteFileMixin, ReprMixin
+from tensorbay.utility import URL, FileMixin, RemoteFileMixin, ReprMixin
 
 
 class SemanticMaskSubcatalog(SubcatalogBase, MaskCategoriesMixin, AttributesMixin):
@@ -462,11 +462,9 @@ class RemotePanopticMask(PanopticMaskBase, RemoteFileMixin):
 
     _T = TypeVar("_T", bound="RemotePanopticMask")
 
-    def __init__(
-        self, remote_path: str, *, _url_getter: Optional[Callable[[str], str]] = None
-    ) -> None:
+    def __init__(self, remote_path: str, *, url: Optional[URL] = None) -> None:
         PanopticMaskBase.__init__(self)
-        RemoteFileMixin.__init__(self, remote_path, _url_getter=_url_getter)
+        RemoteFileMixin.__init__(self, remote_path, url=url)
 
     @classmethod
     def from_response_body(cls: Type[_T], body: Dict[str, Any]) -> _T:

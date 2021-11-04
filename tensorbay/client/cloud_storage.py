@@ -13,6 +13,7 @@ from typing import Any, Dict, Iterator, List
 
 from tensorbay.client.requests import Client
 from tensorbay.dataset import AuthData
+from tensorbay.utility import URL
 
 
 class CloudClient:
@@ -61,5 +62,12 @@ class CloudClient:
 
         """
         return [
-            AuthData(cloud_path, _url_getter=self._get_url) for cloud_path in self._list_files(path)
+            AuthData(
+                cloud_path,
+                url=URL.from_getter(
+                    lambda c=cloud_path: self._get_url(c),
+                    lambda c=cloud_path: self._get_url(c),  # type: ignore[misc]
+                ),
+            )
+            for cloud_path in self._list_files(path)
         ]
