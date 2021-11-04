@@ -21,9 +21,8 @@ _LABEL_FILENAME_DICT = {
 
 
 def BSTLD(path: str) -> Dataset:
-    """Dataloader of the `BSTLD`_ dataset.
-
-    .. _BSTLD: https://hci.iwr.uni-heidelberg.de/content/bosch-small-traffic-lights-dataset
+    """`BSTLD <https://hci.iwr.uni-heidelberg.de/content\
+    /bosch-small-traffic-lights-dataset>`_ dataset.
 
     The file structure should be like::
 

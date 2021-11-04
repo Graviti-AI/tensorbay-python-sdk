@@ -15,9 +15,8 @@ SEGMENT_NAMES = ["train_32x32", "train_64x64", "valid_32x32", "valid_64x64"]
 
 
 def DownsampledImagenet(path: str) -> Dataset:
-    """Dataloader of the `Downsampled Imagenet`_ dataset.
-
-    .. _Downsampled Imagenet: http://image-net.org/small/download.php
+    """`Downsampled Imagenet <https://www.tensorflow.org/datasets\
+    /catalog/downsampled_imagenet>`_ dataset.
 
     The file structure should be like::
 

@@ -22,9 +22,7 @@ DATASET_NAME = "CADC"
 
 
 def CADC(path: str) -> FusionDataset:
-    """Dataloader of the `CADC`_ dataset.
-
-    .. _CADC: http://cadcd.uwaterloo.ca/index.html
+    """`CADC <http://cadcd.uwaterloo.ca/index.html>`_ dataset.
 
     The file structure should be like::
 

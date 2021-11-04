@@ -33,9 +33,7 @@ _XYWH_KEYS = _FIELDNAMES[2:6]
 
 
 def UAVDT(path: str) -> Dataset:
-    """Dataloader of the `UAVDT`_ Dataset.
-
-    .. _UAVDT: https://sites.google.com/site/daviddo0323/projects/uavdt
+    """`UAVDT <https://paperswithcode.com/dataset/uavdt>`_ dataset.
 
     The "score", "in-view", "occlusion" fields in MOT Groundtruth file(``*_gt.txt``) are constant,
     and other fields in that file are the same with such fields in DET Groundtruth file

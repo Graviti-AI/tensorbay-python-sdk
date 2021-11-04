@@ -17,9 +17,7 @@ DATASET_NAME = "NightOwls"
 
 
 def NightOwls(path: str) -> Dataset:
-    """Dataloader of the `NightOwls`_ dataset.
-
-    .. _NightOwls: http://www.nightowls-dataset.org/
+    """`NightOwls <http://www.nightowls-dataset.org/>`_ dataset.
 
     The file structure should be like::
 

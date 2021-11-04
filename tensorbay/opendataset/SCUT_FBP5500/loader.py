@@ -26,9 +26,7 @@ _CATEGORY_NAMES = {
 
 
 def SCUT_FBP5500(path: str) -> Dataset:
-    """Dataloader of the `SCUT_FBP5500`_ dataset.
-
-    .. SCUT_FBP5500: https://github.com/HCIILAB/SCUT-FBP5500-Database-Release
+    """`SCUT_FBP5500 <https://github.com/HCIILAB/SCUT-FBP5500-Database-Release>`_ dataset.
 
      The folder structure should be like::
 

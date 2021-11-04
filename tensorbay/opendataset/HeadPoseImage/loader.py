@@ -18,9 +18,8 @@ DATASET_NAME = "HeadPoseImage"
 
 
 def HeadPoseImage(path: str) -> Dataset:
-    """Dataloader of the `Head Pose Image`_ dataset.
-
-    .. _Head Pose Image: http://www-prima.inrialpes.fr/perso/Gourier/Faces/HPDatabase.html
+    """`Head Pose Image <http://crowley-coutaz.fr\
+    /Head%20Pose%20Image%20Database.html>`_ dataset.
 
     The file structure should be like::
 

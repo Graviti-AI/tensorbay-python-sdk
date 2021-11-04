@@ -25,9 +25,7 @@ _FLOAT_GROUP = {
 
 
 def COVIDChestXRay(path: str) -> Dataset:
-    """Dataloader of `COVID-chestxray`_ Dataset.
-
-    .. _COVID-chestxray: https://github.com/ieee8023/covid-chestxray-dataset
+    """`COVID-chestxray <https://github.com/ieee8023/covid-chestxray-dataset>`_ dataset.
 
     The file structure should be like::
 

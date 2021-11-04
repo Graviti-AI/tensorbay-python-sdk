@@ -18,9 +18,7 @@ _SEGMENT_NAMES_102 = {"train": "trnid", "validation": "valid", "test": "tstid"}
 
 
 def Flower17(path: str) -> Dataset:
-    """Dataloader of the `17 Category Flower`_ dataset.
-
-    .. _17 Category Flower: http://www.robots.ox.ac.uk/~vgg/data/flowers/17/index.html
+    """`17 Category Flower <http://www.robots.ox.ac.uk/~vgg/data/flowers/17/index.html>`_ dataset.
 
     The dataset are 3 separate splits.
     The results in the paper are averaged over the 3 splits.
@@ -71,9 +69,7 @@ def Flower17(path: str) -> Dataset:
 
 
 def Flower102(path: str) -> Dataset:
-    """Dataloader of the `102 Category Flower`_ dataset.
-
-    .. _102 Category Flower: http://www.robots.ox.ac.uk/~vgg/data/flowers/102/index.html
+    """`102 Category Flower <http://www.robots.ox.ac.uk/~vgg/data/flowers/102/index.html>`_ dataset.
 
     The file structure should be like::
 

@@ -15,9 +15,7 @@ DATASET_NAME = "KylbergTexture"
 
 
 def KylbergTexture(path: str) -> Dataset:
-    """Dataloader of the `Kylberg Texture`_ dataset.
-
-    .. _Kylberg Texture: http://www.cb.uu.se/~gustaf/texture/
+    """`Kylberg Texture <http://www.cb.uu.se/~gustaf/texture/>`_ dataset.
 
     The file structure should be like::
 

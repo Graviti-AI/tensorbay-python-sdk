@@ -17,9 +17,7 @@ DATASET_NAME = "LeedsSportsPose"
 
 
 def LeedsSportsPose(path: str) -> Dataset:
-    """Dataloader of the `Leeds Sports Pose`_ dataset.
-
-    .. _Leeds Sports Pose: https://sam.johnson.io/research/lsp.html
+    """`Leeds Sports Pose <http://sam.johnson.io/research/lsp.html>`_ dataset.
 
     The folder structure should be like::
 

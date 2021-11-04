@@ -19,9 +19,7 @@ _WEATHER_CONDITION_MAP = {0: "no weather degradationi", 1: "fog/haze", 2: "rain"
 
 
 def JHU_CROWD(path: str) -> Dataset:
-    """Dataloader of the `JHU-CROWD++`_ dataset.
-
-    .. _JHU-CROWD++: http://www.crowd-counting.com/
+    """`JHU-CROWD++ <http://www.crowd-counting.com/>`_ dataset.
 
     The file structure should be like::
 

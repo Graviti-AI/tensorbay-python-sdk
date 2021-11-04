@@ -15,9 +15,7 @@ DATASET_NAME = "AnimalsWithAttributes2"
 
 
 def AnimalsWithAttributes2(path: str) -> Dataset:
-    """Dataloader of the `Animals with attributes 2`_ dataset.
-
-    .. _Animals with attributes 2: https://cvml.ist.ac.at/AwA2/
+    """`Animals with attributes 2 <https://cvml.ist.ac.at/AwA2/>`_ dataset.
 
     The file structure should be like::
 

@@ -34,9 +34,7 @@ _MASK_GETTER = Callable[[str, str, str, int, Callable[[str], str]], InstanceMask
 
 
 def SegTrack2(path: str) -> Dataset:
-    """Dataloader of the `SegTrack2`_ dataset.
-
-    .. _SegTrack: https://web.engr.oregonstate.edu/~lif/SegTrack2/dataset.html
+    """`SegTrack2 <https://web.engr.oregonstate.edu/~lif/SegTrack2/dataset.html>`_ dataset.
 
     The file structure of SegTrack looks like::
 

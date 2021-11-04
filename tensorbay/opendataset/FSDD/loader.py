@@ -24,9 +24,7 @@ _METADATA = {
 
 
 def FSDD(path: str) -> Dataset:
-    """Dataloader of the `Free Spoken Digit`_ dataset.
-
-    .. _Free Spoken Digit: https://github.com/Jakobovski/free-spoken-digit-dataset
+    """`Free Spoken Digit <https://github.com/Jakobovski/free-spoken-digit-dataset>`_ dataset.
 
     The file structure should be like::
 

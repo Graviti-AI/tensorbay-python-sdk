@@ -18,9 +18,7 @@ DATASET_NAME = "BioIDFace"
 
 
 def BioIDFace(path: str) -> Dataset:
-    """Dataloader of `The BioID Face`_ Dataset.
-
-    .. _The BioID Face: https://www.bioid.com/facedb/
+    """`BioID Face <https://www.bioid.com/facedb/>`_ dataset.
 
     The folder structure should be like::
 

@@ -17,9 +17,7 @@ _VALID_KEYPOINT_INDICES = [0, 1, 2, 3, 4, 5, 6, 9, 12, 13, 16]
 
 
 def FLIC(path: str) -> Dataset:
-    """Dataloader of the `FLIC`_ dataset.
-
-    .. _FLIC: https://bensapp.github.io/flic-dataset.html
+    """`FLIC <https://bensapp.github.io/flic-dataset.html>`_ dataset.
 
     The folder structure should be like::
 

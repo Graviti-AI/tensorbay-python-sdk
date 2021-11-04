@@ -16,9 +16,7 @@ DATASET_NAME = "CompCars"
 
 
 def CompCars(path: str) -> Dataset:
-    """Dataloader of the `CompCars`_ dataset.
-
-    .. _CompCars: http://mmlab.ie.cuhk.edu.hk/datasets/comp_cars/index.html
+    """`CompCars <http://mmlab.ie.cuhk.edu.hk/datasets/comp_cars/index.html>`_ dataset.
 
     The file structure should be like::
 

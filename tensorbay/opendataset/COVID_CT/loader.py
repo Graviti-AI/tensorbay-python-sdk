@@ -22,9 +22,7 @@ _SEGMENT_TO_PATH = {
 
 
 def COVID_CT(path: str) -> Dataset:
-    """Dataloader of the `COVID-CT`_ dataset.
-
-    .. _COVID-CT: https://github.com/UCSD-AI4H/COVID-CT
+    """`COVID-CT <https://github.com/UCSD-AI4H/COVID-CT>`_ dataset.
 
     The file structure should be like::
 

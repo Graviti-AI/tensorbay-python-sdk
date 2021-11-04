@@ -17,9 +17,7 @@ DATASET_NAME = "SVHN"
 
 
 def SVHN(path: str) -> Dataset:
-    """Dataloader of SVHN open dataset.
-
-    .. _SVHN: http://ufldl.stanford.edu/housenumbers
+    """`SVHN <http://ufldl.stanford.edu/housenumbers>`_ dataset.
 
     The file structure should be like::
 

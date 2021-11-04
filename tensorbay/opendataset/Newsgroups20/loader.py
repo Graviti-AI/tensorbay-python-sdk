@@ -30,9 +30,7 @@ SEGMENT_DESCRIPTION_DICT = {
 
 
 def Newsgroups20(path: str) -> Dataset:
-    """Dataloader of the `20 Newsgroups`_ dataset.
-
-    .. _20 Newsgroups: http://qwone.com/~jason/20Newsgroups/
+    """`20 Newsgroups <http://qwone.com/~jason/20Newsgroups/>`_ dataset.
 
     The folder structure should be like::
 

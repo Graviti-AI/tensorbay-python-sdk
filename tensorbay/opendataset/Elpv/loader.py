@@ -14,9 +14,7 @@ DATASET_NAME = "Elpv"
 
 
 def Elpv(path: str) -> Dataset:
-    """Dataloader of the `elpv`_ dataset.
-
-    .. _elpv: https://github.com/zae-bayern/elpv-dataset
+    """`elpv <https://github.com/zae-bayern/elpv-dataset>`_ dataset.
 
     The file structure should be like::
 

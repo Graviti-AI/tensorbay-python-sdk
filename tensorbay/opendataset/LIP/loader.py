@@ -20,9 +20,7 @@ _SEGMENT_NAMES = ("train", "val", "test")
 
 
 def LIP(path: str) -> Dataset:
-    """Dataloader of the `LIP`_ dataset.
-
-    .. _LIP: https://github.com/Engineering-Course/LIP_SSL
+    """`LIP <https://github.com/Engineering-Course/LIP_SSL>`_ dataset.
 
     The file structure should be like::
 

@@ -29,9 +29,7 @@ _ATTRIBUTE_KEYS = {
 
 
 def nuScenes(path: str) -> FusionDataset:
-    """Dataloader of the `nuScenes`_ dataset.
-
-    .. _nuScenes: https://www.nuscenes.org/
+    """`nuScenes <https://www.nuscenes.org/>`_ dataset.
 
     The file structure should be like::
 

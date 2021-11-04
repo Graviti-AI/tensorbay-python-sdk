@@ -22,7 +22,7 @@ DATASET_NAME = "AADB"
 
 
 def AADB(path: str) -> Dataset:
-    """Load the AADB to TensorBay.
+    """`AADB <https://www.ics.uci.edu/~skong2/aesthetics.html>`_ dataset.
 
     The file structure looks like:
 

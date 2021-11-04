@@ -18,9 +18,7 @@ SEGMENTS_FOOD_OR_NONFOOD = {"test": "test.txt", "train": "train.txt"}
 
 
 def KenyanFoodOrNonfood(path: str) -> Dataset:
-    """Dataloader of the `Kenyan Food or Nonfood`_ dataset.
-
-    .. _Kenyan Food or Nonfood: https://github.com/monajalal/Kenyan-Food
+    """`Kenyan Food or Nonfood <https://github.com/monajalal/Kenyan-Food>`_ dataset.
 
     The file structure should be like::
 
@@ -61,9 +59,7 @@ def KenyanFoodOrNonfood(path: str) -> Dataset:
 
 
 def KenyanFoodType(path: str) -> Dataset:
-    """Dataloader of the `Kenyan Food Type`_ dataset.
-
-    .. _Kenyan Food Type: https://github.com/monajalal/Kenyan-Food
+    """`Kenyan Food Type <https://github.com/monajalal/Kenyan-Food>`_ dataset.
 
     The file structure should be like::
 

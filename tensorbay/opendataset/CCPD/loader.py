@@ -125,9 +125,7 @@ DATASET_NAME_CCPDGREEN = "CCPDGreen"
 
 
 def CCPD(path: str) -> Dataset:
-    """Dataloader of CCPD open dataset.
-
-    .. _CCPD: https://github.com/detectRecog/CCPD
+    """`CCPD <https://github.com/detectRecog/CCPD>`_ dataset.
 
     The file structure should be like::
 
@@ -187,9 +185,7 @@ def CCPD(path: str) -> Dataset:
 
 
 def CCPDGreen(path: str) -> Dataset:
-    """Dataloader of CCPDGreen open dataset.
-
-    .. _CCPD: https://github.com/detectRecog/CCPD
+    """`CCPDGreen <https://github.com/detectRecog/CCPD>`_ dataset.
 
     The file structure should be like::
 

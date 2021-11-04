@@ -17,9 +17,7 @@ DATASET_NAME = "CoinImage"
 
 
 def CoinImage(path: str) -> Dataset:
-    """Dataloader of the `Coin Image`_ dataset.
-
-    .. _Coin Image: https://cvl.tuwien.ac.at/research/cvl-databases/coin-image-dataset/
+    """`Coin Image <https://cvl.tuwien.ac.at/research/cvl-databases/coin-image-dataset/>`_ dataset.
 
     The file structure should be like::
 
