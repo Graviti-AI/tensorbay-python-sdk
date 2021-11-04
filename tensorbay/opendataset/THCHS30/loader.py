@@ -18,9 +18,7 @@ _SEGMENT_NAME_LIST = ("train", "dev", "test")
 
 
 def THCHS30(path: str) -> Dataset:
-    """Dataloader of the `THCHS-30`_ dataset.
-
-    .. _THCHS-30: http://166.111.134.19:7777/data/thchs30/README.html
+    """`THCHS-30 <http://166.111.134.19:7777/data/thchs30/README.html>`_ dataset.
 
     The file structure should be like::
 

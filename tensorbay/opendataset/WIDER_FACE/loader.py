@@ -23,9 +23,7 @@ _ATTRIBUTE_MAP_TYPE = Dict[str, List[Union[bool, str]]]
 
 
 def WIDER_FACE(path: str) -> Dataset:
-    """Dataloader of the `WIDER FACE`_ dataset.
-
-    .. _WIDER FACE: http://shuoyang1213.me/WIDERFACE/
+    """`WIDER FACE <http://shuoyang1213.me/WIDERFACE/>`_ dataset.
 
     The file structure should be like::
 

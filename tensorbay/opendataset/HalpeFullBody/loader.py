@@ -24,9 +24,8 @@ _SEGMENT_SPLIT = (
 
 
 def HalpeFullBody(path: str) -> Dataset:
-    """Dataloader of the `Halpe Full-Body Human Keypoints and HOI-Det`_ dataset.
-
-    .. _Halpe Full-Body Human Keypoints and HOI-Det: https://github.com/Fang-Haoshu/Halpe-FullBody/ # noqa: E501
+    """`Halpe Full-Body Human Keypoints and HOI-Det <https://github.com\
+    /Fang-Haoshu/Halpe-FullBody/>`_ dataset.
 
     The folder structure should be like::
 

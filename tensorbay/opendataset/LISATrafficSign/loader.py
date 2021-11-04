@@ -17,9 +17,8 @@ DATASET_NAME = "LISATrafficSign"
 
 
 def LISATrafficSign(path: str) -> Dataset:
-    """Dataloader of the `LISA Traffic Sign`_ dataset.
-
-    .. _LISA Traffic Sign: http://cvrr.ucsd.edu/LISA/lisa-traffic-sign-dataset.html
+    """`LISA Traffic Sign <https://git-disl.github.io/GTDLBench/datasets\
+    /lisa_traffic_sign_dataset/>`_ dataset.
 
     The file structure should be like::
 

@@ -16,9 +16,7 @@ DATASET_NAME = "RP2K"
 
 
 def RP2K(path: str) -> Dataset:
-    """Dataloader of the `RP2K`_ dataset.
-
-    .. _RP2K: https://www.pinlandata.com/rp2k_dataset
+    """`RP2K <https://www.pinlandata.com/rp2k_dataset>`_ dataset.
 
     The file structure of RP2K looks like::
 

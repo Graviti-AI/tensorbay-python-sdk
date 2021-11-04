@@ -48,9 +48,7 @@ _SEGMENTATIONS_INFO = {
 
 
 def BDD100K(path: str) -> Dataset:
-    """Dataloader of the `BDD100K`_ dataset.
-
-    .. _bdd100k: https://bdd-data.berkeley.edu
+    """`BDD100K <https://bdd-data.berkeley.edu>`_ dataset.
 
     The file structure should be like::
 
@@ -85,9 +83,7 @@ def BDD100K(path: str) -> Dataset:
 
 
 def BDD100K_10K(path: str) -> Dataset:
-    """Dataloader of the `BDD100K_10K`_ dataset.
-
-    .. _bdd100k_10k: https://bdd-data.berkeley.edu
+    """`BDD100K_10K <https://bdd-data.berkeley.edu>`_ dataset.
 
     The file structure should be like::
 

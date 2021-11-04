@@ -18,9 +18,8 @@ DATASET_NAME = "DeepRoute"
 
 
 def DeepRoute(path: str) -> Dataset:
-    """Dataloader of the `DeepRoute Open Dataset`_.
-
-    .. _DeepRoute Open Dataset: https://www.graviti.cn/open-datasets/DeepRoute
+    """`DeepRoute <https://gas.graviti.cn/dataset/graviti-open-dataset\
+    /DeepRoute>`_ dataset.
 
     The file structure should be like::
 

@@ -21,9 +21,7 @@ DATASET_NAME = "HardHatWorkers"
 
 
 def HardHatWorkers(path: str) -> Dataset:
-    """Dataloader of the `Hard Hat Workers`_ dataset.
-
-    .. _Hard Hat Workers: https://makeml.app/datasets/hard-hat-workers
+    """`Hard Hat Workers <https://makeml.app/datasets/hard-hat-workers>`_ dataset.
 
     The file structure should be like::
 

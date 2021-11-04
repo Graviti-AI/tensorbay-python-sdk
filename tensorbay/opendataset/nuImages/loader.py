@@ -23,9 +23,7 @@ DATASET_NAME = "nuImages"
 
 
 def nuImages(path: str) -> FusionDataset:
-    """Dataloader of the `nuImages`_ dataset.
-
-    .. _nuImages: https://www.nuscenes.org/nuimages
+    """`nuImages <https://www.nuscenes.org/nuimages>`_ dataset.
 
     The file structure should be like::
 

@@ -18,9 +18,7 @@ _UNSUPERVISED_DATASET_NAME = "DAVIS2017Unsupervised"
 
 
 def DAVIS2017SemiSupervised(path: str) -> Dataset:
-    """Dataloader of `DAVIS2017SemiSupervised`_ open dataset.
-
-    .. _DAVIS2017SemiSupervised: https://davischallenge.org/davis2017/code.html
+    """`DAVIS2017SemiSupervised <https://davischallenge.org/davis2017/code.html>`_ dataset.
 
     The file structure should be like::
 
@@ -111,9 +109,7 @@ def DAVIS2017SemiSupervised(path: str) -> Dataset:
 
 
 def DAVIS2017Unsupervised(path: str) -> Dataset:
-    """Dataloader of `DAVIS2017Unsupervised`_ open dataset.
-
-    .. _DAVIS2017Unsupervised: https://davischallenge.org/davis2017/code.html
+    """`DAVIS2017Unsupervised <https://davischallenge.org/davis2017/code.html>`_ dataset.
 
     The file structure should be like::
 

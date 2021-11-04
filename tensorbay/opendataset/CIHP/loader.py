@@ -14,9 +14,7 @@ _SEGMENTS_INFO = {"train": "Training", "val": "Validation", "test": "Testing"}
 
 
 def CIHP(path: str) -> Dataset:
-    """Dataloader of the `CIHP`_ dataset.
-
-    .. _CIHP: https://github.com/Engineering-Course/CIHP_PGN
+    """`CIHP <https://github.com/Engineering-Course/CIHP_PGN>`_ dataset.
 
     The file structure should be like::
 

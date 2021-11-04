@@ -20,9 +20,7 @@ DATASET_NAME = "VOC2012Detection"
 
 
 def VOC2012Detection(path: str) -> Dataset:
-    """Dataloader of the 'VOC2012Detection'_ dataset.
-
-    .. _VOC2012Detection: http://host.robots.ox.ac.uk/pascal/VOC/voc2012/
+    """`VOC2012Detection <http://host.robots.ox.ac.uk/pascal/VOC/voc2012/>`_ dataset.
 
     The file structure should be like::
 

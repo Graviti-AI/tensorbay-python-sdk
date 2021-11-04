@@ -17,9 +17,7 @@ DATASET_NAME_ARTPHOTO = "ImageEmotionArtPhoto"
 
 
 def ImageEmotionAbstract(path: str) -> Dataset:
-    """Dataloader of the `Image Emotion-abstract`_ dataset.
-
-    .. _Image Emotion-abstract: https://www.imageemotion.org/
+    """`Image Emotion-abstract <https://www.imageemotion.org/>`_ dataset.
 
     The file structure should be like::
 
@@ -61,9 +59,7 @@ def ImageEmotionAbstract(path: str) -> Dataset:
 
 
 def ImageEmotionArtphoto(path: str) -> Dataset:
-    """Dataloader of the `Image Emotion-art Photo`_ dataset.
-
-    .. _Image Emotion-art Photo: https://www.imageemotion.org/
+    """`Image Emotion-art Photo <https://www.imageemotion.org/>`_ dataset.
 
     The file structure should be like::
 

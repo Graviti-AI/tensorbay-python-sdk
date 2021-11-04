@@ -20,9 +20,7 @@ DATASET_NAME = "OxfordIIITPet"
 
 
 def OxfordIIITPet(path: str) -> Dataset:
-    """Dataloader of OxfordIIITPet open dataset.
-
-    .. _OxfordIIITPet: https://www.robots.ox.ac.uk/~vgg/data/pets/
+    """`OxfordIIITPet <https://www.robots.ox.ac.uk/~vgg/data/pets/>`_ dataset.
 
     The file structure should be like::
 

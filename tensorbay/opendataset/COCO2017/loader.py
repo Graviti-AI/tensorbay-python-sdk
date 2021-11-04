@@ -34,9 +34,7 @@ _UNLABELED_SEGMENT_NAMES = ("test", "unlabeled")
 
 
 def COCO2017(path: str) -> Dataset:
-    """Dataloader of COCO2017 open dataset.
-
-    .. _COCO2017: https://cocodataset.org/#home
+    """`COCO2017 <https://cocodataset.org/#home>`_ dataset.
 
     The file structure should be like::
 

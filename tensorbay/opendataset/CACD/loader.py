@@ -61,9 +61,7 @@ _MAT_KEYS = ("name", "identity", "age", "birth", "lfw", "rank", "year")
 
 
 def CACD(path: str) -> Dataset:
-    """Dataloader of `Cross-Age Celebrity Dataset (CACD)`_ dataset.
-
-    .. _Cross-Age Celebrity Dataset (CACD): https://bcsiriuschen.github.io/CARC/
+    """`Cross-Age Celebrity Dataset (CACD) <https://bcsiriuschen.github.io/CARC/>`_ dataset.
 
     The file structure should be like::
 

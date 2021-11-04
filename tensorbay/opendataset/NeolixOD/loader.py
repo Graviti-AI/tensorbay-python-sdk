@@ -17,9 +17,8 @@ DATASET_NAME = "NeolixOD"
 
 
 def NeolixOD(path: str) -> Dataset:
-    """Dataloader of the `Neolix OD`_ dataset.
-
-    .. _Neolix OD: https://www.graviti.cn/dataset-detail/NeolixOD
+    """`Neolix OD <https://gas.graviti.cn/dataset\
+    /graviti-open-dataset/NeolixOD>`_ dataset.
 
     The file structure should be like::
 

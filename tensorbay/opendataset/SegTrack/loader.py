@@ -32,9 +32,7 @@ _SEGMENTS_INFO: Dict[str, Callable[[str], str]] = {
 
 
 def SegTrack(path: str) -> Dataset:
-    """Dataloader of the `SegTrack`_ dataset.
-
-    .. _SegTrack: http://cpl.cc.gatech.edu/projects/SegTrack/
+    """`SegTrack <http://cpl.cc.gatech.edu/projects/SegTrack/>`_ dataset.
 
     The file structure of SegTrack looks like::
 

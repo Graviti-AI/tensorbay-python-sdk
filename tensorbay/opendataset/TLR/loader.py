@@ -18,9 +18,7 @@ DATASET_NAME = "TLR"
 
 
 def TLR(path: str) -> Dataset:
-    """Dataloader of the `TLR`_ dataset.
-
-    .. _TLR: http://www.lara.prd.fr/benchmarks/trafficlightsrecognition
+    """`TLR <http://www.lara.prd.fr/benchmarks/trafficlightsrecognition>`_ dataset.
 
     The file structure should like::
 

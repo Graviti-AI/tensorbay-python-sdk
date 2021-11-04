@@ -14,9 +14,7 @@ DATASET_NAME = "VOC2012Segmentation"
 
 
 def VOC2012Segmentation(path: str) -> Dataset:
-    """Dataloader of the 'VOC2012Segmentation'_ dataset.
-
-    .. _VOC2012Segmentation: http://host.robots.ox.ac.uk/pascal/VOC/voc2012/
+    """`VOC2012Segmentation <http://host.robots.ox.ac.uk/pascal/VOC/voc2012/>`_ dataset.
 
     The file structure should be like::
 

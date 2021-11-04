@@ -34,9 +34,7 @@ _DATA_GENERATOR = Callable[[str, str, str, str, str], Iterable[Data]]
 
 
 def BDD100K_MOTS2020(path: str) -> Dataset:
-    """Dataloader of the `BDD100K_MOTS2020`_ dataset.
-
-    .. _bdd100k_mots2020: https://bdd-data.berkeley.edu
+    """`BDD100K_MOTS2020 <https://bdd-data.berkeley.edu>`_ dataset.
 
     The file structure should be like::
 
@@ -91,9 +89,7 @@ def BDD100K_MOTS2020(path: str) -> Dataset:
 
 
 def BDD100K_MOT2020(path: str) -> Dataset:
-    """Dataloader of the `BDD100K_MOT2020`_ dataset.
-
-    .. _bdd100k_mot2020: https://bdd-data.berkeley.edu
+    """`BDD100K_MOT2020 <https://bdd-data.berkeley.edu>`_ dataset.
 
     The file structure should be like::
 

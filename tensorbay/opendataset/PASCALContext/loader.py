@@ -15,9 +15,7 @@ DATASET_NAME = "PASCALContext"
 
 
 def PASCALContext(mask_path: str, image_path: str) -> Dataset:
-    """Dataloader of the 'PASCALContext'_ dataset.
-
-    .. _PASCALContext: https://cs.stanford.edu/~roozbeh/pascal-context/
+    """`PASCALContext <https://cs.stanford.edu/~roozbeh/pascal-context/>`_ dataset.
 
     The file structure should be like::
 

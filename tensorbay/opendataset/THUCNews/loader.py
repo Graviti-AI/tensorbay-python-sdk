@@ -15,9 +15,7 @@ DATASET_NAME = "THUCNews"
 
 
 def THUCNews(path: str) -> Dataset:
-    """Dataloader of the `THUCNews`_ dataset.
-
-    .. _THUCNews: http://thuctc.thunlp.org/
+    """`THUCNews <http://thuctc.thunlp.org/>`_ dataset.
 
     The folder structure should be like::
 

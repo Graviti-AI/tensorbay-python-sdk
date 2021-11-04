@@ -17,9 +17,8 @@ DATASET_NAME = "CarConnectionPicture"
 
 
 def CarConnection(path: str) -> Dataset:
-    """Dataloader of `The Car Connection Picture`_ dataset.
-
-    .. _The Car Connection Picture: https://github.com/nicolas-gervais/predicting-car-price-from-scraped-data/tree/master/picture-scraper # noqa: E501
+    """`Car Connection Picture <https://github.com/nicolas-gervais\
+    /predicting-car-price-from-scraped-data/tree/master/picture-scraper>`_ dataset.
 
     The file structure should be like::
 
