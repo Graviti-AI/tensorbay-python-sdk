@@ -8,12 +8,18 @@
 import click
 
 from tensorbay.cli.tbrn import TBRN, TBRNType
-from tensorbay.cli.utility import ContextInfo, error, exception_handler, get_dataset_client
+from tensorbay.cli.utility import (
+    ContextInfo,
+    error,
+    exception_handler,
+    get_dataset_client,
+    sort_branches_or_tags,
+)
 from tensorbay.client.gas import DatasetClientType
 
 
 @exception_handler
-def _implement_tag(obj: ContextInfo, tbrn: str, name: str, is_delete: bool) -> None:
+def _implement_tag(obj: ContextInfo, tbrn: str, name: str, is_delete: bool, sort_key: str) -> None:
     tbrn_info = TBRN(tbrn=tbrn)
 
     if tbrn_info.type != TBRNType.DATASET:
@@ -27,7 +33,7 @@ def _implement_tag(obj: ContextInfo, tbrn: str, name: str, is_delete: bool) -> N
     elif name:
         _create_tag(dataset_client, name)
     else:
-        _list_tags(dataset_client)
+        _list_tags(dataset_client, sort_key)
 
 
 def _delete_tag(dataset_client: DatasetClientType, tbrn_info: TBRN) -> None:
@@ -51,6 +57,6 @@ def _create_tag(dataset_client: DatasetClientType, name: str) -> None:
     click.echo(f'Successfully created tag "{tag_tbrn}"')
 
 
-def _list_tags(dataset_client: DatasetClientType) -> None:
-    for tag in dataset_client.list_tags():
+def _list_tags(dataset_client: DatasetClientType, sort_key: str) -> None:
+    for tag in sort_branches_or_tags(sort_key, dataset_client.list_tags()):
         click.echo(tag.name)

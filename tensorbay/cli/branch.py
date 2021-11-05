@@ -8,13 +8,20 @@
 import click
 
 from tensorbay.cli.tbrn import TBRN, TBRNType
-from tensorbay.cli.utility import ContextInfo, error, exception_handler, get_dataset_client, shorten
+from tensorbay.cli.utility import (
+    ContextInfo,
+    error,
+    exception_handler,
+    get_dataset_client,
+    shorten,
+    sort_branches_or_tags,
+)
 from tensorbay.client.gas import DatasetClientType
 
 
 @exception_handler
-def _implement_branch(
-    obj: ContextInfo, tbrn: str, name: str, verbose: bool, is_delete: bool
+def _implement_branch(  # pylint: disable=too-many-arguments
+    obj: ContextInfo, tbrn: str, name: str, verbose: bool, is_delete: bool, sort_key: str
 ) -> None:
     tbrn_info = TBRN(tbrn=tbrn)
     if tbrn_info.type != TBRNType.DATASET:
@@ -30,7 +37,7 @@ def _implement_branch(
     if name:
         _create_branch(dataset_client, name)
     else:
-        _list_branches(dataset_client, verbose)
+        _list_branches(dataset_client, verbose, sort_key)
 
 
 def _create_branch(dataset_client: DatasetClientType, name: str) -> None:
@@ -42,8 +49,8 @@ def _create_branch(dataset_client: DatasetClientType, name: str) -> None:
     click.echo(f'Successfully created branch "{branch_tbrn}"')
 
 
-def _list_branches(dataset_client: DatasetClientType, verbose: bool) -> None:
-    branches = dataset_client.list_branches()
+def _list_branches(dataset_client: DatasetClientType, verbose: bool, sort_key: str) -> None:
+    branches = sort_branches_or_tags(sort_key, dataset_client.list_branches())
     if not verbose:
         for branch in branches:
             click.echo(branch.name)

@@ -314,7 +314,7 @@ def rm(obj: ContextInfo, tbrn: str, is_recursive: bool) -> None:
 
 @command(
     synopsis=(
-        "$ gas branch tb:<dataset_name> [--verbose]                      # List branches.",
+        "$ gas branch tb:<dataset_name> [--verbose] [--sort=[-]<key>]    # List branches.",
         "$ gas branch tb:<dataset_name>[@<revision>] <branch_name>       # Create a branch.",
         "$ gas branch -d tb:<dataset_name>@<branch_name>                 # Delete a branch.",
     )
@@ -323,8 +323,16 @@ def rm(obj: ContextInfo, tbrn: str, is_recursive: bool) -> None:
 @click.argument("name", type=str, default="")
 @click.option("-v", "--verbose", is_flag=True, help="Show short commit id and commit message.")
 @click.option("-d", "--delete", "is_delete", is_flag=True, help="Delete the branch")
+@click.option(
+    "--sort",
+    default="name",
+    help='Sort based on the key given, which can be "name" or "commit_date". '
+    "Prefix - to sort in descending order of the value.",
+)
 @click.pass_obj
-def branch(obj: ContextInfo, tbrn: str, name: str, verbose: bool, is_delete: bool) -> None:
+def branch(  # pylint: disable=too-many-arguments
+    obj: ContextInfo, tbrn: str, name: str, verbose: bool, is_delete: bool, sort: str
+) -> None:
     """List, create or delete branches.\f
 
     Arguments:
@@ -333,16 +341,17 @@ def branch(obj: ContextInfo, tbrn: str, name: str, verbose: bool, is_delete: boo
         name: The name of the branch to be created.
         verbose: Whether to show the short commit id and commit message.
         is_delete: Whether to delete the branch.
+        sort: The key to sort on.
 
     """  # noqa: D301,D415
     from tensorbay.cli.branch import _implement_branch
 
-    _implement_branch(obj, tbrn, name, verbose, is_delete)
+    _implement_branch(obj, tbrn, name, verbose, is_delete, sort)
 
 
 @command(
     synopsis=(
-        "$ gas tag tb:<dataset_name>                            # List tags.",
+        "$ gas tag tb:<dataset_name> [--sort=[-]<key>]          # List tags.",
         "$ gas tag tb:<dataset_name>[@<revision>] <tag_name>    # Create a tag.",
         "$ gas tag -d tb:<dataset_name>@<tag_name>              # Delete a tag.",
     )
@@ -350,8 +359,14 @@ def branch(obj: ContextInfo, tbrn: str, name: str, verbose: bool, is_delete: boo
 @click.argument("tbrn", type=str)
 @click.argument("name", type=str, default="")
 @click.option("-d", "--delete", "is_delete", is_flag=True, help="Delete the tag.")
+@click.option(
+    "--sort",
+    default="name",
+    help='Sort based on the key given, which can be "name" or "commit_date". '
+    "Prefix - to sort in descending order of the value.",
+)
 @click.pass_obj
-def tag(obj: ContextInfo, tbrn: str, name: str, is_delete: bool) -> None:
+def tag(obj: ContextInfo, tbrn: str, name: str, is_delete: bool, sort: str) -> None:
     """List, create or delete tags.\f
 
     Arguments:
@@ -359,11 +374,12 @@ def tag(obj: ContextInfo, tbrn: str, name: str, is_delete: bool) -> None:
         tbrn: The tbrn of the dataset.
         name: The name of the tag.
         is_delete: Whether to delete the tag.
+        sort: The key to sort on.
 
     """  # noqa: D301,D415
     from tensorbay.cli.tag import _implement_tag
 
-    _implement_tag(obj, tbrn, name, is_delete)
+    _implement_tag(obj, tbrn, name, is_delete, sort)
 
 
 @command(

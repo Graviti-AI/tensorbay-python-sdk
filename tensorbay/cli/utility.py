@@ -11,7 +11,7 @@ import sys
 from collections import OrderedDict
 from configparser import ConfigParser, SectionProxy
 from functools import wraps
-from typing import Any, Callable, Iterable, Optional, Tuple, TypeVar, overload
+from typing import Any, Callable, Iterable, Optional, Sequence, Tuple, TypeVar, overload
 
 import click
 from typing_extensions import Literal, NoReturn
@@ -23,10 +23,17 @@ from tensorbay.client.dataset import DatasetClient, FusionDatasetClient
 from tensorbay.client.gas import DatasetClientType
 from tensorbay.client.log import dump_request_and_response
 from tensorbay.client.requests import logger
+from tensorbay.client.struct import Branch, Tag
 from tensorbay.exception import InternalServerError, TensorBayException
 
 _Callable = TypeVar("_Callable", bound=Callable[..., None])
+_T = TypeVar("_T", Tag, Branch)
 INDENT = " " * 4
+
+_SORT_KEYS = {
+    "name": lambda x: x.name,
+    "commit_date": lambda x: (x.committer.date, x.name),
+}
 
 
 class ContextInfo:
@@ -430,3 +437,24 @@ def exception_handler(func: _Callable) -> _Callable:
             error(str(err))
 
     return wrapper  # type: ignore[return-value]
+
+
+def sort_branches_or_tags(sort_key: str, target: Sequence[_T]) -> Sequence[_T]:
+    """Check whether the sort_key is valid and sort the target.
+
+    Arguments:
+        sort_key: The key to sort on.
+        target: The target to be sorted.
+
+    Returns:
+        The sorted target.
+
+    """
+    key, reverse = (sort_key, False) if sort_key[0] != "-" else (sort_key[1:], True)
+    if key not in _SORT_KEYS:
+        error(
+            'The "--sort" option must be "name" or "commit_date" with an optional "-" before them'
+        )
+    if not reverse and sort_key == "name":
+        return target
+    return sorted(target, key=_SORT_KEYS[key], reverse=reverse)
