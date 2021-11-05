@@ -31,7 +31,7 @@ The typical steps to organize a local dataset:
 
    A catalog is needed only if there is label information inside the dataset.
 
-Take the :ref:`Organization of BSTLD <quick_start/examples/bstld:Organize Dataset>` as an example.
+Take the :ref:`Organization of BSTLD <quick_start/examples/generated/bstld:Organize Dataset>` as an example.
 
 
 ****************
@@ -57,7 +57,7 @@ There are plenty of benefits of uploading local datasets to TensorBay.
    During uploading dataset or data, if the remote path of the data is the same as another data under the same segment,
    the old data will be replaced.
 
-Take the :ref:`Upload Dataset of BSTLD <quick_start/examples/bstld:Upload Dataset>` as an example.
+Take the :ref:`Upload Dataset of BSTLD <quick_start/examples/generated/bstld:Upload Dataset>` as an example.
 
 **************
  Read Dataset
@@ -82,7 +82,7 @@ Two types of datasets can be read from TensorBay:
 .. _my datasets(or team datasets): https://gas.graviti.cn/tensorbay/dataset-list
 .. _TensorBay: https://gas.graviti.cn/tensorbay/
 
-Take the :ref:`Read Dataset of BSTLD <quick_start/examples/bstld:Read Dataset>` as an example.
+Take the :ref:`Read Dataset of BSTLD <quick_start/examples/generated/bstld:Read Dataset>` as an example.
 
 ****************
  Update Dataset
