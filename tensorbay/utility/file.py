@@ -19,7 +19,7 @@ from _io import BufferedReader
 from tensorbay.utility.repr import ReprMixin
 
 
-class URL(ReprMixin):
+class URL:
     """URL is a class used to get and update the url.
 
     Arguments:
@@ -41,7 +41,7 @@ class URL(ReprMixin):
             updater: The updater of the url.
 
         Returns:
-            The URL instance which stores the url the updater.
+            The URL instance which stores the url and the updater.
 
         """
         obj: "URL" = object.__new__(cls)
