@@ -198,6 +198,7 @@ class SegmentClientBase:
 
         post_data["key"] = permission["extra"]["objectPrefix"] + checksum
 
+        host = permission["extra"]["host"]
         backend_type = permission["extra"]["backendType"]
         if backend_type == "azure":
             url = (
@@ -206,9 +207,16 @@ class SegmentClientBase:
             )
 
             self._put_binary_file_to_azure(url, local_path, post_data)
+        elif backend_type == "fps":
+            self._post_multipart_formdata(
+                host,
+                local_path,
+                post_data,
+                checksum,
+            )
         else:
             self._post_multipart_formdata(
-                permission["extra"]["host"],
+                host,
                 local_path,
                 post_data,
             )
@@ -224,6 +232,7 @@ class SegmentClientBase:
         url: str,
         local_path: str,
         data: Dict[str, Any],
+        filename: str = "",
     ) -> None:
         with open(local_path, "rb") as fp:
             file_type = filetype.guess_mime(local_path)
@@ -231,7 +240,7 @@ class SegmentClientBase:
                 data["Content-Type"] = file_type
 
             try:
-                data["file"] = ("", fp, file_type)
+                data["file"] = (filename, fp, file_type)
                 self._post_formdata(url, data)
             except ResponseError as error:
                 if b"MalformedPOSTRequest" in error.response.content:
