@@ -295,6 +295,20 @@ class TestGAS:
         }
         open_api_do("POST", "storage-configs/azure", json=post_data)
 
+    def test_create_local_storage_config(self, mocker):
+        open_api_do = mocker.patch(f"{gas.__name__}.Client.open_api_do")
+        self.gas_client.create_local_storage_config(
+            "local_config",
+            "tests",
+            "http://192.168.0.1:9000",
+        )
+        post_data = {
+            "name": "local_config",
+            "filePath": "tests",
+            "endpoint": "http://192.168.0.1:9000",
+        }
+        open_api_do("POST", "storage-configs/local", json=post_data)
+
     def test_get_cloud_client(self, mocker):
         config_name = "cloud_train"
         response_data = {

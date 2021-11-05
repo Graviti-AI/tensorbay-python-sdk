@@ -6,11 +6,14 @@
 import pytest
 
 from tensorbay import GAS
-from tensorbay.dataset import Dataset, Frame, FusionDataset, FusionSegment, Segment
+from tensorbay.dataset import Data, Dataset, Frame, FusionDataset, FusionSegment, Segment
 from tensorbay.exception import ResourceNotExistError
-from tensorbay.label import Classification
+from tensorbay.label import Catalog, Classification, Label
 from tensorbay.sensor import Lidar
+from tests.test_upload import CATALOG, LABEL
 from tests.utility import get_dataset_name
+
+_LOCAL_CONFIG_NAME = "HDFS_本地1"
 
 
 class TestCloudStorage:
@@ -94,3 +97,49 @@ class TestCloudStorage:
         assert len(auth_data) == len(segment)
 
         gas_client.delete_dataset(dataset_name)
+
+
+class TestLocalStorage:
+    def test_create_and_upload_dataset_with_config(self, accesskey, url, tmp_path):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_dataset_name()
+        try:
+            gas_client.get_auth_storage_config(name=_LOCAL_CONFIG_NAME)
+        except ResourceNotExistError:
+            pytest.skip(f"skip this case because there's no {_LOCAL_CONFIG_NAME} config")
+
+        gas_client.create_dataset(dataset_name, config_name=_LOCAL_CONFIG_NAME)
+        dataset = Dataset(name=dataset_name)
+        segment = dataset.create_segment("Segment1")
+        # When uploading label, upload catalog first.
+        dataset._catalog = Catalog.loads(CATALOG)
+
+        path = tmp_path / "sub"
+        path.mkdir()
+        for i in range(5):
+            local_path = path / f"hello{i}.txt"
+            local_path.write_text("CONTENT")
+            data = Data(local_path=str(local_path))
+            data.label = Label.loads(LABEL)
+            segment.append(data)
+
+        dataset_client = gas_client.upload_dataset(dataset)
+        assert dataset_client.get_catalog()
+        segment1 = Segment("Segment1", client=dataset_client)
+        assert len(segment1) == 5
+        for i in range(5):
+            assert segment1[i].path == f"hello{i}.txt"
+            assert segment1[i].label
+
+        gas_client.delete_dataset(dataset_name)
+
+    def test_create_local_storage_config(self, accesskey, url):
+        gas_client = GAS(access_key=accesskey, url=url)
+        local_storage_name = "local_storage_config"
+        local_storage = {
+            "name": local_storage_name,
+            "file_path": "file_path/",
+            "endpoint": "http://192.168.0.1:9000",
+        }
+        gas_client.create_local_storage_config(**local_storage)
+        gas_client.delete_storage_config(local_storage_name)

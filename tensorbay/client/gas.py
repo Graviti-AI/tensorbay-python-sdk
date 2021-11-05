@@ -306,6 +306,23 @@ class GAS:
         self._client.open_api_do("POST", "storage-configs/azure", json=post_data)
         return CloudClient(name, self._client)
 
+    def create_local_storage_config(self, name: str, file_path: str, endpoint: str) -> None:
+        """Create a local auth storage config.
+
+        Arguments:
+            name: The required local storage config name.
+            file_path: The dataset storage path under the local storage.
+            endpoint: The external IP address of the local storage.
+
+        """
+        post_data = {
+            "name": name,
+            "filePath": file_path,
+            "endpoint": endpoint,
+        }
+
+        self._client.open_api_do("POST", "storage-configs/local", json=post_data)
+
     def get_cloud_client(self, name: str) -> CloudClient:
         """Get a cloud client used for interacting with cloud platform.
 
