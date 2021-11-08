@@ -6,6 +6,7 @@
 import pytest
 
 from tensorbay.cli.cli import ls
+from tensorbay.cli.tests.conftest import assert_cli_fail, assert_cli_success
 
 
 @pytest.mark.parametrize("is_fusion", [True, False])
@@ -22,8 +23,7 @@ def test_ls(
     dataset_name = dataset_names[0]
     dataset_output = "\n".join(f"tb:{name}" for name in dataset_names)
     result = invoke(ls, ["-l"])
-    assert result.exit_code == 0
-    assert result.output == f"total {len(dataset_names)}\n{dataset_output}\n"
+    assert_cli_success(result, f"total {len(dataset_names)}\n{dataset_output}\n")
     list_datasets.assert_called_with("GET", "", params=params)
 
     get_datasets, _ = mock_get_dataset(mocker, is_fusion, False)
@@ -33,36 +33,30 @@ def test_ls(
     segment_name = segment_names[0]
     segment_output = "\n".join(f"tb:{dataset_name}:{name}" for name in segment_names)
     result = invoke(ls, [f"tb:{dataset_name}"])
-    assert result.exit_code == 0
-    assert result.output == f"{segment_output}\n"
+    assert_cli_success(result, f"{segment_output}\n")
 
     result = invoke(ls, [f"tb:{dataset_name}", "-l"])
-    assert result.exit_code == 0
-    assert result.output == f"total {len(segment_names)}\n{segment_output}\n"
+    assert_cli_success(result, f"total {len(segment_names)}\n{segment_output}\n")
 
     list_paths, paths = mock_paths(mocker)
 
     result = invoke(ls, [f"tb:{dataset_name}:{segment_name}", "-l"])
     if is_fusion:
-        assert result.exit_code == 1
-        assert result.stderr == "ERROR: List fusion segment is not supported yet\n"
+        assert_cli_fail(result, "ERROR: List fusion segment is not supported yet\n")
     else:
-        assert result.exit_code == 0
         path_output = "\n".join(f"tb:{dataset_name}:{segment_name}://{path}" for path in paths)
-        assert result.output == f"total {len(paths)}\n{path_output}\n"
+        assert_cli_success(result, f"total {len(paths)}\n{path_output}\n")
 
     result = invoke(ls, [f"tb:{dataset_name}", "-l", "-a"])
     if is_fusion:
-        assert result.exit_code == 1
-        assert result.stderr == 'ERROR: "-a" flag is not supported for fusion dataset yet\n'
+        assert_cli_fail(result, 'ERROR: "-a" flag is not supported for fusion dataset yet\n')
     else:
-        assert result.exit_code == 0
         path_output = "\n".join(
             f"tb:{dataset_name}:{segment_name}://{path}"
             for segment_name in segment_names
             for path in paths
         )
-        assert result.output == f"total {len(segment_names)*len(paths)}\n{path_output}\n"
+        assert_cli_success(result, f"total {len(segment_names)*len(paths)}\n{path_output}\n")
         list_paths.assert_called_with()
 
     segments_params = {"commit": "4", "offset": 0, "limit": 128}
