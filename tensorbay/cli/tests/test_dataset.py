@@ -6,6 +6,7 @@
 import pytest
 
 from tensorbay.cli.cli import dataset
+from tensorbay.cli.tests.conftest import assert_cli_fail, assert_cli_success
 
 
 @pytest.mark.parametrize("is_fusion", [True, False])
@@ -39,35 +40,29 @@ def test_dataset(
         f'tb:{new_dataset["name"]}\n' for new_dataset in datasets_response["datasets"]
     )
     result = invoke(dataset)
-    assert result.exit_code == 0
-    assert result.output == dataset_output
+    assert_cli_success(result, dataset_output)
     list_datasets.assert_called_with("GET", "", params=list_params)
 
     result = invoke(dataset, ["-d"])
-    assert result.exit_code == 1
-    assert result.stderr == "ERROR: Missing argument TBRN\n"
+    assert_cli_fail(result, "ERROR: Missing argument TBRN\n")
 
     result = invoke(dataset, [wrong_tbrn])
-    assert result.exit_code == 1
-    assert result.stderr == f'ERROR: "{wrong_tbrn}" is not a dataset\n'
+    assert_cli_fail(result, f'ERROR: "{wrong_tbrn}" is not a dataset\n')
 
     create_dataset, _ = mock_create_dataset(mocker)
     result = invoke(dataset, [tbrn])
-    assert result.exit_code == 0
-    assert result.output == f'Successfully created dataset "tb:{dataset_name}"\n'
+    assert_cli_success(result, f'Successfully created dataset "tb:{dataset_name}"\n')
     create_dataset.assert_called_with("POST", "", json=create_params)
 
     delete_dataset, delete_response = mock_delete_dataset(mocker, False, False, mock_get_dataset)
     result = invoke(dataset, [tbrn, "-d"], "y")
-    assert result.exit_code == 0
-    assert result.output == f"{delete_hint} y\n{succeed_hint}"
+    assert_cli_success(result, f"{delete_hint} y\n{succeed_hint}")
 
     result = invoke(dataset, [tbrn, "-d"], "N")
-    assert result.exit_code == 1
-    assert result.output == f"{delete_hint} N\n"
+    assert result.stdout == f"{delete_hint} N\n"
+    assert_cli_fail(result, "Aborted!\n")
 
     result = invoke(dataset, [tbrn, "-d", "-y"])
-    assert result.exit_code == 0
-    assert result.output == succeed_hint
+    assert_cli_success(result, succeed_hint)
 
     delete_dataset.assert_called_with("DELETE", "", delete_response["id"])
