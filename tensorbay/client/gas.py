@@ -18,7 +18,7 @@ from typing import Any, Dict, Generator, Optional, Type, Union, overload
 
 from typing_extensions import Literal
 
-from tensorbay.client.cloud_storage import CloudClient
+from tensorbay.client.cloud_storage import CloudClient, StorageConfig
 from tensorbay.client.dataset import DatasetClient, FusionDatasetClient
 from tensorbay.client.lazy import PagingList
 from tensorbay.client.log import UPLOAD_DATASET_RESUME_TEMPLATE
@@ -53,14 +53,15 @@ class GAS:
 
     def _generate_auth_storage_configs(
         self, name: Optional[str] = None, offset: int = 0, limit: int = 128
-    ) -> Generator[Dict[str, Any], None, int]:
+    ) -> Generator[StorageConfig, None, int]:
         params: Dict[str, Any] = {"offset": offset, "limit": limit}
         if name:
             params["name"] = name
 
         response = self._client.open_api_do("GET", "storage-configs", "", params=params).json()
 
-        yield from response["configs"]
+        for config in response["configs"]:
+            yield StorageConfig.loads(config)
 
         return response["totalCount"]  # type: ignore[no-any-return]
 
@@ -151,7 +152,7 @@ class GAS:
         response = self._client.open_api_do("GET", "users").json()
         return UserInfo.loads(response)
 
-    def get_auth_storage_config(self, name: str) -> Dict[str, Any]:
+    def get_auth_storage_config(self, name: str) -> StorageConfig:
         """Get the auth storage config with the given name.
 
         Arguments:
@@ -177,7 +178,7 @@ class GAS:
 
         return config
 
-    def list_auth_storage_configs(self) -> PagingList[Dict[str, Any]]:
+    def list_auth_storage_configs(self) -> PagingList[StorageConfig]:
         """List auth storage configs.
 
         Returns:
