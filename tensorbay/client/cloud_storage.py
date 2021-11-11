@@ -9,11 +9,11 @@ The :class:`CloudClient` defines the initial client to interact between local an
 
 """
 
-from typing import Any, Dict, Iterator, List
+from typing import Any, Dict, Iterator, List, Type, TypeVar
 
 from tensorbay.client.requests import Client
 from tensorbay.dataset import AuthData
-from tensorbay.utility import URL
+from tensorbay.utility import URL, AttrsMixin, ReprMixin, attr, camel, common_loads
 
 
 class CloudClient:
@@ -71,3 +71,75 @@ class CloudClient:
             )
             for cloud_path in self._list_files(path)
         ]
+
+
+class StorageConfig(AttrsMixin, ReprMixin):
+    """This is a class stores the information of storage config.
+
+    Arguments:
+        name: The storage config name.
+        file_path: Storage config path of the bucket.
+        type_: Type of the storage provider, such as oss, s3, azure.
+        is_graviti_storage: Whether the config is belong to graviti.
+
+    """
+
+    _T = TypeVar("_T", bound="StorageConfig")
+
+    _repr_attrs = ("file_path", "type", "is_graviti_storage")
+
+    name: str = attr()
+    file_path: str = attr(key=camel)
+    type: str = attr()
+    is_graviti_storage: bool = attr(key=camel)
+
+    def __init__(  # pylint: disable=too-many-arguments
+        self,
+        name: str,
+        file_path: str,
+        type_: str,
+        is_graviti_storage: bool,
+    ) -> None:
+        self.name = name
+        self.file_path = file_path
+        self.type = type_
+        self.is_graviti_storage = is_graviti_storage
+
+    def _repr_head(self) -> str:
+        return f'{self.__class__.__name__}("{self.name}")'
+
+    @classmethod
+    def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
+        """Loads a :class:`StorageConfig` instance from the given contents.
+
+        Arguments:
+            contents: The given dict containing the storage config::
+
+                {
+                    "name":                 <str>,
+                    "filePath":             <str>,
+                    "type":                 <str>,
+                    "isGravitiStorage":     <boolean>
+                }
+
+        Returns:
+            The loaded :class:`StorageConfig` instance.
+
+        """
+        return common_loads(cls, contents)
+
+    def dumps(self) -> Dict[str, Any]:
+        """Dumps the storage config into a dict.
+
+        Returns:
+            A dict containing all the information of the StorageConfig::
+
+                {
+                    "name":                 <str>,
+                    "filePath":             <str>,
+                    "type":                 <str>,
+                    "isGravitiStorage":     <boolean>
+                }
+
+        """
+        return self._dumps()

@@ -8,7 +8,7 @@ import os
 import pytest
 
 from tensorbay.client import gas
-from tensorbay.client.cloud_storage import CloudClient
+from tensorbay.client.cloud_storage import CloudClient, StorageConfig
 from tensorbay.client.dataset import DatasetClient, FusionDatasetClient
 from tensorbay.client.gas import DEFAULT_BRANCH, DEFAULT_IS_PUBLIC, GAS
 from tensorbay.client.status import Status
@@ -28,8 +28,8 @@ class TestGAS:
                 {
                     "name": "cloud_config",
                     "type": "azure",
-                    "accountName": "tensorbay",
-                    "containerName": "tensorbay",
+                    "filePath": "tensorbay",
+                    "isGravitiStorage": True,
                 },
             ],
             "offset": 0,
@@ -40,10 +40,9 @@ class TestGAS:
             f"{gas.__name__}.Client.open_api_do",
             return_value=mock_response(data=response_data),
         )
-        assert (
-            list(self.gas_client._generate_auth_storage_configs("cloud_config"))
-            == response_data["configs"]
-        )
+        assert list(self.gas_client._generate_auth_storage_configs("cloud_config")) == [
+            StorageConfig.loads(config) for config in response_data["configs"]
+        ]
 
         open_api_do.assert_called_once_with("GET", "storage-configs", "", params=params)
 
@@ -191,8 +190,8 @@ class TestGAS:
                 {
                     "name": "cloud_config",
                     "type": "azure",
-                    "accountName": "tensorbay",
-                    "containerName": "tensorbay",
+                    "filePath": "tensorbay",
+                    "isGravitiStorage": True,
                 },
             ],
             "offset": 0,
@@ -203,10 +202,9 @@ class TestGAS:
             f"{gas.__name__}.Client.open_api_do",
             return_value=mock_response(data=response_data),
         )
-        assert (
-            self.gas_client.get_auth_storage_config(response_data["configs"][0]["name"])
-            == response_data["configs"][0]
-        )
+        assert self.gas_client.get_auth_storage_config(
+            response_data["configs"][0]["name"]
+        ) == StorageConfig.loads(response_data["configs"][0])
 
     def test_list_auth_storage_configs(self, mocker):
         response_data = {
@@ -214,8 +212,8 @@ class TestGAS:
                 {
                     "name": "cloud_config",
                     "type": "azure",
-                    "accountName": "tensorbay",
-                    "containerName": "tensorbay",
+                    "filePath": "tensorbay",
+                    "isGravitiStorage": True,
                 },
             ],
             "offset": 0,
@@ -228,7 +226,7 @@ class TestGAS:
         )
         configs = self.gas_client.list_auth_storage_configs()
 
-        assert list(configs) == response_data["configs"]
+        assert list(configs) == [StorageConfig.loads(config) for config in response_data["configs"]]
 
     def test_delete_storage_config(self, mocker):
         open_api_do = mocker.patch(f"{gas.__name__}.Client.open_api_do")
@@ -302,8 +300,8 @@ class TestGAS:
                 {
                     "name": "cloud_train",
                     "type": "azure",
-                    "accountName": "tensorbay",
-                    "containerName": "tensorbay",
+                    "filePath": "tensorbay",
+                    "isGravitiStorage": True,
                 },
             ],
             "offset": 0,

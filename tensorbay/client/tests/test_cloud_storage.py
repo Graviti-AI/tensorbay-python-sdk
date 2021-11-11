@@ -6,10 +6,21 @@
 from itertools import zip_longest
 
 from tensorbay.client import gas
-from tensorbay.client.cloud_storage import CloudClient
+from tensorbay.client.cloud_storage import CloudClient, StorageConfig
 from tensorbay.client.requests import Client
 from tensorbay.client.tests.utility import mock_response
 from tensorbay.dataset import AuthData
+
+_NAME = "config_01"
+_FILE_PATH = "file_path/01"
+_TYPE = "oss"
+_IS_GRAVITI_STORAGE = True
+_STORAGE_CONFIG_DATA = {
+    "name": _NAME,
+    "filePath": _FILE_PATH,
+    "type": _TYPE,
+    "isGravitiStorage": _IS_GRAVITI_STORAGE,
+}
 
 
 class TestCloudClient:
@@ -41,3 +52,23 @@ class TestCloudClient:
         open_api_do.assert_called_once_with(
             "GET", f"cloud/{self.cloud_client._name}/files", params=params
         )
+
+
+class TestStorageConfig:
+    def test_init(self):
+        storage_config = StorageConfig(_NAME, _FILE_PATH, _TYPE, _IS_GRAVITI_STORAGE)
+        assert storage_config.name == _NAME
+        assert storage_config.file_path == _FILE_PATH
+        assert storage_config.type == _TYPE
+        assert storage_config.is_graviti_storage == _IS_GRAVITI_STORAGE
+
+    def test_loads(self):
+        storage_config = StorageConfig.loads(_STORAGE_CONFIG_DATA)
+        assert storage_config.name == _NAME
+        assert storage_config.file_path == _FILE_PATH
+        assert storage_config.type == _TYPE
+        assert storage_config.is_graviti_storage == _IS_GRAVITI_STORAGE
+
+    def test_dumps(self):
+        storage_config = StorageConfig(_NAME, _FILE_PATH, _TYPE, _IS_GRAVITI_STORAGE)
+        assert storage_config.dumps() == _STORAGE_CONFIG_DATA
