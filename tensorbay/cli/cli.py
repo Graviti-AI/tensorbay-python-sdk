@@ -372,6 +372,9 @@ def tag(obj: ContextInfo, tbrn: str, name: str, is_delete: bool, sort: str) -> N
         "",
         "# Show text-based graphical commit logs.",
         "$ gas log --graph tb:<dataset_name>[@<revision>]",
+        "# Show commit and open draft logs.",
+        "$ gas log --show-drafts tb:<dataset_name>[@<revision>]",
+        "",
     )
 )
 @click.argument("tbrn", type=str)
@@ -381,6 +384,7 @@ def tag(obj: ContextInfo, tbrn: str, name: str, is_delete: bool, sort: str) -> N
 @click.option("--oneline", is_flag=True, help="Limit commit message to oneline")
 @click.option("--all", "is_all", is_flag=True, help="Show all the commits of all branches")
 @click.option("--graph", is_flag=True, help="Show text-based graphical commits history")
+@click.option("--show-drafts", is_flag=True, help="Show open drafts")
 @click.pass_obj
 def log(  # pylint: disable=too-many-arguments
     obj: ContextInfo,
@@ -389,6 +393,7 @@ def log(  # pylint: disable=too-many-arguments
     oneline: bool,
     is_all: bool,
     graph: bool,
+    show_drafts: bool,
 ) -> None:
     """Show commit logs.\f
 
@@ -399,11 +404,12 @@ def log(  # pylint: disable=too-many-arguments
         oneline: Whether to show a commit message in oneline.
         is_all: Whether to show all commits of all branches.
         graph: Whether to show graphical commit history.
+        show_drafts: Whether to log open drafts.
 
     """  # noqa: D301,D415
     from tensorbay.cli.log import _implement_log
 
-    _implement_log(obj, tbrn, max_count, oneline, is_all, graph)
+    _implement_log(obj, tbrn, max_count, oneline, is_all, graph, show_drafts)
 
 
 @command(
