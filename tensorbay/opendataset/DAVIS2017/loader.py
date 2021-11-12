@@ -91,7 +91,8 @@ def DAVIS2017SemiSupervised(path: str) -> Dataset:
             _RESOLUTIONS,
             _generate_segment_name(os.path.join(root_path, "ImageSets", "2017", file_path)),
         ):
-            segment = dataset.create_segment(f"{segment_name}-{resolution}")
+            stem = os.path.splitext(file_path)[0]
+            segment = dataset.create_segment(f"{stem}_{segment_name}_{resolution}")
             image_paths = glob(
                 os.path.join(root_path, "JPEGImages", resolution, segment_name, "*.jpg")
             )
@@ -180,7 +181,8 @@ def DAVIS2017Unsupervised(path: str) -> Dataset:
             _RESOLUTIONS,
             _generate_segment_name(os.path.join(root_path, "ImageSets", file_path)),
         ):
-            segment = dataset.create_segment(f"{segment_name}-{resolution}")
+            stem = os.path.splitext(os.path.basename(file_path))[0]
+            segment = dataset.create_segment(f"{stem}_{segment_name}_{resolution}")
             for image_path in glob(
                 os.path.join(root_path, "JPEGImages", resolution, segment_name, "*.jpg")
             ):
