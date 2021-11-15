@@ -325,7 +325,10 @@ class _GraphPrinter:
         # Merge branches.
         del self._layer_colors[self._merge_pointer]
         lines = [f"{self._get_title_prefix(prefixes, original_pointer)} {log}"]
-        lines.extend(f"{prefixes}\n" for prefixes in self._get_merge_prefixes())
+        lines.extend(
+            f"{prefixes}\n"
+            for prefixes in self._get_merge_prefixes(self._merge_pointer, self._pointer)
+        )
         return "".join(lines)
 
     def _add_graph_full(
@@ -342,21 +345,26 @@ class _GraphPrinter:
         else:
             # Merge branches.
             del self._layer_colors[self._merge_pointer]
-            merge_prefixes = self._get_merge_prefixes()
+            merge_prefixes = self._get_merge_prefixes(self._merge_pointer, self._pointer)
             lines.extend(self._combine_details(list(merge_prefixes), list(splitlines)))
         return "".join(lines)
 
     def _get_colorful_prefixes(self) -> List[str]:
         return [click.style("|", fg=color) for color in self._layer_colors]
 
-    def _get_merge_prefixes(self) -> Iterator[str]:
+    def _get_merge_prefixes(self, merge_pointer: int, pointer: int) -> Iterator[str]:
         prefixes = []
         for color in self._layer_colors:
             prefixes.append(click.style("|", fg=color))
             prefixes.append(" ")
-        for i in range(self._merge_pointer, self._pointer, -1):  # type: ignore[arg-type]
+
+        for i in range(merge_pointer, pointer, -1):
             temp_prefixes = prefixes.copy()
-            temp_prefixes[2 * i - 1] = click.style("/", fg=self._layer_colors[self._pointer])
+            temp_prefixes[2 * i - 1] = click.style("/", fg=self._layer_colors[pointer])
+            if i == merge_pointer:
+                for j, color in enumerate(self._layer_colors[i:], i):
+                    temp_prefixes[2 * j] = " "
+                    temp_prefixes[2 * j + 1] = click.style("/", fg=color)
             yield "".join(temp_prefixes)
 
     @staticmethod
