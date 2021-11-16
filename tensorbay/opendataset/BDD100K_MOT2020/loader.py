@@ -13,7 +13,7 @@ from typing import Any, Callable, Dict, Iterable
 import numpy as np
 
 from tensorbay.dataset import Data, Dataset
-from tensorbay.label import InstanceMask, LabeledBox2D, LabeledMultiPolygon
+from tensorbay.label import InstanceMask, LabeledBox2D, LabeledMultiPolygon, SemanticMask
 from tensorbay.opendataset._utility import glob
 
 try:
@@ -187,7 +187,10 @@ def _generate_data(
     if tracking_type == "mots":
         original_mask_subdir = os.path.join(original_mask_dir, subdir_name)
         mask_subdir = os.path.join(mask_dir, subdir_name)
-        os.makedirs(mask_subdir, exist_ok=True)
+        semantic_subdir = os.path.join(mask_subdir, "semantic")
+        instance_subdir = os.path.join(mask_subdir, "instance")
+        os.makedirs(semantic_subdir, exist_ok=True)
+        os.makedirs(instance_subdir, exist_ok=True)
     with open(os.path.join(segment_labels_dir, f"{subdir_name}.json"), "r", encoding="utf-8") as fp:
         label_contents = json.load(fp)
     for label_content in label_contents:
@@ -200,9 +203,10 @@ def _generate_data(
         ) if tracking_type == "mot" else _get_mots_data(
             image_path,
             original_mask_subdir,
-            mask_subdir,
+            semantic_subdir,
+            instance_subdir,
             os.path.splitext(label_content_name)[0],
-            label_content,
+            label_content=label_content,
         )
 
 
@@ -231,8 +235,10 @@ def _get_mot_data(image_path: str, label_content: Dict[str, Any]) -> Data:
 def _get_mots_data(
     image_path: str,
     original_mask_subdir: str,
-    mask_subdir: str,
+    semantic_subdir: str,
+    instance_subdir: str,
     stem: str,
+    *,
     label_content: Dict[str, Any],
 ) -> Data:
     data = Data(image_path)
@@ -248,25 +254,28 @@ def _get_mots_data(
         )
         labeled_multipolygons.append(labeled_multipolygon)
 
-    mask_path = os.path.join(mask_subdir, f"{stem}.png")
+    semantic_path = os.path.join(semantic_subdir, f"{stem}.png")
+    instance_path = os.path.join(instance_subdir, f"{stem}.png")
     mask_info = _save_and_get_mask_info(
         os.path.join(original_mask_subdir, f"{stem}.png"),
-        mask_path,
-        os.path.join(mask_subdir, f"{stem}.json"),
+        semantic_path,
+        instance_path,
+        os.path.join(instance_subdir, f"{stem}.json"),
     )
-    ins_mask = InstanceMask(mask_path)
+    ins_mask = InstanceMask(instance_path)
     ins_mask.all_attributes = mask_info["all_attributes"]
 
     label = data.label
     label.multi_polygon = labeled_multipolygons
+    label.semantic_mask = SemanticMask(semantic_path)
     label.instance_mask = ins_mask
     return data
 
 
 def _save_and_get_mask_info(
-    original_mask_path: str, mask_path: str, mask_info_path: str
+    original_mask_path: str, semantic_path: str, instance_path: str, mask_info_path: str
 ) -> Dict[str, Any]:
-    if not os.path.exists(mask_path):
+    if not os.path.exists(instance_path):
         mask = np.array(Image.open(original_mask_path), dtype=np.uint16)
         all_attributes = {}
         for _, attributes, instance_id_high, instance_id_low in np.unique(
@@ -283,8 +292,12 @@ def _save_and_get_mask_info(
         mask_info = {"all_attributes": all_attributes}
         with open(mask_info_path, "w", encoding="utf-8") as fp:
             json.dump(mask_info, fp)
-        Image.fromarray(mask[:, :, -1] + (mask[:, :, -2] << 8)).save(mask_path)
+        Image.fromarray(mask[:, :, -1] + (mask[:, :, -2] << 8)).save(instance_path)
+        if not os.path.exists(semantic_path):
+            Image.fromarray(mask[:, :, 0]).save(semantic_path)
     else:
+        if not os.path.exists(semantic_path):
+            Image.fromarray(np.array(Image.open(original_mask_path))[:, :, 0]).save(semantic_path)
         with open(mask_info_path, "r", encoding="utf-8") as fp:
             mask_info = json.load(
                 fp,
