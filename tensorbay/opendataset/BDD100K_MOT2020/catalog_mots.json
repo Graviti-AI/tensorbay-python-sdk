@@ -28,6 +28,19 @@
             }
         ]
     },
+    "SEMANTIC_MASK": {
+        "categories": [
+            { "name": "background", "categoryId": 0 },
+            { "name": "pedestrian", "categoryId": 1 },
+            { "name": "rider", "categoryId": 2 },
+            { "name": "car", "categoryId": 3 },
+            { "name": "truck", "categoryId": 4 },
+            { "name": "bus", "categoryId": 5 },
+            { "name": "train", "categoryId": 6 },
+            { "name": "motorcycle", "categoryId": 7 },
+            { "name": "bicycle", "categoryId": 8 }
+        ]
+    },
     "INSTANCE_MASK": {
         "categories": [{ "name": "background", "categoryId": 0 }],
         "attributes": [
