@@ -71,6 +71,9 @@ instance/
 # Sphinx documentation
 docs/_build/
 
+# Documentation generated rst files
+docs/source/reference/api/api_rst/
+
 # PyBuilder
 target/
 
