@@ -10,7 +10,7 @@ which is a dataset with :ref:`reference/label_format/Box3D:Box3D` label type
 
 .. _example-neolixod:
 
-.. figure:: ../../images/example-Box3D.png
+.. figure:: /images/example-Box3D.png
    :scale: 50 %
    :align: center
 

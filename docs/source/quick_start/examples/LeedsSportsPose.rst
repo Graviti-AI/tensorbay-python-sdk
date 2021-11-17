@@ -7,7 +7,7 @@ which is a dataset with :ref:`reference/label_format/Keypoints2D:Keypoints2D` la
 
 .. _example-leedssportspose:
 
-.. figure:: ../../images/example-Keypoints2D.png
+.. figure:: /images/example-Keypoints2D.png
    :scale: 80 %
    :align: center
 

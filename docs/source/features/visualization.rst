@@ -45,7 +45,7 @@ Open the returned URL to see the visualization result.
 
 .. _visualization result:
 
-.. figure:: ../images/visualization.jpg
+.. figure:: /images/visualization.jpg
    :align: center
 
    The visualized result of the BSTLD dataset.
