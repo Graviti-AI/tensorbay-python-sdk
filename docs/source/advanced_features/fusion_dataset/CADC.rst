@@ -11,7 +11,7 @@ See `this page <https://gas.graviti.cn/dataset/hello-dataset/CADC>`_ for more de
 
 .. _example-cadc:
 
-.. figure:: ../../images/example-FusionDataset.png
+.. figure:: /images/example-FusionDataset.png
    :scale: 50 %
    :align: center
 

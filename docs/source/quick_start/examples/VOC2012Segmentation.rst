@@ -11,7 +11,7 @@ and :ref:`reference/label_format/InstanceMask:InstanceMask` labels
 
 .. _example-semantic-mask:
 
-.. figure:: ../../images/example-semanticmask.png
+.. figure:: /images/example-semanticmask.png
    :scale: 150 %
    :align: center
 
@@ -19,7 +19,7 @@ and :ref:`reference/label_format/InstanceMask:InstanceMask` labels
 
 .. _example-instance-mask:
 
-.. figure:: ../../images/example-instancemask.png
+.. figure:: /images/example-instancemask.png
    :scale: 150 %
    :align: center
 

@@ -7,7 +7,7 @@ which is a dataset with :ref:`reference/label_format/Box2D:Box2D` label(:numref:
 
 .. _example-bstld:
 
-.. figure:: ../../images/example-Box2D.png
+.. figure:: /images/example-Box2D.png
    :scale: 50 %
    :align: center
 

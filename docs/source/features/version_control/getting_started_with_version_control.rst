@@ -11,7 +11,7 @@ Take the `VersionControlDemo Dataset <https://gas.graviti.cn/dataset/graviti-ope
 
 .. _commit-demonstration:
 
-.. figure:: ../../images/commit.jpg
+.. figure:: /images/commit.jpg
    :scale: 40 %
    :align: center
 
@@ -75,7 +75,7 @@ It means the action to turn a draft into a commit.
 
 .. _draft-demonstration:
 
-.. figure:: ../../images/draft.jpg
+.. figure:: /images/draft.jpg
    :scale: 30 %
    :align: center
 
@@ -139,7 +139,7 @@ and adds :ref:`classification <reference/label_format/Classification:Classificat
 
 .. _branch-demonstration:
 
-.. figure:: ../../images/branch.jpg
+.. figure:: /images/branch.jpg
    :scale: 30 %
    :align: center
 
