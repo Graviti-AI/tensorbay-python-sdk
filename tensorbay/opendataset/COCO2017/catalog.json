@@ -1,5 +1,6 @@
 {
     "BOX2D": {
+        "categoryDelimiter": ".",
         "categories": [
             { "name": "person.person" },
             { "name": "vehicle.bicycle" },
@@ -137,6 +138,7 @@
         ]
     },
     "KEYPOINTS2D": {
+        "categoryDelimiter": ".",
         "categories": [{ "name": "person.person" }],
         "keypoints": [
             {
@@ -186,6 +188,7 @@
         ]
     },
     "MULTI_POLYGON": {
+        "categoryDelimiter": ".",
         "categories": [
             { "name": "person.person" },
             { "name": "vehicle.bicycle" },
@@ -323,6 +326,7 @@
         ]
     },
     "RLE": {
+        "categoryDelimiter": ".",
         "categories": [
             { "name": "person.person" },
             { "name": "vehicle.bicycle" },
@@ -460,6 +464,7 @@
         ]
     },
     "PANOPTIC_MASK": {
+        "categoryDelimiter": ".",
         "categories": [
             { "name": "background", "categoryId": 0 },
             { "name": "person.person", "categoryId": 1 },
