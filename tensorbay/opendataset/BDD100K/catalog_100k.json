@@ -64,13 +64,7 @@
         ]
     },
     "POLYGON": {
-        "categories": [{ "name": "direct" }, { "name": "alternative" }, { "name": "unknown" }],
-        "attributes": [
-            {
-                "name": "areaType",
-                "enum": ["direct", "alternative"]
-            }
-        ]
+        "categories": [{ "name": "direct" }, { "name": "alternative" }, { "name": "unknown" }]
     },
     "POLYLINE2D": {
         "isBeizerCurve": true,
@@ -92,19 +86,6 @@
             {
                 "name": "laneStyle",
                 "enum": ["solid", "dashed"]
-            },
-            {
-                "name": "laneTypes",
-                "enum": [
-                    "crosswalk",
-                    "double other",
-                    "double white",
-                    "double yellow",
-                    "road curb",
-                    "single other",
-                    "single white",
-                    "single yellow"
-                ]
             }
         ]
     }
