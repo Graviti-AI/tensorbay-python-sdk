@@ -265,14 +265,15 @@ def _add_poly2d_label_100k(
         labeled_polygon = LabeledPolygon(
             points=poly2d_info["vertices"],
             category=label_info["category"],
-            attributes=label_info["attributes"],
         )
         polygon.append(labeled_polygon)
     else:
+        attributes = label_info["attributes"]
+        del attributes["laneTypes"]
         labeled_polyline2d = LabeledPolyline2D(
             points=poly2d_info["vertices"],
             category=label_info["category"],
-            attributes=label_info.get("attributes", {}),
+            attributes=attributes,
             beizer_point_types=poly2d_info["types"],
         )
         polyline2d.append(labeled_polyline2d)
