@@ -49,3 +49,16 @@ for auth_data, label in zip(images, labels):
 
 dataset_client = gas.upload_dataset(dataset, jobs=8)
 """"""
+
+
+"""Create local storage config"""
+gas.create_local_storage_config(
+    name="local_storage_config",
+    file_path="<path to store the datasets>",
+    endpoint="<external IP address of the local storage service>",
+)
+""""""
+
+"""Create authorized local storage dataset"""
+dataset_client = gas.create_dataset("dataset_name", config_name="local_storage_config")
+""""""

@@ -103,3 +103,32 @@ Import the AuthData from cloud platform and load label file to an authorized sto
 
     Set the authorized cloud storage dataset path the same as original directory could speed up
     the import action. For example, set the config path of above dataset to ``data/images``.
+
+
+**************************
+ Authorized Local Storage
+**************************
+
+If you want to use TensorBay service and have the data stored locally at the same time,
+TensorBay supports authorized local storage config.
+
+Before creating the local storage config via :func:`~tensorbay.client.gas.GAS.create_local_storage_config`,
+you need to start a local storage service. Please contact us on `TensorBay`_ for more information.
+
+.. _TensorBay: https://www.graviti.cn/
+
+.. literalinclude:: ../../../docs/code/cloud_storage.py
+   :language: python
+   :start-after: """Create local storage config"""
+   :end-before: """"""
+
+Then create an authorized local storage dataset with the config.
+
+.. literalinclude:: ../../../docs/code/cloud_storage.py
+   :language: python
+   :start-after: """Create authorized local storage dataset"""
+   :end-before: """"""
+
+Other operations such as uploading data and reading data,
+are the same as datasets created by default,
+except that the uploaded data is stored under the local storage.
