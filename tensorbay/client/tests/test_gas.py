@@ -12,7 +12,7 @@ from tensorbay.client.cloud_storage import CloudClient, StorageConfig
 from tensorbay.client.dataset import DatasetClient, FusionDatasetClient
 from tensorbay.client.gas import DEFAULT_BRANCH, DEFAULT_IS_PUBLIC, GAS
 from tensorbay.client.status import Status
-from tensorbay.client.struct import ROOT_COMMIT_ID, Draft
+from tensorbay.client.struct import ROOT_COMMIT_ID, Draft, User
 from tensorbay.client.tests.utility import mock_response
 from tensorbay.dataset import Dataset
 from tensorbay.exception import DatasetTypeError, ResourceNotExistError
@@ -509,7 +509,17 @@ class TestGAS:
         # upload the dataset in main branch containing a draft
         list_drafts = mocker.patch(
             f"{gas.__name__}.DatasetClient.list_drafts",
-            return_value=[Draft(1, "title", DEFAULT_BRANCH, "OPEN")],
+            return_value=[
+                Draft(
+                    1,
+                    "title",
+                    DEFAULT_BRANCH,
+                    "OPEN",
+                    "4c564ea07f4e47679ec8c63d238bb3a1",
+                    User("test", 1636967807),
+                    1637223060,
+                )
+            ],
         )
         checkout = mocker.patch(f"{gas.__name__}.DatasetClient.checkout")
         self.gas_client.upload_dataset(dataset)
@@ -533,7 +543,17 @@ class TestGAS:
         # upload the dataset in dev branch containing a draft
         list_drafts = mocker.patch(
             f"{gas.__name__}.DatasetClient.list_drafts",
-            return_value=[Draft(1, "title", "dev", "OPEN")],
+            return_value=[
+                Draft(
+                    1,
+                    "title",
+                    "dev",
+                    "OPEN",
+                    "4c564ea07f4e47679ec8c63d238bb3a1",
+                    User("test", 1636967807),
+                    1637223060,
+                )
+            ],
         )
         checkout = mocker.patch(f"{gas.__name__}.DatasetClient.checkout")
         self.gas_client.upload_dataset(dataset, branch_name="dev")

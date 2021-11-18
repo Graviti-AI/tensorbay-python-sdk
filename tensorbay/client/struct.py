@@ -435,7 +435,7 @@ class Branch(_NamedCommit):
         self.committer = User.loads(contents["committer"])
 
 
-class Draft(AttrsMixin, ReprMixin):
+class Draft(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attributes
     """This class defines the basic structure of a draft.
 
     Arguments:
@@ -443,6 +443,9 @@ class Draft(AttrsMixin, ReprMixin):
         title: The title of the draft.
         branch_name: The branch name.
         status: The status of the draft.
+        parent_commit_id: The parent commit id.
+        author: The author of the draft.
+        updated_at: The time of last update.
         description: The draft description.
 
     """
@@ -455,15 +458,29 @@ class Draft(AttrsMixin, ReprMixin):
     title: str = attr()
     branch_name: str = attr(key=camel)
     status: str = attr()
+    parent_commit_id: str = attr(key=camel)
+    author: User = attr()
+    updated_at: int = attr(key=camel)
     description: str = attr(default="")
 
     def __init__(  # pylint: disable=too-many-arguments
-        self, number: int, title: str, branch_name: str, status: str, description: str = ""
+        self,
+        number: int,
+        title: str,
+        branch_name: str,
+        status: str,
+        parent_commit_id: str,
+        author: User,
+        updated_at: int,
+        description: str = "",
     ) -> None:
         self.number = number
         self.title = title
         self.branch_name = branch_name
         self.status = status
+        self.parent_commit_id = parent_commit_id
+        self.author = author
+        self.updated_at = updated_at
         self.description = description
 
     def _repr_head(self) -> str:
@@ -481,6 +498,12 @@ class Draft(AttrsMixin, ReprMixin):
                         "title": <str>
                         "branchName": <str>
                         "status": "OPEN", "CLOSED" or "COMMITTED"
+                        "parentCommitId": <str>
+                        "author": {
+                            "name": <str>
+                            "date": <int>
+                        }
+                        "updatedAt": <int>
                         "description": <str>
                     }
 
@@ -501,6 +524,12 @@ class Draft(AttrsMixin, ReprMixin):
                     "title": <str>
                     "branchName": <str>
                     "status": "OPEN", "CLOSED" or "COMMITTED"
+                    "parentCommitId": <str>
+                    "author": {
+                        "name": <str>
+                        "date": <int>
+                    }
+                    "updatedAt": <int>
                     "description": <str>
                 }
 
