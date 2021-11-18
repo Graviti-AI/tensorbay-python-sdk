@@ -41,12 +41,18 @@ _DRAFT_NUMBER = 1
 _DRAFT_TITLE = "draft title"
 _DRAFT_BRANCH_NAME = "main"
 _DRAFT_STATUS = "OPEN"
+_DRAFT_PARENT_COMMIT_ID = "4c564ea07f4e47679ec8c63d238bb3a1"
+_DRAFT_UPDATED_AT = 1637223060
+_DRAFT_AUTHOR = User("draft author", 1636967807)
 _DRAFT_DESCRIPTION = "description"
 _DRAFT_DATA = {
     "number": _DRAFT_NUMBER,
     "title": _DRAFT_TITLE,
     "branchName": _DRAFT_BRANCH_NAME,
     "status": _DRAFT_STATUS,
+    "parentCommitId": _DRAFT_PARENT_COMMIT_ID,
+    "author": {"name": "draft author", "date": 1636967807},
+    "updatedAt": _DRAFT_UPDATED_AT,
 }
 
 
@@ -139,12 +145,23 @@ class TestBranch:
 class TestDraft:
     def test_init(self):
         draft = Draft(
-            _DRAFT_NUMBER, _DRAFT_TITLE, _DRAFT_BRANCH_NAME, _DRAFT_STATUS, _DRAFT_DESCRIPTION
+            _DRAFT_NUMBER,
+            _DRAFT_TITLE,
+            _DRAFT_BRANCH_NAME,
+            _DRAFT_STATUS,
+            _DRAFT_PARENT_COMMIT_ID,
+            _DRAFT_AUTHOR,
+            _DRAFT_UPDATED_AT,
+            _DRAFT_DESCRIPTION,
         )
         assert draft.number == _DRAFT_NUMBER
         assert draft.title == _DRAFT_TITLE
         assert draft.status == _DRAFT_STATUS
+        assert draft.branch_name == _DRAFT_BRANCH_NAME
         assert draft.description == _DRAFT_DESCRIPTION
+        assert draft.parent_commit_id == _DRAFT_PARENT_COMMIT_ID
+        assert draft.author == _DRAFT_AUTHOR
+        assert draft.updated_at == _DRAFT_UPDATED_AT
 
     def test_loads(self):
         draft = Draft.loads(_DRAFT_DATA)
@@ -152,7 +169,18 @@ class TestDraft:
         assert draft.title == _DRAFT_DATA["title"]
         assert draft.branch_name == _DRAFT_DATA["branchName"]
         assert draft.status == _DRAFT_DATA["status"]
+        assert draft.parent_commit_id == _DRAFT_DATA["parentCommitId"]
+        assert draft.author == User.loads(_DRAFT_DATA["author"])
+        assert draft.updated_at == _DRAFT_DATA["updatedAt"]
 
     def test_dumps(self):
-        draft = Draft(_DRAFT_NUMBER, _DRAFT_TITLE, _DRAFT_BRANCH_NAME, _DRAFT_STATUS)
+        draft = Draft(
+            _DRAFT_NUMBER,
+            _DRAFT_TITLE,
+            _DRAFT_BRANCH_NAME,
+            _DRAFT_STATUS,
+            _DRAFT_PARENT_COMMIT_ID,
+            _DRAFT_AUTHOR,
+            _DRAFT_UPDATED_AT,
+        )
         assert draft.dumps() == _DRAFT_DATA
