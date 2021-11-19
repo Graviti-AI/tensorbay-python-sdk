@@ -4,33 +4,7 @@
 #
 # pylint: disable=import-outside-toplevel
 
-"""Command-line interface.
-
-Use ``gas <command>`` in terminal to operate on datasets.
-
-Use ``gas auth`` to authenticate the accessKey of gas.
-
-Use ``gas branch`` to list, create or delete branches.
-
-Use ``gas commit`` to commit drafts.
-
-Use ``gas config`` to configure the options when using gas CLI.
-
-Use ``gas cp`` to copy local data to a remote path.
-
-Use ``gas dataset`` to list, create or delete datasets.
-
-Use ``gas draft`` to list or create drafts.
-
-Use ``gas log`` to show commit logs.
-
-Use ``gas ls`` to list data under the path.
-
-Use ``gas rm`` to remove the remote data.
-
-Use ``gas tag`` to list, create or delete tags.
-
-"""
+"""Definitions of TensorBay Command-line Interface commands."""
 
 from functools import partial
 from typing import Iterable, Optional, Tuple

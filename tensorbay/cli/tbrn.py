@@ -3,14 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""TensorBay Resource Name (TBRN) related classes.
-
-:class:`TBRNType` is an enumeration type, which has 7 types: 'DATASET', 'SEGMENT', 'FRAME',
-'SEGMENT_SENSOR', 'FRAME_SENSOR', 'NORMAL_FILE' and 'FUSION_FILE'.
-
-:class:`TBRN` is a TensorBay Resource Name(TBRN) parser and generator.
-
-"""
+"""Definitions of TensorBay Resource Name (TBRN) related classes."""
 
 from enum import Enum, Flag, auto
 from typing import Any, List, Optional, Tuple, TypeVar

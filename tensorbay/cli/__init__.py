@@ -3,4 +3,4 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Graviti TensorBay CLI."""
+"""TensorBay CLI."""
