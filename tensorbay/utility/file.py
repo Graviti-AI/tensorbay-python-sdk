@@ -190,8 +190,7 @@ class RemoteFileMixin(ReprMixin):
 
         if not os.path.exists(cache_path):
             dirname = os.path.dirname(cache_path)
-            if not os.path.exists(dirname):
-                os.makedirs(dirname)
+            os.makedirs(dirname, exist_ok=True)
 
             with self._urlopen() as fp:
                 with open(cache_path, "wb") as cache:
