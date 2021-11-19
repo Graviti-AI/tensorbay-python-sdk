@@ -1,5 +1,6 @@
 {
     "CLASSIFICATION": {
+        "categoryDelimiter": ".",
         "categories": [
             { "name": "Cat.Abyssinian" },
             { "name": "Cat.Bengal" },
