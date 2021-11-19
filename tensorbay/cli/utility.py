@@ -3,7 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Graviti Tensorbay gas CLI utility functions."""
+"""TensorBay gas CLI utility functions."""
 
 import logging
 import os

@@ -4,7 +4,7 @@
 #
 # pylint: disable=import-outside-toplevel
 
-"""Subclass declaration and definition of click class."""
+"""Customization of the click classes for TensorBay CLI."""
 
 from types import MethodType
 from typing import Any, Optional, Sequence, Tuple, Union
