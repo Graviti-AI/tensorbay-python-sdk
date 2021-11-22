@@ -390,12 +390,13 @@ class SegmentClient(SegmentClientBase):
 
         mask_urls = {}
         for key in _MASK_KEYS:
-            mask_urls[key] = LazyPage(
+            mask_urls[key] = LazyPage.from_items(
                 offset,
                 limit,
-                lambda offset, limit, k=key: self._generate_mask_urls(  # type: ignore[misc]
-                    k.upper(), offset, limit
+                lambda offset, limit, k=key.upper(): (  # type: ignore[misc]
+                    self._generate_mask_urls(k, offset, limit)
                 ),
+                (item["label"].get(key.upper(), {}).get("url") for item in response["dataDetails"]),
             )
 
         for i, item in enumerate(response["dataDetails"]):
@@ -408,9 +409,7 @@ class SegmentClient(SegmentClientBase):
             for key in _MASK_KEYS:
                 mask = getattr(label, key, None)
                 if mask:
-                    mask.url = URL.from_getter(
-                        mask_urls[key].items[i].get, mask_urls[key].pull  # type: ignore[arg-type]
-                    )
+                    mask.url = URL.from_getter(mask_urls[key].items[i].get, mask_urls[key].pull)
                     mask.cache_path = os.path.join(self._cache_path, key, mask.path)
 
             yield data
@@ -711,8 +710,8 @@ class SegmentClient(SegmentClientBase):
         for key in _MASK_KEYS:
             mask = getattr(label, key, None)
             if mask:
-                mask.url = URL.from_getter(
-                    lambda k=key.upper(), r=remote_path: self._get_mask_url(k, r),
+                mask.url = URL(
+                    data_details["label"][key.upper()]["url"],
                     lambda k=key.upper(), r=remote_path: (  # type: ignore[misc, arg-type]
                         self._get_mask_url(k, r)
                     ),
