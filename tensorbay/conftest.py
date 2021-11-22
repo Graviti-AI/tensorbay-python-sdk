@@ -238,7 +238,7 @@ def mock_list_drafts(mocker, branch_name):
             "status": "OPEN",
             "parentCommitId": "4c564ea07f4e47679ec8c63d238bb3a1",
             "author": {"name": "draft author", "date": 1636967807},
-            "updatedAt": 1636967807,
+            "updateAt": 1636967807,
             "description": "first draft of test_draft",
         },
         {
@@ -248,7 +248,7 @@ def mock_list_drafts(mocker, branch_name):
             "status": "CLOSED",
             "parentCommitId": "4c564ea07f4e47679ec8c63d238bb3a1",
             "author": {"name": "draft author", "date": 1636967807},
-            "updatedAt": 1636967807,
+            "updateAt": 1636967807,
             "description": "",
         },
     ]

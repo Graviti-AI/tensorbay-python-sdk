@@ -42,7 +42,7 @@ _DRAFT_TITLE = "draft title"
 _DRAFT_BRANCH_NAME = "main"
 _DRAFT_STATUS = "OPEN"
 _DRAFT_PARENT_COMMIT_ID = "4c564ea07f4e47679ec8c63d238bb3a1"
-_DRAFT_UPDATED_AT = 1637223060
+_DRAFT_UPDATE_AT = 1637223060
 _DRAFT_AUTHOR = User("draft author", 1636967807)
 _DRAFT_DESCRIPTION = "description"
 _DRAFT_DATA = {
@@ -52,7 +52,7 @@ _DRAFT_DATA = {
     "status": _DRAFT_STATUS,
     "parentCommitId": _DRAFT_PARENT_COMMIT_ID,
     "author": {"name": "draft author", "date": 1636967807},
-    "updatedAt": _DRAFT_UPDATED_AT,
+    "updateAt": _DRAFT_UPDATE_AT,
 }
 
 
@@ -151,7 +151,7 @@ class TestDraft:
             _DRAFT_STATUS,
             _DRAFT_PARENT_COMMIT_ID,
             _DRAFT_AUTHOR,
-            _DRAFT_UPDATED_AT,
+            _DRAFT_UPDATE_AT,
             _DRAFT_DESCRIPTION,
         )
         assert draft.number == _DRAFT_NUMBER
@@ -161,7 +161,7 @@ class TestDraft:
         assert draft.description == _DRAFT_DESCRIPTION
         assert draft.parent_commit_id == _DRAFT_PARENT_COMMIT_ID
         assert draft.author == _DRAFT_AUTHOR
-        assert draft.updated_at == _DRAFT_UPDATED_AT
+        assert draft.update_at == _DRAFT_UPDATE_AT
 
     def test_loads(self):
         draft = Draft.loads(_DRAFT_DATA)
@@ -171,7 +171,7 @@ class TestDraft:
         assert draft.status == _DRAFT_DATA["status"]
         assert draft.parent_commit_id == _DRAFT_DATA["parentCommitId"]
         assert draft.author == User.loads(_DRAFT_DATA["author"])
-        assert draft.updated_at == _DRAFT_DATA["updatedAt"]
+        assert draft.update_at == _DRAFT_DATA["updateAt"]
 
     def test_dumps(self):
         draft = Draft(
@@ -181,6 +181,6 @@ class TestDraft:
             _DRAFT_STATUS,
             _DRAFT_PARENT_COMMIT_ID,
             _DRAFT_AUTHOR,
-            _DRAFT_UPDATED_AT,
+            _DRAFT_UPDATE_AT,
         )
         assert draft.dumps() == _DRAFT_DATA

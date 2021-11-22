@@ -445,7 +445,7 @@ class Draft(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribu
         status: The status of the draft.
         parent_commit_id: The parent commit id.
         author: The author of the draft.
-        updated_at: The time of last update.
+        update_at: The time of last update.
         description: The draft description.
 
     """
@@ -460,7 +460,7 @@ class Draft(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribu
     status: str = attr()
     parent_commit_id: str = attr(key=camel)
     author: User = attr()
-    updated_at: int = attr(key=camel)
+    update_at: int = attr(key=camel)
     description: str = attr(default="")
 
     def __init__(  # pylint: disable=too-many-arguments
@@ -471,7 +471,7 @@ class Draft(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribu
         status: str,
         parent_commit_id: str,
         author: User,
-        updated_at: int,
+        update_at: int,
         description: str = "",
     ) -> None:
         self.number = number
@@ -480,7 +480,7 @@ class Draft(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribu
         self.status = status
         self.parent_commit_id = parent_commit_id
         self.author = author
-        self.updated_at = updated_at
+        self.update_at = update_at
         self.description = description
 
     def _repr_head(self) -> str:
@@ -503,7 +503,7 @@ class Draft(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribu
                             "name": <str>
                             "date": <int>
                         }
-                        "updatedAt": <int>
+                        "updateAt": <int>
                         "description": <str>
                     }
 
@@ -529,7 +529,7 @@ class Draft(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribu
                         "name": <str>
                         "date": <int>
                     }
-                    "updatedAt": <int>
+                    "updateAt": <int>
                     "description": <str>
                 }
 
