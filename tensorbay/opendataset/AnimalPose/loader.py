@@ -3,7 +3,8 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-# pylint: disable=missing-module-docstring
+
+"""Dataloaders of AnimalPose5 dataset and AnimalPose7 dataset."""
 
 import json
 import os

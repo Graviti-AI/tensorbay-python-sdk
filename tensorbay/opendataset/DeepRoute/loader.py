@@ -3,7 +3,8 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-# pylint: disable=missing-module-docstring
+
+"""Dataloader of DeepRoute dataset."""
 
 import json
 import os

@@ -3,8 +3,9 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-# pylint: disable=missing-module-docstring
 # pylint: disable=line-too-long
+
+"""Dataloader of CarConnectionPictureD dataset."""
 
 import os
 from typing import Tuple, Union

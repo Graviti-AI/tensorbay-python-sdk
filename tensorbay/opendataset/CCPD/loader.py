@@ -2,7 +2,9 @@
 #
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
-# pylint: disable=invalid-name, missing-module-docstring
+# pylint: disable=invalid-name
+
+"""Dataloader of CCPD dataset."""
 
 import os
 from typing import Dict, Iterator, List, Union

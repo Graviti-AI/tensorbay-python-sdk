@@ -2,7 +2,9 @@
 #
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
-# pylint: disable=invalid-name, missing-module-docstring
+# pylint: disable=invalid-name
+
+"""Dataloaders of DAVIS2017SemiSupervised dataset and DAVIS2017Unsupervised dataset."""
 
 import os
 from itertools import product
