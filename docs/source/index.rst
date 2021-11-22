@@ -50,7 +50,7 @@ It provides:
    :caption: Advanced Features
 
    advanced_features/fusion_dataset/index
-   advanced_features/cloud_storage
+   advanced_features/storage_config
    advanced_features/request_configuration
    advanced_features/use_internal_endpoint
    advanced_features/profile
