@@ -427,7 +427,9 @@ class SegmentClient(SegmentClientBase):
             for key in _MASK_KEYS:
                 mask = getattr(label, key, None)
                 if mask:
-                    mask.url = URL.from_getter(mask_urls[key].items[i].get, mask_urls[key].pull)
+                    mask.url = URL.from_getter(
+                        mask_urls[key].items[i].get, mask_urls[key].pull  # type: ignore[arg-type]
+                    )
                     mask.cache_path = os.path.join(self._cache_path, key, mask.path)
 
             yield data
@@ -444,11 +446,11 @@ class SegmentClient(SegmentClientBase):
 
     def _generate_mask_urls(
         self, mask_type: str, offset: int = 0, limit: int = 128
-    ) -> Generator[str, None, int]:
+    ) -> Generator[Optional[str], None, int]:
         response = self._list_mask_urls(mask_type, offset, limit)
 
         for item in response["urls"]:
-            yield item["url"]
+            yield item["url"] if item else None
 
         return response["totalCount"]  # type: ignore[no-any-return]
 
@@ -772,7 +774,7 @@ class SegmentClient(SegmentClientBase):
         """
         return PagingList(self._generate_urls, 128)
 
-    def list_mask_urls(self, mask_type: str) -> PagingList[str]:
+    def list_mask_urls(self, mask_type: str) -> PagingList[Optional[str]]:
         """List the mask urls in this segment.
 
         Arguments:
