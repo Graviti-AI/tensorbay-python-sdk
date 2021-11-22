@@ -8,7 +8,7 @@
 
 import json
 import os
-from typing import Iterable, Iterator, List, Tuple
+from typing import Any, Iterable, Iterator, List, Tuple
 
 from tensorbay.dataset import Data, Dataset
 from tensorbay.exception import ModuleImportError
@@ -115,7 +115,7 @@ def _get_data_part1(root_path: str, aniamls: Iterable[str]) -> Iterator[Data]:
             ):
 
                 with open(annotation_path, encoding="utf-8") as fp:
-                    labels = xmltodict.parse(fp.read())
+                    labels: Any = xmltodict.parse(fp.read())
 
                 box2d = labels["annotation"]["visible_bounds"]
                 data.label.box2d = [
@@ -158,7 +158,7 @@ def _get_data_part2(root_path: str, aniamls: Iterable[str]) -> Iterator[Data]:
             )
 
             with open(annotation_path, encoding="utf-8") as fp:
-                labels = xmltodict.parse(fp.read())
+                labels: Any = xmltodict.parse(fp.read())
 
             box2d = labels["annotation"]["visible_bounds"]
             data.label.box2d = [

@@ -7,6 +7,7 @@
 """Dataloader of VOC2012ActionClassification dataset."""
 
 import os
+from typing import Any
 
 from tensorbay.dataset import Data, Dataset
 from tensorbay.exception import ModuleImportError
@@ -69,7 +70,9 @@ def _get_data(filename: str, image_path: str, annotation_path: str) -> Data:
     data = Data(os.path.join(image_path, f"{filename}.jpg"))
     box2d = []
     with open(os.path.join(annotation_path, f"{filename}.xml"), "r", encoding="utf-8") as fp:
-        objects = xmltodict.parse(fp.read())["annotation"]["object"]
+        labels: Any = xmltodict.parse(fp.read())
+
+    objects = labels["annotation"]["object"]
     if not isinstance(objects, list):
         objects = [objects]
     for item in objects:
