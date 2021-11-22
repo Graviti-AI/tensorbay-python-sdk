@@ -7,15 +7,19 @@
 from tensorbay.exception import ModuleImportError
 
 
-class Image:
+class ImageMocker:
     """Raise import PIL error for data loader."""
 
     def __getattribute__(self, name: str) -> None:
         raise ModuleImportError(module_name="pillow")
 
 
-class xmltodict:
+class xmltodictMocker:
     """Raise import xmltodict error for data loader."""
 
     def __getattribute__(self, name: str) -> None:
         raise ModuleImportError(module_name="xmltodict")
+
+
+Image = ImageMocker()
+xmltodict = xmltodictMocker()
