@@ -3,7 +3,8 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-# pylint: disable=missing-module-docstring
+
+"""Dataloaders of KenyanFoodType dataset and KenyanFoodOrNonfood dataset."""
 
 import os
 

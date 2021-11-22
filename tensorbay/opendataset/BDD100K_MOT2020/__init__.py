@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of the BDD100K_MOT2020 dataset and the BDD100K_MOTS2020 dataset."""
+"""Dataloaders of the BDD100K_MOT2020 dataset and the BDD100K_MOTS2020 dataset."""
 
 from tensorbay.opendataset.BDD100K_MOT2020.loader import BDD100K_MOT2020, BDD100K_MOTS2020
 

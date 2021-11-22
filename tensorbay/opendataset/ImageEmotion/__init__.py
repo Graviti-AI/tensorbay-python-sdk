@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of the ImageEmotionAbstract dataset and the ImageEmotionArtphoto dataset."""
+"""Dataloaders of the ImageEmotionAbstract dataset and the ImageEmotionArtphoto dataset."""
 
 from tensorbay.opendataset.ImageEmotion.loader import ImageEmotionAbstract, ImageEmotionArtphoto
 

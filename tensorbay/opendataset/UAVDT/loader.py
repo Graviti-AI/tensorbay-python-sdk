@@ -2,7 +2,9 @@
 #
 # Copytright 2020 Graviti. Licensed under MIT License.
 #
-# pylint: disable=invalid-name, missing-module-docstring
+# pylint: disable=invalid-name
+
+"""Dataloader of UAVDT dataset."""
 
 import csv
 import os

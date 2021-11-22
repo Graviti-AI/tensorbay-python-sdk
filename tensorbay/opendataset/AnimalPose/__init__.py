@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of 5 categories AnimalPose dataset and 7 categories AnimalPose dataset."""
+"""Dataloaders of 5 categories AnimalPose dataset and 7 categories AnimalPose dataset."""
 
 from tensorbay.opendataset.AnimalPose.loader import AnimalPose5, AnimalPose7
 

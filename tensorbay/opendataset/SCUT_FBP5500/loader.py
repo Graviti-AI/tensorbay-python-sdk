@@ -3,7 +3,8 @@
 # Copytright 2021 Graviti. Licensed under MIT License.
 #
 # pylint: disable=invalid-name
-# pylint: disable=missing-module-docstring
+
+"""Dataloader of SCUT_FBP5500 dataset."""
 
 import csv
 import os

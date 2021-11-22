@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of the BDD100K dataset and the BDD100K_10K dataset."""
+"""Dataloaders of the BDD100K dataset and the BDD100K_10K dataset."""
 
 from tensorbay.opendataset.BDD100K.loader import BDD100K, BDD100K_10K
 

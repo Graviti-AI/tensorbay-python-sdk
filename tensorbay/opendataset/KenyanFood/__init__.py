@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of the Kenyan Food or Nonfood dataset and Kenyan Food Type dataset."""
+"""Dataloaders of the Kenyan Food or Nonfood dataset and Kenyan Food Type dataset."""
 
 from tensorbay.opendataset.KenyanFood.loader import KenyanFoodOrNonfood, KenyanFoodType
 

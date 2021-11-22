@@ -4,7 +4,7 @@
 #
 # pylint: disable=invalid-name
 
-"""This file defines the BDD100K dataloader and the BDD100K_10K dataloader."""
+"""Dataloaders of BDD100K dataset and BDD100K_10K dataset."""
 
 import json
 import os
