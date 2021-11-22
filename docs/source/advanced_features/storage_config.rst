@@ -1,41 +1,30 @@
-###############
- Cloud Storage
-###############
+################
+ Storage Config
+################
 
-| All data on TensorBay are hosted on cloud.
-| TensorBay supports two cloud storage modes:
+TensorBay supports two storage config modes:
 
-    - DEFAULT CLOUD STORAGE: data are stored on TensorBay cloud
-    - AUTHORIZED CLOUD STORAGE: data are stored on other providers' cloud
+    - GRAVITI Storage Config: storage config provided by graviti.
+    - Authorized Storage Config: storage config provided by userself.
 
-***********************
- Default Cloud Storage
-***********************
-| In default cloud storage mode, data are stored on TensorBay cloud.
-| Create a dataset with default storage:
+************************
+ GRAVITI Storage Config
+************************
+In graviti storage mode, the data is stored in graviti storage space on TensorBay.
 
-.. literalinclude:: ../../../docs/code/getting_started_with_tensorbay.py
-      :language: python
-      :start-after: """Create a Dataset"""
-      :end-before: """"""
+***************************
+ Authorized Storage Config
+***************************
 
-**************************
- Authorized Cloud Storage
-**************************
+When using authorized storage config, datasets are stored on user's storage space and are only indexed to the TensorBay.
+See `authorized storage instruction <https://docs.graviti.cn/guide/tensorbay/data/authorize>`_ for details about how to configure authorized storage on TensorBay.
 
-| You can also upload data to your public cloud storage space.
-| Now TensorBay support following cloud providers:
+TensorBay supports both authorize cloud storage and authorize local storage.
 
-    - Aliyun OSS
-    - Amazon S3
-    - Azure Blob
+Authorized Cloud Storage
+========================
 
-Config
-======
-
-See `cloud storage instruction <https://docs.graviti.cn/guide/tensorbay/data/authorize>`_ for details about how to configure cloud storage on TensorBay.
-
-TensorBay SDK supports following methods to configure cloud storage.
+TensorBay SDK supports following methods to configure authorized cloud storage.
 
     - :func:`~tensorbay.client.gas.GAS.create_oss_storage_config`
     - :func:`~tensorbay.client.gas.GAS.create_s3_storage_config`
@@ -43,7 +32,7 @@ TensorBay SDK supports following methods to configure cloud storage.
 
 For example:
 
-.. literalinclude:: ../../../docs/code/cloud_storage.py
+.. literalinclude:: ../../../docs/code/storage_config.py
    :language: python
    :start-after: """Create storage config"""
    :end-before: """"""
@@ -56,7 +45,7 @@ TensorBay SDK supports a method to list a user's all previous configurations.
 
 
 Create Authorized Storage Dataset
-=================================
+---------------------------------
 
 Create a dataset with authorized cloud storage:
 
@@ -65,9 +54,9 @@ Create a dataset with authorized cloud storage:
     dataset_client = gas.create_dataset("dataset_name", config_name="config_name")
 
 Import Cloud Files into Authorized Storage Dataset
-==================================================
+--------------------------------------------------
 
-Take the following original cloud directory as an example::
+Take the following original cloud storage directory as an example::
 
    data/
    ├── images/
@@ -82,32 +71,30 @@ Take the following original cloud directory as an example::
 
 Get a cloud client.
 
-.. literalinclude:: ../../../docs/code/cloud_storage.py
+.. literalinclude:: ../../../docs/code/storage_config.py
    :language: python
    :start-after: """Get cloud client"""
    :end-before: """"""
 
-Import the AuthData from cloud platform and load label file to an authorized storage dataset.
+Import the AuthData from original cloud storage and load label file to an authorized storage dataset.
 
-.. literalinclude:: ../../../docs/code/cloud_storage.py
+.. literalinclude:: ../../../docs/code/storage_config.py
    :language: python
    :start-after: """Import dataset from cloud platform to the authorized storage dataset"""
    :end-before: """"""
 
 .. important::
 
-    Files will be copied from original directory to the authorized cloud storage dataset path,
-    thus the storage space will be doubled on the cloud platform.
+    Files will be copied from original directory to the authorized storage dataset path,
+    thus the storage space will be doubled.
 
 .. note::
 
-    Set the authorized cloud storage dataset path the same as original directory could speed up
+    Set the authorized storage dataset path the same as original cloud storage directory could speed up
     the import action. For example, set the config path of above dataset to ``data/images``.
 
-
-**************************
- Authorized Local Storage
-**************************
+Authorized Local Storage
+========================
 
 If you want to use TensorBay service and have the data stored locally at the same time,
 TensorBay supports authorized local storage config.
@@ -117,14 +104,14 @@ you need to start a local storage service. Please contact us on `TensorBay`_ for
 
 .. _TensorBay: https://www.graviti.cn/
 
-.. literalinclude:: ../../../docs/code/cloud_storage.py
+.. literalinclude:: ../../../docs/code/storage_config.py
    :language: python
    :start-after: """Create local storage config"""
    :end-before: """"""
 
 Then create an authorized local storage dataset with the config.
 
-.. literalinclude:: ../../../docs/code/cloud_storage.py
+.. literalinclude:: ../../../docs/code/storage_config.py
    :language: python
    :start-after: """Create authorized local storage dataset"""
    :end-before: """"""
