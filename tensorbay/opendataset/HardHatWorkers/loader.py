@@ -7,7 +7,7 @@
 """Dataloader of HardHatWorker dataset."""
 
 import os
-from typing import List
+from typing import Any, List
 
 from tensorbay.dataset import Data, Dataset
 from tensorbay.label import LabeledBox2D
@@ -60,7 +60,9 @@ def HardHatWorkers(path: str) -> Dataset:
 
 def _load_labels(label_file: str) -> List[LabeledBox2D]:
     with open(label_file, "r", encoding="utf-8") as fp:
-        objects = xmltodict.parse(fp.read())["annotation"]["object"]
+        labels: Any = xmltodict.parse(fp.read())
+
+    objects = labels["annotation"]["object"]
     box2ds = []
     if not isinstance(objects, list):
         objects = [objects]

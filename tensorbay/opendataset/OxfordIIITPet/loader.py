@@ -7,7 +7,7 @@
 """Dataloader of OxfordIIITPet dataset."""
 
 import os
-from typing import List
+from typing import Any, List
 
 from tensorbay.dataset import Data, Dataset
 from tensorbay.label import Classification, LabeledBox2D, SemanticMask
@@ -80,7 +80,9 @@ def OxfordIIITPet(path: str) -> Dataset:
 
 def _get_box_label(file_path: str) -> List[LabeledBox2D]:
     with open(file_path, "r", encoding="utf-8") as fp:
-        objects = xmltodict.parse(fp.read())["annotation"]["object"]
+        labels: Any = xmltodict.parse(fp.read())
+
+    objects = labels["annotation"]["object"]
     if not isinstance(objects, list):
         objects = [objects]
     box2d = []
