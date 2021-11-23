@@ -41,7 +41,7 @@ from tensorbay.client.requests import Tqdm, multithread_upload
 from tensorbay.client.segment import _STRATEGIES, FusionSegmentClient, SegmentClient
 from tensorbay.client.statistics import Statistics
 from tensorbay.client.status import Status
-from tensorbay.client.version import VersionControlClient
+from tensorbay.client.version import JobMixin, VersionControlClient
 from tensorbay.dataset import AuthData, Data, Frame, FusionSegment, Notes, RemoteData, Segment
 from tensorbay.exception import (
     FrameError,
@@ -58,7 +58,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class DatasetClientBase(VersionControlClient):
+class DatasetClientBase(VersionControlClient, JobMixin):  # type: ignore[misc]
     """This class defines the basic concept of the dataset client.
 
     A :class:`DatasetClientBase` contains the information needed for
