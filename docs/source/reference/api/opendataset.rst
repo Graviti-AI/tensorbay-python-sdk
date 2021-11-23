@@ -71,6 +71,7 @@ tensorbay.opendataset
    THUCNews
    TLR
    UAVDT
+   UrbanObjectDetection
    VOC2012ActionClassification
    VOC2012Detection
    VOC2012Segmentation

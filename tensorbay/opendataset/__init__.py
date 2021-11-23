@@ -60,6 +60,7 @@ from tensorbay.opendataset.THCHS30 import THCHS30
 from tensorbay.opendataset.THUCNews import THUCNews
 from tensorbay.opendataset.TLR import TLR
 from tensorbay.opendataset.UAVDT import UAVDT
+from tensorbay.opendataset.UrbanObjectDetection import UrbanObjectDetection
 from tensorbay.opendataset.VOC2012ActionClassification import VOC2012ActionClassification
 from tensorbay.opendataset.VOC2012Detection import VOC2012Detection
 from tensorbay.opendataset.VOC2012Segmentation import VOC2012Segmentation
@@ -128,6 +129,7 @@ __all__ = [
     "THUCNews",
     "TLR",
     "UAVDT",
+    "UrbanObjectDetection",
     "WIDER_FACE",
     "COVID_CT",
     "VOC2012Detection",
