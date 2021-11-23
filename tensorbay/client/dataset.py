@@ -24,7 +24,7 @@ from tensorbay.client.requests import multithread_upload
 from tensorbay.client.segment import _STRATEGIES, FusionSegmentClient, SegmentClient
 from tensorbay.client.statistics import Statistics
 from tensorbay.client.status import Status
-from tensorbay.client.version import JobMixin, VersionControlMixin
+from tensorbay.client.version import JobMixin, SquashAndMerge, VersionControlMixin
 from tensorbay.dataset import AuthData, Data, Frame, FusionSegment, Notes, RemoteData, Segment
 from tensorbay.exception import (
     FrameError,
@@ -215,6 +215,15 @@ class DatasetClientBase(VersionControlMixin, JobMixin):
             Whether the cache is enabled.
         """
         return bool(self._cache_path) and not self.status.is_draft
+
+    @property
+    def squash_and_merges(self) -> SquashAndMerge:
+        """Get class :class:`~tensorbay.client.version.SquashAndMerge`.
+
+        Return:
+            Required :class:`~tensorbay.client.version.SquashAndMerge`.
+
+        """
 
     def enable_cache(self, cache_path: str = "") -> None:
         """Enable cache when open the remote data of the dataset.
