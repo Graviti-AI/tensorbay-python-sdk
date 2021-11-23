@@ -7,6 +7,7 @@
 
 from typing import Any, Dict, Optional, Tuple, Type, TypeVar
 
+from tensorbay.client.struct import Draft
 from tensorbay.utility import AttrsMixin, ReprMixin, ReprType, attr, camel, common_loads
 
 
@@ -111,5 +112,24 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
 
         Arguments:
             until_complete: Whether to update job information until it is complete.
+
+        """
+
+    def abort(self) -> None:
+        """Abort a :class:`Job`."""
+
+    def retry(self) -> None:
+        """Retry a :class:`Job`."""
+
+
+class SquashAndMergeJob(Job):
+    """This class defines :class:`SquashAndMergeJob`."""
+
+    @property
+    def result(self) -> Optional[Draft]:
+        """Get the result of the SquashAndMergeJob.
+
+        Return:
+            The draft obtained from SquashAndMergeJob.
 
         """
