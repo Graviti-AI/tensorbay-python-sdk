@@ -220,7 +220,7 @@ def mock_delete_dataset(mocker, is_fusion, is_public, mock_get_dataset):
 
 @function_fixture
 def mock_list_drafts(mocker, branch_name):
-    """Mock the list_drafts method of VersionControlClient class.
+    """Mock the list_drafts method of VersionControlMixin class.
 
     Arguments:
         mocker: The mocker fixture.
@@ -254,14 +254,14 @@ def mock_list_drafts(mocker, branch_name):
     ]
     response = [Draft.loads(draft_response) for draft_response in drafts]
     return (
-        mocker.patch(f"{version.__name__}.VersionControlClient.list_drafts", return_value=response),
+        mocker.patch(f"{version.__name__}.VersionControlMixin.list_drafts", return_value=response),
         response,
     )
 
 
 @function_fixture
 def mock_get_branch(mocker, commit_id):
-    """Mock the get_branch method of VersionControlClient class.
+    """Mock the get_branch method of VersionControlMixin class.
 
     Arguments:
         mocker: The mocker fixture.
@@ -283,7 +283,7 @@ def mock_get_branch(mocker, commit_id):
     )
     return (
         mocker.patch(
-            f"{version.__name__}.VersionControlClient.get_branch", return_value=response_data
+            f"{version.__name__}.VersionControlMixin.get_branch", return_value=response_data
         ),
         response_data,
     )

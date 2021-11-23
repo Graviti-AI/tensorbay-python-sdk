@@ -11,7 +11,7 @@ from tensorbay.client.struct import ROOT_COMMIT_ID
 from tensorbay.client.tests.utility import mock_response
 
 
-class TestVersionControlClient:
+class TestVersionControlMixin:
     gas_client = GAS("Accesskey-********************************")
     dataset_client = DatasetClient(
         "test_dataset",
