@@ -15,14 +15,7 @@ from tensorbay.exception import ResourceNotExistError, StatusError
 
 
 class VersionControlMixin:  # pylint: disable=too-many-public-methods
-    """A mixin class supporting version control methods.
-
-    Arguments:
-        _dataset_id: Dataset ID.
-        _client: The client to interact between local and TensorBay.
-        _status: The version control status of the dataset.
-
-    """
+    """A mixin class supporting version control methods."""
 
     _dataset_id: str
     _client: Client
@@ -582,3 +575,87 @@ class VersionControlMixin:  # pylint: disable=too-many-public-methods
         delete_data: Dict[str, Any] = {"name": name}
 
         self._client.open_api_do("DELETE", "tags", self._dataset_id, json=delete_data)
+
+
+class JobMixin:
+    """A mixin class supporting asynchronous jobs."""
+
+    _dataset_id: str
+    _client: Client
+    _status: Status
+
+    def _create_job(
+        self,
+        title: str,
+        job_type: str,
+        arguments: Dict[str, Any],
+        description: str = "",
+    ) -> str:
+        """Create a :class:`Job`.
+
+        Arguments:
+            title: The Job title.
+            job_type: The type of Job.
+            arguments: The arguments dict of the specific job.
+            description: The Job description.
+
+        Return:
+            The id of the job.
+
+        """
+
+    def _get_job(self, job_id: str) -> Dict[str, Any]:
+        """Get a :class:`Job`.
+
+        Arguments:
+            job_id: The Job id.
+
+        Return:
+            The info of Job.
+
+        """
+
+    def _abort_job(self, job_id: str) -> None:
+        """Abort a :class:`Job`.
+
+        Arguments:
+            job_id: The Job id.
+
+        """
+
+    def _retry_job(self, job_id: str) -> None:
+        """Retry a :class:`Job`.
+
+        Arguments:
+            job_id: The Job id.
+
+        """
+
+    def _delete_job(self, job_id: str) -> None:
+        """Delete a :class:`Job`.
+
+        Arguments:
+            job_id: The Job id.
+
+        """
+
+    def _generate_jobs(
+        self,
+        job_type: str,
+        status: Optional[str] = None,
+        offset: int = 0,
+        limit: int = 128,
+    ) -> Generator[Dict[str, Any], None, int]:
+        """Get a generator of :class:`Job`.
+
+        Arguments:
+            job_type: Type of the Job.
+            status: The Job status which includes "QUEUING", "PROCESSING", "SUCCESS", "FAILED",
+                    "ABORTED" and None. None means all kinds of status.
+            offset: The offset of the page.
+            limit: The limit of the page.
+
+        Return:
+            The generator of job info.
+
+        """
