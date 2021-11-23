@@ -7,6 +7,7 @@
 
 from typing import Any, Dict, Generator, Optional, Union
 
+from tensorbay.client.job import SquashAndMergeJob
 from tensorbay.client.lazy import PagingList
 from tensorbay.client.requests import Client
 from tensorbay.client.status import Status
@@ -582,3 +583,189 @@ class VersionControlMixin:  # pylint: disable=too-many-public-methods
         delete_data: Dict[str, Any] = {"name": name}
 
         self._client.open_api_do("DELETE", "tags", self._dataset_id, json=delete_data)
+
+
+class JobMixin:  # pylint: disable=too-many-public-methods
+    """A mixin class supporting asynchronous jobs.
+
+    Arguments:
+        _dataset_id: Dataset ID.
+        _client: The client to interact between local and TensorBay.
+        _status: The version control status of the dataset.
+
+    """
+
+    _dataset_id: str
+    _client: Client
+    _status: Status
+
+    def _create_job(  # pylint: disable=too-many-arguments
+        self,
+        title: str,
+        job_type: str,
+        arguments: Dict[str, Any],
+        description: str = "",
+        max_retries: int = 3,
+    ) -> str:
+        """Create a :class:`Job`.
+
+        Arguments:
+            title: The Job title.
+            job_type: The type of Job.
+            arguments: The arguments dict of the specific job.
+            description: The Job description.
+            max_retries: The maximum retry times of the Job.
+
+        Return:
+            The id of the job.
+
+        """
+
+    def _get_job(self, job_id: str) -> Dict[str, Any]:
+        """Get a :class:`Job`.
+
+        Arguments:
+            job_id: The Job id.
+
+        Return:
+            The info of Job.
+
+        """
+
+    def _abort_job(self, job_id: str) -> None:
+        """Abort a :class:`Job`.
+
+        Arguments:
+            job_id: The Job id.
+
+        """
+
+    def _retry_job(self, job_id: str) -> None:
+        """Retry a :class:`Job`.
+
+        Arguments:
+            job_id: The Job id.
+
+        """
+
+    def _delete_job(self, job_id: str) -> None:
+        """Delete a :class:`Job`.
+
+        Arguments:
+            job_id: The Job id.
+
+        """
+
+    def _generate_jobs(  # pylint: disable=too-many-arguments
+        self,
+        creator: str,
+        job_type: str,
+        status: Optional[str] = None,
+        offset: int = 0,
+        limit: int = 128,
+    ) -> Generator[str, None, int]:
+        """Get a generator of :class:`Job`.
+
+        Arguments:
+            creator: The creator of the Job.
+            job_type: Type of the Job.
+            status: The Job status which includes "QUEUING", "PROCESSING", "SUCCESS", "FAIL",
+                    "ABORT" and None. None means all kinds of status.
+            offset: The offset of the page.
+            limit: The limit of the page.
+
+        Return:
+            The generator of Job.
+
+        """
+
+    def create_squash_and_merge_job(
+        self,
+        title: str = "",
+        description: str = "",
+        max_retries: int = 3,
+        *,
+        draft_title: str,
+        source_branch_name: str,
+        target_branch_name: Optional[str] = None,
+        draft_description: str = "",
+        strategy: Optional[str] = "abort",
+    ) -> SquashAndMergeJob:
+        """Create a :class:`SquashAndMergeJob`.
+
+        Squash commits in source branch, then merge into target branch by creating a new draft.
+        If the target branch name is not given, the draft will be based on the branch name stored
+        in the dataset client. And during merging, the conflicts between branches can be resolved
+        in three different strategies: "abort", "override" and "skip".
+
+        Arguments:
+            title: The SquashAndMergeJob title.
+            description: The SquashAndMergeJob description.
+            max_retries: The maximum retry times of the SquashAndMergeJob.
+            draft_title: The draft title.
+            source_branch_name: The name of the branch to be squashed.
+            target_branch_name: The target branch name of the merge operation.
+            draft_description: The draft description.
+            strategy: The strategy of handling the branch conflict. There are three options:
+
+                1. "abort": abort the opetation;
+                2. "override": the squashed branch will override the target branch;
+                3. "skip": keep the origin branch.
+
+        Raises:# flake8: noqa: F402
+            StatusError: When squashing and merging without basing on a branch.
+
+        Return:
+            The SquashAndMergeJob.
+
+        """
+
+    def get_squash_and_merge_job(self, job_id: str) -> SquashAndMergeJob:
+        """Get a :class:`SquashAndMergeJob`.
+
+        Arguments:
+            job_id: The SquashAndMergeJob id.
+
+        Return:
+            The SquashAndMergeJob.
+
+        """
+
+    def list_squash_and_merge_jobs(
+        self, creator: str, status: Optional[str] = None
+    ) -> PagingList[str]:
+        """List the SquashAndMergeJob.
+
+        Arguments:
+            creator: The creator of the SquashAndMergeJob.
+            status: The SquashAndMergeJob status which includes "QUEUING", "PROCESSING", "SUCCESS",
+                    "FAIL", "ABORT" and None. None means all kinds of status.
+
+        Return:
+            The PagingList of SquashAndMergeJob.
+
+        """
+
+    def abort_squash_and_merge_job(self, job_id: str) -> None:
+        """Abort a :class:`SquashAndMergeJob`.
+
+        Arguments:
+            job_id: The SquashAndMergeJob id.
+
+        """
+
+    def retry_squash_and_merge_job(self, job_id: str) -> None:
+        """Retry a :class:`SquashAndMergeJob`.
+
+        Arguments:
+            job_id: The SquashAndMergeJob id.
+
+        """
+
+    def delete_squash_and_merge_job(self, job_id: str) -> None:
+        """Delete a :class:`SquashAndMergeJob`.
+
+        Arguments:
+            job_id: The SquashAndMergeJob id.
+
+        """

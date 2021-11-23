@@ -5,6 +5,7 @@
 
 # pylint: disable=pointless-string-statement
 # pylint: disable=wrong-import-position
+# pylint: disable=duplicate-code
 # pylint: disable=import-error
 # type: ignore
 
