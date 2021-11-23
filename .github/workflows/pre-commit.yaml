@@ -53,7 +53,7 @@ jobs:
       - name: Run pre-commit for all files
         run: |
           pre-commit run --all-files
-          git show --format=%B --no-patch > commit-msg
+          git log --format=%B --no-merges -n 1 > commit-msg
           pre-commit run --commit-msg-filename commit-msg --hook-stage commit-msg gitlint
 
       - name: Run pre-commit for commit files
