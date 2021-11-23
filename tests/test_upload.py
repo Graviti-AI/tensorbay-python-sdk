@@ -184,6 +184,39 @@ class TestUploadDataset:
     def test_upload_dataset_after_commit(self, accesskey, url, tmp_path):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
+        gas_client.create_dataset(dataset_name)
+
+        dataset = Dataset(name=dataset_name)
+        dataset._catalog = Catalog.loads(CATALOG)
+        dataset.notes.is_continuous = True
+        segment = dataset.create_segment("Segment1")
+
+        path = tmp_path / "sub"
+        path.mkdir()
+        for i in range(10):
+            local_path = path / f"hello{i}.txt"
+            local_path.write_text("CONTENT")
+            data = Data(local_path=str(local_path))
+            data.label = Label.loads(LABEL)
+            segment.append(data)
+
+        dataset_client = gas_client.upload_dataset(dataset)
+        dataset_client.commit("test")
+        dataset_remote = Dataset(name=dataset_name, gas=gas_client)
+        assert dataset_remote.notes.is_continuous == dataset.notes.is_continuous
+        assert dataset_remote.catalog == dataset.catalog
+
+        segment_remote = dataset_remote[0]
+        assert len(segment_remote) == len(segment)
+        for remote_data, data in zip(segment_remote, segment):
+            assert remote_data.path == data.target_remote_path
+            assert remote_data.label == data.label
+
+        gas_client.delete_dataset(dataset_name)
+
+    def test_upload_fusion_dataset_after_commit(self, accesskey, url, tmp_path):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_dataset_name()
         gas_client.create_dataset(dataset_name, is_fusion=True)
 
         dataset = FusionDataset(name=dataset_name)
@@ -195,13 +228,13 @@ class TestUploadDataset:
         path = tmp_path / "sub"
         path.mkdir()
         for i in range(10):
-            frame = Frame()
+            remote_frame = Frame()
             local_path = path / f"hello{i}.txt"
             local_path.write_text("CONTENT")
             data = Data(local_path=str(local_path))
             data.label = Label.loads(LABEL)
-            frame[LIDAR_NAME] = data
-            segment.append(frame)
+            remote_frame[LIDAR_NAME] = data
+            segment.append(remote_frame)
 
         dataset_client = gas_client.upload_dataset(dataset)
         dataset_client.commit("test")
@@ -212,9 +245,9 @@ class TestUploadDataset:
         segment_remote = dataset_remote[0]
         assert len(segment_remote) == len(segment)
         assert segment_remote.sensors == segment.sensors
-        for index, frame in enumerate(segment_remote):
-            assert frame[LIDAR_NAME].path == segment[index][LIDAR_NAME].target_remote_path
-            assert frame[LIDAR_DATA["name"]].label == Label.loads(LABEL)
+        for remote_frame, frame in zip(segment_remote, segment):
+            assert remote_frame[LIDAR_NAME].path == frame[LIDAR_NAME].target_remote_path
+            assert remote_frame[LIDAR_DATA["name"]].label == frame[LIDAR_NAME].label
 
         gas_client.delete_dataset(dataset_name)
 
