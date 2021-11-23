@@ -320,14 +320,16 @@ class _GraphPrinter:
         prefixes = self._get_colorful_prefixes()
         # Don't merge branches.
         if self._merge_pointer is None:
-            return f"{self._get_title_prefix(prefixes, original_pointer)} {log}"
+            return f"{self._get_title_prefix(prefixes, original_pointer)}{log}"
 
         # Merge branches.
         del self._layer_colors[self._merge_pointer]
-        lines = [f"{self._get_title_prefix(prefixes, original_pointer)} {log}"]
+        lines = [f"{self._get_title_prefix(prefixes, original_pointer)}{log}"]
         lines.extend(
             f"{prefixes}\n"
-            for prefixes in self._get_merge_prefixes(self._merge_pointer, self._pointer)
+            for prefixes in self._get_merge_prefixes(
+                self._get_colorful_prefixes(), self._merge_pointer, self._pointer
+            )
         )
         return "".join(lines)
 
@@ -336,28 +338,25 @@ class _GraphPrinter:
     ) -> str:
         log = _get_full_log(commit, branch_names)
         splitlines = iter(log.splitlines())
-        prefixes = self._get_colorful_prefixes()
-        lines = [f"{self._get_title_prefix(prefixes, original_pointer)} {next(splitlines)}\n"]
+        original_prefixes = self._get_colorful_prefixes()
+        lines = [
+            f"{self._get_title_prefix(original_prefixes, original_pointer)}{next(splitlines)}\n"
+        ]
         # Don't merge branches.
         if self._merge_pointer is None:
-            details_prefix = " ".join(prefixes)
-            lines.extend(f"{details_prefix} {line}\n" for line in splitlines)
+            details_prefix = "".join(original_prefixes)
+            lines.extend(f"{details_prefix}{line}\n" for line in splitlines)
         else:
             # Merge branches.
             del self._layer_colors[self._merge_pointer]
-            merge_prefixes = self._get_merge_prefixes(self._merge_pointer, self._pointer)
-            lines.extend(self._combine_details(list(merge_prefixes), list(splitlines)))
+            prefixes = self._get_colorful_prefixes()
+            merge_prefixes = self._get_merge_prefixes(prefixes, self._merge_pointer, self._pointer)
+            lines.extend(self._combine_details(list(merge_prefixes), list(splitlines), prefixes))
         return "".join(lines)
 
-    def _get_colorful_prefixes(self) -> List[str]:
-        return [click.style("|", fg=color) for color in self._layer_colors]
-
-    def _get_merge_prefixes(self, merge_pointer: int, pointer: int) -> Iterator[str]:
-        prefixes = []
-        for color in self._layer_colors:
-            prefixes.append(click.style("|", fg=color))
-            prefixes.append(" ")
-
+    def _get_merge_prefixes(
+        self, prefixes: List[str], merge_pointer: int, pointer: int
+    ) -> Iterator[str]:
         for i in range(merge_pointer, pointer, -1):
             temp_prefixes = prefixes.copy()
             temp_prefixes[2 * i - 1] = click.style("/", fg=self._layer_colors[pointer])
@@ -367,17 +366,24 @@ class _GraphPrinter:
                     temp_prefixes[2 * j + 1] = click.style("/", fg=color)
             yield "".join(temp_prefixes)
 
+    def _get_colorful_prefixes(self) -> List[str]:
+        prefixes = []
+        for color in self._layer_colors:
+            prefixes.append(click.style("|", fg=color))
+            prefixes.append(" ")
+        return prefixes
+
     @staticmethod
     def _get_title_prefix(prefixes: List[str], original_pointer: int) -> str:
         title_prefixes = prefixes.copy()
-        title_prefixes[original_pointer] = "*"
-        return " ".join(title_prefixes)
+        title_prefixes[2 * original_pointer] = "*"
+        return "".join(title_prefixes)
 
     @staticmethod
-    def _combine_details(merge_prefixes: List[str], messages: List[str]) -> Iterator[str]:
-        fillvalue = (
-            "" if len(merge_prefixes) > len(messages) else merge_prefixes[0].replace("/", " ")
-        )
+    def _combine_details(
+        merge_prefixes: List[str], messages: List[str], fill_prefix: List[str]
+    ) -> Iterator[str]:
+        fillvalue = "" if len(merge_prefixes) > len(messages) else "".join(fill_prefix)
         for prefix, message in zip_longest(merge_prefixes, messages, fillvalue=fillvalue):
             yield f"{prefix}  {message}\n"
 
