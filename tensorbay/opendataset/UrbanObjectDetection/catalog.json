@@ -1,0 +1,21 @@
+{
+    "BOX2D": {
+        "attributes": [
+            {
+                "name": "pose",
+                "enum": ["Rear", "Left", "Right", "Frontal", "Unspecified", "none", null]
+            },
+            { "name": "truncated", "type": "boolean" },
+            { "name": "difficult", "type": "boolean" }
+        ],
+        "categories": [
+            { "name": "bicycle" },
+            { "name": "bus" },
+            { "name": "car" },
+            { "name": "motorbike" },
+            { "name": "person" },
+            { "name": "trafficlight" },
+            { "name": "trafficsignal" }
+        ]
+    }
+}
