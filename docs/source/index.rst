@@ -60,6 +60,7 @@ It provides:
    :maxdepth: 1
    :caption: Integrations
 
+   integrations/paddlepaddle
    integrations/pytorch
    integrations/tensorflow
 
