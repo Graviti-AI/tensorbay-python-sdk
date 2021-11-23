@@ -41,7 +41,7 @@ from tensorbay.client.requests import Tqdm, multithread_upload
 from tensorbay.client.segment import _STRATEGIES, FusionSegmentClient, SegmentClient
 from tensorbay.client.statistics import Statistics
 from tensorbay.client.status import Status
-from tensorbay.client.version import VersionControlClient
+from tensorbay.client.version import VersionControlMixin
 from tensorbay.dataset import AuthData, Data, Frame, FusionSegment, Notes, RemoteData, Segment
 from tensorbay.exception import (
     FrameError,
@@ -58,7 +58,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class DatasetClientBase(VersionControlClient):
+class DatasetClientBase(VersionControlMixin):
     """This class defines the basic concept of the dataset client.
 
     A :class:`DatasetClientBase` contains the information needed for
@@ -91,11 +91,13 @@ class DatasetClientBase(VersionControlClient):
         alias: str,
         is_public: bool,
     ) -> None:
-        super().__init__(dataset_id, gas, status=status)
         self._name = name
+        self._dataset_id = dataset_id
+        self._client = gas._client
+        self._status = status
         self._alias = alias
         self._is_public = is_public
-        self._cache_path = ""
+        self._cache_path: str = ""
 
     def _create_segment(self, name: str) -> None:
         post_data: Dict[str, Any] = {"name": name}
@@ -170,6 +172,26 @@ class DatasetClientBase(VersionControlClient):
         post_data.update(self._status.get_status_info())
 
         self._client.open_api_do("POST", "segments?move", self._dataset_id, json=post_data)
+
+    @property
+    def dataset_id(self) -> str:
+        """Return the TensorBay dataset ID.
+
+        Returns:
+            The TensorBay dataset ID.
+
+        """
+        return self._dataset_id
+
+    @property
+    def status(self) -> Status:
+        """Return the status of the dataset client.
+
+        Returns:
+            The status of the dataset client.
+
+        """
+        return self._status
 
     @property
     def name(self) -> str:

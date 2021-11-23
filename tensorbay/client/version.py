@@ -5,31 +5,28 @@
 
 """TensorBay dataset version control related classes."""
 
-from typing import TYPE_CHECKING, Any, Dict, Generator, Optional, Union
+from typing import Any, Dict, Generator, Optional, Union
 
 from tensorbay.client.lazy import PagingList
+from tensorbay.client.requests import Client
 from tensorbay.client.status import Status
 from tensorbay.client.struct import Branch, Commit, Draft, Tag
 from tensorbay.exception import ResourceNotExistError, StatusError
 
-if TYPE_CHECKING:
-    from tensorbay.client.gas import GAS
 
-
-class VersionControlClient:
-    """TensorBay dataset version control client.
+class VersionControlMixin:  # pylint: disable=too-many-public-methods
+    """A mixin class supporting version control methods.
 
     Arguments:
-        dataset_id: Dataset ID.
-        gas: The initial client to interact between local and TensorBay.
-        status: The version control status of the dataset.
+        _dataset_id: Dataset ID.
+        _client: The client to interact between local and TensorBay.
+        _status: The version control status of the dataset.
 
     """
 
-    def __init__(self, dataset_id: str, gas: "GAS", *, status: Status) -> None:
-        self._dataset_id = dataset_id
-        self._client = gas._client
-        self._status = status
+    _dataset_id: str
+    _client: Client
+    _status: Status
 
     def _get_basehead(
         self, base: Optional[Union[str, int]] = None, head: Optional[Union[str, int]] = None
@@ -38,9 +35,9 @@ class VersionControlClient:
             head = f"draft-{head}" if isinstance(head, int) else f"commit-{head}"
         else:
             if self._status.is_draft:
-                head = f"draft-{self.status.draft_number}"
+                head = f"draft-{self._status.draft_number}"
             else:
-                head = f"commit-{self.status.commit_id}"
+                head = f"commit-{self._status.commit_id}"
 
         if base:
             base = f"draft-{base}" if isinstance(base, int) else f"commit-{base}"
@@ -133,26 +130,6 @@ class VersionControlClient:
 
         self._client.open_api_do("DELETE", "branches", self._dataset_id, json=delete_data)
 
-    @property
-    def dataset_id(self) -> str:
-        """Return the TensorBay dataset ID.
-
-        Returns:
-            The TensorBay dataset ID.
-
-        """
-        return self._dataset_id
-
-    @property
-    def status(self) -> Status:
-        """Return the status of the dataset client.
-
-        Returns:
-            The status of the dataset client.
-
-        """
-        return self._status
-
     def checkout(self, revision: Optional[str] = None, draft_number: Optional[int] = None) -> None:
         """Checkout to commit or draft.
 
@@ -223,7 +200,7 @@ class VersionControlClient:
 
         """
         if not branch_name:
-            branch_name = self.status.branch_name
+            branch_name = self._status.branch_name
             if not branch_name:
                 raise StatusError(
                     message="Creating the draft without basing on a branch is not allowed"
@@ -310,7 +287,7 @@ class VersionControlClient:
         """
         if draft_number is None:
             self._status.check_authority_for_draft()
-            draft_number = self.status.draft_number
+            draft_number = self._status.draft_number
 
         patch_data: Dict[str, Any] = {}
         if title is not None:
@@ -333,7 +310,7 @@ class VersionControlClient:
             StatusError: When closing the current draft.
 
         """
-        if number == self.status.draft_number:
+        if number == self._status.draft_number:
             raise StatusError("Closing the current draft is not allowed")
 
         self._close_draft(number)
@@ -373,7 +350,7 @@ class VersionControlClient:
 
         """
         if not target_branch_name:
-            target_branch_name = self.status.branch_name
+            target_branch_name = self._status.branch_name
             if not target_branch_name:
                 raise StatusError(
                     message="Squash and merge without basing on a branch is not allowed"
@@ -449,7 +426,7 @@ class VersionControlClient:
 
         """
         if revision is None:
-            if self.status.is_draft:
+            if self._status.is_draft:
                 revision = self._status.branch_name
             else:
                 revision = self._status.commit_id
@@ -536,7 +513,7 @@ class VersionControlClient:
             StatusError: When deleting the current branch.
 
         """
-        if name == self.status.branch_name:
+        if name == self._status.branch_name:
             raise StatusError("Deleting the current branch is not allowed")
 
         self._delete_branch(name)
