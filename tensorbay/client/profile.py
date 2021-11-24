@@ -3,11 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Statistical.
-
-:class:`Profile` is a class used to save statistical summary.
-
-"""
+"""Record statistics of the interface that interacts with TensorBay."""
 
 import csv
 import json

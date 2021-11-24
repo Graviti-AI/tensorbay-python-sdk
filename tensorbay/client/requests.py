@@ -3,13 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Class Client and method multithread_upload.
-
-:class:`Client` can send POST, PUT, and GET requests to the TensorBay Dataset Open API.
-
-:meth:`multithread_upload` creates a multi-thread framework for uploading.
-
-"""
+"""The multi-thread uploading framework and request senders of the TensorBay Dataset Open API."""
 
 import logging
 from concurrent.futures import FIRST_EXCEPTION, ThreadPoolExecutor, wait

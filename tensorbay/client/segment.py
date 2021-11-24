@@ -3,25 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""SegmentClientBase, SegmentClient and FusionSegmentClient.
-
-The :class:`SegmentClient` is a remote concept. It
-contains the information needed for determining a unique segment in a dataset
-on TensorBay, and provides a series of methods within a segment scope,
-such as :meth:`SegmentClient.upload_label`, :meth:`SegmentClient.upload_data`,
-:meth:`SegmentClient.list_data` and so on.
-In contrast to the :class:`SegmentClient`,
-:class:`~tensorbay.dataset.segment.Segment` is a local concept.
-It represents a segment created locally. Please refer to
-:class:`~tensorbay.dataset.segment.Segment` for more information.
-
-Similarly to the :class:`SegmentClient`, the :class:`FusionSegmentClient` represents
-the fusion segment in a fusion dataset on TensorBay, and its local counterpart
-is :class:`~tensorbay.dataset.segment.FusionSegment`.
-Please refer to :class:`~tensorbay.dataset.segment.FusionSegment`
-for more information.
-
-"""
+"""The segment of remote dataset on TensorBay."""
 
 import os
 import time

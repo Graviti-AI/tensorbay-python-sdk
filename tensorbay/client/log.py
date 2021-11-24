@@ -3,11 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Logging utility functions.
-
-:meth:`Dump_request_and_response <dump_request_and_response>` dumps http request and response.
-
-"""
+"""The implementation of logging utilities."""
 
 import json
 from typing import MutableMapping

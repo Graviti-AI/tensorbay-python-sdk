@@ -3,7 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Class Status."""
+"""The basic concept of the status."""
 
 
 from typing import Any, Dict, Optional

@@ -3,15 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Class GAS.
-
-The :class:`GAS` defines the initial client to interact between local and TensorBay.
-It provides some operations on datasets level such as :meth:`GAS.create_dataset`,
-:meth:`GAS.list_dataset_names` and :meth:`GAS.get_dataset`.
-
-AccessKey is required when operating with dataset.
-
-"""
+"""The implementation of the gas."""
 
 import logging
 from typing import Any, Dict, Generator, Optional, Type, Union, overload

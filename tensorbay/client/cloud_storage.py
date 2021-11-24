@@ -3,11 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Class CloudClient.
-
-The :class:`CloudClient` defines the initial client to interact between local and cloud platform.
-
-"""
+"""Related classes for the Storage Config."""
 
 from typing import Any, Dict, Iterator, List, Type, TypeVar
 

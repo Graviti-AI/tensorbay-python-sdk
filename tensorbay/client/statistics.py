@@ -3,12 +3,8 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Class Statistics.
+"""The basic structure of the label statistics."""
 
-:class:`Statistics` defines the basic structure of the label statistics obtained by
-:meth:`DatasetClientBase.get_label_statistics`.
-
-"""
 from typing import Any, Dict
 
 from tensorbay.utility import UserMapping

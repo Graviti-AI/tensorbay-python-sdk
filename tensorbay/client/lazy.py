@@ -3,7 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Lazy evaluation related classes."""
+"""Related classes for the lazy evaluation."""
 
 from itertools import repeat, zip_longest
 from typing import (
