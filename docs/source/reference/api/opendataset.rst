@@ -6,7 +6,7 @@ tensorbay.opendataset
 
 .. autosummary::
    :nosignatures:
-   :toctree: api_rst/
+   :toctree: generated/
 
    AADB
    AnimalPose5
