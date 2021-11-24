@@ -3,27 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Class about the diff.
-
-:class:`DiffBase` defines the basic structure of a diff.
-
-:class:`NotesDiff` defines the basic structure of a brief diff of notes.
-
-:class:`CatalogDiff` defines the basic structure of a brief diff of catalog.
-
-:class:`FileDiff` defines the basic structure of a brief diff of data file.
-
-:class:`LabelDiff` defines the basic structure of a brief diff of data label.
-
-:class:`SensorDiff` defines the basic structure of a brief diff of sensor.
-
-:class:`DataDiff` defines the basic structure of a brief diff of data.
-
-:class:`SegmentDiff` defines the basic structure of a brief diff of a segment.
-
-:class:`DatasetDiff` defines the basic structure of a brief diff of a dataset.
-
-"""
+"""Related classes for the diff."""
 
 from typing import Any, Dict, Sequence, Tuple, Type, TypeVar, Union, overload
 

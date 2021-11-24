@@ -3,24 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Class DatasetClientBase, DatasetClient and FusionDatasetClient.
-
-:class:`DatasetClient` is a remote concept. It contains the information
-needed for determining a unique dataset on TensorBay, and provides a series of methods within
-dataset scope, such as :meth:`DatasetClient.get_segment`, :meth:`DatasetClient.list_segment_names`,
-:meth:`DatasetClient.commit <DatasetClientBase.commit>`, and so on.
-In contrast to the :class:`DatasetClient`,
-:class:`~tensorbay.dataset.dataset.Dataset` is a local concept. It represents a
-dataset created locally. Please refer to
-:class:`~tensorbay.dataset.dataset.Dataset` for more information.
-
-Similar to the :class:`DatasetClient`, the
-:class:`FusionDatasetClient` represents
-the fusion dataset on TensorBay, and its local counterpart is
-:class:`~tensorbay.dataset.dataset.FusionDataset`.
-Please refer to :class:`~tensorbay.dataset.dataset.FusionDataset` for more information.
-
-"""
+"""The remote dataset on TensorBay."""
 
 import logging
 import os

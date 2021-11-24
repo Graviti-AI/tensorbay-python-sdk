@@ -3,19 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""User, Commit, Tag, Branch and Draft classes.
-
-:class:`User` defines the basic concept of a user with an action.
-
-:class:`Commit` defines the structure of a commit.
-
-:class:`Tag` defines the structure of a commit tag.
-
-:class:`Branch` defines the structure of a branch.
-
-:class:`Draft` defines the structure of a draft.
-
-"""
+"""Structures of dataset-scopic actions on the TensorBay."""
 
 from functools import partial
 from typing import Any, Dict, Optional, Tuple, Type, TypeVar

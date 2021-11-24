@@ -3,7 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""TensorBay dataset version control related classes."""
+"""Related methods of the TensorBay version control."""
 
 from typing import Any, Dict, Generator, Optional, Union
 
