@@ -5,10 +5,12 @@
 
 """Interact with sextant app at graviti marketplace."""
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Generator, List, Optional
 from urllib.parse import urljoin
 
+from tensorbay.client.lazy import PagingList
 from tensorbay.client.requests import Client
+from tensorbay.exception import ResourceNotExistError
 
 
 class Evaluation:
@@ -77,6 +79,9 @@ class Benchmark:  # pylint: disable=too-many-instance-attributes
         self.iou_threshold = iou_threshold
         self.customized_metrics = customized_metrics
 
+    def __repr__(self) -> str:
+        return f'{self.__class__.__name__}("{self.name}")'
+
     def create_evaluation(self, dataset_id: str, commit_id: str) -> Evaluation:
         """Create an evaluation task.
 
@@ -109,7 +114,19 @@ class Sextant(Client):
 
     def __init__(self, access_key: str, url: str = "") -> None:
         super().__init__(access_key, url)
-        self._open_api = urljoin(self.gateway_url, "apps-sextant/v1")
+        self._open_api = urljoin(self.gateway_url, "apps-sextant/v1/")
+
+    def _generate_benmarks(
+        self, offset: int = 0, limit: int = 128
+    ) -> Generator[Benchmark, None, int]:
+
+        params: Dict[str, Any] = {"offset": offset, "limit": limit}
+        response = self.open_api_do("GET", "benchmarks", "", params=params).json()
+
+        for benchmark in response["benchmarks"]:
+            yield Benchmark(benchmark["name"], benchmark["benchmarkId"], self)
+
+        return response["totalCount"]  # type: ignore[no-any-return]
 
     def create_benchmark(
         self,
@@ -136,13 +153,14 @@ class Sextant(Client):
 
         """
 
-    def list_benchmarks(self) -> List[Benchmark]:
+    def list_benchmarks(self) -> PagingList[Benchmark]:
         """List all benchmarks.
 
-        Return:
+        Returns:
             The list of Benchmark instances.
 
         """
+        return PagingList(self._generate_benmarks, 128)
 
     def get_benchmark(self, name: str) -> Benchmark:
         """Get a benchmark instance by name.
@@ -150,7 +168,15 @@ class Sextant(Client):
         Arguments:
             name: Name of the Benchmark.
 
-        Return:
+        Returns:
             The Benchmark instance with the given name.
 
+        Raises:
+            ResourceNotExistError: When the required benchmark does not exist.
+
         """
+        for benchmark in self.list_benchmarks():
+            if benchmark.name == name:
+                return benchmark
+
+        raise ResourceNotExistError(resource="benchmark", identification=name)
