@@ -109,7 +109,7 @@ class Sextant(Client):
 
     def __init__(self, access_key: str, url: str = "") -> None:
         super().__init__(access_key, url)
-        self._open_api = urljoin(self.gateway_url, "apps/sextant/")
+        self._open_api = urljoin(self.gateway_url, "apps-sextant/v1")
 
     def create_benchmark(
         self,
