@@ -121,10 +121,15 @@ class Benchmark:  # pylint: disable=too-many-instance-attributes
             dataset_id: Id of the needed evaluation dataset.
             commit_id: Id of the needed commit.
 
-        Return:
+        Returns:
             The created evaluation instance.
 
         """
+        post_data = {"datasetId": dataset_id, "commitId": commit_id}
+        evaluation_id = self.sextant.open_api_do(
+            "POST", f"benchmarks/{self.benchmark_id}/evaluations", "", json=post_data
+        ).json()["evaluationId"]
+        return Evaluation(evaluation_id, int(time.time()), 0, self)
 
     def list_evaluations(self) -> PagingList[Evaluation]:
         """List all evaluations.
