@@ -36,10 +36,15 @@ class Evaluation:
     def get_result(self) -> Dict[str, Any]:
         """Get the result of the evaluation.
 
-        Return:
+        Returns:
             The result dict of the evaluation.
 
         """
+        return self.benchmark.sextant.open_api_do(  # type: ignore[no-any-return]
+            "GET",
+            f"benchmarks/{self.benchmark.benchmark_id}/evaluations/{self.evaluation_id}/results",
+            "",
+        ).json()
 
     # def get_status(self) -> str:
     #     """Get the status of the evaluation.
