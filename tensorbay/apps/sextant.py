@@ -5,6 +5,7 @@
 
 """Interact with sextant app at graviti marketplace."""
 
+import time
 from typing import Any, Dict, Generator, List, Optional
 from urllib.parse import urljoin
 
@@ -18,13 +19,28 @@ class Evaluation:
 
     Arguments:
         evaluation_id: Evaluation ID.
+        created_at: Created time of the evaluation.
+        status: Status of the the evaluation. There are three values:
+
+            0: "processing"
+            1: "fail"
+            2: "success"
+
         benchmark: The :class:`Benchmark`.
 
     """
 
-    def __init__(self, evaluation_id: str, benchmark: "Benchmark") -> None:
+    def __init__(
+        self, evaluation_id: str, created_at: int, status: int, benchmark: "Benchmark"
+    ) -> None:
         self.evaluation_id = evaluation_id
         self.benchmark = benchmark
+        self.created_at = created_at
+        self.status = status
+
+    def __repr__(self) -> str:
+        read_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.created_at))
+        return f"{self.__class__.__name__} createdAt: {read_time}"
 
     def get_result(self) -> Dict[str, Any]:
         """Get the result of the evaluation.
@@ -82,6 +98,22 @@ class Benchmark:  # pylint: disable=too-many-instance-attributes
     def __repr__(self) -> str:
         return f'{self.__class__.__name__}("{self.name}")'
 
+    def _generate_evaluations(
+        self, offset: int = 0, limit: int = 128
+    ) -> Generator[Evaluation, None, int]:
+
+        params: Dict[str, Any] = {"offset": offset, "limit": limit}
+        response = self.sextant.open_api_do(
+            "GET", f"benchmarks/{self.benchmark_id}/evaluations", "", params=params
+        ).json()
+
+        for evaluation in response["evaluations"]:
+            yield Evaluation(
+                evaluation["evaluationId"], evaluation["createdAt"], evaluation["status"], self
+            )
+
+        return response["totalCount"]  # type: ignore[no-any-return]
+
     def create_evaluation(self, dataset_id: str, commit_id: str) -> Evaluation:
         """Create an evaluation task.
 
@@ -94,13 +126,14 @@ class Benchmark:  # pylint: disable=too-many-instance-attributes
 
         """
 
-    def list_evaluations(self) -> List[Evaluation]:
+    def list_evaluations(self) -> PagingList[Evaluation]:
         """List all evaluations.
 
-        Return:
+        Returns:
             A list of evaluations.
 
         """
+        return PagingList(self._generate_evaluations, 128)
 
 
 class Sextant(Client):
