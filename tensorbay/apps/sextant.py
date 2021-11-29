@@ -20,23 +20,14 @@ class Evaluation:
     Arguments:
         evaluation_id: Evaluation ID.
         created_at: Created time of the evaluation.
-        status: Status of the the evaluation. There are three values:
-
-            0: "processing"
-            1: "fail"
-            2: "success"
-
         benchmark: The :class:`Benchmark`.
 
     """
 
-    def __init__(
-        self, evaluation_id: str, created_at: int, status: int, benchmark: "Benchmark"
-    ) -> None:
+    def __init__(self, evaluation_id: str, created_at: int, benchmark: "Benchmark") -> None:
         self.evaluation_id = evaluation_id
         self.benchmark = benchmark
         self.created_at = created_at
-        self.status = status
 
     def __repr__(self) -> str:
         read_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.created_at))
@@ -50,13 +41,13 @@ class Evaluation:
 
         """
 
-    def get_status(self) -> str:
-        """Get the status of the evaluation.
+    # def get_status(self) -> str:
+    #     """Get the status of the evaluation.
 
-        Return:
-            One of "success", "fail" or "processing".
+    #     Return:
+    #         One of "success", "fail" or "processing".
 
-        """
+    #     """
 
 
 class Benchmark:  # pylint: disable=too-many-instance-attributes
@@ -108,9 +99,7 @@ class Benchmark:  # pylint: disable=too-many-instance-attributes
         ).json()
 
         for evaluation in response["evaluations"]:
-            yield Evaluation(
-                evaluation["evaluationId"], evaluation["createdAt"], evaluation["status"], self
-            )
+            yield Evaluation(evaluation["evaluationId"], evaluation["createdAt"], self)
 
         return response["totalCount"]  # type: ignore[no-any-return]
 
@@ -129,7 +118,7 @@ class Benchmark:  # pylint: disable=too-many-instance-attributes
         evaluation_id = self.sextant.open_api_do(
             "POST", f"benchmarks/{self.benchmark_id}/evaluations", "", json=post_data
         ).json()["evaluationId"]
-        return Evaluation(evaluation_id, int(time.time()), 0, self)
+        return Evaluation(evaluation_id, int(time.time()), self)
 
     def list_evaluations(self) -> PagingList[Evaluation]:
         """List all evaluations.
