@@ -32,6 +32,7 @@ from urllib3.util.retry import Retry
 from tensorbay.__version__ import __version__
 from tensorbay.client.log import RequestLogging, ResponseLogging
 from tensorbay.exception import ResponseError, ResponseErrorDistributor
+from tensorbay.utility import config
 
 logger = logging.getLogger(__name__)
 
@@ -45,33 +46,6 @@ def _get_allowed_methods_keyword() -> str:
 
 # check the version of urllib3 and choose the correct keyword for "allowed_methods" in "Retry"
 _ALLOWED_METHODS = _get_allowed_methods_keyword()
-
-
-class Config:
-    """This is a base class defining the concept of Request Config.
-
-    Attributes:
-        max_retries: Maximum retry times of the request.
-        allowed_retry_methods: The allowed methods for retrying request.
-        allowed_retry_status: The allowed status for retrying request.
-            If both methods and status are fitted, the retrying strategy will work.
-        timeout: Timeout value of the request in seconds.
-        is_internal: Whether the request is from internal.
-
-    """
-
-    def __init__(self) -> None:
-
-        self.max_retries = 3
-        self.allowed_retry_methods = ["HEAD", "OPTIONS", "POST", "PUT"]
-        self.allowed_retry_status = [429, 500, 502, 503, 504]
-
-        self.timeout = 30
-        self.is_internal = False
-        self._x_source = "PYTHON-SDK"
-
-
-config = Config()
 
 
 class TimeoutHTTPAdapter(HTTPAdapter):

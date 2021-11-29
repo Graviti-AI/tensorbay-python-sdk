@@ -17,6 +17,7 @@ from urllib.request import pathname2url, urlopen
 from _io import BufferedReader
 
 from tensorbay.utility.repr import ReprMixin
+from tensorbay.utility.request_config import config
 
 
 class URL:
@@ -167,7 +168,7 @@ class RemoteFileMixin(ReprMixin):
 
         try:
             return urlopen(  # type: ignore[no-any-return]
-                quote(self.url.get(), safe=printable), timeout=2
+                quote(self.url.get(), safe=printable), timeout=config.timeout
             )
         except HTTPError as error:
             if error.code == 403:
