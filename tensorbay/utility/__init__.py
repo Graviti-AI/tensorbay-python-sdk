@@ -17,6 +17,7 @@ from tensorbay.utility.file import FileMixin, RemoteFileMixin
 from tensorbay.utility.itertools import chunked
 from tensorbay.utility.name import NameList, NameMixin, SortedNameList
 from tensorbay.utility.repr import ReprMixin, ReprType, repr_config
+from tensorbay.utility.request_config import config
 from tensorbay.utility.type import TypeEnum, TypeMixin, TypeRegister
 from tensorbay.utility.user import (
     UserMapping,
@@ -52,6 +53,7 @@ __all__ = [
     "camel",
     "chunked",
     "common_loads",
+    "config",
     "locked",
     "repr_config",
     "upper",

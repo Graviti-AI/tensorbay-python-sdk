@@ -34,13 +34,12 @@ from requests_toolbelt import MultipartEncoder
 from ulid import ULID, from_timestamp
 
 from tensorbay.client.lazy import LazyPage, PagingList
-from tensorbay.client.requests import config
 from tensorbay.client.status import Status
 from tensorbay.dataset import AuthData, Data, Frame, RemoteData
 from tensorbay.exception import FrameError, InvalidParamsError, ResponseError
 from tensorbay.label import Label
 from tensorbay.sensor.sensor import Sensor, Sensors
-from tensorbay.utility import FileMixin, chunked, locked
+from tensorbay.utility import FileMixin, chunked, config, locked
 
 if TYPE_CHECKING:
     from tensorbay.client.dataset import DatasetClient, FusionDatasetClient
