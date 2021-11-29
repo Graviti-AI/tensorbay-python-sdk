@@ -7,7 +7,7 @@
 
 from tensorbay.client.gas import GAS
 from tensorbay.client.profile import profile
-from tensorbay.client.requests import config
+from tensorbay.utility import config
 
 __all__ = [
     "GAS",
