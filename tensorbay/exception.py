@@ -98,8 +98,10 @@ class DatasetTypeError(ClientError):
 
     def __str__(self) -> str:
         if self._dataset_name and self._is_fusion:
-            return f'Dataset "{self._dataset_name}" is \
-            {"" if self._is_fusion else "not "}a fusion dataset'
+            return (
+                f'Dataset "{self._dataset_name}" is '
+                f'{"" if self._is_fusion else "not "}a fusion dataset'
+            )
         return super().__str__()
 
 
