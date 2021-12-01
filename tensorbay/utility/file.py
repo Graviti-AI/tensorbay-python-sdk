@@ -176,6 +176,21 @@ class RemoteFileMixin(ReprMixin):
                 return urlopen(quote(self.url.get(), safe=printable))  # type: ignore[no-any-return]
             raise
 
+    def get_url(self) -> str:
+        """Return the url of the data hosted by tensorbay.
+
+        Returns:
+            The url of the data.
+
+        Raises:
+            ValueError: When the url is missing.
+
+        """
+        if not self.url:
+            raise ValueError(f"The file URL cannot be got because {self._repr_head()} has no url")
+
+        return self.url.get()
+
     def open(self) -> Union[HTTPResponse, BufferedReader]:
         """Return the binary file pointer of this file.
 
