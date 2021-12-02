@@ -7,17 +7,15 @@
 
 import os
 from hashlib import sha1
-from http.client import HTTPResponse
-from string import printable
 from typing import Any, Callable, Dict, Optional, Union
-from urllib.error import HTTPError
-from urllib.parse import quote, urljoin
-from urllib.request import pathname2url, urlopen
+from urllib.parse import urljoin
+from urllib.request import pathname2url
 
 from _io import BufferedReader
 
+from tensorbay.exception import ResponseError
 from tensorbay.utility.repr import ReprMixin
-from tensorbay.utility.request_config import config
+from tensorbay.utility.requests import UserResponse, config, get_session
 
 
 class URL:
@@ -161,19 +159,21 @@ class RemoteFileMixin(ReprMixin):
     def _repr_head(self) -> str:
         return f'{self.__class__.__name__}("{self.path}")'
 
-    def _urlopen(self) -> HTTPResponse:
+    def _urlopen(self) -> UserResponse:
 
+        url = self.get_url()
         if not self.url:
             raise ValueError(f"The file cannot open because {self._repr_head()} has no url")
 
         try:
-            return urlopen(  # type: ignore[no-any-return]
-                quote(self.url.get(), safe=printable), timeout=config.timeout
-            )
-        except HTTPError as error:
-            if error.code == 403:
+            session = get_session()
+            return UserResponse(session.request("GET", url, timeout=config.timeout, stream=True))
+        except ResponseError as error:
+            if error.response.status_code == 403:
                 self.url.update()
-                return urlopen(quote(self.url.get(), safe=printable))  # type: ignore[no-any-return]
+                return UserResponse(
+                    get_session().request("GET", url, timeout=config.timeout, stream=True)
+                )
             raise
 
     def get_url(self) -> str:
@@ -191,7 +191,7 @@ class RemoteFileMixin(ReprMixin):
 
         return self.url.get()
 
-    def open(self) -> Union[HTTPResponse, BufferedReader]:
+    def open(self) -> Union[UserResponse, BufferedReader]:
         """Return the binary file pointer of this file.
 
         The remote file pointer will be obtained by ``urllib.request.urlopen()``.
