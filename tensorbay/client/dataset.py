@@ -37,7 +37,7 @@ from tensorbay.client.log import (
     UPLOAD_SEGMENT_RESUME_TEMPLATE_CLI,
     UPLOAD_SEGMENT_RESUME_TEMPLATE_SDK,
 )
-from tensorbay.client.requests import Tqdm, multithread_upload
+from tensorbay.client.requests import multithread_upload
 from tensorbay.client.segment import _STRATEGIES, FusionSegmentClient, SegmentClient
 from tensorbay.client.statistics import Statistics
 from tensorbay.client.status import Status
@@ -51,6 +51,7 @@ from tensorbay.exception import (
     StatusError,
 )
 from tensorbay.label import Catalog
+from tensorbay.utility import Tqdm
 
 if TYPE_CHECKING:
     from tensorbay.client.gas import GAS
