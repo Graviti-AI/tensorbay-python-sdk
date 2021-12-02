@@ -15,7 +15,6 @@ import math
 import time
 from collections import OrderedDict, defaultdict
 from functools import wraps
-from http.client import HTTPResponse
 from itertools import chain
 from multiprocessing import Manager
 from multiprocessing.managers import SyncManager
@@ -27,10 +26,10 @@ from requests.models import Response
 from requests_toolbelt.multipart.encoder import FileWrapper, MultipartEncoder
 
 from tensorbay.client.requests import Client
-from tensorbay.utility.file import RemoteFileMixin
+from tensorbay.utility import RemoteFileMixin, UserResponse
 
 _Callable = TypeVar("_Callable", bound=Callable[..., Response])
-_OpenCallable = TypeVar("_OpenCallable", bound=Callable[..., HTTPResponse])
+_OpenCallable = TypeVar("_OpenCallable", bound=Callable[..., UserResponse])
 _ReadCallable = Callable[..., bytes]
 
 _COLUMNS = OrderedDict(
@@ -152,9 +151,9 @@ class Profile:
         return wrapper  # type: ignore[return-value]
 
     def _statistical_read(self, download_path: str) -> _ReadCallable:
-        def wrapper(response: HTTPResponse, amt: Optional[int] = None) -> bytes:
+        def wrapper(response: UserResponse, amt: Optional[int] = None) -> bytes:
             start_time = time.time()
-            content = HTTPResponse.read(response, amt)
+            content = UserResponse.read(response, amt)
             self._update(download_path, 0, time.time() - start_time, len(content))
             return content
 
@@ -162,7 +161,7 @@ class Profile:
 
     def _statistical_open(self, func: _OpenCallable) -> _OpenCallable:
         @wraps(func)
-        def wrapper(obj: RemoteFileMixin) -> HTTPResponse:
+        def wrapper(obj: RemoteFileMixin) -> UserResponse:
             netloc = urlparse(obj.url.get()).netloc  # type: ignore[union-attr]
             download_path = f"[GET] {netloc}/*"
 

@@ -22,11 +22,12 @@ from tensorbay.client.cloud_storage import CloudClient, StorageConfig
 from tensorbay.client.dataset import DatasetClient, FusionDatasetClient
 from tensorbay.client.lazy import PagingList
 from tensorbay.client.log import UPLOAD_DATASET_RESUME_TEMPLATE
-from tensorbay.client.requests import Client, Tqdm
+from tensorbay.client.requests import Client
 from tensorbay.client.status import Status
 from tensorbay.client.struct import ROOT_COMMIT_ID, UserInfo
 from tensorbay.dataset import Dataset, FusionDataset
 from tensorbay.exception import DatasetTypeError, ResourceNotExistError
+from tensorbay.utility import Tqdm
 
 DatasetClientType = Union[DatasetClient, FusionDatasetClient]
 
