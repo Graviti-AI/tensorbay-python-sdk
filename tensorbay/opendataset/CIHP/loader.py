@@ -71,16 +71,16 @@ def CIHP(path: str) -> Dataset:
             os.path.join(segment_abspath, f"{segment_name}_id.txt"), "r", encoding="utf-8"
         ) as fp:
             if segment_name == "test":
-                for filename in fp:
-                    segment.append(Data(os.path.join(image_path, f"{filename.rstrip()}.jpg")))
+                for stem in fp:
+                    segment.append(Data(os.path.join(image_path, f"{stem.rstrip()}.jpg")))
             else:
                 category_path = os.path.join(segment_abspath, "Category_ids")
                 instance_path = os.path.join(segment_abspath, "Instance_ids")
-                for filename in fp:
-                    filename = filename.rstrip()
-                    data = Data(os.path.join(image_path, f"{filename}.jpg"))
+                for stem in fp:
+                    stem = stem.rstrip()
+                    data = Data(os.path.join(image_path, f"{stem}.jpg"))
                     label = data.label
-                    png_filename = f"{filename}.png"
+                    png_filename = f"{stem}.png"
                     label.semantic_mask = SemanticMask(os.path.join(category_path, png_filename))
                     label.instance_mask = InstanceMask(os.path.join(instance_path, png_filename))
                     segment.append(data)

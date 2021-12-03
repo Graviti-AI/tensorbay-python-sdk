@@ -60,16 +60,16 @@ def VOC2012Detection(path: str) -> Dataset:
     for segment_name in _SEGMENT_NAMES:
         segment = dataset.create_segment(segment_name)
         with open(os.path.join(main_path, f"{segment_name}.txt"), encoding="utf-8") as fp:
-            for filename in fp:
-                segment.append(_get_data(filename.rstrip(), image_path, annotation_path))
+            for stem in fp:
+                segment.append(_get_data(stem.rstrip(), image_path, annotation_path))
     return dataset
 
 
-def _get_data(filename: str, image_path: str, annotation_path: str) -> Data:
+def _get_data(stem: str, image_path: str, annotation_path: str) -> Data:
     """Get all information of the datum corresponding to filename.
 
     Arguments:
-        filename: The filename of the data.
+        stem: The stem of the data.
         image_path: The path of the image directory.
         annotation_path: The path of the annotation directory.
 
@@ -77,12 +77,12 @@ def _get_data(filename: str, image_path: str, annotation_path: str) -> Data:
         Data: class: `~tensorbay.dataset.data.Data` instance.
 
     """
-    data = Data(os.path.join(image_path, f"{filename}.jpg"))
+    data = Data(os.path.join(image_path, f"{stem}.jpg"))
     box2d = []
-    with open(os.path.join(annotation_path, f"{filename}.xml"), "r", encoding="utf-8") as fp:
+    with open(os.path.join(annotation_path, f"{stem}.xml"), "r", encoding="utf-8") as fp:
         labels: Any = xmltodict.parse(fp.read())
-
     objects = labels["annotation"]["object"]
+
     if not isinstance(objects, list):
         objects = [objects]
     for obj in objects:
