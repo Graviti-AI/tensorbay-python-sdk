@@ -122,7 +122,7 @@ def _load_frame(
         # The data file name is a string of length 10 with each digit being a number:
         # 0000000000.jpg
         # 0000000001.bin
-        data_file_name = f"{frame_index:010}"
+        stem = f"{frame_index:010}"
 
         # Each line of the timestamps file looks like:
         # 2018-03-06 15:02:33.000000000
@@ -133,7 +133,7 @@ def _load_frame(
             # The image folder corresponds to different cameras, whose name is likes "CAM00".
             # The image folder looks like "image_00".
             camera_folder = f"image_{sensor_name[-2:]}"
-            image_file = f"{data_file_name}.png"
+            image_file = f"{stem}.png"
 
             data = Data(
                 os.path.join(data_path, camera_folder, "data", image_file),
@@ -142,7 +142,7 @@ def _load_frame(
             )
         else:
             data = Data(
-                os.path.join(data_path, "lidar_points", "data", f"{data_file_name}.bin"),
+                os.path.join(data_path, "lidar_points", "data", f"{stem}.bin"),
                 timestamp=timestamp,
             )
             data.label.box3d = _load_labels(annotation["cuboids"])

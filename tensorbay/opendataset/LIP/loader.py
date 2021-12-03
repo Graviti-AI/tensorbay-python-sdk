@@ -75,8 +75,8 @@ def LIP(path: str) -> Dataset:
         if segment_name == "test":
             image_path = os.path.join(test_path, "testing_images")
             with open(os.path.join(test_path, "test_id.txt"), "r", encoding="utf-8") as fp:
-                for filename in fp:
-                    segment.append(Data(os.path.join(image_path, f"{filename.rstrip()}.jpg")))
+                for stem in fp:
+                    segment.append(Data(os.path.join(image_path, f"{stem.rstrip()}.jpg")))
         else:
             image_path = os.path.join(trainval_image_path, f"{segment_name}_images")
             parsing_path = os.path.join(trainval_parsing_path, f"{segment_name}_segmentations")
@@ -89,10 +89,10 @@ def LIP(path: str) -> Dataset:
 
 
 def _get_data(keypoints_info: List[str], image_path: str, parsing_path: str) -> Data:
-    filename = os.path.splitext(keypoints_info[0])[0]
-    data = Data(os.path.join(image_path, f"{filename}.jpg"))
+    stem = os.path.splitext(keypoints_info[0])[0]
+    data = Data(os.path.join(image_path, f"{stem}.jpg"))
     label = data.label
-    label.semantic_mask = SemanticMask(os.path.join(parsing_path, f"{filename}.png"))
+    label.semantic_mask = SemanticMask(os.path.join(parsing_path, f"{stem}.png"))
     keypoints = LabeledKeypoints2D()
     for x, y, v in chunked(islice(keypoints_info, 1, None), 3):
         keypoints.append(

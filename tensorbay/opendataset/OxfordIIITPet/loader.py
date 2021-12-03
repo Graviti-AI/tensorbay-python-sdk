@@ -57,17 +57,14 @@ def OxfordIIITPet(path: str) -> Dataset:
     test_segment = dataset.create_segment("test")
     annotation_path = os.path.join(root_path, "annotations")
     for image_path in glob(os.path.join(root_path, "images", "*.jpg")):
-        image_name = os.path.splitext(os.path.basename(image_path))[0]
-        name = "Cat" if image_name.istitle() else "Dog"
-        category, num = image_name.rsplit("_", 1)
-
+        stem = os.path.splitext(os.path.basename(image_path))[0]
+        name = "Cat" if stem.istitle() else "Dog"
+        category, num = stem.rsplit("_", 1)
         data = Data(image_path, target_remote_path=f"{category}_{num.zfill(3)}.jpg")
         label = data.label
         label.classification = Classification(category=f"{name}.{category}")
-        label.semantic_mask = SemanticMask(
-            os.path.join(annotation_path, "trimaps", f"{image_name}.png")
-        )
-        xml_path = os.path.join(annotation_path, "xmls", f"{image_name}.xml")
+        label.semantic_mask = SemanticMask(os.path.join(annotation_path, "trimaps", f"{stem}.png"))
+        xml_path = os.path.join(annotation_path, "xmls", f"{stem}.xml")
         if os.path.exists(xml_path):
             label.box2d = _get_box_label(xml_path)
             trainval_segment.append(data)
