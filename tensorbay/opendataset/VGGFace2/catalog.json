@@ -1,0 +1,76 @@
+{
+    "CLASSIFICATION": {
+        "attributes": [
+            {
+                "name": "Sample_Num",
+                "type": "number",
+                "minimum": 87,
+                "maximum": 843
+            },
+            {
+                "name": "Flag",
+                "type": "boolean"
+            },
+            {
+                "name": "Gender",
+                "enum": ["m", "f"]
+            }
+        ]
+    },
+    "BOX2D": {
+        "attributes": [
+            {
+                "name": "Male",
+                "type": "boolean"
+            },
+            {
+                "name": "Black_Hair",
+                "type": "boolean"
+            },
+            {
+                "name": "Brown_Hair",
+                "type": "boolean"
+            },
+            {
+                "name": "Gray_Hair",
+                "type": "boolean"
+            },
+            {
+                "name": "Blond_Hair",
+                "type": "boolean"
+            },
+            {
+                "name": "Long_Hair",
+                "type": "boolean"
+            },
+            {
+                "name": "Mustache_or_Bread",
+                "type": "boolean"
+            },
+            {
+                "name": "Wearing_Hat",
+                "type": "boolean"
+            },
+            {
+                "name": "Eyeglasses",
+                "type": "boolean"
+            },
+            {
+                "name": "Sunglasses",
+                "type": "boolean"
+            },
+            {
+                "name": "Mouth_Open",
+                "type": "boolean"
+            }
+        ]
+    },
+    "KEYPOINTS2D": {
+        "keypoints": [
+            {
+                "number": 5,
+                "names": ["L_eye", "R_eye", "Nose", "L_mouth_corner", "R_month_corner"]
+            }
+        ]
+    }
+}
