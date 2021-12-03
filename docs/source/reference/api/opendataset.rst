@@ -73,6 +73,7 @@ tensorbay.opendataset
    TLR
    UAVDT
    UrbanObjectDetection
+   VGGFace2
    VOC2012ActionClassification
    VOC2012Detection
    VOC2012Segmentation
