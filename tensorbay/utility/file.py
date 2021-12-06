@@ -14,6 +14,7 @@ from urllib.request import pathname2url
 from _io import BufferedReader
 
 from tensorbay.exception import ResponseError
+from tensorbay.utility.common import ProcessLocked
 from tensorbay.utility.repr import ReprMixin
 from tensorbay.utility.requests import UserResponse, config, get_session
 
@@ -179,6 +180,16 @@ class RemoteFileMixin(ReprMixin):
                 )
             raise
 
+    @ProcessLocked("cache_path")
+    def _write_cache(self, cache_path: str) -> None:
+        dirname = os.path.dirname(cache_path)
+        os.makedirs(dirname, exist_ok=True)
+        temp_path = f"{cache_path}.tensorbay.downloading"
+        with self._urlopen() as fp:
+            with open(temp_path, "wb") as cache:
+                cache.write(fp.read())
+        os.rename(temp_path, cache_path)
+
     def get_url(self) -> str:
         """Return the url of the data hosted by tensorbay.
 
@@ -208,11 +219,6 @@ class RemoteFileMixin(ReprMixin):
             return self._urlopen()
 
         if not os.path.exists(cache_path):
-            dirname = os.path.dirname(cache_path)
-            os.makedirs(dirname, exist_ok=True)
-
-            with self._urlopen() as fp:
-                with open(cache_path, "wb") as cache:
-                    cache.write(fp.read())
+            self._write_cache(cache_path)
 
         return open(cache_path, "rb")
