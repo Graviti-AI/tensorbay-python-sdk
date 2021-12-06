@@ -75,6 +75,12 @@ It provides:
 
 .. toctree::
    :maxdepth: 1
+   :caption: Applications
+
+   applications/sextant
+
+.. toctree::
+   :maxdepth: 1
    :caption: Reference
 
    reference/glossary

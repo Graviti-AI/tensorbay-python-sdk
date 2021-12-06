@@ -10,5 +10,6 @@ API Reference
    label/index
    sensor/index
    utility/index
+   apps/index
    exception
    opendataset
