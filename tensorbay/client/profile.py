@@ -137,13 +137,13 @@ class Profile:
         """
 
         @wraps(func)
-        def wrapper(client: Client, method: str, url: str, **kwargs: Any) -> Response:
+        def wrapper(method: str, url: str, **kwargs: Any) -> Response:
             path = urlparse(url).path
             part = path.replace(_PATH_PREFIX, "") if path else url
             key = f"[{method}] {part}"
             data = kwargs.get("data")
             file_size = self._get_file_size(data) if isinstance(data, MultipartEncoder) else 0
-            response = func(client, method, url, **kwargs)
+            response = func(method, url, **kwargs)
             self._update(key, len(response.content), response.elapsed.total_seconds(), file_size)
 
             return response
@@ -218,7 +218,7 @@ class Profile:
             self._summary = self._manager.dict()
         else:
             self._summary = {}
-        setattr(Client, "do", self._statistical(self.do_function))
+        setattr(Client, "do", staticmethod(self._statistical(self.do_function)))
         setattr(RemoteFileMixin, "_urlopen", self._statistical_open(self.urlopen))
 
     def stop(self) -> None:
