@@ -152,7 +152,7 @@
                 "description": "Whether the emergency light of vehicle is lighting."
             },
             {
-                "name": "vehicle_position",
+                "name": "vertical_position",
                 "enum": ["off_ground", "on_ground"],
                 "description": "Whether the object is on the ground plane."
             }
@@ -311,7 +311,7 @@
                 "description": "Whether the emergency light of vehicle is lighting."
             },
             {
-                "name": "vehicle_position",
+                "name": "vertical_position",
                 "enum": ["off_ground", "on_ground"],
                 "description": "Whether the object is on the ground plane."
             }
