@@ -22,7 +22,7 @@ all be initialized by :meth:`__init__()` or :meth:`loads()` method.
 
 import math
 from itertools import count
-from typing import Dict, Iterator, Optional, Sequence, Tuple, Type, TypeVar
+from typing import Dict, Iterator, Mapping, Optional, Sequence, Tuple, Type, TypeVar
 
 import numpy as np
 
@@ -135,7 +135,7 @@ class CameraMatrix(ReprMixin, AttrsMixin):
         )
 
     @classmethod
-    def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
+    def loads(cls: Type[_T], contents: Mapping[str, float]) -> _T:
         """Loads CameraMatrix from a dict containing the information of the camera matrix.
 
         Arguments:
@@ -279,7 +279,7 @@ class DistortionCoefficients(ReprMixin, AttrsMixin):
 
     @staticmethod
     def _distortion_generator(
-        distortion_keyword: str, data: Dict[str, float]
+        distortion_keyword: str, data: Mapping[str, float]
     ) -> Iterator[Tuple[str, float]]:
         for index in range(1, len(data) + 1):
             key = f"{distortion_keyword}{index}"
@@ -324,7 +324,7 @@ class DistortionCoefficients(ReprMixin, AttrsMixin):
         p2: float = self.p2  # type: ignore[attr-defined]
         return (p1 * xy2 + p2 * (r2 + 2 * x2), p1 * (r2 + 2 * y2) + p2 * xy2)
 
-    def _loads(self, contents: Dict[str, float]) -> None:
+    def _loads(self, contents: Mapping[str, float]) -> None:
         for distortion_key in self._DISTORTION_KEYS:
             for key, value in self._distortion_generator(distortion_key, contents):
                 setattr(self, key, value)
@@ -346,7 +346,7 @@ class DistortionCoefficients(ReprMixin, AttrsMixin):
             yield distortion_value
 
     @classmethod
-    def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
+    def loads(cls: Type[_T], contents: Mapping[str, float]) -> _T:
         """Loads DistortionCoefficients from a dict containing the information.
 
         Arguments:
@@ -544,7 +544,7 @@ class CameraIntrinsics(ReprMixin, AttrsMixin):
             self.distortion_coefficients = DistortionCoefficients.loads(kwargs)
 
     @classmethod
-    def loads(cls: Type[_T], contents: Dict[str, Dict[str, float]]) -> _T:
+    def loads(cls: Type[_T], contents: Mapping[str, Mapping[str, float]]) -> _T:
         """Loads CameraIntrinsics from a dict containing the information.
 
         Arguments:

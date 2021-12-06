@@ -18,7 +18,7 @@ which is often used for object detection in 3D point cloud.
 """
 
 import warnings
-from typing import Any, Dict, Iterable, Optional, Type, TypeVar
+from typing import Any, Dict, Iterable, Mapping, Optional, Type, TypeVar
 
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
@@ -206,7 +206,7 @@ class LabeledBox2D(_LabelBase, Box2D):
         )
 
     @classmethod
-    def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
+    def loads(cls: Type[_T], contents: Mapping[str, Any]) -> _T:
         """Loads a LabeledBox2D from a dict containing the information of the label.
 
         Arguments:
@@ -405,7 +405,7 @@ class LabeledBox3D(_LabelBase, Box3D):
         return NotImplemented  # type: ignore[unreachable]
 
     @classmethod
-    def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
+    def loads(cls: Type[_T], contents: Mapping[str, Any]) -> _T:
         """Loads a LabeledBox3D from a dict containing the information of the label.
 
         Arguments:

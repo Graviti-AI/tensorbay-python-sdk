@@ -10,7 +10,7 @@ and provides :meth:`Polygon.area` to calculate the area of the polygon.
 
 """
 
-from typing import Dict, Iterable, List, Optional, Type, TypeVar
+from typing import Dict, Iterable, List, Mapping, Optional, Sequence, Type, TypeVar
 
 from tensorbay.geometry.point_list import MultiPointList2D, PointList2D
 from tensorbay.geometry.vector import Vector2D
@@ -38,7 +38,7 @@ class Polygon(PointList2D[Vector2D]):
     _ElementType = Vector2D
 
     @classmethod
-    def loads(cls: Type[_P], contents: List[Dict[str, float]]) -> _P:
+    def loads(cls: Type[_P], contents: Sequence[Mapping[str, float]]) -> _P:
         """Loads the information of :class:`Polygon`.
 
         Arguments:
@@ -110,7 +110,7 @@ class MultiPolygon(MultiPointList2D[Polygon]):
         super().__init__(polygons)
 
     @classmethod
-    def loads(cls: Type[_P], contents: List[List[Dict[str, float]]]) -> _P:
+    def loads(cls: Type[_P], contents: Sequence[Sequence[Mapping[str, float]]]) -> _P:
         """Loads a :class:`MultiPolygon` from the given contents.
 
         Arguments:

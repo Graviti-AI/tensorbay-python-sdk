@@ -14,7 +14,7 @@ and :attr:`Transform3D.rotation` is stored as `numpy quaternion`_.
 """
 
 import warnings
-from typing import Dict, Iterable, Optional, Type, TypeVar, Union, overload
+from typing import Dict, Iterable, Mapping, Optional, Type, TypeVar, Union, overload
 
 import numpy as np
 
@@ -156,7 +156,7 @@ class Transform3D(ReprMixin):
         # __radd__ is used to ensure the shape of the input object.
         return self._translation.__radd__(rotate_vectors(self._rotation, other))
 
-    def _loads(self, contents: Dict[str, Dict[str, float]]) -> None:
+    def _loads(self, contents: Mapping[str, Mapping[str, float]]) -> None:
         self._translation = Vector3D.loads(contents["translation"])
         rotation_contents = contents["rotation"]
         self._rotation = Quaternion(
@@ -167,7 +167,7 @@ class Transform3D(ReprMixin):
         )
 
     @classmethod
-    def loads(cls: Type[_T], contents: Dict[str, Dict[str, float]]) -> _T:
+    def loads(cls: Type[_T], contents: Mapping[str, Mapping[str, float]]) -> _T:
         """Load a :class:`Transform3D` from a dict containing rotation and translation.
 
         Arguments:

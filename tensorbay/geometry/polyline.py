@@ -14,7 +14,7 @@ and provides a series of methods to operate on polyline, such as
 
 from itertools import accumulate, count, islice, product
 from sys import version_info
-from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Type, TypeVar
+from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple, Type, TypeVar
 
 from tensorbay.geometry.point_list import MultiPointList2D, PointList2D
 from tensorbay.geometry.vector import Vector2D
@@ -188,7 +188,7 @@ class Polyline2D(PointList2D[Vector2D]):
         return 1 - min_distance / max_distance
 
     @classmethod
-    def loads(cls: Type[_P], contents: List[Dict[str, float]]) -> _P:
+    def loads(cls: Type[_P], contents: Sequence[Mapping[str, float]]) -> _P:
         """Load a :class:`Polyline2D` from a list of dict.
 
         Arguments:
@@ -233,7 +233,7 @@ class MultiPolyline2D(MultiPointList2D[Polyline2D]):
         super().__init__(polylines)
 
     @classmethod
-    def loads(cls: Type[_P], contents: List[List[Dict[str, float]]]) -> _P:
+    def loads(cls: Type[_P], contents: Sequence[Sequence[Mapping[str, float]]]) -> _P:
         """Loads a :class:`MultiPolyline2D` from the given contents.
 
         Arguments:

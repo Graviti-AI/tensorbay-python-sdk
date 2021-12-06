@@ -13,7 +13,7 @@ such as the coordinates and visible status(optional).
 
 """
 
-from typing import Dict, Iterable, List, Optional, Type, TypeVar
+from typing import Dict, Iterable, Mapping, Optional, Sequence, Type, TypeVar
 
 from tensorbay.geometry.point_list import PointList2D
 from tensorbay.geometry.vector import Vector2D
@@ -73,7 +73,7 @@ class Keypoint2D(Vector2D):
         return NotImplemented
 
     @classmethod
-    def loads(cls: Type[_T], contents: Dict[str, float]) -> _T:
+    def loads(cls: Type[_T], contents: Mapping[str, float]) -> _T:
         """Load a :class:`Keypoint2D` from a dict containing coordinates of a 2D keypoint.
 
         Arguments:
@@ -146,7 +146,7 @@ class Keypoints2D(PointList2D[Keypoint2D]):
     _ElementType = Keypoint2D
 
     @classmethod
-    def loads(cls: Type[_P], contents: List[Dict[str, float]]) -> _P:
+    def loads(cls: Type[_P], contents: Sequence[Mapping[str, float]]) -> _P:
         """Load a :class:`Keypoints2D` from a list of dict.
 
         Arguments:
