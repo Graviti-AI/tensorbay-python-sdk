@@ -11,7 +11,7 @@
 
 """
 
-from typing import Any, Dict, Iterable, List, Optional, Type, TypeVar
+from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Type, TypeVar
 
 from tensorbay.geometry.box import Box2D
 from tensorbay.geometry.vector import Vector2D
@@ -40,13 +40,13 @@ class PointList2D(UserMutableSequence[_T]):
     ) -> None:
         self._data = [self._ElementType(*point) for point in points] if points else []
 
-    def _loads(self, contents: List[Dict[str, float]]) -> None:
+    def _loads(self, contents: Sequence[Mapping[str, float]]) -> None:
         self._data = []
         for point in contents:
             self._data.append(self._ElementType.loads(point))
 
     @classmethod
-    def loads(cls: Type[_P], contents: List[Dict[str, float]]) -> _P:
+    def loads(cls: Type[_P], contents: Sequence[Mapping[str, float]]) -> _P:
         """Load a :class:`PointList2D` from a list of dictionaries.
 
         Arguments:
@@ -123,14 +123,14 @@ class MultiPointList2D(UserMutableSequence[_L]):
             [self._ElementType(point_list) for point_list in point_lists] if point_lists else []
         )
 
-    def _loads(self, contents: List[List[Dict[str, float]]]) -> None:
+    def _loads(self, contents: Sequence[Sequence[Mapping[str, float]]]) -> None:
         self._data = [self._ElementType.loads(point_list) for point_list in contents]
 
     def _dumps(self) -> List[List[Dict[str, float]]]:
         return [point_list.dumps() for point_list in self._data]
 
     @classmethod
-    def loads(cls: Type[_P], contents: List[List[Dict[str, float]]]) -> _P:
+    def loads(cls: Type[_P], contents: Sequence[Sequence[Mapping[str, float]]]) -> _P:
         """Loads a :class:`MultiPointList2D` from the given contents.
 
         Arguments:

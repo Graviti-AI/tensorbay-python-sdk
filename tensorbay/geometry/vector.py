@@ -17,7 +17,7 @@ coordinates of a 2D vector or a 3D vector.
 from itertools import zip_longest
 from math import hypot, sqrt
 from sys import version_info
-from typing import Dict, Iterable, Optional, Sequence, Tuple, Type, TypeVar, Union
+from typing import Dict, Iterable, Mapping, Optional, Sequence, Tuple, Type, TypeVar, Union
 
 from tensorbay.utility import ReprType, UserSequence
 
@@ -181,7 +181,7 @@ class Vector(UserSequence[float]):
         return f"{self.__class__.__name__}{self._data}"
 
     @staticmethod
-    def loads(contents: Dict[str, float]) -> _T:
+    def loads(contents: Mapping[str, float]) -> _T:
         """Loads a :class:`Vector` from a dict containing coordinates of the vector.
 
         Arguments:
@@ -245,7 +245,7 @@ class Vector2D(Vector):
         return hypot(*self._data)
 
     @classmethod
-    def loads(cls: Type[_V2], contents: Dict[str, float]) -> _V2:
+    def loads(cls: Type[_V2], contents: Mapping[str, float]) -> _V2:
         """Load a :class:`Vector2D` object from a dict containing coordinates of a 2D vector.
 
         Arguments:
@@ -345,7 +345,7 @@ class Vector3D(Vector):
         self._data = (x, y, z)
 
     @classmethod
-    def loads(cls: Type[_V3], contents: Dict[str, float]) -> _V3:
+    def loads(cls: Type[_V3], contents: Mapping[str, float]) -> _V3:
         """Load a :class:`Vector3D` object from a dict containing coordinates of a 3D vector.
 
         Arguments:

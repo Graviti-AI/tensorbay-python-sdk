@@ -17,7 +17,7 @@ It provides :meth:`Box3D.iou` to calculate the intersection over union of two 3D
 
 import math
 import warnings
-from typing import Dict, Iterable, Optional, Tuple, Type, TypeVar
+from typing import Dict, Iterable, Mapping, Optional, Tuple, Type, TypeVar
 
 from tensorbay.geometry.transform import Transform3D
 from tensorbay.geometry.vector import Vector2D, Vector3D
@@ -89,7 +89,7 @@ class Box2D(UserSequence[float]):
         except (TypeError, IndexError, AttributeError):
             return NotImplemented
 
-    def _loads(self, contents: Dict[str, float]) -> None:
+    def _loads(self, contents: Mapping[str, float]) -> None:
         self._data = (contents["xmin"], contents["ymin"], contents["xmax"], contents["ymax"])
 
     def _repr_head(self) -> str:
@@ -147,7 +147,7 @@ class Box2D(UserSequence[float]):
         return cls(x, y, x + width, y + height)
 
     @classmethod
-    def loads(cls: Type[_B2], contents: Dict[str, float]) -> _B2:
+    def loads(cls: Type[_B2], contents: Mapping[str, float]) -> _B2:
         """Load a :class:`Box2D` from a dict containing coordinates of the 2D box.
 
         Arguments:
@@ -407,12 +407,12 @@ class Box3D(ReprMixin):
         intersect_length = min(line1_max, line2_max) - max(line1_min, line2_min)
         return intersect_length if intersect_length > 0 else 0
 
-    def _loads(self, contents: Dict[str, Dict[str, float]]) -> None:
+    def _loads(self, contents: Mapping[str, Mapping[str, float]]) -> None:
         self._size = Vector3D.loads(contents["size"])
         self._transform = Transform3D.loads(contents)
 
     @classmethod
-    def loads(cls: Type[_B3], contents: Dict[str, Dict[str, float]]) -> _B3:
+    def loads(cls: Type[_B3], contents: Mapping[str, Mapping[str, float]]) -> _B3:
         """Load a :class:`Box3D` from a dict containing the coordinates of the 3D box.
 
         Arguments:
