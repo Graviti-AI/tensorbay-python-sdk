@@ -19,12 +19,12 @@ from tensorbay import GAS
 from tensorbay.dataset import Dataset as TensorBayDataset
 
 
-class MNISTSegment(Dataset):
-    """class for wrapping a MNIST segment."""
+class DogsVsCatsSegment(Dataset):
+    """class for wrapping a DogsVsCats segment."""
 
     def __init__(self, gas, segment_name, transform):
         super().__init__()
-        self.dataset = TensorBayDataset("MNIST", gas)
+        self.dataset = TensorBayDataset("DogsVsCats", gas)
         self.segment = self.dataset[segment_name]
         self.category_to_index = self.dataset.catalog.classification.get_category_to_index()
         self.transform = transform
@@ -38,9 +38,8 @@ class MNISTSegment(Dataset):
             image_tensor = self.transform(Image.open(fp))
 
         return image_tensor, self.category_to_index[data.label.classification.category]
+        # """"""
 
-
-""""""
 
 """Build a dataloader and run it"""
 ACCESS_KEY = "Accesskey-*****"
@@ -49,7 +48,7 @@ to_tensor = transforms.ToTensor()
 normalization = transforms.Normalize(mean=[0.485], std=[0.229])
 my_transforms = transforms.Compose([to_tensor, normalization])
 
-train_segment = MNISTSegment(GAS(ACCESS_KEY), segment_name="train", transform=my_transforms)
+train_segment = DogsVsCatsSegment(GAS(ACCESS_KEY), segment_name="train", transform=my_transforms)
 train_dataloader = DataLoader(train_segment, batch_size=4, shuffle=True, num_workers=0)
 
 for index, (image, label) in enumerate(train_dataloader):
