@@ -160,30 +160,31 @@ class Sextant(Client):
 
         return response["totalCount"]  # type: ignore[no-any-return]
 
-    def create_benchmark(
-        self,
-        name: str,
-        dataset_id: str,
-        commit_id: str,
-        *,
-        categories: Optional[List[str]] = None,
-        iou_threshold: Optional[float] = None,
-        customized_metrics: Optional[str] = None,
-    ) -> Benchmark:
-        """Create a benchmark with the given parameters.
+    # def create_benchmark(
+    #     self,
+    #     name: str,
+    #     dataset_id: str,
+    #     commit_id: str,
+    #     *,
+    #     categories: Optional[List[str]] = None,
+    #     iou_threshold: Optional[float] = None,
+    #     customized_metrics: Optional[str] = None,
+    # ) -> Benchmark:
+    #     """Create a benchmark with the given parameters.
 
-        Arguments:
-            name: Name of the Benchmark.
-            dataset_id: ID of the dataset on which this benchmark based.
-            commit_id: ID of the commit which used as the evaluation benchmark.
-            categories: The needed evaluation categories, if not given, all categories will be used.
-            iou_threshold: The IoU threshold.
-            customized_metrics: Https url of the github repository.
+    #     Arguments:
+    #         name: Name of the Benchmark.
+    #         dataset_id: ID of the dataset on which this benchmark based.
+    #         commit_id: ID of the commit which used as the evaluation benchmark.
+    #         categories: The needed evaluation categories, if not given,
+    #                   all categories will be used.
+    #         iou_threshold: The IoU threshold.
+    #         customized_metrics: Https url of the github repository.
 
-        Raises:# flake8: noqa: F402
-            ValueError: When iou_threshold and customized_metrics both given or both not given.
+    #     Raises:
+    #         ValueError: When iou_threshold and customized_metrics both given or both not given.
 
-        """
+    #     """
 
     def list_benchmarks(self) -> PagingList[Benchmark]:
         """List all benchmarks.
