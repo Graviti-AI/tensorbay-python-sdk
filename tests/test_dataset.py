@@ -47,7 +47,7 @@ class TestDataset:
     def test_create_dataset_with_alias(self, accesskey, url):
         gas_client = GAS(access_key=accesskey, url=url)
         dataset_name = get_dataset_name()
-        alias = "alias"
+        alias = f"{dataset_name}_alias"
 
         dataset_client = gas_client.create_dataset(dataset_name, alias=alias)
         assert dataset_client.dataset_id is not None
