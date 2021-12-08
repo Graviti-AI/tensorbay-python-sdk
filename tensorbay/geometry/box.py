@@ -3,17 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Box2D, Box3D.
-
-:class:`Box2D` contains the information of a 2D bounding box, such as the coordinates,
-width and height.
-It provides :meth:`Box2D.iou` to calculate the intersection over union of two 2D boxes.
-
-:class:`Box3D` contains the information of a 3D bounding box such as the transform,
-translation, rotation and size.
-It provides :meth:`Box3D.iou` to calculate the intersection over union of two 3D boxes.
-
-"""
+"""The implementation of the TensorBay bounding box."""
 
 import math
 import warnings

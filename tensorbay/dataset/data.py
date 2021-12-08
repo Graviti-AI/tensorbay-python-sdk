@@ -3,12 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Data.
-
-:class:`Data` is the most basic data unit of a :class:`~tensorbay.dataset.dataset.Dataset`.
-It contains path information of a data sample and its corresponding labels.
-
-"""
+"""The implementation of the TensorBay data."""
 
 import os
 from typing import Any, Dict, Optional, Type, TypeVar, Union

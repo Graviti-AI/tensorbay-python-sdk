@@ -3,15 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Frame.
-
-:class:`Frame` is a concept in :class:`~tensorbay.dataset.dataset.FusionDataset`.
-
-It is the structure that composes a :class:`~tensorbay.dataset.segment.FusionSegment`,
-and consists of multiple :class:`~tensorbay.dataset.data.Data` collected at the same time
-from different sensors.
-
-"""
+"""The implementation of the TensorBay frame."""
 
 import logging
 from typing import Any, Dict, Optional, Type, TypeVar

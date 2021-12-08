@@ -3,16 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Vector, Vector2D, Vector3D.
-
-:class:`Vector` is the base class of :class:`Vector2D` and :class:`Vector3D`. It contains the
-coordinates of a 2D vector or a 3D vector.
-
-:class:`Vector2D` contains the coordinates of a 2D vector, extending :class:`Vector`.
-
-:class:`Vector3D` contains the coordinates of a 3D vector, extending :class:`Vector`.
-
-"""
+"""The implementation of the TensorBay vector."""
 
 from itertools import zip_longest
 from math import hypot, sqrt

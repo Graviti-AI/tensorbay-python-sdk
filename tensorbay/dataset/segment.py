@@ -3,18 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Segment and FusionSegment.
-
-Segment is a concept in :class:`~tensorbay.dataset.dataset.Dataset`.
-It is the structure that composes :class:`~tensorbay.dataset.dataset.Dataset`,
-and consists of a series of :class:`~tensorbay.dataset.data.Data` without sensor information.
-
-Fusion segment is a concept in :class:`~tensorbay.dataset.dataset.FusionDataset`.
-It is the structure that composes :class:`~tensorbay.dataset.dataset.FusionDataset`,
-and consists of a list of :class:`~tensorbay.dataset.frame.Frame`
-along with multiple :class:`~tensorbay.sensor.sensor.Sensors`.
-
-"""
+"""The implementation of the TensorBay segment."""
 
 from typing import TYPE_CHECKING, Any, Callable, MutableSequence, Optional, Type, TypeVar
 

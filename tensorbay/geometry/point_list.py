@@ -3,13 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""PointList2D, MultiPointList2D.
-
-:class:`PointList2D` contains a list of 2D points.
-
-:class:`MultiPointList2D` contains multiple 2D point lists.
-
-"""
+"""The implementation of lists of the TensorBay 2D point."""
 
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Type, TypeVar
 
