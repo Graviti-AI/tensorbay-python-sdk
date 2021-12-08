@@ -3,14 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Polyline2D.
-
-:class:`Polyline2D` contains the coordinates of the vertexes of the polyline
-and provides a series of methods to operate on polyline, such as
-:meth:`Polyline2D.uniform_frechet_distance` and :meth:`Polyline2D.similarity`.
-
-:class:`MultiPolyline2D` contains a list of polyline.
-"""
+"""The implementation of the TensorBay polyline."""
 
 from itertools import accumulate, count, islice, product
 from sys import version_info

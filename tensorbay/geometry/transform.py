@@ -3,15 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Transform3D.
-
-:class:`Transform3D` contains the rotation and translation of a 3D transform.
-:attr:`Transform3D.translation` is stored as :class:`.Vector3D`,
-and :attr:`Transform3D.rotation` is stored as `numpy quaternion`_.
-
-.. _numpy quaternion: https://github.com/moble/quaternion/
-
-"""
+"""The implementation of 3D transformations in the 3D coordinate system."""
 
 import warnings
 from typing import Dict, Iterable, Optional, Type, TypeVar, Union, overload

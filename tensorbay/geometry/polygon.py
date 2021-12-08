@@ -3,12 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Polygon.
-
-:class:`Polygon` contains the coordinates of the vertexes of the polygon
-and provides :meth:`Polygon.area` to calculate the area of the polygon.
-
-"""
+"""The implementation of the TensorBay polygon."""
 
 from typing import Dict, Iterable, List, Optional, Type, TypeVar
 

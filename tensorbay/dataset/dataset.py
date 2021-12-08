@@ -3,24 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Notes, DatasetBase, Dataset and FusionDataset.
-
-:class:`Notes` contains the basic information of a :class:`DatasetBase`.
-
-:class:`DatasetBase` defines the basic concept of a dataset,
-which is the top-level structure to handle your data files, labels and other additional information.
-
-It represents a whole dataset contains several segments
-and is the base class of :class:`Dataset` and :class:`FusionDataset`.
-
-:class:`Dataset` is made up of data collected from only one sensor
-or data without sensor information.
-It consists of a list of :class:`~tensorbay.dataset.segment.Segment`.
-
-:class:`FusionDataset` is made up of data collected from multiple sensors.
-It consists of a list of :class:`~tensorbay.dataset.segment.FusionSegment`.
-
-"""
+"""The implementation of the TensorBay dataset."""
 
 import json
 from typing import (

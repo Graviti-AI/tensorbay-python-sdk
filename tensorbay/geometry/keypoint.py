@@ -3,15 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Keypoints2D, Keypoint2D.
-
-:class:`Keypoint2D` contains the information of 2D keypoint,
-such as the coordinates and visible status(optional).
-
-:class:`Keypoints2D` contains a list of 2D keypoint and is based on
-:class:`~tensorbay.geometry.polygon.PointList2D`.
-
-"""
+"""The implementation of the TensorBay 2D keypoint."""
 
 from typing import Dict, Iterable, List, Optional, Type, TypeVar
 
