@@ -1,0 +1,115 @@
+{
+    "CLASSIFICATION": {
+        "attributes": [
+            {
+                "name": "Weather",
+                "enum": ["Clear Skies", "Snow", "Cloud Cover or Haze"]
+            },
+            {
+                "name": "scan_direction",
+                "enum": ["Forward", "Reverse"],
+                "description": "The direction in which the sensor operated for collection"
+            },
+            {
+                "name": "Country",
+                "type": "string",
+                "description": "The country of the airfield"
+            },
+            {
+                "name": "State_Province",
+                "type": "string",
+                "description": "The state, province, or other administrative district for each air field"
+            },
+            {
+                "name": "Air_Field",
+                "type": "string",
+                "description": "The air field or airport name"
+            }
+        ]
+    },
+    "POLYGON": {
+        "attributes": [
+            {
+                "name": "role",
+                "enum": [
+                    "Small Civil Transport/Utility",
+                    "Medium Civil Transport/Utility",
+                    "Large Civil Transport/Utility",
+                    "Military Transport/Utility/AWAC",
+                    "Military Bomber",
+                    "Military Fighter/Interceptor/Attack",
+                    "Military Trainer"
+                ]
+            },
+            {
+                "name": "num_engines",
+                "enum": [0, 1, 2, 3, 4]
+            },
+            {
+                "name": "propulsion",
+                "enum": ["unpowered", "propeller", "jet"]
+            },
+            { "name": "canards", "type": "boolean" },
+            {
+                "name": "num_tail_fins",
+                "enum": [1, 2]
+            },
+            {
+                "name": "wing_position",
+                "enum": ["high mounted", "mid/low mounted"]
+            },
+            {
+                "name": "wing_type",
+                "enum": ["straight", "swept-back", "delta", "variable-sweep"]
+            },
+            {
+                "name": "length",
+                "type": "number",
+                "minimum": 4.0,
+                "maximum": 83.0,
+                "description": "length estimate in meters for each aircraft in floating point format"
+            },
+            {
+                "name": "wingspan",
+                "type": "number",
+                "minimum": 4.0,
+                "maximum": 80.0,
+                "description": "wingspan estimate in meters for each aircraft in floating point format"
+            },
+            {
+                "name": "area",
+                "type": "number",
+                "minimum": 13.0,
+                "maximum": 3051.0,
+                "description": "The total area of each annotation (meters²)"
+            },
+            {
+                "name": "faa_wingspan_class",
+                "enum": [1, 2, 3, 4, 5, 6]
+            },
+            {
+                "name": "new_area",
+                "type": "number",
+                "minimum": 7.0,
+                "maximum": 2910.0
+            },
+            {
+                "name": "area_pixels",
+                "type": "number",
+                "minimum": 69.0,
+                "maximum": 41822.0
+            },
+            {
+                "name": "partialDec",
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0,
+                "description": "A floating point value between 0 and 1 indicating the proportion of a plane that was cropped. The lower the value, the more of the plane has been cropped"
+            },
+            {
+                "name": "truncated",
+                "type": "boolean"
+            }
+        ]
+    }
+}

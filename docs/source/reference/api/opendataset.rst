@@ -60,6 +60,7 @@ tensorbay.opendataset
    nuScenes
    OxfordIIITPet
    PASCALContext
+   RarePlanesReal
    RP2K
    SCUT_FBP5500
    SegTrack
