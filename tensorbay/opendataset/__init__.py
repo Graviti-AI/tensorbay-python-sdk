@@ -49,6 +49,7 @@ from tensorbay.opendataset.nuImages import nuImages
 from tensorbay.opendataset.nuScenes import nuScenes
 from tensorbay.opendataset.OxfordIIITPet import OxfordIIITPet
 from tensorbay.opendataset.PASCALContext import PASCALContext
+from tensorbay.opendataset.RarePlanesReal import RarePlanesReal
 from tensorbay.opendataset.RP2K import RP2K
 from tensorbay.opendataset.SCUT_FBP5500 import SCUT_FBP5500
 from tensorbay.opendataset.SegTrack import SegTrack
@@ -114,6 +115,7 @@ __all__ = [
     "NightOwls",
     "OxfordIIITPet",
     "PASCALContext",
+    "RarePlanesReal",
     "RP2K",
     "SCUT_FBP5500",
     "SegTrack",
