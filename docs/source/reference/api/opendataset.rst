@@ -61,6 +61,7 @@ tensorbay.opendataset
    OxfordIIITPet
    PASCALContext
    RarePlanesReal
+   RarePlanesSynthetic
    RP2K
    SCUT_FBP5500
    SegTrack
