@@ -5,7 +5,7 @@
 TensorBay supports showing changes between commits or drafts.
 
 Before operating the :ref:`reference/glossary:diff`, a dataset client instance with commits is needed.
-See more details in :ref:`features/version_control/draft_and_commit:Draft and Commit`
+See more details in :doc:`/features/version_control/draft_and_commit`
 
 **********
  Get Diff

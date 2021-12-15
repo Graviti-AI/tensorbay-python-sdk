@@ -13,32 +13,32 @@ The following table lists a series of examples to help developers to use TensorB
    ====================================================================== =========================================================================
    Examples                                                               Description
    ====================================================================== =========================================================================
-   :ref:`quick_start/examples/DogsVsCats:Dogs vs Cats`                    | Topic: Dataset Management
+   :doc:`/quick_start/examples/DogsVsCats`                                | Topic: Dataset Management
                                                                           | Data Type: Image
-                                                                          | Label Type: :ref:`reference/label_format/Classification:Classification`
-   :ref:`quick_start/examples/Newsgroups20:20 Newsgroups`                 | Topic: Dataset Management
+                                                                          | Label Type: :doc:`/reference/label_format/Classification`
+   :doc:`/quick_start/examples/Newsgroups20`                              | Topic: Dataset Management
                                                                           | Data Type: Text
-                                                                          | Label Type: :ref:`reference/label_format/Classification:Classification`
-   :ref:`quick_start/examples/BSTLD:BSTLD`                                | Topic: Dataset Management
+                                                                          | Label Type: :doc:`/reference/label_format/Classification`
+   :doc:`/quick_start/examples/BSTLD`                                     | Topic: Dataset Management
                                                                           | Data Type: Image
-                                                                          | Label Type: :ref:`reference/label_format/Box2D:Box2D`
-   :ref:`quick_start/examples/NeolixOD:Neolix OD`                         | Topic: Dataset Management
+                                                                          | Label Type: :doc:`/reference/label_format/Box2D`
+   :doc:`/quick_start/examples/NeolixOD`                                  | Topic: Dataset Management
                                                                           | Data Type: Point Cloud
-                                                                          | Label Type: :ref:`reference/label_format/Box3D:Box3D`
-   :ref:`quick_start/examples/LeedsSportsPose:Leeds Sports Pose`          | Topic: Dataset Management
+                                                                          | Label Type: :doc:`/reference/label_format/Box3D`
+   :doc:`/quick_start/examples/LeedsSportsPose`                           | Topic: Dataset Management
                                                                           | Data Type: Image
-                                                                          | Label Type: :ref:`reference/label_format/Keypoints2D:Keypoints2D`
-   :ref:`quick_start/examples/THCHS30:THCHS-30`                           | Topic: Dataset Management
+                                                                          | Label Type: :doc:`/reference/label_format/Keypoints2D`
+   :doc:`/quick_start/examples/THCHS30`                                   | Topic: Dataset Management
                                                                           | Data Type: Audio
-                                                                          | Label Type: :ref:`reference/label_format/Sentence:Sentence`
-   :ref:`quick_start/examples/VOC2012Segmentation:VOC2012 Segmentation`   | Topic: Dataset Management
+                                                                          | Label Type: :doc:`/reference/label_format/Sentence`
+   :doc:`/quick_start/examples/VOC2012Segmentation`                       | Topic: Dataset Management
                                                                           | Data Type: Image
-                                                                          | Label Types: :ref:`reference/label_format/SemanticMask:SemanticMask`,
-                                                                            :ref:`reference/label_format/InstanceMask:InstanceMask`
-   :ref:`quick_start/examples/update_dataset:Update Dataset`              | Topic: Update Dataset
-   :ref:`quick_start/examples/move_and_copy:Move And Copy`                | Topic: Move And Copy
-   :ref:`quick_start/examples/merge_datasets:Merge Datasets`              | Topic: Merge Datasets
-   :ref:`quick_start/examples/get_label_statistics:Get Label Statistics`  | Topic: Get Label Statistics
+                                                                          | Label Types: :doc:`/reference/label_format/SemanticMask`,
+                                                                            :doc:`/reference/label_format/InstanceMask`
+   :doc:`/quick_start/examples/update_dataset`                            | Topic: Update Dataset
+   :doc:`/quick_start/examples/move_and_copy`                             | Topic: Move And Copy
+   :doc:`/quick_start/examples/merge_datasets`                            | Topic: Merge Datasets
+   :doc:`/quick_start/examples/get_label_statistics`                      | Topic: Get Label Statistics
    ====================================================================== =========================================================================
 
 .. toctree::

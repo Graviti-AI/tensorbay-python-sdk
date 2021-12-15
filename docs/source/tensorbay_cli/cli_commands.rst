@@ -61,7 +61,7 @@ Work with configuration operations.
 ``gas config`` supports modifying the configurations about network request and editor.
 
 Add a single configuration, see the available keys and corresponding values about network request at
-:ref:`request_configuration<advanced_features/request_configuration:Request Configuration>`.
+:doc:`request_configuration</advanced_features/request_configuration>`.
 
 .. code:: html
 

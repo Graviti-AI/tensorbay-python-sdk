@@ -53,7 +53,7 @@ The code below checkouts to the second commit and check the data amount.
 
 As shown above, there are 8 data in the train segment.
 
-See :ref:`features/version_control/draft_and_commit:Draft and Commit` for more details about commit.
+See :doc:`/features/version_control/draft_and_commit` for more details about commit.
 
 Draft
 =====
@@ -103,7 +103,7 @@ adds a new segment to the "VersionControlDemo" dataset and does the commit opera
    dataset_client.upload_segment(test_segment, jobs=8)
    dataset_client.commit("add test segment")
 
-See :ref:`features/version_control/draft_and_commit:Draft and Commit` for more details about draft.
+See :doc:`/features/version_control/draft_and_commit` for more details about draft.
 
 Tag
 ===
@@ -118,7 +118,7 @@ The tag "v1.0.0" in :numref:`Fig. %s <commit-demonstration>` is added by
 
    dataset_client.create_tag("v1.0.0", revision=SECOND_COMMIT_ID)
 
-See :ref:`features/version_control/tag:Tag` for more details about tag.
+See :doc:`/features/version_control/tag` for more details about tag.
 
 Branch
 ======
@@ -133,7 +133,7 @@ For the convenience of maintaining a commit tree, TensorBay provides the :ref:`r
 Actually, the commit list (:numref:`Fig. %s <commit-demonstration>`) above is the default branch named "main".
 
 The code block below creates a branch "with-label" based on the :ref:`reference/glossary:revision` "v1.0.0",
-and adds :ref:`classification <reference/label_format/Classification:Classification>` label to the "train" segment.
+and adds :doc:`classification </reference/label_format/Classification>` label to the "train" segment.
 
 :numref:`Figure. %s <branch-demonstration>` demonstrates the two branches.
 
@@ -172,4 +172,4 @@ and adds :ref:`classification <reference/label_format/Classification:Classificat
 
    dataset_client.commit("add labels to train segment")
 
-See :ref:`features/version_control/branch:Branch` for more details about branch.
+See :doc:`/features/version_control/branch` for more details about branch.

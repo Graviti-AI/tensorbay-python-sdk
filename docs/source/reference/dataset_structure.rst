@@ -48,7 +48,7 @@ The corresponding class of notes is :class:`~tensorbay.dataset.dataset.Notes`.
 
 Catalog is used for storing label meta information.
 It collects all the labels corresponding to a dataset.
-There could be one or several subcatalogs (:ref:`reference/label_format/index:Label Format`)
+There could be one or several subcatalogs (:doc:`/reference/label_format/index`)
 under one catalog. Each Subcatalog only stores label meta information of one label type,
 including whether the corresponding annotation has tracking information.
 
@@ -64,15 +64,15 @@ Here are some catalog examples of datasets with different label types and a data
     Catalogs                       Description
    =============================  ============================================================================================
    `elpv Catalog`_                | This example is the catalog of `elpv Dataset`_,
-                                  | which is a dataset with :ref:`reference/label_format/Classification:Classification` label.
+                                  | which is a dataset with :doc:`/reference/label_format/Classification` label.
    `BSTLD Catalog`_               | This example is the catalog of `BSTLD Dataset`_,
-                                  | which is a dataset with :ref:`reference/label_format/Box2D:Box2D` label.
+                                  | which is a dataset with :doc:`/reference/label_format/Box2D` label.
    `Neolix OD Catalog`_           | This example is the catalog of `Neolix OD Dataset`_,
-                                  | which is a dataset with :ref:`reference/label_format/Box3D:Box3D` label.
+                                  | which is a dataset with :doc:`/reference/label_format/Box3D` label.
    `Leeds Sports Pose Catalog`_   | This example is the catalog of `Leeds Sports Pose Dataset`_,
-                                  | which is a dataset with :ref:`reference/label_format/Keypoints2D:Keypoints2D` label.
+                                  | which is a dataset with :doc:`/reference/label_format/Keypoints2D` label.
    `NightOwls Catalog`_           | This example is the catalog of `NightOwls Dataset`_,
-                                  | which is a dataset with tracking :ref:`reference/label_format/Box2D:Box2D` label.
+                                  | which is a dataset with tracking :doc:`/reference/label_format/Box2D` label.
    =============================  ============================================================================================
 
 .. _elpv Catalog: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/Elpv/catalog.json

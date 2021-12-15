@@ -3,7 +3,7 @@
 ########
 
 This topic describes how to manage the `BSTLD Dataset <https://gas.graviti.cn/dataset/data-decorators/BSTLD>`_,
-which is a dataset with :ref:`reference/label_format/Box2D:Box2D` label(:numref:`Fig. %s <example-bstld>`).
+which is a dataset with :doc:`/reference/label_format/Box2D` label(:numref:`Fig. %s <example-bstld>`).
 
 .. _example-bstld:
 
@@ -55,7 +55,7 @@ is typically stored in a json file like ``catalog.json``.
    :name: BSTLD-catalog
    :linenos:
 
-The only annotation type for "BSTLD" is :ref:`reference/label_format/Box2D:Box2D`, and there are 13
+The only annotation type for "BSTLD" is :doc:`/reference/label_format/Box2D`, and there are 13
 :ref:`reference/label_format/CommonLabelProperties:category` types and one :ref:`reference/label_format/CommonLabelProperties:attributes` type.
 
 .. note::
@@ -76,7 +76,7 @@ A :ref:`reference/glossary:dataloader` is needed to organize the dataset into a 
    :name: BSTLD-dataloader
    :linenos:
 
-See :ref:`Box2D annotation <reference/label_format/Box2D:Box2D>` for more details.
+See :doc:`Box2D annotation </reference/label_format/Box2D>` for more details.
 
 There are already a number of dataloaders in TensorBay SDK provided by the community.
 Thus, instead of writing, importing an available dataloader is also feasible.
@@ -100,7 +100,7 @@ Thus, instead of writing, importing an available dataloader is also feasible.
 
 Optionally, the organized dataset can be visualized by **Pharos**, which is a TensorBay SDK plug-in.
 This step can help users to check whether the dataset is correctly organized.
-Please see :ref:`features/visualization:Visualization` for more details.
+Please see :doc:`/features/visualization` for more details.
 
 ****************
  Upload Dataset
@@ -119,7 +119,7 @@ The organized "BSTLD" dataset can be uploaded to TensorBay for sharing, reuse, e
 
 Similar with Git, the commit step after uploading can record changes to the dataset as a version.
 If needed, do the modifications and commit again.
-Please see :ref:`features/version_control/index:Version Control` for more details.
+Please see :doc:`/features/version_control/index` for more details.
 
 **************
  Read Dataset
@@ -158,7 +158,7 @@ which can be obtained by index.
    :end-before: """"""
 
 In each :ref:`reference/dataset_structure:data`,
-there is a sequence of :ref:`reference/label_format/Box2D:Box2D` annotations,
+there is a sequence of :doc:`/reference/label_format/Box2D` annotations,
 which can be obtained by index.
 
 .. literalinclude:: ../../../../docs/code/BSTLD.py
@@ -170,7 +170,7 @@ There is only one label type in "BSTLD" dataset, which is ``box2d``.
 The information stored in :ref:`reference/label_format/CommonLabelProperties:category` is
 one of the names in "categories" list of :ref:`catalog.json <BSTLD-catalog>`. The information stored
 in :ref:`reference/label_format/CommonLabelProperties:attributes` is one or several of the attributes in "attributes" list of :ref:`catalog.json <BSTLD-catalog>`.
-See :ref:`reference/label_format/Box2D:Box2D` label format for more details.
+See :doc:`/reference/label_format/Box2D` label format for more details.
 
 ****************
  Delete Dataset

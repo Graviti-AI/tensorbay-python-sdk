@@ -48,7 +48,7 @@ To show authentication information:
 
 TensorBay Resource Name(TBRN) uniquely defines the resource stored in TensorBay.
 TBRN begins with ``tb:``.
-See more details in :ref:`TBRN <tensorbay_cli/tbrn:TensorBay Resource Name>`.
+See more details in :doc:`TBRN </tensorbay_cli/tbrn>`.
 The following is the general format for TBRN:
 
 .. code:: html

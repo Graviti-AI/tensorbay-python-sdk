@@ -8,7 +8,7 @@ Some are more general, and some are unique to a specific label type.
 Three common properties of a label will be introduced first,
 and the unique ones will be explained under the corresponding type of label.
 
-Take a :ref:`2D box label <reference/label_format/Box2D:Box2D>` as an example:
+Take a :doc:`2D box label </reference/label_format/Box2D>` as an example:
 
     >>> from tensorbay.label import LabeledBox2D
     >>> box2d_label = LabeledBox2D(

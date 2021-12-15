@@ -3,7 +3,7 @@
 ##############
 
 This topic describes how to manage the `Dogs vs Cats Dataset <https://gas.graviti.cn/dataset/data-decorators/DogsVsCats>`_,
-which is a dataset with :ref:`reference/label_format/Classification:Classification` label.
+which is a dataset with :doc:`/reference/label_format/Classification` label.
 
 *****************************
  Authorize a Client Instance
@@ -47,7 +47,7 @@ is typically stored in a json file like ``catalog.json``.
    :name: dogsvscats-catalog
    :linenos:
 
-The only annotation type for "Dogs vs Cats" is :ref:`reference/label_format/Classification:Classification`, and there are 2
+The only annotation type for "Dogs vs Cats" is :doc:`/reference/label_format/Classification`, and there are 2
 :ref:`reference/label_format/CommonLabelProperties:category` types.
 
 .. note::
@@ -69,7 +69,7 @@ a :class:`~tensorbay.dataset.dataset.Dataset` instance.
    :name: dogsvscats-dataloader
    :linenos:
 
-See :ref:`Classification annotation <reference/label_format/Classification:Classification>` for more details.
+See :doc:`Classification annotation </reference/label_format/Classification>` for more details.
 
 
 There are already a number of dataloaders in TensorBay SDK provided by the community.
@@ -94,7 +94,7 @@ Thus, instead of writing, importing an available dataloadert is also feasible.
 
 Optionally, the organized dataset can be visualized by **Pharos**, which is a TensorBay SDK plug-in.
 This step can help users to check whether the dataset is correctly organized.
-Please see :ref:`features/visualization:Visualization` for more details.
+Please see :doc:`/features/visualization` for more details.
 
 ****************
  Upload Dataset
@@ -109,7 +109,7 @@ The organized "Dogs vs Cats" dataset can be uploaded to TensorBay for sharing, r
 
 Similar with Git, the commit step after uploading can record changes to the dataset as a version.
 If needed, do the modifications and commit again.
-Please see :ref:`features/version_control/index:Version Control` for more details.
+Please see :doc:`/features/version_control/index` for more details.
 
 **************
  Read Dataset
@@ -147,7 +147,7 @@ which can be obtained by index.
    :end-before: """"""
 
 In each :ref:`reference/dataset_structure:data`,
-there is a sequence of :ref:`reference/label_format/Classification:Classification` annotations,
+there is a sequence of :doc:`/reference/label_format/Classification` annotations,
 which can be obtained by index.
 
 .. literalinclude:: ../../../../docs/code/DogsVsCats.py
@@ -157,7 +157,7 @@ which can be obtained by index.
 
 There is only one label type in "Dogs vs Cats" dataset, which is ``classification``. The information stored in :ref:`reference/label_format/CommonLabelProperties:category` is
 one of the names in "categories" list of :ref:`catalog.json <dogsvscats-catalog>`.
-See :ref:`reference/label_format/Classification:Classification` label format for more details.
+See :doc:`/reference/label_format/Classification` label format for more details.
 
 ****************
  Delete Dataset

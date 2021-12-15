@@ -31,7 +31,7 @@ Note that the default settings can satisfy most use cases.
    is_internal           | Whether the request is from internal or not. 
                          | Scenario: Set it to True for quicker network speed when datasets
                          | and cloud servers are in the same region.
-                         | See :ref:`advanced_features/use_internal_endpoint:Use Internal Endpoint` for details.
+                         | See :doc:`/advanced_features/use_internal_endpoint` for details.
                          | Default: False
    ===================== ======================================================================================
 

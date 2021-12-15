@@ -5,7 +5,7 @@
 TensorBay supports squashing and merging between different branches.
 
 Before :func:`~tensorbay.client.version.VersionControlMixin.squash_and_merge`, a dataset client instance with commits on different branches is needed.
-See more details in :ref:`features/version_control/draft_and_commit:Draft and Commit`.
+See more details in :doc:`/features/version_control/draft_and_commit`.
 
 .. figure:: /images/squash_and_merge.png
    :scale: 40 %

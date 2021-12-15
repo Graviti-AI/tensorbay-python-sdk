@@ -18,7 +18,7 @@ This topic describes dataset management, including:
 ******************
 
 TensorBay SDK supports methods to organize local datasets
-into uniform TensorBay :ref:`dataset structure <reference/dataset_structure:Dataset Structure>`.
+into uniform TensorBay :doc:`dataset structure </reference/dataset_structure>`.
 The typical steps to organize a local dataset:
 
 - First, write a catalog (:ref:`ref <reference/dataset_structure:Catalog>`)
@@ -91,7 +91,7 @@ Take the :ref:`Read Dataset of BSTLD <quick_start/examples/bstld:Read Dataset>` 
 Since TensorBay supports version control, users can update dataset meta, notes, data and labels to a new commit of a dataset.
 Thus, different versions of data and labels can coexist in one dataset, which greatly facilitates the datasets' maintenance.
 
-Please see :ref:`Update dataset<quick_start/examples/update_dataset:Update Dataset>` example for more details.
+Please see :doc:`Update dataset</quick_start/examples/update_dataset>` example for more details.
 
 ***************
  Move and Copy
@@ -112,7 +112,7 @@ Moving is only supported within one dataset.
 
    The target dataset of copying and moving must be in :ref:`reference/glossary:draft` status.
 
-Please see :ref:`Move and copy<quick_start/examples/move_and_copy:Move And Copy>` example for more details.
+Please see :doc:`Move and copy</quick_start/examples/move_and_copy>` example for more details.
 
 ****************
  Merge Datasets
@@ -120,7 +120,7 @@ Please see :ref:`Move and copy<quick_start/examples/move_and_copy:Move And Copy>
 
 Since TensorBay supports copy operation between different datasets, users can use it to merge datasets.
 
-Please see :ref:`quick_start/examples/merge_datasets:Merge Datasets` example for more details.
+Please see :doc:`/quick_start/examples/merge_datasets` example for more details.
 
 **********************
  Get Label Statistics
@@ -128,4 +128,4 @@ Please see :ref:`quick_start/examples/merge_datasets:Merge Datasets` example for
 
 TensorBay supports getting label statistics of dataset.
 
-Please see :ref:`quick_start/examples/get_label_statistics:Get Label Statistics` example for more details.
+Please see :doc:`/quick_start/examples/get_label_statistics` example for more details.

@@ -3,7 +3,7 @@
 ###########
 
 This topic describes how to manage the `THCHS-30 Dataset`_,
-which is a dataset with :ref:`reference/label_format/Sentence:Sentence` label
+which is a dataset with :doc:`/reference/label_format/Sentence` label
 
 .. _THCHS-30 Dataset: https://www.graviti.com/open-datasets/data-decorators/THCHS30
 
@@ -57,7 +57,7 @@ into a :class:`~tensorbay.dataset.dataset.Dataset` instance.
    :name: THCHS30-dataloader
    :linenos:
 
-See :ref:`Sentence annotation <reference/label_format/Sentence:Sentence>` for more details.
+See :doc:`Sentence annotation </reference/label_format/Sentence>` for more details.
 
 
 There are already a number of dataloaders in TensorBay SDK provided by the community.
@@ -82,7 +82,7 @@ Thus, instead of writing, importing an available dataloadert is also feasible.
 
 Optionally, the organized dataset can be visualized by **Pharos**, which is a TensorBay SDK plug-in.
 This step can help users to check whether the dataset is correctly organized.
-Please see :ref:`features/visualization:Visualization` for more details.
+Please see :doc:`/features/visualization` for more details.
 
 ****************
 Upload Dataset
@@ -97,7 +97,7 @@ The organized "THCHS-30" dataset can be uploaded to TensorBay for sharing, reuse
 
 Similar with Git, the commit step after uploading can record changes to the dataset as a version.
 If needed, do the modifications and commit again.
-Please see :ref:`features/version_control/index:Version Control` for more details.
+Please see :doc:`/features/version_control/index` for more details.
 
 **************
 Read Dataset
@@ -137,7 +137,7 @@ which can be obtained by index.
    :end-before: """"""
 
 In each :ref:`reference/dataset_structure:Data`,
-there is a sequence of :ref:`reference/label_format/Sentence:Sentence` annotations,
+there is a sequence of :doc:`/reference/label_format/Sentence` annotations,
 which can be obtained by index.
 
 .. literalinclude:: ../../../../docs/code/THCHS30.py
@@ -146,7 +146,7 @@ which can be obtained by index.
    :end-before: """"""
 
 There is only one label type in "THCHS-30" dataset, which is ``Sentence``. It contains
-``sentence``, ``spell`` and ``phone`` information. See :ref:`Sentence <reference/label_format/Sentence:Sentence>`
+``sentence``, ``spell`` and ``phone`` information. See :doc:`Sentence </reference/label_format/Sentence>`
 label format for more details.
 
 ****************
