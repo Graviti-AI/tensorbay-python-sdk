@@ -3,7 +3,7 @@
 ###########
 
 This topic describes how to manage the `Neolix OD dataset`_,
-which is a dataset with :ref:`reference/label_format/Box3D:Box3D` label type
+which is a dataset with :doc:`/reference/label_format/Box3D` label type
 (:numref:`Fig. %s <example-neolixod>`).
 
 .. _Neolix OD dataset: https://gas.graviti.cn/dataset/graviti-open-dataset/NeolixOD
@@ -59,7 +59,7 @@ which is typically stored in a json file like ``catalog.json``.
    :name: neolixod-catalog
    :linenos:
 
-The only annotation type for "Neolix OD" is :ref:`reference/label_format/Box3D:Box3D`, and there are 15
+The only annotation type for "Neolix OD" is :doc:`/reference/label_format/Box3D`, and there are 15
 :ref:`reference/label_format/CommonLabelProperties:Category` types and 3 :ref:`reference/label_format/CommonLabelProperties:Attributes` types.
 
 .. note::
@@ -81,7 +81,7 @@ a :class:`~tensorbay.dataset.dataset.Dataset` instance.
    :name: neolixod-dataloader
    :linenos:
 
-See :ref:`Box3D annotation <reference/label_format/Box3D:Box3D>` for more details.
+See :doc:`Box3D annotation </reference/label_format/Box3D>` for more details.
 
 
 There are already a number of dataloaders in TensorBay SDK provided by the community.
@@ -106,7 +106,7 @@ Thus, instead of writing, importing an available dataloader is also feasible.
 
 Optionally, the organized dataset can be visualized by **Pharos**, which is a TensorBay SDK plug-in.
 This step can help users to check whether the dataset is correctly organized.
-Please see :ref:`features/visualization:Visualization` for more details.
+Please see :doc:`/features/visualization` for more details.
 
 ****************
  Upload Dataset
@@ -121,7 +121,7 @@ The organized "Neolix OD" dataset can be uploaded to tensorBay for sharing, reus
 
 Similar with Git, the commit step after uploading can record changes to the dataset as a version.
 If needed, do the modifications and commit again.
-Please see :ref:`features/version_control/index:Version Control` for more details.
+Please see :doc:`/features/version_control/index` for more details.
 
 **************
  Read Dataset
@@ -153,7 +153,7 @@ which can be obtained by index.
    :end-before: """"""
 
 In each :ref:`reference/dataset_structure:Data`,
-there is a sequence of :ref:`reference/label_format/Box3D:Box3D` annotations,
+there is a sequence of :doc:`/reference/label_format/Box3D` annotations,
 
 .. literalinclude:: ../../../../docs/code/NeolixOD.py
    :language: python
@@ -165,7 +165,7 @@ The information stored in :ref:`reference/label_format/CommonLabelProperties:Cat
 one of the category names in "categories" list of :ref:`catalog.json <neolixod-catalog>`.
 The information stored in :ref:`reference/label_format/CommonLabelProperties:Attributes`
 is one of the attributes in "attributes" list of :ref:`catalog.json <neolixod-catalog>`.
-See :ref:`reference/label_format/Box3D:Box3D` label format for more details.
+See :doc:`/reference/label_format/Box3D` label format for more details.
 
 ****************
  Delete Dataset

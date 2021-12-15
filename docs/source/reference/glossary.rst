@@ -88,15 +88,15 @@ Here are some dataloader examples of datasets with different label types and con
     Dataloaders                       Description
    ================================  ============================================================================================
    `LISA Traffic Light Dataloader`_  | This example is the dataloader of `LISA Traffic Light Dataset`_,
-                                     | which is a continuous dataset with :ref:`reference/label_format/Box2D:Box2D` label.
+                                     | which is a continuous dataset with :doc:`/reference/label_format/Box2D` label.
    `Dogs vs Cats Dataloader`_        | This example is the dataloader of `Dogs vs Cats Dataset`_,
-                                     | which is a dataset with :ref:`reference/label_format/Classification:Classification` label.
+                                     | which is a dataset with :doc:`/reference/label_format/Classification` label.
    `BSTLD Dataloader`_               | This example is the dataloader of `BSTLD Dataset`_,
-                                     | which is a dataset with :ref:`reference/label_format/Box2D:Box2D` label.
+                                     | which is a dataset with :doc:`/reference/label_format/Box2D` label.
    `Neolix OD Dataloader`_           | This example is the dataloader of `Neolix OD Dataset`_,
-                                     | which is a dataset with :ref:`reference/label_format/Box3D:Box3D` label.
+                                     | which is a dataset with :doc:`/reference/label_format/Box3D` label.
    `Leeds Sports Pose Daraloader`_   | This example is the dataloader of `Leeds Sports Pose Dataset`_,
-                                     | which is a dataset with :ref:`reference/label_format/Keypoints2D:Keypoints2D` label.
+                                     | which is a dataset with :doc:`/reference/label_format/Keypoints2D` label.
    ================================  ============================================================================================
 
 .. _Dogs vs Cats Dataloader: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/DogsVsCats/loader.py
@@ -132,7 +132,7 @@ According to the time continuity of data inside the dataset, a dataset can be a 
 
 The corresponding class of dataset is :class:`~tensorbay.dataset.dataset.Dataset`.
 
-See :ref:`reference/dataset_structure:Dataset Structure` for more details.
+See :doc:`/reference/dataset_structure` for more details.
 
 diff
 ====
@@ -163,7 +163,7 @@ According to the time continuity of data inside the dataset, a fusion dataset ca
 
 The corresponding class of fusion dataset is :class:`~tensorbay.dataset.dataset.FusionDataset`.
 
-See :ref:`advanced_features/fusion_dataset/fusion_dataset_structure:Fusion Dataset Structure` for more details.
+See :doc:`/advanced_features/fusion_dataset/fusion_dataset_structure` for more details.
 
 revision
 ========
@@ -188,7 +188,7 @@ TBRN
 
 TBRN is the abbreviation for TensorBay Resource Name, which represents the data or a collection of data stored in TensorBay uniquely.
 
-Note that TBRN is only used in :ref:`CLI<tensorbay_cli/getting_started_with_cli:Getting Started with CLI>`.
+Note that TBRN is only used in :doc:`CLI</tensorbay_cli/getting_started_with_cli>`.
 
 TBRN begins with ``tb:``, followed by the dataset name, the segment name and the file name.
 
@@ -213,4 +213,4 @@ Tracking is a characteristic to describe the labels within a :ref:`reference/glo
 The labels of a dataset are tracking means the labels contain tracking information, such as tracking ID, which is used for tracking tasks.
 
 Tracking characteristic is stored in :ref:`reference/dataset_structure:catalog`,
-please see :ref:`reference/label_format/index:Label Format` for more details.
+please see :doc:`/reference/label_format/index` for more details.

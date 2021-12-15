@@ -3,7 +3,7 @@
 ###############
 
 This topic describes how to manage the `20 Newsgroups dataset`_, which is a dataset 
-with :ref:`reference/label_format/Classification:Classification` label type.
+with :doc:`/reference/label_format/Classification` label type.
 
 .. _20 Newsgroups dataset: https://gas.graviti.cn/dataset/data-decorators/Newsgroups20
 
@@ -53,7 +53,7 @@ which is typically stored in a json file like ``catalog.json``.
    :name: Newsgroups20-catalog
    :linenos:
 
-The only annotation type for "20 Newsgroups" is :ref:`reference/label_format/Classification:Classification`,
+The only annotation type for "20 Newsgroups" is :doc:`/reference/label_format/Classification`,
 and there are 20 :ref:`reference/label_format/CommonLabelProperties:Category` types.
 
 .. note::
@@ -78,7 +78,7 @@ A :ref:`reference/glossary:Dataloader` is neeeded to organize the dataset into a
    :name: Newsgroups20-dataloader
    :linenos:
 
-See :ref:`Classification annotation <reference/label_format/Classification:Classification>` for more details.
+See :doc:`Classification annotation </reference/label_format/Classification>` for more details.
 
 .. note::
 
@@ -109,7 +109,7 @@ Thus, instead of writing, importing an available dataloader is also feasible.
 
 Optionally, the organized dataset can be visualized by **Pharos**, which is a TensorBay SDK plug-in.
 This step can help users to check whether the dataset is correctly organized.
-Please see :ref:`features/visualization:Visualization` for more details.
+Please see :doc:`/features/visualization` for more details.
 
 ****************
  Upload Dataset
@@ -124,7 +124,7 @@ The organized "20 Newsgroups" dataset can be uploaded to TensorBay for sharing, 
 
 Similar with Git, the commit step after uploading can record changes to the dataset as a version.
 If needed, do the modifications and commit again.
-Please see :ref:`features/version_control/index:Version Control` for more details.
+Please see :doc:`/features/version_control/index` for more details.
 
 **************
  Read Dataset
@@ -163,7 +163,7 @@ which can be obtained by index.
    :end-before: """"""
 
 In each :ref:`reference/dataset_structure:Data`,
-there is a sequence of :ref:`reference/label_format/Classification:Classification` annotations,
+there is a sequence of :doc:`/reference/label_format/Classification` annotations,
 which can be obtained by index.
 
 .. literalinclude:: ../../../../docs/code/Newsgroups20.py
@@ -174,7 +174,7 @@ which can be obtained by index.
 There is only one label type in "20 Newsgroups" dataset, which is ``Classification``.
 The information stored in :ref:`reference/label_format/CommonLabelProperties:Category` is
 one of the category names in "categories" list of :ref:`catalog.json <Newsgroups20-catalog>`.
-See :ref:`this page <reference/label_format/Classification:Classification>` for more details about the
+See :doc:`this page </reference/label_format/Classification>` for more details about the
 structure of Classification.
    
 ****************

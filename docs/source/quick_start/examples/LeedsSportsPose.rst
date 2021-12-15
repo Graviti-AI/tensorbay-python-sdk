@@ -3,7 +3,7 @@
 ###################
 
 This topic describes how to manage the `Leeds Sports Pose Dataset <https://gas.graviti.cn/dataset/data-decorators/LeedsSportsPose>`_,
-which is a dataset with :ref:`reference/label_format/Keypoints2D:Keypoints2D` label(:numref:`Fig. %s <example-leedssportspose>`).
+which is a dataset with :doc:`/reference/label_format/Keypoints2D` label(:numref:`Fig. %s <example-leedssportspose>`).
 
 .. _example-leedssportspose:
 
@@ -55,7 +55,7 @@ is typically stored in a json file like ``catalog.json``.
    :name: LeedsSportsPose-catalog
    :linenos:
 
-The only annotation type for "Leeds Sports Pose" is :ref:`reference/label_format/Keypoints2D:Keypoints2D`.
+The only annotation type for "Leeds Sports Pose" is :doc:`/reference/label_format/Keypoints2D`.
 
 .. note::
 
@@ -76,7 +76,7 @@ a :class:`~tensorbay.dataset.dataset.Dataset` instance.
    :name: LeedsSportsPose-dataloader
    :linenos:
 
-See :ref:`Keipoints2D annotation <reference/label_format/Keypoints2D:Keypoints2D>` for more details.
+See :doc:`Keipoints2D annotation </reference/label_format/Keypoints2D>` for more details.
 
 
 There are already a number of dataloaders in TensorBay SDK provided by the community.
@@ -101,7 +101,7 @@ Thus, instead of writing, importing an available dataloader is also feasible.
 
 Optionally, the organized dataset can be visualized by **Pharos**, which is a TensorBay SDK plug-in.
 This step can help users to check whether the dataset is correctly organized.
-Please see :ref:`features/visualization:Visualization` for more details.
+Please see :doc:`/features/visualization` for more details.
 
 ****************
  Upload Dataset
@@ -116,7 +116,7 @@ The organized "BSTLD" dataset can be uploaded to TensorBay for sharing, reuse, e
 
 Similar with Git, the commit step after uploading can record changes to the dataset as a version.
 If needed, do the modifications and commit again.
-Please see :ref:`features/version_control/index:Version Control` for more details.
+Please see :doc:`/features/version_control/index` for more details.
 
 **************
  Read Dataset
@@ -146,7 +146,7 @@ which can be obtained by index.
    :end-before: """"""
 
 In each :ref:`reference/dataset_structure:data`,
-there is a sequence of :ref:`reference/label_format/Keypoints2D:Keypoints2D` annotations,
+there is a sequence of :doc:`/reference/label_format/Keypoints2D` annotations,
 which can be obtained by index.
 
 .. literalinclude:: ../../../../docs/code/LeedsSportsPose.py
@@ -156,7 +156,7 @@ which can be obtained by index.
 
 There is only one label type in "Leeds Sports Pose" dataset, which is ``keypoints2d``. The information stored in ``x`` (``y``) is
 the x (y) coordinate of one keypoint of one keypoints list. The information stored in ``v`` is
-the visible status of one keypoint of one keypoints list. See :ref:`reference/label_format/Keypoints2D:Keypoints2D`
+the visible status of one keypoint of one keypoints list. See :doc:`/reference/label_format/Keypoints2D`
 label format for more details.
 
 ****************

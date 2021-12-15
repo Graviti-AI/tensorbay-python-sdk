@@ -5,7 +5,7 @@
 This topic describes how to manage the "CADC" dataset.
 
 "CADC" is a fusion dataset with 8 :ref:`sensors<advanced_features/fusion_dataset/fusion_dataset_structure:sensor>` including 7 :class:`cameras<tensorbay.sensor.sensor.Camera>` and 1 :class:`lidar<tensorbay.sensor.sensor.Lidar>`
-, and has :ref:`reference/label_format/Box3D:Box3D` type of labels on the point cloud data.
+, and has :doc:`/reference/label_format/Box3D` type of labels on the point cloud data.
 (:numref:`Fig. %s <example-cadc>`).
 See `this page <https://gas.graviti.cn/dataset/hello-dataset/CADC>`_ for more details about this dataset.
 
@@ -68,7 +68,7 @@ Write the Catalog
 The first step is to write the :ref:`reference/dataset_structure:Catalog`.
 Catalog is a json file contains all label information of one dataset.
 See :ref:`this page <reference/dataset_structure:Catalog>` for more details.
-The only annotation type for "CADC" is :ref:`reference/label_format/Box3D:Box3D`, and there are 10
+The only annotation type for "CADC" is :doc:`/reference/label_format/Box3D`, and there are 10
 :ref:`reference/label_format/CommonLabelProperties:Category` types and 9 :ref:`reference/label_format/CommonLabelProperties:Attributes` types.
 
 .. literalinclude:: ../../../../tensorbay/opendataset/CADC/catalog.json
@@ -153,8 +153,8 @@ After adding the sensors to the fusion segments, the frames should be added into
 Each frame contains the data corresponding to each sensor, and each data should be added to the frame under the key of sensor name(L147).
 
 In fusion datasets, it is common that not all data have labels.
-In "CADC", only point cloud files(Lidar data) have :ref:`reference/label_format/Box3D:Box3D` type of labels(L145).
-See :ref:`this page <reference/label_format/Box3D:Box3D>` for more details about Box3D annotation details.
+In "CADC", only point cloud files(Lidar data) have :doc:`/reference/label_format/Box3D` type of labels(L145).
+See :doc:`this page </reference/label_format/Box3D>` for more details about Box3D annotation details.
 
 .. note::
    The :ref:`CADC dataloader <cadc-dataloader>` above uses relative import(L16-L19).
@@ -167,7 +167,7 @@ See :ref:`this page <reference/label_format/Box3D:Box3D>` for more details about
 
 Optionally, the organized dataset can be visualized by **Pharos**, which is a TensorBay SDK plug-in.
 This step can help users to check whether the dataset is correctly organized.
-Please see :ref:`features/visualization:Visualization` for more details.
+Please see :doc:`/features/visualization` for more details.
 
 ***********************
  Upload Fusion Dataset
@@ -184,7 +184,7 @@ to TensorBay for sharing, reuse, etc.
 
 Remember to execute the commit step after uploading.
 If needed, you can re-upload and commit again.
-Please see :ref:`this page <features/version_control/index:Version Control>` for more details about version control.
+Please see :doc:`this page </features/version_control/index>` for more details about version control.
 
 .. note::
 
@@ -257,7 +257,7 @@ You can get each data by the corresponding sensor name.
 
 In "CADC", only :ref:`data<advanced_features/fusion_dataset/fusion_dataset_structure:data in fusion dataset>`
 under :class:`~tensorbay.sensor.sensor.Lidar`
-has a sequence of :ref:`reference/label_format/Box3D:Box3D` annotations.
+has a sequence of :doc:`/reference/label_format/Box3D` annotations.
 You can get one by index.
 
 .. literalinclude:: ../../../../docs/code/CADC.py
@@ -271,7 +271,7 @@ one of the category names in "categories" list of :ref:`catalog.json <cadc-catal
 The information stored in :ref:`reference/label_format/CommonLabelProperties:Attributes`
 is some of the attributes in "attributes" list of :ref:`catalog.json <cadc-catalog>`.
 
-See :ref:`this page <reference/label_format/Box3D:Box3D>` for more details about the structure of Box3D.
+See :doc:`this page </reference/label_format/Box3D>` for more details about the structure of Box3D.
 
 ***********************
  Delete Fusion Dataset

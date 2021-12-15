@@ -3,8 +3,8 @@
 ######################
 
 This topic describes how to manage the `VOC2012 Segmentation dataset`_,
-which is a dataset with :ref:`reference/label_format/SemanticMask:SemanticMask`
-and :ref:`reference/label_format/InstanceMask:InstanceMask` labels
+which is a dataset with :doc:`/reference/label_format/SemanticMask`
+and :doc:`/reference/label_format/InstanceMask` labels
 (:numref:`Fig. %s <example-semantic-mask>` and :numref:`Fig. %s <example-instance-mask>`).
 
 .. _VOC2012 Segmentation dataset: https://gas.graviti.cn/dataset/hello-dataset/VOC2012Segmentation
@@ -72,10 +72,10 @@ which is typically stored in a json file like ``catalog.json``.
    :name: voc2012segmentation-catalog
    :linenos:
 
-The annotation types for "VOC2012 Segmentation" are :ref:`reference/label_format/SemanticMask:SemanticMask`
-and :ref:`reference/label_format/InstanceMask:InstanceMask`, and there are 22
-:ref:`reference/label_format/CommonLabelProperties:Category` types for :ref:`reference/label_format/SemanticMask:SemanticMask`. There are 2
-:ref:`reference/label_format/CommonLabelProperties:Category` types for :ref:`reference/label_format/InstanceMask:InstanceMask`, category 0 represents the
+The annotation types for "VOC2012 Segmentation" are :doc:`/reference/label_format/SemanticMask`
+and :doc:`/reference/label_format/InstanceMask`, and there are 22
+:ref:`reference/label_format/CommonLabelProperties:Category` types for :doc:`/reference/label_format/SemanticMask`. There are 2
+:ref:`reference/label_format/CommonLabelProperties:Category` types for :doc:`/reference/label_format/InstanceMask`, category 0 represents the
 background, and category 255 represents the border of instances.
 
 .. note::
@@ -98,8 +98,8 @@ a :class:`~tensorbay.dataset.dataset.Dataset` instance.
    :name: voc2012segmentation-dataloader
    :linenos:
 
-See :ref:`SemanticMask annotation <reference/label_format/SemanticMask:SemanticMask>`
-and :ref:`InstanceMask annotation <reference/label_format/InstanceMask:InstanceMask>` for more details.
+See :doc:`SemanticMask annotation </reference/label_format/SemanticMask>`
+and :doc:`InstanceMask annotation </reference/label_format/InstanceMask>` for more details.
 
 
 There are already a number of dataloaders in TensorBay SDK provided by the community.
@@ -131,7 +131,7 @@ The organized "VOC2012 Segmentation" dataset can be uploaded to tensorBay for sh
 
 Similar with Git, the commit step after uploading can record changes to the dataset as a version.
 If needed, do the modifications and commit again.
-Please see :ref:`features/version_control/index:Version Control` for more details.
+Please see :doc:`/features/version_control/index` for more details.
 
 See the visualization on TensorBay website.
 
@@ -165,7 +165,7 @@ which can be obtained by index.
    :end-before: """"""
 
 In each :ref:`reference/dataset_structure:Data`,
-there are one :ref:`reference/label_format/SemanticMask:SemanticMask` annotation and one :ref:`reference/label_format/InstanceMask:InstanceMask` annotation.
+there are one :doc:`/reference/label_format/SemanticMask` annotation and one :doc:`/reference/label_format/InstanceMask` annotation.
 
 .. literalinclude:: ../../../../docs/code/VOC2012Segmentation.py
    :language: python
@@ -178,7 +178,7 @@ The information stored in :ref:`reference/label_format/SemanticMask:SemanticMask
 attributes for every category in ``categories`` list of ``SEMANTIC_MASK``.
 The information stored in :ref:`reference/label_format/InstanceMask:InstanceMask.all_attributes`
 is attributes for every instance.
-See :ref:`reference/label_format/SemanticMask:SemanticMask` and :ref:`reference/label_format/InstanceMask:InstanceMask` label formats for more details.
+See :doc:`/reference/label_format/SemanticMask` and :doc:`/reference/label_format/InstanceMask` label formats for more details.
 
 ****************
  Delete Dataset
