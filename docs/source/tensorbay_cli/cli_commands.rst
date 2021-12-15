@@ -338,6 +338,12 @@ Show graphical commit logs.
 
    $ gas log --graph tb:<dataset_name>
 
+Show commit and open draft logs.
+
+.. code:: html
+
+   $ gas log --show-drafts tb:<dataset_name>
+
 
 *************
  gas branch

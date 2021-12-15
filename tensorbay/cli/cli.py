@@ -372,6 +372,7 @@ def tag(obj: ContextInfo, tbrn: str, name: str, is_delete: bool, sort: str) -> N
         "",
         "# Show text-based graphical commit logs.",
         "$ gas log --graph tb:<dataset_name>[@<revision>]",
+        "",
         "# Show commit and open draft logs.",
         "$ gas log --show-drafts tb:<dataset_name>[@<revision>]",
         "",
@@ -384,7 +385,7 @@ def tag(obj: ContextInfo, tbrn: str, name: str, is_delete: bool, sort: str) -> N
 @click.option("--oneline", is_flag=True, help="Limit commit message to oneline")
 @click.option("--all", "is_all", is_flag=True, help="Show all the commits of all branches")
 @click.option("--graph", is_flag=True, help="Show text-based graphical commits history")
-@click.option("--show-drafts", is_flag=True, help="Show open drafts")
+@click.option("--show-drafts", is_flag=True, help="Show open drafts along with the commits")
 @click.pass_obj
 def log(  # pylint: disable=too-many-arguments
     obj: ContextInfo,
