@@ -590,7 +590,7 @@ class JobMixin:
         job_type: str,
         arguments: Dict[str, Any],
         description: str = "",
-    ) -> str:
+    ) -> Dict[str, Any]:
         """Create a :class:`Job`.
 
         Arguments:
@@ -599,10 +599,29 @@ class JobMixin:
             arguments: The arguments dict of the specific job.
             description: The Job description.
 
-        Return:
-            The id of the job.
+        Returns:
+            The info of the job.
 
         """
+        post_data: Dict[str, Any] = {"title": title, "jobType": job_type, "arguments": arguments}
+        if description:
+            post_data["description"] = description
+
+        response: Dict[str, Any] = self._client.open_api_do(
+            "POST", "jobs", self._dataset_id, json=post_data
+        ).json()
+
+        response.update(
+            title=title,
+            arguments=arguments,
+            startedAt=None,
+            finishedAt=None,
+            status="QUEUING",
+            errorMessage="",
+            description=description,
+            results=None,
+        )
+        return response
 
     def _get_job(self, job_id: str) -> Dict[str, Any]:
         """Get a :class:`Job`.
