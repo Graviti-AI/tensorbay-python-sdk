@@ -16,7 +16,6 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
     Arguments:
         title: Title of the Job.
         job_id: ID of the Job.
-        job_type: Type of the Job.
         arguments: Arguments of the Job.
         created_at: The time when the Job is created.
         started_at: The time when the Job is started.
@@ -45,10 +44,9 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
 
     title: str = attr()
     job_id: str = attr(key=camel)
-    job_type: str = attr(key=camel)
     arguments: Dict[str, Any] = attr()
     created_at: int = attr(key=camel)
-    started_at: int = attr(key=camel)
+    started_at: Optional[int] = attr(key=camel)
     finished_at: Optional[int] = attr(key=camel)
     status: str = attr()
     error_message: str = attr(key=camel)
@@ -59,10 +57,9 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
         self,
         title: str,
         job_id: str,
-        job_type: str,
         arguments: Dict[str, Any],
         created_at: int,
-        started_at: int,
+        started_at: Optional[int],
         finished_at: Optional[int],
         status: str,
         error_message: str,
@@ -71,7 +68,6 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
     ) -> None:
         self.title = title
         self.job_id = job_id
-        self.job_type = job_type
         self.arguments = arguments
         self.created_at = created_at
         self.started_at = started_at
@@ -94,7 +90,6 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
                 {
                     "title": <str>
                     "jobId": <str>
-                    "jobType": <str>
                     "arguments": <object>
                     "createdAt": <int>
                     "startedAt": <int>
