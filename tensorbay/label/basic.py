@@ -3,14 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""SubcatalogBase.
-
-:class:`Subcatalogbase` is the base class for different types of subcatalogs,
-which defines the basic concept of Subcatalog.
-
-A subcatalog class extends :class:`SubcatalogBase` and needed :class:`SubcatalogMixin` classes.
-
-"""
+"""The basic concept of the TensorBay label."""
 
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
 

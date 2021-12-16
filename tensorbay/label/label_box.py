@@ -3,19 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""LabeledBox2D ,LabeledBox3D, Box2DSubcatalog, Box3DSubcatalog.
-
-:class:`Box2DSubcatalog` defines the subcatalog for 2D box type of labels.
-
-:class:`LabeledBox2D` is the 2D bounding box type of label,
-which is often used for CV tasks such as object detection.
-
-:class:`Box3DSubcatalog` defines the subcatalog for 3D box type of labels.
-
-:class:`LabeledBox3D` is the 3D bounding box type of label,
-which is often used for object detection in 3D point cloud.
-
-"""
+"""The implementation of the TensorBay bounding box label."""
 
 import warnings
 from typing import Any, Dict, Iterable, Mapping, Optional, Type, TypeVar

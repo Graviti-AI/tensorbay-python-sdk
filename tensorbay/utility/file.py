@@ -3,7 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""mixin classes for local file and remote file."""
+"""Basic concepts of local file and remote file."""
 
 import os
 from hashlib import sha1

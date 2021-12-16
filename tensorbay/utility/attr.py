@@ -3,13 +3,8 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""AttrsMixin and Field class.
+"""Basic concepts of the TensorBay attr."""
 
-:class:`AttrsMixin` provides a list of special methods based on field configs.
-
-:class:`Field` is a class describing the attr related fields.
-
-"""
 from sys import version_info
 from typing import (
     Any,

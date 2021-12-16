@@ -3,14 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Classification.
-
-:class:`ClassificationSubcatalog` defines the subcatalog for classification type of labels.
-
-:class:`Classification` defines the concept of classification label,
-which can apply to different types of data, such as images and texts.
-
-"""
+"""The implementation of the TensorBay classification label."""
 
 from typing import Any, Dict, Optional, Type, TypeVar
 

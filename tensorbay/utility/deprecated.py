@@ -3,18 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Deprecated, KwargsDeprecated, DefaultValueDeprecated and Disable.
-
-:class:`Deprecated` is a decorator for deprecated functions.
-
-:class:`KwargsDeprecated` is a decorator for the function which has deprecated keyword arguments.
-
-:class:`DefaultValueDeprecated` is a decorator for the function which has deprecated argument
- default value.
-
-:class:`Disable` is a decorator for the function which is disabled temporarily.
-
-"""
+"""Basic concepts of related deprecated functions."""
 
 import inspect
 import warnings

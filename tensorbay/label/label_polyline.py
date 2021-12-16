@@ -3,14 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""LabeledPolyline2D, Polyline2DSubcatalog.
-
-:class:`Polyline2DSubcatalog` defines the subcatalog for 2D polyline type of labels.
-
-:class:`LabeledPolyline2D` is the 2D polyline type of label,
-which is often used for CV tasks such as lane detection.
-
-"""
+"""The implementation of the TensorBay polyline label."""
 
 from typing import Any, Dict, Iterable, Optional, Type, TypeVar
 

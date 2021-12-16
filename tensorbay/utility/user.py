@@ -3,17 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""UserSequence, UserMutableSequence, UserMapping and UserMutableMapping.
-
-:class:`UserSequence` is a user-defined wrapper around sequence objects.
-
-:class:`UserMutableSequence` is a user-defined wrapper around mutable sequence objects.
-
-:class:`UserMapping` is a user-defined wrapper around mapping objects.
-
-:class:`UserMutableMapping` is a user-defined wrapper around mutable mapping objects.
-
-"""
+"""Basic concepts of user-defined objects."""
 
 from sys import maxsize
 from typing import (

@@ -3,7 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""The request related tools."""
+"""The implementation of request related tools."""
 
 import logging
 import os

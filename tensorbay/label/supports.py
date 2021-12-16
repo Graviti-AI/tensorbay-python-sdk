@@ -3,26 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""CatagoryInfo, MaskCategoryInfo, KeypointsInfo and different SubcatalogMixin classes.
-
-:class:`CatagoryInfo` defines a category with the name and description of it.
-
-:class:`MaskCategoryInfo` defines a category with the name, id and description of it.
-
-:class:`KeypointsInfo` defines the structure of a set of keypoints.
-
-.. table:: mixin classes for subcatalog
-   :widths: auto
-
-   ============================  ===============================================================
-   mixin classes for subcatalog  explaination
-   ============================  ===============================================================
-   :class:`IsTrackingMixin`      a mixin class supporting tracking information of a subcatalog
-   :class:`CategoriesMixin`      a mixin class supporting category information of a subcatalog
-   :class:`AttributesMixin`      a mixin class supporting attribute information of a subcatalog
-   ============================  ===============================================================
-
-"""
+"""Related supports for the TensorBay subcatalog."""
 
 from enum import Enum, auto
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Union
