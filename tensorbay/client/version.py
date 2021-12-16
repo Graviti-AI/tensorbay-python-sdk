@@ -630,10 +630,13 @@ class JobMixin:
         Arguments:
             job_id: The Job id.
 
-        Return:
+        Returns:
             The info of Job.
 
         """
+        return self._client.open_api_do(  # type: ignore[no-any-return]
+            "GET", f"jobs/{job_id}", self._dataset_id
+        ).json()
 
     def _delete_job(self, job_id: str) -> None:
         """Delete a :class:`Job`.
