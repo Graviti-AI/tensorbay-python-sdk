@@ -3,7 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Mask related classes."""
+"""The implementation of the TensorBay mask label."""
 
 from typing import Any, Dict, Optional, Type, TypeVar
 

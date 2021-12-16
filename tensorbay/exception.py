@@ -3,35 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""TensorBay cutoms exceptions.
-
-The class hierarchy for TensorBay custom exceptions is::
-
-     +-- TensorBayException
-         +-- ClientError
-             +-- StatusError
-             +-- DatasetTypeError
-             +-- FrameError
-             +-- ResponseError
-                 +-- AccessDeniedError
-                 +-- ForbiddenError
-                 +-- InvalidParamsError
-                 +-- NameConflictError
-                 +-- RequestParamsMissingError
-                 +-- ResourceNotExistError
-                 +-- InternalServerError
-                 +-- UnauthorizedError
-        +-- UtilityError
-            +-- AttrError
-         +-- TBRNError
-         +-- OpenDatasetError
-             +-- NoFileError
-             +-- FileStructureError
-
-:class:`OperationError` is removed in version v1.13.0.
-Use :class:`StatusError` or :class:`ValueError` instead.
-
-"""
+"""Basic concepts of TensorBay custom exceptions."""
 
 from typing import Dict, Optional, Type, Union
 

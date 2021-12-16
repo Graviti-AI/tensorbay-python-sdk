@@ -3,22 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""CameraMatrix, DistortionCoefficients and CameraIntrinsics.
-
-:class:`CameraMatrix` represents camera matrix. It describes the mapping of
-a pinhole camera model from 3D points in the world to 2D points in an image.
-
-:class:`DistortionCoefficients` represents camera distortion coefficients. It is the deviation
-from rectilinear projection including radial distortion and tangential distortion.
-
-:class:`CameraIntrinsics` represents camera intrinsics including camera matrix and
-distortion coeffecients. It describes the mapping of the scene in front of the camera
-to the pixels in the final image.
-
-:class:`CameraMatrix`, :class:`DistortionCoefficients` and :class:`CameraIntrinsics` class can
-all be initialized by :meth:`__init__()` or :meth:`loads()` method.
-
-"""
+"""Basic concepts of camera intrinsics."""
 
 import math
 from itertools import count

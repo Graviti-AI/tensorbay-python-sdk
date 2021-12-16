@@ -3,14 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""LabeledKeypoints2D, Keypoints2DSubcatalog.
-
-:class:`Keypoints2DSubcatalog` defines the subcatalog for 2D keypoints type of labels.
-
-:class:`LabeledKeypoints2D` is the 2D keypoints type of label,
-which is often used for CV tasks such as human body pose estimation.
-
-"""
+"""The implementation of the TensorBay 2D keypoints label."""
 
 from typing import Any, Dict, Iterable, List, Optional, Type, TypeVar, Union
 

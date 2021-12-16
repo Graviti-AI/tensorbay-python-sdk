@@ -3,16 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""TypeEnum, TypeMixin and TypeRegister.
-
-:class:`TypeEnum` is a superclass for enumeration classes that need to create a mapping with class.
-
-:class:`TypeMixin` is a superclass for the class which needs to link with :class:`TypeEnum`.
-
-:class:`TypeRegister` is a decorator, which is used for registering
-:class:`TypeMixin` to :class:`TypeEnum`.
-
-"""
+"""Basic concepts of enumeration classes."""
 
 from enum import Enum
 from typing import Any, Dict, Generic, Type, TypeVar

@@ -3,14 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""ReprType and ReprMixin.
-
-:class:`ReprType` is an enumeration type, which defines the repr strategy type and includes
-'INSTANCE', 'SEQUENCE', 'MAPPING'.
-
-:class:`ReprMixin` provides customized repr config and method.
-
-"""
+"""The implementation of the TensorBay repr."""
 
 from abc import ABC
 from enum import Enum, auto

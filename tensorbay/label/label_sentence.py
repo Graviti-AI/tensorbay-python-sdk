@@ -3,17 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Word, LabeledSentence, SentenceSubcatalog.
-
-:class:`SentenceSubcatalog` defines the subcatalog for audio transcripted sentence type of labels.
-
-:class:`Word` is a word within a phonetic transcription sentence,
-containing the content of the word, the start and end time in the audio.
-
-:class:`LabeledSentence` is the transcripted sentence type of label.
-which is often used for tasks such as automatic speech recognition.
-
-"""
+"""The implementation of the TensorBay sentence label."""
 
 from typing import Any, Dict, Iterable, List, Optional, Type, TypeVar, Union
 

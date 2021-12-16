@@ -3,34 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Catalog.
-
-:class:`Catalog` is used to describe the types of labels
-contained in a :class:`~tensorbay.dataset.dataset.DatasetBase` and
-all the optional values of the label contents.
-
-A :class:`Catalog` contains one or several :class:`~tensorbay.label.basic.SubcatalogBase`,
-corresponding to different types of labels.
-
-.. table:: subcatalog classes
-   :widths: auto
-
-   ===================================   ==================================================
-   subcatalog classes                    explaination
-   ===================================   ==================================================
-   :class:`.ClassificationSubcatalog`    subcatalog for classification type of label
-   :class:`.Box2DSubcatalog`             subcatalog for 2D bounding box type of label
-   :class:`.Box3DSubcatalog`             subcatalog for 3D bounding box type of label
-   :class:`.Keypoints2DSubcatalog`       subcatalog for 2D keypoints type of label
-   :class:`.PolygonSubcatalog`           subcatalog for polygon type of label
-   :class:`.Polyline2DSubcatalog`        subcatalog for 2D polyline type of label
-   :class:`.MultiPolygonSubcatalog`      subcatalog for multiple polygon type of label
-   :class:`.RLESubcatalog`               subcatalog for rle mask type of label
-   :class:`.MultiPolyline2DSubcatalog`   subcatalog for 2D multiple polyline type of label
-   :class:`.SentenceSubcatalog`          subcatalog for transcripted sentence type of label
-   ===================================   ==================================================
-
-"""
+"""The implementation of the TensorBay catalog."""
 
 from functools import partial
 from typing import Any, Dict, Iterator, Type, TypeVar

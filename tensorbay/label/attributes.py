@@ -3,16 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Items and AttributeInfo.
-
-:class:`AttributeInfo` represents the information of an attribute.
-It refers to the `Json schema`_ method to describe an attribute.
-
-:class:`Items` is the base class of :class:`AttributeInfo`, representing the items of an attribute.
-
-.. _Json schema: https://json-schema.org/
-
-"""
+"""The basic concept of the attribute."""
 
 from enum import Enum
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Union

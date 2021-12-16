@@ -3,16 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""NameMixin, SortedNameList and NameList.
-
-:class:`NameMixin` is a mixin class for instance which has immutable name and mutable description.
-
-:class:`SortedNameList` is a sorted sequence class which contains :class:`NameMixin`.
-It is maintained in sorted order according to the 'name' of :class:`NameMixin`.
-
-:class:`NameList` is a list of named elements, supports searching the element by its name.
-
-"""
+"""Name related tools."""
 
 from bisect import bisect_left, bisect_right
 from typing import Any, Dict, Iterable, List, Tuple, TypeVar, Union, overload

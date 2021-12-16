@@ -3,14 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Common_loads method, EqMixin class.
-
-:meth:`common_loads` is a common method for loading an object from a dict or a list of dict.
-
-:class:`EqMixin` is a mixin class to support __eq__() method,
-which compares all the instance variables.
-
-"""
+"""Common tools."""
 
 from collections import defaultdict
 from functools import wraps
@@ -21,7 +14,6 @@ import numpy as np
 
 _T = TypeVar("_T")
 _CallableWithoutReturnValue = TypeVar("_CallableWithoutReturnValue", bound=Callable[..., None])
-
 
 MatrixType = Union[Sequence[Sequence[float]], np.ndarray]
 

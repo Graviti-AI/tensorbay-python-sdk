@@ -3,14 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""LabeledPolygon, PolygonSubcatalog.
-
-:class:`PolygonSubcatalog` defines the subcatalog for polygon type of labels.
-
-:class:`LabeledPolygon` is the polygon type of label,
-which is often used for CV tasks such as semantic segmentation.
-
-"""
+"""The implementation of the TensorBay polygon label."""
 
 from typing import Any, Dict, Iterable, Optional, Type, TypeVar
 

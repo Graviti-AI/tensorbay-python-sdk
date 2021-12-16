@@ -3,7 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Utility tools about iteration."""
+"""The implementation of iteration tools."""
 
 from itertools import islice
 from typing import Iterable, Iterator, Tuple, TypeVar

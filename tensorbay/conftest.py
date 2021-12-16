@@ -5,7 +5,7 @@
 # type: ignore
 # pylint: disable=redefined-outer-name
 
-"""Pytest fixture config."""
+"""The implementation of the pytest fixture function."""
 
 import sys
 

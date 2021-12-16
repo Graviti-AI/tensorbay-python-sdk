@@ -3,32 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""Label.
-
-A :class:`~.tensorbay.dataset.data.Data` instance contains one or several types of labels,
-all of which are stored in :attr:`~tensorbay.dataset.data.Data.label`.
-
-Different label types correspond to different label classes classes.
-
-.. table:: label classes
-   :widths: auto
-
-   ================================ ===================================
-   label classes                    explaination
-   ================================ ===================================
-   :class:`.Classification`         classification type of label
-   :class:`.LabeledBox2D`           2D bounding box type of label
-   :class:`.LabeledBox3D`           3D bounding box type of label
-   :class:`.LabeledPolygon`         polygon type of label
-   :class:`.LabeledMultiPolygon`    polygon lists type of label
-   :class:`.LabeledRLE`             rle mask type of label
-   :class:`.LabeledPolyline2D`      2D polyline type of label
-   :class:`.LabeledMultiPolyline2D` 2D polyline lists type of label
-   :class:`.LabeledKeypoints2D`     2D keypoints type of label
-   :class:`.LabeledSentence`        transcripted sentence type of label
-   ================================ ===================================
-
-"""
+"""The implementation of the TensorBay label."""
 
 from functools import partial
 from typing import Any, Dict, Iterator, List, Type, TypeVar

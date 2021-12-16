@@ -3,32 +3,7 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
-"""SensorType, Sensor, Lidar, Radar, Camera, FisheyeCamera and Sensors.
-
-:class:`SensorType` is an enumeration type. It includes 'LIDAR', 'RADAR', 'CAMERA' and
-'FISHEYE_CAMERA'.
-
-:class:`Sensor` defines the concept of sensor. It includes name, description, translation
-and rotation.
-
-A :class:`Sensor` class can be initialized by :meth:`Sensor.__init__()` or
-:meth:`Sensor.loads()` method.
-
-:class:`Lidar` defines the concept of lidar. It is a kind of sensor for measuring distances by
-illuminating the target with laser light and measuring the reflection.
-
-:class:`Radar` defines the concept of radar. It is a detection system that uses radio waves to
-determine the range, angle, or velocity of objects.
-
-:class:`Camera` defines the concept of camera. It includes name, description, translation,
-rotation, cameraMatrix and distortionCoefficients.
-
-:class:`FisheyeCamera` defines the concept of fisheye camera. It is an ultra wide-angle lens that
-produces strong visual distortion intended to create a wide panoramic or hemispherical image.
-
-:class:`Sensors` represent all the sensors in a :class:`~tensorbay.dataset.segment.FusionSegment`.
-
-"""
+"""Basic concepts of different kinds of TensorBay sensors."""
 
 import warnings
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Union
