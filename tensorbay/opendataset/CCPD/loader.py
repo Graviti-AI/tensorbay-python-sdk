@@ -242,7 +242,7 @@ def _get_polygons(image_path: str) -> List[LabeledPolygon]:
 def _get_ccpd_image_path(root_path: str, segment_head: str, segment_tail: str) -> Iterator[str]:
     if segment_tail == "base":
         file_path = os.path.join(root_path, "splits", f"{segment_head}.txt")
-        with open(file_path, "r", encoding="utf-8") as fp:
+        with open(file_path, encoding="utf-8") as fp:
             for image_path in fp:
                 yield os.path.join(root_path, image_path.strip())
     else:

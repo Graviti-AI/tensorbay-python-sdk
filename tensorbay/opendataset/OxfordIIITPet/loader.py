@@ -76,7 +76,7 @@ def OxfordIIITPet(path: str) -> Dataset:
 
 
 def _get_box_label(file_path: str) -> List[LabeledBox2D]:
-    with open(file_path, "r", encoding="utf-8") as fp:
+    with open(file_path, encoding="utf-8") as fp:
         labels: Any = xmltodict.parse(fp.read())
 
     objects = labels["annotation"]["object"]

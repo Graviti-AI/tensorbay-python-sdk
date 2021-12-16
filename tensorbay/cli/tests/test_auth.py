@@ -77,12 +77,10 @@ def test_auth(mocker, invoke, context, mock_get_users):
     output_rows = []
     for profile, access_key, url in context.generate_profiles():
         output_rows.append(
-            (
-                f"{profile}\n"
-                f"{INDENT}USER: {user_info['nickname']}\n"
-                f"{INDENT}TEAM: {user_info['team']['name']}\n"
-                f"{INDENT}{access_key}\n"
-            )
+            f"{profile}\n"
+            f"{INDENT}USER: {user_info['nickname']}\n"
+            f"{INDENT}TEAM: {user_info['team']['name']}\n"
+            f"{INDENT}{access_key}\n"
         )
         if url:
             output_rows.append(f"{INDENT}{url}\n\n")

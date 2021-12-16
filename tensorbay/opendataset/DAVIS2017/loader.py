@@ -193,7 +193,7 @@ def DAVIS2017Unsupervised(path: str) -> Dataset:
 
 
 def _generate_segment_name(file_path: str) -> Iterator[str]:
-    with open(file_path, "r", encoding="utf-8") as fp:
+    with open(file_path, encoding="utf-8") as fp:
         for segment_name in fp:
             yield segment_name.strip()
 

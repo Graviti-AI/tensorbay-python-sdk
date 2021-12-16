@@ -75,14 +75,14 @@ def LIP(path: str) -> Dataset:
         segment = dataset.create_segment(segment_name)
         if segment_name == "test":
             image_path = os.path.join(test_path, "testing_images")
-            with open(os.path.join(test_path, "test_id.txt"), "r", encoding="utf-8") as fp:
+            with open(os.path.join(test_path, "test_id.txt"), encoding="utf-8") as fp:
                 for stem in fp:
                     segment.append(Data(os.path.join(image_path, f"{stem.rstrip()}.jpg")))
         else:
             image_path = os.path.join(trainval_image_path, f"{segment_name}_images")
             parsing_path = os.path.join(trainval_parsing_path, f"{segment_name}_segmentations")
             with open(
-                os.path.join(pose_path, f"lip_{segment_name}_set.csv"), "r", encoding="utf-8"
+                os.path.join(pose_path, f"lip_{segment_name}_set.csv"), encoding="utf-8"
             ) as csvfile:
                 for keypoints_info in csv.reader(csvfile):
                     segment.append(_get_data(keypoints_info, image_path, parsing_path))

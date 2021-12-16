@@ -65,7 +65,7 @@ def SCUT_FBP5500(path: str) -> Dataset:
 
     for segment_name in _SEGMENT_NAMES:
         segment = dataset.create_segment(segment_name)
-        with open(os.path.join(segment_path, f"{segment_name}.txt"), "r", encoding="utf-8") as fp:
+        with open(os.path.join(segment_path, f"{segment_name}.txt"), encoding="utf-8") as fp:
             reader = csv.reader(fp, delimiter=" ")
             for filename, beauty_score in reader:
                 if filename == "CM152.jpg":  # This image lacks 2D keypoints.

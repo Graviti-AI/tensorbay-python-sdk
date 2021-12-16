@@ -57,7 +57,7 @@ def HalpeFullBody(path: str) -> Dataset:
     for mode, label_file, image_dir in _SEGMENT_SPLIT:
         segment = dataset.create_segment(mode)
 
-        with open(os.path.join(root_path, label_file), "r", encoding="utf-8") as fp:
+        with open(os.path.join(root_path, label_file), encoding="utf-8") as fp:
             annotations = json.load(fp)
 
         if mode == "train":

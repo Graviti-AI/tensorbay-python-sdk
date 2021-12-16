@@ -67,7 +67,7 @@ def _load_labels(root_path: str, labels_filename: Optional[str]) -> Dict[str, An
         return {"test": None}
 
     label_path = os.path.join(root_path, labels_filename)
-    with open(label_path, "r", encoding="utf-8") as fp:
+    with open(label_path, encoding="utf-8") as fp:
         loaded_data = json.load(fp)
 
     labels = {}

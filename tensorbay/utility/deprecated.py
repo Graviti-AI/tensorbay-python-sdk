@@ -216,10 +216,8 @@ class DefaultValueDeprecated:
         ]
         if self._removed_in:
             messages.append(
-                (
-                    "Its default value is deprecated and "
-                    f'will be removed in version "{self._removed_in}".'
-                )
+                "Its default value is deprecated and "
+                f'will be removed in version "{self._removed_in}".'
             )
 
         message = " ".join(messages)
