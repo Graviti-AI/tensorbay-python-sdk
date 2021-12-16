@@ -306,7 +306,7 @@ def _read_label_file_100k(label_dir: str, segment_name: str) -> Dict[str, Any]:
 
         label_description = _LABEL_TYPE_INFO_100K[label_prefix][0]
         print(f"Reading '{label_description}' labels to segment '{segment_name}'...")
-        with open(label_filename, "r", encoding="utf-8") as fp:
+        with open(label_filename, encoding="utf-8") as fp:
             source_label_contents.append(json.load(fp))
         print(f"Finished reading '{label_description}' labels to segment '{segment_name}'...")
 
@@ -327,7 +327,7 @@ def _read_label_file_100k(label_dir: str, segment_name: str) -> Dict[str, Any]:
 def _read_label_file_10k(label_dir: str, segment_name: str) -> Dict[str, Any]:
     source_label_contents = []
     label_filename = os.path.join(label_dir, "pan_seg", "polygons", f"pan_seg_{segment_name}.json")
-    with open(label_filename, "r", encoding="utf-8") as fp:
+    with open(label_filename, encoding="utf-8") as fp:
         source_label_contents.append(json.load(fp))
 
     print(f"Merging '{segment_name}' labels...")
@@ -404,7 +404,7 @@ def _save_and_get_mask_info(
             json.dump(mask_info, fp)
         Image.fromarray(mask[:, :, -1]).save(mask_path)
     else:
-        with open(mask_info_path, "r", encoding="utf-8") as fp:
+        with open(mask_info_path, encoding="utf-8") as fp:
             mask_info = json.load(
                 fp,
                 object_hook=lambda info: {

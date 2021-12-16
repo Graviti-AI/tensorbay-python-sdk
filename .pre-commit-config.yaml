@@ -27,6 +27,12 @@ repos:
         files: "^examples"
         args: ["--profile=black", "-w 100", "--thirdparty=tensorbay"]
 
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v2.29.1
+    hooks:
+      - id: pyupgrade
+        args: [--py36-plus]
+
   - repo: https://github.com/ambv/black
     rev: 21.9b0
     hooks:

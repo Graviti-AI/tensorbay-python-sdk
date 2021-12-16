@@ -118,9 +118,9 @@ class TestCache:
             (semantic_mask_cache_path, "png"),
             (instance_mask_cache_path, "png"),
         ):
-            assert set(cache_dir.glob(f"*.{extension}")) == set(
+            assert set(cache_dir.glob(f"*.{extension}")) == {
                 cache_dir / f"hello{i}.{extension}" for i in range(_SEGMENT_LENGTH)
-            )
+            }
 
         gas_client.delete_dataset(dataset_name)
 
@@ -158,11 +158,11 @@ class TestCache:
         segment_cache_path = (
             cache_path / dataset_client.dataset_id / dataset_client.status.commit_id / "Segment1"
         )
-        correct_files = set(
+        correct_files = {
             segment_cache_path / f'{sensor_data["name"]}{i}.txt'
             for i in range(_SEGMENT_LENGTH)
             for sensor_data in _SENSORS_DATA
-        )
+        }
         assert set(segment_cache_path.glob("*.txt")) == correct_files
 
         gas_client.delete_dataset(dataset_name)

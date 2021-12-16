@@ -113,7 +113,7 @@ def _get_information(annotation_path: str, segment_name: str) -> Dict[str, Any]:
     task_information: Dict[str, Any] = {}
     for task in ("instances", "person_keypoints", "panoptic"):
         with open(
-            os.path.join(annotation_path, f"{task}_{segment_name}2017.json"), "r", encoding="utf-8"
+            os.path.join(annotation_path, f"{task}_{segment_name}2017.json"), encoding="utf-8"
         ) as fp:
             file_json = json.load(fp)
 

@@ -33,7 +33,7 @@ def get_info_with_token(info_path: str, annotation_part: str) -> Dict[str, Any]:
 
     """
     filepath = os.path.join(info_path, f"{annotation_part}.json")
-    with open(filepath, "r", encoding="utf-8") as fp:
+    with open(filepath, encoding="utf-8") as fp:
         info = json.load(fp)
     return {item.pop("token"): item for item in info}
 
@@ -57,7 +57,7 @@ def get_info_with_determined_token(
 
     """
     filepath = os.path.join(info_path, f"{annotation_part}.json")
-    with open(filepath, "r", encoding="utf-8") as fp:
+    with open(filepath, encoding="utf-8") as fp:
         info = json.load(fp)
     info_with_keys: Dict[str, List[Any]] = {}
     for item in info:

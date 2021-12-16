@@ -192,7 +192,7 @@ def _generate_data(
         instance_subdir = os.path.join(mask_subdir, "instance")
         os.makedirs(semantic_subdir, exist_ok=True)
         os.makedirs(instance_subdir, exist_ok=True)
-    with open(os.path.join(segment_labels_dir, f"{subdir_name}.json"), "r", encoding="utf-8") as fp:
+    with open(os.path.join(segment_labels_dir, f"{subdir_name}.json"), encoding="utf-8") as fp:
         label_contents = json.load(fp)
     for label_content in label_contents:
         label_content_name = label_content["name"]
@@ -299,7 +299,7 @@ def _save_and_get_mask_info(
     else:
         if not os.path.exists(semantic_path):
             Image.fromarray(np.array(Image.open(original_mask_path))[:, :, 0]).save(semantic_path)
-        with open(mask_info_path, "r", encoding="utf-8") as fp:
+        with open(mask_info_path, encoding="utf-8") as fp:
             mask_info = json.load(
                 fp,
                 object_hook=lambda info: {

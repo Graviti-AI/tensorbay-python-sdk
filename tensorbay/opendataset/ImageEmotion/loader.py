@@ -41,7 +41,7 @@ def ImageEmotionAbstract(path: str) -> Dataset:
     segment = dataset.create_segment()
 
     csv_path = os.path.join(root_path, "ABSTRACT_groundTruth.csv")
-    with open(csv_path, "r", encoding="utf-8") as fp:
+    with open(csv_path, encoding="utf-8") as fp:
         reader = csv.DictReader(fp)
         reader.fieldnames = [
             field.strip("'") for field in reader.fieldnames  # type:ignore[union-attr]

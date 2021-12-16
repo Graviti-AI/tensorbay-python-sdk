@@ -59,7 +59,7 @@ def HardHatWorkers(path: str) -> Dataset:
 
 
 def _load_labels(label_file: str) -> List[LabeledBox2D]:
-    with open(label_file, "r", encoding="utf-8") as fp:
+    with open(label_file, encoding="utf-8") as fp:
         labels: Any = xmltodict.parse(fp.read())
 
     objects = labels["annotation"]["object"]

@@ -140,7 +140,7 @@ def _get_annotation_info(info_path: str, is_test: bool = False) -> Dict[str, Any
         "ego_poses": get_info_with_token(info_path, "ego_pose"),
         "sensor": get_info_with_token(info_path, "sensor"),
     }
-    with open(os.path.join(info_path, "scene.json"), "r", encoding="utf-8") as file:
+    with open(os.path.join(info_path, "scene.json"), encoding="utf-8") as file:
         annotation_info["scenes"] = json.load(file)
     if not is_test:
         annotation_info["sample_annotations"] = get_info_with_determined_token(

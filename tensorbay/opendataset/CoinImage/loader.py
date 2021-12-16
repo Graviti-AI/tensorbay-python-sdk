@@ -41,7 +41,7 @@ def CoinImage(path: str) -> Dataset:
     segment = dataset.create_segment()
 
     csv_path = os.path.join(root_path, "classes.csv")
-    with open(csv_path, "r", encoding="utf-8") as fp:
+    with open(csv_path, encoding="utf-8") as fp:
         reader = csv.reader(fp, delimiter=";")
         mapping: Dict[str, str] = dict(row for row in reader)  # type: ignore[arg-type, misc]
 

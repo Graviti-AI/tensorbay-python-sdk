@@ -117,7 +117,7 @@ def _get_path_prefix(annotation_path: str, csv_path: str) -> str:
 
 
 def _get_segment_name(csv_path: str) -> str:
-    with open(csv_path, "r", encoding="utf-8") as fp:
+    with open(csv_path, encoding="utf-8") as fp:
         reader = csv.DictReader(fp, delimiter=";")
         first_filename = next(reader)["Filename"]
         header = first_filename[: first_filename.index("-")].replace("/", "-")
@@ -142,7 +142,7 @@ def _get_classification(path_prefix: str) -> str:
 def _add_labels(segment: Segment, csv_path: str) -> None:
     supercategory = _get_supercategory(csv_path)
 
-    with open(csv_path, "r", encoding="utf-8") as fp:
+    with open(csv_path, encoding="utf-8") as fp:
         reader = csv.DictReader(fp, delimiter=";")
         for row in reader:
             frame_number = int(row["Origin frame number"])

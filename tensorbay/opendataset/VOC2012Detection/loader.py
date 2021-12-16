@@ -79,7 +79,7 @@ def _get_data(stem: str, image_path: str, annotation_path: str) -> Data:
     """
     data = Data(os.path.join(image_path, f"{stem}.jpg"))
     box2d = []
-    with open(os.path.join(annotation_path, f"{stem}.xml"), "r", encoding="utf-8") as fp:
+    with open(os.path.join(annotation_path, f"{stem}.xml"), encoding="utf-8") as fp:
         labels: Any = xmltodict.parse(fp.read())
     objects = labels["annotation"]["object"]
 
