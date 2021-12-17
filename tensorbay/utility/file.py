@@ -161,18 +161,21 @@ class RemoteFileMixin(ReprMixin):
 
     def _urlopen(self) -> UserResponse:
 
-        url = self.get_url()
         if not self.url:
             raise ValueError(f"The file cannot open because {self._repr_head()} has no url")
 
         try:
             session = get_session()
-            return UserResponse(session.request("GET", url, timeout=config.timeout, stream=True))
+            return UserResponse(
+                session.request("GET", self.get_url(), timeout=config.timeout, stream=True)
+            )
         except ResponseError as error:
             if error.response.status_code == 403:
                 self.url.update()
                 return UserResponse(
-                    get_session().request("GET", url, timeout=config.timeout, stream=True)
+                    get_session().request(
+                        "GET", self.get_url(), timeout=config.timeout, stream=True
+                    )
                 )
             raise
 
