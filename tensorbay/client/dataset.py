@@ -5,6 +5,7 @@
 
 """The remote dataset on TensorBay."""
 
+import functools
 import logging
 import os
 import shutil
@@ -24,7 +25,7 @@ from tensorbay.client.requests import multithread_upload
 from tensorbay.client.segment import _STRATEGIES, FusionSegmentClient, SegmentClient
 from tensorbay.client.statistics import Statistics
 from tensorbay.client.status import Status
-from tensorbay.client.version import JobMixin, SquashAndMerge, VersionControlMixin
+from tensorbay.client.version import SquashAndMerge, VersionControlMixin
 from tensorbay.dataset import AuthData, Data, Frame, FusionSegment, Notes, RemoteData, Segment
 from tensorbay.exception import (
     FrameError,
@@ -42,7 +43,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class DatasetClientBase(VersionControlMixin, JobMixin):
+class DatasetClientBase(VersionControlMixin):
     """This class defines the basic concept of the dataset client.
 
     A :class:`DatasetClientBase` contains the information needed for
@@ -216,14 +217,16 @@ class DatasetClientBase(VersionControlMixin, JobMixin):
         """
         return bool(self._cache_path) and not self.status.is_draft
 
-    @property
+    @property  # type: ignore[misc]
+    @functools.lru_cache()
     def squash_and_merges(self) -> SquashAndMerge:
         """Get class :class:`~tensorbay.client.version.SquashAndMerge`.
 
-        Return:
+        Returns:
             Required :class:`~tensorbay.client.version.SquashAndMerge`.
 
         """
+        return SquashAndMerge(self._dataset_id, self._client, self._status)
 
     def enable_cache(self, cache_path: str = "") -> None:
         """Enable cache when open the remote data of the dataset.
