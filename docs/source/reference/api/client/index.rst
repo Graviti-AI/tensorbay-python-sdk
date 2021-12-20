@@ -17,3 +17,4 @@ tensorbay.client
    diff
    profile
    statistics
+   job
