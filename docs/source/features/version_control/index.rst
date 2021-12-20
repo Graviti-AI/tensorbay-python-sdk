@@ -26,3 +26,4 @@ TensorBay supports dataset version control. There can be multiple versions in on
    :caption: Advanced Operations
 
    diff
+   squash_and_merge
