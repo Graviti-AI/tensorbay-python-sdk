@@ -24,6 +24,7 @@ tensorbay.opendataset
    CCPD
    CCPDGreen
    CIHP
+   CityscapesGTCoarse
    CityscapesGTFine
    COCO2017
    COVIDChestXRay

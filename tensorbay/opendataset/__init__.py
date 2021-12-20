@@ -17,7 +17,7 @@ from tensorbay.opendataset.CADC import CADC
 from tensorbay.opendataset.CarConnection import CarConnection
 from tensorbay.opendataset.CCPD import CCPD, CCPDGreen
 from tensorbay.opendataset.CIHP import CIHP
-from tensorbay.opendataset.Cityscapes import CityscapesGTFine
+from tensorbay.opendataset.Cityscapes import CityscapesGTCoarse, CityscapesGTFine
 from tensorbay.opendataset.COCO2017 import COCO2017
 from tensorbay.opendataset.CoinImage import CoinImage
 from tensorbay.opendataset.CompCars import CompCars
@@ -81,6 +81,7 @@ __all__ = [
     "CCPD",
     "CCPDGreen",
     "CIHP",
+    "CityscapesGTCoarse",
     "CityscapesGTFine",
     "COCO2017",
     "CoinImage",
