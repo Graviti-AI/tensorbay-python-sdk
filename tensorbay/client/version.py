@@ -620,7 +620,7 @@ class JobMixin:
             status="QUEUING",
             errorMessage="",
             description=description,
-            results=None,
+            result=None,
         )
         return response
 
@@ -716,13 +716,35 @@ class SquashAndMerge(JobMixin):
                 2. "override": the squashed branch will override the target branch;
                 3. "skip": keep the origin branch.
 
-        Raises:# flake8: noqa: F402
+        Raises:
             StatusError: When squashing and merging without basing on a branch.
 
-        Return:
+        Returns:
             The SquashAndMergeJob.
 
         """
+        if not target_branch_name:
+            target_branch_name = self._status.branch_name
+            if not target_branch_name:
+                raise StatusError(
+                    message="Squash and merge without basing on a branch is not allowed"
+                )
+            self._status.check_authority_for_commit()
+
+        if not title:
+            title = f"{source_branch_name}->{target_branch_name}({strategy})"
+
+        arguments = {
+            "title": draft_title,
+            "sourceBranchName": source_branch_name,
+            "targetBranchName": target_branch_name,
+            "strategy": strategy,
+        }
+        if draft_description:
+            arguments["description"] = draft_description
+
+        job_info = self._create_job(title, "squashAndMerge", arguments, description)
+        return SquashAndMergeJob.loads(job_info)
 
     def get_job(self, job_id: str) -> SquashAndMergeJob:
         """Get a :class:`SquashAndMergeJob`.
