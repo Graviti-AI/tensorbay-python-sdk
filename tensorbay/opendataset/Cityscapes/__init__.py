@@ -4,8 +4,8 @@
 #
 # pylint: disable=invalid-name
 
-"""Dataloader of the CityscapesGTFine dataset."""
+"""Dataloaders of the CityscapesGTCoarse dataset and the CityscapesGTFine dataset."""
 
-from tensorbay.opendataset.Cityscapes.loader import CityscapesGTFine
+from tensorbay.opendataset.Cityscapes.loader import CityscapesGTCoarse, CityscapesGTFine
 
-__all__ = ["CityscapesGTFine"]
+__all__ = ["CityscapesGTCoarse", "CityscapesGTFine"]
