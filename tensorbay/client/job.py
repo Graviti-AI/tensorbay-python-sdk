@@ -20,9 +20,9 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
     """This class defines :class:`Job`.
 
     Arguments:
-        job_updater: The function to update the information of the Job instance.
         client: The :class:`~tensorbay.client.requests.Client`.
         dataset_id: Dataset ID.
+        job_updater: The function to update the information of the Job instance.
         title: Title of the Job.
         job_id: ID of the Job.
         arguments: Arguments of the Job.
@@ -64,9 +64,9 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
 
     def __init__(  # pylint: disable=too-many-arguments
         self,
-        job_updater: Callable[[str], Dict[str, Any]],
         client: Client,
         dataset_id: str,
+        job_updater: Callable[[str], Dict[str, Any]],
         title: str,
         job_id: str,
         arguments: Dict[str, Any],
@@ -78,9 +78,9 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
         result: Optional[Dict[str, Any]],
         description: Optional[str] = "",
     ) -> None:
-        self._job_updater = job_updater
         self._client = client
         self._dataset_id = dataset_id
+        self._job_updater = job_updater
         self.title = title
         self.job_id = job_id
         self.arguments = arguments
@@ -96,30 +96,46 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
         return f'{self.__class__.__name__}("{self.job_id}")'
 
     @classmethod
-    def loads(cls: Type[_T], contents: Dict[str, Any]) -> _T:
-        """Loads a :class:`Job` instance for the given contents.
+    def from_response_body(
+        cls: Type[_T],
+        body: Dict[str, Any],
+        *,
+        client: Client,
+        dataset_id: str,
+        job_updater: Callable[[str], Dict[str, Any]],  # noqa: DAR101
+    ) -> _T:
+        """Loads a :class:`Job` object from a response body.
 
         Arguments:
-            contents: A dict containing the information of the Job::
+            body: The response body which contains the information of a job,
+                whose format should be like::
 
-                {
-                    "title": <str>
-                    "jobId": <str>
-                    "arguments": <object>
-                    "createdAt": <int>
-                    "startedAt": <int>
-                    "finishedAt": <int>
-                    "status": <str>
-                    "errorMessage": <str>
-                    "result": <object>
-                    "description": <str>
-                }
+                    {
+                        "title": <str>
+                        "jobId": <str>
+                        "arguments": <object>
+                        "createdAt": <int>
+                        "startedAt": <int>
+                        "finishedAt": <int>
+                        "status": <str>
+                        "errorMessage": <str>
+                        "result": <object>
+                        "description": <str>
+                    }
+            client: The :class:`~tensorbay.client.requests.Client`.
+            dataset_id: Dataset ID.
+            job_updater: The function to update the information of the Job instance.
 
         Returns:
-            A :class:`Job` instance containing all the information in the given contents.
+            The loaded :class:`Job` object.
 
         """
-        return common_loads(cls, contents)
+        job = common_loads(cls, body)
+        job._client = client
+        job._dataset_id = dataset_id
+        job._job_updater = job_updater
+
+        return job
 
     def update(self, until_complete: bool = False) -> None:
         """Update attrs of the Job instance.
