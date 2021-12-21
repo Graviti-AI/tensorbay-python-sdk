@@ -8,6 +8,7 @@
 from time import sleep
 from typing import Any, Callable, Dict, Optional, Tuple, Type, TypeVar
 
+from tensorbay.client.requests import Client
 from tensorbay.client.struct import Draft
 from tensorbay.utility import AttrsMixin, ReprMixin, ReprType, attr, camel, common_loads
 
@@ -20,6 +21,8 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
 
     Arguments:
         job_updater: The function to update the information of the Job instance.
+        client: The :class:`~tensorbay.client.requests.Client`.
+        dataset_id: Dataset ID.
         title: Title of the Job.
         job_id: ID of the Job.
         arguments: Arguments of the Job.
@@ -62,6 +65,8 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
     def __init__(  # pylint: disable=too-many-arguments
         self,
         job_updater: Callable[[str], Dict[str, Any]],
+        client: Client,
+        dataset_id: str,
         title: str,
         job_id: str,
         arguments: Dict[str, Any],
@@ -74,6 +79,8 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
         description: Optional[str] = "",
     ) -> None:
         self._job_updater = job_updater
+        self._client = client
+        self._dataset_id = dataset_id
         self.title = title
         self.job_id = job_id
         self.arguments = arguments
@@ -135,9 +142,11 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
 
     def abort(self) -> None:
         """Abort a :class:`Job`."""
+        self._client.open_api_do("POST", f"jobs/{self.job_id}/abort", self._dataset_id)
 
     def retry(self) -> None:
         """Retry a :class:`Job`."""
+        self._client.open_api_do("POST", f"jobs/{self.job_id}/retry", self._dataset_id)
 
 
 class SquashAndMergeJob(Job):
