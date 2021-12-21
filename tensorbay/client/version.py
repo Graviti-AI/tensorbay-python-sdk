@@ -643,14 +643,14 @@ class JobMixin:
 
         """
 
-    def _generate_jobs(
+    def _list_jobs(
         self,
         job_type: str,
         status: Optional[str] = None,
         offset: int = 0,
         limit: int = 128,
-    ) -> Generator[Dict[str, Any], None, int]:
-        """Get a generator of :class:`Job`.
+    ) -> Dict[str, Any]:
+        """Get a dict containing the information of :class:`Job` list.
 
         Arguments:
             job_type: Type of the Job.
@@ -659,10 +659,14 @@ class JobMixin:
             offset: The offset of the page.
             limit: The limit of the page.
 
-        Return:
-            The generator of job info.
+        Returns:
+            A dict containing the information of Job list.
 
         """
+        params = {"jobType": job_type, "status": status, "offset": offset, "limit": limit}
+
+        response = self._client.open_api_do("GET", "jobs", self._dataset_id, params=params)
+        return response.json()  # type: ignore[no-any-return]
 
 
 class SquashAndMerge(JobMixin):
