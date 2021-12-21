@@ -5,16 +5,21 @@
 
 """Basic structures of asynchronous jobs."""
 
-from typing import Any, Dict, Optional, Tuple, Type, TypeVar
+from time import sleep
+from typing import Any, Callable, Dict, Optional, Tuple, Type, TypeVar
 
 from tensorbay.client.struct import Draft
 from tensorbay.utility import AttrsMixin, ReprMixin, ReprType, attr, camel, common_loads
+
+_JOB_UPDATE_INTERVAL = 5
+_JOB_NOT_COMPLETE_STATUS = {"QUEUING", "PROCESSING"}
 
 
 class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attributes
     """This class defines :class:`Job`.
 
     Arguments:
+        job_updater: The function to update the information of the Job instance.
         title: Title of the Job.
         job_id: ID of the Job.
         arguments: Arguments of the Job.
@@ -56,6 +61,7 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
 
     def __init__(  # pylint: disable=too-many-arguments
         self,
+        job_updater: Callable[[str], Dict[str, Any]],
         title: str,
         job_id: str,
         arguments: Dict[str, Any],
@@ -67,6 +73,7 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
         result: Optional[Dict[str, Any]],
         description: Optional[str] = "",
     ) -> None:
+        self._job_updater = job_updater
         self.title = title
         self.job_id = job_id
         self.arguments = arguments
@@ -114,6 +121,17 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
             until_complete: Whether to update job information until it is complete.
 
         """
+        job_info = self._job_updater(self.job_id)
+
+        if until_complete:
+            while job_info["status"] in _JOB_NOT_COMPLETE_STATUS:
+                sleep(_JOB_UPDATE_INTERVAL)
+                job_info = self._job_updater(self.job_id)
+
+        self.finished_at = job_info["finishedAt"]
+        self.status = job_info["status"]
+        self.error_message = job_info["errorMessage"]
+        self._result = job_info["results"]
 
     def abort(self) -> None:
         """Abort a :class:`Job`."""
