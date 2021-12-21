@@ -638,15 +638,6 @@ class JobMixin:
             "GET", f"jobs/{job_id}", self._dataset_id
         ).json()
 
-    def _delete_job(self, job_id: str) -> None:
-        """Delete a :class:`Job`.
-
-        Arguments:
-            job_id: The Job id.
-
-        """
-        self._client.open_api_do("DELETE", f"jobs/{job_id}", self._dataset_id)
-
     def _list_jobs(
         self,
         job_type: str,
@@ -671,6 +662,15 @@ class JobMixin:
 
         response = self._client.open_api_do("GET", "jobs", self._dataset_id, params=params)
         return response.json()  # type: ignore[no-any-return]
+
+    def delete_job(self, job_id: str) -> None:
+        """Delete a :class:`Job`.
+
+        Arguments:
+            job_id: The Job id.
+
+        """
+        self._client.open_api_do("DELETE", f"jobs/{job_id}", self._dataset_id)
 
 
 class SquashAndMerge(JobMixin):
@@ -774,13 +774,5 @@ class SquashAndMerge(JobMixin):
 
         Return:
             The PagingList of SquashAndMergeJob.
-
-        """
-
-    def delete_job(self, job_id: str) -> None:
-        """Delete a :class:`SquashAndMergeJob`.
-
-        Arguments:
-            job_id: The SquashAndMergeJob id.
 
         """
