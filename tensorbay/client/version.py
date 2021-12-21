@@ -752,7 +752,11 @@ class SquashAndMerge(JobMixin):
             arguments["description"] = draft_description
 
         job_info = self._create_job(title, "squashAndMerge", arguments, description)
-        return SquashAndMergeJob.loads(job_info)
+        job = SquashAndMergeJob.from_response_body(
+            job_info, dataset_id=self._dataset_id, client=self._client, job_updater=self._get_job
+        )
+
+        return job
 
     def get_job(self, job_id: str) -> SquashAndMergeJob:
         """Get a :class:`SquashAndMergeJob`.
@@ -760,10 +764,16 @@ class SquashAndMerge(JobMixin):
         Arguments:
             job_id: The SquashAndMergeJob id.
 
-        Return:
+        Returns:
             The SquashAndMergeJob.
 
         """
+        job_info = self._get_job(job_id)
+        job = SquashAndMergeJob.from_response_body(
+            job_info, dataset_id=self._dataset_id, client=self._client, job_updater=self._get_job
+        )
+
+        return job
 
     def list_jobs(self, status: Optional[str] = None) -> PagingList[SquashAndMergeJob]:
         """List the SquashAndMergeJob.
