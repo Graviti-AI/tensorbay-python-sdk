@@ -219,7 +219,7 @@ class DatasetClientBase(VersionControlMixin):
 
     @property  # type: ignore[misc]
     @functools.lru_cache()
-    def squash_and_merges(self) -> SquashAndMerge:
+    def squash_and_merge(self) -> SquashAndMerge:
         """Get class :class:`~tensorbay.client.version.SquashAndMerge`.
 
         Returns:
