@@ -166,13 +166,70 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
 
 
 class SquashAndMergeJob(Job):
-    """This class defines :class:`SquashAndMergeJob`."""
+    """This class defines :class:`SquashAndMergeJob`.
+
+    Arguments:
+        client: The :class:`~tensorbay.client.requests.Client`.
+        dataset_id: Dataset ID.
+        job_updater: The function to update the information of the Job instance.
+        draft_getter: The function to get draft by draft_number.
+        title: Title of the Job.
+        job_id: ID of the Job.
+        arguments: Arguments of the Job.
+        created_at: The time when the Job is created.
+        started_at: The time when the Job is started.
+        finished_at: The time when the Job is finished.
+        status: The status of the Job.
+        error_message: The error message of the Job.
+        result: The result of the Job.
+        description: The description of the Job.
+
+    """
+
+    def __init__(  # pylint: disable=too-many-arguments
+        self,
+        client: Client,
+        dataset_id: str,
+        job_updater: Callable[[str], Dict[str, Any]],
+        draft_getter: Callable[[int], Draft],
+        title: str,
+        job_id: str,
+        arguments: Dict[str, Any],
+        created_at: int,
+        started_at: Optional[int],
+        finished_at: Optional[int],
+        status: str,
+        error_message: str,
+        result: Optional[Dict[str, Any]],
+        description: Optional[str] = "",
+    ) -> None:
+        super().__init__(
+            client,
+            dataset_id,
+            job_updater,
+            title,
+            job_id,
+            arguments,
+            created_at,
+            started_at,
+            finished_at,
+            status,
+            error_message,
+            result,
+            description,
+        )
+        self._draft_getter = draft_getter
 
     @property
     def result(self) -> Optional[Draft]:
         """Get the result of the SquashAndMergeJob.
 
-        Return:
+        Returns:
             The draft obtained from SquashAndMergeJob.
 
         """
+        if self._result:
+            draft_number: int = self._result["draftNumber"]
+            return self._draft_getter(draft_number)
+
+        return None
