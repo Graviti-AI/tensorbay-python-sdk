@@ -693,6 +693,20 @@ class SquashAndMerge(JobMixin):
         self._client = client
         self._status = status
 
+    def _generate_jobs(
+        self,
+        status: Optional[str] = None,
+        offset: int = 0,
+        limit: int = 128,
+    ) -> Generator[SquashAndMergeJob, None, int]:
+        response = self._list_jobs("SquashAndMerge", status, offset, limit)
+        for item in response["jobs"]:
+            yield SquashAndMergeJob.from_response_body(
+                item, dataset_id=self._dataset_id, client=self._client, job_updater=self._get_job
+            )
+
+        return response["totalCount"]  # type: ignore[no-any-return]
+
     def create_job(
         self,
         title: str = "",
@@ -782,7 +796,11 @@ class SquashAndMerge(JobMixin):
             status: The SquashAndMergeJob status which includes "QUEUING", "PROCESSING", "SUCCESS",
                     "FAIL", "ABORT" and None. None means all kinds of status.
 
-        Return:
+        Returns:
             The PagingList of SquashAndMergeJob.
 
         """
+        return PagingList(
+            lambda offset, limit: self._generate_jobs(status, offset, limit),
+            128,
+        )
