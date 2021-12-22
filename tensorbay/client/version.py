@@ -309,67 +309,6 @@ class VersionControlMixin:  # pylint: disable=too-many-public-methods
 
         self._close_draft(number)
 
-    def squash_and_merge(
-        self,
-        title: str,
-        description: str = "",
-        *,
-        source_branch_name: str,
-        target_branch_name: Optional[str] = None,
-        strategy: Optional[str] = "abort",
-    ) -> int:
-        """Squash and merge.
-
-        Squash commits in source branch, then merge into target branch by creating a new draft.
-        If the target branch name is not given, the draft will be based on the branch name stored
-        in the dataset client. And during merging, the conflicts between branches can be resolved
-        in three different strategies: "abort", "override" and "skip".
-
-        Arguments:
-            title: The draft title.
-            description: The draft description.
-            source_branch_name: The name of the branch to be squashed.
-            target_branch_name: The target branch name of the merge operation.
-            strategy: The strategy of handling the branch conflict. There are three options:
-
-                1. "abort": abort the opetation;
-                2. "override": the squashed branch will override the target branch;
-                3. "skip": keep the origin branch.
-
-        Raises:
-            StatusError: When squashing and merging without basing on a branch.
-
-        Returns:
-            The draft number of the new draft.
-
-        """
-        if not target_branch_name:
-            target_branch_name = self._status.branch_name
-            if not target_branch_name:
-                raise StatusError(
-                    message="Squash and merge without basing on a branch is not allowed"
-                )
-            self._status.check_authority_for_commit()
-
-        post_data: Dict[str, Any] = {
-            "title": title,
-            "sourceBranchName": source_branch_name,
-            "targetBranchName": target_branch_name,
-            "strategy": strategy,
-        }
-
-        if description:
-            post_data["description"] = description
-
-        response = self._client.open_api_do(
-            "POST", "squashAndMerge", self._dataset_id, json=post_data
-        )
-        draft_number: int = response.json()["draftNumber"]
-
-        self._status.checkout(draft_number=draft_number)
-        self._status.branch_name = target_branch_name
-        return draft_number
-
     def get_commit(self, revision: Optional[str] = None) -> Commit:
         """Get the certain commit with the given revision.
 

@@ -21,26 +21,3 @@ class TestVersionControlMixin:
         alias="",
         is_public=DEFAULT_IS_PUBLIC,
     )
-
-    def test_squash_and_merge(self, mocker):
-        post_data = {
-            "title": "squash_merge-1",
-            "sourceBranchName": "branch-1",
-            "targetBranchName": "branch-2",
-            "strategy": "abort",
-        }
-        response_data = {"draftNumber": 2}
-        open_api_do = mocker.patch(
-            f"{gas.__name__}.Client.open_api_do",
-            return_value=mock_response(data=response_data),
-        )
-        draft_number = self.dataset_client.squash_and_merge(
-            "squash_merge-1",
-            source_branch_name="branch-1",
-            target_branch_name="branch-2",
-            strategy="abort",
-        )
-        open_api_do.assert_called_once_with(
-            "POST", "squashAndMerge", self.dataset_client.dataset_id, json=post_data
-        )
-        assert draft_number == 2
