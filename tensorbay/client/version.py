@@ -622,6 +622,8 @@ class SquashAndMerge(JobMixin):
 
     """
 
+    _JOB_TYPE = "squashAndMerge"
+
     def __init__(
         self,
         dataset_id: str,
@@ -638,7 +640,7 @@ class SquashAndMerge(JobMixin):
         offset: int = 0,
         limit: int = 128,
     ) -> Generator[SquashAndMergeJob, None, int]:
-        response = self._list_jobs("SquashAndMerge", status, offset, limit)
+        response = self._list_jobs(self._JOB_TYPE, status, offset, limit)
         for item in response["jobs"]:
             yield SquashAndMergeJob.from_response_body(
                 item, dataset_id=self._dataset_id, client=self._client, job_updater=self._get_job
@@ -704,7 +706,7 @@ class SquashAndMerge(JobMixin):
         if draft_description:
             arguments["description"] = draft_description
 
-        job_info = self._create_job(title, "squashAndMerge", arguments, description)
+        job_info = self._create_job(title, self._JOB_TYPE, arguments, description)
         job = SquashAndMergeJob.from_response_body(
             job_info, dataset_id=self._dataset_id, client=self._client, job_updater=self._get_job
         )
