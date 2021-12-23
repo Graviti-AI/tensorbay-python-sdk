@@ -53,13 +53,19 @@ Or ``checkout`` to the target_branch first. In this case, the current branch is 
 Get, list or delete
 ===================
 
+The latest SquashAndMergeJob can be obtained by :func:`~tensorbay.client.version.SquashAndMerge.get_job` or :func:`~tensorbay.client.version.SquashAndMerge.list_jobs`.
+The finished SquashAndMergeJob can be deleted by :func:`~tensorbay.client.version.JobMixin.delete_job`.
+
 .. literalinclude:: ../../../../docs/code/squash_and_merge.py
       :language: python
       :start-after: """Get, List and Delete"""
       :end-before: """"""
 
-Get info
-========
+Get information
+===============
+
+Available SquashAndMergeJob information includes ``title``, ``description``, ``job_id``, ``arguments``, ``created_at``, ``started_at``, ``finished_at``,
+``status``, ``error_message`` and ``result``.
 
 .. literalinclude:: ../../../../docs/code/squash_and_merge.py
       :language: python
@@ -72,7 +78,7 @@ Get info
 Update
 ======
 
-The SquashAndMergeJob information can be updated by :func:`~tensorbay.client.job.Job.update`. Note that if the ``until_complete`` is
+The latest information of a SquashAndMergeJob can be obtained after :func:`~tensorbay.client.job.Job.update`. Note that if the ``until_complete`` is
 set to ``True``, the SquashAndMergeJob will be blocked until it is completed.
 
 .. literalinclude:: ../../../../docs/code/squash_and_merge.py
