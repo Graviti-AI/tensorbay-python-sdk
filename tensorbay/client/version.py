@@ -5,7 +5,7 @@
 
 """Related methods of the TensorBay version control."""
 
-from typing import Any, Dict, Generator, Optional, Union
+from typing import Any, Callable, Dict, Generator, Optional, Union
 
 from tensorbay.client.job import SquashAndMergeJob
 from tensorbay.client.lazy import PagingList
@@ -612,9 +612,10 @@ class SquashAndMerge(JobMixin):
     """This class defines :class:`SquashAndMerge`.
 
     Arguments:
-        dataset_id: Dataset ID.
         client: The :class:`~tensorbay.client.requests.Client`.
+        dataset_id: Dataset ID.
         status: The version control status of the dataset.
+        draft_getter: The function to get draft by draft_number.
 
     """
 
@@ -622,13 +623,15 @@ class SquashAndMerge(JobMixin):
 
     def __init__(
         self,
-        dataset_id: str,
         client: Client,
+        dataset_id: str,
         status: Status,
+        draft_getter: Callable[[int], Draft],
     ) -> None:
-        self._dataset_id = dataset_id
         self._client = client
+        self._dataset_id = dataset_id
         self._status = status
+        self._draft_getter = draft_getter
 
     def _generate_jobs(
         self,
@@ -639,7 +642,11 @@ class SquashAndMerge(JobMixin):
         response = self._list_jobs(self._JOB_TYPE, status, offset, limit)
         for item in response["jobs"]:
             yield SquashAndMergeJob.from_response_body(
-                item, dataset_id=self._dataset_id, client=self._client, job_updater=self._get_job
+                item,
+                dataset_id=self._dataset_id,
+                client=self._client,
+                job_updater=self._get_job,
+                draft_getter=self._draft_getter,
             )
 
         return response["totalCount"]  # type: ignore[no-any-return]
@@ -703,11 +710,13 @@ class SquashAndMerge(JobMixin):
             arguments["description"] = draft_description
 
         job_info = self._create_job(title, self._JOB_TYPE, arguments, description)
-        job = SquashAndMergeJob.from_response_body(
-            job_info, dataset_id=self._dataset_id, client=self._client, job_updater=self._get_job
+        return SquashAndMergeJob.from_response_body(
+            job_info,
+            dataset_id=self._dataset_id,
+            client=self._client,
+            job_updater=self._get_job,
+            draft_getter=self._draft_getter,
         )
-
-        return job
 
     def get_job(self, job_id: str) -> SquashAndMergeJob:
         """Get a :class:`SquashAndMergeJob`.
@@ -720,11 +729,13 @@ class SquashAndMerge(JobMixin):
 
         """
         job_info = self._get_job(job_id)
-        job = SquashAndMergeJob.from_response_body(
-            job_info, dataset_id=self._dataset_id, client=self._client, job_updater=self._get_job
+        return SquashAndMergeJob.from_response_body(
+            job_info,
+            dataset_id=self._dataset_id,
+            client=self._client,
+            job_updater=self._get_job,
+            draft_getter=self._draft_getter,
         )
-
-        return job
 
     def list_jobs(self, status: Optional[str] = None) -> PagingList[SquashAndMergeJob]:
         """List the SquashAndMergeJob.
