@@ -55,11 +55,11 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
     job_id: str = attr(key=camel)
     arguments: Dict[str, Any] = attr()
     created_at: int = attr(key=camel)
-    started_at: Optional[int] = attr(key=camel)
-    finished_at: Optional[int] = attr(key=camel)
+    started_at: Optional[int] = attr(key=camel, default=None)
+    finished_at: Optional[int] = attr(key=camel, default=None)
     status: str = attr()
-    error_message: str = attr(key=camel)
-    _result: Optional[Dict[str, Any]] = attr(key="result")
+    error_message: str = attr(key=camel, default="")
+    _result: Optional[Dict[str, Any]] = attr(key="result", default=None)
     description: Optional[str] = attr(default="")
 
     def __init__(  # pylint: disable=too-many-arguments
