@@ -226,7 +226,7 @@ class DatasetClientBase(VersionControlMixin):
             Required :class:`~tensorbay.client.version.SquashAndMerge`.
 
         """
-        return SquashAndMerge(self._dataset_id, self._client, self._status)
+        return SquashAndMerge(self._client, self._dataset_id, self._status, self.get_draft)
 
     def enable_cache(self, cache_path: str = "") -> None:
         """Enable cache when open the remote data of the dataset.
