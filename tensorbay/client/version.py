@@ -554,12 +554,8 @@ class JobMixin:
         response.update(
             title=title,
             arguments=arguments,
-            startedAt=None,
-            finishedAt=None,
             status="QUEUING",
-            errorMessage="",
             description=description,
-            result=None,
         )
         return response
 
