@@ -186,6 +186,8 @@ class SquashAndMergeJob(Job):
 
     """
 
+    _T = TypeVar("_T", bound="SquashAndMergeJob")
+
     def __init__(  # pylint: disable=too-many-arguments
         self,
         client: Client,
@@ -233,3 +235,47 @@ class SquashAndMergeJob(Job):
             return self._draft_getter(draft_number)
 
         return None
+
+    @classmethod
+    def from_response_body(  # type: ignore[override]  # pylint: disable=arguments-differ
+        cls: Type[_T],
+        body: Dict[str, Any],
+        *,
+        client: Client,
+        dataset_id: str,
+        job_updater: Callable[[str], Dict[str, Any]],  # noqa: DAR101
+        draft_getter: Callable[[int], Draft],
+    ) -> _T:
+        """Loads a :class:`SquashAndMergeJob` object from a response body.
+
+        Arguments:
+            body: The response body which contains the information of a SquashAndMergeJob,
+                whose format should be like::
+
+                    {
+                        "title": <str>
+                        "jobId": <str>
+                        "arguments": <object>
+                        "createdAt": <int>
+                        "startedAt": <int>
+                        "finishedAt": <int>
+                        "status": <str>
+                        "errorMessage": <str>
+                        "result": <object>
+                        "description": <str>
+                    }
+            client: The :class:`~tensorbay.client.requests.Client`.
+            dataset_id: Dataset ID.
+            job_updater: The function to update the information of the SquashAndMergeJob instance.
+            draft_getter: The function to get draft by draft_number.
+
+        Returns:
+            The loaded :class:`SquashAndMergeJob` object.
+
+        """
+        job = super().from_response_body(
+            body, client=client, dataset_id=dataset_id, job_updater=job_updater
+        )
+        job._draft_getter = draft_getter  # pylint: disable=protected-access
+
+        return job
