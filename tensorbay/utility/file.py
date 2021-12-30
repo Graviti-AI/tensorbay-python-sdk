@@ -14,7 +14,6 @@ from urllib.request import pathname2url
 from _io import BufferedReader
 
 from tensorbay.exception import ResponseError
-from tensorbay.utility.common import ProcessLocked
 from tensorbay.utility.repr import ReprMixin
 from tensorbay.utility.requests import UserResponse, config, get_session
 
@@ -180,11 +179,10 @@ class RemoteFileMixin(ReprMixin):
                 )
             raise
 
-    @ProcessLocked("cache_path")
     def _write_cache(self, cache_path: str) -> None:
         dirname = os.path.dirname(cache_path)
         os.makedirs(dirname, exist_ok=True)
-        temp_path = f"{cache_path}.tensorbay.downloading"
+        temp_path = f"{cache_path}.tensorbay.downloading.{os.getpid()}"
         with self._urlopen() as fp:
             with open(temp_path, "wb") as cache:
                 cache.write(fp.read())

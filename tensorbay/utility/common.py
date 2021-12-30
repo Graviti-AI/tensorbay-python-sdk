@@ -7,11 +7,9 @@
 
 
 from collections import defaultdict
-from contextlib import contextmanager
 from functools import wraps
-from multiprocessing import Manager
 from threading import Lock
-from typing import Any, Callable, DefaultDict, Dict, Iterator, Sequence, Type, TypeVar, Union
+from typing import Any, Callable, DefaultDict, Sequence, Type, TypeVar, Union
 
 import numpy as np
 
@@ -51,16 +49,7 @@ class EqMixin:
         return self.__dict__ == other.__dict__
 
 
-@contextmanager
-def _acquire(lock: Lock) -> Iterator[bool]:
-    acquire = lock.acquire(blocking=False)
-    yield acquire
-    if not acquire:
-        lock.acquire()
-    lock.release()
-
-
-thread_locks: DefaultDict[int, Lock] = defaultdict(Lock)
+locks: DefaultDict[int, Lock] = defaultdict(Lock)
 
 
 def locked(func: _CallableWithoutReturnValue) -> _CallableWithoutReturnValue:
@@ -77,52 +66,15 @@ def locked(func: _CallableWithoutReturnValue) -> _CallableWithoutReturnValue:
     @wraps(func)
     def wrapper(self: Any, *arg: Any, **kwargs: Any) -> None:
         key = id(self)
-        lock = thread_locks[key]
-        with _acquire(lock) as success:
-            if success:
+        lock = locks[key]
+        acquire = lock.acquire(blocking=False)
+        try:
+            if acquire:
                 func(self, *arg, **kwargs)
-                del thread_locks[key]
+                del locks[key]
+            else:
+                lock.acquire()
+        finally:
+            lock.release()
 
     return wrapper  # type: ignore[return-value]
-
-
-class ProcessLocked:  # pylint: disable=too-few-public-methods
-    """A decorator to add lock for methods called from different processes.
-
-    Arguments:
-        attr_name: The name of the attr to be taken as the key of the lock.
-
-    """
-
-    _manager = Manager()
-
-    process_locks: Dict[str, Lock] = _manager.dict()
-
-    def __init__(self, attr_name: str) -> None:
-        self._attr_name = attr_name
-
-    def __call__(self, func: _CallableWithoutReturnValue) -> _CallableWithoutReturnValue:
-        """Return the locked function.
-
-        Arguments:
-            func: The function to add lock.
-
-        Returns:
-            The locked function.
-
-        """
-
-        @wraps(func)
-        def wrapper(func_self: Any, *arg: Any, **kwargs: Any) -> None:
-            key = getattr(func_self, self._attr_name)
-            # https://github.com/PyCQA/pylint/issues/3313
-            lock = self.process_locks.setdefault(
-                key, self._manager.Lock()  # pylint: disable=no-member
-            )
-
-            with _acquire(lock) as success:
-                if success:
-                    func(func_self, *arg, **kwargs)
-                    del self.process_locks[key]
-
-        return wrapper  # type: ignore[return-value]
