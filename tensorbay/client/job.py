@@ -151,6 +151,7 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
                 sleep(_JOB_UPDATE_INTERVAL)
                 job_info = self._job_updater(self.job_id)
 
+        self.started_at = job_info.get("startedAt")
         self.finished_at = job_info.get("finishedAt")
         self.status = job_info["status"]
         self.error_message = job_info["errorMessage"]
