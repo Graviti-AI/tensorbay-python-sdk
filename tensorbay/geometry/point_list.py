@@ -32,7 +32,7 @@ class PointList2D(UserMutableSequence[_T]):
         self,
         points: Optional[Iterable[Iterable[float]]] = None,
     ) -> None:
-        self._data = [self._ElementType(*point) for point in points] if points else []
+        self._data = [self._ElementType(*point) for point in points] if points is not None else []
 
     def _loads(self, contents: Sequence[Mapping[str, float]]) -> None:
         self._data = []
@@ -114,7 +114,9 @@ class MultiPointList2D(UserMutableSequence[_L]):
 
     def __init__(self, point_lists: Optional[Iterable[Iterable[Iterable[float]]]] = None) -> None:
         self._data = (
-            [self._ElementType(point_list) for point_list in point_lists] if point_lists else []
+            [self._ElementType(point_list) for point_list in point_lists]
+            if point_lists is not None
+            else []
         )
 
     def _loads(self, contents: Sequence[Sequence[Mapping[str, float]]]) -> None:
