@@ -5,4 +5,4 @@
 
 """Graviti python SDK version info."""
 
-__version__ = "1.20.0.dev"
+__version__ = "1.20.0rc1"
