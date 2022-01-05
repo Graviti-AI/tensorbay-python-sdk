@@ -168,8 +168,8 @@ class RLE(UserMutableSequence[int]):
 
     _data: List[int]
 
-    def __init__(self, rle: Optional[Iterable[int]]):
-        self._data = list(rle) if rle else []
+    def __init__(self, rle: Optional[Iterable[int]] = None):
+        self._data = list(rle) if rle is not None else []
 
     def _dumps(self) -> List[int]:
         return self._data

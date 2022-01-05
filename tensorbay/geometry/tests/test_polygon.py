@@ -3,6 +3,8 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
+import numpy as np
+
 from tensorbay.geometry.box import Box2D
 from tensorbay.geometry.polygon import RLE, MultiPolygon, Polygon
 from tensorbay.geometry.vector import Vector2D
@@ -19,7 +21,9 @@ class TestPolygon:
     def test_init(self):
         sequence = [[1, 2], [2, 3], [2, 2]]
         assert Polygon(None) == Polygon([])
-        assert Polygon(sequence) == Polygon([Vector2D(1, 2), Vector2D(2, 3), Vector2D(2, 2)])
+        result = Polygon([Vector2D(1, 2), Vector2D(2, 3), Vector2D(2, 2)])
+        assert Polygon(sequence) == result
+        assert Polygon(np.array(sequence)) == result
 
     def test_eq(self):
         polygon_1 = Polygon([[1, 2], [2, 3], [2, 2]])
@@ -50,9 +54,9 @@ class TestMultiPolygon:
         assert MultiPolygon(None) == MultiPolygon([])
         polygon1 = Polygon([[1.0, 4.0], [2.0, 3.7], [7.0, 4.0]])
         polygon2 = Polygon([[5.0, 7.0], [6.0, 7.0], [9.0, 8.0]])
-        assert MultiPolygon(
-            [[[1.0, 4.0], [2.0, 3.7], [7.0, 4.0]], [[5.0, 7.0], [6.0, 7.0], [9.0, 8.0]]]
-        ) == MultiPolygon([polygon1, polygon2])
+        sequence = [[[1.0, 4.0], [2.0, 3.7], [7.0, 4.0]], [[5.0, 7.0], [6.0, 7.0], [9.0, 8.0]]]
+        assert MultiPolygon(sequence) == MultiPolygon([polygon1, polygon2])
+        assert MultiPolygon(np.array(sequence)) == MultiPolygon([polygon1, polygon2])
 
     def test_loads(self):
         multipolygon = MultiPolygon.loads(_DATA_MULTIPOLYGON)
@@ -70,7 +74,10 @@ class TestMultiPolygon:
 
 class TestRLE:
     def test_init(self):
-        assert RLE([272, 2, 4, 4, 2, 9])._data == [272, 2, 4, 4, 2, 9]
+        value = [272, 2, 4, 4, 2, 9]
+        assert RLE(value)._data == value
+        assert RLE(np.array(value))._data == value
+        assert RLE()._data == []
 
     def test_loads(self):
         rle = RLE.loads(_DATA_RLE)

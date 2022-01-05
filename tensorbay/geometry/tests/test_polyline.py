@@ -5,6 +5,8 @@
 
 from math import isclose
 
+import numpy as np
+
 from tensorbay.geometry import Box2D, MultiPolyline2D, Polyline2D, Vector2D
 
 _POLYLINE_SEQUENCE_1 = [[1, 1], [2, 2], [4, 4], [5, 5]]
@@ -65,7 +67,9 @@ class TestPolyline2D:
     def test_init(self):
         sequence = [[1, 1], [1, 2], [2, 2]]
         assert Polyline2D() == Polyline2D([])
-        assert Polyline2D(sequence) == Polyline2D([Vector2D(1, 1), Vector2D(1, 2), Vector2D(2, 2)])
+        result = Polyline2D([Vector2D(1, 1), Vector2D(1, 2), Vector2D(2, 2)])
+        assert Polyline2D(sequence) == result
+        assert Polyline2D(np.array(sequence)) == result
 
     def test_eq(self):
         polyline_1 = Polyline2D([[1, 2], [2, 3], [2, 2]])
@@ -118,12 +122,15 @@ class TestPolyline2D:
 class TestMultiPolyline2D:
     def test_init(self):
         assert MultiPolyline2D() == MultiPolyline2D([])
-        assert MultiPolyline2D(_MULTI_POLYLINE_SEQUENCE) == MultiPolyline2D(
+
+        result = MultiPolyline2D(
             [
                 [Vector2D(1, 1), Vector2D(2, 2), Vector2D(4, 4), Vector2D(5, 5)],
                 [Vector2D(2, 1), Vector2D(4, 3), Vector2D(6, 5)],
             ]
         )
+        assert MultiPolyline2D(_MULTI_POLYLINE_SEQUENCE) == result
+        assert MultiPolyline2D(np.array(_MULTI_POLYLINE_SEQUENCE)) == result
 
     def test_loads(self):
         assert MultiPolyline2D.loads(_MULTI_POLYLINE_CONTENT) == _MULTI_POLYLINE

@@ -3,6 +3,8 @@
 # Copyright 2021 Graviti. Licensed under MIT License.
 #
 
+import numpy as np
+
 from tensorbay.geometry import Box2D, Keypoint2D, Keypoints2D, Vector2D
 
 _DATA_KEYPOINT = {"x": 1.0, "y": 1.0, "v": 1}
@@ -34,7 +36,9 @@ class TestKeypoints2D:
     def test_init(self):
         sequence = [[1, 2], [2, 3]]
         assert Keypoints2D(None) == Keypoints2D([])
-        assert Keypoints2D(sequence) == Keypoints2D([Keypoint2D(1, 2), Keypoint2D(2, 3)])
+        result = Keypoints2D([Keypoint2D(1, 2), Keypoint2D(2, 3)])
+        assert Keypoints2D(sequence) == result
+        assert Keypoints2D(np.array(sequence)) == result
 
     def test_eq(self):
         keypoints_1 = Keypoints2D([[1, 2], [2, 3]])
