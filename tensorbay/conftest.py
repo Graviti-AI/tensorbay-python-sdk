@@ -438,3 +438,102 @@ def mock_get_users(mocker, is_valid):
         mock.side_effect = UnauthorizedError()
 
     return mock, response_data
+
+
+@function_fixture
+def mock_create_job(mocker):
+    """Mock the createJob OpenAPI.
+
+    Arguments:
+        mocker: The mocker fixture.
+
+    Returns:
+        The patched mocker and response data.
+
+    """
+    response_data = {"jobId": "123", "createdAt": 1}
+    return (
+        mocker.patch(
+            f"{gas.__name__}.Client.open_api_do",
+            return_value=mock_response(data=response_data),
+        ),
+        response_data,
+    )
+
+
+@function_fixture
+def mock_get_job(mocker):
+    """Mock the getJob OpenAPI.
+
+    Arguments:
+        mocker: The mocker fixture.
+
+    Returns:
+        The patched mocker and response data.
+
+    """
+    response_data = {
+        "title": "test->main(abort)",
+        "jobId": "123",
+        "jobType": "squashAndMerge",
+        "arguments": {"title": "draft-1"},
+        "createdAt": 1,
+        "status": "QUEUING",
+        "errorMessage": "",
+        "description": "12",
+    }
+
+    return (
+        mocker.patch(
+            f"{gas.__name__}.Client.open_api_do",
+            return_value=mock_response(data=response_data),
+        ),
+        response_data,
+    )
+
+
+@function_fixture
+def mock_list_jobs(mocker):
+    """Mock the listJobs OpenAPI.
+
+    Arguments:
+        mocker: The mocker fixture.
+
+    Returns:
+        The patched mocker and response data.
+
+    """
+    response_data = {
+        "jobs": [
+            {
+                "title": "test->main(abort)",
+                "jobId": "123",
+                "jobType": "squashAndMerge",
+                "arguments": {"title": "draft-1"},
+                "createdAt": 1,
+                "status": "QUEUING",
+                "errorMessage": "",
+                "description": "12",
+            },
+            {
+                "title": "test->main(abort)",
+                "jobId": "234",
+                "jobType": "squashAndMerge",
+                "arguments": {"title": "draft-1"},
+                "createdAt": 1,
+                "status": "QUEUING",
+                "errorMessage": "",
+                "description": "12",
+            },
+        ],
+        "offset": 0,
+        "recordSize": 2,
+        "totalCount": 2,
+    }
+    return (
+        mocker.patch(
+            f"{gas.__name__}.Client.open_api_do",
+            return_value=mock_response(data=response_data),
+        ),
+        response_data,
+    )
