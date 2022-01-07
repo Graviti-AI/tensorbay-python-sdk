@@ -56,24 +56,27 @@ Here are some catalog examples of datasets with different label types and a data
 
 .. _catalogs_table:
 
-.. table:: Catalogs
-   :align: center
+.. list-table:: Catalogs
    :widths: auto
+   :header-rows: 1
 
-   =============================  ============================================================================================
-    Catalogs                       Description
-   =============================  ============================================================================================
-   `elpv Catalog`_                | This example is the catalog of `elpv Dataset`_,
-                                  | which is a dataset with :doc:`/reference/label_format/Classification` label.
-   `BSTLD Catalog`_               | This example is the catalog of `BSTLD Dataset`_,
-                                  | which is a dataset with :doc:`/reference/label_format/Box2D` label.
-   `Neolix OD Catalog`_           | This example is the catalog of `Neolix OD Dataset`_,
-                                  | which is a dataset with :doc:`/reference/label_format/Box3D` label.
-   `Leeds Sports Pose Catalog`_   | This example is the catalog of `Leeds Sports Pose Dataset`_,
-                                  | which is a dataset with :doc:`/reference/label_format/Keypoints2D` label.
-   `NightOwls Catalog`_           | This example is the catalog of `NightOwls Dataset`_,
-                                  | which is a dataset with tracking :doc:`/reference/label_format/Box2D` label.
-   =============================  ============================================================================================
+   * - Catalogs
+     - Description
+   * - `elpv Catalog`_
+     - | This example is the catalog of `elpv Dataset`_,
+       | which is a dataset with :doc:`/reference/label_format/Classification` label.
+   * - `BSTLD Catalog`_
+     - | This example is the catalog of `BSTLD Dataset`_,
+       | which is a dataset with :doc:`/reference/label_format/Box2D` label.
+   * - `Neolix OD Catalog`_
+     - | This example is the catalog of `Neolix OD Dataset`_,
+       | which is a dataset with :doc:`/reference/label_format/Box3D` label.
+   * - `Leeds Sports Pose Catalog`_
+     - | This example is the catalog of `Leeds Sports Pose Dataset`_,
+       | which is a dataset with :doc:`/reference/label_format/Keypoints2D` label.
+   * - `NightOwls Catalog`_
+     - | This example is the catalog of `NightOwls Dataset`_,
+       | which is a dataset with tracking :doc:`/reference/label_format/Box2D` label.
 
 .. _elpv Catalog: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/Elpv/catalog.json
 .. _elpv Dataset: https://gas.graviti.cn/dataset/data-decorators/Elpv
