@@ -108,6 +108,7 @@
                 "name": "cycle_rider",
                 "enum": ["with_rider", "without_rider"],
                 "parentCategories": [
+                    "human.pedestrian.personal_mobility",
                     "static_object.bicycle_rack",
                     "vehicle.bicycle",
                     "vehicle.motorcycle"
@@ -118,6 +119,7 @@
                 "name": "pedestrian_motion",
                 "enum": ["moving", "sitting_lying_down", "standing"],
                 "parentCategories": [
+                    "animal",
                     "human.pedestrian.adult",
                     "human.pedestrian.child",
                     "human.pedestrian.construction_worker",
@@ -149,11 +151,18 @@
             {
                 "name": "vehicle_light.emergency",
                 "enum": ["flashing", "not_flashing"],
+                "parentCategories": [
+                    "vehicle.car",
+                    "vehicle.emergency.ambulance",
+                    "vehicle.emergency.police",
+                    "vehicle.truck"
+                ],
                 "description": "Whether the emergency light of vehicle is lighting."
             },
             {
                 "name": "vertical_position",
                 "enum": ["off_ground", "on_ground"],
+                "parentCategories": ["human.pedestrian.adult", "animal"],
                 "description": "Whether the object is on the ground plane."
             }
         ]
@@ -267,6 +276,7 @@
                 "name": "cycle_rider",
                 "enum": ["with_rider", "without_rider"],
                 "parentCategories": [
+                    "human.pedestrian.personal_mobility",
                     "static_object.bicycle_rack",
                     "vehicle.bicycle",
                     "vehicle.motorcycle"
@@ -277,6 +287,7 @@
                 "name": "pedestrian_motion",
                 "enum": ["moving", "sitting_lying_down", "standing"],
                 "parentCategories": [
+                    "animal",
                     "human.pedestrian.adult",
                     "human.pedestrian.child",
                     "human.pedestrian.construction_worker",
@@ -308,11 +319,18 @@
             {
                 "name": "vehicle_light.emergency",
                 "enum": ["flashing", "not_flashing"],
+                "parentCategories": [
+                    "vehicle.car",
+                    "vehicle.emergency.ambulance",
+                    "vehicle.emergency.police",
+                    "vehicle.truck"
+                ],
                 "description": "Whether the emergency light of vehicle is lighting."
             },
             {
                 "name": "vertical_position",
                 "enum": ["off_ground", "on_ground"],
+                "parentCategories": ["human.pedestrian.adult", "animal"],
                 "description": "Whether the object is on the ground plane."
             }
         ]
