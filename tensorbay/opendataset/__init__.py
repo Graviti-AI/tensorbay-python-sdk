@@ -34,6 +34,7 @@ from tensorbay.opendataset.FSDD import FSDD
 from tensorbay.opendataset.HalpeFullBody import HalpeFullBody
 from tensorbay.opendataset.HardHatWorkers import HardHatWorkers
 from tensorbay.opendataset.HeadPoseImage import HeadPoseImage
+from tensorbay.opendataset.HKD import HKD
 from tensorbay.opendataset.ImageEmotion import ImageEmotionAbstract, ImageEmotionArtphoto
 from tensorbay.opendataset.JHU_CROWD import JHU_CROWD
 from tensorbay.opendataset.KenyanFood import KenyanFoodOrNonfood, KenyanFoodType
@@ -104,6 +105,7 @@ __all__ = [
     "Flower17",
     "HardHatWorkers",
     "HeadPoseImage",
+    "HKD",
     "ImageEmotionAbstract",
     "ImageEmotionArtphoto",
     "JHU_CROWD",

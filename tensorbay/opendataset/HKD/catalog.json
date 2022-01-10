@@ -1,0 +1,18 @@
+{
+    "KEYPOINTS2D": {
+        "keypoints": [
+            {
+                "number": 7,
+                "names": [
+                    "translated centroid of right hand",
+                    "right wrist",
+                    "right thumb",
+                    "right index finger",
+                    "right middle finger",
+                    "right ring finger",
+                    "right little finger"
+                ]
+            }
+        ]
+    }
+}

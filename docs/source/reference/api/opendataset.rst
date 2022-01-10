@@ -44,6 +44,7 @@ tensorbay.opendataset
    HalpeFullBody
    HardHatWorkers
    HeadPoseImage
+   HKD
    ImageEmotionAbstract
    ImageEmotionArtphoto
    JHU_CROWD
