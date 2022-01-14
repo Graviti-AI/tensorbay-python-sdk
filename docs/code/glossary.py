@@ -28,7 +28,7 @@ def DatasetName(path: str) -> Dataset:
         The loaded 'Dataset' object.
 
     """
-    dataset = Dataset("<Dataset Name>")
+    dataset = Dataset("<DATASET_NAME>")
     ...  # organize the files( and the labels) under the path to the dataset
     return dataset
 

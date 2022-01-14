@@ -46,18 +46,18 @@ To create a :class:`~tensorbay.label.label_box.LabeledBox3D` label:
     ... size=[10, 20, 30],
     ... translation=[0, 0, 0],
     ... rotation=[1, 0, 0, 0],
-    ... category="category",
-    ... attributes={"attribute_name": "attribute_value"},
-    ... instance="instance_ID"
+    ... category="<LABEL_CATEGORY>",
+    ... attributes={"<LABEL_ATTRIBUTE_NAME>": "<LABEL_ATTRIBUTE_VALUE>"},
+    ... instance="<LABEL_INSTANCE_ID>"
     ... )
     >>> box3d_label
     LabeledBox3D(
       (size): Vector3D(10, 20, 30),
       (translation): Vector3D(0, 0, 0),
       (rotation): quaternion(1.0, 0.0, 0.0, 0.0),
-      (category): 'category',
+      (category): '<LABEL_CATEGORY>',
       (attributes): {...},
-      (instance): 'instance_ID'
+      (instance): '<LABEL_INSTANCE_ID>'
     )
 
 Box3D.box3d
@@ -189,7 +189,7 @@ The catalog with only Box3D subcatalog is typically stored in a json file as fol
 To add a :class:`~tensorbay.label.label_box.LabeledBox3D` label to one data:
 
     >>> from tensorbay.dataset import Data
-    >>> data = Data("local_path")
+    >>> data = Data("<DATA_LOCAL_PATH>")
     >>> data.label.box3d = []
     >>> data.label.box3d.append(box3d_label)
 

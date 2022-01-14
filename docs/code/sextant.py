@@ -29,8 +29,8 @@ benchmark = sextant.get_benchmark("test_01")
 from tensorbay import GAS
 
 gas = GAS("<YOUR_ACCESSKEY>")
-dataset_client = gas.get_dataset("dataset_name")
-dataset_client.checkout(revision="branch/tag/commitId")
+dataset_client = gas.get_dataset("<DATASET_NAME>")
+dataset_client.checkout(revision="<branch/tag/commitId>")
 evaluation = benchmark.create_evaluation(dataset_client.dataset_id, dataset_client.status.commit_id)
 """"""
 

@@ -33,10 +33,10 @@ Each data can only be assigned with one :class:`~tensorbay.label.label_mask.Pano
 To create a :class:`~tensorbay.label.label_mask.PanopticMask` label:
 
     >>> from tensorbay.label import PanopticMask
-    >>> panoptic_mask_label = PanopticMask(local_path="/panoptic_mask/mask_image.png")
+    >>> panoptic_mask_label = PanopticMask(local_path="</panoptic_mask/mask_image.png>")
     >>> panoptic_mask_label.all_category_ids = {1: 2, 2: 2}
     >>> panoptic_mask_label
-    PanopticMask("/panoptic_mask/mask_image.png")(
+    PanopticMask("</panoptic_mask/mask_image.png>")(
       (all_category_ids): {
         1: 2,
         2: 2
@@ -57,7 +57,7 @@ To create `all_attributes`:
 
     >>> panoptic_mask_label.all_attributes = {1: {"occluded": True}, 2: {"occluded": True}}
     >>> panoptic_mask_label
-    PanopticMask("/panoptic_mask/mask_image.png")(
+    PanopticMask("</panoptic_mask/mask_image.png>")(
       (all_category_ids): {
         1: 2,
         2: 2
@@ -137,7 +137,7 @@ The catalog with only PanopticMask subcatalog is typically stored in a json file
 To add a :class:`~tensorbay.label.label_mask.PanopticMask` label to one data:
 
     >>> from tensorbay.dataset import Data
-    >>> data = Data("local_path")
+    >>> data = Data("<DATA_LOCAL_PATH>")
     >>> data.label.panoptic_mask = panoptic_mask_label
 
 .. note::

@@ -13,15 +13,15 @@ Take a :doc:`2D box label </reference/label_format/Box2D>` as an example:
     >>> from tensorbay.label import LabeledBox2D
     >>> box2d_label = LabeledBox2D(
     ... 10, 20, 30, 40,
-    ... category="category",
-    ... attributes={"attribute_name": "attribute_value"},
-    ... instance="instance_ID"
+    ... category="<LABEL_CATEGORY>",
+    ... attributes={"<LABEL_ATTRIBUTE_NAME>": "<LABEL_ATTRIBUTE_VALUE>"},
+    ... instance="<LABEL_INSTANCE_ID>"
     ... )
     >>> box2d_label
     LabeledBox2D(10, 20, 30, 40)(
-      (category): 'category',
+      (category): '<LABEL_CATEGORY>',
       (attributes): {...},
-      (instance): 'instance_ID'
+      (instance): '<LABEL_INSTANCE_ID>'
     )
 
 category
@@ -30,7 +30,7 @@ category
 Category is a string indicating the class of the labeled object.
 
     >>> box2d_label.category
-    'data_category'
+    '<LABEL_CATEGORY>'
 
 attributes
 ==========
@@ -41,7 +41,7 @@ and there is no limit on the number of attributes.
 The attribute names and values are stored in key-value pairs.
 
    >>> box2d_label.attributes
-   {'attribute_name': 'attribute_value'}
+   {'<LABEL_ATTRIBUTE_NAME>': '<LABEL_ATTRIBUTE_VALUE>'}
 
 
 instance
@@ -51,4 +51,4 @@ Instance is the unique id for the object inside of the label,
 which is mostly used for tracking tasks.
 
    >>> box2d_label.instance
-   "instance_ID"
+   "<LABEL_INSTANCE_ID>"

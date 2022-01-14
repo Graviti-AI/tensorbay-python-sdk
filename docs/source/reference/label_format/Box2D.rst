@@ -30,15 +30,15 @@ To create a :class:`~tensorbay.label.label_box.LabeledBox2D` label:
     >>> from tensorbay.label import LabeledBox2D
     >>> box2d_label = LabeledBox2D(
     ... xmin, ymin, xmax, ymax,
-    ... category="category",
-    ... attributes={"attribute_name": "attribute_value"},
-    ... instance="instance_ID"
+    ... category="<LABEL_CATEGORY>",
+    ... attributes={"<LABEL_ATTRIBUTE_NAME>": "<LABEL_ATTRIBUTE_VALUE>"},
+    ... instance="<LABEL_INSTANCE_ID>"
     ... )
     >>> box2d_label
     LabeledBox2D(xmin, ymin, xmax, ymax)(
-      (category): 'category',
+      (category): '<LABEL_CATEGORY>',
       (attributes): {...}
-      (instance): 'instance_ID'
+      (instance): '<LABEL_INSTANCE_ID>'
     )
 
 Box2D.box2d
@@ -157,7 +157,7 @@ The catalog with only Box2D subcatalog is typically stored in a json file as fol
 To add a :class:`~tensorbay.label.label_box.LabeledBox2D` label to one data:
 
     >>> from tensorbay.dataset import Data
-    >>> data = Data("local_path")
+    >>> data = Data("<DATA_LOCAL_PATH>")
     >>> data.label.box2d = []
     >>> data.label.box2d.append(box2d_label)
 

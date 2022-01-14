@@ -13,9 +13,8 @@
 """Authorize a Dataset Client Instance"""
 from tensorbay import GAS
 
-ACCESS_KEY = "Accesskey-*****"
-gas = GAS(ACCESS_KEY)
-dataset_client = gas.create_dataset("DatasetName")
+gas = GAS("<YOUR_ACCESSKEY>")
+dataset_client = gas.create_dataset("<DATASET_NAME>")
 dataset_client.create_draft("draft-1")
 # Add some data to the dataset.
 dataset_client.commit("commit-1", tag="V1")

@@ -14,8 +14,7 @@
 from tensorbay import GAS
 from tensorbay.dataset import FusionDataset
 
-ACCESS_KEY = "Accesskey-*****"
-gas = GAS(ACCESS_KEY)
+gas = GAS("<YOUR_ACCESSKEY>")
 """"""
 
 """Create Fusion Dataset"""
@@ -28,7 +27,8 @@ gas.list_dataset_names()
 
 from tensorbay.opendataset import CADC
 
-fusion_dataset = CADC("path/to/dataset/directory")
+fusion_dataset = CADC("<path/to/dataset>")
+
 
 """Upload Fusion Dataset"""
 # fusion_dataset is the one you initialized in "Organize Fusion Dataset" section

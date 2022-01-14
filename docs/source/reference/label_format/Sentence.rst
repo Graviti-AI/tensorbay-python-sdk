@@ -54,7 +54,7 @@ To create a :class:`~tensorbay.label.label_sentence.LabeledSentence` label:
     ... sentence=[Word("text", 1.1, 1.6)],
     ... spell=[Word("spell", 1.1, 1.6)],
     ... phone=[Word("phone", 1.1, 1.6)],
-    ... attributes={"attribute_name": "attribute_value"}
+    ... attributes={"<LABEL_ATTRIBUTE_NAME>": "<LABEL_ATTRIBUTE_VALUE>"}
     ... )
     >>> sentence_label
     LabeledSentence(
@@ -80,7 +80,7 @@ To create a :class:`~tensorbay.label.label_sentence.LabeledSentence` label:
         )
       ],
       (attributes): {
-        'attribute_name': 'attribute_value'
+        '<LABEL_ATTRIBUTE_NAME>': '<LABEL_ATTRIBUTE_VALUE>'
       }
 
 Sentence.sentence
@@ -217,7 +217,7 @@ it's also feasible to set them after initialization.
 To add a :class:`~tensorbay.label.label_sentence.LabeledSentence` label to one data:
 
     >>> from tensorbay.dataset import Data
-    >>> data = Data("local_path")
+    >>> data = Data("<DATA_LOCAL_PATH>")
     >>> data.label.sentence = []
     >>> data.label.sentence.append(sentence_label)
 

@@ -18,7 +18,7 @@ gas = GAS("<YOUR_ACCESSKEY>")
 """"""
 
 """Create a Dataset"""
-gas.create_dataset("DatasetName")
+gas.create_dataset("<DATASET_NAME>")
 """"""
 
 """List Dataset Names"""
@@ -29,7 +29,7 @@ dataset_names = gas.list_dataset_names()
 from tensorbay.dataset import Data, Dataset
 
 # Organize the local dataset by the "Dataset" class before uploading.
-dataset = Dataset("DatasetName")
+dataset = Dataset("<DATASET_NAME>")
 
 # TensorBay uses "segment" to separate different parts in a dataset.
 segment = dataset.create_segment()
@@ -46,7 +46,7 @@ dataset_client.commit("Initial commit")
 """Read Images from the Dataset"""
 from PIL import Image
 
-dataset = Dataset("DatasetName", gas)
+dataset = Dataset("<DATASET_NAME>", gas)
 segment = dataset[0]
 
 for data in segment:
@@ -57,5 +57,5 @@ for data in segment:
 """"""
 
 """Delete the Dataset"""
-gas.delete_dataset("DatasetName")
+gas.delete_dataset("<DATASET_NAME>")
 """"""

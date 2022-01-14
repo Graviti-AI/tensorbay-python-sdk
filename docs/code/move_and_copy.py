@@ -16,8 +16,7 @@
 """Get Dataset Client"""
 from tensorbay import GAS
 
-ACCESS_KEY = "Accesskey-*****"
-gas = GAS(ACCESS_KEY)
+gas = GAS("<YOUR_ACCESSKEY>")
 dataset_client = gas.get_dataset("OxfordIIITPet")
 dataset_client.list_segment_names()
 # test, trainval

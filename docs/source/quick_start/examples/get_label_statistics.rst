@@ -8,9 +8,8 @@ Label statistics of dataset could be obtained via :func:`~tensorbay.client.datas
 as follows:
 
     >>> from tensorbay import GAS
-    >>> ACCESS_KEY = "Accesskey-*****"
-    >>> gas = GAS(ACCESS_KEY)
-    >>> dataset_client = gas.get_dataset("targetDataset")
+    >>> gas = GAS("YOUR_ACCESSKEY")
+    >>> dataset_client = gas.get_dataset("<DATASET_NAME>")
     >>> statistics = dataset_client.get_label_statistics()
     >>> statistics
     Statistics {

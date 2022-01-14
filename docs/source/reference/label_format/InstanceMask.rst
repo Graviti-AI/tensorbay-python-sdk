@@ -33,9 +33,9 @@ Each data can only be assigned with one :class:`~tensorbay.label.label_mask.Inst
 To create a :class:`~tensorbay.label.label_mask.InstanceMask` label:
 
     >>> from tensorbay.label import InstanceMask
-    >>> instance_mask_label = InstanceMask(local_path="/instance_mask/mask_image.png")
+    >>> instance_mask_label = InstanceMask(local_path="</instance_mask/mask_image.png>")
     >>> instance_mask_label
-    InstanceMask("/instance_mask/mask_image.png")()
+    InstanceMask("</instance_mask/mask_image.png>")()
 
 InstanceMask.all_attributes
 ===========================
@@ -47,7 +47,7 @@ To create `all_attributes`:
 
     >>> instance_mask_label.all_attributes = {1: {"occluded": True}, 2: {"occluded": True}}
     >>> instance_mask_label
-    InstanceMask("/instance_mask/mask_image.png")(
+    InstanceMask("</instance_mask/mask_image.png>")(
       (all_attributes): {
         1: {
           'occluded': True
@@ -126,7 +126,7 @@ The catalog with only InstanceMask subcatalog is typically stored in a json file
 To add a :class:`~tensorbay.label.label_mask.InstanceMask` label to one data:
 
     >>> from tensorbay.dataset import Data
-    >>> data = Data("local_path")
+    >>> data = Data("<DATA_LOCAL_PATH>")
     >>> data.label.instance_mask = instance_mask_label
 
 .. note::

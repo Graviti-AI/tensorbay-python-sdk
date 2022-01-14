@@ -14,7 +14,7 @@
 """Organize a Dataset"""
 from tensorbay.opendataset import BSTLD
 
-dataset = BSTLD("path/to/dataset")
+dataset = BSTLD("<path/to/dataset>")
 """"""
 
 """Visualize The Dataset"""

@@ -21,7 +21,7 @@ config.is_internal = True
 gas = GAS("<YOUR_ACCESSKEY>")
 
 # Organize the local dataset by the "Dataset" class before uploading.
-dataset = Dataset("DatasetName")
+dataset = Dataset("<DATASET_NAME>")
 
 segment = dataset.create_segment()
 segment.append(Data("0000001.jpg"))

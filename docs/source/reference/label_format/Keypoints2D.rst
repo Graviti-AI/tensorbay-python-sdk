@@ -34,9 +34,9 @@ To create a :class:`~tensorbay.label.label_keypoints.LabeledKeypoints2D` label:
     >>> from tensorbay.label import LabeledKeypoints2D
     >>> keypoints2d_label = LabeledKeypoints2D(
     ... [[10, 20], [15, 25], [20, 30]],
-    ... category="category",
-    ... attributes={"attribute_name": "attribute_value"},
-    ... instance="instance_ID"
+    ... category="<LABELCATEGORY>",
+    ... attributes={"<LABEL_ATTRIBUTE_NAME>": "<LABEL_ATTRIBUTE_VALUE>"},
+    ... instance="<LABEL_INSTANCE_ID>"
     ... )
     >>> keypoints2d_label
     LabeledKeypoints2D [
@@ -44,9 +44,9 @@ To create a :class:`~tensorbay.label.label_keypoints.LabeledKeypoints2D` label:
       Keypoint2D(15, 25),
       Keypoint2D(20, 30)
     ](
-      (category): 'category',
+      (category): '<LABEL_CATEGORY>',
       (attributes): {...},
-      (instance): 'instance_ID'
+      (instance): '<LABEL_INSTANCE_ID>'
     )
 
 
@@ -211,7 +211,7 @@ it's also feasible to set them after initialization.
 To add a :class:`~tensorbay.label.label_keypoints.LabeledKeypoints2D` label to one data:
 
     >>> from tensorbay.dataset import Data
-    >>> data = Data("local_path")
+    >>> data = Data("<DATA_LOCAL_PATH>")
     >>> data.label.keypoints2d = []
     >>> data.label.keypoints2d.append(keypoints2d_label)
 
