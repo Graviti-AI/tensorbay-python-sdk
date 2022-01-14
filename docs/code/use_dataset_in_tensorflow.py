@@ -49,7 +49,7 @@ class MNISTSegment:
 
 
 """Build a tensorflow dataset and run it"""
-ACCESS_KEY = "Accesskey-*****"
+ACCESS_KEY = "<YOUR_ACCESSKEY>"
 
 dataset = Dataset.from_generator(
     MNISTSegment(GAS(ACCESS_KEY), "train"),

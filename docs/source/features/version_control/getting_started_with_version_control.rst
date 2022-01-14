@@ -29,8 +29,7 @@ The code below checkouts to the first commit and check the data amount.
    from tensorbay import GAS
    from tensorbay.dataset import Dataset
 
-   ACCESS_KEY = "Accesskey-*****"
-   gas = GAS(ACCESS_KEY)
+   gas = GAS("<YOUR_ACCESSKEY>")
    commits = dataset_client.list_commits()
 
    FIRST_COMMIT_ID = "ebb1cb46b36f4a4b922a40fb01574517"
@@ -89,7 +88,7 @@ adds a new segment to the "VersionControlDemo" dataset and does the commit opera
    import os
    from tensorbay.dataset import Segment
 
-   TEST_IMAGES_PATH = "path/to/test_images"
+   TEST_IMAGES_PATH = "<path/to/test_images>"
 
    dataset_client = gas.get_dataset("VersionControlDemo")
    dataset_client.create_draft("draft-1")
@@ -149,7 +148,7 @@ and adds :doc:`classification </reference/label_format/Classification>` label to
 
    from tensorbay.label import Catalog, Classification, ClassificationSubcatalog
 
-   TRAIN_IMAGES_PATH = "path/to/train/images"
+   TRAIN_IMAGES_PATH = "<path/to/train/images>"
 
    catalog = Catalog()
    classification_subcatalog = ClassificationSubcatalog()
@@ -164,7 +163,7 @@ and adds :doc:`classification </reference/label_format/Classification>` label to
    train_segment = Segment("train")
    train_segment_client = dataset_client.get_segment(train_segment.name)
 
-   for image_name in os.listdir("path/to/train_images/"):
+   for image_name in os.listdir(TRAIN_IMAGES_PATH):
        data = Data(os.path.join(TRAIN_IMAGES_PATH, image_name))
        data.label.classification = Classification(image_name[:5])
        train_segment.append(data)

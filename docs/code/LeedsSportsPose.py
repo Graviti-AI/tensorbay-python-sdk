@@ -15,8 +15,7 @@
 """Authorize a Client Instance"""
 from tensorbay import GAS
 
-ACCESS_KEY = "Accesskey-*****"
-gas = GAS(ACCESS_KEY)
+gas = GAS("<YOUR_ACCESSKEY>")
 """"""
 
 """Create Dataset"""
@@ -31,7 +30,7 @@ from tensorbay.dataset import Dataset
 """Organize dataset / import dataloader"""
 from tensorbay.opendataset import LeedsSportsPose
 
-dataset = LeedsSportsPose("path/to/dataset/directory")
+dataset = LeedsSportsPose("<path/to/dataset>")
 """"""
 
 """Upload Dataset"""

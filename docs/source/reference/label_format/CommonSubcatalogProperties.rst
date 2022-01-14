@@ -85,15 +85,15 @@ appeared in the dataset should follow the rules set in the attributes of the sub
 Attribute information ca be added to the subcatalog.
 
     >>> box2d_subcatalog.add_attribute(
-    ... name="attribute_name",
+    ... name="<SUBCATALOG_ATTRIBUTE_NAME>",
     ... type_="number",
     ... maximum=100,
     ... minimum=0,
-    ... description="attribute description"
+    ... description="<SUBCATALOG_ATTRIBUTE_DESCRIPTION>"
     ... )
     >>> box2d_subcatalog.attributes
     NameList [
-      AttributeInfo("attribute_name")(...)
+      AttributeInfo("<SUBCATALOG_ATTRIBUTE_NAME>")(...)
     ]
 
 :class:`~tensorbay.label.attributes.AttributeInfo` is used to describe the rules of an

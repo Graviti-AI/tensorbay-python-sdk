@@ -28,9 +28,9 @@ To create a :class:`~tensorbay.label.label_polygon.LabeledRLE` label:
     >>> from tensorbay.label import LabeledRLE
     >>> rle_label = LabeledRLE(
     ... [8, 4, 1, 3, 12, 7, 16, 2, 9, 2],
-    ... category="category",
-    ... attributes={"attribute_name": "attribute_value"},
-    ... instance="instance_ID"
+    ... category="<LABEL_CATEGORY>",
+    ... attributes={"<LABEL_ATTRIBUTE_NAME>": "<LABEL_ATTRIBUTE_VALUE>"},
+    ... instance="<LABEL_INSTANCE_ID>"
     ... )
     >>> rle_label
     LabeledRLE [
@@ -39,9 +39,9 @@ To create a :class:`~tensorbay.label.label_polygon.LabeledRLE` label:
       1,
       ...
     ](
-      (category): 'category',
+      (category): '<LABEL_CATEGORY>',
       (attributes): {...},
-      (instance): 'instance_ID'
+      (instance): '<LABEL_INSTANCE_ID>'
     )
 
 
@@ -143,7 +143,7 @@ The catalog with only RLE subcatalog is typically stored in a json file as follo
 To add a :class:`~tensorbay.label.label_polygon.LabeledRLE` label to one data:
 
     >>> from tensorbay.dataset import Data
-    >>> data = Data("local_path")
+    >>> data = Data("<DATA_LOCAL_PATH>")
     >>> data.label.rle = []
     >>> data.label.rle.append(rle_label)
 

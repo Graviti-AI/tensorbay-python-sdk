@@ -26,12 +26,12 @@ To create a :class:`~tensorbay.label.label_classification.Classification` label:
 
     >>> from tensorbay.label import Classification
     >>> classification_label = Classification(
-    ... category="data_category",
-    ... attributes={"attribute_name": "attribute_value"}
+    ... category="<LABEL_CATEGORY>",
+    ... attributes={"<LABEL_ATTRIBUTE_NAME>": "<LABEL_ATTRIBUTE_VALUE>"}
     ... )
     >>> classification_label
     Classification(
-      (category): 'data_category',
+      (category): '<LABEL_CATEGORY>',
       (attributes): {...}
     )
 
@@ -113,7 +113,7 @@ The catalog with only Classification subcatalog is typically stored in a json fi
 To add a :class:`~tensorbay.label.label_classification.Classification` label to one data:
 
     >>> from tensorbay.dataset import Data
-    >>> data = Data("local_path")
+    >>> data = Data("<DATA_LOCAL_PATH>")
     >>> data.label.classification = classification_label
 
 .. note::

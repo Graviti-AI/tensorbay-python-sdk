@@ -32,9 +32,9 @@ Each data can only be assigned with one :class:`~tensorbay.label.label_mask.Sema
 To create a :class:`~tensorbay.label.label_mask.SemanticMask` label:
 
     >>> from tensorbay.label import SemanticMask
-    >>> semantic_mask_label = SemanticMask(local_path="/semantic_mask/mask_image.png")
+    >>> semantic_mask_label = SemanticMask(local_path="</semantic_mask/mask_image.png>")
     >>> semantic_mask_label
-    SemanticMask("/semantic_mask/mask_image.png")()
+    SemanticMask("</semantic_mask/mask_image.png>")()
 
 SemanticMask.all_attributes
 ===========================
@@ -46,7 +46,7 @@ To create `all_attributes`:
 
     >>> semantic_mask_label.all_attributes = {1: {"occluded": True}, 2: {"occluded": False}}
     >>> semantic_mask_label
-    SemanticMask("/semantic_mask/mask_image.png")(
+    SemanticMask("</semantic_mask/mask_image.png>")(
       (all_attributes): {
         1: {
           'occluded': True
@@ -122,7 +122,7 @@ The catalog with only SemanticMask subcatalog is typically stored in a json file
 To add a :class:`~tensorbay.label.label_mask.SemanticMask` label to one data:
 
     >>> from tensorbay.dataset import Data
-    >>> data = Data("local_path")
+    >>> data = Data("<DATA_LOCAL_PATH>")
     >>> data.label.semantic_mask = semantic_mask_label
 
 .. note::

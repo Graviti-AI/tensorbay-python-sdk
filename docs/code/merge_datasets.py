@@ -13,8 +13,7 @@
 """Create Target Dataset"""
 from tensorbay import GAS
 
-ACCESS_KEY = "Accesskey-*****"
-gas = GAS(ACCESS_KEY)
+gas = GAS("<YOUR_ACCESSKEY>")
 dataset_client = gas.create_dataset("mergedDataset")
 dataset_client.create_draft("merge dataset")
 """"""

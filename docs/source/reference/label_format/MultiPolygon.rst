@@ -36,18 +36,18 @@ To create a :class:`~tensorbay.label.label_polygon.LabeledMultiPolygon` label:
     >>> from tensorbay.label import LabeledMultiPolygon
     >>> multipolygon_label = LabeledMultiPolygon(
     ... [[(1.0, 2.0), (2.0, 3.0), (1.0, 3.0)], [(1.0, 4.0), (2.0, 3.0), (1.0, 8.0)]],
-    ... category="category",
-    ... attributes={"attribute_name": "attribute_value"},
-    ... instance="instance_ID"
+    ... category="<LABEL_CATEGORY>",
+    ... attributes={"<LABEL_ATTRIBUTE_NAME>": "<LABEL_ATTRIBUTE_VALUE>"},
+    ... instance="<LABEL_INSTANCE_ID>"
     ... )
     >>> multipolygon_label
     LabeledMultiPolygon [
       Polygon [...],
       Polygon [...]
     ](
-      (category): 'category',
+      (category): '<LABEL_CATEGORY>',
       (attributes): {...},
-      (instance): 'instance_ID'
+      (instance): '<LABEL_INSTANCE_ID'
     )
 
 
@@ -149,7 +149,7 @@ The catalog with only MultiPolygon subcatalog is typically stored in a json file
 To add a :class:`~tensorbay.label.label_polygon.LabeledMultiPolygon` label to one data:
 
     >>> from tensorbay.dataset import Data
-    >>> data = Data("local_path")
+    >>> data = Data("<DATA_LOCAL_PATH>")
     >>> data.label.multi_polygon = []
     >>> data.label.multi_polygon.append(multipolygon_label)
 

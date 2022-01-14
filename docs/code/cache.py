@@ -17,9 +17,8 @@
 from tensorbay import GAS
 from tensorbay.dataset import Dataset
 
-ACCESS_KEY = "Accesskey-*****"
-gas = GAS(ACCESS_KEY)
-dataset = Dataset("<DatasetName>", gas)
+gas = GAS("<YOUR_ACCESSKEY>")
+dataset = Dataset("<DATASET_NAME>", gas)
 """"""
 
 """Enable Cache"""
@@ -27,7 +26,7 @@ dataset.enable_cache()
 """"""
 
 """Setting Cache Path"""
-dataset.enable_cache("path/to/cache/folder")
+dataset.enable_cache("<path/to/cache/folder>")
 """"""
 
 """Open Remote Data"""

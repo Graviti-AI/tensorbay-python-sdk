@@ -12,14 +12,14 @@
 """Get cloud client"""
 from tensorbay import GAS
 
-gas = GAS("Accesskey-*****")
-cloud_client = gas.get_cloud_client("config_name")
+gas = GAS("<YOUR_ACCESSKEY>")
+cloud_client = gas.get_cloud_client("<CONFIG_NAME>")
 """"""
 
 """Create storage config"""
 gas.create_oss_storage_config(
-    "oss_config",
-    "tests",
+    "<OSS_CONFIG_NAME>",
+    "<path/to/dataset>",
     endpoint="<YOUR_ENDPOINT>",  # like oss-cn-qingdao.aliyuncs.com
     accesskey_id="<YOUR_ACCESSKEYID>",
     accesskey_secret="<YOUR_ACCESSKEYSECRET>",
@@ -34,13 +34,13 @@ from tensorbay.dataset import Dataset
 from tensorbay.label import Classification
 
 # Use AuthData to organize a dataset by the "Dataset" class before importing.
-dataset = Dataset("DatasetName")
+dataset = Dataset("<DATASET_NAME>")
 
 # TensorBay uses "segment" to separate different parts in a dataset.
 segment = dataset.create_segment()
 
-images = cloud_client.list_auth_data("data/images/")
-labels = cloud_client.list_auth_data("data/labels/")
+images = cloud_client.list_auth_data("<data/images/>")
+labels = cloud_client.list_auth_data("<data/labels/>")
 
 for auth_data, label in zip(images, labels):
     with label.open() as fp:
@@ -53,12 +53,12 @@ dataset_client = gas.upload_dataset(dataset, jobs=8)
 
 """Create local storage config"""
 gas.create_local_storage_config(
-    name="local_storage_config",
-    file_path="<path to store the datasets>",
+    name="<LOCAL_STORAGE_CONFIG>",
+    file_path="<path/to/dataset>",
     endpoint="<external IP address of the local storage service>",
 )
 """"""
 
 """Create authorized local storage dataset"""
-dataset_client = gas.create_dataset("dataset_name", config_name="local_storage_config")
+dataset_client = gas.create_dataset("<DATASET_NAME>", config_name="<LOCAL_STORAGE_CONFIG>")
 """"""

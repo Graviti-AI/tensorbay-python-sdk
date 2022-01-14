@@ -43,7 +43,7 @@ class MNISTSegment(Dataset):
 
 
 """Build a dataloader and run it"""
-ACCESS_KEY = "Accesskey-*****"
+ACCESS_KEY = "<YOUR_ACCESSKEY>"
 
 to_tensor = transforms.ToTensor()
 normalization = transforms.Normalize(mean=[0.485], std=[0.229])

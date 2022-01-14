@@ -36,18 +36,18 @@ To create a :class:`~tensorbay.label.label_polyline.LabeledMultiPolyline2D` labe
     >>> from tensorbay.label import LabeledMultiPolyline2D
     >>> multipolyline2d_label = LabeledMultiPolyline2D(
     ... [[[1, 2], [2, 3]], [[3, 4], [6, 8]]],
-    ... category="category",
-    ... attributes={"attribute_name": "attribute_value"},
-    ... instance="instance_ID"
+    ... category="<LABEL_CATEGORY>",
+    ... attributes={"<LABEL_ATTRIBUTE_NAME>": "<LABEL_ATTRIBUTE_VALUE>"},
+    ... instance="<LABEL_INSTANCE_ID>"
     ... )
     >>> multipolyline2d_label
     LabeledMultiPolyline2D [
       Polyline2D [...],
       Polyline2D [...]
     ](
-      (category): 'category',
+      (category): '<LABEL_CATEGORY>',
       (attributes): {...},
-      (instance): 'instance_ID'
+      (instance): '<LABEL_INSTANCE_ID>'
     )
 
 
@@ -149,7 +149,7 @@ The catalog with only MultiPolyline2D subcatalog is typically stored in a json f
 To add a :class:`~tensorbay.label.label_polyline.LabeledMultiPolyline2D` label to one data:
 
     >>> from tensorbay.dataset import Data
-    >>> data = Data("local_path")
+    >>> data = Data("<DATA_LOCAL_PATH>")
     >>> data.label.multi_polyline2d = []
     >>> data.label.multi_polyline2d.append(multipolyline2d_label)
 

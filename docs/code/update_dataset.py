@@ -14,17 +14,16 @@ from tensorbay import GAS
 """Upload Images to the Dataset"""
 from tensorbay.dataset import Dataset
 
-dataset = Dataset("DatasetName")
-ACCESS_KEY = "Accesskey-*****"
-gas = GAS(ACCESS_KEY)
+gas = GAS("<YOUR_ACCESSKEY>")
+dataset = Dataset("<DATASET_NAME>")
 """"""
 
 """Update dataset meta"""
-gas.update_dataset("DATASET_NAME", alias="alias", is_public=True)
+gas.update_dataset("<DATASET_NAME>", alias="<DATASET_ALIAS>", is_public=True)
 """"""
 
 """Update dataset notes"""
-dataset_client = gas.get_dataset("DATASET_NAME")
+dataset_client = gas.get_dataset("<DATASET_NAME>")
 dataset_client.create_draft("draft-1")
 dataset_client.update_notes(is_continuous=True)
 dataset_client.commit("update notes")
@@ -59,11 +58,11 @@ gas.upload_dataset(dataset, jobs=8)
 
 """Update data/ delete segment"""
 dataset_client.create_draft("draft-3")
-dataset_client.delete_segment("SegmentName")
+dataset_client.delete_segment("<SEGMENT_NAME>")
 """"""
 
 """Update data/ delete data"""
-segment_client = dataset_client.get_segment("SegmentName")
+segment_client = dataset_client.get_segment("<SEGMENT_NAME>")
 segment_client.delete_data("a.png")
 """"""
 
