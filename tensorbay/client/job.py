@@ -155,7 +155,7 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
         self.finished_at = job_info.get("finishedAt")
         self.status = job_info["status"]
         self.error_message = job_info["errorMessage"]
-        self._result = job_info.get("results")
+        self._result = job_info.get("result")
 
     def abort(self) -> None:
         """Abort a :class:`Job`."""
