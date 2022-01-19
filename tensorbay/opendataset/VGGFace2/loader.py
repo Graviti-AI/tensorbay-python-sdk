@@ -131,9 +131,9 @@ def _get_classifications(
         # ...
         for line in islice(csv.reader(fp), 1, None):
             # The normal format of each line of the file is
-            # '<class_id>,"<class_name>",<sample_num>,<flag>,<gender>,\n'
+            # '<class_id>, "<class_name>",<sample_num>,<flag>,<gender>,\n'
             # but now there is an error type
-            # '<class_id>,"<class_,name>",<sample_num>,<flag>,<gender>\n'
+            # '<class_id>, "<class_,name>",<sample_num>,<flag>,<gender>\n'
             if line[-1] != "":
                 # join the splitted "class_ and name"
                 line[1] = "".join(islice(line, 1, 3))
@@ -141,7 +141,7 @@ def _get_classifications(
                 line.pop(2)
                 line[4] = line[4].rstrip("\n")
             category_id = line[0]
-            category_name = line[1].strip('"')
+            category_name = line[1].strip(' "')
             attributes = dict(
                 zip(
                     attribute_names,
