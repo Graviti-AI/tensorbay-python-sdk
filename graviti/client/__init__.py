@@ -5,6 +5,7 @@
 """Client module."""
 
 from graviti.client.branch import create_branch, delete_branch, list_branches
+from graviti.client.catalog import get_catalog
 from graviti.client.commit import commit_draft, list_commits
 from graviti.client.data import list_data, list_data_details, list_data_urls, list_mask_urls
 from graviti.client.dataset import get_dataset, get_total_size, list_datasets
@@ -22,6 +23,7 @@ __all__ = [
     "create_tag",
     "delete_branch",
     "delete_tag",
+    "get_catalog",
     "get_dataset",
     "get_label_statistics",
     "get_notes",
