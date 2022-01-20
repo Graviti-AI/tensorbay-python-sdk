@@ -6,9 +6,12 @@
 """Interfaces about the segment."""
 
 from typing import Any, Dict, Optional
+from urllib.parse import urljoin
+
+from graviti.client.request import PARTIAL_URL, open_api_do
 
 
-def list_segments(  # pylint: disable=unused-argument
+def list_segments(
     url: str,
     access_key: str,
     dataset_id: str,
@@ -30,7 +33,42 @@ def list_segments(  # pylint: disable=unused-argument
         offset: The offset of the page.
         limit: The limit of the page.
 
-    Return:
+    Examples:
+        List segments of the dataset with the given id and commit/draft_number:
+
+        >>> list_segments(
+        ...     "https://gas.graviti.com/",
+        ...     "ACCESSKEY-********",
+        ...     "2bc95d506db2401b898067f1045d7f68",
+        ...     "test",
+        ...     commit="main"
+        ... )
+        {
+            "segments": [
+                {
+                    "name": "test",
+                    "description": ""
+                },
+                {
+                    "name": "trainval",
+                    "description": ""
+                }
+            ],
+            "offset": 0,
+            "recordSize": 2,
+            "totalCount": 2
+        }
+
+    Returns:
         The response of OpenAPI.
 
     """
+    url = urljoin(url, f"{PARTIAL_URL}/datasets/{dataset_id}/segments")
+    params: Dict[str, Any] = {"offset": offset, "limit": limit}
+
+    if draft_number:
+        params["draftNumber"] = draft_number
+    if commit:
+        params["commit"] = commit
+
+    return open_api_do(url, access_key, "GET", params=params).json()  # type: ignore[no-any-return]
