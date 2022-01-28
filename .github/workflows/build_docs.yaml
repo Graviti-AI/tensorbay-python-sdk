@@ -30,6 +30,7 @@ jobs:
           path: /opt/hostedtoolcache/Python/${{ matrix.python-version }}
           key: >-
             docs-${{ matrix.os }}-${{ matrix.python-version }}-
+            ${{ hashFiles('requirements_docs.txt') }}-
             ${{ hashFiles('requirements.txt') }}
 
       - name: Set up python ${{ matrix.python-version }}
@@ -39,7 +40,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install sphinx furo
+          pip install -r requirements_docs.txt
           pip install -r requirements.txt
 
       - name: Build docs
