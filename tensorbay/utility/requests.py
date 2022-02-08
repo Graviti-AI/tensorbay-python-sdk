@@ -119,7 +119,7 @@ class UserSession(Session):
             total=config.max_retries,
             status_forcelist=config.allowed_retry_status,
             raise_on_status=False,
-            **{_ALLOWED_METHODS: config.allowed_retry_methods},
+            **{_ALLOWED_METHODS: config.allowed_retry_methods},  # type: ignore[arg-type]
         )
 
         self.mount("http://", TimeoutHTTPAdapter(20, 20, retry_strategy))
