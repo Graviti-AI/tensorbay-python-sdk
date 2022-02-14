@@ -24,9 +24,7 @@ from tensorbay.utility import Tqdm
 DatasetClientType = Union[DatasetClient, FusionDatasetClient]
 
 logger = logging.getLogger(__name__)
-
 DEFAULT_BRANCH = "main"
-DEFAULT_IS_PUBLIC = False
 
 
 class GAS:
@@ -338,7 +336,7 @@ class GAS:
         *,
         config_name: Optional[str] = None,
         alias: str = "",
-        is_public: bool = DEFAULT_IS_PUBLIC,
+        is_public: bool = False,
     ) -> DatasetClient:
         ...
 
@@ -350,7 +348,7 @@ class GAS:
         *,
         config_name: Optional[str] = None,
         alias: str = "",
-        is_public: bool = DEFAULT_IS_PUBLIC,
+        is_public: bool = False,
     ) -> FusionDatasetClient:
         ...
 
@@ -362,7 +360,7 @@ class GAS:
         *,
         config_name: Optional[str] = None,
         alias: str = "",
-        is_public: bool = DEFAULT_IS_PUBLIC,
+        is_public: bool = False,
     ) -> DatasetClientType:
         ...
 
@@ -373,7 +371,7 @@ class GAS:
         *,
         config_name: Optional[str] = None,
         alias: str = "",
-        is_public: bool = DEFAULT_IS_PUBLIC,
+        is_public: bool = False,
     ) -> DatasetClientType:
         """Create a TensorBay dataset with given name.
 

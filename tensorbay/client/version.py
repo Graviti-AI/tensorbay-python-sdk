@@ -5,9 +5,9 @@
 
 """Related methods of the TensorBay version control."""
 
-from typing import Any, Callable, Dict, Generator, Optional, Union
+from typing import Any, Callable, Dict, Generator, List, Optional, Tuple, Union
 
-from tensorbay.client.job import SquashAndMergeJob
+from tensorbay.client.job import BasicSearchJob, SquashAndMergeJob
 from tensorbay.client.lazy import PagingList
 from tensorbay.client.requests import Client
 from tensorbay.client.status import Status
@@ -752,3 +752,83 @@ class SquashAndMerge(JobMixin):
             lambda offset, limit: self._generate_jobs(status, offset, limit),
             128,
         )
+
+
+class BasicSearch(JobMixin):
+    """This class defines :class:`BasicSearch`.
+
+    Arguments:
+        client: The :class:`~tensorbay.client.requests.Client`.
+        dataset_id: Dataset ID.
+        status: The version control status of the dataset.
+
+    """
+
+    _JOB_TYPE = "basicSearch"
+
+    def __init__(
+        self,
+        client: Client,
+        dataset_id: str,
+        status: Status,
+    ) -> None:
+        pass
+
+    def _generate_jobs(
+        self,
+        status: Optional[str] = None,
+        offset: int = 0,
+        limit: int = 128,
+    ) -> Generator[BasicSearchJob, None, int]:
+        pass
+
+    def create_job(
+        self,
+        title: str = "",
+        description: str = "",
+        *,
+        conjunction: str,
+        filters: List[Tuple[Any, ...]],
+        unit: str = "FILE",
+    ) -> BasicSearchJob:
+        """Create a :class:`BasicSearchJob`.
+
+        Arguments:
+            title: The BasicSearchJob title.
+            description: The BasicSearchJob description.
+            conjunction: The logical conjunction between search filters, which includes "AND" and
+                "OR".
+            filters: The list of basic search criteria.
+            unit: The unit of basic search. There are two options:
+
+                1. "FILE": get the data that meets search filters;
+                2. "FRAME": if at least one data in a frame meets search filters, all data in
+                    the frame will be get. This option only works on fusion dataset.
+
+        Return:
+            The BasicSearchJob.
+
+        """
+
+    def get_job(self, job_id: str) -> BasicSearchJob:
+        """Get a :class:`BasicSearchJob`.
+
+        Arguments:
+            job_id: The BasicSearchJob id.
+
+        Return:
+            The BasicSearchJob.
+
+        """
+
+    def list_jobs(self, status: Optional[str] = None) -> PagingList[BasicSearchJob]:
+        """List the BasicSearchJob.
+
+        Arguments:
+            status: The BasicSearchJob status which includes "QUEUING", "PROCESSING", "SUCCESS",
+                    "FAIL", "ABORT" and None. None means all kinds of status.
+
+        Return:
+            The PagingList of BasicSearchJob.
+
+        """
