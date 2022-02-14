@@ -25,7 +25,7 @@ from tensorbay.client.requests import multithread_upload
 from tensorbay.client.segment import _STRATEGIES, FusionSegmentClient, SegmentClient
 from tensorbay.client.statistics import Statistics
 from tensorbay.client.status import Status
-from tensorbay.client.version import SquashAndMerge, VersionControlMixin
+from tensorbay.client.version import BasicSearch, SquashAndMerge, VersionControlMixin
 from tensorbay.dataset import AuthData, Data, Frame, FusionSegment, Notes, RemoteData, Segment
 from tensorbay.exception import (
     FrameError,
@@ -227,6 +227,17 @@ class DatasetClientBase(VersionControlMixin):
 
         """
         return SquashAndMerge(self._client, self._dataset_id, self._status, self.get_draft)
+
+    @property  # type: ignore[misc]
+    @functools.lru_cache()
+    def basic_search(self) -> BasicSearch:
+        """Get class :class:`~tensorbay.client.version.BasicSearch`.
+
+        Returns:
+            Required :class:`~tensorbay.client.version.BasicSearch`.
+
+        """
+        return BasicSearch(self._client, self._dataset_id, self._status)
 
     def enable_cache(self, cache_path: str = "") -> None:
         """Enable cache when open the remote data of the dataset.

@@ -6,9 +6,10 @@
 """Basic structures of asynchronous jobs."""
 
 from time import sleep
-from typing import Any, Callable, Dict, Optional, Tuple, Type, TypeVar
+from typing import Any, Callable, Dict, Optional, Tuple, Type, TypeVar, Union
 
 from tensorbay.client.requests import Client
+from tensorbay.client.search import FusionSearchResult, SearchResult
 from tensorbay.client.struct import Draft
 from tensorbay.utility import AttrsMixin, ReprMixin, ReprType, attr, camel, common_loads
 
@@ -280,3 +281,16 @@ class SquashAndMergeJob(Job):
         job._draft_getter = draft_getter  # pylint: disable=protected-access
 
         return job
+
+
+class BasicSearchJob(Job):
+    """This class defines :class:`BasicSearchJob`."""
+
+    @property
+    def result(self) -> Union[SearchResult, FusionSearchResult, None]:
+        """Get the result of the BasicSearchJob.
+
+        Return:
+            The search result of the BasicSearchJob.
+
+        """

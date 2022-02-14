@@ -13,7 +13,7 @@ from ulid import ULID, from_timestamp
 from tensorbay.client import dataset, gas, segment
 from tensorbay.client.dataset import DatasetClient, FusionDatasetClient
 from tensorbay.client.diff import DataDiff, SegmentDiff
-from tensorbay.client.gas import DEFAULT_BRANCH, DEFAULT_IS_PUBLIC, GAS
+from tensorbay.client.gas import DEFAULT_BRANCH, GAS
 from tensorbay.client.lazy import ReturnGenerator
 from tensorbay.client.requests import Tqdm
 from tensorbay.client.segment import FusionSegmentClient, SegmentClient
@@ -40,7 +40,7 @@ class TestDatasetClientBase:
         gas_client,
         status=Status(DEFAULT_BRANCH, commit_id=ROOT_COMMIT_ID),
         alias="",
-        is_public=DEFAULT_IS_PUBLIC,
+        is_public=False,
     )
     source_dataset_client = DatasetClient(
         "source_dataset",
@@ -48,7 +48,7 @@ class TestDatasetClientBase:
         gas_client,
         status=Status(DEFAULT_BRANCH, commit_id=ROOT_COMMIT_ID),
         alias="",
-        is_public=DEFAULT_IS_PUBLIC,
+        is_public=False,
     )
 
     def test__create_segment(self, mocker):
@@ -684,7 +684,7 @@ class TestFusionDatasetClient(TestDatasetClientBase):
         gas_client,
         status=Status(DEFAULT_BRANCH, commit_id=ROOT_COMMIT_ID),
         alias="",
-        is_public=DEFAULT_IS_PUBLIC,
+        is_public=False,
     )
     source_dataset_client = FusionDatasetClient(
         "source_dataset",
@@ -692,7 +692,7 @@ class TestFusionDatasetClient(TestDatasetClientBase):
         gas_client,
         status=Status(DEFAULT_BRANCH, commit_id=ROOT_COMMIT_ID),
         alias="",
-        is_public=DEFAULT_IS_PUBLIC,
+        is_public=False,
     )
 
     def test__extract_all_data(self):

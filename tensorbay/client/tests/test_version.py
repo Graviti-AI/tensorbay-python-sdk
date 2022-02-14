@@ -6,7 +6,7 @@
 import pytest
 
 from tensorbay.client.dataset import DatasetClient
-from tensorbay.client.gas import DEFAULT_BRANCH, DEFAULT_IS_PUBLIC, GAS
+from tensorbay.client.gas import DEFAULT_BRANCH, GAS
 from tensorbay.client.job import SquashAndMergeJob
 from tensorbay.client.lazy import ReturnGenerator
 from tensorbay.client.status import Status
@@ -22,7 +22,7 @@ class TestVersionControlMixin:
         gas_client,
         status=Status(DEFAULT_BRANCH, commit_id=ROOT_COMMIT_ID),
         alias="",
-        is_public=DEFAULT_IS_PUBLIC,
+        is_public=False,
     )
 
 
@@ -34,7 +34,7 @@ class TestJobMixin:
         gas_client,
         status=Status(DEFAULT_BRANCH, commit_id=ROOT_COMMIT_ID),
         alias="",
-        is_public=DEFAULT_IS_PUBLIC,
+        is_public=False,
     )
 
     def test__create_job(self, mocker, mock_create_job):

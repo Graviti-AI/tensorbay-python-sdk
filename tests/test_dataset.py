@@ -6,7 +6,7 @@
 import pytest
 
 from tensorbay import GAS
-from tensorbay.client.gas import DEFAULT_BRANCH, DEFAULT_IS_PUBLIC
+from tensorbay.client.gas import DEFAULT_BRANCH
 from tensorbay.client.struct import ROOT_COMMIT_ID
 from tensorbay.exception import ResourceNotExistError, ResponseError, StatusError
 from tests.utility import get_dataset_name
@@ -75,7 +75,7 @@ class TestDataset:
         assert dataset_client_get.status.commit_id == ROOT_COMMIT_ID
         assert dataset_client_get.status.branch_name == DEFAULT_BRANCH
         assert dataset_client_get.dataset_id == dataset_client.dataset_id
-        assert dataset_client_get.is_public == DEFAULT_IS_PUBLIC
+        assert dataset_client_get.is_public == False
 
         gas_client.delete_dataset(dataset_name)
 
@@ -92,7 +92,7 @@ class TestDataset:
         dataset_client_get = gas_client.get_dataset(dataset_name)
         assert dataset_client_get.status.commit_id == v2_commit_id
         assert dataset_client_get.status.branch_name == DEFAULT_BRANCH
-        assert dataset_client_get.is_public == DEFAULT_IS_PUBLIC
+        assert dataset_client_get.is_public == False
 
         gas_client.delete_dataset(dataset_name)
 
@@ -109,7 +109,7 @@ class TestDataset:
         dataset_client_get = gas_client.get_dataset(dataset_name, is_fusion=True)
         assert dataset_client_get.status.commit_id == v2_commit_id
         assert dataset_client_get.status.branch_name == DEFAULT_BRANCH
-        assert dataset_client_get.is_public == DEFAULT_IS_PUBLIC
+        assert dataset_client_get.is_public == False
 
         gas_client.delete_dataset(dataset_name)
 

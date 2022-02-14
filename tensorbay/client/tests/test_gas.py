@@ -10,7 +10,7 @@ import pytest
 from tensorbay.client import gas
 from tensorbay.client.cloud_storage import CloudClient, StorageConfig
 from tensorbay.client.dataset import DatasetClient, FusionDatasetClient
-from tensorbay.client.gas import DEFAULT_BRANCH, DEFAULT_IS_PUBLIC, GAS
+from tensorbay.client.gas import DEFAULT_BRANCH, GAS
 from tensorbay.client.status import Status
 from tensorbay.client.struct import ROOT_COMMIT_ID, Draft, User
 from tensorbay.client.tests.utility import mock_response
@@ -110,7 +110,7 @@ class TestGAS:
             "updateTime": 1622693494,
             "owner": "",
             "id": "123456",
-            "isPublic": DEFAULT_IS_PUBLIC,
+            "isPublic": False,
         }
         mocker.patch(
             f"{gas.__name__}.GAS._list_datasets",
@@ -485,7 +485,7 @@ class TestGAS:
                 self.gas_client,
                 status=Status(DEFAULT_BRANCH, commit_id=ROOT_COMMIT_ID),
                 alias="",
-                is_public=DEFAULT_IS_PUBLIC,
+                is_public=False,
             ),
         )
         checkout = mocker.patch(f"{gas.__name__}.DatasetClient.checkout")
