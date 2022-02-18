@@ -4,7 +4,7 @@
 
 This topic describes how to manage the "CADC" dataset.
 
-"CADC" is a fusion dataset with 8 :ref:`sensors<advanced_features/fusion_dataset/fusion_dataset_structure:sensor>` including 7 :class:`cameras<tensorbay.sensor.sensor.Camera>` and 1 :class:`lidar<tensorbay.sensor.sensor.Lidar>`
+"CADC" is a fusion dataset with 8 :ref:`sensors<advanced_features/fusion_dataset:sensor>` including 7 :class:`cameras<tensorbay.sensor.sensor.Camera>` and 1 :class:`lidar<tensorbay.sensor.sensor.Lidar>`
 , and has :doc:`/reference/label_format/Box3D` type of labels on the point cloud data.
 (:numref:`Fig. %s <example-cadc>`).
 See `this page <https://gas.graviti.cn/dataset/hello-dataset/CADC>`_ for more details about this dataset.
@@ -47,7 +47,7 @@ To check if you have created "CADC" fusion dataset, you can list all your availa
 See :ref:`this page <features/dataset_management:Read Dataset>` for details.
 
 The datasets listed here include both :ref:`datasets <reference/dataset_structure:dataset>`
-and :ref:`fusion datasets <advanced_features/fusion_dataset/fusion_dataset_structure:fusion dataset>`.
+and :ref:`fusion datasets <advanced_features/fusion_dataset:fusion dataset>`.
 
 .. literalinclude:: ../../../../docs/code/CADC.py
    :language: python
@@ -98,10 +98,10 @@ create a fusion dataset
 
 To load a fusion dataset, we first need to create an instance of :class:`~tensorbay.dataset.dataset.FusionDataset`.(L75)
 
-Note that after creating the :ref:`advanced_features/fusion_dataset/fusion_dataset_structure:fusion dataset`,
+Note that after creating the :ref:`advanced_features/fusion_dataset:fusion dataset`,
 you need to set the ``is_continuous`` attribute of :attr:`~tensorbay.dataset.DatasetBase.notes` to ``True``,(L76)
-since the :ref:`frames<advanced_features/fusion_dataset/fusion_dataset_structure:frame>`
-in each :ref:`advanced_features/fusion_dataset/fusion_dataset_structure:fusion segment` is time-continuous.
+since the :ref:`frames<advanced_features/fusion_dataset:frame>`
+in each :ref:`advanced_features/fusion_dataset:fusion segment` is time-continuous.
 
 load the catalog
 ----------------
@@ -120,7 +120,7 @@ add sensors to fusion segments
 ------------------------------
 
 After constructing the fusion segment,
-the :ref:`sensors<advanced_features/fusion_dataset/fusion_dataset_structure:sensor>`
+the :ref:`sensors<advanced_features/fusion_dataset:sensor>`
 corresponding to different data should be added to the fusion segment.(L87)
 
 In "CADC" , there is a need for `projection`_,
@@ -223,11 +223,11 @@ You can get a segment by passing the required segment name.
 .. note::
 
    If the :ref:`reference/dataset_structure:Segment` or
-   :ref:`advanced_features/fusion_dataset/fusion_dataset_structure:fusion segment`
+   :ref:`advanced_features/fusion_dataset:fusion segment`
    is created  without given name, then its name will be "".
 
-In the ``2018_03_06/0001`` :ref:`advanced_features/fusion_dataset/fusion_dataset_structure:fusion segment`,
-there are several :ref:`sensors<advanced_features/fusion_dataset/fusion_dataset_structure:sensor>`.
+In the ``2018_03_06/0001`` :ref:`advanced_features/fusion_dataset:fusion segment`,
+there are several :ref:`sensors<advanced_features/fusion_dataset:sensor>`.
 You can get all the sensors by accessing the :class:`sensors<tensorbay.sensor.sensor.Sensors>`
 of the :class:`~tensorbay.dataset.dataset.FusionSegment`.
 
@@ -236,8 +236,8 @@ of the :class:`~tensorbay.dataset.dataset.FusionSegment`.
    :start-after: """Read Fusion Dataset / get sensors"""
    :end-before: """"""
 
-In each :ref:`advanced_features/fusion_dataset/fusion_dataset_structure:fusion segment`,
-there are a sequence of :ref:`frames<advanced_features/fusion_dataset/fusion_dataset_structure:frame>`.
+In each :ref:`advanced_features/fusion_dataset:fusion segment`,
+there are a sequence of :ref:`frames<advanced_features/fusion_dataset:frame>`.
 You can get one by index.
 
 .. literalinclude:: ../../../../docs/code/CADC.py
@@ -245,8 +245,8 @@ You can get one by index.
    :start-after: """Read Fusion Dataset / get frame"""
    :end-before: """"""
 
-In each :ref:`advanced_features/fusion_dataset/fusion_dataset_structure:frame`,
-there are several :ref:`data<advanced_features/fusion_dataset/fusion_dataset_structure:data in fusion dataset>`
+In each :ref:`advanced_features/fusion_dataset:frame`,
+there are several :ref:`data<advanced_features/fusion_dataset:data in fusion dataset>`
 corresponding to different sensors.
 You can get each data by the corresponding sensor name.
 
@@ -255,7 +255,7 @@ You can get each data by the corresponding sensor name.
    :start-after: """Read Fusion Dataset / get data"""
    :end-before: """"""
 
-In "CADC", only :ref:`data<advanced_features/fusion_dataset/fusion_dataset_structure:data in fusion dataset>`
+In "CADC", only :ref:`data<advanced_features/fusion_dataset:data in fusion dataset>`
 under :class:`~tensorbay.sensor.sensor.Lidar`
 has a sequence of :doc:`/reference/label_format/Box3D` annotations.
 You can get one by index.

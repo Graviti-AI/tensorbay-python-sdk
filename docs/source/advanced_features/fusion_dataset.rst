@@ -1,10 +1,24 @@
-##########################
- Fusion Dataset Structure
-##########################
+################
+ Fusion Dataset
+################
 
-TensorBay also defines a uniform fusion dataset format.
-This topic explains the related concepts.
-The TensorBay fusion dataset format looks like::
+Fusion dataset represents datasets with data collected from multiple sensors.
+Typical examples of fusion dataset are some autonomous driving datasets, such as `nuScenes`_ and `KITTI-tracking`_.
+
+.. _nuScenes: https://gas.graviti.cn/dataset/motional/nuScenes
+.. _KITTI-tracking: https://gas.graviti.cn/dataset/data-decorators/KITTITracking
+
+
+Fusion dataset is one of the topmost concept in TensorBay format.
+Each fusion dataset includes a catalog and a certain number of fusion segments.
+
+The corresponding class of fusion dataset is :class:`~tensorbay.dataset.dataset.FusionDataset`.
+
+**************************
+ fusion dataset format
+**************************
+
+The uniform fusion dataset format in TensorBay is defined as follows::
 
    fusion dataset
    ├── notes
@@ -27,28 +41,19 @@ The TensorBay fusion dataset format looks like::
    ├── fusion segment
    └── ...
 
-****************
- fusion dataset
-****************
-
-Fusion dataset is the topmost concept in TensorBay format.
-Each fusion dataset includes a catalog and a certain number of fusion segments.
-
-The corresponding class of fusion dataset is :class:`~tensorbay.dataset.dataset.FusionDataset`.
-
 *******
  notes
 *******
 
-The notes of the fusion dataset is the same as the notes
-(:ref:`ref <reference/dataset_structure:notes>`) of the dataset.
+The notes of the fusion dataset is the same as the 
+:ref:`notes <reference/dataset_structure:notes>` of the dataset.
 
 ****************************************
  catalog & subcatalog in fusion dataset
 ****************************************
 
-The catalog of the fusion dataset is the same as the catalog
-(:ref:`ref <reference/dataset_structure:catalog>`) of the dataset.
+The catalog of the fusion dataset is the same as the 
+:ref:`catalog <reference/dataset_structure:catalog>` of the dataset.
 
 ****************
  fusion segment
@@ -98,5 +103,11 @@ The corresponding class of frame is :class:`~tensorbay.dataset.frame.Frame`.
 ************************
 
 Each data inside a frame corresponds to a sensor.
-And the data of the fusion dataset is the same as the data
-(:ref:`ref <reference/dataset_structure:data>`) of the dataset.
+And the data of the fusion dataset is the same as the 
+:ref:`data <reference/dataset_structure:data>` of the dataset.
+
+*********
+ example 
+*********
+
+To learn more about fusion dataset, please read example of :doc:`/quick_start/examples/CADC`

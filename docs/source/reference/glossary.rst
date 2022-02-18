@@ -163,7 +163,7 @@ According to the time continuity of data inside the dataset, a fusion dataset ca
 
 The corresponding class of fusion dataset is :class:`~tensorbay.dataset.dataset.FusionDataset`.
 
-See :doc:`/advanced_features/fusion_dataset/fusion_dataset_structure` for more details.
+See :doc:`/advanced_features/fusion_dataset` for more details.
 
 revision
 ========
