@@ -40,6 +40,10 @@ The following table lists a series of examples to help developers to use TensorB
      - | Topic: Dataset Management
        | Data Type: Image
        | Label Types: :doc:`/reference/label_format/SemanticMask`, :doc:`/reference/label_format/InstanceMask`
+   * - :doc:`/quick_start/examples/CADC`
+     - | Topic: Fusion Dataset
+       | Data Type: Image, PointCloud
+       | Label Types: :doc:`/reference/label_format/Box3D`
    * - :doc:`/quick_start/examples/update_dataset`
      - Topic: Update Dataset
    * - :doc:`/quick_start/examples/move_and_copy`
@@ -60,6 +64,7 @@ The following table lists a series of examples to help developers to use TensorB
    LeedsSportsPose
    THCHS30
    VOC2012Segmentation
+   CADC
    update_dataset
    move_and_copy
    merge_datasets
