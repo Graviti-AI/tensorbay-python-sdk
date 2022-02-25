@@ -462,17 +462,18 @@ def mock_create_job(mocker):
 
 
 @function_fixture
-def mock_get_job(mocker):
+def mock_get_job(mocker, until_complete: bool = False):
     """Mock the getJob OpenAPI.
 
     Arguments:
         mocker: The mocker fixture.
+        until_complete: Whether to update job information until it is complete.
 
     Returns:
         The patched mocker and response data.
 
     """
-    response_data = {
+    response_data1 = {
         "title": "test->main(abort)",
         "jobId": "123",
         "jobType": "squashAndMerge",
@@ -482,13 +483,33 @@ def mock_get_job(mocker):
         "errorMessage": "",
         "description": "12",
     }
-
+    response_data2 = {
+        "title": "test->main(abort)",
+        "jobId": "123",
+        "jobType": "squashAndMerge",
+        "arguments": {"title": "draft-1"},
+        "createdAt": 1,
+        "startedAt": 2,
+        "finishedAt": 3,
+        "status": "SUCCESS",
+        "errorMessage": "",
+        "result": {"draftNumber": 3},
+        "description": "12",
+    }
+    if not until_complete:
+        return (
+            mocker.patch(
+                f"{gas.__name__}.Client.open_api_do",
+                return_value=mock_response(data=response_data1),
+            ),
+            response_data1,
+        )
     return (
         mocker.patch(
             f"{gas.__name__}.Client.open_api_do",
-            return_value=mock_response(data=response_data),
+            side_effect=[mock_response(data=response_data1), mock_response(data=response_data2)],
         ),
-        response_data,
+        [response_data1, response_data2],
     )
 
 
