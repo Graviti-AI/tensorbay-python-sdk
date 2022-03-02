@@ -1,3 +1,6 @@
+..
+ Copyright 2021 Graviti. Licensed under MIT License.
+ 
 #########################
  TensorBay Resource Name
 #########################
