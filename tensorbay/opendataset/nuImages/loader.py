@@ -120,8 +120,8 @@ def _load_frame_and_sensor(
     subset_path: str,
     is_test: bool,
 ) -> None:
-    frame = Frame()
     for data_frames in annotation_info["frame_data"].values():
+        frame = Frame()
         for data_frame in data_frames:
             calibrated_sensor_info = annotation_info["calibrated_sensors"][
                 data_frame["calibrated_sensor_token"]
