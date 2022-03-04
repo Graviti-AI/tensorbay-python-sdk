@@ -558,3 +558,23 @@ def mock_list_jobs(mocker):
         ),
         response_data,
     )
+
+
+@function_fixture
+def mock_create_commit(mocker):
+    """Mock the createCommit OpenAPI.
+
+    Arguments:
+        mocker: The mocker fixture.
+
+    Returns:
+        The patched mocker and response data.
+
+    """
+    response_data = {"commitId": 1}
+    return (
+        mocker.patch(
+            f"{gas.__name__}.Client.open_api_do", return_value=mock_response(data=response_data)
+        ),
+        response_data,
+    )
