@@ -38,10 +38,16 @@ dataset_client.upload_catalog(dataset.catalog)
 """"""
 
 """Update label / overwrite label"""
+from tensorbay.label import Classification
+
+dataset = Dataset("<DATASET_NAME>", gas)
 for segment in dataset:
-    segment_client = dataset_client.get_segment(segment.name)
+    update_data = []
     for data in segment:
-        segment_client.upload_label(data)
+        data.label.classification = Classification("NEW_CATEGORY")  # set new label
+        update_data.append(data)
+    segment_client = dataset_client.get_segment(segment.name)
+    segment_client.upload_label(update_data)
 """"""
 
 """Update label / commit dataset"""

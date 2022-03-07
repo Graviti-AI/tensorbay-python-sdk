@@ -236,3 +236,43 @@ class TestUploadLabel:
         assert remote_panoptic_mask.all_category_ids == panoptic_mask.all_category_ids
 
         gas_client.delete_dataset(dataset_name)
+
+    def test_upload_label(self, accesskey, url, tmp_path):
+        gas_client = GAS(access_key=accesskey, url=url)
+        dataset_name = get_dataset_name()
+        gas_client.create_dataset(dataset_name)
+
+        dataset = Dataset(name=dataset_name)
+        segment = dataset.create_segment("Segment1")
+        # When uploading label, upload catalog first.
+        dataset._catalog = Catalog.loads(CATALOG_CONTENTS)
+
+        path = tmp_path / "sub"
+        path.mkdir()
+        local_path = path / "hello.txt"
+        local_path.write_text("CONTENT")
+        data = Data(local_path=str(local_path))
+        data.label = Label.loads(LABEL)
+        segment.append(data)
+
+        dataset_client = gas_client.upload_dataset(dataset)
+        dataset_client.commit("upload dataset with label")
+        dataset = Dataset(dataset_name, gas_client)
+        assert dataset[0][0].label == Label.loads(LABEL)
+
+        dataset_client.create_draft("update label")
+        segment_client = dataset_client.get_segment(segment.name)
+
+        upload_data = []
+        new_label = Label.loads(LABEL)
+        new_label.multi_polygon[0].category = "dog"
+        for data in segment:
+            data.label = new_label
+            upload_data.append(data)
+        segment_client.upload_label(upload_data)
+        dataset_client.commit("update label")
+        dataset = Dataset(dataset_name, gas_client)
+        assert dataset.catalog == Catalog.loads(CATALOG_CONTENTS)
+        assert dataset[0][0].label == new_label
+
+        gas_client.delete_dataset(dataset_name)
