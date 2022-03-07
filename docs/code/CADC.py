@@ -46,6 +46,7 @@ fusion_dataset.keys()
 
 """Read Fusion Dataset / get fusion segment"""
 fusion_segment = fusion_dataset["2018_03_06/0001"]
+fusion_segment = fusion_dataset[0]
 """"""
 
 """Read Fusion Dataset / get sensors"""

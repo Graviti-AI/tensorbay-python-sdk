@@ -216,7 +216,7 @@ You can get the segment names by list them all.
    :start-after: """Read Fusion Dataset / list fusion segment names"""
    :end-before: """"""
 
-You can get a segment by passing the required segment name.
+You can get a segment by passing the required segment name or the segment index.
 
 .. literalinclude:: ../../../../docs/code/CADC.py
    :language: python
