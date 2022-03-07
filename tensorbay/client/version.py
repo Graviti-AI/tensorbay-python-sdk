@@ -761,18 +761,17 @@ class BasicSearch(JobMixin):
         client: The :class:`~tensorbay.client.requests.Client`.
         dataset_id: Dataset ID.
         status: The version control status of the dataset.
+        is_fusion: Whether the dataset searched is a fusion dataset.
 
     """
 
     _JOB_TYPE = "basicSearch"
 
-    def __init__(
-        self,
-        client: Client,
-        dataset_id: str,
-        status: Status,
-    ) -> None:
-        pass
+    def __init__(self, client: Client, dataset_id: str, status: Status, is_fusion: bool) -> None:
+        self._client = client
+        self._dataset_id = dataset_id
+        self._status = status
+        self._is_fusion = is_fusion
 
     def _generate_jobs(
         self,
@@ -780,7 +779,17 @@ class BasicSearch(JobMixin):
         offset: int = 0,
         limit: int = 128,
     ) -> Generator[BasicSearchJob, None, int]:
-        pass
+        response = self._list_jobs(self._JOB_TYPE, status, offset, limit)
+        for item in response["jobs"]:
+            yield BasicSearchJob.from_response_body(
+                item,
+                dataset_id=self._dataset_id,
+                client=self._client,
+                job_updater=self._get_job,
+                is_fusion=self._is_fusion,
+            )
+
+        return response["totalCount"]  # type: ignore[no-any-return]
 
     def create_job(
         self,
@@ -805,10 +814,34 @@ class BasicSearch(JobMixin):
                 2. "FRAME": if at least one data in a frame meets search filters, all data in
                     the frame will be get. This option only works on fusion dataset.
 
-        Return:
+        Returns:
             The BasicSearchJob.
 
         """
+        self._status.check_authority_for_commit()
+
+        if not title:
+            title = (
+                f"search({self._status.commit_id[:7]}): "  # type: ignore[index]
+                f"{' '.join(filters[0][:2])} ..."
+            )
+
+        arguments = {
+            "commit": self._status.commit_id,
+            "conjunction": conjunction,
+            "filters": filters,
+            "unit": unit,
+            "title": title,
+        }
+
+        job_info = self._create_job(title, self._JOB_TYPE, arguments, description)
+        return BasicSearchJob.from_response_body(
+            job_info,
+            dataset_id=self._dataset_id,
+            client=self._client,
+            job_updater=self._get_job,
+            is_fusion=self._is_fusion,
+        )
 
     def get_job(self, job_id: str) -> BasicSearchJob:
         """Get a :class:`BasicSearchJob`.
@@ -816,10 +849,18 @@ class BasicSearch(JobMixin):
         Arguments:
             job_id: The BasicSearchJob id.
 
-        Return:
+        Returns:
             The BasicSearchJob.
 
         """
+        job_info = self._get_job(job_id)
+        return BasicSearchJob.from_response_body(
+            job_info,
+            dataset_id=self._dataset_id,
+            client=self._client,
+            job_updater=self._get_job,
+            is_fusion=self._is_fusion,
+        )
 
     def list_jobs(self, status: Optional[str] = None) -> PagingList[BasicSearchJob]:
         """List the BasicSearchJob.
@@ -828,7 +869,11 @@ class BasicSearch(JobMixin):
             status: The BasicSearchJob status which includes "QUEUING", "PROCESSING", "SUCCESS",
                     "FAIL", "ABORT" and None. None means all kinds of status.
 
-        Return:
+        Returns:
             The PagingList of BasicSearchJob.
 
         """
+        return PagingList(
+            lambda offset, limit: self._generate_jobs(status, offset, limit),
+            128,
+        )
