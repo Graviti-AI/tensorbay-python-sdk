@@ -64,7 +64,7 @@ Update the catalog if needed:
    :start-after: """Update label / update catalog"""
    :end-before: """"""
 
-Overwrite previous labels with new label on dataset:
+Overwrite previous labels with new label:
 
 .. literalinclude:: ../../../../docs/code/update_dataset.py
    :language: python

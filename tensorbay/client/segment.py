@@ -18,6 +18,7 @@ from ulid import ULID, from_timestamp
 from tensorbay.client.lazy import LazyPage, PagingList
 from tensorbay.client.status import Status
 from tensorbay.dataset import AuthData, Data, Frame, RemoteData
+from tensorbay.dataset.data import DataBase
 from tensorbay.exception import FrameError, InvalidParamsError, ResourceNotExistError, ResponseError
 from tensorbay.label import Label
 from tensorbay.sensor.sensor import Sensor, Sensors
@@ -328,6 +329,42 @@ class SegmentClientBase:
 
         self._client.open_api_do("PUT", "labels", self._dataset_id, json=post_data)
 
+    def _upload_multi_label(self, data: Iterable[DataBase._Type]) -> None:
+        post_data: Dict[str, Any] = {"segmentName": self.name}
+        objects = []
+        for single_data in data:
+            label = single_data.label.dumps()
+            if not label:
+                continue
+
+            remote_path = (
+                single_data.path
+                if isinstance(single_data, RemoteData)
+                else single_data.target_remote_path
+            )
+            objects.append({"remotePath": remote_path, "label": label})
+        post_data["objects"] = objects
+        post_data.update(self._status.get_status_info())
+
+        self._client.open_api_do("PUT", "multi/data/labels", self._dataset_id, json=post_data)
+
+    def upload_label(self, data: Union[DataBase._Type, Iterable[DataBase._Type]]) -> None:
+        """Upload label with Data object to the draft.
+
+        Arguments:
+            data: The data object which represents the local file to upload.
+
+        """
+        self._status.check_authority_for_draft()
+
+        if not isinstance(data, Iterable):
+            data = [data]
+
+        for chunked_data in chunked(data, 128):
+            for single_data in chunked_data:
+                self._upload_mask_files(single_data.label)
+            self._upload_multi_label(chunked_data)
+
     @property
     def name(self) -> str:
         """Return the segment name.
@@ -457,18 +494,6 @@ class SegmentClient(SegmentClientBase):
         self._upload_file(data)
 
         self._synchronize_upload_info((data.get_callback_body(),))
-
-    def upload_label(self, data: Data) -> None:
-        """Upload label with Data object to the draft.
-
-        Arguments:
-            data: The data object which represents the local file to upload.
-
-        """
-        self._status.check_authority_for_draft()
-
-        self._upload_mask_files(data.label)
-        self._upload_label(data)
 
     def upload_data(self, data: Data) -> None:
         """Upload Data object to the draft.
