@@ -286,11 +286,98 @@ class SquashAndMergeJob(Job):
 class BasicSearchJob(Job):
     """This class defines :class:`BasicSearchJob`."""
 
+    _T = TypeVar("_T", bound="BasicSearchJob")
+
+    def __init__(
+        self,
+        client: Client,
+        *,
+        dataset_id: str,
+        job_updater: Callable[[str], Dict[str, Any]],
+        is_fusion: bool,
+        title: str,
+        job_id: str,
+        arguments: Dict[str, Any],
+        created_at: int,
+        started_at: Optional[int],
+        finished_at: Optional[int],
+        status: str,
+        error_message: str,
+        result: Optional[Dict[str, Any]],
+        description: Optional[str] = "",
+    ) -> None:
+        super().__init__(
+            client,
+            dataset_id,
+            job_updater,
+            title,
+            job_id,
+            arguments,
+            created_at,
+            started_at,
+            finished_at,
+            status,
+            error_message,
+            result,
+            description,
+        )
+        self._is_fusion = is_fusion
+
     @property
     def result(self) -> Union[SearchResult, FusionSearchResult, None]:
         """Get the result of the BasicSearchJob.
 
-        Return:
+        Returns:
             The search result of the BasicSearchJob.
 
         """
+        if self._result:
+            search_result_id: str = self._result["searchResultId"]
+            if self._is_fusion:
+                return FusionSearchResult(self.job_id, search_result_id, self._client)
+            return SearchResult(self.job_id, search_result_id, self._client)
+
+        return None
+
+    @classmethod
+    def from_response_body(  # type: ignore[override]  # pylint: disable=arguments-differ
+        cls: Type[_T],
+        body: Dict[str, Any],
+        *,
+        client: Client,
+        dataset_id: str,
+        job_updater: Callable[[str], Dict[str, Any]],  # noqa: DAR101
+        is_fusion: bool,
+    ) -> _T:
+        """Loads a :class:`BasicSearchJob` object from a response body.
+
+        Arguments:
+            body: The response body which contains the information of a BasicSearchJob,
+                whose format should be like::
+
+                    {
+                        "title": <str>
+                        "jobId": <str>
+                        "arguments": <object>
+                        "createdAt": <int>
+                        "startedAt": <int>
+                        "finishedAt": <int>
+                        "status": <str>
+                        "errorMessage": <str>
+                        "result": <object>
+                        "description": <str>
+                    }
+            client: The :class:`~tensorbay.client.requests.Client`.
+            dataset_id: Dataset ID.
+            job_updater: The function to update the information of the BasicSearchJob instance.
+            if_fusion: Whether it is from fusion dataset.
+
+        Returns:
+            The loaded :class:`BasicSearchJob` object.
+
+        """
+        job = super().from_response_body(
+            body, client=client, dataset_id=dataset_id, job_updater=job_updater
+        )
+        job._is_fusion = is_fusion  # pylint: disable=protected-access
+        return job
