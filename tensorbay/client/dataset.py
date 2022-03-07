@@ -237,7 +237,9 @@ class DatasetClientBase(VersionControlMixin):
             Required :class:`~tensorbay.client.version.BasicSearch`.
 
         """
-        return BasicSearch(self._client, self._dataset_id, self._status)
+        return BasicSearch(
+            self._client, self._dataset_id, self._status, isinstance(self, FusionDatasetClient)
+        )
 
     def enable_cache(self, cache_path: str = "") -> None:
         """Enable cache when open the remote data of the dataset.
