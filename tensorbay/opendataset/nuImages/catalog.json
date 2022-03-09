@@ -149,7 +149,7 @@
                 "description": "Motion of the vehicle."
             },
             {
-                "name": "vehicle_light.emergency",
+                "name": "vehicle_light-emergency",
                 "enum": ["flashing", "not_flashing"],
                 "parentCategories": [
                     "vehicle.car",
@@ -317,7 +317,7 @@
                 "description": "Motion of the vehicle."
             },
             {
-                "name": "vehicle_light.emergency",
+                "name": "vehicle_light-emergency",
                 "enum": ["flashing", "not_flashing"],
                 "parentCategories": [
                     "vehicle.car",
