@@ -47,6 +47,7 @@ It provides:
    features/dataset_management
    features/version_control/index
    features/visualization
+   features/search/index
 
 .. toctree::
    :maxdepth: 1

@@ -241,7 +241,7 @@ class FusionSearchResult(SearchResultBase):
             segment_name: Name of the segment.
 
         Returns:
-            The :class:`sensors<~tensorbay.sensor.sensor.Sensors>`instance.
+            The :class:`sensors<~tensorbay.sensor.sensor.Sensors>` instance.
 
         """
         params: Dict[str, Any] = {"segmentName": segment_name, "draftNumber": 1}

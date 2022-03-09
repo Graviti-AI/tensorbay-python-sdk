@@ -21,3 +21,4 @@ tensorbay.client
    profile
    statistics
    job
+   search
