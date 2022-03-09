@@ -110,7 +110,12 @@ def _get_annotation_info(info_path: str, is_test: bool = False) -> Dict[str, Any
             info_path, "surface_ann", no_key_frame=True, determined_token="sample_data_token"
         )
         annotation_info["category"] = get_info_with_token(info_path, "category")
-        annotation_info["attribute"] = get_info_with_token(info_path, "attribute")
+        attributes_info = get_info_with_token(info_path, "attribute")
+        for attribute_info in attributes_info.values():
+            name, value = attribute_info["name"].rsplit(".", 1)
+            attribute_info["name"] = name.replace(".", "-")
+            attribute_info["value"] = value
+        annotation_info["attribute"] = attributes_info
     return annotation_info
 
 
@@ -176,8 +181,8 @@ def _get_object_annotations(
         category = token_to_categories[object_annotation["category_token"]]["name"]
         attributes = {}
         for attribute_token in object_annotation["attribute_tokens"]:
-            key, value = token_to_attributes[attribute_token]["name"].rsplit(".", 1)
-            attributes[key] = value
+            attribute_info = token_to_attributes[attribute_token]
+            attributes[attribute_info["name"]] = attribute_info["value"]
         box2d = LabeledBox2D(*object_annotation["bbox"], category=category, attributes=attributes)
         mask = object_annotation["mask"]
         rle = _get_labeled_rle(mask, category, attributes) if mask else None
