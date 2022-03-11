@@ -13,6 +13,7 @@
 """Authorize a Dataset Client Instance"""
 from tensorbay import GAS
 
+# Please visit `https://gas.graviti.cn/tensorbay/developer` to get the AccessKey.
 gas = GAS("<YOUR_ACCESSKEY>")
 dataset_client = gas.create_dataset("<DATASET_NAME>")
 dataset_client.create_draft("draft-1")

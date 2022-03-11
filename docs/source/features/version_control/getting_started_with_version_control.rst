@@ -32,6 +32,7 @@ The code below checkouts to the first commit and check the data amount.
    from tensorbay import GAS
    from tensorbay.dataset import Dataset
 
+   # Please visit `https://gas.graviti.cn/tensorbay/developer` to get the AccessKey.
    gas = GAS("<YOUR_ACCESSKEY>")
    commits = dataset_client.list_commits()
 
