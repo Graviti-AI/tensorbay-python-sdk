@@ -284,7 +284,25 @@ class SquashAndMergeJob(Job):
 
 
 class BasicSearchJob(Job):
-    """This class defines :class:`BasicSearchJob`."""
+    """This class defines :class:`BasicSearchJob`.
+
+    Arguments:
+        client: The :class:`~tensorbay.client.requests.Client`.
+        dataset_id: Dataset ID.
+        job_updater: The function to update the information of the Job instance.
+        title: Title of the Job.
+        job_id: ID of the Job.
+        arguments: Arguments of the Job.
+        created_at: The time when the Job is created.
+        started_at: The time when the Job is started.
+        finished_at: The time when the Job is finished.
+        status: The status of the Job.
+        error_message: The error message of the Job.
+        result: The result of the Job.
+        description: The description of the Job.
+        is_fusion: whether its dataset is a fusion dataset.
+
+    """
 
     _T = TypeVar("_T", bound="BasicSearchJob")
 
@@ -331,7 +349,7 @@ class BasicSearchJob(Job):
             The search result of the BasicSearchJob.
 
         """
-        if self._result:
+        if self.status == "SUCCESS" and self._result:
             search_result_id: str = self._result["searchResultId"]
             if self._is_fusion:
                 return FusionSearchResult(self.job_id, search_result_id, self._client)
