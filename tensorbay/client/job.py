@@ -331,7 +331,7 @@ class BasicSearchJob(Job):
             The search result of the BasicSearchJob.
 
         """
-        if self._result:
+        if self.status == "SUCCESS" and self._result:
             search_result_id: str = self._result["searchResultId"]
             if self._is_fusion:
                 return FusionSearchResult(self.job_id, search_result_id, self._client)
