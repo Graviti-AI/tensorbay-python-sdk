@@ -14,6 +14,7 @@ from tensorbay import GAS
 """Upload Images to the Dataset"""
 from tensorbay.dataset import Dataset
 
+# Please visit `https://gas.graviti.cn/tensorbay/developer` to get the AccessKey.
 gas = GAS("<YOUR_ACCESSKEY>")
 dataset = Dataset("<DATASET_NAME>")
 """"""

@@ -12,6 +12,7 @@
 """Get cloud client"""
 from tensorbay import GAS
 
+# Please visit `https://gas.graviti.cn/tensorbay/developer` to get the AccessKey.
 gas = GAS("<YOUR_ACCESSKEY>")
 cloud_client = gas.get_cloud_client("<CONFIG_NAME>")
 """"""

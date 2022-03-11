@@ -14,6 +14,7 @@
 from tensorbay import GAS
 from tensorbay.dataset import FusionDataset
 
+# Please visit `https://gas.graviti.cn/tensorbay/developer` to get the AccessKey.
 gas = GAS("<YOUR_ACCESSKEY>")
 """"""
 
