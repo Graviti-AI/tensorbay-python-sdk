@@ -831,7 +831,6 @@ class BasicSearch(JobMixin):
             "conjunction": conjunction,
             "filters": filters,
             "unit": unit,
-            "title": title,
         }
 
         job_info = self._create_job(title, self._JOB_TYPE, arguments, description)
