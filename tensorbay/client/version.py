@@ -553,25 +553,32 @@ class JobMixin:
 
         response.update(
             title=title,
+            jobType=job_type,
             arguments=arguments,
             status="QUEUING",
             description=description,
         )
         return response
 
-    def _get_job(self, job_id: str) -> Dict[str, Any]:
+    def _get_job(self, job_id: str, job_type: str) -> Dict[str, Any]:
         """Get a :class:`Job`.
 
         Arguments:
             job_id: The Job id.
+            job_type: The type of Job.
 
         Returns:
             The info of Job.
 
         """
-        return self._client.open_api_do(  # type: ignore[no-any-return]
-            "GET", f"jobs/{job_id}", self._dataset_id
+        params = {"jobType": job_type}
+
+        response: Dict[str, Any] = self._client.open_api_do(
+            "GET", f"jobs/{job_id}", self._dataset_id, params=params
         ).json()
+
+        response.update(jobType=job_type)
+        return response
 
     def _list_jobs(
         self,
@@ -595,8 +602,12 @@ class JobMixin:
         """
         params = {"jobType": job_type, "status": status, "offset": offset, "limit": limit}
 
-        response = self._client.open_api_do("GET", "jobs", self._dataset_id, params=params)
-        return response.json()  # type: ignore[no-any-return]
+        response: Dict[str, Any] = self._client.open_api_do(
+            "GET", "jobs", self._dataset_id, params=params
+        ).json()
+
+        response.update(jobType=job_type)
+        return response
 
     def delete_job(self, job_id: str) -> None:
         """Delete a :class:`Job`.
@@ -728,7 +739,7 @@ class SquashAndMerge(JobMixin):
             The SquashAndMergeJob.
 
         """
-        job_info = self._get_job(job_id)
+        job_info = self._get_job(job_id, self._JOB_TYPE)
         return SquashAndMergeJob.from_response_body(
             job_info,
             dataset_id=self._dataset_id,
@@ -856,7 +867,7 @@ class BasicSearch(JobMixin):
             The BasicSearchJob.
 
         """
-        job_info = self._get_job(job_id)
+        job_info = self._get_job(job_id, self._JOB_TYPE)
         return BasicSearchJob.from_response_body(
             job_info,
             dataset_id=self._dataset_id,
