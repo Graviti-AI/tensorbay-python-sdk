@@ -63,9 +63,12 @@ class TestJobMixin:
 
     def test__get_job(self, mocker, mock_get_job):
         job_id = "123"
+        job_type = "squashAndMerge"
         open_api_do, response_data = mock_get_job(mocker)
-        assert response_data == self.dataset_client.squash_and_merge._get_job(job_id)
-        open_api_do.assert_called_once_with("GET", f"jobs/{job_id}", self.dataset_client.dataset_id)
+        assert response_data == self.dataset_client.squash_and_merge._get_job(job_id, job_type)
+        open_api_do.assert_called_once_with(
+            "GET", f"jobs/{job_id}", self.dataset_client.dataset_id, params={"jobType": job_type}
+        )
 
     def test__list_jobs(self, mocker, mock_list_jobs):
         params = {
@@ -164,6 +167,7 @@ class TestSquashAndMerge(TestJobMixin):
 
     def test_get_job(self, mocker, mock_get_job):
         job_id = "123"
+        job_type = "squashAndMerge"
         open_api_do, job_info = mock_get_job(mocker)
         assert self.dataset_client.squash_and_merge.get_job(
             job_id
@@ -174,7 +178,9 @@ class TestSquashAndMerge(TestJobMixin):
             job_updater=self.dataset_client.squash_and_merge._get_job,
             draft_getter=self.dataset_client.squash_and_merge._draft_getter,
         )
-        open_api_do.assert_called_once_with("GET", f"jobs/{job_id}", self.dataset_client.dataset_id)
+        open_api_do.assert_called_once_with(
+            "GET", f"jobs/{job_id}", self.dataset_client.dataset_id, params={"jobType": job_type}
+        )
 
     def test_list_jobs(self, mocker, mock_list_jobs):
         status, offset, limit = None, 0, 128

@@ -26,6 +26,7 @@ class TestJob:
         job_updater=dataset_client.squash_and_merge._get_job,
         title="test->main(abort)",
         job_id="123",
+        job_type="squashAndMerge",
         arguments={"title": "draft-1"},
         created_at=1,
         started_at=2,
@@ -44,8 +45,9 @@ class TestJob:
         assert self.job.status == final_responce["status"]
         assert self.job.error_message == final_responce["errorMessage"]
         assert self.job._result == final_responce.get("result")
+        params = {"jobType": "squashAndMerge"}
         open_api_do.assert_called_with(
-            "GET", f"jobs/{self.job.job_id}", self.dataset_client.dataset_id
+            "GET", f"jobs/{self.job.job_id}", self.dataset_client.dataset_id, params=params
         )
 
 
@@ -66,6 +68,7 @@ class TestSquashAndMergeJob:
         draft_getter=dataset_client.get_draft,
         title="test->main(abort)",
         job_id="234",
+        job_type="squashAndMerge",
         arguments={"title": "draft-1"},
         created_at=1,
         started_at=None,
@@ -82,6 +85,7 @@ class TestSquashAndMergeJob:
         draft_getter=dataset_client.get_draft,
         title="test->main(abort)",
         job_id="123",
+        job_type="squashAndMerge",
         arguments={"title": "draft-1"},
         created_at=1,
         started_at=2,

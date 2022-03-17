@@ -26,6 +26,7 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
         job_updater: The function to update the information of the Job instance.
         title: Title of the Job.
         job_id: ID of the Job.
+        job_type: Type of the Job.
         arguments: Arguments of the Job.
         created_at: The time when the Job is created.
         started_at: The time when the Job is started.
@@ -54,6 +55,7 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
 
     title: str = attr()
     job_id: str = attr(key=camel)
+    _job_type: str = attr(key=camel)
     arguments: Dict[str, Any] = attr()
     created_at: int = attr(key=camel)
     started_at: Optional[int] = attr(key=camel, default=None)
@@ -67,9 +69,10 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
         self,
         client: Client,
         dataset_id: str,
-        job_updater: Callable[[str], Dict[str, Any]],
+        job_updater: Callable[[str, str], Dict[str, Any]],
         title: str,
         job_id: str,
+        job_type: str,
         arguments: Dict[str, Any],
         created_at: int,
         started_at: Optional[int],
@@ -84,6 +87,7 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
         self._job_updater = job_updater
         self.title = title
         self.job_id = job_id
+        self._job_type = job_type
         self.arguments = arguments
         self.created_at = created_at
         self.started_at = started_at
@@ -103,7 +107,7 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
         *,
         client: Client,
         dataset_id: str,
-        job_updater: Callable[[str], Dict[str, Any]],  # noqa: DAR101
+        job_updater: Callable[[str, str], Dict[str, Any]],  # noqa: DAR101
     ) -> _T:
         """Loads a :class:`Job` object from a response body.
 
@@ -114,6 +118,7 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
                     {
                         "title": <str>
                         "jobId": <str>
+                        "jobType"" <str>
                         "arguments": <object>
                         "createdAt": <int>
                         "startedAt": <int>
@@ -145,12 +150,12 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
             until_complete: Whether to update job information until it is complete.
 
         """
-        job_info = self._job_updater(self.job_id)
+        job_info = self._job_updater(self.job_id, self._job_type)
 
         if until_complete:
             while job_info["status"] in _JOB_NOT_COMPLETE_STATUS:
                 sleep(_JOB_UPDATE_INTERVAL)
-                job_info = self._job_updater(self.job_id)
+                job_info = self._job_updater(self.job_id, self._job_type)
 
         self.started_at = job_info.get("startedAt")
         self.finished_at = job_info.get("finishedAt")
@@ -177,6 +182,7 @@ class SquashAndMergeJob(Job):
         draft_getter: The function to get draft by draft_number.
         title: Title of the Job.
         job_id: ID of the Job.
+        job_type: Type of the Job.
         arguments: Arguments of the Job.
         created_at: The time when the Job is created.
         started_at: The time when the Job is started.
@@ -190,14 +196,16 @@ class SquashAndMergeJob(Job):
 
     _T = TypeVar("_T", bound="SquashAndMergeJob")
 
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(  # pylint: disable=too-many-locals
         self,
         client: Client,
+        *,
         dataset_id: str,
-        job_updater: Callable[[str], Dict[str, Any]],
+        job_updater: Callable[[str, str], Dict[str, Any]],
         draft_getter: Callable[[int], Draft],
         title: str,
         job_id: str,
+        job_type: str,
         arguments: Dict[str, Any],
         created_at: int,
         started_at: Optional[int],
@@ -213,6 +221,7 @@ class SquashAndMergeJob(Job):
             job_updater,
             title,
             job_id,
+            job_type,
             arguments,
             created_at,
             started_at,
@@ -245,7 +254,7 @@ class SquashAndMergeJob(Job):
         *,
         client: Client,
         dataset_id: str,
-        job_updater: Callable[[str], Dict[str, Any]],  # noqa: DAR101
+        job_updater: Callable[[str, str], Dict[str, Any]],  # noqa: DAR101
         draft_getter: Callable[[int], Draft],
     ) -> _T:
         """Loads a :class:`SquashAndMergeJob` object from a response body.
@@ -257,6 +266,7 @@ class SquashAndMergeJob(Job):
                     {
                         "title": <str>
                         "jobId": <str>
+                        "jobType"" <str>
                         "arguments": <object>
                         "createdAt": <int>
                         "startedAt": <int>
@@ -288,15 +298,16 @@ class BasicSearchJob(Job):
 
     _T = TypeVar("_T", bound="BasicSearchJob")
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-locals
         self,
         client: Client,
         *,
         dataset_id: str,
-        job_updater: Callable[[str], Dict[str, Any]],
+        job_updater: Callable[[str, str], Dict[str, Any]],
         is_fusion: bool,
         title: str,
         job_id: str,
+        job_type: str,
         arguments: Dict[str, Any],
         created_at: int,
         started_at: Optional[int],
@@ -312,6 +323,7 @@ class BasicSearchJob(Job):
             job_updater,
             title,
             job_id,
+            job_type,
             arguments,
             created_at,
             started_at,
@@ -346,7 +358,7 @@ class BasicSearchJob(Job):
         *,
         client: Client,
         dataset_id: str,
-        job_updater: Callable[[str], Dict[str, Any]],  # noqa: DAR101
+        job_updater: Callable[[str, str], Dict[str, Any]],  # noqa: DAR101
         is_fusion: bool,
     ) -> _T:
         """Loads a :class:`BasicSearchJob` object from a response body.
@@ -358,6 +370,7 @@ class BasicSearchJob(Job):
                     {
                         "title": <str>
                         "jobId": <str>
+                        "jobType"" <str>
                         "arguments": <object>
                         "createdAt": <int>
                         "startedAt": <int>
