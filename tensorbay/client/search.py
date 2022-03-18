@@ -123,14 +123,6 @@ class SearchResultBase(ReprMixin):
             ).json()["labelStatistics"]
         )
 
-    def get_total_size(self) -> int:
-        """Get total data size of the search result and the unit is byte.
-
-        Return:
-            The total data size of the search result.
-
-        """
-
     def list_segment_names(self) -> PagingList[str]:
         """List all segment names of the search result.
 
