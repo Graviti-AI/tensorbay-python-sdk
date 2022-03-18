@@ -826,10 +826,14 @@ class BasicSearch(JobMixin):
                 f"{' '.join(filters[0][:2])} ..."
             )
 
+        new_filters = [
+            dict(zip(("key", "operator", "value", "labelType"), filter_)) for filter_ in filters
+        ]
+
         arguments = {
             "commit": self._status.commit_id,
             "conjunction": conjunction,
-            "filters": filters,
+            "filters": new_filters,
             "unit": unit,
         }
 
