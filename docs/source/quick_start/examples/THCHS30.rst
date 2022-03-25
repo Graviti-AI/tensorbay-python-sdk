@@ -64,7 +64,7 @@ See :doc:`Sentence annotation </reference/label_format/Sentence>` for more detai
 
 
 There are already a number of dataloaders in TensorBay SDK provided by the community.
-Thus, instead of writing, importing an available dataloadert is also feasible.
+Thus, in addition to writing, importing an available dataloadert is also feasible.
 
 .. literalinclude:: ../../../../docs/code/THCHS30.py
    :language: python

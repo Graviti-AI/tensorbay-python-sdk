@@ -83,7 +83,7 @@ See :doc:`Keipoints2D annotation </reference/label_format/Keypoints2D>` for more
 
 
 There are already a number of dataloaders in TensorBay SDK provided by the community.
-Thus, instead of writing, importing an available dataloader is also feasible.
+Thus, in addition to writing, importing an available dataloader is also feasible.
 
 .. literalinclude:: ../../../../docs/code/LeedsSportsPose.py
    :language: python

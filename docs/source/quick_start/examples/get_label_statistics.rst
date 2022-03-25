@@ -5,7 +5,7 @@
  Get Label Statistics
 ######################
 
-This topic describes the get label statistics operation.
+This topic describes the operation to get label statistics.
 
 Label statistics of dataset could be obtained via :func:`~tensorbay.client.dataset.DatasetClientBase.get_label_statistics`
 as follows:
@@ -64,4 +64,4 @@ The details of the statistics structure for the targetDataset are as follows:
     }
 
 .. note::
-   The method :func:`~tensorbay.client.statistics.Statistics.dumps` of :class:`~tensorbay.client.statistics.Statistics` can dump the statistics into a dict.
+   The :func:`~tensorbay.client.statistics.Statistics.dumps` of :class:`~tensorbay.client.statistics.Statistics` can dump the statistics into a dict.
