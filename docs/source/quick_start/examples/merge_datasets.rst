@@ -29,14 +29,13 @@ as examples. Their structures looks like::
             cat.1.jpg
             ...
 
-There are lots of pictures of cats and dogs in these two datasets,
-merge them to get a more diverse dataset.
+There are lots of pictures of cats and dogs in these two datasets, and now merge them to get a more diverse dataset.
 
 .. note::
 
    Before merging datasets, fork both of the open datasets first.
 
-Create a dataset which is named ``mergedDataset``.
+Create a dataset which is named as ``mergedDataset``.
 
 .. literalinclude:: ../../../../docs/code/merge_datasets.py
    :language: python

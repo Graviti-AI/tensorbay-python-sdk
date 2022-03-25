@@ -25,7 +25,7 @@ It provides:
 
 - A :doc:`pythonic way </quick_start/getting_started_with_tensorbay>`
   to access TensorBay resources by TensorBay `OpenAPI`_.
-- An easy-to-use CLI tool :doc:`gas </tensorbay_cli/getting_started_with_cli>`
+- An easy-to-use CLI tool — :doc:`GAS </tensorbay_cli/getting_started_with_cli>`
   (Graviti AI service) to communicate with TensorBay.
 - A consistent :doc:`dataset structure </reference/dataset_structure>`
   to read and write datasets.
