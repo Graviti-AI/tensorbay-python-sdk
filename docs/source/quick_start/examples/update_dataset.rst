@@ -78,11 +78,11 @@ Commit the dataset:
    :start-after: """Update label / commit dataset"""
    :end-before: """"""
 
-| Now dataset is committed with a version includes new labels.
+| Now dataset is committed with a version including new labels.
 | Users can switch between different commits to use different version of labels.
 
 .. important::
-   Uploading labels operation will overwrite all types of labels in data.
+   The operation to upload labels will overwrite all types of labels in data.
 
 ***************
  Update Data
@@ -95,7 +95,7 @@ Add new data to dataset.
    :start-after: """Update data/ upload dataset"""
    :end-before: """"""
 
-Set `skip_uploaded_files=True` to skip uploaded data.
+Set ``skip_uploaded_files=True`` to skip uploaded data.
 
 Overwrite uploaded data to dataset.
 
@@ -104,15 +104,15 @@ Overwrite uploaded data to dataset.
    :start-after: """Update data/ overwrite dataset"""
    :end-before: """"""
 
-The default value of `skip_uploaded_files` is false, use it to overwrite uploaded data.
+The default value of ``skip_uploaded_files`` is ``False``, and use it to overwrite uploaded data.
 
 .. note::
    The segment name and data name are used to identify data,
-   which means if two data's segment names and data names are the same,
-   then they will be regarded as one data.
+   if uploading a data whose segment name and data name are the same with certain data uploaded,
+   then the former one will be visited.
 
 .. important::
-   Uploading dataset operation will only add or overwrite data, Data uploaded before will not be deleted.
+   The operation to upload data will only add or overwrite data, and the data uploaded before will not be deleted.
 
 Delete segment by the segment name.
 

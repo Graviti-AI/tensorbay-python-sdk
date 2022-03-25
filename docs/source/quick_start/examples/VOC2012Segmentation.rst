@@ -106,7 +106,7 @@ and :doc:`InstanceMask annotation </reference/label_format/InstanceMask>` for mo
 
 
 There are already a number of dataloaders in TensorBay SDK provided by the community.
-Thus, instead of writing, importing an available dataloader is also feasible.
+Thus, in addition to writing, importing an available dataloader is also feasible.
 
 .. literalinclude:: ../../../../docs/code/VOC2012Segmentation.py
    :language: python

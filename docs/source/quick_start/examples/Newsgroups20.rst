@@ -91,7 +91,7 @@ See :doc:`Classification annotation </reference/label_format/Classification>` fo
 
 
 There are already a number of dataloaders in TensorBay SDK provided by the community.
-Thus, instead of writing, importing an available dataloader is also feasible.
+Thus, in addition to writing, importing an available dataloader is also feasible.
 
 .. literalinclude:: ../../../../docs/code/Newsgroups20.py
    :language: python

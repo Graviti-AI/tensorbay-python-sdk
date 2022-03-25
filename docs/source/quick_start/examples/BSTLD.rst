@@ -82,7 +82,7 @@ A :ref:`reference/glossary:dataloader` is needed to organize the dataset into a 
 See :doc:`Box2D annotation </reference/label_format/Box2D>` for more details.
 
 There are already a number of dataloaders in TensorBay SDK provided by the community.
-Thus, instead of writing, importing an available dataloader is also feasible.
+Thus, in addition to writing, importing an available dataloader is also feasible.
 
 .. literalinclude:: ../../../../docs/code/BSTLD.py
    :language: python

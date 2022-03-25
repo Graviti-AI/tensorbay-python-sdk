@@ -72,7 +72,7 @@ A BasicSearchJob can be created by :func:`~tensorbay.client.version.BasicSearch.
              - list
            * - "attribute"
              - "in"
-             - list
+             - dict
            * - "dataRemotePath"
              - "like", "="
              - string
