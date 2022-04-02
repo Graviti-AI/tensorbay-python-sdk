@@ -38,7 +38,8 @@ A BasicSearchJob can be created by :func:`~tensorbay.client.version.BasicSearch.
 
 .. note::
     ``filters``: The list of basic search criteria whose format is (key, operator, value, label_type).
-        * key: The keyword of filters, which could be "segment", "size", "withLabel", "frame", "sensor", "category", "attribute" or "dataRemotePath".
+        * | key: The key of filters, which could be "segment", "size", "withLabel", "frame", "sensor", "category", "attribute" or "keyword".
+            Here, the meaning of the "keyword" is the remote path of the data, such as "cat_01.jpg".
         * operator: The operational relationship between the key and value. The supported operators are "like", "in", "=", ">", "<", ">=" and "<=".
         * value: The value of filters.
         * label_type：It only needs to be used if the key is "category" or "attribute", indicating the label type to which the category or attribute belongs.
@@ -73,7 +74,7 @@ A BasicSearchJob can be created by :func:`~tensorbay.client.version.BasicSearch.
            * - "attribute"
              - "in"
              - dict
-           * - "dataRemotePath"
+           * - "keyword"
              - "like", "="
              - string
 
