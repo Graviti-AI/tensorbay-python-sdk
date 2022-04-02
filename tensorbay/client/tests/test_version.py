@@ -53,7 +53,6 @@ class TestJobMixin:
         )
         assert response_data == self.dataset_client.squash_and_merge._create_job(
             post_data["title"],
-            post_data["jobType"],
             post_data["arguments"],
             post_data["description"],
         )
@@ -65,7 +64,7 @@ class TestJobMixin:
         job_id = "123"
         job_type = "squashAndMerge"
         open_api_do, response_data = mock_get_job(mocker)
-        assert response_data == self.dataset_client.squash_and_merge._get_job(job_id, job_type)
+        assert response_data == self.dataset_client.squash_and_merge._get_job(job_id)
         open_api_do.assert_called_once_with(
             "GET", f"jobs/{job_id}", self.dataset_client.dataset_id, params={"jobType": job_type}
         )
@@ -79,7 +78,7 @@ class TestJobMixin:
         }
         open_api_do, response_data = mock_list_jobs(mocker)
         assert response_data == self.dataset_client.squash_and_merge._list_jobs(
-            params["jobType"], params["status"], params["offset"], params["limit"]
+            params["status"], params["offset"], params["limit"]
         )
         open_api_do.assert_called_once_with(
             "GET", "jobs", self.dataset_client.dataset_id, params=params

@@ -69,7 +69,7 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
         self,
         client: Client,
         dataset_id: str,
-        job_updater: Callable[[str, str], Dict[str, Any]],
+        job_updater: Callable[[str], Dict[str, Any]],
         title: str,
         job_id: str,
         job_type: str,
@@ -107,7 +107,7 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
         *,
         client: Client,
         dataset_id: str,
-        job_updater: Callable[[str, str], Dict[str, Any]],  # noqa: DAR101
+        job_updater: Callable[[str], Dict[str, Any]],  # noqa: DAR101
     ) -> _T:
         """Loads a :class:`Job` object from a response body.
 
@@ -150,12 +150,12 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
             until_complete: Whether to update job information until it is complete.
 
         """
-        job_info = self._job_updater(self.job_id, self._job_type)
+        job_info = self._job_updater(self.job_id)
 
         if until_complete:
             while job_info["status"] in _JOB_NOT_COMPLETE_STATUS:
                 sleep(_JOB_UPDATE_INTERVAL)
-                job_info = self._job_updater(self.job_id, self._job_type)
+                job_info = self._job_updater(self.job_id)
 
         self.started_at = job_info.get("startedAt")
         self.finished_at = job_info.get("finishedAt")
@@ -201,7 +201,7 @@ class SquashAndMergeJob(Job):
         client: Client,
         *,
         dataset_id: str,
-        job_updater: Callable[[str, str], Dict[str, Any]],
+        job_updater: Callable[[str], Dict[str, Any]],
         draft_getter: Callable[[int], Draft],
         title: str,
         job_id: str,
@@ -254,7 +254,7 @@ class SquashAndMergeJob(Job):
         *,
         client: Client,
         dataset_id: str,
-        job_updater: Callable[[str, str], Dict[str, Any]],  # noqa: DAR101
+        job_updater: Callable[[str], Dict[str, Any]],  # noqa: DAR101
         draft_getter: Callable[[int], Draft],
     ) -> _T:
         """Loads a :class:`SquashAndMergeJob` object from a response body.
@@ -303,7 +303,7 @@ class BasicSearchJob(Job):
         client: Client,
         *,
         dataset_id: str,
-        job_updater: Callable[[str, str], Dict[str, Any]],
+        job_updater: Callable[[str], Dict[str, Any]],
         is_fusion: bool,
         title: str,
         job_id: str,
@@ -358,7 +358,7 @@ class BasicSearchJob(Job):
         *,
         client: Client,
         dataset_id: str,
-        job_updater: Callable[[str, str], Dict[str, Any]],  # noqa: DAR101
+        job_updater: Callable[[str], Dict[str, Any]],  # noqa: DAR101
         is_fusion: bool,
     ) -> _T:
         """Loads a :class:`BasicSearchJob` object from a response body.
