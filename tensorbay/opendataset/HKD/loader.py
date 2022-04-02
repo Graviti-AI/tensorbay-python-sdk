@@ -8,6 +8,7 @@
 
 import csv
 import os
+from itertools import groupby
 
 from tensorbay.dataset import Data, Dataset
 from tensorbay.label import LabeledKeypoints2D
@@ -92,11 +93,17 @@ def HKD(path: str) -> Dataset:
             #         5,-1.026,31.344,138.77,178.4,136.54,78.863,135.06,75.149,...
             #         ...
             #     ...
-            for csv_line in csv.reader(fp):
+            for key, group in groupby(csv.reader(fp), lambda line: line.pop(0)):
                 image_path = os.path.join(
-                    segment_path, "CropImages", image_name_template.format(csv_line.pop(0))
+                    segment_path, "CropImages", image_name_template.format(key)
                 )
                 data = Data(image_path)
-                data.label.keypoints2d = [LabeledKeypoints2D(chunked(map(float, csv_line), 2))]
+                data.label.keypoints2d = []
+                for coordinates in group:
+                    if "NaN" not in coordinates:
+                        data.label.keypoints2d.append(
+                            LabeledKeypoints2D(chunked(map(float, coordinates), 2))
+                        )
+                        break
                 segment.append(data)
     return dataset
