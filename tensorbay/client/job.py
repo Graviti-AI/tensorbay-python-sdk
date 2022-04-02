@@ -165,11 +165,15 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
 
     def abort(self) -> None:
         """Abort a :class:`Job`."""
-        self._client.open_api_do("POST", f"jobs/{self.job_id}/abort", self._dataset_id)
+        self._client.open_api_do(
+            "POST", f"jobs/{self.job_id}/abort?jobType={self._job_type}", self._dataset_id
+        )
 
     def retry(self) -> None:
         """Retry a :class:`Job`."""
-        self._client.open_api_do("POST", f"jobs/{self.job_id}/retry", self._dataset_id)
+        self._client.open_api_do(
+            "POST", f"jobs/{self.job_id}/retry?jobType={self._job_type}", self._dataset_id
+        )
 
 
 class SquashAndMergeJob(Job):
