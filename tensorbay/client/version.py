@@ -14,6 +14,17 @@ from tensorbay.client.status import Status
 from tensorbay.client.struct import Branch, Commit, Draft, Tag
 from tensorbay.exception import ResourceNotExistError, StatusError
 
+_KEY_TO_TITLES = {
+    "segment": "Segment",
+    "withLabel": "With/Without Label",
+    "frame": "Frame",
+    "sensor": "Sensor",
+    "size": "Size",
+    "category": "Category",
+    "attribute": "Attribute",
+    "keyword": "Data Name",
+}
+
 
 class VersionControlMixin:  # pylint: disable=too-many-public-methods
     """A mixin class supporting version control methods."""
@@ -840,6 +851,9 @@ class BasicSearch(JobMixin):
         new_filters = [
             dict(zip(("key", "operator", "value", "labelType"), filter_)) for filter_ in filters
         ]
+
+        for new_filter in new_filters:
+            new_filter["title"] = _KEY_TO_TITLES[new_filter["key"]]
 
         arguments = {
             "commit": self._status.commit_id,
