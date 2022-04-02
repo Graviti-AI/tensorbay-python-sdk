@@ -627,7 +627,9 @@ class JobMixin:
             job_id: The Job id.
 
         """
-        self._client.open_api_do("DELETE", f"jobs/{job_id}", self._dataset_id)
+        self._client.open_api_do(
+            "DELETE", f"jobs/{job_id}?jobType={self._JOB_TYPE}", self._dataset_id
+        )
 
 
 class SquashAndMerge(JobMixin):
