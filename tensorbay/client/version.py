@@ -534,11 +534,11 @@ class JobMixin:
     _dataset_id: str
     _client: Client
     _status: Status
+    _JOB_TYPE: str
 
     def _create_job(
         self,
         title: str,
-        job_type: str,
         arguments: Dict[str, Any],
         description: str = "",
     ) -> Dict[str, Any]:
@@ -546,7 +546,6 @@ class JobMixin:
 
         Arguments:
             title: The Job title.
-            job_type: The type of Job.
             arguments: The arguments dict of the specific job.
             description: The Job description.
 
@@ -554,7 +553,11 @@ class JobMixin:
             The info of the job.
 
         """
-        post_data: Dict[str, Any] = {"title": title, "jobType": job_type, "arguments": arguments}
+        post_data: Dict[str, Any] = {
+            "title": title,
+            "jobType": self._JOB_TYPE,
+            "arguments": arguments,
+        }
         if description:
             post_data["description"] = description
 
@@ -564,36 +567,34 @@ class JobMixin:
 
         response.update(
             title=title,
-            jobType=job_type,
+            jobType=self._JOB_TYPE,
             arguments=arguments,
             status="QUEUING",
             description=description,
         )
         return response
 
-    def _get_job(self, job_id: str, job_type: str) -> Dict[str, Any]:
+    def _get_job(self, job_id: str) -> Dict[str, Any]:
         """Get a :class:`Job`.
 
         Arguments:
             job_id: The Job id.
-            job_type: The type of Job.
 
         Returns:
             The info of Job.
 
         """
-        params = {"jobType": job_type}
+        params = {"jobType": self._JOB_TYPE}
 
         response: Dict[str, Any] = self._client.open_api_do(
             "GET", f"jobs/{job_id}", self._dataset_id, params=params
         ).json()
 
-        response.update(jobType=job_type)
+        response.update(jobType=self._JOB_TYPE)
         return response
 
     def _list_jobs(
         self,
-        job_type: str,
         status: Optional[str] = None,
         offset: int = 0,
         limit: int = 128,
@@ -601,7 +602,6 @@ class JobMixin:
         """Get a dict containing the information of :class:`Job` list.
 
         Arguments:
-            job_type: Type of the Job.
             status: The Job status which includes "QUEUING", "PROCESSING", "SUCCESS", "FAILED",
                     "ABORTED" and None. None means all kinds of status.
             offset: The offset of the page.
@@ -611,13 +611,13 @@ class JobMixin:
             A dict containing the information of Job list.
 
         """
-        params = {"jobType": job_type, "status": status, "offset": offset, "limit": limit}
+        params = {"jobType": self._JOB_TYPE, "status": status, "offset": offset, "limit": limit}
 
         response: Dict[str, Any] = self._client.open_api_do(
             "GET", "jobs", self._dataset_id, params=params
         ).json()
 
-        response.update(jobType=job_type)
+        response.update(jobType=self._JOB_TYPE)
         return response
 
     def delete_job(self, job_id: str) -> None:
@@ -661,7 +661,7 @@ class SquashAndMerge(JobMixin):
         offset: int = 0,
         limit: int = 128,
     ) -> Generator[SquashAndMergeJob, None, int]:
-        response = self._list_jobs(self._JOB_TYPE, status, offset, limit)
+        response = self._list_jobs(status, offset, limit)
         for item in response["jobs"]:
             yield SquashAndMergeJob.from_response_body(
                 item,
@@ -731,7 +731,7 @@ class SquashAndMerge(JobMixin):
         if draft_description:
             arguments["description"] = draft_description
 
-        job_info = self._create_job(title, self._JOB_TYPE, arguments, description)
+        job_info = self._create_job(title, arguments, description)
         return SquashAndMergeJob.from_response_body(
             job_info,
             dataset_id=self._dataset_id,
@@ -750,7 +750,7 @@ class SquashAndMerge(JobMixin):
             The SquashAndMergeJob.
 
         """
-        job_info = self._get_job(job_id, self._JOB_TYPE)
+        job_info = self._get_job(job_id)
         return SquashAndMergeJob.from_response_body(
             job_info,
             dataset_id=self._dataset_id,
@@ -801,7 +801,7 @@ class BasicSearch(JobMixin):
         offset: int = 0,
         limit: int = 128,
     ) -> Generator[BasicSearchJob, None, int]:
-        response = self._list_jobs(self._JOB_TYPE, status, offset, limit)
+        response = self._list_jobs(status, offset, limit)
         for item in response["jobs"]:
             yield BasicSearchJob.from_response_body(
                 item,
@@ -862,7 +862,7 @@ class BasicSearch(JobMixin):
             "unit": unit,
         }
 
-        job_info = self._create_job(title, self._JOB_TYPE, arguments, description)
+        job_info = self._create_job(title, arguments, description)
         return BasicSearchJob.from_response_body(
             job_info,
             dataset_id=self._dataset_id,
@@ -881,7 +881,7 @@ class BasicSearch(JobMixin):
             The BasicSearchJob.
 
         """
-        job_info = self._get_job(job_id, self._JOB_TYPE)
+        job_info = self._get_job(job_id)
         return BasicSearchJob.from_response_body(
             job_info,
             dataset_id=self._dataset_id,
