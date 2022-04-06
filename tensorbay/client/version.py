@@ -856,6 +856,9 @@ class BasicSearch(JobMixin):
 
         for new_filter in new_filters:
             new_filter["title"] = _KEY_TO_TITLES[new_filter["key"]]
+            label_type = new_filter.pop("labelType", None)
+            if label_type:
+                new_filter["extraInfo"] = {"labelType": label_type}
 
         arguments = {
             "commit": self._status.commit_id,
