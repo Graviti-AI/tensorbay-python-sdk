@@ -30,13 +30,20 @@ class SearchResultBase(ReprMixin):
 
     _repr_attrs: Tuple[str, ...] = ("job_id", "search_result_id")
 
-    def __init__(self, job_id: str, search_result_id: str, client: Client) -> None:
+    def __init__(
+        self, job_id: str, search_result_id: str, search_result_commit_id: str, client: Client
+    ) -> None:
         self.job_id = job_id
         self.search_result_id = search_result_id
+        self.search_result_commit_id = search_result_commit_id
         self._client = client
 
     def _list_segments(self, offset: int = 0, limit: int = 128) -> Dict[str, Any]:
-        params: Dict[str, Any] = {"draftNumber": 1, "offset": offset, "limit": limit}
+        params: Dict[str, Any] = {
+            "commit": self.search_result_commit_id,
+            "offset": offset,
+            "limit": limit,
+        }
         response = self._client.open_api_do("GET", "segments", self.search_result_id, params=params)
         return response.json()  # type: ignore[no-any-return]
 
@@ -57,7 +64,7 @@ class SearchResultBase(ReprMixin):
             "segmentName": segment_name,
             "offset": offset,
             "limit": limit,
-            "draftNumber": 1,
+            "commit": self.search_result_commit_id,
         }
 
         if config.is_internal:
@@ -116,7 +123,7 @@ class SearchResultBase(ReprMixin):
             Required :class:`~tensorbay.client.dataset.Statistics`.
 
         """
-        params: Dict[str, Any] = {"draftNumber": 1}
+        params: Dict[str, Any] = {"commit": self.search_result_commit_id}
         return Statistics(
             self._client.open_api_do(
                 "GET", "labels/statistics", self.search_result_id, params=params
@@ -236,7 +243,10 @@ class FusionSearchResult(SearchResultBase):
             The :class:`sensors<~tensorbay.sensor.sensor.Sensors>` instance.
 
         """
-        params: Dict[str, Any] = {"segmentName": segment_name, "draftNumber": 1}
+        params: Dict[str, Any] = {
+            "segmentName": segment_name,
+            "commit": self.search_result_commit_id,
+        }
 
         response = self._client.open_api_do(
             "GET", "sensors", self.search_result_id, params=params
