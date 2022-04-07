@@ -349,9 +349,14 @@ class BasicSearchJob(Job):
         """
         if self.status == "SUCCESS" and self._result:
             search_result_id: str = self._result["searchResultId"]
+            search_result_commit_id: str = self._result["searchResultCommitId"]
             if self._is_fusion:
-                return FusionSearchResult(self.job_id, search_result_id, self._client)
-            return SearchResult(self.job_id, search_result_id, self._client)
+                return FusionSearchResult(
+                    self.job_id, search_result_id, search_result_commit_id, self._client
+                )
+            return SearchResult(
+                self.job_id, search_result_id, search_result_commit_id, self._client
+            )
 
         return None
 
