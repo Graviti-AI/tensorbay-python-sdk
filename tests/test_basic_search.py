@@ -143,7 +143,26 @@ class TestBasicSearch:
         assert job.status == "SUCCESS"
 
     @pytest.mark.xfail(reason="there are still some bugs in creating and aborting job")
-    def test_job_result(self, accesskey, url, dataset_client, job):
+    def test_create_dataset(self, accesskey, url, dataset_client, job):
+        job.update()
+        job.create_dataset("search_dataset")
+        gas_client = GAS(access_key=accesskey, url=url)
+
+        search_dataset = gas_client.get_dataset("search_dataset", True)
+
+        search_dataset_segment = search_dataset.get_or_create_segment("test")
+        assert (
+            search_dataset_segment.get_sensors() == dataset_client.get_segment("test").get_sensors()
+        )
+
+        search_dataset_frames = search_dataset_segment.list_frames()
+        assert len(search_dataset_frames) == 1
+        search_dataset_data = search_dataset_frames[0]["CAM_BACK_RIGHT"]
+        assert search_dataset_data.path == "test_CAM_BACK_RIGHT.txt"
+        assert search_dataset_data.label == Label.loads(LABEL_1)
+
+    @pytest.mark.xfail(reason="there are still some bugs in creating and aborting job")
+    def test_job_result(self, dataset_client, job):
         job.update()
         fusion_search_result = job.result
 
@@ -174,19 +193,6 @@ class TestBasicSearch:
                 "quantity": 1,
             }
         }
-        fusion_search_result.create_dataset("search_dataset")
-        gas_client = GAS(access_key=accesskey, url=url)
-
-        search_dataset = gas_client.get_dataset("search_dataset", True)
-
-        search_dataset_segment = search_dataset.get_or_create_segment("test")
-        assert search_dataset_segment.get_sensors() == search_result_sensors
-
-        search_dataset_frames = search_dataset_segment.list_frames()
-        assert len(search_dataset_frames) == 1
-        search_dataset_data = search_dataset_frames[0]["CAM_BACK_RIGHT"]
-        assert search_dataset_data.path == "test_CAM_BACK_RIGHT.txt"
-        assert search_dataset_data.label == Label.loads(LABEL_1)
 
     @pytest.mark.xfail(reason="there are still some bugs in creating and aborting job")
     def test_list_jobs(self, dataset_client):

@@ -126,3 +126,12 @@ BasicSearchJob also supports :func:`~tensorbay.client.job.Job.abort` and :func:`
       :language: python
       :start-after: """Abort and Retry Job"""
       :end-before: """"""
+
+Create Dataset
+==============
+TensorBay SDK allows to create a dataset based on the search job by :func:`~tensorbay.client.job.BasicSearchJob.create_dataset`
+
+.. literalinclude:: ../../../../docs/code/basic_search.py
+      :language: python
+      :start-after: """Create Dataset"""
+      :end-before: """"""
