@@ -43,10 +43,6 @@ job = dataset_client.basic_search.create_job(
 search_result = job.result
 """"""
 
-"""Create Dataset"""
-search_result.create_dataset("<DATASET_NAME>")
-""""""
-
 """Get Label Statistics"""
 search_result.get_label_statistics()
 """"""
@@ -78,8 +74,6 @@ fusion_search_result = job.result
 """"""
 
 """The same function as SearchResult"""
-fusion_search_result.create_dataset("<DATASET_NAME>")
-
 fusion_search_result.get_label_statistics()
 
 fusion_search_result.list_segment_names()
