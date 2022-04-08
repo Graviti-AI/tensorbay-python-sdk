@@ -16,15 +16,6 @@ TensorBay SDK allows create :class:`~tensorbay.client.search.SearchResult` via :
       :start-after: """Obtain a SearchResult Instance"""
       :end-before: """"""
 
-Create Dataset
-==============
-TensorBay SDK allows to create a dataset based on the search result by :func:`~tensorbay.client.search.SearchResult.create_dataset`
-
-.. literalinclude:: ../../../../docs/code/search_result.py
-      :language: python
-      :start-after: """Create Dataset"""
-      :end-before: """"""
-
 Get Label Statistics
 ====================
 

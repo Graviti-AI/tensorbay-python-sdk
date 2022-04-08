@@ -97,25 +97,6 @@ class SearchResultBase(ReprMixin):
 
         return response["totalCount"]  # type: ignore[no-any-return]
 
-    def create_dataset(self, name: str, alias: str = "", is_public: bool = False) -> None:
-        """Create a TensorBay dataset based on the search result.
-
-        Arguments:
-            name: Name of the dataset, unique for a user.
-            alias: Alias of the dataset, default is "".
-            is_public: Whether the dataset is a public dataset.
-
-        """
-        post_data = {
-            "datasetName": name,
-            "alias": alias,
-            "isPublic": is_public,
-        }
-
-        self._client.open_api_do(
-            "POST", f"searchResults/{self.search_result_id}/datasets", "", json=post_data
-        )
-
     def get_label_statistics(self) -> Statistics:
         """Get label statistics of the search result.
 
