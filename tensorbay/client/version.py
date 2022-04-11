@@ -822,20 +822,20 @@ class BasicSearch(JobMixin):
         *,
         conjunction: str,
         filters: List[Tuple[Any, ...]],
-        unit: str = "FILE",
+        unit: str = "file",
     ) -> BasicSearchJob:
         """Create a :class:`BasicSearchJob`.
 
         Arguments:
             title: The BasicSearchJob title.
             description: The BasicSearchJob description.
-            conjunction: The logical conjunction between search filters, which includes "AND" and
-                "OR".
+            conjunction: The logical conjunction between search filters, which includes "and" and
+                "or".
             filters: The list of basic search criteria.
             unit: The unit of basic search. There are two options:
 
-                1. "FILE": get the data that meets search filters;
-                2. "FRAME": if at least one data in a frame meets search filters, all data in
+                1. "file": get the data that meets search filters;
+                2. "frame": if at least one data in a frame meets search filters, all data in
                     the frame will be get. This option only works on fusion dataset.
 
         Returns:
