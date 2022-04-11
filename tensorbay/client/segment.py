@@ -933,7 +933,7 @@ class FusionSegmentClient(SegmentClientBase):
         callback_bodies = []
         for sensor_name, data in frame.items():
             try:
-                callback_body = data.get_callback_body()  # type:ignore[union-attr]
+                callback_body = data.get_callback_body()
             except AttributeError:
                 continue
 
