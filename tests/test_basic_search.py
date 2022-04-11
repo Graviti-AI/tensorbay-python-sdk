@@ -103,6 +103,16 @@ def init_dataset_client(accesskey, url, tmp_path_factory):
 def init_job(dataset_client):
     job = dataset_client.basic_search.create_job(
         title="basic search job example",
+        conjunction="AND",
+        unit="FILE",
+        filters=[("withLabel", "=", True)],
+    )
+    job.abort()
+    job.update()
+    assert job.status == "ABORTED"
+
+    job = dataset_client.basic_search.create_job(
+        title="basic search job example",
         description="search description",
         conjunction="AND",
         unit="FILE",
@@ -120,12 +130,6 @@ def init_job(dataset_client):
             ("sensor", "in", ["CAM_BACK_RIGHT"]),
         ],
     )
-    job.abort()
-    job.update()
-    assert job.status == "ABORTED"
-    job.retry()
-    job.update()
-    assert job.status == "PROCESSING"
 
     yield job
 
@@ -197,7 +201,7 @@ class TestBasicSearch:
     @pytest.mark.xfail(reason="there are still some bugs in creating and aborting job")
     def test_list_jobs(self, dataset_client):
         jobs = dataset_client.basic_search.list_jobs()
-        assert len(jobs) == 1
+        assert len(jobs) == 2
         for job in jobs:
             dataset_client.basic_search.delete_job(job.job_id)
         jobs = dataset_client.basic_search.list_jobs()

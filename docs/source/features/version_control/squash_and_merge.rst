@@ -92,7 +92,7 @@ set to ``True``, the SquashAndMergeJob will be blocked until it is completed.
 Abort or retry
 ==============
 
-SquashAndMergeJob also supports :func:`~tensorbay.client.job.Job.abort` and :func:`~tensorbay.client.job.Job.retry`:
+SquashAndMergeJob also supports :func:`~tensorbay.client.job.Job.abort` and :func:`~tensorbay.client.job.SquashAndMergeJob.retry`:
 
 .. literalinclude:: ../../../../docs/code/squash_and_merge.py
       :language: python
