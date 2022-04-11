@@ -25,8 +25,8 @@ dataset_client = gas.create_dataset("<DATASET_NAME>")
 dataset_client.basic_search.create_job(
     title="search example",
     description="search description",
-    conjunction="AND",
-    unit="FILE",
+    conjunction="and",
+    unit="file",
     filters=[
         (
             "category",
