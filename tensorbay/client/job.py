@@ -169,12 +169,6 @@ class Job(AttrsMixin, ReprMixin):  # pylint: disable=too-many-instance-attribute
             "POST", f"jobs/{self.job_id}/abort?jobType={self._job_type}", self._dataset_id
         )
 
-    def retry(self) -> None:
-        """Retry a :class:`Job`."""
-        self._client.open_api_do(
-            "POST", f"jobs/{self.job_id}/retry?jobType={self._job_type}", self._dataset_id
-        )
-
 
 class SquashAndMergeJob(Job):
     """This class defines :class:`SquashAndMergeJob`.
@@ -295,6 +289,12 @@ class SquashAndMergeJob(Job):
         job._draft_getter = draft_getter  # pylint: disable=protected-access
 
         return job
+
+    def retry(self) -> None:
+        """Retry a :class:`SquashAndMergeJob`."""
+        self._client.open_api_do(
+            "POST", f"jobs/{self.job_id}/retry?jobType={self._job_type}", self._dataset_id
+        )
 
 
 class BasicSearchJob(Job):

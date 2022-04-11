@@ -62,9 +62,8 @@ job.update()
 job.update(until_complete=True)
 """"""
 
-"""Abort and Retry Job"""
+"""Abort Job"""
 job.abort()
-job.retry()
 """"""
 
 """Create Dataset"""

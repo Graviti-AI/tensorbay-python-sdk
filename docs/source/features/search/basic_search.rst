@@ -117,14 +117,14 @@ set to ``True``, the BasicSearchJob will be blocked until it is completed.
       :start-after: """Update Job"""
       :end-before: """"""
 
-Abort or Retry
-==============
+Abort
+=====
 
-BasicSearchJob also supports :func:`~tensorbay.client.job.Job.abort` and :func:`~tensorbay.client.job.Job.retry`:
+BasicSearchJob also supports :func:`~tensorbay.client.job.Job.abort`:
 
 .. literalinclude:: ../../../../docs/code/basic_search.py
       :language: python
-      :start-after: """Abort and Retry Job"""
+      :start-after: """Abort Job"""
       :end-before: """"""
 
 Create Dataset
