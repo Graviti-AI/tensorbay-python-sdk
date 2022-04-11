@@ -103,8 +103,8 @@ def init_dataset_client(accesskey, url, tmp_path_factory):
 def init_job(dataset_client):
     job = dataset_client.basic_search.create_job(
         title="basic search job example",
-        conjunction="AND",
-        unit="FILE",
+        conjunction="and",
+        unit="file",
         filters=[("withLabel", "=", True)],
     )
     job.abort()
@@ -114,8 +114,8 @@ def init_job(dataset_client):
     job = dataset_client.basic_search.create_job(
         title="basic search job example",
         description="search description",
-        conjunction="AND",
-        unit="FILE",
+        conjunction="and",
+        unit="file",
         filters=[
             (
                 "category",

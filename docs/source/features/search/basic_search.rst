@@ -29,12 +29,12 @@ A BasicSearchJob can be created by :func:`~tensorbay.client.version.BasicSearch.
       :end-before: """"""
 
 .. note::
-    ``conjunction``: The logical conjunction between search filters, which includes "AND" and "OR".
+    ``conjunction``: The logical conjunction between search filters, which includes "and" and "or".
 
 .. note::
     ``unit``:The unit of basic search. There are two options:
-        * "FILE": Get the data that meets search filters;
-        * "FRAME": If at least one data in a frame meets search filters, all data in the frame will be get. This option only works on fusion dataset.
+        * "file": Get the data that meets search filters;
+        * "frame": If at least one data in a frame meets search filters, all data in the frame will be get. This option only works on fusion dataset.
 
 .. note::
     ``filters``: The list of basic search criteria whose format is (key, operator, value, label_type).

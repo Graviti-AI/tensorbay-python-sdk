@@ -22,8 +22,8 @@ dataset_client = gas.get_dataset("<DATASET_NAME>")
 job = dataset_client.basic_search.create_job(
     title="search example",
     description="search description",
-    conjunction="AND",
-    unit="FILE",
+    conjunction="and",
+    unit="file",
     filters=[
         (
             "category",
@@ -61,8 +61,8 @@ fusion_dataset_client = gas.get_dataset("<DATASET_NAME>", is_fusion=True)
 job = dataset_client.basic_search.create_job(
     title="search example",
     description="search description",
-    conjunction="AND",
-    unit="Frame",
+    conjunction="and",
+    unit="frame",
     filters=[
         ("sensor", "in", ["CAM_BACK_RIGHT", "CAM_FRONT"]),
         ("size", ">", 0),
