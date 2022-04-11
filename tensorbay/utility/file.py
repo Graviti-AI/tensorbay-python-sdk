@@ -220,3 +220,12 @@ class RemoteFileMixin(ReprMixin):
             self._write_cache(cache_path)
 
         return open(cache_path, "rb")
+
+    def get_callback_body(self) -> Dict[str, Any]:
+        """Not support ``get_callback_body`` function.
+
+        Raises:
+            AttributeError: when calling the ``get_callback_body()``.
+
+        """
+        raise AttributeError(f"Could not dump a '{self.__class__.__name__}' instance")
