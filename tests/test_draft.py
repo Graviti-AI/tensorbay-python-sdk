@@ -27,12 +27,7 @@ class TestDraft:
         )
         assert draft_1_number == 1
 
-        # Creating more than 1 draft on one branch and one accesskey is not allowed
-        with pytest.raises(InvalidParamsError):
-            dataset_client.create_draft("draft-2", "description", branch_name=DEFAULT_BRANCH)
-
         dataset_client.get_draft(draft_1_number)
-
         gas_client.delete_dataset(dataset_name)
 
     def test_create_draft_on_other_branch(self, accesskey, url):
