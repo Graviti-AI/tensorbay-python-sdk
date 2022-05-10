@@ -10,7 +10,7 @@ This topic describes how to manage the "CADC" dataset.
 "CADC" is a fusion dataset with 8 :ref:`sensors<advanced_features/fusion_dataset:sensor>` including 7 :class:`cameras<tensorbay.sensor.sensor.Camera>` and 1 :class:`lidar<tensorbay.sensor.sensor.Lidar>`
 , and has :doc:`/reference/label_format/Box3D` type of labels on the point cloud data.
 (:numref:`Fig. %s <example-cadc>`).
-See `this page <https://gas.graviti.cn/dataset/hello-dataset/CADC>`_ for more details about this dataset.
+See `this page <https://gas.graviti.com/dataset/graviti/CADC>`_ for more details about this dataset.
 
 .. _example-cadc:
 
@@ -193,7 +193,7 @@ Please see :doc:`this page </features/version_control/index>` for more details a
 
    Commit operation can also be done on our GAS_ Platform.
 
-.. _gas: https://www.graviti.cn/tensorBay
+.. _gas: https://gas.graviti.com/tensorbay/
 
 *********************
  Read Fusion Dataset

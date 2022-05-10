@@ -17,7 +17,7 @@ from tensorbay.client import config
 config.timeout = 40
 config.max_retries = 4
 
-# Please visit `https://gas.graviti.cn/tensorbay/developer` to get the AccessKey.
+# Please visit `https://gas.graviti.com/tensorbay/developer` to get the AccessKey.
 gas = GAS("<YOUR_ACCESSKEY>")
 
 # The configs will apply to all the requests sent by TensorBay SDK.

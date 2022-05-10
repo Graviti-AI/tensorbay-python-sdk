@@ -42,7 +42,7 @@ class DogsVsCatsSegment(Dataset):
 
 
 """Build a dataloader and run it"""
-# Please visit `https://gas.graviti.cn/tensorbay/developer` to get the AccessKey.
+# Please visit `https://gas.graviti.com/tensorbay/developer` to get the AccessKey.
 ACCESS_KEY = "<YOUR_ACCESSKEY>"
 
 to_tensor = transforms.ToTensor()

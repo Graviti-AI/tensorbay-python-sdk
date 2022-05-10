@@ -8,7 +8,7 @@
 This topic describes how to manage the `20 Newsgroups dataset`_, which is a dataset 
 with :doc:`/reference/label_format/Classification` label type.
 
-.. _20 Newsgroups dataset: https://gas.graviti.cn/dataset/data-decorators/Newsgroups20
+.. _20 Newsgroups dataset: https://gas.graviti.com/dataset/graviti/Newsgroups20
 
 *****************************
  Authorize a Client Instance

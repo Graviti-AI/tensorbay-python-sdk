@@ -5,7 +5,7 @@
  Dogs vs Cats
 ##############
 
-This topic describes how to manage the `Dogs vs Cats Dataset <https://gas.graviti.cn/dataset/data-decorators/DogsVsCats>`_,
+This topic describes how to manage the `Dogs vs Cats Dataset <https://gas.graviti.com/dataset/graviti/DogsVsCats>`_,
 which is a dataset with :doc:`/reference/label_format/Classification` label.
 
 *****************************

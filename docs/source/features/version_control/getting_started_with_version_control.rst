@@ -10,7 +10,7 @@ Commit
 
 The basic element of TensorBay version control system is :ref:`reference/glossary:commit`.
 Each commit of a TensorBay dataset is a **read-only** version.
-Take the `VersionControlDemo Dataset <https://gas.graviti.cn/dataset/graviti-open-dataset/VersionControlDemo/branch/main>`_ as an example.
+Take the `VersionControlDemo Dataset <https://gas.graviti.com/dataset/hellodataset/VersionControlDemo/branch/main>`_ as an example.
 
 .. _commit-demonstration:
 
@@ -21,7 +21,7 @@ Take the `VersionControlDemo Dataset <https://gas.graviti.cn/dataset/graviti-ope
    The first two commits of dataset "VersionControlDemo".
 
 .. note::
-   "VersionControlDemo" is an open dataset on `Graviti Open Datasets <https://www.graviti.cn/>`_ platform,
+   "VersionControlDemo" is an open dataset on `Graviti Open Datasets <https://gas.graviti.com/>`_ platform,
    Please fork it before running the following demo code.
 
 At the very beginning, there are only two commits in this dataset(:numref:`Fig. %s <commit-demonstration>`).
@@ -32,7 +32,7 @@ The code below checkouts to the first commit and check the data amount.
    from tensorbay import GAS
    from tensorbay.dataset import Dataset
 
-   # Please visit `https://gas.graviti.cn/tensorbay/developer` to get the AccessKey.
+   # Please visit `https://gas.graviti.com/tensorbay/developer` to get the AccessKey.
    gas = GAS("<YOUR_ACCESSKEY>")
    commits = dataset_client.list_commits()
 

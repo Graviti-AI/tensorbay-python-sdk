@@ -10,7 +10,7 @@ which is a dataset with :doc:`/reference/label_format/SemanticMask`
 and :doc:`/reference/label_format/InstanceMask` labels
 (:numref:`Fig. %s <example-semantic-mask>` and :numref:`Fig. %s <example-instance-mask>`).
 
-.. _VOC2012 Segmentation dataset: https://gas.graviti.cn/dataset/hello-dataset/VOC2012Segmentation
+.. _VOC2012 Segmentation dataset: https://gas.graviti.com/dataset/graviti/VOC2012Segmentation
 
 .. _example-semantic-mask:
 

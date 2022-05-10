@@ -12,7 +12,7 @@ This topic describes TensorBay dataset operations:
 - :ref:`quick_start/examples/move_and_copy:Copy Data`
 - :ref:`quick_start/examples/move_and_copy:Move Data`
 
-Take the `Oxford-IIIT Pet <https://gas.graviti.cn/dataset/data-decorators/OxfordIIITPet>`_
+Take the `Oxford-IIIT Pet <https://gas.graviti.com/dataset/graviti/OxfordIIITPet>`_
 as an example. Its structure looks like::
 
     datasets/
@@ -26,7 +26,7 @@ as an example. Its structure looks like::
 .. note::
 
    Before operating this dataset,
-   `fork <https://gas.graviti.cn/dataset/data-decorators/OxfordIIITPet>`_ it first.
+   `fork <https://gas.graviti.com/dataset/graviti/OxfordIIITPet>`_ it first.
 
 Get the dataset client.
 

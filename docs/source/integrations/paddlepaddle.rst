@@ -6,7 +6,7 @@
 ###############
 
 This topic describes how to integrate TensorBay dataset with PaddlePaddle Pipeline
-using the `DogsVsCats Dataset <https://gas.graviti.cn/dataset/data-decorators/DogsVsCats>`_ as an example.
+using the `DogsVsCats Dataset <https://gas.graviti.com/dataset/graviti/DogsVsCats>`_ as an example.
 
 The typical method to integrate TensorBay dataset with PaddlePaddle is to build a "Segment" class
 derived from ``paddle.io.Dataset``.
