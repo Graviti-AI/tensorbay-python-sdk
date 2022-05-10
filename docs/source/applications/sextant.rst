@@ -6,7 +6,7 @@
 #########
 
 TensorBay SDK supports methods to interact with sextant application.
-See `authorized storage instruction <https://docs.graviti.cn/apps/sextant>`_ for details about how to start.
+See `authorized storage instruction <https://docs.graviti.com/apps/sextant>`_ for details about how to start.
 
 Authorize a Sextant Instance
 ============================
@@ -80,4 +80,5 @@ The details of the result structure for the evaluation are as follows:
 
 .. note::
 
-    Benchmark can only be created with `tensorbay website <https://gas.graviti.cn/apps/Sextant>`_ now.
+    Benchmark can only be created with `tensorbay website <https://gas.graviti.com/apps/Sextant>`_ now.
+

@@ -82,15 +82,15 @@ Here are some catalog examples of datasets with different label types and a data
        | which is a dataset with tracking :doc:`/reference/label_format/Box2D` label.
 
 .. _elpv Catalog: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/Elpv/catalog.json
-.. _elpv Dataset: https://gas.graviti.cn/dataset/data-decorators/Elpv
+.. _elpv Dataset: https://gas.graviti.com/dataset/graviti/Elpv
 .. _BSTLD Catalog: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/BSTLD/catalog.json
-.. _BSTLD Dataset: https://gas.graviti.cn/dataset/data-decorators/BSTLD
+.. _BSTLD Dataset: https://gas.graviti.com/dataset/graviti/BSTLD
 .. _Neolix OD Catalog: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/NeolixOD/catalog.json
 .. _Neolix OD Dataset: https://gas.graviti.cn/dataset/graviti-open-dataset/NeolixOD
 .. _Leeds Sports Pose Catalog: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/LeedsSportsPose/catalog.json
-.. _Leeds Sports Pose Dataset: https://gas.graviti.cn/dataset/data-decorators/LeedsSportsPose
+.. _Leeds Sports Pose Dataset: https://gas.graviti.com/dataset/graviti/LeedsSportsPose
 .. _NightOwls Catalog: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/NightOwls/catalog.json
-.. _NightOwls Dataset: https://gas.graviti.cn/dataset/hello-dataset/NightOwls
+.. _NightOwls Dataset: https://gas.graviti.com/dataset/graviti/NightOwls
 
 Note that catalog is not needed if there is no label information in a dataset.
 

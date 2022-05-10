@@ -17,7 +17,7 @@
 from tensorbay import GAS
 from tensorbay.dataset import Dataset
 
-# Please visit `https://gas.graviti.cn/tensorbay/developer` to get the AccessKey.
+# Please visit `https://gas.graviti.com/tensorbay/developer` to get the AccessKey.
 gas = GAS("<YOUR_ACCESSKEY>")
 dataset = Dataset("<DATASET_NAME>", gas)
 """"""

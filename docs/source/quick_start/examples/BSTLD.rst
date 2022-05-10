@@ -5,7 +5,7 @@
  BSTLD
 ########
 
-This topic describes how to manage the `BSTLD Dataset <https://gas.graviti.cn/dataset/data-decorators/BSTLD>`_,
+This topic describes how to manage the `BSTLD Dataset <https://gas.graviti.com/dataset/graviti/BSTLD>`_,
 which is a dataset with :doc:`/reference/label_format/Box2D` label(:numref:`Fig. %s <example-bstld>`).
 
 .. _example-bstld:

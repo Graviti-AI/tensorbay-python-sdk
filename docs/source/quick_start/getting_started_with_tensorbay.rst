@@ -30,8 +30,8 @@ Before using TensorBay SDK, please finish the following registration steps:
 - Please visit `Graviti AI Service(GAS)`_ to sign up.
 - Please visit `Graviti Developer Tools`_ to get an AccessKey.
 
-.. _graviti ai service(gas): https://gas.graviti.cn/tensorbay/
-.. _Graviti Developer Tools: https://gas.graviti.cn/tensorbay/developer
+.. _graviti ai service(gas): https://gas.graviti.com/tensorbay/
+.. _Graviti Developer Tools: https://gas.graviti.com/tensorbay/developer
 
 .. note::
    An AccessKey is needed to authenticate identity when using TensorBay via SDK or CLI.

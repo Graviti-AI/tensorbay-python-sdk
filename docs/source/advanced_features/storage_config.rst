@@ -20,7 +20,7 @@ In graviti storage mode, the data is stored in graviti storage space on TensorBa
 ***************************
 
 When using authorized storage config, datasets are stored on user's storage space and are only indexed to the TensorBay.
-See `authorized storage instruction <https://docs.graviti.cn/guide/tensorbay/data/authorize>`_ for details about how to configure authorized storage on TensorBay.
+See `authorized storage instruction <https://docs.graviti.com/guide/tensorbay/data/authorize>`_ for details about how to configure authorized storage on TensorBay.
 
 TensorBay supports both authorize cloud storage and authorize local storage.
 
@@ -105,7 +105,7 @@ TensorBay supports authorized local storage config.
 Before creating the local storage config via :func:`~tensorbay.client.gas.GAS.create_local_storage_config`,
 you need to start a local storage service. Please contact us on `TensorBay`_ for more information.
 
-.. _TensorBay: https://www.graviti.cn/
+.. _TensorBay: https://gas.graviti.com/
 
 .. literalinclude:: ../../../docs/code/storage_config.py
    :language: python
