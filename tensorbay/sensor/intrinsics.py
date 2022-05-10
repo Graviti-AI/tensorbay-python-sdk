@@ -286,13 +286,13 @@ class DistortionCoefficients(ReprMixin, AttrsMixin):
         if is_fisheye:
             r = math.sqrt(r2)
             factor = math.atan(r)
-            factor2 = factor ** 2
+            factor2 = factor**2
         else:
             factor2 = r2
 
         radial_distortion = 1.0
         for i, value in enumerate(self._list_distortions("k"), 1):
-            radial_distortion += value * factor2 ** i
+            radial_distortion += value * factor2**i
 
         if is_fisheye:
             radial_distortion = radial_distortion * factor / r if r > self._FISHEYE_MINIMUM_R else 1
@@ -419,8 +419,8 @@ class DistortionCoefficients(ReprMixin, AttrsMixin):
         else:
             raise TypeError("The point to be projected must have 2 or 3 dimensions")
 
-        x2 = x ** 2
-        y2 = y ** 2
+        x2 = x**2
+        y2 = y**2
         xy2 = 2 * x * y
         r2 = x2 + y2
 
