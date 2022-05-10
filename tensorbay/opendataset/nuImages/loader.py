@@ -139,7 +139,7 @@ def _load_frame_and_sensor(
 
             data = Data(
                 os.path.join(subset_path, data_frame["filename"]),
-                timestamp=data_frame["timestamp"] / 10 ** 6,
+                timestamp=data_frame["timestamp"] / 10**6,
             )
 
             if not is_test:

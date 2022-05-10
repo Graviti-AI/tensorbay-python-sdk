@@ -175,7 +175,7 @@ def _load_frame_and_sensor(
 
         data = Data(
             os.path.join(subset_path, sensor_frame["filename"]),
-            timestamp=sensor_frame["timestamp"] / 10 ** 6,
+            timestamp=sensor_frame["timestamp"] / 10**6,
         )
 
         if not is_test and sensor_type == "lidar":
