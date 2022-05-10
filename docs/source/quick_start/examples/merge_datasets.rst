@@ -7,8 +7,8 @@
 
 This topic describes the merge dataset operation.
 
-Take the `Oxford-IIIT Pet <https://gas.graviti.cn/dataset/data-decorators/OxfordIIITPet>`_
-and `Dogs vs Cats <https://gas.graviti.cn/dataset/data-decorators/DogsVsCats>`_
+Take the `Oxford-IIIT Pet <https://gas.graviti.com/dataset/graviti/OxfordIIITPet>`_
+and `Dogs vs Cats <https://gas.graviti.com/dataset/graviti/DogsVsCats>`_
 as examples. Their structures looks like::
 
     Oxford-IIIT Pet/

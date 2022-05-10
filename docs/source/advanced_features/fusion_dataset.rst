@@ -8,8 +8,8 @@
 Fusion dataset represents datasets with data collected from multiple sensors.
 Typical examples of fusion dataset are some autonomous driving datasets, such as `nuScenes`_ and `KITTI-tracking`_.
 
-.. _nuScenes: https://gas.graviti.cn/dataset/motional/nuScenes
-.. _KITTI-tracking: https://gas.graviti.cn/dataset/data-decorators/KITTITracking
+.. _nuScenes: https://gas.graviti.com/dataset/motional/nuScenes
+.. _KITTI-tracking: https://gas.graviti.com/dataset/graviti/KITTITracking
 
 
 Fusion dataset is one of the topmost concept in TensorBay format.

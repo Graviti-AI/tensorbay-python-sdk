@@ -15,7 +15,7 @@
 """Obtain a SearchResult Instance"""
 from tensorbay import GAS
 
-# Please visit `https://gas.graviti.cn/tensorbay/developer` to get the AccessKey.
+# Please visit `https://gas.graviti.com/tensorbay/developer` to get the AccessKey.
 gas = GAS("<YOUR_ACCESSKEY>")
 dataset_client = gas.get_dataset("<DATASET_NAME>")
 

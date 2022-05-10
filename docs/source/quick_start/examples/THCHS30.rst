@@ -8,7 +8,7 @@
 This topic describes how to manage the `THCHS-30 Dataset`_,
 which is a dataset with :doc:`/reference/label_format/Sentence` label
 
-.. _THCHS-30 Dataset: https://www.graviti.com/open-datasets/data-decorators/THCHS30
+.. _THCHS-30 Dataset: https://gas.graviti.com/dataset/hellodataset/THCHS-30
 
 *****************************
  Authorize a Client Instance

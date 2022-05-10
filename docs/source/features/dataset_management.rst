@@ -80,10 +80,10 @@ Two types of datasets can be read from TensorBay:
    Visit `my datasets(or team datasets)`_ panel of `TensorBay`_ platform to check all
    datasets that can be read.
 
-.. _fork: https://docs.graviti.cn/guide/opendataset/fork
-.. _Open Datasets: https://gas.graviti.cn/open-datasets
-.. _my datasets(or team datasets): https://gas.graviti.cn/tensorbay/dataset-list
-.. _TensorBay: https://gas.graviti.cn/tensorbay/
+.. _fork: https://docs.graviti.com/guide/opendataset/fork
+.. _Open Datasets: https://gas.graviti.com/open-datasets
+.. _my datasets(or team datasets): https://gas.graviti.com/tensorbay/dataset-list
+.. _TensorBay: https://gas.graviti.com/tensorbay/
 
 Take the :ref:`Read Dataset of BSTLD <quick_start/examples/bstld:Read Dataset>` as an example.
 

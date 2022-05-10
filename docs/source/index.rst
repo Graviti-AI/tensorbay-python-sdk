@@ -13,7 +13,7 @@ This documentation describes
 :doc:`SDK </quick_start/getting_started_with_tensorbay>` and
 :doc:`CLI </tensorbay_cli/getting_started_with_cli>` tools for using TensorBay.
 
-.. _TensorBay: https://www.graviti.cn/
+.. _TensorBay: https://gas.graviti.com/
 
 
 ############################
@@ -30,7 +30,7 @@ It provides:
 - A consistent :doc:`dataset structure </reference/dataset_structure>`
   to read and write datasets.
 
-.. _OpenAPI: https://docs.graviti.cn/dev-doc/tools/api-center
+.. _OpenAPI: https://docs.graviti.com/dev-doc/tools/api-center
 
 
 .. toctree::

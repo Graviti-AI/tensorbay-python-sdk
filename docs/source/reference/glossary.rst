@@ -11,9 +11,9 @@ accesskey
 An accesskey is an access credential for identification when using TensorBay to operate on your dataset.
 
 To obtain an accesskey, log in to `Graviti AI Service(GAS)`_ and
-visit the `developer page <https://gas.graviti.cn/tensorbay/developer>`_ to create one.
+visit the `developer page <https://gas.graviti.com/tensorbay/developer>`_ to create one.
 
-.. _graviti ai service(gas): https://www.graviti.cn/tensorBay
+.. _graviti ai service(gas): https://gas.graviti.com/tensorbay/
 
 For the usage of accesskey via Tensorbay SDK or CLI,
 please see :ref:`SDK authorization <quick_start/getting_started_with_tensorbay:Authorize a Client Instance>`
@@ -103,15 +103,15 @@ Here are some dataloader examples of datasets with different label types and con
    ================================  ============================================================================================
 
 .. _Dogs vs Cats Dataloader: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/DogsVsCats/loader.py
-.. _Dogs vs Cats Dataset: https://gas.graviti.cn/dataset/data-decorators/DogsVsCats
+.. _Dogs vs Cats Dataset: https://gas.graviti.com/dataset/graviti/DogsVsCats
 .. _BSTLD Dataloader: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/BSTLD/loader.py
-.. _BSTLD Dataset: https://gas.graviti.cn/dataset/data-decorators/BSTLD
+.. _BSTLD Dataset: https://gas.graviti.com/dataset/graviti/BSTLD
 .. _Neolix OD Dataloader: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/NeolixOD/loader.py
 .. _Neolix OD Dataset: https://gas.graviti.cn/dataset/graviti-open-dataset/NeolixOD
 .. _Leeds Sports Pose Daraloader: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/LeedsSportsPose/loader.py
-.. _Leeds Sports Pose Dataset: https://gas.graviti.cn/dataset/data-decorators/LeedsSportsPose
+.. _Leeds Sports Pose Dataset: https://gas.graviti.com/dataset/graviti/LeedsSportsPose
 .. _LISA Traffic Light Dataloader: https://github.com/Graviti-AI/tensorbay-python-sdk/blob/main/tensorbay/opendataset/LISATrafficLight/loader.py
-.. _LISA Traffic Light Dataset: https://gas.graviti.cn/dataset/hello-dataset/LISATrafficLight
+.. _LISA Traffic Light Dataset: https://gas.graviti.com/dataset/graviti/LISATrafficLight
 
 .. note::
 
@@ -121,7 +121,7 @@ Here are some dataloader examples of datasets with different label types and con
   Take `Dogs vs Cats`_ dataset as an example,
   the name of its dataloader function is :meth:`~tensorbay.opendataset.DogsVsCats.loader.DogsVsCats`.
 
-  .. _dogs vs cats: https://gas.graviti.cn/dataset/data-decorators/DogsVsCats
+  .. _dogs vs cats: https://gas.graviti.com/dataset/graviti/DogsVsCats
 
 See more dataloader examples in :ref:`reference/api/opendataset:tensorbay.opendataset`.
 

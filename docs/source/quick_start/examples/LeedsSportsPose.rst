@@ -5,7 +5,7 @@
  Leeds Sports Pose
 ###################
 
-This topic describes how to manage the `Leeds Sports Pose Dataset <https://gas.graviti.cn/dataset/data-decorators/LeedsSportsPose>`_,
+This topic describes how to manage the `Leeds Sports Pose Dataset <https://gas.graviti.com/dataset/graviti/LeedsSportsPose>`_,
 which is a dataset with :doc:`/reference/label_format/Keypoints2D` label(:numref:`Fig. %s <example-leedssportspose>`).
 
 .. _example-leedssportspose:

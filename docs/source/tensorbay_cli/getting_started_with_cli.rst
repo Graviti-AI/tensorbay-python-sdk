@@ -31,7 +31,7 @@ To use TensorBay CLI, please install TensorBay SDK first.
 
 An accessKey_ is used for identification when using TensorBay to operate datasets.
 
-.. _accesskey: https://gas.graviti.cn/tensorbay/developer
+.. _accesskey: https://gas.graviti.com/tensorbay/developer
 
 Set the accessKey into configuration:
 

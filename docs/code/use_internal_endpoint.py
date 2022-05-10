@@ -18,7 +18,7 @@ from tensorbay.dataset import Data, Dataset
 # Set is_internal to True for using internal endpoint.
 config.is_internal = True
 
-# Please visit `https://gas.graviti.cn/tensorbay/developer` to get the AccessKey.
+# Please visit `https://gas.graviti.com/tensorbay/developer` to get the AccessKey.
 gas = GAS("<YOUR_ACCESSKEY>")
 
 # Organize the local dataset by the "Dataset" class before uploading.

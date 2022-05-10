@@ -14,7 +14,7 @@
 """Get sextant client"""
 from tensorbay.apps.sextant import Sextant
 
-# Please visit `https://gas.graviti.cn/tensorbay/developer` to get the AccessKey.
+# Please visit `https://gas.graviti.com/tensorbay/developer` to get the AccessKey.
 sextant = Sextant("<YOUR_ACCESSKEY>")
 """"""
 
@@ -29,7 +29,7 @@ benchmark = sextant.get_benchmark("test_01")
 """Create evaluation"""
 from tensorbay import GAS
 
-# Please visit `https://gas.graviti.cn/tensorbay/developer` to get the AccessKey.
+# Please visit `https://gas.graviti.com/tensorbay/developer` to get the AccessKey.
 gas = GAS("<YOUR_ACCESSKEY>")
 dataset_client = gas.get_dataset("<DATASET_NAME>")
 dataset_client.checkout(revision="<branch/tag/commitId>")

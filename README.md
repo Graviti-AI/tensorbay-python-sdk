@@ -18,7 +18,7 @@ of OpenAPI and SDK. As a result, the SDK under version v1.6.0 does not work anym
 
 ---
 
-TensorBay Python SDK is a python library to access [TensorBay](https://gas.graviti.cn/tensorbay/)
+TensorBay Python SDK is a python library to access [TensorBay](https://gas.graviti.com/tensorbay/)
 and manage your datasets.  
 It provides:
 
@@ -39,7 +39,7 @@ More information can be found on the [documentation site](https://tensorbay-pyth
 ## Usage
 
 An **AccessKey** is needed to communicate with TensorBay.
-Please visit [this page](https://gas.graviti.cn/tensorbay/developer) to get an **AccessKey** first.
+Please visit [this page](https://gas.graviti.com/tensorbay/developer) to get an **AccessKey** first.
 
 ### Authorize a client object
 

@@ -6,7 +6,7 @@
 #########
 
 This topic describes how to integrate TensorBay dataset with PyTorch Pipeline
-using the `MNIST Dataset <https://gas.graviti.cn/dataset/data-decorators/MNIST>`_ as an example.
+using the `MNIST Dataset <https://gas.graviti.com/dataset/hellodataset/MNIST>`_ as an example.
 
 The typical method to integrate TensorBay dataset with PyTorch is to build a "Segment" class
 derived from ``torch.utils.data.Dataset``.
