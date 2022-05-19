@@ -34,6 +34,7 @@ The code below checkouts to the first commit and check the data amount.
 
    # Please visit `https://gas.graviti.com/tensorbay/developer` to get the AccessKey.
    gas = GAS("<YOUR_ACCESSKEY>")
+   dataset_client = gas.get_dataset("VersionControlDemo")
    commits = dataset_client.list_commits()
 
    FIRST_COMMIT_ID = "ebb1cb46b36f4a4b922a40fb01574517"
