@@ -7,7 +7,19 @@
 
 from abc import ABC
 from enum import Enum, auto
-from typing import Any, Callable, Dict, Iterable, Mapping, Sequence, Tuple, Type, TypeVar, Union
+from typing import (
+    Any,
+    Callable,
+    ClassVar,
+    Dict,
+    Iterable,
+    Mapping,
+    Sequence,
+    Tuple,
+    Type,
+    TypeVar,
+    Union,
+)
 
 
 class ReprType(Enum):
@@ -25,7 +37,7 @@ class ReprType(Enum):
 class ReprMixin:
     """ReprMixin provides customized repr config and method."""
 
-    _repr_type = ReprType.INSTANCE
+    _repr_type: ClassVar[ReprType] = ReprType.INSTANCE
     _repr_attrs: Iterable[str] = ()
     _repr_maxlevel = 1
     _repr_non_empty = False
@@ -129,8 +141,8 @@ def _repr1(obj: Any, level: int, maxlevel: int, folding: bool) -> str:
 
     """
     # pylint: disable=protected-access
-    printer_key = obj._repr_type if hasattr(obj, "_repr_type") else type(obj)
-    printer = _PRINTERS.get(printer_key, None)
+    class_ = type(obj)
+    printer = _PRINTERS.get(getattr(class_, "_repr_type", class_), None)
     return printer(obj, level, maxlevel, folding) if printer else repr(obj)
 
 
