@@ -140,8 +140,7 @@ def _repr1(obj: Any, level: int, maxlevel: int, folding: bool) -> str:
         "repr" of the object.
 
     """
-    # pylint: disable=protected-access
-    class_ = type(obj)
+    class_: Type[Any] = type(obj)
     printer = _PRINTERS.get(getattr(class_, "_repr_type", class_), None)
     return printer(obj, level, maxlevel, folding) if printer else repr(obj)
 
