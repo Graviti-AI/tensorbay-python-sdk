@@ -53,9 +53,10 @@ class Config:
 
     def __init__(self) -> None:
 
-        self.max_retries = 3
-        self.allowed_retry_methods = ["HEAD", "OPTIONS", "POST", "PUT"]
+        self.max_retries = 5
+        self.allowed_retry_methods = ["GET", "HEAD", "OPTIONS", "POST", "PUT"]
         self.allowed_retry_status = [429, 500, 502, 503, 504]
+        self.backoff_factor = 0.5
 
         self.timeout = 30
         self.is_internal = False
@@ -119,6 +120,7 @@ class UserSession(Session):
             total=config.max_retries,
             status_forcelist=config.allowed_retry_status,
             raise_on_status=False,
+            backoff_factor=config.backoff_factor,
             **{_ALLOWED_METHODS: config.allowed_retry_methods},  # type: ignore[arg-type]
         )
 
