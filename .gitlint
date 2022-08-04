@@ -1,8 +1,12 @@
 [general]
 ignore=body-is-missing
+contrib=CT1
 
 [title-max-length]
 line-length=72
 
+[contrib-title-conventional-commits]
+types=feat,fix,docs,style,refactor,perf,test,build,ci,chore,release
+
 [title-match-regex]
-regex=^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert|release)(\(\w+\))?!?: [a-z][\x20-\x7e]+$
+regex=: [a-z][\x20-\x7e]+$
