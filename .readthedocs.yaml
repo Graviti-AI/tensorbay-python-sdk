@@ -5,6 +5,9 @@
 ---
 version: 2
 
+formats:
+  - pdf
+
 build:
   os: ubuntu-20.04
   tools:
