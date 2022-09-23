@@ -6,3 +6,5 @@ pytest == 6.2.2
 pytest-cov == 2.11.1
 pytest-mock == 3.5.1
 coveralls == 2.2
+
+numpy <= 1.20.3
