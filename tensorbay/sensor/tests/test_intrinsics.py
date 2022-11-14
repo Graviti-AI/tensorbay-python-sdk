@@ -9,7 +9,7 @@ from tensorbay.geometry import Vector2D
 from tensorbay.sensor import CameraIntrinsics, CameraMatrix, DistortionCoefficients
 
 _3x3_MATRIX = [[1, 2, 3], [0, 4, 5], [0, 0, 1]]
-_3x3_NUMPY = np.array([[1.0, 2.0, 3.0], [0.0, 5.0, 5.0], [0.0, 0.0, 1.0]])
+_3x3_NUMPY = np.array([[1.0, 2.0, 3.0], [0.0, 4.0, 5.0], [0.0, 0.0, 1.0]])
 
 _CAMERA_MATRIX_DATA = {"fx": 2, "fy": 6, "cx": 4, "cy": 7, "skew": 3}
 
