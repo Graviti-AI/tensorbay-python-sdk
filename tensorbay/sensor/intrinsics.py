@@ -180,7 +180,7 @@ class CameraMatrix(ReprMixin, AttrsMixin):
         return np.array(
             [
                 [self.fx, self.skew, self.cx],
-                [0.0, self.cy, self.cy],
+                [0.0, self.fy, self.cy],
                 [0.0, 0.0, 1.0],
             ]
         )
