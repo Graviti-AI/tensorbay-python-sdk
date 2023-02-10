@@ -192,11 +192,18 @@ class SegmentClientBase:
         if config.is_internal:
             params["isInternal"] = True
 
-        self._permission = self._client.open_api_do(
+        _permission = self._client.open_api_do(
             "GET", "policies", self._dataset_id, params=params
         ).json()
 
-        del self._permission["result"]["multipleUploadLimit"]
+        result = _permission["result"]
+        del result["multipleUploadLimit"]
+
+        keys = [key for key, value in result.items() if value is None]
+        for key in keys:
+            del result[key]
+
+        self._permission = _permission
 
     def _get_upload_permission(self) -> Dict[str, Any]:
         if int(time.time()) >= self._permission["expireAt"]:
