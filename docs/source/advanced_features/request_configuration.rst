@@ -30,7 +30,7 @@ Note that the default settings can satisfy most use cases.
    * - allowed_retry_status
      - | The allowed status for retrying request.
        | Default: [429, 500, 502, 503, 504]
-   * - verify
+   * - verify_tls_certificate
      - | Whether to verify the server's TLS certificate.
        | Default: True
    * - timeout
