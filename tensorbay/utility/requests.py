@@ -46,7 +46,7 @@ class Config:
         allowed_retry_methods: The allowed methods for retrying request.
         allowed_retry_status: The allowed status for retrying request.
             If both methods and status are fitted, the retrying strategy will work.
-        verify: Whether to verify the server's TLS certificate.
+        verify_tls_certificate: Whether to verify the server's TLS certificate.
         timeout: Timeout value of the request in seconds.
         is_internal: Whether the request is from internal.
 
@@ -57,7 +57,7 @@ class Config:
         self.max_retries = 3
         self.allowed_retry_methods = ["HEAD", "OPTIONS", "POST", "PUT"]
         self.allowed_retry_status = [429, 500, 502, 503, 504]
-        self.verify = True
+        self.verify_tls_certificate = True
 
         self.timeout = 30
         self.is_internal = False
@@ -147,7 +147,11 @@ class UserSession(Session):
         """
         try:
             response = super().request(
-                method, url, *args, verify=config.verify, **kwargs  # type: ignore[misc]
+                method,
+                url,
+                *args,
+                verify=config.verify_tls_certificate,  # type: ignore[misc]
+                **kwargs,
             )
             if response.status_code not in (200, 201):
                 logger.error(
